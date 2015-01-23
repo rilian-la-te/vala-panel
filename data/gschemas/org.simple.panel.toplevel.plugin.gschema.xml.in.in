@@ -1,0 +1,41 @@
+<schemalist gettext-domain="@GETTEXT_PACKAGE@">
+  <schema id="org.simple.panel.toplevel.plugin">
+    <key name="plugin-type" type="s">
+      <default>''</default>
+      <_summary>Type of panel plugin.</_summary>
+      <_description>Type of this panel object.</_description>
+    </key>
+    <key name="has-schema" type="b">
+      <default>false</default>
+      <_summary>Availability of plugin schema</_summary>
+      <_description>If true, plugin has its own GSettings configuration.</_description>
+    </key>
+    <key name="can-expand" type="b">
+      <default>false</default>
+      <_summary>Availability of plugin expanded state</_summary>
+      <_description>If true, plugin can take all available space.</_description>
+    </key>
+    <key name="is-expanded" type="b">
+      <default>false</default>
+      <_summary>Availability of plugin expanded state</_summary>
+      <_description>If true, plugin can take all available space.</_description>
+    </key>
+    <key name="position" type="u">
+      <default>0</default>
+      <_summary>Plugin position on the panel</_summary>
+      <_description>Plugin position on the panel from start.</_description>
+    </key>
+    <key name="padding" type="i">
+      <default>0</default>
+      <_summary>Plugin padding</_summary>
+      <_description>Plugin padding in internal GtkBox.</_description>
+    </key>
+<!-- (Useless)
+    <key name="border" type="i">
+      <default>0</default>
+      <_summary>Plugin border size</_summary>
+      <_description>Plugin border size in internal GtkBox.</_description>
+    </key>
+-->
+  </schema>
+</schemalist>

@@ -1,0 +1,1938 @@
+# Japanese translations for lxpanel package
+# lxpanel パッケージに対する日本語訳.
+# Copyright (C) 2008-2009 THE lxpanel'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the lxpanel package.
+# Hironao Komatsu <hironao@users.sourceforge.net>, 2008-2009.
+# IWAI, Masaharu <iwai@alib.jp>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: lxpanel 0.5.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-27 08:58+0100\n"
+"PO-Revision-Date: 2014-04-03 04:34+0000\n"
+"Last-Translator: Hironao <hirkmt@gmail.com>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.5.0\n"
+"X-POOTLE-MTIME: 1396499684.0\n"
+
+#. { "configure", N_("Preferences"), configure },
+#: ../src/configurator.c:55 ../src/gtk-run.c:361 ../src/plugins/menu.c:770
+msgid "Run"
+msgstr "実行"
+
+#: ../src/configurator.c:57 ../src/plugins/menu.c:771
+msgid "Restart"
+msgstr "再起動"
+
+#: ../src/configurator.c:58 ../src/plugins/menu.c:772
+msgid "Logout"
+msgstr "ログアウト"
+
+#: ../src/configurator.c:549
+msgid "Currently loaded plugins"
+msgstr "現在ロードされているプラグイン"
+
+#: ../src/configurator.c:558
+msgid "Stretch"
+msgstr "引き伸ばす"
+
+#: ../src/configurator.c:680
+msgid "Add plugin to panel"
+msgstr "パネルにプラグインを追加"
+
+#: ../src/configurator.c:708
+msgid "Available plugins"
+msgstr "利用可能なプラグイン"
+
+#: ../src/configurator.c:1244
+msgid "Logout command is not set"
+msgstr "ログアウトのコマンドが設定されていません"
+
+#: ../src/configurator.c:1312
+msgid "Select a directory"
+msgstr "ディレクトリの選択"
+
+#: ../src/configurator.c:1312 ../src/configurator.c:1419
+msgid "Select a file"
+msgstr "ファイルの選択"
+
+#: ../src/configurator.c:1446
+msgid "_Browse"
+msgstr "ダイアログから選択(_B)"
+
+#: ../src/panel.c:660
+msgid "There is no room for another panel. All the edges are taken."
+msgstr "これ以上パネルを置く余地がありません。すべての辺が使われています。"
+
+#: ../src/panel.c:687
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning: This can not be recovered.</b>"
+msgstr ""
+"本当にこのパネルを削除しますか?\n"
+"<b>警告: 削除すると元には戻せません。</b>"
+
+#: ../src/panel.c:689
+msgid "Confirm"
+msgstr "確認"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/panel.c:721
+msgid "translator-credits"
+msgstr ""
+"Hironao Komatsu <hironao@users.sourceforge.net>\n"
+"IWAI, Masaharu <iwai@alib.jp>"
+
+#: ../src/panel.c:726
+msgid "LXPanel"
+msgstr "LXPanel"
+
+#: ../src/panel.c:744
+msgid "Copyright (C) 2008-2013"
+msgstr "Copyright (C) 2008-2013"
+
+#: ../src/panel.c:745
+msgid "Desktop panel for LXDE project"
+msgstr "LXDE プロジェクトのためのデスクトップパネル"
+
+#: ../src/panel.c:782
+msgid "Add / Remove Panel Items"
+msgstr "パネルのアイテムの追加・削除"
+
+#: ../src/panel.c:791
+#, c-format
+msgid "Remove \"%s\" From Panel"
+msgstr "パネルから \"%s\" を削除する"
+
+#: ../src/panel.c:803
+msgid "Panel Settings"
+msgstr "パネルの設定"
+
+#: ../src/panel.c:809
+msgid "Create New Panel"
+msgstr "新規パネルの作成"
+
+#: ../src/panel.c:815
+msgid "Delete This Panel"
+msgstr "このパネルを削除する"
+
+#: ../src/panel.c:826
+msgid "About"
+msgstr "このソフトウェアについて"
+
+#: ../src/panel.c:834
+msgid "Panel"
+msgstr "パネル"
+
+#: ../src/panel.c:847
+#, c-format
+msgid "\"%s\" Settings"
+msgstr "\"%s\" の設定"
+
+#: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
+msgid "Height:"
+msgstr "高さ:"
+
+#: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
+msgid "Width:"
+msgstr "幅:"
+
+#: ../src/panel.c:1111 ../data/ui/panel-pref.glade.h:13
+msgid "Left"
+msgstr "左"
+
+#: ../src/panel.c:1112 ../data/ui/panel-pref.glade.h:14
+msgid "Right"
+msgstr "右"
+
+#: ../src/panel.c:1118 ../data/ui/panel-pref.glade.h:12
+msgid "Top"
+msgstr "上"
+
+#: ../src/panel.c:1119 ../data/ui/panel-pref.glade.h:11
+msgid "Bottom"
+msgstr "下"
+
+#: ../src/panel.c:1428
+#, c-format
+msgid "lxpanel %s - lightweight GTK2+ panel for UNIX desktops\n"
+msgstr "lxpanel %s - UNIX デスクトップのための軽量な GTK2+ パネル\n"
+
+#: ../src/panel.c:1429
+#, c-format
+msgid "Command line options:\n"
+msgstr "コマンドラインのオプション:\n"
+
+#: ../src/panel.c:1430
+#, c-format
+msgid " --help      -- print this help and exit\n"
+msgstr " --help      -- このヘルプを表示して終了\n"
+
+#: ../src/panel.c:1431
+#, c-format
+msgid " --version   -- print version and exit\n"
+msgstr " --version   -- バージョンを表示して終了\n"
+
+#: ../src/panel.c:1432
+#, c-format
+msgid " --log <number> -- set log level 0-5. 0 - none 5 - chatty\n"
+msgstr ""
+" --log <number> -- ログをとるレベルを 0(なし) 〜 5(詳細) の範囲で設定\n"
+
+#. g_print(_(" --configure -- launch configuration utility\n"));
+#: ../src/panel.c:1434
+#, c-format
+msgid " --profile name -- use specified profile\n"
+msgstr " --profile name -- 指定したプロファイルを使用する\n"
+
+#: ../src/panel.c:1436
+#, c-format
+msgid " -h  -- same as --help\n"
+msgstr " -h  -- --help と同じ\n"
+
+#: ../src/panel.c:1437
+#, c-format
+msgid " -p  -- same as --profile\n"
+msgstr " -p  -- --profile と同じ\n"
+
+#: ../src/panel.c:1438
+#, c-format
+msgid " -v  -- same as --version\n"
+msgstr " -v  -- --version と同じ\n"
+
+#. g_print(_(" -C  -- same as --configure\n"));
+#: ../src/panel.c:1440
+#, c-format
+msgid ""
+"\n"
+"Visit http://lxde.org/ for detail.\n"
+"\n"
+msgstr ""
+"\n"
+"詳細については http://lxde.org/ をご覧下さい。\n"
+"\n"
+
+#: ../src/plugin.c:370
+msgid "No file manager is configured."
+msgstr "ファイルマネージャが設定されていません。"
+
+#: ../src/gtk-run.c:374
+msgid "Enter the command you want to execute:"
+msgstr "実行したいコマンドを入力してください:"
+
+#. vim: set sw=4 et sts=4 ts=4 :
+#: ../data/ui/launchtaskbar.glade.h:1 ../src/plugins/launchtaskbar.c:3414
+msgid "Application Launch and Task Bar"
+msgstr "アプリケーション・ランチャー／タスクバー"
+
+#: ../data/ui/launchtaskbar.glade.h:2
+msgid "<b>Mode:</b>"
+msgstr "<b>モード:</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:3
+msgid "Launchers"
+msgstr "ランチャ"
+
+#: ../data/ui/launchtaskbar.glade.h:4
+msgid "<b>Launchbar</b>"
+msgstr "<b>ランチャーバー</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:5
+msgid "Show tooltips"
+msgstr "ツールチップを表示する"
+
+#: ../data/ui/launchtaskbar.glade.h:6
+msgid "Icons only"
+msgstr "アイコンのみ"
+
+#: ../data/ui/launchtaskbar.glade.h:7
+msgid "Flat buttons"
+msgstr "平らなボタン"
+
+#: ../data/ui/launchtaskbar.glade.h:8
+msgid "Show windows from all desktops"
+msgstr "すべてのデスクトップのウィンドウを表示する"
+
+#: ../data/ui/launchtaskbar.glade.h:9
+msgid "Only show windows on the same monitor as the task bar"
+msgstr "タスクバーには同一モニタ上のウィンドウだけを表示する"
+
+#: ../data/ui/launchtaskbar.glade.h:10
+msgid "Use mouse wheel"
+msgstr "マウスホイールを使う"
+
+#: ../data/ui/launchtaskbar.glade.h:11
+msgid "Flash when there is any window requiring attention"
+msgstr "注意を引く必要のあるウィンドウは強調させる"
+
+#: ../data/ui/launchtaskbar.glade.h:12
+msgid "Combine multiple application windows into a single button"
+msgstr "複数のアプリケーションのウィンドウを一つのボタンに連結する"
+
+#: ../data/ui/launchtaskbar.glade.h:13
+msgid "Maximum width of task button"
+msgstr "タスクボタンの最大幅"
+
+#: ../data/ui/launchtaskbar.glade.h:14
+msgid "Spacing"
+msgstr "間隔"
+
+#: ../data/ui/launchtaskbar.glade.h:15
+msgid "<b>Taskbar</b>"
+msgstr "<b>タスクバー</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:16
+msgid "Only Application Launch Bar"
+msgstr "アプリケーション・ランチャーのみ"
+
+#: ../data/ui/launchtaskbar.glade.h:17
+msgid "Only Task Bar (Window List)"
+msgstr "タスクバー (ウィンドウのリスト) のみ"
+
+#: ../data/ui/launchtaskbar.glade.h:18
+msgid "Integrated Application Launch Bar and Task Bar"
+msgstr "統合アプリケーション・ランチャー／タスクバー"
+
+#: ../data/ui/netstatus.glade.h:1
+msgid "<b>Connection</b>"
+msgstr "<b>接続</b>"
+
+#: ../data/ui/netstatus.glade.h:2
+msgid "Status:"
+msgstr "状態:"
+
+#: ../data/ui/netstatus.glade.h:3
+msgid "_Name:"
+msgstr "名前(_N):"
+
+#: ../data/ui/netstatus.glade.h:4
+msgid "<b>Activity</b>"
+msgstr "<b>稼働状況</b>"
+
+#: ../data/ui/netstatus.glade.h:5
+msgid "Received:"
+msgstr "受信:"
+
+#: ../data/ui/netstatus.glade.h:6
+msgid "Sent:"
+msgstr "送信:"
+
+#: ../data/ui/netstatus.glade.h:7
+msgid "<b>Signal Strength</b>"
+msgstr "<b>信号の強さ</b>"
+
+#: ../data/ui/netstatus.glade.h:9
+#, no-c-format
+msgid "0%"
+msgstr "0%"
+
+#: ../data/ui/netstatus.glade.h:10
+msgid "General"
+msgstr "一般"
+
+#: ../data/ui/netstatus.glade.h:11
+msgid "<b>Internet Protocol (IPv4)</b>"
+msgstr "<b>インターネット・プロトコル (IPv4)</b>"
+
+#: ../data/ui/netstatus.glade.h:12
+msgid "Address:"
+msgstr "アドレス:"
+
+#: ../data/ui/netstatus.glade.h:13
+msgid "Destination:"
+msgstr "接続先:"
+
+#: ../data/ui/netstatus.glade.h:14 ../src/plugins/netstat/netstat.c:362
+#: ../src/plugins/netstat/netstat.c:373
+msgid "Broadcast:"
+msgstr "ブロードキャスト:"
+
+#: ../data/ui/netstatus.glade.h:15
+msgid "Subnet Mask:"
+msgstr "サブネットマスク:"
+
+#: ../data/ui/netstatus.glade.h:16
+msgid "<b>Internet Protocol (IPv6)</b>"
+msgstr "<b>インターネット・プロトコル (IPv6)</b>"
+
+#: ../data/ui/netstatus.glade.h:17
+msgid "Scope:"
+msgstr "スコープ:"
+
+#: ../data/ui/netstatus.glade.h:18
+msgid "<b>Network Device</b>"
+msgstr "<b>ネットワーク・デバイス</b>"
+
+#: ../data/ui/netstatus.glade.h:19
+msgid "Type:"
+msgstr "形式:"
+
+#: ../data/ui/netstatus.glade.h:20
+msgid "Support"
+msgstr "サポート"
+
+#: ../data/ui/netstatus.glade.h:21
+msgid "Con_figure"
+msgstr "設定(_F)"
+
+#: ../data/ui/panel-pref.glade.h:1
+msgid "Dynamic"
+msgstr "動的に"
+
+#: ../data/ui/panel-pref.glade.h:2
+msgid "Pixels"
+msgstr "ピクセル"
+
+#: ../data/ui/panel-pref.glade.h:4
+#, no-c-format
+msgid "% Percent"
+msgstr "% パーセント"
+
+#: ../data/ui/panel-pref.glade.h:5
+msgid "None"
+msgstr "なし"
+
+#: ../data/ui/panel-pref.glade.h:6
+msgid "Err"
+msgstr "エラー"
+
+#: ../data/ui/panel-pref.glade.h:7
+msgid "Warn"
+msgstr "警戒"
+
+#: ../data/ui/panel-pref.glade.h:8
+msgid "Info"
+msgstr "Info"
+
+#: ../data/ui/panel-pref.glade.h:9
+msgid "All"
+msgstr "すべて"
+
+#: ../data/ui/panel-pref.glade.h:10
+msgid "Panel Preferences"
+msgstr "パネルの設定"
+
+#: ../data/ui/panel-pref.glade.h:15
+msgid "Edge:"
+msgstr "端:"
+
+#: ../data/ui/panel-pref.glade.h:16
+msgid "Center"
+msgstr "中央"
+
+#: ../data/ui/panel-pref.glade.h:17
+msgid "Alignment:"
+msgstr "配置:"
+
+#: ../data/ui/panel-pref.glade.h:18
+msgid "Margin:"
+msgstr "余白:"
+
+#: ../data/ui/panel-pref.glade.h:19
+msgid "Monitor:"
+msgstr "モニタ:"
+
+#: ../data/ui/panel-pref.glade.h:20
+msgid "<b>Position</b>"
+msgstr "<b>位置</b>"
+
+#: ../data/ui/panel-pref.glade.h:23
+msgid "Icon size:"
+msgstr "アイコンのサイズ:"
+
+#: ../data/ui/panel-pref.glade.h:24
+msgid "<b>Size</b>"
+msgstr "<b>サイズ</b>"
+
+#: ../data/ui/panel-pref.glade.h:25
+msgid "Geometry"
+msgstr "ジオメトリ"
+
+#: ../data/ui/panel-pref.glade.h:26
+msgid "System theme"
+msgstr "システムのテーマ"
+
+#: ../data/ui/panel-pref.glade.h:27
+msgid "Solid color (with opacity)"
+msgstr "無地の色 (透明度つき)"
+
+#: ../data/ui/panel-pref.glade.h:28 ../src/plugins/xkb/xkb-plugin.c:1479
+msgid "Image"
+msgstr "画像"
+
+#: ../data/ui/panel-pref.glade.h:29
+msgid "Select an image file"
+msgstr "画像ファイルの選択"
+
+#: ../data/ui/panel-pref.glade.h:30
+msgid "<b>Background</b>"
+msgstr "<b>背景</b>"
+
+#: ../data/ui/panel-pref.glade.h:31
+msgid "Custom color"
+msgstr "独自の色"
+
+#: ../data/ui/panel-pref.glade.h:32 ../src/plugins/space.c:93
+#: ../src/plugins/batt/batt.c:632
+msgid "Size"
+msgstr "大きさ"
+
+#: ../data/ui/panel-pref.glade.h:33
+msgid "<b>Font</b>"
+msgstr "<b>フォント</b>"
+
+#: ../data/ui/panel-pref.glade.h:34
+msgid "Appearance"
+msgstr "外観"
+
+#: ../data/ui/panel-pref.glade.h:35
+msgid "Panel Applets"
+msgstr "パネルアプレット"
+
+#: ../data/ui/panel-pref.glade.h:36
+msgid "Logout Command:"
+msgstr "ログアウトのコマンド:"
+
+#: ../data/ui/panel-pref.glade.h:37
+msgid "Terminal Emulator:"
+msgstr "端末エミュレータ:"
+
+#: ../data/ui/panel-pref.glade.h:38
+msgid "File Manager:"
+msgstr "ファイルマネージャ"
+
+#: ../data/ui/panel-pref.glade.h:39
+msgid "<b>Set Preferred Applications</b>"
+msgstr "<b>優先するアプリケーションの設定</b>"
+
+#: ../data/ui/panel-pref.glade.h:40
+msgid "Make window managers treat the panel as dock"
+msgstr "ウィンドウマネージャがパネルを dock として扱うようにする"
+
+#: ../data/ui/panel-pref.glade.h:41
+msgid "Reserve space, and not covered by maximized windows"
+msgstr "場所を確保し、最大化したウィンドウに隠れないようにする"
+
+#: ../data/ui/panel-pref.glade.h:42
+msgid "<b>Properties</b>"
+msgstr "<b>プロパティ</b>"
+
+#: ../data/ui/panel-pref.glade.h:43
+msgid "Minimize panel when not in use"
+msgstr "使わないときはパネルを最小化する"
+
+#: ../data/ui/panel-pref.glade.h:44
+msgid "Size when minimized"
+msgstr "最小化時のサイズ"
+
+#: ../data/ui/panel-pref.glade.h:45
+msgid "pixels"
+msgstr "ピクセル"
+
+#: ../data/ui/panel-pref.glade.h:46
+msgid "<b>Automatic hiding</b>"
+msgstr "<b>自動的に隠す</b>"
+
+#: ../data/ui/panel-pref.glade.h:47
+msgid "Log level"
+msgstr "ログレベル"
+
+#: ../data/ui/panel-pref.glade.h:48
+msgid "<b>Log level</b>"
+msgstr "<b>ログレベル</b>"
+
+#: ../data/ui/panel-pref.glade.h:49
+msgid "Advanced"
+msgstr "高度な設定"
+
+#: ../src/plugins/cpu/cpu.c:276
+msgid "CPU Usage Monitor"
+msgstr "CPU 使用量モニタ"
+
+#: ../src/plugins/cpu/cpu.c:277 ../src/plugins/monitors/monitors.c:713
+msgid "Display CPU usage"
+msgstr "CPU の使用状況を表示する"
+
+#: ../src/plugins/deskno/deskno.c:180 ../src/plugins/deskno/deskno.c:200
+msgid "Desktop Number / Workspace Name"
+msgstr "デスクトップ番号 / ワークスペースの名前"
+
+#: ../src/plugins/deskno/deskno.c:182 ../src/plugins/dclock.c:429
+msgid "Bold font"
+msgstr "太字"
+
+#: ../src/plugins/deskno/deskno.c:183
+msgid "Display desktop names"
+msgstr "デスクトップ名を表示する"
+
+#: ../src/plugins/deskno/deskno.c:201
+msgid "Display workspace number, by cmeury@users.sf.net"
+msgstr "ワークスペースの番号を表示する。cmeury@users.sf.net 氏による"
+
+#: ../src/plugins/image.c:161
+msgid "Display Image and Tooltip"
+msgstr "画像とツールチップを表示します"
+
+#: ../src/plugins/launchtaskbar.c:2450
+msgid "_Close all windows"
+msgstr "すべてのウィンドウを閉じる(_C)"
+
+#. Add Raise menu item.
+#: ../src/plugins/launchtaskbar.c:3243
+msgid "_Raise"
+msgstr "最前面に(_R)"
+
+#. Add Restore menu item.
+#: ../src/plugins/launchtaskbar.c:3248
+msgid "R_estore"
+msgstr "元に戻す(_E)"
+
+#. Add Maximize menu item.
+#: ../src/plugins/launchtaskbar.c:3253
+msgid "Ma_ximize"
+msgstr "最大化(_X)"
+
+#. Add Iconify menu item.
+#: ../src/plugins/launchtaskbar.c:3258
+msgid "Ico_nify"
+msgstr "最小化(_N)"
+
+#: ../src/plugins/launchtaskbar.c:3277
+#, c-format
+msgid "Workspace _%d"
+msgstr "ワークスペース _%d"
+
+#: ../src/plugins/launchtaskbar.c:3282
+#, c-format
+msgid "Workspace %d"
+msgstr "ワークスペース %d"
+
+#. Add "move to all workspaces" item.  This causes the window to be visible no matter what desktop is active.
+#: ../src/plugins/launchtaskbar.c:3298
+msgid "_All workspaces"
+msgstr "すべてのワークスペース(_A)"
+
+#. Add Move to Workspace menu item as a submenu.
+#: ../src/plugins/launchtaskbar.c:3304
+msgid "_Move to Workspace"
+msgstr "ワークスペースへ移動(_M)"
+
+#. Add Close menu item.  By popular demand, we place this menu item closest to the cursor.
+#: ../src/plugins/launchtaskbar.c:3310
+msgid "_Close Window"
+msgstr "ウィンドウを閉じる(_C)"
+
+#: ../src/plugins/launchtaskbar.c:3312
+msgid "A_dd to Launcher"
+msgstr "ランチャーに追加する(_D)"
+
+#: ../src/plugins/launchtaskbar.c:3313
+msgid "Rem_ove from Launcher"
+msgstr "ランチャーから \"%s\" を削除する(_O)"
+
+#: ../src/plugins/launchtaskbar.c:3314
+msgid "_New Instance"
+msgstr "新規インスタンス(_N)"
+
+#: ../src/plugins/launchtaskbar.c:3384
+msgid "Application Launch Bar"
+msgstr "アプリケーション・ランチャー"
+
+#: ../src/plugins/launchtaskbar.c:3385
+msgid "Bar with buttons to launch application"
+msgstr "アプリケーションを呼び出すボタンのついたバー"
+
+#: ../src/plugins/launchtaskbar.c:3395
+msgid "Task Bar (Window List)"
+msgstr "タスクバー (ウィンドウのリスト)"
+
+#: ../src/plugins/launchtaskbar.c:3396
+msgid ""
+"Taskbar shows all opened windows and allow to iconify them, shade or get "
+"focus"
+msgstr ""
+"タスクバーは開いているすべてのウィンドウを表示し、最小化やシェード化、フォー"
+"カスの移動を可能にします"
+
+#: ../src/plugins/launchtaskbar.c:3415
+msgid "Bar with buttons to launch application and/or show all opened windows"
+msgstr "アプリケーションを呼び出すボタンやウィンドウのリストを表示するボタンのついたバー"
+
+#: ../src/plugins/dclock.c:423 ../src/plugins/dclock.c:443
+msgid "Digital Clock"
+msgstr "デジタル時計"
+
+#: ../src/plugins/dclock.c:425
+msgid "Clock Format"
+msgstr "時刻表示のフォーマット"
+
+#: ../src/plugins/dclock.c:426
+msgid "Tooltip Format"
+msgstr "ツールチップのフォーマット"
+
+#: ../src/plugins/dclock.c:427
+#, c-format
+msgid "Format codes: man 3 strftime; \\%n for line break"
+msgstr "フォーマットについては: man 3 strftime; \\%n で改行"
+
+#: ../src/plugins/dclock.c:428
+msgid "Action when clicked (default: display calendar)"
+msgstr "クリック時のアクション (デフォルト: カレンダの表示)"
+
+#: ../src/plugins/dclock.c:430
+msgid "Tooltip only"
+msgstr "ツールチップのみ"
+
+#: ../src/plugins/dclock.c:431
+msgid "Center text"
+msgstr "中央寄せ"
+
+#: ../src/plugins/dclock.c:444
+msgid "Display digital clock and tooltip"
+msgstr "デジタル時計とツールチップを表示します"
+
+#: ../src/plugins/menu.c:421
+msgid "Add to desktop"
+msgstr "デスクトップに追加"
+
+#: ../src/plugins/menu.c:428
+msgid "Properties"
+msgstr "プロパティ"
+
+#: ../src/plugins/menu.c:1041 ../src/plugins/menu.c:1054
+msgid "Menu"
+msgstr "メニュー"
+
+#: ../src/plugins/menu.c:1042 ../src/plugins/dirmenu.c:365
+msgid "Icon"
+msgstr "アイコン"
+
+#: ../src/plugins/menu.c:1055
+msgid "Application Menu"
+msgstr "アプリケーション・メニュー"
+
+#: ../src/plugins/separator.c:72
+msgid "Separator"
+msgstr "セパレータ"
+
+#: ../src/plugins/separator.c:73
+msgid "Add a separator to the panel"
+msgstr "パネルにセパレータを追加します"
+
+#: ../src/plugins/pager.c:84 ../src/plugins/pager.c:98
+msgid "Desktop Pager"
+msgstr "デスクトップページャ"
+
+#: ../src/plugins/pager.c:85 ../src/plugins/pager.c:99
+msgid "Simple pager plugin"
+msgstr "シンプルなページャのプラグインです"
+
+#: ../src/plugins/space.c:91 ../src/plugins/space.c:100
+msgid "Spacer"
+msgstr "空白"
+
+#: ../src/plugins/space.c:101
+msgid "Allocate space"
+msgstr "空白を割り当てます"
+
+#: ../src/plugins/tray.c:709
+msgid "System Tray"
+msgstr "システムトレイ"
+
+#: ../src/plugins/tray.c:710
+msgid "System tray"
+msgstr "システムトレイ"
+
+#: ../src/plugins/xkb/xkb-plugin.c:451
+msgid "New session is required for this option to take effect"
+msgstr "このオプションは、次回のセッションから有効になります"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:628
+msgid "Select Keyboard Model"
+msgstr "キーボードモデルの選択"
+
+#: ../src/plugins/xkb/xkb-plugin.c:651 ../src/plugins/xkb/xkb-plugin.c:778
+#: ../src/plugins/xkb/xkb-plugin.c:954
+msgid "Description"
+msgstr "説明"
+
+#: ../src/plugins/xkb/xkb-plugin.c:656 ../src/plugins/xkb/xkb-plugin.c:785
+msgid "Id"
+msgstr "Id"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:750
+msgid "Select Layout Change Type"
+msgstr "配列の改変タイプの選択"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:921
+msgid "Add Keyboard Layout"
+msgstr "キーボード配列の追加"
+
+#: ../src/plugins/xkb/xkb-plugin.c:944 ../src/plugins/xkb/xkb-plugin.c:1327
+msgid "Flag"
+msgstr "国旗"
+
+#: ../src/plugins/xkb/xkb-plugin.c:949 ../src/plugins/xkb/xkb-plugin.c:1331
+msgid "Layout"
+msgstr "配列"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1238 ../src/plugins/xkb/xkb-plugin.c:1587
+msgid "Keyboard Layout Handler"
+msgstr "キーボード配列の設定"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1260
+msgid "Keyboard Model"
+msgstr "キーボードモデル"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1281
+msgid "Keyboard Layouts"
+msgstr "キーボード配列"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1335
+msgid "Variant"
+msgstr "変種"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1344
+msgid "Change Layout Option"
+msgstr "配列の改変オプション"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1364
+msgid "Advanced setxkbmap Options"
+msgstr "setxkbmap の高度なオプション"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1384
+msgid "Do _not reset existing options"
+msgstr "既にあるオプションはリセットしない (_N)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1389
+msgid "Keep _system layouts"
+msgstr "システムの配列を維持する (_S)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1398
+msgid "Per Window Settings"
+msgstr "ウィンドウごとの設定"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1410
+msgid "_Remember layout for each window"
+msgstr "それぞれのウィンドウについて配列を記憶する(_R)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1419
+msgid "Show Layout as"
+msgstr "配列を次のように表す"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1480
+msgid "Custom Image"
+msgstr "独自の画像"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1481
+msgid "Text"
+msgstr "テキスト"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1507
+msgid "Panel Icon Size"
+msgstr "パネルのアイコンサイズ"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1589
+msgid "Handle keyboard layouts"
+msgstr "キーボード配列を設定する"
+
+#: ../src/plugins/wincmd.c:193
+msgid "Left click to iconify all windows.  Middle click to shade them."
+msgstr "左クリックですべてのウィンドウを最小化し、中クリックでシェード化します"
+
+#: ../src/plugins/wincmd.c:227 ../src/plugins/wincmd.c:245
+msgid "Minimize All Windows"
+msgstr "すべてのウィンドウを最小化"
+
+#: ../src/plugins/wincmd.c:229
+msgid "Alternately iconify/shade and raise"
+msgstr "アイコン化/シェード化、最全面を切り替え"
+
+#: ../src/plugins/wincmd.c:246
+msgid ""
+"Sends commands to all desktop windows.\n"
+"Supported commands are 1) iconify and 2) shade"
+msgstr ""
+"すべてのデスクトップのウィンドウにコマンドを送ります。\n"
+"可能なのは 1)最小化 2)シェード化"
+
+#: ../src/plugins/dirmenu.c:208
+msgid "Open in _Terminal"
+msgstr "端末で開く(_T)"
+
+#: ../src/plugins/dirmenu.c:361 ../src/plugins/dirmenu.c:377
+msgid "Directory Menu"
+msgstr "ディレクトリメニュー"
+
+#: ../src/plugins/dirmenu.c:363
+msgid "Directory"
+msgstr "ディレクトリ"
+
+#: ../src/plugins/dirmenu.c:364
+msgid "Label"
+msgstr "ラベル"
+
+#: ../src/plugins/dirmenu.c:378
+msgid "Browse directory tree via menu (Author = PCMan)"
+msgstr "ディレクトリ・ツリーをメニュー形式で表示します (作者 = PCMan)"
+
+#: ../src/plugins/thermal/thermal.c:480
+msgid "Normal"
+msgstr "通常"
+
+#: ../src/plugins/thermal/thermal.c:481
+msgid "Warning1"
+msgstr "警戒1"
+
+#: ../src/plugins/thermal/thermal.c:482
+msgid "Warning2"
+msgstr "警戒2"
+
+#: ../src/plugins/thermal/thermal.c:483
+msgid "Automatic sensor location"
+msgstr "自動センサの位置"
+
+#: ../src/plugins/thermal/thermal.c:484
+msgid "Sensor"
+msgstr "センサ"
+
+#: ../src/plugins/thermal/thermal.c:485
+msgid "Automatic temperature levels"
+msgstr "自動温度警戒域"
+
+#: ../src/plugins/thermal/thermal.c:486
+msgid "Warning1 Temperature"
+msgstr "警戒1 の温度"
+
+#: ../src/plugins/thermal/thermal.c:487
+msgid "Warning2 Temperature"
+msgstr "警戒2 の温度"
+
+#: ../src/plugins/thermal/thermal.c:531
+msgid "Temperature Monitor"
+msgstr "温度モニタ"
+
+#: ../src/plugins/thermal/thermal.c:533
+msgid "Display system temperature"
+msgstr "システムの温度を表示します"
+
+#: ../src/plugins/cpufreq/cpufreq.c:329
+#, c-format
+msgid ""
+"Frequency: %d MHz\n"
+"Governor: %s"
+msgstr ""
+"動作周波数: %d MHz\n"
+"速度管理: %s"
+
+#: ../src/plugins/cpufreq/cpufreq.c:421
+msgid "CPUFreq frontend"
+msgstr "CPUFreq フロントエンド"
+
+#: ../src/plugins/cpufreq/cpufreq.c:422
+msgid "Display CPU frequency and allow to change governors and frequency"
+msgstr "CPU の動作周波数を表示し、またその変更ができます"
+
+#. FIXME: display current level in tooltip. ex: "Volume Control: 80%"
+#. Display current level in tooltip.
+#: ../src/plugins/volume/volume.c:300
+#: ../src/plugins/volumealsa/volumealsa.c:363
+#: ../src/plugins/volumealsa/volumealsa.c:545
+msgid "Volume control"
+msgstr "音量コントロール"
+
+#: ../src/plugins/volume/volume.c:312
+#: ../src/plugins/volumealsa/volumealsa.c:666
+msgid "Volume Control"
+msgstr "音量コントロール"
+
+#. Create a frame as the child of the viewport.
+#: ../src/plugins/volume/volume-impl.c:109
+#: ../src/plugins/volumealsa/volumealsa.c:503
+msgid "Volume"
+msgstr "音量"
+
+#. Create a check button as the child of the vertical box.
+#: ../src/plugins/volumealsa/volumealsa.c:522
+msgid "Mute"
+msgstr "ミュート"
+
+#: ../src/plugins/volumealsa/volumealsa.c:639
+msgid ""
+"Error, you need to install an application to configure the sound "
+"(pavucontol, alsamixer ...)"
+msgstr ""
+"エラー、音量設定のためのアプリケーションが別途必要になります。(pavucontrol, "
+"alsamixer ...)"
+
+#: ../src/plugins/volumealsa/volumealsa.c:668
+msgid "Display and control volume for ALSA"
+msgstr "ALSA の音量の表示と操作"
+
+#: ../src/plugins/netstat/netstat.c:180
+msgid "<Hidden Access Point>"
+msgstr "<隠れたアクセスポイント>"
+
+#: ../src/plugins/netstat/netstat.c:213
+msgid "Wireless Networks not found in range"
+msgstr "範囲内に無線ネットワークは見つかりません"
+
+#. Repair
+#: ../src/plugins/netstat/netstat.c:247
+msgid "Repair"
+msgstr "修復"
+
+#. interface down
+#: ../src/plugins/netstat/netstat.c:252
+msgid "Disable"
+msgstr "無効化"
+
+#: ../src/plugins/netstat/netstat.c:342
+msgid "Wireless Connection has no connectivity"
+msgstr "無線ネットワークへ接続できません"
+
+#: ../src/plugins/netstat/netstat.c:344
+msgid "Network cable is plugged out"
+msgstr "ネットワークケーブルが抜けています"
+
+#: ../src/plugins/netstat/netstat.c:346
+msgid "Connection has limited or no connectivity"
+msgstr "接続が制限されているか、または接続できません"
+
+#: ../src/plugins/netstat/netstat.c:350 ../src/plugins/netstat/netstat.c:361
+#: ../src/plugins/netstat/netstat.c:372
+msgid "IP Address:"
+msgstr "IP アドレス:"
+
+#: ../src/plugins/netstat/netstat.c:351
+msgid "Remote IP:"
+msgstr "リモート IP:"
+
+#: ../src/plugins/netstat/netstat.c:352 ../src/plugins/netstat/netstat.c:363
+#: ../src/plugins/netstat/netstat.c:374
+msgid "Netmask:"
+msgstr "ネットマスク:"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Activity"
+msgstr "稼働状況"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Sent"
+msgstr "送信"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Received"
+msgstr "受信"
+
+#: ../src/plugins/netstat/netstat.c:354 ../src/plugins/netstat/netstat.c:366
+#: ../src/plugins/netstat/netstat.c:377
+msgid "bytes"
+msgstr "バイト"
+
+#: ../src/plugins/netstat/netstat.c:355 ../src/plugins/netstat/netstat.c:367
+#: ../src/plugins/netstat/netstat.c:378
+msgid "packets"
+msgstr "パケット"
+
+#: ../src/plugins/netstat/netstat.c:358
+#: ../src/plugins/netstatus/netstatus-iface.c:173
+msgid "Wireless"
+msgstr "無線"
+
+#: ../src/plugins/netstat/netstat.c:360
+msgid "Protocol:"
+msgstr "プロトコル:"
+
+#: ../src/plugins/netstat/netstat.c:364 ../src/plugins/netstat/netstat.c:375
+msgid "HW Address:"
+msgstr "HW アドレス:"
+
+#: ../src/plugins/netstat/netstat.c:515
+msgid "Manage Networks"
+msgstr "ネットワークの管理"
+
+#: ../src/plugins/netstat/netstat.c:517
+msgid "Monitor and Manage networks"
+msgstr "ネットワークを表示・管理する"
+
+#. create dialog
+#: ../src/plugins/netstat/passwd_gui.c:86
+msgid "Setting Encryption Key"
+msgstr "暗号化キーの設定"
+
+#. messages
+#: ../src/plugins/netstat/passwd_gui.c:96
+msgid ""
+"This wireless network was encrypted.\n"
+"You must have the encryption key."
+msgstr ""
+"この無線ネットワークは暗号化されています。\n"
+"暗号化キーが必要です。"
+
+#: ../src/plugins/netstat/passwd_gui.c:101
+msgid "Encryption Key:"
+msgstr "暗号化キー:"
+
+#: ../src/plugins/netstatus/netstatus.c:179
+msgid "Interface to monitor"
+msgstr "監視するインタフェース"
+
+#: ../src/plugins/netstatus/netstatus.c:180
+msgid "Config tool"
+msgstr "設定ツール"
+
+#: ../src/plugins/netstatus/netstatus.c:197
+msgid "Network Status Monitor"
+msgstr "ネットワーク状態モニタ"
+
+#: ../src/plugins/netstatus/netstatus.c:199
+msgid "Monitor network status"
+msgstr "ネットワークの状態を監視します"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:51
+#: ../src/plugins/netstatus/netstatus-dialog.c:312
+msgid "Unknown"
+msgstr "未知"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:116
+msgid "Connection Properties"
+msgstr "接続のプロパティ"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:122
+#, c-format
+msgid "Connection Properties: %s"
+msgstr "接続のプロパティ: %s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:135
+#, c-format
+msgid "%lu packet"
+msgid_plural "%lu packets"
+msgstr[0] "%lu 個のパケット"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:396
+#, c-format
+msgid ""
+"There was an error displaying help:\n"
+"%s"
+msgstr ""
+"ヘルプの表示でエラーがありました:\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:580
+#, c-format
+msgid "Failed to launch time configuration tool: %s"
+msgstr "時刻設定ツールの呼び出しに失敗しました: %s"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:380
+#, c-format
+msgid "Network Connection: %s"
+msgstr "ネットワーク接続: %s"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:385
+msgid "Network Connection"
+msgstr "ネットワーク接続"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:814
+msgid "Interface"
+msgstr "インタフェース"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:815
+msgid "The current interface the icon is monitoring."
+msgstr "このアイコンがモニタしている現在のインタフェースです。"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:822
+msgid "Orientation"
+msgstr "方向"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:823
+msgid "The orientation of the tray."
+msgstr "トレイの向く方向です。"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:831
+msgid "Tooltips Enabled"
+msgstr "ツールチップが有効か"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:832
+msgid "Whether or not the icon's tooltips are enabled."
+msgstr "アイコンのツールチップが有効かどうかです。"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:839
+msgid "Show Signal"
+msgstr "信号を表示するか"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:840
+msgid "Whether or not the signal strength should be displayed."
+msgstr "信号の強さを表示するかどうかです"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:949
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"\n"
+"%s"
+msgstr ""
+"以下の問題を解決するため、システム管理者に問い合わせてください:\n"
+"\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:148
+msgid "Name"
+msgstr "名前"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:149
+msgid "The interface name"
+msgstr "インタフェース名"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:156
+#: ../src/plugins/weather/weatherwidget.c:2036
+msgid "State"
+msgstr "状態"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:157
+msgid "The interface state"
+msgstr "インタフェースの状態"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:165
+msgid "Stats"
+msgstr "統計"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:166
+msgid "The interface packets/bytes statistics"
+msgstr "インタフェースのパケットやバイトの統計"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:174
+msgid "Whether the interface is a wireless interface"
+msgstr "インタフェースが無線かどうか"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:181
+msgid "Signal"
+msgstr "信号"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:182
+msgid "Wireless signal strength percentage"
+msgstr "無線の信号の強さ (パーセント)"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:191
+#: ../src/plugins/netstatus/netstatus-util.c:167
+msgid "Error"
+msgstr "エラー"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:192
+msgid "The current error condition"
+msgstr "現在のエラー状況"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:440
+#: ../src/plugins/netstatus/netstatus-iface.c:1206
+#, c-format
+msgid "Unable to open socket: %s"
+msgstr "ソケットを開けません: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:502
+#: ../src/plugins/netstatus/netstatus-iface.c:1232
+#, c-format
+msgid "SIOCGIFFLAGS error: %s"
+msgstr "SIOCGIFFLAGS エラー: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:879
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:882
+msgid "Ethernet"
+msgstr "イーサネット"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:888
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:897
+#: ../src/plugins/netstatus/netstatus-iface.c:1017
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps トークンリング"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:900
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:906
+msgid "Frame Relay DLCI"
+msgstr "フレームリレー DLCI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:912
+msgid "Metricom Starmode IP"
+msgstr "Metricom Starmode IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:915
+msgid "Serial Line IP"
+msgstr "Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:918
+msgid "VJ Serial Line IP"
+msgstr "VJ Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:921
+msgid "6-bit Serial Line IP"
+msgstr "6-bit Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:924
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6-bit Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:930
+msgid "Adaptive Serial Line IP"
+msgstr "Adaptive Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:933
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:936
+msgid "Generic X.25"
+msgstr "Generic X.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:939
+msgid "Point-to-Point Protocol"
+msgstr "Point-to-Point Protocol"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:945
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:948
+msgid "LAPB"
+msgstr "LAPB"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:957
+msgid "IPIP Tunnel"
+msgstr "IPIP トンネル"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:963
+msgid "Frame Relay Access Device"
+msgstr "フレームリレーアクセス装置"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:969
+msgid "Local Loopback"
+msgstr "ローカルループバック"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:975
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiber Distributed Data Interface"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:981
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:993
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:996
+msgid "Ash"
+msgstr "Ash"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:999
+msgid "Econet"
+msgstr "Econet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1002
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1164
+#, c-format
+msgid "SIOCGIFCONF error: %s"
+msgstr "SIOCGIFCONF エラー: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1257
+#, c-format
+msgid "No network devices found"
+msgstr "ネットワークデバイスが見つかりません"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:180
+#, c-format
+msgid "Cannot open /proc/net/dev: %s"
+msgstr "/proc/net/dev が開けません: %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:185
+msgid "Could not parse /proc/net/dev. No data."
+msgstr "/proc/net/dev をパースできません。データがありません。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:190
+msgid "Could not parse /proc/net/dev. Unknown format."
+msgstr "/proc/net/dev をパースできません。未知のフォーマットです。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:205
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:332
+#, c-format
+msgid "Could not parse interface name from '%s'"
+msgstr "'%s' からインタフェース名をパースできません"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:218
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:647
+#, c-format
+msgid ""
+"Could not parse interface statistics from '%s'. prx_idx = %d; ptx_idx = %d; "
+"brx_idx = %d; btx_idx = %d;"
+msgstr ""
+"'%s' からインタフェース統計をパースできません。prx_idx = %d; ptx_idx = %d; "
+"brx_idx = %d; btx_idx = %d;"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:312
+msgid "Could not parse /proc/net/wireless. No data."
+msgstr "/proc/net/wireless をパースできません。データがありません。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:316
+msgid "Could not parse /proc/net/wireless. Unknown format."
+msgstr "/proc/net/wireless をパースできません。未知のフォーマットです。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:343
+#, c-format
+msgid "Could not parse wireless details from '%s'. link_idx = %d;"
+msgstr "'%s' から無線の詳細をパースできません。link_idx = %d;"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:416
+#, c-format
+msgid "Could not connect to interface, '%s'"
+msgstr "インタフェース '%s' に接続できません。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:422
+#, c-format
+msgid "Could not send ioctl to interface, '%s'"
+msgstr "インタフェースへ '%s' への ioctl に失敗しました。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:600
+#, c-format
+msgid "Could not parse command line '%s': %s"
+msgstr "コマンドライン '%s' をパースできません: %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:637
+msgid "Could not parse 'netstat' output. Unknown format"
+msgstr "'netstat' の出力をパースできません。未知のフォーマットです。"
+
+#: ../src/plugins/netstatus/netstatus-util.c:152
+msgid "Disconnected"
+msgstr "切断"
+
+#: ../src/plugins/netstatus/netstatus-util.c:155
+msgid "Idle"
+msgstr "待機中"
+
+#: ../src/plugins/netstatus/netstatus-util.c:158
+msgid "Sending"
+msgstr "送信"
+
+#: ../src/plugins/netstatus/netstatus-util.c:161
+msgid "Receiving"
+msgstr "受信"
+
+#: ../src/plugins/netstatus/netstatus-util.c:164
+msgid "Sending/Receiving"
+msgstr "送信/受信"
+
+#: ../src/plugins/batt/batt.c:151
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d until full"
+msgstr "バッテリ: 残量 %d%%、充電してから %d:%02d"
+
+#: ../src/plugins/batt/batt.c:162
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d left"
+msgstr "バッテリ: 残量 %d%%、残り %d:%02d"
+
+#: ../src/plugins/batt/batt.c:168
+#, c-format
+msgid "Battery: %d%% charged"
+msgstr "バッテリ: 残量 %d%%"
+
+#: ../src/plugins/batt/batt.c:178
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full design:\t\t%5d mWh"
+msgstr ""
+"\n"
+"%s設計上の最大電力量:\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:180
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full:\t\t\t%5d mWh"
+msgstr ""
+"\n"
+"%s最大電力量:\t\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:182
+#, c-format
+msgid ""
+"\n"
+"%sEnergy now:\t\t\t%5d mWh"
+msgstr ""
+"\n"
+"%s現在の電力量:\t\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:184
+#, c-format
+msgid ""
+"\n"
+"%sPower now:\t\t\t%5d mW"
+msgstr ""
+"\n"
+"%s現在の電力:\t\t\t%5d mW"
+
+#: ../src/plugins/batt/batt.c:187
+#, c-format
+msgid ""
+"\n"
+"%sCharge full design:\t%5d mAh"
+msgstr ""
+"\n"
+"%s設計上の最大充電容量:\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:189
+#, c-format
+msgid ""
+"\n"
+"%sCharge full:\t\t\t%5d mAh"
+msgstr ""
+"\n"
+"%s満充電:\t\t\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:191
+#, c-format
+msgid ""
+"\n"
+"%sCharge now:\t\t\t%5d mAh"
+msgstr ""
+"\n"
+"%s現在の充電容量:\t\t\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:193
+#, c-format
+msgid ""
+"\n"
+"%sCurrent now:\t\t\t%5d mA"
+msgstr ""
+"\n"
+"%s現在の電流:\t\t\t%5d mA"
+
+#: ../src/plugins/batt/batt.c:196
+#, c-format
+msgid ""
+"\n"
+"%sCurrent Voltage:\t\t%.3lf V"
+msgstr ""
+"\n"
+"%s現在の電圧:\t\t%.3lf V"
+
+#: ../src/plugins/batt/batt.c:234
+msgid "No batteries found"
+msgstr "バッテリが見つかりません"
+
+#: ../src/plugins/batt/batt.c:619 ../src/plugins/batt/batt.c:642
+msgid "Battery Monitor"
+msgstr "バッテリモニタ"
+
+#: ../src/plugins/batt/batt.c:622
+msgid "Hide if there is no battery"
+msgstr "バッテリがないときは隠す"
+
+#: ../src/plugins/batt/batt.c:624
+msgid "Alarm command"
+msgstr "アラームのコマンド"
+
+#: ../src/plugins/batt/batt.c:625
+msgid "Alarm time (minutes left)"
+msgstr "アラームの時間 (分単位で)"
+
+#: ../src/plugins/batt/batt.c:626
+msgid "Background color"
+msgstr "背景色"
+
+#: ../src/plugins/batt/batt.c:627
+msgid "Charging color 1"
+msgstr "残量の色 1"
+
+#: ../src/plugins/batt/batt.c:628
+msgid "Charging color 2"
+msgstr "残量の色 2"
+
+#: ../src/plugins/batt/batt.c:629
+msgid "Discharging color 1"
+msgstr "放電の色 1"
+
+#: ../src/plugins/batt/batt.c:630
+msgid "Discharging color 2"
+msgstr "放電の色 2"
+
+#: ../src/plugins/batt/batt.c:631
+msgid "Border width"
+msgstr "境界の幅"
+
+#: ../src/plugins/batt/batt.c:633
+msgid "Show Extended Information"
+msgstr "さらなる情報を表示"
+
+#: ../src/plugins/batt/batt.c:643
+msgid "Display battery status using ACPI"
+msgstr "バッテリの状態を ACPI で表示します"
+
+#: ../src/plugins/kbled/kbled.c:257
+msgid "Show CapsLock"
+msgstr "CapsLock を表示する"
+
+#: ../src/plugins/kbled/kbled.c:258
+msgid "Show NumLock"
+msgstr "NumLock を表示する"
+
+#: ../src/plugins/kbled/kbled.c:259
+msgid "Show ScrollLock"
+msgstr "ScrollLock を表示する"
+
+#: ../src/plugins/kbled/kbled.c:293
+msgid "Keyboard LED"
+msgstr "キーボード LED"
+
+#: ../src/plugins/kbled/kbled.c:295
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr "CapsLock と NumLock、ScrollLock キーの状態を表示します"
+
+#. A label to allow for click through
+#: ../src/plugins/indicator/indicator.c:698
+msgid "No Indicators"
+msgstr "表示器がありません"
+
+#: ../src/plugins/indicator/indicator.c:897
+msgid "Indicator Applications"
+msgstr "表示アプリケーション"
+
+#: ../src/plugins/indicator/indicator.c:898
+msgid "Clock Indicator"
+msgstr "時刻表示"
+
+#: ../src/plugins/indicator/indicator.c:899
+msgid "Messaging Menu"
+msgstr "メッセージメニュー"
+
+#: ../src/plugins/indicator/indicator.c:900
+msgid "Network Menu"
+msgstr "ネットワークメニュー"
+
+#: ../src/plugins/indicator/indicator.c:901
+msgid "Session Menu"
+msgstr "セッションメニュー"
+
+#: ../src/plugins/indicator/indicator.c:902
+msgid "Sound Menu"
+msgstr "音声メニュー"
+
+#: ../src/plugins/indicator/indicator.c:928
+msgid "Indicator applets"
+msgstr "表示アプレット"
+
+#: ../src/plugins/indicator/indicator.c:930
+msgid "Add indicator applets to the panel"
+msgstr "パネルに表示アプレットを追加します"
+
+#: ../src/plugins/monitors/monitors.c:277
+#, c-format
+msgid "CPU usage: %.2f%%"
+msgstr "CPU 使用量: %.2f%%"
+
+#: ../src/plugins/monitors/monitors.c:360
+#, c-format
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr "RAM 使用量: %.1fMB (%.2f%%)"
+
+#: ../src/plugins/monitors/monitors.c:714
+msgid "CPU color"
+msgstr "CPUの色"
+
+#: ../src/plugins/monitors/monitors.c:715
+msgid "Display RAM usage"
+msgstr "メモリの使用状況を表示する"
+
+#: ../src/plugins/monitors/monitors.c:716
+msgid "RAM color"
+msgstr "RAMの色"
+
+#: ../src/plugins/monitors/monitors.c:717
+msgid "Action when clicked (default: lxtask)"
+msgstr "クリック時のアクション (デフォルト: lxtask)"
+
+#: ../src/plugins/monitors/monitors.c:810
+msgid "Resource monitors"
+msgstr "リソースモニタ"
+
+#: ../src/plugins/monitors/monitors.c:812
+msgid "Display monitors (CPU, RAM)"
+msgstr "モニタを表示します (CPU, RAM)"
+
+#: ../src/plugins/weather/weatherwidget.c:50
+msgid "[N/A]"
+msgstr "[不明]"
+
+#: ../src/plugins/weather/weatherwidget.c:784
+msgid "Enter New Location"
+msgstr "新しい地点を入力する"
+
+#: ../src/plugins/weather/weatherwidget.c:798
+msgid "_New Location:"
+msgstr "新しい地点(_N)"
+
+#: ../src/plugins/weather/weatherwidget.c:809
+msgid ""
+"Enter the:\n"
+"- city, or\n"
+"- city and state/country, or\n"
+"- postal code\n"
+"for which to retrieve the weather forecast."
+msgstr ""
+"天気予報を取得するには以下のいずれかを入力します:\n"
+"- 都市名\n"
+"- 都市名と州あるいは国名\n"
+"- 郵便番号"
+
+#: ../src/plugins/weather/weatherwidget.c:846
+#: ../src/plugins/weather/weatherwidget.c:979
+msgid "You must specify a location."
+msgstr "地点を入力する必要があります。"
+
+#: ../src/plugins/weather/weatherwidget.c:893
+#, c-format
+msgid "Location '%s' not found!"
+msgstr "'%s' という地名は見つかりません！"
+
+#: ../src/plugins/weather/weatherwidget.c:1051
+msgid "Preferences"
+msgstr "設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1057
+msgid "Refresh"
+msgstr "更新"
+
+#: ../src/plugins/weather/weatherwidget.c:1063
+msgid "Quit"
+msgstr "終了"
+
+#: ../src/plugins/weather/weatherwidget.c:1160
+msgid "Weather Preferences"
+msgstr "天気予報の設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1174
+msgid "Current Location"
+msgstr "現在の地点"
+
+#: ../src/plugins/weather/weatherwidget.c:1178
+#: ../src/plugins/weather/weatherwidget.c:1475
+msgid "None configured"
+msgstr "未設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1180
+#: ../src/plugins/weather/weatherwidget.c:1472
+msgid "_Set"
+msgstr "設定(_S)"
+
+#: ../src/plugins/weather/weatherwidget.c:1201
+msgid "Display"
+msgstr "表示"
+
+#: ../src/plugins/weather/weatherwidget.c:1205
+msgid "Name:"
+msgstr "名前:"
+
+#: ../src/plugins/weather/weatherwidget.c:1209
+msgid "Units:"
+msgstr "単位:"
+
+#: ../src/plugins/weather/weatherwidget.c:1213
+msgid "_Metric (°C)"
+msgstr "メートル法(°C) (_M)"
+
+#: ../src/plugins/weather/weatherwidget.c:1215
+msgid "_English (°F)"
+msgstr "英米(°F) (_E)"
+
+#: ../src/plugins/weather/weatherwidget.c:1250
+msgid "Forecast"
+msgstr "予報"
+
+#: ../src/plugins/weather/weatherwidget.c:1254
+msgid "Updates:"
+msgstr "更新:"
+
+#: ../src/plugins/weather/weatherwidget.c:1258
+msgid "Ma_nual"
+msgstr "マニュアル(_N)"
+
+#: ../src/plugins/weather/weatherwidget.c:1262
+msgid "_Automatic, every"
+msgstr "定時(_A)"
+
+#: ../src/plugins/weather/weatherwidget.c:1278
+msgid "minutes"
+msgstr "分"
+
+#: ../src/plugins/weather/weatherwidget.c:1287
+msgid "Source:"
+msgstr "情報元:"
+
+#: ../src/plugins/weather/weatherwidget.c:1428
+msgid "C_hange"
+msgstr "変更(_H)"
+
+#. Both are available
+#: ../src/plugins/weather/weatherwidget.c:1519
+#, c-format
+msgid "Current Conditions for %s"
+msgstr "現在の %s の状況"
+
+#: ../src/plugins/weather/weatherwidget.c:1543
+msgid "Location:"
+msgstr "地点:"
+
+#: ../src/plugins/weather/weatherwidget.c:1566
+msgid "Last updated:"
+msgstr "更新時刻:"
+
+#: ../src/plugins/weather/weatherwidget.c:1593
+msgid "Feels like:"
+msgstr "体感:"
+
+#: ../src/plugins/weather/weatherwidget.c:1618
+msgid "Humidity:"
+msgstr "湿度:"
+
+#: ../src/plugins/weather/weatherwidget.c:1645
+msgid "Pressure:"
+msgstr "気圧:"
+
+#: ../src/plugins/weather/weatherwidget.c:1672
+msgid "Visibility:"
+msgstr "視界:"
+
+#: ../src/plugins/weather/weatherwidget.c:1700
+msgid "Wind:"
+msgstr "風:"
+
+#: ../src/plugins/weather/weatherwidget.c:1723
+msgid "Sunrise:"
+msgstr "日昇:"
+
+#: ../src/plugins/weather/weatherwidget.c:1746
+msgid "Sunset:"
+msgstr "日没:"
+
+#: ../src/plugins/weather/weatherwidget.c:1854
+#: ../src/plugins/weather/weatherwidget.c:2190
+#, c-format
+msgid "Forecast for %s unavailable."
+msgstr "%s の天気予報は取得できません。"
+
+#: ../src/plugins/weather/weatherwidget.c:1863
+#: ../src/plugins/weather/weatherwidget.c:2195
+#, c-format
+msgid "Location not set."
+msgstr "地点が設定されていません。"
+
+#: ../src/plugins/weather/weatherwidget.c:1880
+#, c-format
+msgid "Searching for '%s'..."
+msgstr "'%s' を検索中..."
+
+#: ../src/plugins/weather/weatherwidget.c:2006
+#, c-format
+msgid "Location matches for '%s'"
+msgstr "'%s' が地点に合致します"
+
+#: ../src/plugins/weather/weatherwidget.c:2026
+msgid "City"
+msgstr "都市"
+
+#: ../src/plugins/weather/weatherwidget.c:2046
+msgid "Country"
+msgstr "国名"
+
+#. make it nice and pretty
+#: ../src/plugins/weather/weatherwidget.c:2177
+msgid "Currently in "
+msgstr "現在地 "
+
+#: ../src/plugins/weather/weatherwidget.c:2179
+msgid "Today: "
+msgstr "今日: "
+
+#: ../src/plugins/weather/weatherwidget.c:2180
+msgid "Tomorrow: "
+msgstr "明日: "
+
+#: ../src/plugins/weather/weather.c:285
+msgid "Weather Plugin"
+msgstr "天気予報プラグイン"
+
+#: ../src/plugins/weather/weather.c:287
+msgid "Show weather conditions for a location."
+msgstr "気象状況を表示します。"
+
+#~ msgid "Model"
+#~ msgstr "モデル"
+
+#~ msgid "WNCKPager"
+#~ msgstr "WMCKページャ"
+
+#~ msgid "<b>Icon</b>"
+#~ msgstr "<b>アイコン</b>"
+
+#~ msgid "Configure Keyboard Layout Switcher"
+#~ msgstr "キーボードレイアウトスイッチャーの設定"
+
+#~ msgid "image"
+#~ msgstr "画像"
+
+#~ msgid "text"
+#~ msgstr "テキスト"
+
+#~ msgid "Per application settings"
+#~ msgstr "アプリケーションごとの設定"
+
+#~ msgid "Default layout:"
+#~ msgstr "デフォルトのレイアウト:"
+
+#~ msgid "Available Applications"
+#~ msgstr "利用可能なアプリケーション"
+
+#~ msgid "Display system temperature, by kesler.daniel@gmail.com"
+#~ msgstr "システムの温度を表示します。kesler.daniel@gmail.com 氏による"
+
+#~ msgid "Desktop No / Workspace Name"
+#~ msgstr "デスクトップ番号 / ワークスペース名"
+
+#~ msgid "Battery: %d%% charged, %s"
+#~ msgstr "バッテリ: %d%% 充電, %s"
+
+#~ msgid "charging finished"
+#~ msgstr "充電完了"
+
+#~ msgid "charging"
+#~ msgstr "充電中"
+
+#~ msgid "Left\t"
+#~ msgstr "左\t"
+
+#~ msgid "Top\t"
+#~ msgstr "上\t"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "pixmap ファイルが見つかりません: %s"

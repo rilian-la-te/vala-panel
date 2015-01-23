@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="panel-context-menu">
+    <section id="plugin-section">
+        <item>
+          <attribute name="label" translatable="yes">Configure plugin...</attribute>
+          <attribute name="action">win.config-plugin</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Remove plugin</attribute>
+          <attribute name="action">win.remove-plugin</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+    </section>
+    <section>
+        <item>
+          <attribute name="label" translatable="yes">Panel Items...</attribute>
+          <attribute name="action">win.panel-settings</attribute>
+          <attribute name="target">plugins</attribute>
+        </item>
+    </section>
+    <section>
+        <item>
+          <attribute name="label" translatable="yes">Panel Settings...</attribute>
+          <attribute name="action">win.panel-settings</attribute>
+          <attribute name="target">appearance</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">New Panel</attribute>
+          <attribute name="action">win.new-panel</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Remove this Panel</attribute>
+          <attribute name="action">win.remove-panel</attribute>
+        </item>
+    </section>
+    <section>
+        <item>
+          <attribute name="label" translatable="yes">Application Settings</attribute>
+          <attribute name="action">app.preferences</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">About</attribute>
+          <attribute name="action">app.about</attribute>
+        </item>
+    </section>
+  </menu>
+</interface>

@@ -1,0 +1,2063 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-27 08:58+0100\n"
+"PO-Revision-Date: 2014-04-06 06:54+0000\n"
+"Last-Translator: wwycheuk <wwycheuk@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.5.0\n"
+"X-POOTLE-MTIME: 1396767290.0\n"
+
+#. { "configure", N_("Preferences"), configure },
+#: ../src/configurator.c:55 ../src/gtk-run.c:361 ../src/plugins/menu.c:770
+msgid "Run"
+msgstr "執行"
+
+#: ../src/configurator.c:57 ../src/plugins/menu.c:771
+msgid "Restart"
+msgstr "重新啟動"
+
+#: ../src/configurator.c:58 ../src/plugins/menu.c:772
+msgid "Logout"
+msgstr "登出"
+
+#: ../src/configurator.c:549
+msgid "Currently loaded plugins"
+msgstr "目前載入的外掛"
+
+#: ../src/configurator.c:558
+msgid "Stretch"
+msgstr "延展"
+
+#: ../src/configurator.c:680
+msgid "Add plugin to panel"
+msgstr "新增外掛到工作列"
+
+#: ../src/configurator.c:708
+msgid "Available plugins"
+msgstr "可選用的外掛"
+
+#: ../src/configurator.c:1244
+msgid "Logout command is not set"
+msgstr "登出指令尚未設定"
+
+#: ../src/configurator.c:1312
+msgid "Select a directory"
+msgstr "選擇目錄"
+
+#: ../src/configurator.c:1312 ../src/configurator.c:1419
+msgid "Select a file"
+msgstr "選擇檔案"
+
+#: ../src/configurator.c:1446
+msgid "_Browse"
+msgstr "瀏覽(_B)"
+
+#: ../src/panel.c:660
+msgid "There is no room for another panel. All the edges are taken."
+msgstr "無空間容納另一個面板。已使用所有邊沿。"
+
+#: ../src/panel.c:687
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning: This can not be recovered.</b>"
+msgstr ""
+"確定要刪除這個工作列？\n"
+"<b>警告： 這個動作沒辦法復原。</b>"
+
+#: ../src/panel.c:689
+msgid "Confirm"
+msgstr "確認"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/panel.c:721
+msgid "translator-credits"
+msgstr ""
+"洪任諭 (PCMan) <pcman.tw@gmail.com>\n"
+"Walter Cheuk <wwycheuk@gmail.com>, 2012-2014.\n"
+"\n"
+"如對翻譯有意見，請到\n"
+"http://groups.google.com.tw/group/chinese-l10n?hl=zh-TW討論"
+
+#: ../src/panel.c:726
+msgid "LXPanel"
+msgstr "LXPanel"
+
+#: ../src/panel.c:744
+msgid "Copyright (C) 2008-2013"
+msgstr "版權所有 (C) 2008-2013"
+
+#: ../src/panel.c:745
+msgid "Desktop panel for LXDE project"
+msgstr "LXDE 桌案的桌面工作列"
+
+#: ../src/panel.c:782
+msgid "Add / Remove Panel Items"
+msgstr "新增/移除 工作列項目"
+
+#: ../src/panel.c:791
+#, c-format
+msgid "Remove \"%s\" From Panel"
+msgstr "從工作列移除 \"%s\""
+
+#: ../src/panel.c:803
+msgid "Panel Settings"
+msgstr "設定工作列"
+
+#: ../src/panel.c:809
+msgid "Create New Panel"
+msgstr "建立新工作列"
+
+#: ../src/panel.c:815
+msgid "Delete This Panel"
+msgstr "刪除這個工作列"
+
+#: ../src/panel.c:826
+msgid "About"
+msgstr "關於"
+
+#: ../src/panel.c:834
+msgid "Panel"
+msgstr "工作列"
+
+#: ../src/panel.c:847
+#, c-format
+msgid "\"%s\" Settings"
+msgstr "設定 \"%s\""
+
+#: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
+msgid "Height:"
+msgstr "高度："
+
+#: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
+msgid "Width:"
+msgstr "寬度："
+
+#: ../src/panel.c:1111 ../data/ui/panel-pref.glade.h:13
+msgid "Left"
+msgstr "左"
+
+#: ../src/panel.c:1112 ../data/ui/panel-pref.glade.h:14
+msgid "Right"
+msgstr "右"
+
+#: ../src/panel.c:1118 ../data/ui/panel-pref.glade.h:12
+msgid "Top"
+msgstr "上"
+
+#: ../src/panel.c:1119 ../data/ui/panel-pref.glade.h:11
+msgid "Bottom"
+msgstr "下"
+
+#: ../src/panel.c:1428
+#, c-format
+msgid "lxpanel %s - lightweight GTK2+ panel for UNIX desktops\n"
+msgstr "lxpanel %s - UNIX 桌面的輕量級 GTK2+ 工作列\n"
+
+#: ../src/panel.c:1429
+#, c-format
+msgid "Command line options:\n"
+msgstr "指令列選項：\n"
+
+#: ../src/panel.c:1430
+#, c-format
+msgid " --help      -- print this help and exit\n"
+msgstr " --help      -- 顯示使用說明並離開\n"
+
+#: ../src/panel.c:1431
+#, c-format
+msgid " --version   -- print version and exit\n"
+msgstr " --version   -- 顯示版本資訊並離開\n"
+
+#: ../src/panel.c:1432
+#, c-format
+msgid " --log <number> -- set log level 0-5. 0 - none 5 - chatty\n"
+msgstr " --log <數值>   -- 設定程式運作紀錄的層級 (0-5). 0 - 無, 5 - 全部\n"
+
+#. g_print(_(" --configure -- launch configuration utility\n"));
+#: ../src/panel.c:1434
+#, c-format
+msgid " --profile name -- use specified profile\n"
+msgstr " --profile name -- 指定使用其他設定檔\n"
+
+#: ../src/panel.c:1436
+#, c-format
+msgid " -h  -- same as --help\n"
+msgstr " -h  -- 和 --help 作用相同\n"
+
+#: ../src/panel.c:1437
+#, c-format
+msgid " -p  -- same as --profile\n"
+msgstr " -p  -- 和 --profile 作用相同\n"
+
+#: ../src/panel.c:1438
+#, c-format
+msgid " -v  -- same as --version\n"
+msgstr " -v  -- 和 --version 作用相同\n"
+
+#. g_print(_(" -C  -- same as --configure\n"));
+#: ../src/panel.c:1440
+#, c-format
+msgid ""
+"\n"
+"Visit http://lxde.org/ for detail.\n"
+"\n"
+msgstr ""
+"\n"
+"詳細資訊請參觀 http://lxde.org/\n"
+"\n"
+
+#: ../src/plugin.c:370
+msgid "No file manager is configured."
+msgstr "未設定檔案管理員。"
+
+#: ../src/gtk-run.c:374
+msgid "Enter the command you want to execute:"
+msgstr "輸入要想執行的指令："
+
+#. vim: set sw=4 et sts=4 ts=4 :
+#: ../data/ui/launchtaskbar.glade.h:1 ../src/plugins/launchtaskbar.c:3414
+#, fuzzy
+msgid "Application Launch and Task Bar"
+msgstr "應用程式啟動列及工作列"
+
+#: ../data/ui/launchtaskbar.glade.h:2
+msgid "<b>Mode:</b>"
+msgstr "<b>模式：</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:3
+msgid "Launchers"
+msgstr "啟動器"
+
+#: ../data/ui/launchtaskbar.glade.h:4
+#, fuzzy
+msgid "<b>Launchbar</b>"
+msgstr "<b>啟動列</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:5
+msgid "Show tooltips"
+msgstr "顯示工具提示"
+
+#: ../data/ui/launchtaskbar.glade.h:6
+msgid "Icons only"
+msgstr "只顯示圖示"
+
+#: ../data/ui/launchtaskbar.glade.h:7
+msgid "Flat buttons"
+msgstr "平面按鈕"
+
+#: ../data/ui/launchtaskbar.glade.h:8
+msgid "Show windows from all desktops"
+msgstr "顯示來自所有桌面的視窗"
+
+#: ../data/ui/launchtaskbar.glade.h:9
+msgid "Only show windows on the same monitor as the task bar"
+msgstr ""
+
+#: ../data/ui/launchtaskbar.glade.h:10
+msgid "Use mouse wheel"
+msgstr "使用滑鼠滾輪"
+
+#: ../data/ui/launchtaskbar.glade.h:11
+msgid "Flash when there is any window requiring attention"
+msgstr "當有視窗要求使用者注意時，閃爍工作列"
+
+#: ../data/ui/launchtaskbar.glade.h:12
+msgid "Combine multiple application windows into a single button"
+msgstr "將同一應用程式的視窗合併顯示為單一按鈕"
+
+#: ../data/ui/launchtaskbar.glade.h:13
+msgid "Maximum width of task button"
+msgstr "工作列按鈕最大寬度"
+
+#: ../data/ui/launchtaskbar.glade.h:14
+msgid "Spacing"
+msgstr "間距"
+
+#: ../data/ui/launchtaskbar.glade.h:15
+msgid "<b>Taskbar</b>"
+msgstr "<b>工作列</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:16
+#, fuzzy
+msgid "Only Application Launch Bar"
+msgstr "僅應用程式啟動列"
+
+#: ../data/ui/launchtaskbar.glade.h:17
+#, fuzzy
+msgid "Only Task Bar (Window List)"
+msgstr "僅工作列 (視窗清單)"
+
+#: ../data/ui/launchtaskbar.glade.h:18
+#, fuzzy
+msgid "Integrated Application Launch Bar and Task Bar"
+msgstr "整合應用程式啟動列及工作列"
+
+#: ../data/ui/netstatus.glade.h:1
+msgid "<b>Connection</b>"
+msgstr "<b>連線</b>"
+
+#: ../data/ui/netstatus.glade.h:2
+msgid "Status:"
+msgstr "狀態："
+
+#: ../data/ui/netstatus.glade.h:3
+msgid "_Name:"
+msgstr "名稱(_N)："
+
+#: ../data/ui/netstatus.glade.h:4
+msgid "<b>Activity</b>"
+msgstr "<b>活動</b>"
+
+#: ../data/ui/netstatus.glade.h:5
+msgid "Received:"
+msgstr "接收："
+
+#: ../data/ui/netstatus.glade.h:6
+msgid "Sent:"
+msgstr "送出："
+
+#: ../data/ui/netstatus.glade.h:7
+msgid "<b>Signal Strength</b>"
+msgstr "<b>訊號強度</b>"
+
+#: ../data/ui/netstatus.glade.h:9
+#, no-c-format
+msgid "0%"
+msgstr "0%"
+
+#: ../data/ui/netstatus.glade.h:10
+msgid "General"
+msgstr "一般"
+
+#: ../data/ui/netstatus.glade.h:11
+msgid "<b>Internet Protocol (IPv4)</b>"
+msgstr "<b>網路協定 (IPv4)</b>"
+
+#: ../data/ui/netstatus.glade.h:12
+msgid "Address:"
+msgstr "位址："
+
+#: ../data/ui/netstatus.glade.h:13
+msgid "Destination:"
+msgstr "目的地："
+
+#: ../data/ui/netstatus.glade.h:14 ../src/plugins/netstat/netstat.c:362
+#: ../src/plugins/netstat/netstat.c:373
+msgid "Broadcast:"
+msgstr "廣播位址："
+
+#: ../data/ui/netstatus.glade.h:15
+msgid "Subnet Mask:"
+msgstr "子網路遮罩："
+
+#: ../data/ui/netstatus.glade.h:16
+msgid "<b>Internet Protocol (IPv6)</b>"
+msgstr "<b>網路協定 (IPv6)</b>"
+
+#: ../data/ui/netstatus.glade.h:17
+msgid "Scope:"
+msgstr "範圍："
+
+#: ../data/ui/netstatus.glade.h:18
+msgid "<b>Network Device</b>"
+msgstr "<b>網路裝置</b>"
+
+#: ../data/ui/netstatus.glade.h:19
+msgid "Type:"
+msgstr "型態："
+
+#: ../data/ui/netstatus.glade.h:20
+msgid "Support"
+msgstr "支援"
+
+#: ../data/ui/netstatus.glade.h:21
+msgid "Con_figure"
+msgstr "設定(_F)"
+
+#: ../data/ui/panel-pref.glade.h:1
+msgid "Dynamic"
+msgstr "動態"
+
+#: ../data/ui/panel-pref.glade.h:2
+msgid "Pixels"
+msgstr "像素"
+
+#: ../data/ui/panel-pref.glade.h:4
+#, no-c-format
+msgid "% Percent"
+msgstr "% 百分比"
+
+#: ../data/ui/panel-pref.glade.h:5
+msgid "None"
+msgstr "無"
+
+#: ../data/ui/panel-pref.glade.h:6
+msgid "Err"
+msgstr "出錯"
+
+#: ../data/ui/panel-pref.glade.h:7
+msgid "Warn"
+msgstr "警告"
+
+#: ../data/ui/panel-pref.glade.h:8
+msgid "Info"
+msgstr "資訊"
+
+#: ../data/ui/panel-pref.glade.h:9
+msgid "All"
+msgstr "全部"
+
+#: ../data/ui/panel-pref.glade.h:10
+msgid "Panel Preferences"
+msgstr "工作列偏好設定"
+
+#: ../data/ui/panel-pref.glade.h:15
+msgid "Edge:"
+msgstr "吸附邊緣："
+
+#: ../data/ui/panel-pref.glade.h:16
+msgid "Center"
+msgstr "置中"
+
+#: ../data/ui/panel-pref.glade.h:17
+msgid "Alignment:"
+msgstr "排列方式："
+
+#: ../data/ui/panel-pref.glade.h:18
+msgid "Margin:"
+msgstr "留空："
+
+#: ../data/ui/panel-pref.glade.h:19
+#, fuzzy
+msgid "Monitor:"
+msgstr "螢幕："
+
+#: ../data/ui/panel-pref.glade.h:20
+msgid "<b>Position</b>"
+msgstr "<b>位置</b>"
+
+#: ../data/ui/panel-pref.glade.h:23
+msgid "Icon size:"
+msgstr "圖示尺寸："
+
+#: ../data/ui/panel-pref.glade.h:24
+msgid "<b>Size</b>"
+msgstr "<b>大小</b>"
+
+#: ../data/ui/panel-pref.glade.h:25
+msgid "Geometry"
+msgstr "大小及位置"
+
+#: ../data/ui/panel-pref.glade.h:26
+msgid "System theme"
+msgstr "系統佈景主題"
+
+#: ../data/ui/panel-pref.glade.h:27
+msgid "Solid color (with opacity)"
+msgstr "單一色彩（含透明度）"
+
+#: ../data/ui/panel-pref.glade.h:28 ../src/plugins/xkb/xkb-plugin.c:1479
+msgid "Image"
+msgstr "圖片"
+
+#: ../data/ui/panel-pref.glade.h:29
+msgid "Select an image file"
+msgstr "選擇圖片檔"
+
+#: ../data/ui/panel-pref.glade.h:30
+msgid "<b>Background</b>"
+msgstr "<b>背景</b>"
+
+#: ../data/ui/panel-pref.glade.h:31
+msgid "Custom color"
+msgstr "自訂色彩"
+
+#: ../data/ui/panel-pref.glade.h:32 ../src/plugins/space.c:93
+#: ../src/plugins/batt/batt.c:632
+msgid "Size"
+msgstr "大小"
+
+#: ../data/ui/panel-pref.glade.h:33
+msgid "<b>Font</b>"
+msgstr "<b>字型</b>"
+
+#: ../data/ui/panel-pref.glade.h:34
+msgid "Appearance"
+msgstr "外觀"
+
+#: ../data/ui/panel-pref.glade.h:35
+msgid "Panel Applets"
+msgstr "工作列元件"
+
+#: ../data/ui/panel-pref.glade.h:36
+msgid "Logout Command:"
+msgstr "登出指令："
+
+#: ../data/ui/panel-pref.glade.h:37
+msgid "Terminal Emulator:"
+msgstr "終端機："
+
+#: ../data/ui/panel-pref.glade.h:38
+msgid "File Manager:"
+msgstr "檔案管理員："
+
+#: ../data/ui/panel-pref.glade.h:39
+msgid "<b>Set Preferred Applications</b>"
+msgstr "<b>設定偏好使用的程式</b>"
+
+#: ../data/ui/panel-pref.glade.h:40
+msgid "Make window managers treat the panel as dock"
+msgstr "讓視窗管理員把工作列當成 Dock 處理"
+
+#: ../data/ui/panel-pref.glade.h:41
+msgid "Reserve space, and not covered by maximized windows"
+msgstr "保留空間，不被最大化視窗覆蓋"
+
+#: ../data/ui/panel-pref.glade.h:42
+msgid "<b>Properties</b>"
+msgstr "<b>屬性</b>"
+
+#: ../data/ui/panel-pref.glade.h:43
+msgid "Minimize panel when not in use"
+msgstr "當不使用工作列時最小化"
+
+#: ../data/ui/panel-pref.glade.h:44
+msgid "Size when minimized"
+msgstr "最小化時的大小"
+
+#: ../data/ui/panel-pref.glade.h:45
+msgid "pixels"
+msgstr "像素"
+
+#: ../data/ui/panel-pref.glade.h:46
+msgid "<b>Automatic hiding</b>"
+msgstr "<b>自動隱藏</b>"
+
+#: ../data/ui/panel-pref.glade.h:47
+msgid "Log level"
+msgstr "日誌等級"
+
+#: ../data/ui/panel-pref.glade.h:48
+msgid "<b>Log level</b>"
+msgstr "<b>日誌等級</b>"
+
+#: ../data/ui/panel-pref.glade.h:49
+msgid "Advanced"
+msgstr "進階"
+
+#: ../src/plugins/cpu/cpu.c:276
+msgid "CPU Usage Monitor"
+msgstr "CPU 使用量監視器"
+
+#: ../src/plugins/cpu/cpu.c:277 ../src/plugins/monitors/monitors.c:713
+msgid "Display CPU usage"
+msgstr "顯示 CPU 資源使用量"
+
+#: ../src/plugins/deskno/deskno.c:180 ../src/plugins/deskno/deskno.c:200
+msgid "Desktop Number / Workspace Name"
+msgstr "桌面編號 / 工作區名稱"
+
+#: ../src/plugins/deskno/deskno.c:182 ../src/plugins/dclock.c:429
+msgid "Bold font"
+msgstr "粗體字型"
+
+#: ../src/plugins/deskno/deskno.c:183
+msgid "Display desktop names"
+msgstr "顯示桌面名稱"
+
+#: ../src/plugins/deskno/deskno.c:201
+msgid "Display workspace number, by cmeury@users.sf.net"
+msgstr "顯示工作區編號，由 cmeury@users.sf.net 撰寫"
+
+#: ../src/plugins/image.c:161
+msgid "Display Image and Tooltip"
+msgstr "顯示圖片及工具提示"
+
+#: ../src/plugins/launchtaskbar.c:2450
+msgid "_Close all windows"
+msgstr "關閉所有視窗(_C)"
+
+#. Add Raise menu item.
+#: ../src/plugins/launchtaskbar.c:3243
+msgid "_Raise"
+msgstr "移到最上層(_R)"
+
+#. Add Restore menu item.
+#: ../src/plugins/launchtaskbar.c:3248
+msgid "R_estore"
+msgstr "復原(_E)"
+
+#. Add Maximize menu item.
+#: ../src/plugins/launchtaskbar.c:3253
+msgid "Ma_ximize"
+msgstr "最大化(_X)"
+
+#. Add Iconify menu item.
+#: ../src/plugins/launchtaskbar.c:3258
+msgid "Ico_nify"
+msgstr "最小化(_N)"
+
+#: ../src/plugins/launchtaskbar.c:3277
+#, c-format
+msgid "Workspace _%d"
+msgstr "工作區 %d"
+
+#: ../src/plugins/launchtaskbar.c:3282
+#, c-format
+msgid "Workspace %d"
+msgstr "工作區 %d"
+
+#. Add "move to all workspaces" item.  This causes the window to be visible no matter what desktop is active.
+#: ../src/plugins/launchtaskbar.c:3298
+msgid "_All workspaces"
+msgstr "所有工作區(_A)"
+
+#. Add Move to Workspace menu item as a submenu.
+#: ../src/plugins/launchtaskbar.c:3304
+msgid "_Move to Workspace"
+msgstr "移動到工作區(_M)"
+
+#. Add Close menu item.  By popular demand, we place this menu item closest to the cursor.
+#: ../src/plugins/launchtaskbar.c:3310
+msgid "_Close Window"
+msgstr "關閉視窗(_C)"
+
+#: ../src/plugins/launchtaskbar.c:3312
+msgid "A_dd to Launcher"
+msgstr "加入至啟動列(_D)"
+
+#: ../src/plugins/launchtaskbar.c:3313
+msgid "Rem_ove from Launcher"
+msgstr "從啟動器移除(_O)"
+
+#: ../src/plugins/launchtaskbar.c:3314
+msgid "_New Instance"
+msgstr "新執行實體(_N)"
+
+#: ../src/plugins/launchtaskbar.c:3384
+msgid "Application Launch Bar"
+msgstr "應用程式啟動列"
+
+#: ../src/plugins/launchtaskbar.c:3385
+msgid "Bar with buttons to launch application"
+msgstr "具有應用程式啟動按鈕的工具列"
+
+#: ../src/plugins/launchtaskbar.c:3395
+msgid "Task Bar (Window List)"
+msgstr "工作列 (視窗清單)"
+
+#: ../src/plugins/launchtaskbar.c:3396
+msgid ""
+"Taskbar shows all opened windows and allow to iconify them, shade or get "
+"focus"
+msgstr "工作列顯示所有開啟的視窗，並讓能視窗最小化、折疊、或取得焦點"
+
+#: ../src/plugins/launchtaskbar.c:3415
+#, fuzzy
+msgid "Bar with buttons to launch application and/or show all opened windows"
+msgstr "具有啟動應用程式及/或顯示所有已開啟視窗按鈕的工具列"
+
+#: ../src/plugins/dclock.c:423 ../src/plugins/dclock.c:443
+msgid "Digital Clock"
+msgstr "數位時鐘"
+
+#: ../src/plugins/dclock.c:425
+msgid "Clock Format"
+msgstr "時鐘格式"
+
+#: ../src/plugins/dclock.c:426
+msgid "Tooltip Format"
+msgstr "工具提示格式"
+
+#: ../src/plugins/dclock.c:427
+#, c-format
+msgid "Format codes: man 3 strftime; \\%n for line break"
+msgstr "格式字串說明：man 3 strftime; \\%n 用來表示換行"
+
+#: ../src/plugins/dclock.c:428
+msgid "Action when clicked (default: display calendar)"
+msgstr "被滑鼠點擊時要執行的動作 (預設： 顯示月曆)"
+
+#: ../src/plugins/dclock.c:430
+msgid "Tooltip only"
+msgstr "只顯示工具提示"
+
+#: ../src/plugins/dclock.c:431
+msgid "Center text"
+msgstr "文字置中"
+
+#: ../src/plugins/dclock.c:444
+msgid "Display digital clock and tooltip"
+msgstr "顯示數位時鐘及其工具提示"
+
+#: ../src/plugins/menu.c:421
+msgid "Add to desktop"
+msgstr "加到桌面"
+
+#: ../src/plugins/menu.c:428
+msgid "Properties"
+msgstr "屬性"
+
+#: ../src/plugins/menu.c:1041 ../src/plugins/menu.c:1054
+msgid "Menu"
+msgstr "選單"
+
+#: ../src/plugins/menu.c:1042 ../src/plugins/dirmenu.c:365
+msgid "Icon"
+msgstr "圖示"
+
+#: ../src/plugins/menu.c:1055
+msgid "Application Menu"
+msgstr "應用程式啟動列"
+
+#: ../src/plugins/separator.c:72
+msgid "Separator"
+msgstr "分隔線"
+
+#: ../src/plugins/separator.c:73
+msgid "Add a separator to the panel"
+msgstr "在工作列上增加分隔線"
+
+#: ../src/plugins/pager.c:84 ../src/plugins/pager.c:98
+msgid "Desktop Pager"
+msgstr "切換桌面"
+
+#: ../src/plugins/pager.c:85 ../src/plugins/pager.c:99
+msgid "Simple pager plugin"
+msgstr "簡易桌面切換外掛"
+
+#: ../src/plugins/space.c:91 ../src/plugins/space.c:100
+msgid "Spacer"
+msgstr "空白分隔"
+
+#: ../src/plugins/space.c:101
+msgid "Allocate space"
+msgstr "配置空間"
+
+#: ../src/plugins/tray.c:709
+msgid "System Tray"
+msgstr "系統匣 (通知區域)"
+
+#: ../src/plugins/tray.c:710
+msgid "System tray"
+msgstr "系統匣 (通知區域)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:451
+msgid "New session is required for this option to take effect"
+msgstr "此選項只有在新的工作階段才能生效"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:628
+msgid "Select Keyboard Model"
+msgstr "選取鍵盤型號"
+
+#: ../src/plugins/xkb/xkb-plugin.c:651 ../src/plugins/xkb/xkb-plugin.c:778
+#: ../src/plugins/xkb/xkb-plugin.c:954
+msgid "Description"
+msgstr "說明"
+
+#: ../src/plugins/xkb/xkb-plugin.c:656 ../src/plugins/xkb/xkb-plugin.c:785
+#, fuzzy
+msgid "Id"
+msgstr "閒置"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:750
+msgid "Select Layout Change Type"
+msgstr "選取配置變更類型"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:921
+msgid "Add Keyboard Layout"
+msgstr "新增鍵盤配置"
+
+#: ../src/plugins/xkb/xkb-plugin.c:944 ../src/plugins/xkb/xkb-plugin.c:1327
+msgid "Flag"
+msgstr "旗標"
+
+#: ../src/plugins/xkb/xkb-plugin.c:949 ../src/plugins/xkb/xkb-plugin.c:1331
+msgid "Layout"
+msgstr "配置"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1238 ../src/plugins/xkb/xkb-plugin.c:1587
+msgid "Keyboard Layout Handler"
+msgstr "鍵盤配置處理"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1260
+msgid "Keyboard Model"
+msgstr "鍵盤型號"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1281
+msgid "Keyboard Layouts"
+msgstr "鍵盤配置"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1335
+msgid "Variant"
+msgstr "變體"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1344
+msgid "Change Layout Option"
+msgstr "變更配置選項"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1364
+msgid "Advanced setxkbmap Options"
+msgstr "進階 setxkbmap 選項"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1384
+msgid "Do _not reset existing options"
+msgstr "不要重置現有的選項(_N)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1389
+msgid "Keep _system layouts"
+msgstr "保持系統配置(_S)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1398
+msgid "Per Window Settings"
+msgstr "每個視窗的設定"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1410
+msgid "_Remember layout for each window"
+msgstr "記住每個視窗的配置(_R)"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1419
+msgid "Show Layout as"
+msgstr "將配置顯示為"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1480
+msgid "Custom Image"
+msgstr "自訂圖片"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1481
+msgid "Text"
+msgstr "文字"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1507
+msgid "Panel Icon Size"
+msgstr "面板圖示尺寸"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1589
+msgid "Handle keyboard layouts"
+msgstr "處理鍵盤配置"
+
+#: ../src/plugins/wincmd.c:193
+msgid "Left click to iconify all windows.  Middle click to shade them."
+msgstr "按左鍵最小化所有視窗 / 中鍵折疊所有視窗"
+
+#: ../src/plugins/wincmd.c:227 ../src/plugins/wincmd.c:245
+msgid "Minimize All Windows"
+msgstr "最小化所有視窗"
+
+#: ../src/plugins/wincmd.c:229
+msgid "Alternately iconify/shade and raise"
+msgstr "切換視窗最小化/折疊/移到最上層"
+
+#: ../src/plugins/wincmd.c:246
+msgid ""
+"Sends commands to all desktop windows.\n"
+"Supported commands are 1) iconify and 2) shade"
+msgstr ""
+"發送指令給所有桌面視窗\n"
+"支援的指令  1) 最小化  2) 折疊"
+
+#: ../src/plugins/dirmenu.c:208
+msgid "Open in _Terminal"
+msgstr "在終端機內開啟(_T)"
+
+#: ../src/plugins/dirmenu.c:361 ../src/plugins/dirmenu.c:377
+msgid "Directory Menu"
+msgstr "目錄選單"
+
+#: ../src/plugins/dirmenu.c:363
+msgid "Directory"
+msgstr "目錄"
+
+#: ../src/plugins/dirmenu.c:364
+msgid "Label"
+msgstr "標籤"
+
+#: ../src/plugins/dirmenu.c:378
+#, fuzzy
+msgid "Browse directory tree via menu (Author = PCMan)"
+msgstr "使用選單瀏覽目錄 (作者：PCMan)"
+
+#: ../src/plugins/thermal/thermal.c:480
+msgid "Normal"
+msgstr "正常"
+
+#: ../src/plugins/thermal/thermal.c:481
+msgid "Warning1"
+msgstr "警告1"
+
+#: ../src/plugins/thermal/thermal.c:482
+msgid "Warning2"
+msgstr "警告2"
+
+#: ../src/plugins/thermal/thermal.c:483
+msgid "Automatic sensor location"
+msgstr "自動感應器路徑"
+
+#: ../src/plugins/thermal/thermal.c:484
+msgid "Sensor"
+msgstr "感應器"
+
+#: ../src/plugins/thermal/thermal.c:485
+msgid "Automatic temperature levels"
+msgstr "自動溫度等級"
+
+#: ../src/plugins/thermal/thermal.c:486
+msgid "Warning1 Temperature"
+msgstr "警告1的溫度"
+
+#: ../src/plugins/thermal/thermal.c:487
+msgid "Warning2 Temperature"
+msgstr "警告2的溫度"
+
+#: ../src/plugins/thermal/thermal.c:531
+msgid "Temperature Monitor"
+msgstr "溫度監視器"
+
+#: ../src/plugins/thermal/thermal.c:533
+msgid "Display system temperature"
+msgstr "顯示系統溫度"
+
+#: ../src/plugins/cpufreq/cpufreq.c:329
+#, c-format
+msgid ""
+"Frequency: %d MHz\n"
+"Governor: %s"
+msgstr ""
+
+#: ../src/plugins/cpufreq/cpufreq.c:421
+msgid "CPUFreq frontend"
+msgstr ""
+
+#: ../src/plugins/cpufreq/cpufreq.c:422
+msgid "Display CPU frequency and allow to change governors and frequency"
+msgstr ""
+
+#. FIXME: display current level in tooltip. ex: "Volume Control: 80%"
+#. Display current level in tooltip.
+#: ../src/plugins/volume/volume.c:300
+#: ../src/plugins/volumealsa/volumealsa.c:363
+#: ../src/plugins/volumealsa/volumealsa.c:545
+msgid "Volume control"
+msgstr "音量控制"
+
+#: ../src/plugins/volume/volume.c:312
+#: ../src/plugins/volumealsa/volumealsa.c:666
+msgid "Volume Control"
+msgstr "音量控制"
+
+#. Create a frame as the child of the viewport.
+#: ../src/plugins/volume/volume-impl.c:109
+#: ../src/plugins/volumealsa/volumealsa.c:503
+msgid "Volume"
+msgstr "音量"
+
+#. Create a check button as the child of the vertical box.
+#: ../src/plugins/volumealsa/volumealsa.c:522
+msgid "Mute"
+msgstr "靜音"
+
+#: ../src/plugins/volumealsa/volumealsa.c:639
+msgid ""
+"Error, you need to install an application to configure the sound "
+"(pavucontol, alsamixer ...)"
+msgstr "出錯，要安裝適當應用程式才能設定聲音 (pavucontol、alsamixer 等等)"
+
+#: ../src/plugins/volumealsa/volumealsa.c:668
+msgid "Display and control volume for ALSA"
+msgstr "顯示並控制 ALSA 的音量"
+
+#: ../src/plugins/netstat/netstat.c:180
+msgid "<Hidden Access Point>"
+msgstr "<隱藏的無線存取點>"
+
+#: ../src/plugins/netstat/netstat.c:213
+msgid "Wireless Networks not found in range"
+msgstr "範圍內找不到無線網路"
+
+#. Repair
+#: ../src/plugins/netstat/netstat.c:247
+msgid "Repair"
+msgstr "修復連線"
+
+#. interface down
+#: ../src/plugins/netstat/netstat.c:252
+msgid "Disable"
+msgstr "停用"
+
+#: ../src/plugins/netstat/netstat.c:342
+msgid "Wireless Connection has no connectivity"
+msgstr "無線網路無法連接"
+
+#: ../src/plugins/netstat/netstat.c:344
+msgid "Network cable is plugged out"
+msgstr "網路線已拔除"
+
+#: ../src/plugins/netstat/netstat.c:346
+msgid "Connection has limited or no connectivity"
+msgstr "只能有限制的連線或無法連線"
+
+#: ../src/plugins/netstat/netstat.c:350 ../src/plugins/netstat/netstat.c:361
+#: ../src/plugins/netstat/netstat.c:372
+msgid "IP Address:"
+msgstr "IP 位址："
+
+#: ../src/plugins/netstat/netstat.c:351
+msgid "Remote IP:"
+msgstr "遠端 IP 位址："
+
+#: ../src/plugins/netstat/netstat.c:352 ../src/plugins/netstat/netstat.c:363
+#: ../src/plugins/netstat/netstat.c:374
+msgid "Netmask:"
+msgstr "子網路遮罩："
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Activity"
+msgstr "活動"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Sent"
+msgstr "已傳送"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Received"
+msgstr "已接收"
+
+#: ../src/plugins/netstat/netstat.c:354 ../src/plugins/netstat/netstat.c:366
+#: ../src/plugins/netstat/netstat.c:377
+msgid "bytes"
+msgstr "位元組"
+
+#: ../src/plugins/netstat/netstat.c:355 ../src/plugins/netstat/netstat.c:367
+#: ../src/plugins/netstat/netstat.c:378
+msgid "packets"
+msgstr "封包"
+
+#: ../src/plugins/netstat/netstat.c:358
+#: ../src/plugins/netstatus/netstatus-iface.c:173
+msgid "Wireless"
+msgstr "無線網路"
+
+#: ../src/plugins/netstat/netstat.c:360
+msgid "Protocol:"
+msgstr "通訊協定："
+
+#: ../src/plugins/netstat/netstat.c:364 ../src/plugins/netstat/netstat.c:375
+msgid "HW Address:"
+msgstr "實體位址："
+
+#: ../src/plugins/netstat/netstat.c:515
+msgid "Manage Networks"
+msgstr "管理網路連線"
+
+#: ../src/plugins/netstat/netstat.c:517
+msgid "Monitor and Manage networks"
+msgstr "監控及管理網路連線"
+
+#. create dialog
+#: ../src/plugins/netstat/passwd_gui.c:86
+msgid "Setting Encryption Key"
+msgstr "設定加密金鑰"
+
+#. messages
+#: ../src/plugins/netstat/passwd_gui.c:96
+msgid ""
+"This wireless network was encrypted.\n"
+"You must have the encryption key."
+msgstr ""
+"這是經過加密的無線網路連線。\n"
+"你必須要有加密金鑰。"
+
+#: ../src/plugins/netstat/passwd_gui.c:101
+msgid "Encryption Key:"
+msgstr "加密金鑰："
+
+#: ../src/plugins/netstatus/netstatus.c:179
+msgid "Interface to monitor"
+msgstr "要監控的介面"
+
+#: ../src/plugins/netstatus/netstatus.c:180
+msgid "Config tool"
+msgstr "設定工具"
+
+#: ../src/plugins/netstatus/netstatus.c:197
+msgid "Network Status Monitor"
+msgstr "網路狀態監視器"
+
+#: ../src/plugins/netstatus/netstatus.c:199
+msgid "Monitor network status"
+msgstr "監控網路狀態"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:51
+#: ../src/plugins/netstatus/netstatus-dialog.c:312
+msgid "Unknown"
+msgstr "未知"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:116
+msgid "Connection Properties"
+msgstr "連線屬性"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:122
+#, c-format
+msgid "Connection Properties: %s"
+msgstr "連線屬性 %s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:135
+#, c-format
+msgid "%lu packet"
+msgid_plural "%lu packets"
+msgstr[0] "%lu 封包"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:396
+#, c-format
+msgid ""
+"There was an error displaying help:\n"
+"%s"
+msgstr ""
+"顯示說明時發生錯誤：\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:580
+#, c-format
+msgid "Failed to launch time configuration tool: %s"
+msgstr "執行設定工具 %s 失敗"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:380
+#, c-format
+msgid "Network Connection: %s"
+msgstr "網路連線：%s"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:385
+msgid "Network Connection"
+msgstr "網路連線"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:814
+msgid "Interface"
+msgstr "介面"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:815
+msgid "The current interface the icon is monitoring."
+msgstr "目前正在監控的介面"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:822
+msgid "Orientation"
+msgstr "方向"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:823
+msgid "The orientation of the tray."
+msgstr "系統列的排列方向"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:831
+msgid "Tooltips Enabled"
+msgstr "顯示工具提示"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:832
+msgid "Whether or not the icon's tooltips are enabled."
+msgstr "是否使用圖示的工具提示"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:839
+msgid "Show Signal"
+msgstr "顯示訊號"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:840
+msgid "Whether or not the signal strength should be displayed."
+msgstr "是否顯示訊號強度"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:949
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"\n"
+"%s"
+msgstr ""
+"請聯絡你的系統管理員解決下列問題：\n"
+"\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:148
+msgid "Name"
+msgstr "名稱"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:149
+msgid "The interface name"
+msgstr "介面名稱"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:156
+#: ../src/plugins/weather/weatherwidget.c:2036
+msgid "State"
+msgstr "狀態"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:157
+msgid "The interface state"
+msgstr "介面狀態"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:165
+msgid "Stats"
+msgstr "統計"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:166
+msgid "The interface packets/bytes statistics"
+msgstr "介面 封包/位元組 統計"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:174
+msgid "Whether the interface is a wireless interface"
+msgstr "介面卡是否為無線網卡"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:181
+msgid "Signal"
+msgstr "訊號"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:182
+msgid "Wireless signal strength percentage"
+msgstr "無線訊號強度百分比"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:191
+#: ../src/plugins/netstatus/netstatus-util.c:167
+msgid "Error"
+msgstr "錯誤"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:192
+msgid "The current error condition"
+msgstr "目前的錯誤狀況"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:440
+#: ../src/plugins/netstatus/netstatus-iface.c:1206
+#, c-format
+msgid "Unable to open socket: %s"
+msgstr "無法開啟 socket: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:502
+#: ../src/plugins/netstatus/netstatus-iface.c:1232
+#, c-format
+msgid "SIOCGIFFLAGS error: %s"
+msgstr "SIOCGIFFLAGS 錯誤：%s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:879
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:882
+msgid "Ethernet"
+msgstr "乙太網路"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:888
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:897
+#: ../src/plugins/netstatus/netstatus-iface.c:1017
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps Token Ring"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:900
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:906
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay DLCI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:912
+msgid "Metricom Starmode IP"
+msgstr "Metricom Starmode IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:915
+msgid "Serial Line IP"
+msgstr "Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:918
+msgid "VJ Serial Line IP"
+msgstr "VJ Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:921
+msgid "6-bit Serial Line IP"
+msgstr "6-bit Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:924
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6-bit Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:930
+msgid "Adaptive Serial Line IP"
+msgstr "Adaptive Serial Line IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:933
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:936
+msgid "Generic X.25"
+msgstr "Generic X.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:939
+msgid "Point-to-Point Protocol"
+msgstr "Point-to-Point Protocol"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:945
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:948
+msgid "LAPB"
+msgstr "LAPB"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:957
+msgid "IPIP Tunnel"
+msgstr "IPIP Tunnel"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:963
+msgid "Frame Relay Access Device"
+msgstr "Frame Relay Access Device"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:969
+msgid "Local Loopback"
+msgstr "Local Loopback"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:975
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiber Distributed Data Interface"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:981
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:993
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:996
+msgid "Ash"
+msgstr "Ash"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:999
+msgid "Econet"
+msgstr "Econet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1002
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1164
+#, c-format
+msgid "SIOCGIFCONF error: %s"
+msgstr "SIOCGIFCONF 錯誤： %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1257
+#, c-format
+msgid "No network devices found"
+msgstr "找不到網路裝置"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:180
+#, c-format
+msgid "Cannot open /proc/net/dev: %s"
+msgstr "無法開啟 /proc/net/dev: %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:185
+#, fuzzy
+msgid "Could not parse /proc/net/dev. No data."
+msgstr "無法解析 /proc/net/dev。未知的格式。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:190
+msgid "Could not parse /proc/net/dev. Unknown format."
+msgstr "無法解析 /proc/net/dev。未知的格式。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:205
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:332
+#, c-format
+msgid "Could not parse interface name from '%s'"
+msgstr "無法從 '%s' 解析介面卡名稱"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:218
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:647
+#, c-format
+msgid ""
+"Could not parse interface statistics from '%s'. prx_idx = %d; ptx_idx = %d; "
+"brx_idx = %d; btx_idx = %d;"
+msgstr ""
+"無法從 '%s'. prx_idx = %d; ptx_idx = %d; brx_idx = %d; btx_idx = %d; 解析介面"
+"卡統計資料"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:312
+#, fuzzy
+msgid "Could not parse /proc/net/wireless. No data."
+msgstr "無法解析 /proc/net/wireless。沒有資料。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:316
+msgid "Could not parse /proc/net/wireless. Unknown format."
+msgstr "無法解析 /proc/net/wireless。未知格式。"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:343
+#, c-format
+msgid "Could not parse wireless details from '%s'. link_idx = %d;"
+msgstr "無法從 '%s'. link_idx = %d; 解析無線網路細節"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:416
+#, c-format
+msgid "Could not connect to interface, '%s'"
+msgstr "無法連接到介面 '%s'"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:422
+#, c-format
+msgid "Could not send ioctl to interface, '%s'"
+msgstr "無法傳送 ioctl 到介面 '%s'"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:600
+#, c-format
+msgid "Could not parse command line '%s': %s"
+msgstr "無法解析命令列 '%s': %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:637
+msgid "Could not parse 'netstat' output. Unknown format"
+msgstr "無法解析 'netstat' 的輸出。未知格式"
+
+#: ../src/plugins/netstatus/netstatus-util.c:152
+msgid "Disconnected"
+msgstr "斷線"
+
+#: ../src/plugins/netstatus/netstatus-util.c:155
+msgid "Idle"
+msgstr "閒置"
+
+#: ../src/plugins/netstatus/netstatus-util.c:158
+msgid "Sending"
+msgstr "正在傳送"
+
+#: ../src/plugins/netstatus/netstatus-util.c:161
+msgid "Receiving"
+msgstr "正在接收"
+
+#: ../src/plugins/netstatus/netstatus-util.c:164
+msgid "Sending/Receiving"
+msgstr "傳送/接收"
+
+#: ../src/plugins/batt/batt.c:151
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d until full"
+msgstr "電池：剩餘電量 %d%%，充滿還需 %d:%02d"
+
+#: ../src/plugins/batt/batt.c:162
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d left"
+msgstr "電池：剩餘電量 %d%%，剩餘可用時間 %d:%02d"
+
+#: ../src/plugins/batt/batt.c:168
+#, c-format
+msgid "Battery: %d%% charged"
+msgstr "電池：剩餘電量 %d%%"
+
+#: ../src/plugins/batt/batt.c:178
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full design:\t\t%5d mWh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:180
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full:\t\t\t%5d mWh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:182
+#, c-format
+msgid ""
+"\n"
+"%sEnergy now:\t\t\t%5d mWh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:184
+#, c-format
+msgid ""
+"\n"
+"%sPower now:\t\t\t%5d mW"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:187
+#, c-format
+msgid ""
+"\n"
+"%sCharge full design:\t%5d mAh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:189
+#, c-format
+msgid ""
+"\n"
+"%sCharge full:\t\t\t%5d mAh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:191
+#, c-format
+msgid ""
+"\n"
+"%sCharge now:\t\t\t%5d mAh"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:193
+#, c-format
+msgid ""
+"\n"
+"%sCurrent now:\t\t\t%5d mA"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:196
+#, c-format
+msgid ""
+"\n"
+"%sCurrent Voltage:\t\t%.3lf V"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:234
+msgid "No batteries found"
+msgstr "沒有電池"
+
+#: ../src/plugins/batt/batt.c:619 ../src/plugins/batt/batt.c:642
+msgid "Battery Monitor"
+msgstr "電池電量顯示"
+
+#: ../src/plugins/batt/batt.c:622
+msgid "Hide if there is no battery"
+msgstr "沒有電池時隱藏"
+
+#: ../src/plugins/batt/batt.c:624
+msgid "Alarm command"
+msgstr "發出警示時要執行的命令"
+
+#: ../src/plugins/batt/batt.c:625
+msgid "Alarm time (minutes left)"
+msgstr "電池剩餘時間低於此數值時警示 (分鐘)"
+
+#: ../src/plugins/batt/batt.c:626
+msgid "Background color"
+msgstr "背景顏色"
+
+#: ../src/plugins/batt/batt.c:627
+msgid "Charging color 1"
+msgstr "充電顯示顏色 1"
+
+#: ../src/plugins/batt/batt.c:628
+msgid "Charging color 2"
+msgstr "充電顯示顏色 2"
+
+#: ../src/plugins/batt/batt.c:629
+msgid "Discharging color 1"
+msgstr "放電顯示顏色 1"
+
+#: ../src/plugins/batt/batt.c:630
+msgid "Discharging color 2"
+msgstr "放電顯示顏色 2"
+
+#: ../src/plugins/batt/batt.c:631
+msgid "Border width"
+msgstr "邊框寬度"
+
+#: ../src/plugins/batt/batt.c:633
+msgid "Show Extended Information"
+msgstr ""
+
+#: ../src/plugins/batt/batt.c:643
+msgid "Display battery status using ACPI"
+msgstr "透過 ACPI 顯示電池狀態"
+
+#: ../src/plugins/kbled/kbled.c:257
+msgid "Show CapsLock"
+msgstr "顯示 CapsLock"
+
+#: ../src/plugins/kbled/kbled.c:258
+msgid "Show NumLock"
+msgstr "顯示 NumLock"
+
+#: ../src/plugins/kbled/kbled.c:259
+msgid "Show ScrollLock"
+msgstr "顯示 ScrollLock"
+
+#: ../src/plugins/kbled/kbled.c:293
+msgid "Keyboard LED"
+msgstr "鍵盤 LED 燈號"
+
+#: ../src/plugins/kbled/kbled.c:295
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr "顯示 CapsLock、NumLock、及 ScrollLock 鍵的狀態"
+
+#. A label to allow for click through
+#: ../src/plugins/indicator/indicator.c:698
+msgid "No Indicators"
+msgstr "無顯示"
+
+#: ../src/plugins/indicator/indicator.c:897
+msgid "Indicator Applications"
+msgstr "顯示應用程式"
+
+#: ../src/plugins/indicator/indicator.c:898
+msgid "Clock Indicator"
+msgstr "顯示時鐘"
+
+#: ../src/plugins/indicator/indicator.c:899
+msgid "Messaging Menu"
+msgstr "即時通訊選單"
+
+#: ../src/plugins/indicator/indicator.c:900
+msgid "Network Menu"
+msgstr "網路選單"
+
+#: ../src/plugins/indicator/indicator.c:901
+msgid "Session Menu"
+msgstr "工作階段選單"
+
+#: ../src/plugins/indicator/indicator.c:902
+msgid "Sound Menu"
+msgstr "聲音選單"
+
+#: ../src/plugins/indicator/indicator.c:928
+msgid "Indicator applets"
+msgstr "顯示小程式"
+
+#: ../src/plugins/indicator/indicator.c:930
+msgid "Add indicator applets to the panel"
+msgstr "在面板增加顯示小程式"
+
+#: ../src/plugins/monitors/monitors.c:277
+#, c-format
+msgid "CPU usage: %.2f%%"
+msgstr "CPU 用量：%.2f%%"
+
+#: ../src/plugins/monitors/monitors.c:360
+#, c-format
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr "記憶體用量：%.1fMB (%.2f%%)"
+
+#: ../src/plugins/monitors/monitors.c:714
+msgid "CPU color"
+msgstr "CPU 色彩"
+
+#: ../src/plugins/monitors/monitors.c:715
+msgid "Display RAM usage"
+msgstr "顯示記憶體使用量"
+
+#: ../src/plugins/monitors/monitors.c:716
+msgid "RAM color"
+msgstr "記憶體色彩"
+
+#: ../src/plugins/monitors/monitors.c:717
+msgid "Action when clicked (default: lxtask)"
+msgstr "滑鼠點擊時要執行的動作 (預設：顯示工作管理員)"
+
+#: ../src/plugins/monitors/monitors.c:810
+msgid "Resource monitors"
+msgstr "資源監控"
+
+#: ../src/plugins/monitors/monitors.c:812
+msgid "Display monitors (CPU, RAM)"
+msgstr "顯示監控 (CPU、記憶體)"
+
+#: ../src/plugins/weather/weatherwidget.c:50
+msgid "[N/A]"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:784
+msgid "Enter New Location"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:798
+#, fuzzy
+msgid "_New Location:"
+msgstr "新增位置(_N)："
+
+#: ../src/plugins/weather/weatherwidget.c:809
+#, fuzzy
+msgid ""
+"Enter the:\n"
+"- city, or\n"
+"- city and state/country, or\n"
+"- postal code\n"
+"for which to retrieve the weather forecast."
+msgstr ""
+"輸入：\n"
+"- 城市，或\n"
+"- 城市及州份/國家，或\n"
+"- 郵遞區號\n"
+"總之是取得天氣預測的位置。"
+
+#: ../src/plugins/weather/weatherwidget.c:846
+#: ../src/plugins/weather/weatherwidget.c:979
+msgid "You must specify a location."
+msgstr "必須指定位置。"
+
+#: ../src/plugins/weather/weatherwidget.c:893
+#, c-format
+msgid "Location '%s' not found!"
+msgstr "找不到「%s」位置！"
+
+#: ../src/plugins/weather/weatherwidget.c:1051
+msgid "Preferences"
+msgstr "偏好設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1057
+msgid "Refresh"
+msgstr "重新整理"
+
+#: ../src/plugins/weather/weatherwidget.c:1063
+msgid "Quit"
+msgstr "結束"
+
+#: ../src/plugins/weather/weatherwidget.c:1160
+msgid "Weather Preferences"
+msgstr "天氣偏好設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1174
+msgid "Current Location"
+msgstr "目前位置"
+
+#: ../src/plugins/weather/weatherwidget.c:1178
+#: ../src/plugins/weather/weatherwidget.c:1475
+#, fuzzy
+msgid "None configured"
+msgstr "沒有設定好的"
+
+#: ../src/plugins/weather/weatherwidget.c:1180
+#: ../src/plugins/weather/weatherwidget.c:1472
+msgid "_Set"
+msgstr "設定(_S)"
+
+#: ../src/plugins/weather/weatherwidget.c:1201
+msgid "Display"
+msgstr "顯示器"
+
+#: ../src/plugins/weather/weatherwidget.c:1205
+msgid "Name:"
+msgstr "名稱："
+
+#: ../src/plugins/weather/weatherwidget.c:1209
+msgid "Units:"
+msgstr "單位："
+
+#: ../src/plugins/weather/weatherwidget.c:1213
+msgid "_Metric (°C)"
+msgstr "公制(_M) (°C)"
+
+#: ../src/plugins/weather/weatherwidget.c:1215
+msgid "_English (°F)"
+msgstr "美制(_E) (°F)"
+
+#: ../src/plugins/weather/weatherwidget.c:1250
+msgid "Forecast"
+msgstr "預測"
+
+#: ../src/plugins/weather/weatherwidget.c:1254
+msgid "Updates:"
+msgstr "更新："
+
+#: ../src/plugins/weather/weatherwidget.c:1258
+msgid "Ma_nual"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:1262
+msgid "_Automatic, every"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:1278
+msgid "minutes"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:1287
+msgid "Source:"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:1428
+#, fuzzy
+msgid "C_hange"
+msgstr "變更類型"
+
+#. Both are available
+#: ../src/plugins/weather/weatherwidget.c:1519
+#, c-format
+msgid "Current Conditions for %s"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:1543
+#, fuzzy
+msgid "Location:"
+msgstr "教育"
+
+#: ../src/plugins/weather/weatherwidget.c:1566
+msgid "Last updated:"
+msgstr "最後更新："
+
+#: ../src/plugins/weather/weatherwidget.c:1593
+msgid "Feels like:"
+msgstr "就好像："
+
+#: ../src/plugins/weather/weatherwidget.c:1618
+msgid "Humidity:"
+msgstr "溼度："
+
+#: ../src/plugins/weather/weatherwidget.c:1645
+msgid "Pressure:"
+msgstr "氣壓："
+
+#: ../src/plugins/weather/weatherwidget.c:1672
+msgid "Visibility:"
+msgstr "能見度："
+
+#: ../src/plugins/weather/weatherwidget.c:1700
+msgid "Wind:"
+msgstr "風向："
+
+#: ../src/plugins/weather/weatherwidget.c:1723
+msgid "Sunrise:"
+msgstr "日出："
+
+#: ../src/plugins/weather/weatherwidget.c:1746
+msgid "Sunset:"
+msgstr "日落："
+
+#: ../src/plugins/weather/weatherwidget.c:1854
+#: ../src/plugins/weather/weatherwidget.c:2190
+#, c-format, fuzzy
+msgid "Forecast for %s unavailable."
+msgstr "無法提供 %s 的預測。"
+
+#: ../src/plugins/weather/weatherwidget.c:1863
+#: ../src/plugins/weather/weatherwidget.c:2195
+#, fuzzy, c-format
+msgid "Location not set."
+msgstr "登出指令尚未設定"
+
+#: ../src/plugins/weather/weatherwidget.c:1880
+#, c-format
+msgid "Searching for '%s'..."
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:2006
+#, c-format
+msgid "Location matches for '%s'"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:2026
+msgid "City"
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:2046
+msgid "Country"
+msgstr ""
+
+#. make it nice and pretty
+#: ../src/plugins/weather/weatherwidget.c:2177
+#, fuzzy
+msgid "Currently in "
+msgstr "目前載入的外掛"
+
+#: ../src/plugins/weather/weatherwidget.c:2179
+msgid "Today: "
+msgstr ""
+
+#: ../src/plugins/weather/weatherwidget.c:2180
+msgid "Tomorrow: "
+msgstr ""
+
+#: ../src/plugins/weather/weather.c:285
+#, fuzzy
+msgid "Weather Plugin"
+msgstr "WNCKPager 工作區顯示外掛程式"
+
+#: ../src/plugins/weather/weather.c:287
+msgid "Show weather conditions for a location."
+msgstr "顯示某個位置的天氣情況。"
+
+#~ msgid "Model"
+#~ msgstr "型號"
+
+#~ msgid "WNCKPager"
+#~ msgstr "WNCKPager 工作區顯示程式"
+
+#~ msgid "<b>Icon</b>"
+#~ msgstr "<b>圖示</b>"
+
+#~ msgid "Configure Keyboard Layout Switcher"
+#~ msgstr "設定鍵盤配置切換"
+
+#~ msgid "image"
+#~ msgstr "圖片"
+
+#~ msgid "text"
+#~ msgstr "文字"
+
+#~ msgid "Per application settings"
+#~ msgstr "個別應用程式的設定"
+
+#~ msgid "Default layout:"
+#~ msgstr "預設配置："
+
+#~ msgid "Available Applications"
+#~ msgstr "可用的應用程式"
+
+#~ msgid "Display system temperature, by kesler.daniel@gmail.com"
+#~ msgstr "溫度顯示系統,由kesler.daniel@gmail.com製作"
+
+#~ msgid "Left\t"
+#~ msgstr "左\t"
+
+#~ msgid "Top\t"
+#~ msgstr "上\t"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "找不到圖片檔：%s"
+
+#~ msgid ""
+#~ "Allows you to switch the keyboard layout and\n"
+#~ "displays the currently selected layout."
+#~ msgstr ""
+#~ "顯示目前選用的鍵盤配置，以及\n"
+#~ "在不同的配置之間切換"
+
+#~ msgid "Other plugins available here"
+#~ msgstr "其他可用的外掛"
+
+#~ msgid "Desktop No / Workspace Name"
+#~ msgstr "桌面編號 / 工作區名稱"
+
+#~ msgid "Old KDE/GNOME Tray"
+#~ msgstr "KDE/GNOME 系統列"
+
+#~ msgid "Enable Image:"
+#~ msgstr "啟用背景圖："
+
+#~ msgid "Enable Transparency"
+#~ msgstr "啟用透明效果"
+
+#~ msgid " --configure -- launch configuration utility\n"
+#~ msgstr " --configure -- 執行設定工具\n"
+
+#~ msgid " -C  -- same as --configure\n"
+#~ msgstr " -C  -- 和 --configure 作用相同\n"
+
+#~ msgid "Add Button"
+#~ msgstr "新增按鈕"
+
+#~ msgid "Button Properties"
+#~ msgstr "按鈕屬性"
+
+#~ msgid "Remove Button"
+#~ msgstr "移除按鈕"
+
+#~ msgid "Buttons"
+#~ msgstr "按鈕"
+
+#~ msgid "Accept SkipPager"
+#~ msgstr "接受 SkipPager Hint"
+
+#~ msgid "Show Iconified windows"
+#~ msgstr "顯示最小化的視窗"
+
+#~ msgid "Show mapped windows"
+#~ msgstr "顯示已被映射的視窗"
+
+#~ msgid "Action"
+#~ msgstr "動作"
+
+#~ msgid ""
+#~ "Dynamic\n"
+#~ "Pixels\n"
+#~ "% Percent"
+#~ msgstr ""
+#~ "動態\n"
+#~ "像素 (pixels)\n"
+#~ "% 百分比"
+
+#~ msgid ""
+#~ "Left\n"
+#~ "Center\n"
+#~ "Right"
+#~ msgstr ""
+#~ "靠左\n"
+#~ "置中\n"
+#~ "靠右"
+
+#~ msgid ""
+#~ "Left\n"
+#~ "Right\n"
+#~ "Top\n"
+#~ "Bottom"
+#~ msgstr ""
+#~ "左\n"
+#~ "右\n"
+#~ "上\n"
+#~ "下"
+
+#~ msgid "Where to put the panel?"
+#~ msgstr "要把工作列放到哪裡？"
+
+#~ msgid "Battery: %d%% charged, %s"
+#~ msgstr "電池：剩餘電量 %d%%，%s"
+
+#~ msgid "charging finished"
+#~ msgstr "充電完成"
+
+#~ msgid "charging"
+#~ msgstr "充電中"
+
+#~ msgid "Add to desktop panel"
+#~ msgstr "加入到工作列"
+
+#~ msgid "Game"
+#~ msgstr "遊戲"
+
+#~ msgid "Development"
+#~ msgstr "軟體開發"
+
+#~ msgid "Audio & Video"
+#~ msgstr "影音多媒體"
+
+#~ msgid "Graphics"
+#~ msgstr "繪圖"
+
+#~ msgid "System Tools"
+#~ msgstr "系統工具"
+
+#~ msgid "Office"
+#~ msgstr "辦公軟體"
+
+#~ msgid "Accessories"
+#~ msgstr "附屬應用程式"
+
+#~ msgid "not charging"
+#~ msgstr "未充電"
+
+#~ msgid "% of edge"
+#~ msgstr "% 百分比"
+
+#~ msgid "Select a background image file"
+#~ msgstr "選擇背景圖片"
+
+#~ msgid "Plugins"
+#~ msgstr "外掛"
+
+#, fuzzy
+#~ msgid "Logout Command"
+#~ msgstr "登出指令："
+
+#~ msgid "lxpanel configurator"
+#~ msgstr "lxpanel 偏好設定"
+
+#~ msgid "Background"
+#~ msgstr "背景"
+
+#~ msgid "Update interval (seconds)"
+#~ msgstr "更新頻率 (秒)"

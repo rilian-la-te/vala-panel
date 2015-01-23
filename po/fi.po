@@ -1,0 +1,2048 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-27 08:58+0100\n"
+"PO-Revision-Date: 2014-07-05 10:48+0000\n"
+"Last-Translator: Juhani <juhaninumminen0@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.0\n"
+"X-POOTLE-MTIME: 1404557328.0\n"
+
+#. { "configure", N_("Preferences"), configure },
+#: ../src/configurator.c:55 ../src/gtk-run.c:361 ../src/plugins/menu.c:770
+msgid "Run"
+msgstr "Suorita"
+
+#: ../src/configurator.c:57 ../src/plugins/menu.c:771
+msgid "Restart"
+msgstr "Käynnistä uudelleen"
+
+#: ../src/configurator.c:58 ../src/plugins/menu.c:772
+msgid "Logout"
+msgstr "Kirjaudu ulos"
+
+#: ../src/configurator.c:549
+msgid "Currently loaded plugins"
+msgstr "Käytössä olevat liitännäiset"
+
+#: ../src/configurator.c:558
+msgid "Stretch"
+msgstr "Venytä"
+
+#: ../src/configurator.c:680
+msgid "Add plugin to panel"
+msgstr "Lisää liitännäinen paneeliin"
+
+#: ../src/configurator.c:708
+msgid "Available plugins"
+msgstr "Käytettävissä olevat liitännäiset"
+
+#: ../src/configurator.c:1244
+msgid "Logout command is not set"
+msgstr "Uloskirjautumisen komentoa ei ole asetettu"
+
+#: ../src/configurator.c:1312
+msgid "Select a directory"
+msgstr "Valitse hakemisto"
+
+#: ../src/configurator.c:1312 ../src/configurator.c:1419
+msgid "Select a file"
+msgstr "Valitse tiedosto"
+
+#: ../src/configurator.c:1446
+msgid "_Browse"
+msgstr "_Selaa"
+
+#: ../src/panel.c:660
+msgid "There is no room for another panel. All the edges are taken."
+msgstr "Uudelle paneelille ei ole tilaa. Kaikki reunat ovat käytössä."
+
+#: ../src/panel.c:687
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning: This can not be recovered.</b>"
+msgstr ""
+"Haluatko varmasti poistaa tämän paneelin?\n"
+"<b>Varoitus: tätä toimintoa ei voi perua.</b>"
+
+#: ../src/panel.c:689
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. TRANSLATORS: Replace this string with your names, one name per line.
+#: ../src/panel.c:721
+msgid "translator-credits"
+msgstr ""
+"Elias Julkunen, 2010\n"
+"Juhani Numminen, 2013"
+
+#: ../src/panel.c:726
+msgid "LXPanel"
+msgstr "LXPanel"
+
+#: ../src/panel.c:744
+msgid "Copyright (C) 2008-2013"
+msgstr "Tiedostonhallintaohjelmaa ei ole asetettu."
+
+#: ../src/panel.c:745
+msgid "Desktop panel for LXDE project"
+msgstr "Työpöytäpaneeli LXDE-projektille"
+
+#: ../src/panel.c:782
+msgid "Add / Remove Panel Items"
+msgstr "Lisää ja poista paneelin sovelmia"
+
+#: ../src/panel.c:791
+#, c-format
+msgid "Remove \"%s\" From Panel"
+msgstr "Poista ”%s” paneelista"
+
+#: ../src/panel.c:803
+msgid "Panel Settings"
+msgstr "Paneelin asetukset"
+
+#: ../src/panel.c:809
+msgid "Create New Panel"
+msgstr "Luo uusi paneeli"
+
+#: ../src/panel.c:815
+msgid "Delete This Panel"
+msgstr "Poista tämä paneeli"
+
+#: ../src/panel.c:826
+msgid "About"
+msgstr "Tietoja"
+
+#: ../src/panel.c:834
+msgid "Panel"
+msgstr "Paneeli"
+
+#: ../src/panel.c:847
+#, c-format
+msgid "\"%s\" Settings"
+msgstr "Sovelman ”%s” asetukset"
+
+#: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
+msgid "Height:"
+msgstr "Korkeus:"
+
+#: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
+msgid "Width:"
+msgstr "Leveys:"
+
+#: ../src/panel.c:1111 ../data/ui/panel-pref.glade.h:13
+msgid "Left"
+msgstr "Vasemmalla"
+
+#: ../src/panel.c:1112 ../data/ui/panel-pref.glade.h:14
+msgid "Right"
+msgstr "Oikealla"
+
+#: ../src/panel.c:1118 ../data/ui/panel-pref.glade.h:12
+msgid "Top"
+msgstr "Ylhäällä"
+
+#: ../src/panel.c:1119 ../data/ui/panel-pref.glade.h:11
+msgid "Bottom"
+msgstr "Alhaalla"
+
+#: ../src/panel.c:1428
+#, c-format
+msgid "lxpanel %s - lightweight GTK2+ panel for UNIX desktops\n"
+msgstr "lxpanel %s - kevyt GTK2+-paneeli UNIX-työpöydille\n"
+
+#: ../src/panel.c:1429
+#, c-format
+msgid "Command line options:\n"
+msgstr "Komentorivivalinnat:\n"
+
+#: ../src/panel.c:1430
+#, c-format
+msgid " --help      -- print this help and exit\n"
+msgstr " --help      -- näyttää tämän ohjeen ja poistuu\n"
+
+#: ../src/panel.c:1431
+#, c-format
+msgid " --version   -- print version and exit\n"
+msgstr " --version   -- näyttää versionumeron ja poistuu\n"
+
+#: ../src/panel.c:1432
+#, c-format
+msgid " --log <number> -- set log level 0-5. 0 - none 5 - chatty\n"
+msgstr ""
+" --log <numero> -- asettaa lokin tasoksi 0-5. 0 = ei mitään, 5 = "
+"lavertelija\n"
+
+#. g_print(_(" --configure -- launch configuration utility\n"));
+#: ../src/panel.c:1434
+#, c-format
+msgid " --profile name -- use specified profile\n"
+msgstr " --profile <nimi> -- käyttää tiettyä profiilia\n"
+
+#: ../src/panel.c:1436
+#, c-format
+msgid " -h  -- same as --help\n"
+msgstr " -h  -- sama kuin --help\n"
+
+#: ../src/panel.c:1437
+#, c-format
+msgid " -p  -- same as --profile\n"
+msgstr " -p  -- sama kuin --profile\n"
+
+#: ../src/panel.c:1438
+#, c-format
+msgid " -v  -- same as --version\n"
+msgstr " -v  -- sama kuin --version\n"
+
+#. g_print(_(" -C  -- same as --configure\n"));
+#: ../src/panel.c:1440
+#, c-format
+msgid ""
+"\n"
+"Visit http://lxde.org/ for detail.\n"
+"\n"
+msgstr ""
+"\n"
+"Vieraile sivustolla http://lxde.org/ lisätietoja varten.\n"
+"\n"
+
+#: ../src/plugin.c:370
+msgid "No file manager is configured."
+msgstr "Tiedostonhallintaohjelmaa ei ole asetettu."
+
+#: ../src/gtk-run.c:374
+msgid "Enter the command you want to execute:"
+msgstr "Syötä suoritettava komento:"
+
+#. vim: set sw=4 et sts=4 ts=4 :
+#: ../data/ui/launchtaskbar.glade.h:1 ../src/plugins/launchtaskbar.c:3414
+msgid "Application Launch and Task Bar"
+msgstr "Käynnistys- ja tehtäväpalkki"
+
+#: ../data/ui/launchtaskbar.glade.h:2
+msgid "<b>Mode:</b>"
+msgstr "<b>Tila:</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:3
+msgid "Launchers"
+msgstr "Käynnistimet"
+
+#: ../data/ui/launchtaskbar.glade.h:4
+msgid "<b>Launchbar</b>"
+msgstr "<b>Käynnistyspalkki</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:5
+msgid "Show tooltips"
+msgstr "Näytä työkaluvihjeet"
+
+#: ../data/ui/launchtaskbar.glade.h:6
+msgid "Icons only"
+msgstr "Vain kuvakkeet"
+
+#: ../data/ui/launchtaskbar.glade.h:7
+msgid "Flat buttons"
+msgstr "Latteat painikkeet"
+
+#: ../data/ui/launchtaskbar.glade.h:8
+msgid "Show windows from all desktops"
+msgstr "Näytä ikkunat kaikilta työpöydiltä"
+
+#: ../data/ui/launchtaskbar.glade.h:9
+msgid "Only show windows on the same monitor as the task bar"
+msgstr "Näytä vain tehtäväpalkin kanssa samalla näytöllä olevat ikkunat"
+
+#: ../data/ui/launchtaskbar.glade.h:10
+msgid "Use mouse wheel"
+msgstr "Käytä hiiren rullaa"
+
+#: ../data/ui/launchtaskbar.glade.h:11
+msgid "Flash when there is any window requiring attention"
+msgstr "Huomauta, kun jokin ikkuna vaatii huomiota"
+
+#: ../data/ui/launchtaskbar.glade.h:12
+msgid "Combine multiple application windows into a single button"
+msgstr "Yhdistä monta sovellusikkunaa yhteen painikkeeseen"
+
+#: ../data/ui/launchtaskbar.glade.h:13
+msgid "Maximum width of task button"
+msgstr "Tehtäväpainikkeen enimmäisleveys"
+
+#: ../data/ui/launchtaskbar.glade.h:14
+msgid "Spacing"
+msgstr "Väli"
+
+#: ../data/ui/launchtaskbar.glade.h:15
+msgid "<b>Taskbar</b>"
+msgstr "<b>Tehtäväpalkki</b>"
+
+#: ../data/ui/launchtaskbar.glade.h:16
+msgid "Only Application Launch Bar"
+msgstr "Vain sovelluksien käynnistyspalkki"
+
+#: ../data/ui/launchtaskbar.glade.h:17
+msgid "Only Task Bar (Window List)"
+msgstr "Vain tehtäväpalkki (ikkunalista)"
+
+#: ../data/ui/launchtaskbar.glade.h:18
+msgid "Integrated Application Launch Bar and Task Bar"
+msgstr "Yhdistetty käynnistys- ja tehtäväpalkki"
+
+#: ../data/ui/netstatus.glade.h:1
+msgid "<b>Connection</b>"
+msgstr "<b>Yhteys</b>"
+
+#: ../data/ui/netstatus.glade.h:2
+msgid "Status:"
+msgstr "Tila:"
+
+#: ../data/ui/netstatus.glade.h:3
+msgid "_Name:"
+msgstr "_Nimi:"
+
+#: ../data/ui/netstatus.glade.h:4
+msgid "<b>Activity</b>"
+msgstr "<b>Aktiivisuus</b>"
+
+#: ../data/ui/netstatus.glade.h:5
+msgid "Received:"
+msgstr "Vastaanotettu:"
+
+#: ../data/ui/netstatus.glade.h:6
+msgid "Sent:"
+msgstr "Lähetetty:"
+
+#: ../data/ui/netstatus.glade.h:7
+msgid "<b>Signal Strength</b>"
+msgstr "<b>Signaalin vahvuus</b>"
+
+#: ../data/ui/netstatus.glade.h:9
+#, no-c-format
+msgid "0%"
+msgstr "0%"
+
+#: ../data/ui/netstatus.glade.h:10
+msgid "General"
+msgstr "Yleinen"
+
+#: ../data/ui/netstatus.glade.h:11
+msgid "<b>Internet Protocol (IPv4)</b>"
+msgstr "<b>Internetin yhteyskäytäntö (IPv4)</b>"
+
+#: ../data/ui/netstatus.glade.h:12
+msgid "Address:"
+msgstr "Osoite:"
+
+#: ../data/ui/netstatus.glade.h:13
+msgid "Destination:"
+msgstr "Kohde:"
+
+#: ../data/ui/netstatus.glade.h:14 ../src/plugins/netstat/netstat.c:362
+#: ../src/plugins/netstat/netstat.c:373
+msgid "Broadcast:"
+msgstr "Lähetys:"
+
+#: ../data/ui/netstatus.glade.h:15
+msgid "Subnet Mask:"
+msgstr "Aliverkon peite:"
+
+#: ../data/ui/netstatus.glade.h:16
+msgid "<b>Internet Protocol (IPv6)</b>"
+msgstr "<b>Internetin yhteyskäytäntö (IPv6)</b>"
+
+#: ../data/ui/netstatus.glade.h:17
+msgid "Scope:"
+msgstr "Alue:"
+
+#: ../data/ui/netstatus.glade.h:18
+msgid "<b>Network Device</b>"
+msgstr "<b>Verkkolaite</b>"
+
+#: ../data/ui/netstatus.glade.h:19
+msgid "Type:"
+msgstr "Tyyppi:"
+
+#: ../data/ui/netstatus.glade.h:20
+msgid "Support"
+msgstr "Tuki"
+
+#: ../data/ui/netstatus.glade.h:21
+msgid "Con_figure"
+msgstr "_Tee asetukset"
+
+#: ../data/ui/panel-pref.glade.h:1
+msgid "Dynamic"
+msgstr "Dynaaminen"
+
+#: ../data/ui/panel-pref.glade.h:2
+msgid "Pixels"
+msgstr "pikseliä"
+
+#: ../data/ui/panel-pref.glade.h:4
+#, no-c-format
+msgid "% Percent"
+msgstr "% prosenttia"
+
+#: ../data/ui/panel-pref.glade.h:5
+msgid "None"
+msgstr "Ei mitään"
+
+#: ../data/ui/panel-pref.glade.h:6
+msgid "Err"
+msgstr "Virhe"
+
+#: ../data/ui/panel-pref.glade.h:7
+msgid "Warn"
+msgstr "Varoitus"
+
+#: ../data/ui/panel-pref.glade.h:8
+msgid "Info"
+msgstr "Tietoja"
+
+#: ../data/ui/panel-pref.glade.h:9
+msgid "All"
+msgstr "Kaikki"
+
+#: ../data/ui/panel-pref.glade.h:10
+msgid "Panel Preferences"
+msgstr "Paneelin asetukset"
+
+#: ../data/ui/panel-pref.glade.h:15
+msgid "Edge:"
+msgstr "Reuna:"
+
+#: ../data/ui/panel-pref.glade.h:16
+msgid "Center"
+msgstr "Keskellä"
+
+#: ../data/ui/panel-pref.glade.h:17
+msgid "Alignment:"
+msgstr "Tasaus:"
+
+#: ../data/ui/panel-pref.glade.h:18
+msgid "Margin:"
+msgstr "Reunus:"
+
+#: ../data/ui/panel-pref.glade.h:19
+msgid "Monitor:"
+msgstr "Näyttö:"
+
+#: ../data/ui/panel-pref.glade.h:20
+msgid "<b>Position</b>"
+msgstr "<b>Sijainti</b>"
+
+#: ../data/ui/panel-pref.glade.h:23
+msgid "Icon size:"
+msgstr "Kuvakkeiden koko:"
+
+#: ../data/ui/panel-pref.glade.h:24
+msgid "<b>Size</b>"
+msgstr "<b>Koko</b>"
+
+#: ../data/ui/panel-pref.glade.h:25
+msgid "Geometry"
+msgstr "Geometria"
+
+#: ../data/ui/panel-pref.glade.h:26
+msgid "System theme"
+msgstr "Järjestelmän teema"
+
+#: ../data/ui/panel-pref.glade.h:27
+msgid "Solid color (with opacity)"
+msgstr "Yhtenäinen väri (läpinäkyvyydellä)"
+
+#: ../data/ui/panel-pref.glade.h:28 ../src/plugins/xkb/xkb-plugin.c:1479
+msgid "Image"
+msgstr "Kuva"
+
+#: ../data/ui/panel-pref.glade.h:29
+msgid "Select an image file"
+msgstr "Valitse kuvatiedosto"
+
+#: ../data/ui/panel-pref.glade.h:30
+msgid "<b>Background</b>"
+msgstr "<b>Taustakuva</b>"
+
+#: ../data/ui/panel-pref.glade.h:31
+msgid "Custom color"
+msgstr "Oma väri"
+
+#: ../data/ui/panel-pref.glade.h:32 ../src/plugins/space.c:93
+#: ../src/plugins/batt/batt.c:632
+msgid "Size"
+msgstr "Koko"
+
+#: ../data/ui/panel-pref.glade.h:33
+msgid "<b>Font</b>"
+msgstr "<b>Kirjasin</b>"
+
+#: ../data/ui/panel-pref.glade.h:34
+msgid "Appearance"
+msgstr "Ulkoasu"
+
+#: ../data/ui/panel-pref.glade.h:35
+msgid "Panel Applets"
+msgstr "Paneelin sovelmat"
+
+#: ../data/ui/panel-pref.glade.h:36
+msgid "Logout Command:"
+msgstr "Uloskirjautumisen komento:"
+
+#: ../data/ui/panel-pref.glade.h:37
+msgid "Terminal Emulator:"
+msgstr "Pääteohjelma:"
+
+#: ../data/ui/panel-pref.glade.h:38
+msgid "File Manager:"
+msgstr "Tiedostonhallinta:"
+
+#: ../data/ui/panel-pref.glade.h:39
+msgid "<b>Set Preferred Applications</b>"
+msgstr "<b>Aseta oletussovellukset</b>"
+
+#: ../data/ui/panel-pref.glade.h:40
+msgid "Make window managers treat the panel as dock"
+msgstr "Kerro ikkunakäsittelijälle paneelin olevan telakka"
+
+#: ../data/ui/panel-pref.glade.h:41
+msgid "Reserve space, and not covered by maximized windows"
+msgstr "Varaa tilaa, etteivät suurennetut ikkunat mene paneelin alle"
+
+#: ../data/ui/panel-pref.glade.h:42
+msgid "<b>Properties</b>"
+msgstr "<b>Asetukset</b>"
+
+#: ../data/ui/panel-pref.glade.h:43
+msgid "Minimize panel when not in use"
+msgstr "Pienennä paneeli, kun ei käytössä"
+
+#: ../data/ui/panel-pref.glade.h:44
+msgid "Size when minimized"
+msgstr "Koko, kun pienennetty"
+
+#: ../data/ui/panel-pref.glade.h:45
+msgid "pixels"
+msgstr "pikseliä"
+
+#: ../data/ui/panel-pref.glade.h:46
+msgid "<b>Automatic hiding</b>"
+msgstr "<b>Automaattinen piilotus</b>"
+
+#: ../data/ui/panel-pref.glade.h:47
+msgid "Log level"
+msgstr "Kirjauksen taso"
+
+#: ../data/ui/panel-pref.glade.h:48
+msgid "<b>Log level</b>"
+msgstr "<b>Kirjauksen taso</b>"
+
+#: ../data/ui/panel-pref.glade.h:49
+msgid "Advanced"
+msgstr "Lisäasetukset"
+
+#: ../src/plugins/cpu/cpu.c:276
+msgid "CPU Usage Monitor"
+msgstr "CPU:n käytön valvoja"
+
+#: ../src/plugins/cpu/cpu.c:277 ../src/plugins/monitors/monitors.c:713
+msgid "Display CPU usage"
+msgstr "Näyttää CPU:n käyttöasteen"
+
+#: ../src/plugins/deskno/deskno.c:180 ../src/plugins/deskno/deskno.c:200
+msgid "Desktop Number / Workspace Name"
+msgstr "Työpöydän numero/työtilan nimi"
+
+#: ../src/plugins/deskno/deskno.c:182 ../src/plugins/dclock.c:429
+msgid "Bold font"
+msgstr "Lihavoitu kirjasin"
+
+#: ../src/plugins/deskno/deskno.c:183
+msgid "Display desktop names"
+msgstr "Näytä työpöytien nimet"
+
+#: ../src/plugins/deskno/deskno.c:201
+msgid "Display workspace number, by cmeury@users.sf.net"
+msgstr "Näyttää työtilan numeron, tehnyt cmeury@users.sf.net"
+
+#: ../src/plugins/image.c:161
+msgid "Display Image and Tooltip"
+msgstr "Näytä kuva ja työkaluvihje"
+
+#: ../src/plugins/launchtaskbar.c:2450
+msgid "_Close all windows"
+msgstr "Sulje _kaikki ikkunat"
+
+#. Add Raise menu item.
+#: ../src/plugins/launchtaskbar.c:3243
+msgid "_Raise"
+msgstr "_Nosta"
+
+#. Add Restore menu item.
+#: ../src/plugins/launchtaskbar.c:3248
+msgid "R_estore"
+msgstr "_Palauta"
+
+#. Add Maximize menu item.
+#: ../src/plugins/launchtaskbar.c:3253
+msgid "Ma_ximize"
+msgstr "_Suurenna"
+
+#. Add Iconify menu item.
+#: ../src/plugins/launchtaskbar.c:3258
+msgid "Ico_nify"
+msgstr "_Pienennä"
+
+#: ../src/plugins/launchtaskbar.c:3277
+#, c-format
+msgid "Workspace _%d"
+msgstr "Työtila _%d"
+
+#: ../src/plugins/launchtaskbar.c:3282
+#, c-format
+msgid "Workspace %d"
+msgstr "Työtila %d"
+
+#. Add "move to all workspaces" item.  This causes the window to be visible no matter what desktop is active.
+#: ../src/plugins/launchtaskbar.c:3298
+msgid "_All workspaces"
+msgstr "_Kaikki työtilat"
+
+#. Add Move to Workspace menu item as a submenu.
+#: ../src/plugins/launchtaskbar.c:3304
+msgid "_Move to Workspace"
+msgstr "Siirrä _työtilaan"
+
+#. Add Close menu item.  By popular demand, we place this menu item closest to the cursor.
+#: ../src/plugins/launchtaskbar.c:3310
+msgid "_Close Window"
+msgstr "_Sulje ikkuna"
+
+#: ../src/plugins/launchtaskbar.c:3312
+msgid "A_dd to Launcher"
+msgstr "_Lisää käynnistimeen"
+
+#: ../src/plugins/launchtaskbar.c:3313
+msgid "Rem_ove from Launcher"
+msgstr "P_oista käynnistimestä"
+
+#: ../src/plugins/launchtaskbar.c:3314
+msgid "_New Instance"
+msgstr "_Uusi instanssi"
+
+#: ../src/plugins/launchtaskbar.c:3384
+msgid "Application Launch Bar"
+msgstr "Sovelluksien käynnistyspalkki"
+
+#: ../src/plugins/launchtaskbar.c:3385
+msgid "Bar with buttons to launch application"
+msgstr "Käynnistyspalkki painikkeiden kanssa"
+
+#: ../src/plugins/launchtaskbar.c:3395
+msgid "Task Bar (Window List)"
+msgstr "Tehtäväpalkki (ikkunalista)"
+
+#: ../src/plugins/launchtaskbar.c:3396
+msgid ""
+"Taskbar shows all opened windows and allow to iconify them, shade or get "
+"focus"
+msgstr ""
+"Tehtäväpalkki näyttää kaikki avoinna olevat ikkunat ja sallii niiden "
+"pienentämisen, piilottamisen ja aktivoimisen."
+
+#: ../src/plugins/launchtaskbar.c:3415
+msgid "Bar with buttons to launch application and/or show all opened windows"
+msgstr ""
+"Käynnistyspalkki, jossa on painikkeet sovelluksen käynnistämiseen tai "
+"kaikkien avattujen ikkunoiden näyttämiseen"
+
+#: ../src/plugins/dclock.c:423 ../src/plugins/dclock.c:443
+msgid "Digital Clock"
+msgstr "Digitaalikello"
+
+#: ../src/plugins/dclock.c:425
+msgid "Clock Format"
+msgstr "Kellon muoto"
+
+#: ../src/plugins/dclock.c:426
+msgid "Tooltip Format"
+msgstr "Työkaluvihjeen muoto"
+
+#: ../src/plugins/dclock.c:427
+#, c-format
+msgid "Format codes: man 3 strftime; \\%n for line break"
+msgstr "Muotoilukoodit: man 3 strftime, \\%n aloittaa uuden rivin"
+
+#: ../src/plugins/dclock.c:428
+msgid "Action when clicked (default: display calendar)"
+msgstr "Toiminto, kun napsautetaan (oletus: näytä kalenteri)"
+
+#: ../src/plugins/dclock.c:430
+msgid "Tooltip only"
+msgstr "Vain työkaluvihje"
+
+#: ../src/plugins/dclock.c:431
+msgid "Center text"
+msgstr "Keskitä teksti"
+
+#: ../src/plugins/dclock.c:444
+msgid "Display digital clock and tooltip"
+msgstr "Näytä digitaalikello ja työkaluvihje"
+
+#: ../src/plugins/menu.c:421
+msgid "Add to desktop"
+msgstr "Lisää työpöydälle"
+
+#: ../src/plugins/menu.c:428
+msgid "Properties"
+msgstr "Asetukset"
+
+#: ../src/plugins/menu.c:1041 ../src/plugins/menu.c:1054
+msgid "Menu"
+msgstr "Valikko"
+
+#: ../src/plugins/menu.c:1042 ../src/plugins/dirmenu.c:365
+msgid "Icon"
+msgstr "Kuvake"
+
+#: ../src/plugins/menu.c:1055
+msgid "Application Menu"
+msgstr "Sovellusvalikko"
+
+#: ../src/plugins/separator.c:72
+msgid "Separator"
+msgstr "Väli"
+
+#: ../src/plugins/separator.c:73
+msgid "Add a separator to the panel"
+msgstr "Lisää väli paneeliin"
+
+#: ../src/plugins/pager.c:84 ../src/plugins/pager.c:98
+msgid "Desktop Pager"
+msgstr "Työtilan vaihtaja"
+
+#: ../src/plugins/pager.c:85 ../src/plugins/pager.c:99
+msgid "Simple pager plugin"
+msgstr "Yksinkertainen työtilan vaihtaja"
+
+#: ../src/plugins/space.c:91 ../src/plugins/space.c:100
+msgid "Spacer"
+msgstr "Väli"
+
+#: ../src/plugins/space.c:101
+msgid "Allocate space"
+msgstr "Varaa tyhjää tilaa"
+
+#: ../src/plugins/tray.c:709
+msgid "System Tray"
+msgstr "Ilmoitusalue"
+
+#: ../src/plugins/tray.c:710
+msgid "System tray"
+msgstr "Ilmoitusalue"
+
+#: ../src/plugins/xkb/xkb-plugin.c:451
+msgid "New session is required for this option to take effect"
+msgstr "Asetus tulee voimaan seuraavassa istunnossa"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:628
+msgid "Select Keyboard Model"
+msgstr "Valitse näppäimistön malli"
+
+#: ../src/plugins/xkb/xkb-plugin.c:651 ../src/plugins/xkb/xkb-plugin.c:778
+#: ../src/plugins/xkb/xkb-plugin.c:954
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../src/plugins/xkb/xkb-plugin.c:656 ../src/plugins/xkb/xkb-plugin.c:785
+msgid "Id"
+msgstr "ID"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:750
+msgid "Select Layout Change Type"
+msgstr "Valitse asettelun muutoksen tyyppi"
+
+#. dialog
+#: ../src/plugins/xkb/xkb-plugin.c:921
+msgid "Add Keyboard Layout"
+msgstr "Lisää näppäimistöasettelu"
+
+#: ../src/plugins/xkb/xkb-plugin.c:944 ../src/plugins/xkb/xkb-plugin.c:1327
+msgid "Flag"
+msgstr "Lippu"
+
+#: ../src/plugins/xkb/xkb-plugin.c:949 ../src/plugins/xkb/xkb-plugin.c:1331
+msgid "Layout"
+msgstr "Asettelu"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1238 ../src/plugins/xkb/xkb-plugin.c:1587
+msgid "Keyboard Layout Handler"
+msgstr "Näppäimistöasettelun vaihtaja"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1260
+msgid "Keyboard Model"
+msgstr "Näppäimistön malli"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1281
+msgid "Keyboard Layouts"
+msgstr "Näppäimistöasettelut"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1335
+msgid "Variant"
+msgstr "Muunnos"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1344
+msgid "Change Layout Option"
+msgstr "Vaihda asetteluvalintaa"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1364
+msgid "Advanced setxkbmap Options"
+msgstr "Edistyneet setxkbmapin valinnat"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1384
+msgid "Do _not reset existing options"
+msgstr "Ä_lä tyhjennä edellisiä asetuksia"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1389
+msgid "Keep _system layouts"
+msgstr "Pidä _järjestelmäasettelut"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1398
+msgid "Per Window Settings"
+msgstr "Ikkunakohtaiset asetukset"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1410
+msgid "_Remember layout for each window"
+msgstr "_Muista asettelu jokaiselle ikkunalle"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1419
+msgid "Show Layout as"
+msgstr "Näytä asettelu"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1480
+msgid "Custom Image"
+msgstr "Oma kuva"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1481
+msgid "Text"
+msgstr "Teksti"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1507
+msgid "Panel Icon Size"
+msgstr "Paneelin kuvakekoko"
+
+#: ../src/plugins/xkb/xkb-plugin.c:1589
+msgid "Handle keyboard layouts"
+msgstr "Hallitse näppäimistöasetteluja"
+
+#: ../src/plugins/wincmd.c:193
+msgid "Left click to iconify all windows.  Middle click to shade them."
+msgstr ""
+"Napsauta hiiren vasemmalla napilla pienentääksesi ikkunat, keskinapilla "
+"piilottaaksesi ne."
+
+#: ../src/plugins/wincmd.c:227 ../src/plugins/wincmd.c:245
+msgid "Minimize All Windows"
+msgstr "Pienennä kaikki ikkuna"
+
+#: ../src/plugins/wincmd.c:229
+msgid "Alternately iconify/shade and raise"
+msgstr "Vaihtoehtoisesti pienennä/häivytä ja nosta"
+
+#: ../src/plugins/wincmd.c:246
+msgid ""
+"Sends commands to all desktop windows.\n"
+"Supported commands are 1) iconify and 2) shade"
+msgstr ""
+"Lähettää komentoja kaikille työpöydän ikkunoille.\n"
+"Tuetut komennot ovat 1) pienentäminen 2) piilottaminen"
+
+#: ../src/plugins/dirmenu.c:208
+msgid "Open in _Terminal"
+msgstr "Avaa _päätteessä"
+
+#: ../src/plugins/dirmenu.c:361 ../src/plugins/dirmenu.c:377
+msgid "Directory Menu"
+msgstr "Hakemistovalikko"
+
+#: ../src/plugins/dirmenu.c:363
+msgid "Directory"
+msgstr "Hakemisto"
+
+#: ../src/plugins/dirmenu.c:364
+msgid "Label"
+msgstr "Nimi"
+
+#: ../src/plugins/dirmenu.c:378
+msgid "Browse directory tree via menu (Author = PCMan)"
+msgstr "Selaa hakemistopuuta valikon kautta (tekijä: PCMan)"
+
+#: ../src/plugins/thermal/thermal.c:480
+msgid "Normal"
+msgstr "Normaali"
+
+#: ../src/plugins/thermal/thermal.c:481
+msgid "Warning1"
+msgstr "Varoitus1"
+
+#: ../src/plugins/thermal/thermal.c:482
+msgid "Warning2"
+msgstr "Varoitus2"
+
+#: ../src/plugins/thermal/thermal.c:483
+msgid "Automatic sensor location"
+msgstr "Automaattinen sensorin sijainti"
+
+#: ../src/plugins/thermal/thermal.c:484
+msgid "Sensor"
+msgstr "Sensori"
+
+#: ../src/plugins/thermal/thermal.c:485
+msgid "Automatic temperature levels"
+msgstr "Automaattiset lämpötilan tasot"
+
+#: ../src/plugins/thermal/thermal.c:486
+msgid "Warning1 Temperature"
+msgstr "Varoitus1 Lämpötila"
+
+#: ../src/plugins/thermal/thermal.c:487
+msgid "Warning2 Temperature"
+msgstr "Varoitus2 Lämpötila"
+
+#: ../src/plugins/thermal/thermal.c:531
+msgid "Temperature Monitor"
+msgstr "Lämpötilan näyttäjä"
+
+#: ../src/plugins/thermal/thermal.c:533
+msgid "Display system temperature"
+msgstr "Näyttää järjestelmän lämpötilan"
+
+#: ../src/plugins/cpufreq/cpufreq.c:329
+#, c-format
+msgid ""
+"Frequency: %d MHz\n"
+"Governor: %s"
+msgstr ""
+"Kellotaajuus: %d MHz\n"
+"Governor: %s"
+
+#: ../src/plugins/cpufreq/cpufreq.c:421
+msgid "CPUFreq frontend"
+msgstr "CPUFreq-edustaohjelma"
+
+#: ../src/plugins/cpufreq/cpufreq.c:422
+msgid "Display CPU frequency and allow to change governors and frequency"
+msgstr ""
+"Näyttää suorittimen kellotaajuuden sekä sallii vaihtaa governoria ja muuttaa "
+"taajuutta"
+
+#. FIXME: display current level in tooltip. ex: "Volume Control: 80%"
+#. Display current level in tooltip.
+#: ../src/plugins/volume/volume.c:300
+#: ../src/plugins/volumealsa/volumealsa.c:363
+#: ../src/plugins/volumealsa/volumealsa.c:545
+msgid "Volume control"
+msgstr "Äänenhallinta"
+
+#: ../src/plugins/volume/volume.c:312
+#: ../src/plugins/volumealsa/volumealsa.c:666
+msgid "Volume Control"
+msgstr "Äänenhallinta"
+
+#. Create a frame as the child of the viewport.
+#: ../src/plugins/volume/volume-impl.c:109
+#: ../src/plugins/volumealsa/volumealsa.c:503
+msgid "Volume"
+msgstr "Voimakkuus"
+
+#. Create a check button as the child of the vertical box.
+#: ../src/plugins/volumealsa/volumealsa.c:522
+msgid "Mute"
+msgstr "Hiljennä"
+
+#: ../src/plugins/volumealsa/volumealsa.c:639
+msgid ""
+"Error, you need to install an application to configure the sound "
+"(pavucontol, alsamixer ...)"
+msgstr ""
+"Tapahtui virhe, sinun pitää asentaa joku ääniasetusten muokkausohjelma "
+"(pavucontrol, alsamixer ...)"
+
+#: ../src/plugins/volumealsa/volumealsa.c:668
+msgid "Display and control volume for ALSA"
+msgstr "Näytä ja muuta ALSA-äänenvoimakkuutta"
+
+#: ../src/plugins/netstat/netstat.c:180
+msgid "<Hidden Access Point>"
+msgstr "<Piilotettu tukiasema>"
+
+#: ../src/plugins/netstat/netstat.c:213
+msgid "Wireless Networks not found in range"
+msgstr "Langattomia verkkoja ei löytynyt"
+
+#. Repair
+#: ../src/plugins/netstat/netstat.c:247
+msgid "Repair"
+msgstr "Korjaa"
+
+#. interface down
+#: ../src/plugins/netstat/netstat.c:252
+msgid "Disable"
+msgstr "Älä käytä"
+
+#: ../src/plugins/netstat/netstat.c:342
+msgid "Wireless Connection has no connectivity"
+msgstr "Langatonta yhteyttä ei ole"
+
+#: ../src/plugins/netstat/netstat.c:344
+msgid "Network cable is plugged out"
+msgstr "Verkkojohto on irrotettu."
+
+#: ../src/plugins/netstat/netstat.c:346
+msgid "Connection has limited or no connectivity"
+msgstr "Yhteyttä on rajoitettu tai yhteyttä ei ole"
+
+#: ../src/plugins/netstat/netstat.c:350 ../src/plugins/netstat/netstat.c:361
+#: ../src/plugins/netstat/netstat.c:372
+msgid "IP Address:"
+msgstr "IP-osoite:"
+
+#: ../src/plugins/netstat/netstat.c:351
+msgid "Remote IP:"
+msgstr "Etä-IP:"
+
+#: ../src/plugins/netstat/netstat.c:352 ../src/plugins/netstat/netstat.c:363
+#: ../src/plugins/netstat/netstat.c:374
+msgid "Netmask:"
+msgstr "Verkon peite:"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Activity"
+msgstr "Aktiivisuus"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Sent"
+msgstr "Lähetetty"
+
+#: ../src/plugins/netstat/netstat.c:353 ../src/plugins/netstat/netstat.c:365
+#: ../src/plugins/netstat/netstat.c:376
+msgid "Received"
+msgstr "Vastaanotettu"
+
+#: ../src/plugins/netstat/netstat.c:354 ../src/plugins/netstat/netstat.c:366
+#: ../src/plugins/netstat/netstat.c:377
+msgid "bytes"
+msgstr "tavua"
+
+#: ../src/plugins/netstat/netstat.c:355 ../src/plugins/netstat/netstat.c:367
+#: ../src/plugins/netstat/netstat.c:378
+msgid "packets"
+msgstr "pakettia"
+
+#: ../src/plugins/netstat/netstat.c:358
+#: ../src/plugins/netstatus/netstatus-iface.c:173
+msgid "Wireless"
+msgstr "Langaton"
+
+#: ../src/plugins/netstat/netstat.c:360
+msgid "Protocol:"
+msgstr "Yhteyskäytäntö"
+
+#: ../src/plugins/netstat/netstat.c:364 ../src/plugins/netstat/netstat.c:375
+msgid "HW Address:"
+msgstr "HW-osoite"
+
+#: ../src/plugins/netstat/netstat.c:515
+msgid "Manage Networks"
+msgstr "Hallitse verkkoja"
+
+#: ../src/plugins/netstat/netstat.c:517
+msgid "Monitor and Manage networks"
+msgstr "Valvo ja hallitse verkkoja"
+
+#. create dialog
+#: ../src/plugins/netstat/passwd_gui.c:86
+msgid "Setting Encryption Key"
+msgstr "Asetetaan salausavainta"
+
+#. messages
+#: ../src/plugins/netstat/passwd_gui.c:96
+msgid ""
+"This wireless network was encrypted.\n"
+"You must have the encryption key."
+msgstr ""
+"Tämä langaton verkko on suojattu.\n"
+"Sinulla täytyy olla salausavain."
+
+#: ../src/plugins/netstat/passwd_gui.c:101
+msgid "Encryption Key:"
+msgstr "Salausavain:"
+
+#: ../src/plugins/netstatus/netstatus.c:179
+msgid "Interface to monitor"
+msgstr "Valvottava laite"
+
+#: ../src/plugins/netstatus/netstatus.c:180
+msgid "Config tool"
+msgstr "Asetustyökalu"
+
+#: ../src/plugins/netstatus/netstatus.c:197
+msgid "Network Status Monitor"
+msgstr "Verkon tilan valvoja"
+
+#: ../src/plugins/netstatus/netstatus.c:199
+msgid "Monitor network status"
+msgstr "Valvoo verkon tilaa"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:51
+#: ../src/plugins/netstatus/netstatus-dialog.c:312
+msgid "Unknown"
+msgstr "Tuntematon"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:116
+msgid "Connection Properties"
+msgstr "Yhteyden tiedot"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:122
+#, c-format
+msgid "Connection Properties: %s"
+msgstr "Yhteyden tiedot: %s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:135
+#, c-format
+msgid "%lu packet"
+msgid_plural "%lu packets"
+msgstr[0] "%lu paketti"
+msgstr[1] "%lu pakettia"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:396
+#, c-format
+msgid ""
+"There was an error displaying help:\n"
+"%s"
+msgstr ""
+"Ohjetta näytettäessä ilmaantui virhe:\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-dialog.c:580
+#, c-format
+msgid "Failed to launch time configuration tool: %s"
+msgstr "Ajanhallintatyökalun käynnistys epäonnistui: %s"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:380
+#, c-format
+msgid "Network Connection: %s"
+msgstr "Verkkoyhteys: %s"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:385
+msgid "Network Connection"
+msgstr "Verkkoyhteys"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:814
+msgid "Interface"
+msgstr "Liitäntä"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:815
+msgid "The current interface the icon is monitoring."
+msgstr "Verkkolaite, jonka tilla kuvake seuraa."
+
+#: ../src/plugins/netstatus/netstatus-icon.c:822
+msgid "Orientation"
+msgstr "Asento"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:823
+msgid "The orientation of the tray."
+msgstr "Ilmoitusalueen asento."
+
+#: ../src/plugins/netstatus/netstatus-icon.c:831
+msgid "Tooltips Enabled"
+msgstr "Työkaluvihjeet sallittu"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:832
+msgid "Whether or not the icon's tooltips are enabled."
+msgstr "Käytetäänkö vai ei kuvakkeen työkaluvihjeitä."
+
+#: ../src/plugins/netstatus/netstatus-icon.c:839
+msgid "Show Signal"
+msgstr "Näytä signaali"
+
+#: ../src/plugins/netstatus/netstatus-icon.c:840
+msgid "Whether or not the signal strength should be displayed."
+msgstr "Näytetäänkö vai ei signaalin vahvuus."
+
+#: ../src/plugins/netstatus/netstatus-icon.c:949
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"\n"
+"%s"
+msgstr ""
+"Ota yhteyttä järjestelmäsi ylläpitäjään ratkaistaksesi seuraavan ongelman:\n"
+"\n"
+"%s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:148
+msgid "Name"
+msgstr "Nimi"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:149
+msgid "The interface name"
+msgstr "Verkkolaitteen nimi"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:156
+#: ../src/plugins/weather/weatherwidget.c:2036
+msgid "State"
+msgstr "Tila"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:157
+msgid "The interface state"
+msgstr "Verkkolaitteen tila"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:165
+msgid "Stats"
+msgstr "Tilastot"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:166
+msgid "The interface packets/bytes statistics"
+msgstr "Verkkolaitteen paketti- ja tavutilastot"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:174
+msgid "Whether the interface is a wireless interface"
+msgstr "Onko verkkolaite langaton verkkolaite"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:181
+msgid "Signal"
+msgstr "Signaali"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:182
+msgid "Wireless signal strength percentage"
+msgstr "Langattoman signaalin vahvuus prosentteina"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:191
+#: ../src/plugins/netstatus/netstatus-util.c:167
+msgid "Error"
+msgstr "Virhe"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:192
+msgid "The current error condition"
+msgstr "Virheen tila"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:440
+#: ../src/plugins/netstatus/netstatus-iface.c:1206
+#, c-format
+msgid "Unable to open socket: %s"
+msgstr "Ei voida avata pistoketta: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:502
+#: ../src/plugins/netstatus/netstatus-iface.c:1232
+#, c-format
+msgid "SIOCGIFFLAGS error: %s"
+msgstr "SIOCGIFFLAGS-virhe: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:879
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:882
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:888
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:897
+#: ../src/plugins/netstatus/netstatus-iface.c:1017
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps ”Token Ring” -verkko"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:900
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:906
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay DLCI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:912
+msgid "Metricom Starmode IP"
+msgstr "Metricom Starmode IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:915
+msgid "Serial Line IP"
+msgstr "Sarjalinja-IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:918
+msgid "VJ Serial Line IP"
+msgstr "VJ-sarjalinja-IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:921
+msgid "6-bit Serial Line IP"
+msgstr "6-bittinen sarjalinja-IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:924
+msgid "VJ 6-bit Serial Line IP"
+msgstr "6-bittinen VJ-sarjalinja-IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:930
+msgid "Adaptive Serial Line IP"
+msgstr "Mukautuva sarjalinja-IP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:933
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:936
+msgid "Generic X.25"
+msgstr "Yleinen X.25"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:939
+msgid "Point-to-Point Protocol"
+msgstr "Point-to-Point-yhteyskäytäntö"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:945
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:948
+msgid "LAPB"
+msgstr "LAPB"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:957
+msgid "IPIP Tunnel"
+msgstr "IPIP-tunneli"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:963
+msgid "Frame Relay Access Device"
+msgstr "Frame Relay -liityntälaite"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:969
+msgid "Local Loopback"
+msgstr "Paikallinen silmukka"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:975
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiber Distributed Data Interface"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:981
+msgid "IPv6-in-IPv4"
+msgstr "IPv6 IPv4-tunnelissa"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:993
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:996
+msgid "Ash"
+msgstr "Ash"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:999
+msgid "Econet"
+msgstr "Econet"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1002
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1164
+#, c-format
+msgid "SIOCGIFCONF error: %s"
+msgstr "SIOCGIFCONF-virhe: %s"
+
+#: ../src/plugins/netstatus/netstatus-iface.c:1257
+#, c-format
+msgid "No network devices found"
+msgstr "Verkkolaitteita ei löytynyt"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:180
+#, c-format
+msgid "Cannot open /proc/net/dev: %s"
+msgstr "Ei voida avata polkua /proc/net/dev: %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:185
+msgid "Could not parse /proc/net/dev. No data."
+msgstr "Tiedoston /dev/proc/net jäsentäminen ei onnistunut. Ei dataa."
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:190
+msgid "Could not parse /proc/net/dev. Unknown format."
+msgstr ""
+"Tiedoston /dev/proc/net jäsentäminen ei onnistunut. Tuntematon muotoilu."
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:205
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:332
+#, c-format
+msgid "Could not parse interface name from '%s'"
+msgstr "Verkkolaitteen nimeä ei voitu jäsentää lähteestä ”%s”"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:218
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:647
+#, c-format
+msgid ""
+"Could not parse interface statistics from '%s'. prx_idx = %d; ptx_idx = %d; "
+"brx_idx = %d; btx_idx = %d;"
+msgstr ""
+"Käyttöliittymän tilastoja ei voitu jäsentää lähteestä ”%s”. prx_idx = %d; "
+"ptx_idx = %d; brx_idx = %d; btx_idx = %d;"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:312
+msgid "Could not parse /proc/net/wireless. No data."
+msgstr "Tiedostoa /proc/net/wireless ei voitu jäsentää. Ei dataa."
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:316
+msgid "Could not parse /proc/net/wireless. Unknown format."
+msgstr "Tiedostoa /proc/net/wireless ei voitu jäsentää. Tuntematon muotoilu."
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:343
+#, c-format
+msgid "Could not parse wireless details from '%s'. link_idx = %d;"
+msgstr ""
+"Langattoman verkkoyhteyden tietoja ei voitu jäsentää lähteestä ”%s”. "
+"link_idx = %d;"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:416
+#, c-format
+msgid "Could not connect to interface, '%s'"
+msgstr "Liitäntään ”%s” ei voitu yhdistää"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:422
+#, c-format
+msgid "Could not send ioctl to interface, '%s'"
+msgstr "Liitännälle ”%s” ei voitu lähettää ioctl-signaalia"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:600
+#, c-format
+msgid "Could not parse command line '%s': %s"
+msgstr "Komentoriviä ”%s” ei voitu jäsentää: %s"
+
+#: ../src/plugins/netstatus/netstatus-sysdeps.c:637
+msgid "Could not parse 'netstat' output. Unknown format"
+msgstr "”netstat”:in tulostetta ei voitu jäsentää. Tuntematon muotoilu."
+
+#: ../src/plugins/netstatus/netstatus-util.c:152
+msgid "Disconnected"
+msgstr "Ei yhteyttä"
+
+#: ../src/plugins/netstatus/netstatus-util.c:155
+msgid "Idle"
+msgstr "Jouten"
+
+#: ../src/plugins/netstatus/netstatus-util.c:158
+msgid "Sending"
+msgstr "Lähetetään"
+
+#: ../src/plugins/netstatus/netstatus-util.c:161
+msgid "Receiving"
+msgstr "Vastaanotetaan"
+
+#: ../src/plugins/netstatus/netstatus-util.c:164
+msgid "Sending/Receiving"
+msgstr "Lähetetään/Vastaanotetaan"
+
+#: ../src/plugins/batt/batt.c:151
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d until full"
+msgstr "Akku: %d%% ladattu, %d:%02d kunnes täynnä"
+
+#: ../src/plugins/batt/batt.c:162
+#, c-format
+msgid "Battery: %d%% charged, %d:%02d left"
+msgstr "Akku: %d%% ladattu, %d:%02d jäljellä"
+
+#: ../src/plugins/batt/batt.c:168
+#, c-format
+msgid "Battery: %d%% charged"
+msgstr "Akku: %d%% ladattu"
+
+#: ../src/plugins/batt/batt.c:178
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full design:\t\t%5d mWh"
+msgstr ""
+"\n"
+"%sEnergia täynnä, design:\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:180
+#, c-format
+msgid ""
+"\n"
+"%sEnergy full:\t\t\t%5d mWh"
+msgstr ""
+"\n"
+"%sEnergia täynnä\t\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:182
+#, c-format
+msgid ""
+"\n"
+"%sEnergy now:\t\t\t%5d mWh"
+msgstr ""
+"\n"
+"%sEnergiaa nyt:\t\t\t%5d mWh"
+
+#: ../src/plugins/batt/batt.c:184
+#, c-format
+msgid ""
+"\n"
+"%sPower now:\t\t\t%5d mW"
+msgstr ""
+"\n"
+"%sTeho nyt:\t\t\t%5d mW"
+
+#: ../src/plugins/batt/batt.c:187
+#, c-format
+msgid ""
+"\n"
+"%sCharge full design:\t%5d mAh"
+msgstr ""
+"\n"
+"%sTäysi lataus, design:\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:189
+#, c-format
+msgid ""
+"\n"
+"%sCharge full:\t\t\t%5d mAh"
+msgstr ""
+"\n"
+"%sTäysi lataus:\t\t\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:191
+#, c-format
+msgid ""
+"\n"
+"%sCharge now:\t\t\t%5d mAh"
+msgstr ""
+"\n"
+"%sLataus nyt:\t\t\t%5d mAh"
+
+#: ../src/plugins/batt/batt.c:193
+#, c-format
+msgid ""
+"\n"
+"%sCurrent now:\t\t\t%5d mA"
+msgstr ""
+"\n"
+"%sVirta nyt:\t\t\t%5d mA"
+
+#: ../src/plugins/batt/batt.c:196
+#, c-format
+msgid ""
+"\n"
+"%sCurrent Voltage:\t\t%.3lf V"
+msgstr ""
+"\n"
+"%sTämänhetkinen jännite:\t\t%.3lf V"
+
+#: ../src/plugins/batt/batt.c:234
+msgid "No batteries found"
+msgstr "Akkua ei löytynyt"
+
+#: ../src/plugins/batt/batt.c:619 ../src/plugins/batt/batt.c:642
+msgid "Battery Monitor"
+msgstr "Akun valvoja"
+
+#: ../src/plugins/batt/batt.c:622
+msgid "Hide if there is no battery"
+msgstr "Piilota, jos akkua ei ole"
+
+#: ../src/plugins/batt/batt.c:624
+msgid "Alarm command"
+msgstr "Hälytyskomento"
+
+#: ../src/plugins/batt/batt.c:625
+msgid "Alarm time (minutes left)"
+msgstr "Hälytysaika (minuuttia jäljellä)"
+
+#: ../src/plugins/batt/batt.c:626
+msgid "Background color"
+msgstr "Taustaväri"
+
+#: ../src/plugins/batt/batt.c:627
+msgid "Charging color 1"
+msgstr "Latausväri 1"
+
+#: ../src/plugins/batt/batt.c:628
+msgid "Charging color 2"
+msgstr "Latausväri 2"
+
+#: ../src/plugins/batt/batt.c:629
+msgid "Discharging color 1"
+msgstr "Purkautumisen väri 1"
+
+#: ../src/plugins/batt/batt.c:630
+msgid "Discharging color 2"
+msgstr "Purkautumisen väri 2"
+
+#: ../src/plugins/batt/batt.c:631
+msgid "Border width"
+msgstr "Reunuksen leveys"
+
+#: ../src/plugins/batt/batt.c:633
+msgid "Show Extended Information"
+msgstr "Näytä lisätiedot"
+
+#: ../src/plugins/batt/batt.c:643
+msgid "Display battery status using ACPI"
+msgstr "Näyttää akun tila käyttäen ACPI:a."
+
+#: ../src/plugins/kbled/kbled.c:257
+msgid "Show CapsLock"
+msgstr "Näytä CapsLock"
+
+#: ../src/plugins/kbled/kbled.c:258
+msgid "Show NumLock"
+msgstr "Näytä NumLock"
+
+#: ../src/plugins/kbled/kbled.c:259
+msgid "Show ScrollLock"
+msgstr "Näytä ScrollLock"
+
+#: ../src/plugins/kbled/kbled.c:293
+msgid "Keyboard LED"
+msgstr "Näppäimistön valot"
+
+#: ../src/plugins/kbled/kbled.c:295
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr "CapsLock-, NumLock- ja ScrollLock-näppäinten ilmaisin"
+
+#. A label to allow for click through
+#: ../src/plugins/indicator/indicator.c:698
+msgid "No Indicators"
+msgstr "Ei ilmaisimia"
+
+#: ../src/plugins/indicator/indicator.c:897
+msgid "Indicator Applications"
+msgstr "Ilmaisinsovellukset"
+
+#: ../src/plugins/indicator/indicator.c:898
+msgid "Clock Indicator"
+msgstr "Kelloilmaisin"
+
+#: ../src/plugins/indicator/indicator.c:899
+msgid "Messaging Menu"
+msgstr "Viestintävalikko"
+
+#: ../src/plugins/indicator/indicator.c:900
+msgid "Network Menu"
+msgstr "Verkkovalikko"
+
+#: ../src/plugins/indicator/indicator.c:901
+msgid "Session Menu"
+msgstr "Istuntovalikko"
+
+#: ../src/plugins/indicator/indicator.c:902
+msgid "Sound Menu"
+msgstr "Äänivalikko"
+
+#: ../src/plugins/indicator/indicator.c:928
+msgid "Indicator applets"
+msgstr "Osoitinsovelmat"
+
+#: ../src/plugins/indicator/indicator.c:930
+msgid "Add indicator applets to the panel"
+msgstr "Lisää osoitinsovelmia paneeliin"
+
+#: ../src/plugins/monitors/monitors.c:277
+#, c-format
+msgid "CPU usage: %.2f%%"
+msgstr "Prosessorin kuorma: %.2f%%"
+
+#: ../src/plugins/monitors/monitors.c:360
+#, c-format
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr "Keskusmuistin käyttö: %.1fMB (%.2f%%)"
+
+#: ../src/plugins/monitors/monitors.c:714
+msgid "CPU color"
+msgstr "Prosessorin väri"
+
+#: ../src/plugins/monitors/monitors.c:715
+msgid "Display RAM usage"
+msgstr "Näytä muistin käyttöaste"
+
+#: ../src/plugins/monitors/monitors.c:716
+msgid "RAM color"
+msgstr "Muistin väri"
+
+#: ../src/plugins/monitors/monitors.c:717
+msgid "Action when clicked (default: lxtask)"
+msgstr "Toiminto, kun napsautetaan (oletus: lxtask)"
+
+#: ../src/plugins/monitors/monitors.c:810
+msgid "Resource monitors"
+msgstr "Resurssienhallinta"
+
+#: ../src/plugins/monitors/monitors.c:812
+msgid "Display monitors (CPU, RAM)"
+msgstr "Näyttää mittareita (suoritin, muisti)"
+
+#: ../src/plugins/weather/weatherwidget.c:50
+msgid "[N/A]"
+msgstr "–"
+
+#: ../src/plugins/weather/weatherwidget.c:784
+msgid "Enter New Location"
+msgstr "Kirjoita uusi sijainti"
+
+#: ../src/plugins/weather/weatherwidget.c:798
+msgid "_New Location:"
+msgstr "_Uusi sijainti:"
+
+#: ../src/plugins/weather/weatherwidget.c:809
+msgid ""
+"Enter the:\n"
+"- city, or\n"
+"- city and state/country, or\n"
+"- postal code\n"
+"for which to retrieve the weather forecast."
+msgstr ""
+"Kirjoita\n"
+"- kaupunki,\n"
+"- kaupunki ja maa tai\n"
+"- postinumero\n"
+"jonka sääennuste haetaan."
+
+#: ../src/plugins/weather/weatherwidget.c:846
+#: ../src/plugins/weather/weatherwidget.c:979
+msgid "You must specify a location."
+msgstr "Sijainti täytyy määrittää."
+
+#: ../src/plugins/weather/weatherwidget.c:893
+#, c-format
+msgid "Location '%s' not found!"
+msgstr "Sijaintia ”%s” ei löytynyt!"
+
+#: ../src/plugins/weather/weatherwidget.c:1051
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: ../src/plugins/weather/weatherwidget.c:1057
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: ../src/plugins/weather/weatherwidget.c:1063
+msgid "Quit"
+msgstr "Lopeta"
+
+#: ../src/plugins/weather/weatherwidget.c:1160
+msgid "Weather Preferences"
+msgstr "Sääsovelman asetukset"
+
+#: ../src/plugins/weather/weatherwidget.c:1174
+msgid "Current Location"
+msgstr "Nykyinen sijainti"
+
+#: ../src/plugins/weather/weatherwidget.c:1178
+#: ../src/plugins/weather/weatherwidget.c:1475
+msgid "None configured"
+msgstr "Ei määritetty"
+
+#: ../src/plugins/weather/weatherwidget.c:1180
+#: ../src/plugins/weather/weatherwidget.c:1472
+msgid "_Set"
+msgstr "A_seta"
+
+#: ../src/plugins/weather/weatherwidget.c:1201
+msgid "Display"
+msgstr "Näyttö"
+
+#: ../src/plugins/weather/weatherwidget.c:1205
+msgid "Name:"
+msgstr "Nimi:"
+
+#: ../src/plugins/weather/weatherwidget.c:1209
+msgid "Units:"
+msgstr "Yksikköjärjestelmä:"
+
+#: ../src/plugins/weather/weatherwidget.c:1213
+msgid "_Metric (°C)"
+msgstr "_SI-yksiköt (°C)"
+
+#: ../src/plugins/weather/weatherwidget.c:1215
+msgid "_English (°F)"
+msgstr "_Englantilainen (°F)"
+
+#: ../src/plugins/weather/weatherwidget.c:1250
+msgid "Forecast"
+msgstr "Ennuste"
+
+#: ../src/plugins/weather/weatherwidget.c:1254
+msgid "Updates:"
+msgstr "Päivitykset:"
+
+#: ../src/plugins/weather/weatherwidget.c:1258
+msgid "Ma_nual"
+msgstr "_Käsin"
+
+#: ../src/plugins/weather/weatherwidget.c:1262
+msgid "_Automatic, every"
+msgstr "_Automaattinen, joka"
+
+#: ../src/plugins/weather/weatherwidget.c:1278
+msgid "minutes"
+msgstr "minuutti"
+
+#: ../src/plugins/weather/weatherwidget.c:1287
+msgid "Source:"
+msgstr "Lähde:"
+
+#: ../src/plugins/weather/weatherwidget.c:1428
+msgid "C_hange"
+msgstr "Vai_hda"
+
+#. Both are available
+#: ../src/plugins/weather/weatherwidget.c:1519
+#, c-format
+msgid "Current Conditions for %s"
+msgstr "Säätila – %s"
+
+#: ../src/plugins/weather/weatherwidget.c:1543
+msgid "Location:"
+msgstr "Sijainti:"
+
+#: ../src/plugins/weather/weatherwidget.c:1566
+msgid "Last updated:"
+msgstr "Viimeksi päivitetty:"
+
+#: ../src/plugins/weather/weatherwidget.c:1593
+msgid "Feels like:"
+msgstr "Tuntuu:"
+
+#: ../src/plugins/weather/weatherwidget.c:1618
+msgid "Humidity:"
+msgstr "Kosteus:"
+
+#: ../src/plugins/weather/weatherwidget.c:1645
+msgid "Pressure:"
+msgstr "Paine:"
+
+#: ../src/plugins/weather/weatherwidget.c:1672
+msgid "Visibility:"
+msgstr "Näkyvyys:"
+
+#: ../src/plugins/weather/weatherwidget.c:1700
+msgid "Wind:"
+msgstr "Tuuli:"
+
+#: ../src/plugins/weather/weatherwidget.c:1723
+msgid "Sunrise:"
+msgstr "Aurinko nousee:"
+
+#: ../src/plugins/weather/weatherwidget.c:1746
+msgid "Sunset:"
+msgstr "Aurinko laskee:"
+
+#: ../src/plugins/weather/weatherwidget.c:1854
+#: ../src/plugins/weather/weatherwidget.c:2190
+#, c-format
+msgid "Forecast for %s unavailable."
+msgstr "Paikkakunnan %s sääennuste ei ole saatavilla."
+
+#: ../src/plugins/weather/weatherwidget.c:1863
+#: ../src/plugins/weather/weatherwidget.c:2195
+#, c-format
+msgid "Location not set."
+msgstr "Sijaintia ei ole asetettu."
+
+#: ../src/plugins/weather/weatherwidget.c:1880
+#, c-format
+msgid "Searching for '%s'..."
+msgstr "Etsitään ”%s”…"
+
+#: ../src/plugins/weather/weatherwidget.c:2006
+#, c-format
+msgid "Location matches for '%s'"
+msgstr "Täsmäävät sijainnit hakusanalle ”%s”"
+
+#: ../src/plugins/weather/weatherwidget.c:2026
+msgid "City"
+msgstr "Kaupunki"
+
+#: ../src/plugins/weather/weatherwidget.c:2046
+msgid "Country"
+msgstr "Maa"
+
+#. make it nice and pretty
+#: ../src/plugins/weather/weatherwidget.c:2177
+msgid "Currently in "
+msgstr "Tällä hetkellä "
+
+#: ../src/plugins/weather/weatherwidget.c:2179
+msgid "Today: "
+msgstr "Tänään: "
+
+#: ../src/plugins/weather/weatherwidget.c:2180
+msgid "Tomorrow: "
+msgstr "Huomenna: "
+
+#: ../src/plugins/weather/weather.c:285
+msgid "Weather Plugin"
+msgstr "Sää-lisäosa"
+
+#: ../src/plugins/weather/weather.c:287
+msgid "Show weather conditions for a location."
+msgstr "Näytä paikan säätiedot."
+
+#~ msgid "Model"
+#~ msgstr "Malli"
+
+#~ msgid "WNCKPager"
+#~ msgstr "WNCK-sivuttaja"
+
+#~ msgid "<b>Icon</b>"
+#~ msgstr "<b>Kuvake</b>"
+
+#~ msgid "Configure Keyboard Layout Switcher"
+#~ msgstr "Muokkaa näppäimistöasettelunvaihtajan asetuksia"
+
+#~ msgid "image"
+#~ msgstr "kuvana"
+
+#~ msgid "text"
+#~ msgstr "tekstinä"
+
+#~ msgid "Per application settings"
+#~ msgstr "Sovelluskohtaiset asetukset"
+
+#~ msgid "Default layout:"
+#~ msgstr "Oletusasettelu:"
+
+#~ msgid "Available Applications"
+#~ msgstr "Käytettävissä olevat liitännäiset"
+
+#~ msgid "Left\t"
+#~ msgstr "Vasemmalla"
+
+#~ msgid "Top\t"
+#~ msgstr "Ylhäällä"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Ei löydetty "
+
+#~ msgid "Desktop No / Workspace Name"
+#~ msgstr "Työpöydän numero/työtilan nimi"
+
+#~ msgid ""
+#~ "Allows you to switch the keyboard layout and\n"
+#~ "displays the currently selected layout."
+#~ msgstr ""
+#~ "Sallii näppäimistöasettelun vaihtamisen ja\n"
+#~ "näyttää käytössä olevan asettelun."
+
+#~ msgid "Old KDE/GNOME Tray"
+#~ msgstr "Vanha KDE/Gnome-ilmoitusalue"
+
+#~ msgid "Enable Image:"
+#~ msgstr "Käytä kuvaa:"
+
+#~ msgid "Enable Transparency"
+#~ msgstr "Käytä läpinäkyvyyttä"
+
+#~ msgid " --configure -- launch configuration utility\n"
+#~ msgstr "--configure -- käynnistää asetustyökalun\n"
+
+#~ msgid " -C  -- same as --configure\n"
+#~ msgstr "-C  -- sama kuin --configure\n"
+
+#~ msgid "Add Button"
+#~ msgstr "Lisää painike"
+
+#~ msgid "Button Properties"
+#~ msgstr "Painikkeen asetukset"
+
+#~ msgid "Remove Button"
+#~ msgstr "Poista painike"
+
+#~ msgid "Buttons"
+#~ msgstr "Painikkeet"
+
+#~ msgid "Accept SkipPager"
+#~ msgstr "Salli SkipPager"
+
+#~ msgid "Show Iconified windows"
+#~ msgstr "Näytä pienennetyt ikkunat"
+
+#~ msgid "Show mapped windows"
+#~ msgstr "Näytä auki olevat ikkunat"
+
+#~ msgid "Kayboard Layout switcher"
+#~ msgstr "Näppäimistöasettelun vaihtaja"
+
+#~ msgid ""
+#~ "Dynamic\n"
+#~ "Pixels\n"
+#~ "% Percent"
+#~ msgstr ""
+#~ "muokkautuva\n"
+#~ "pikseliä\n"
+#~ "prosenttia"
+
+#~ msgid ""
+#~ "Left\n"
+#~ "Center\n"
+#~ "Right"
+#~ msgstr ""
+#~ "Vasemmalla\n"
+#~ "Keskellä\n"
+#~ "Oikealla"
+
+#~ msgid ""
+#~ "Left\n"
+#~ "Right\n"
+#~ "Top\n"
+#~ "Bottom"
+#~ msgstr ""
+#~ "Vasemmalla\n"
+#~ "Oikealla\n"
+#~ "Ylhäällä\n"
+#~ "Alhaalla"
+
+#~ msgid "Where to put the panel?"
+#~ msgstr "Minne paneeli laitetaan?"
+
+#~ msgid "Battery: %d%% charged, %s"
+#~ msgstr "Akku: %d%% ladattu, %s"
+
+#~ msgid "charging finished"
+#~ msgstr "lataus on valmis"
+
+#~ msgid "charging"
+#~ msgstr "ladataan"
+
+#~ msgid "Add to desktop panel"
+#~ msgstr "Lisää työpöytäpaneeliin"
+
+#~ msgid "Game"
+#~ msgstr "Pelit"
+
+#~ msgid "Development"
+#~ msgstr "Kehitys"
+
+#~ msgid "Audio & Video"
+#~ msgstr "Ääni & video"
+
+#~ msgid "Graphics"
+#~ msgstr "Grafiikka"
+
+#~ msgid "System Tools"
+#~ msgstr "Järjestelmätyökalut"
+
+#~ msgid "Office"
+#~ msgstr "Toimisto"
+
+#~ msgid "Accessories"
+#~ msgstr "Apuohjelmat"

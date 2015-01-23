@@ -1,0 +1,119 @@
+<schemalist gettext-domain="@GETTEXT_PACKAGE@">
+  <enum id="GtkPositionType">
+    <value nick="left" value="0"/>
+    <value nick="right" value="1"/>
+    <value nick="top" value="2"/>
+    <value nick="bottom" value="3"/>
+  </enum>
+  <schema id="org.simple.panel.toplevel">
+    <key name="name" type="s">
+      <default>''</default>
+      <_summary>Name to identify panel</_summary>
+      <_description>This is a human readable name which you can use to identify a panel. It also serves as a config name for panel config file.</_description>
+    </key>
+    <key name="monitor" type="i">
+      <default>-1</default>
+      <_summary>Xinerama monitor where the panel is displayed</_summary>
+      <_description>In a Xinerama setup, you may have panels on each individual monitor. This key identifies the current monitor the panel is displayed on.</_description>
+    </key>
+    <key name="edge" enum="GtkPositionType">
+      <default>'top'</default>
+      <_summary>Panel edge</_summary>
+      <_description>The edge of the panel. Possible values are "top", "bottom", "left", "right". The key specifies which screen edge the panel is on.</_description>
+    </key>
+    <key name="height" type="i">
+	  <range min="16" max="200"/>
+      <default>26</default>
+      <_summary>Panel height</_summary>
+      <_description>The height (width for a vertical panel) of the panel. The minimum size is 16 px. The maximum size is 200 px.</_description>
+    </key>
+    <key name="width" type="i">
+      <default>100</default>
+      <_summary>Panel width</_summary>
+      <_description>The width (height for a vertical panel) of the panel. Minimum size is 16 px (or 1 percent, if size-type is percent), maximum is screen edge size (or 100 percent).</_description>
+    </key>
+    <key name="size-type" enum="org.simple.panel.SizeType">
+      <default>'percent'</default>
+      <_summary>Panel height type</_summary>
+      <_description>This key determines as width for panel counts. If dynamic, it taken from size request, if pixel, it exactly as in width key, is percent it will be a value from 1 to 100.</_description>
+    </key>
+    <key name="alignment" enum="org.simple.panel.AlignType">
+      <default>'center'</default>
+      <_summary>Panel alignment type</_summary>
+      <_description>This key determines from which point width for panel counts.</_description>
+    </key>
+    <key name="icon-size" type="i">
+	  <range min="16" max="200"/>
+      <default>24</default>
+      <_summary>Panel icon size</_summary>
+      <_description>Size of icons on the panel in pixels. Minimum is 16px, maximum is 200px.</_description>
+    </key>
+    <key name="dock" type="b">
+      <default>true</default>
+      <_summary>As dock</_summary>
+      <_description>If true, window managers will counts panel as dock.</_description>
+    </key>
+    <key name="strut" type="b">
+      <default>true</default>
+      <_summary>Do not overlap panel by other windows</_summary>
+      <_description>If true, the panel will not overlapped by another windows like maximized ones.</_description>
+    </key>
+    <key name="margin" type="i">
+      <default>0</default>
+      <_summary>Margin from side</_summary>
+      <_description>If alignment is not center, margin determines number of free pixels before panel.</_description>
+    </key>
+    <key name="auto-hide" type="b">
+      <default>false</default>
+      <_summary>Automatically hide panel into corner</_summary>
+      <_description>If true, the panel is automatically hidden into a corner of the screen when the pointer leaves the panel area. Moving the pointer to that corner again will cause the panel to re-appear.</_description>
+    </key>
+    <key name="auto-hide-size" type="i">
+	  <range min="0" max="10"/>
+      <default>1</default>
+      <_summary>Visible pixels when hidden</_summary>
+      <_description>Specifies the number of pixels visible when the panel is automatically hidden into a corner. This key is only relevant if the autohide key is true.</_description>
+    </key>
+    <key name="background-type" enum="org.simple.panel.BackgroundType">
+      <default>'gtk'</default>
+      <_summary>Background type</_summary>
+      <_description>Which type of background should be used for this panel. Possible values are "gtk" - the default GTK+ widget background will be used, "gnome" - the default Gnome Panel background will be used, "color" - the color key will be used as background color or "image" - the image specified by the image key will be used as background.</_description>
+    </key>
+    <key name="background-color" type="s">
+      <default>'rgb(255,255,255)'</default>
+      <_summary>Background color</_summary>
+      <_description>Specifies the background color for the panel in rgba(red,green,blue,alpha) format.</_description>
+    </key>
+    <key name="background-file" type="s">
+      <default>''</default>
+      <_summary>Background image</_summary>
+      <_description>Specifies the file to be used for the background image. If the image contains an alpha channel it will be composited onto the desktop background image.</_description>
+    </key>
+	<key name="appearance-features" flags="org.simple.panel.AppearanceFlags">
+      <default>[]</default>
+      <_summary>Selected apperance features.</_summary>
+      <_description>Listed appearance features will be used from GSettings, not from GTK theme.</_description>
+    </key>
+    <key name="enable-font-size" type="b">
+      <default>false</default>
+      <_summary>Use custom font size</_summary>
+      <_description>If true, the panel use custom font size for all items.</_description>
+    </key>
+    <key name="enable-font-color" type="b">
+      <default>false</default>
+      <_summary>Use custom font color</_summary>
+      <_description>If true, the panel use custom font color for all items.</_description>
+    </key>
+    <key name="font-color" type="s">
+      <default>'rgb(255,255,255)'</default>
+      <_summary>Background color</_summary>
+      <_description>Specifies the background color for the panel in rgba(red,green,blue,alpha) format.</_description>
+    </key>
+    <key name="font-size" type="i">
+	  <range min="2" max="96"/>
+      <default>10</default>
+      <_summary>Font size</_summary>
+      <_description>Custom font size of the panel.</_description>
+    </key>
+  </schema>
+</schemalist>
