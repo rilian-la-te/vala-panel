@@ -1,6 +1,10 @@
 using Gtk;
 using Peas;
 
+private class PanelApplet : Gtk.Bin
+{		
+}
+
 namespace ValaPanel
 {
 	[Flags]
@@ -27,6 +31,7 @@ namespace ValaPanel
 		private GLib.Settings _settings;
 		private ValaPanel.Toplevel _toplevel;
 		private Gtk.Widget back;
+		private PanelApplet applet;
 		internal uint number;
 		public abstract SupportedPluginFeatures features
 		{
@@ -54,6 +59,7 @@ namespace ValaPanel
 			this._toplevel = toplevel;
 			this.number = settings.number;
 			this._settings = settings.config_settings;
+			applet = new PanelApplet();
 			this.constructor(toplevel,this.settings);
 			if (back == null)
 				back = this;

@@ -1,4 +1,5 @@
 using Gtk;
+using Peas;
 
 //			settings.default_settings.bind(Key.BORDER,this,"border-width",GLib.SettingsBindFlags.GET);
 //			settings.default_settings.bind(Key.POSITION,this,"position",GLib.SettingsBindFlags.GET);
@@ -8,14 +9,23 @@ using Gtk;
 private class PanelToplevel : Gtk.Bin
 {		
 }
-private class PanelApplet : Gtk.Bin
-{		
-}
 
 namespace ValaPanel
 {
+	[Flags]
+	public enum AppearanceHints
+	{
+		GNOME,
+		BACKGROUND_COLOR,
+		FOREGROUND_COLOR,
+		BACKGROUND_IMAGE,
+		CORNERS,
+		FONT,
+		FONT_SIZE_ONLY
+	}
 	public class Toplevel : Gtk.ApplicationWindow
 	{
+		private AppearanceHints hints;
 		private Gtk.PositionType _edge;
 		public Gtk.PositionType edge {
 			get {return _edge;}
@@ -23,6 +33,41 @@ namespace ValaPanel
 				_edge = edge;
 			}
 		}
+		public bool use_gnome_theme
+		{ get {return AppearanceHints.GNOME in hints;}
+		  set {
+			  hints = (use_gnome_theme == true) ?
+				  hints | AppearanceHints.GNOME :
+				  hints & (~AppearanceHints.GNOME);
+			  update_background();
+		  }
+		}
+
+
+#if HAVE_GTK313
+		protected override Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
+		{
+			Gtk.WidgetPath path = base.get_path_for_child(child);
+#else
+		protected override unowned Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
+		{
+			unowned Gtk.WidgetPath path = base.get_path_for_child(child);
+#endif
+			if (use_gnome_theme)
+			{
+				path.iter_set_object_type(0, typeof(PanelToplevel));
+				for (int i=0; i<path.length(); i++)
+				{
+					if (path.iter_get_object_type(i) == typeof(Applet))
+					{
+						path.iter_set_object_type(i, typeof(PanelApplet));
+						break;
+					}
+				}
+			}
+		return path;
+		}
+		
 		public void popup_position_helper(Gtk.Widget near, Gtk.Widget popup,
 		                                  out int x, out int y) 
 		{
@@ -69,9 +114,19 @@ namespace ValaPanel
 			x.clamp(a.x,a.x + a.width - pa.width);
 			y.clamp(a.y,a.y + a.height - pa.height);
 		}
+
+		private place_plugin(PluginSettings s, uint pos)
+		{
+			
+		}	
 		public Gtk.Menu get_plugin_menu(Applet pl)
 		{
 			return new Gtk.Menu();
+		}
+		
+		private void update_background()
+		{
+			
 		}
 	}
 }
