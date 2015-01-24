@@ -8,9 +8,6 @@ BUILT_SOURCES = \
 	libvalapanel-resources.h \
 	libvalapanel-resources.c
 
-CLEANFILES = \
-	$(BUILT_SOURCES)
-
 # resources
 libvalapanel-resources.h: $(top_srcdir)/data/libvalapanel.gresource.xml
 	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-header $(top_srcdir)/data/libvalapanel.gresource.xml
@@ -25,7 +22,7 @@ libvalapanel_la_CPPFLAGS = $(simple_panel_CPPFLAGS)
 nodist_libvalapanel_la_SOURCES = libvalapanel-resources.c
 libvalapanel_la_SOURCES = \
 	menu-maker.vala \
-	plugingsettings.vala \
+	plugin-settings.vala \
 	css.vala 
 #	Misc.vala 
 #	configurator.vala 
@@ -51,7 +48,6 @@ libvalapanel_la_CFLAGS = \
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(GOBJECT_CFLAGS) \
 	$(GTK3_CFLAGS) \
-	$(WNCK3_CFLAGS) \
 	$(LIBPEAS_CFLAGS) \
 	-DG_SETTINGS_ENABLE_BACKEND \
 	-DGETTEXT_PACKAGE=\""vala-panel"\" \
@@ -67,6 +63,9 @@ libvalapanel_la_LIBADD = \
 	$(LIBPEAS_LIBS) \
 	-lm
 
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(libvalapanel_la_SOURCES:.vala=.c)
 
 dist-hook:
 	cd $(distdir) && \
