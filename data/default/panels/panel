@@ -8,7 +8,7 @@ icon-size=24
 auto-hide=false
 enable-font-color=true
 font-color='rgb(255,255,255)'
-background-file='/usr/share/simple-panel/images/background.png'
+background-file='/usr/local/share/simple-panel/images/background.png'
 
 
 [0]

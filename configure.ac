@@ -94,20 +94,30 @@ fi
 
 AC_SUBST(VALAFLAGS)
 
+#AC_CONFIG_FILES([Makefile
+#                data/Makefile
+#                lib/Makefile
+#                src/Makefile
+#                applets/Makefile
+#                po/Makefile.in
+#                vala-panel.pc
+#                data/budgie-desktop.desktop
+#                lib/libvalapanel.gresource.xml
+#                src/vala-panel.gresource.xml
+#                data/default/panels/panel
+#                data/two_panels/panels/top
+#                data/two_panels/panels/bottom
+ #               ])
 AC_CONFIG_FILES([Makefile
                 data/Makefile
                 lib/Makefile
-                src/Makefile
-                applets/Makefile
                 po/Makefile.in
-                simple-panel.pc
-                data/budgie-desktop.desktop
-                src/libsimplepanel.gresource.xml
-                src/simple-panel.gresource.xml
+                vala-panel.pc
+                data/libvalapanel.gresource.xml
                 data/default/panels/panel
                 data/two_panels/panels/top
                 data/two_panels/panels/bottom
-                ])
+               ])
 AC_OUTPUT
 
 AC_MSG_RESULT([

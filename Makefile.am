@@ -17,6 +17,6 @@ CLEANFILES =
 SUBDIRS = \
 	data \
 	lib\
-#	src \
-#	applets \
 	po
+#	src 
+#	applets 

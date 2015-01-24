@@ -17,9 +17,9 @@
 # We have the following line for use by intltoolize:
 # INTLTOOL_MAKEFILE
 
-GETTEXT_PACKAGE = simple-panel
-PACKAGE = simple-panel
-VERSION = 0.1.0
+GETTEXT_PACKAGE = vala-panel
+PACKAGE = ria.freelander@gmail.com
+VERSION = 0.1
 
 SHELL = /bin/sh
 
@@ -28,14 +28,14 @@ top_srcdir = ..
 top_builddir = ..
 
 
-prefix = /usr
+prefix = /usr/local
 exec_prefix = ${prefix}
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 libdir = ${exec_prefix}/lib
 localedir = ${datarootdir}/locale
 subdir = po
-install_sh = ${SHELL} /home/athor/Downloads/Panel/simple-panel/install-sh
+install_sh = ${SHELL} /home/user/Загрузки/Projects/vala-panel/install-sh
 # Automake >= 1.8 provides $(MKDIR_P).
 # Until it can be supposed, use the safe fallback:
 mkdir_p = $(install_sh) -d
@@ -43,7 +43,7 @@ mkdir_p = $(install_sh) -d
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 
-GMSGFMT = /usr/bin/gmsgfmt
+GMSGFMT = /usr/bin/msgfmt
 MSGFMT = /usr/bin/msgfmt
 XGETTEXT = /usr/bin/xgettext
 INTLTOOL_UPDATE = /usr/bin/intltool-update

@@ -5,7 +5,7 @@ edge='top'
 height=26
 auto-hide=false
 alignment='center'
-background-file='/usr/share/simple-panel/images/background.png'
+background-file='/usr/local/share/simple-panel/images/background.png'
 enable-font-size=false
 
 [0]
