@@ -1,7 +1,4 @@
 using GLib;
-using Gtk;
-
-
 
 namespace MenuMaker
 {

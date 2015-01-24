@@ -24,10 +24,10 @@ pkglib_LTLIBRARIES = libvalapanel.la
 libvalapanel_la_CPPFLAGS = $(simple_panel_CPPFLAGS)
 nodist_libvalapanel_la_SOURCES = libvalapanel-resources.c
 libvalapanel_la_SOURCES = \
-	menu-maker.vala
-#	plugingsettings.vala
+	menu-maker.vala \
+	plugingsettings.vala \
+	css.vala 
 #	Misc.vala 
-#	CSS.vala 
 #	configurator.vala 
 #	IconGrid.vala 
 #	Panel.vala 
@@ -53,6 +53,7 @@ libvalapanel_la_CFLAGS = \
 	$(GTK3_CFLAGS) \
 	$(WNCK3_CFLAGS) \
 	$(LIBPEAS_CFLAGS) \
+	-DG_SETTINGS_ENABLE_BACKEND \
 	-DGETTEXT_PACKAGE=\""vala-panel"\" \
 	-DPACKAGE_LIB_DIR=\""$(libdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)/simple-panel"\" \
