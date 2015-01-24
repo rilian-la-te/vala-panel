@@ -68,7 +68,7 @@ PKG_CHECK_MODULES([UPOWER], [upower-glib >= 0.9.20])
 PKG_CHECK_MODULES([LIBPEAS], [libpeas-gtk-1.0 >= 1.8.0])
 
 # Because we target Linux.
-PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.38.0])
+PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.40.0])
 
 AC_CONFIG_MACRO_DIR([m4])
 

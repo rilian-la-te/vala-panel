@@ -1,14 +1,23 @@
 using GLib;
 
-namespace PanelSettings
+namespace ValaPanel
 {
 	private static const string PLUGIN_SCHEMA = "org.simple.panel.toplevel.plugin";
 	private static const string PANEL_SCHEMA = "org.simple.panel.toplevel";
 	private static const string PANEL_PATH = "/org/simple/panel/toplevel/";
 	private static const string ROOT_NAME = "toplevel-settings";
 
-	private static const string NAME_KEY = "plugin-type";
-	private static const string SCHEMA_KEY = "has-schema";
+	namespace Key
+	{
+		private static const string NAME = "plugin-type";
+		private static const string SCHEMA = "has-schema";
+		private static const string EXPAND = "is-expanded";
+		private static const string CAN_EXPAND = "can-expand";
+		private static const string PADDING = "padding";
+		private static const string BORDER = "border";
+		private static const string POSITION = "position";
+	}
+	
 	internal class PluginSettings : GLib.Object
 	{
 		internal string path_append;
@@ -26,7 +35,7 @@ namespace PanelSettings
 		}
 		internal void init_configuration(ToplevelSettings settings, bool has_config)
 		{
-			default_settings.set_boolean(SCHEMA_KEY,has_config);
+			default_settings.set_boolean(Key.SCHEMA,has_config);
 			if (has_config)
 			{
 				var id = "%s.%s".printf(settings.root_name, this.path_append);
@@ -143,19 +152,28 @@ namespace PanelSettings
 			{
 				try 
 				{
-					var name = f.get_string(group,NAME_KEY);
+					var name = f.get_string(group,Key.NAME);
 					name.strip();
 					name.delimit("'",' ');
-					var config = f.get_boolean(group,SCHEMA_KEY);
+					var config = f.get_boolean(group,Key.SCHEMA);
 					var s = add_plugin_settings(name,int.parse(name));
 					s.init_configuration(this,config);
 				}
 				catch (GLib.KeyFileError e)
 				{
-					f.remove_group(group);
+					try{
+						f.remove_group(group);
+					} catch (GLib.KeyFileError e) {}
 				}
 			}
 			return true;
+		}
+		internal PluginSettings? get_settings_by_num(uint num)
+		{
+			foreach (var pl in _plugins)
+				if (pl.number == num)
+					return pl;
+			return null;
 		}
 	}
 }

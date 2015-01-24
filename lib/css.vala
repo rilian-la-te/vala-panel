@@ -1,7 +1,7 @@
 using Gtk;
 using Gdk;
 
-namespace PanelCss
+namespace PanelCSS
 {
 	public void apply_with_class(Gtk.Widget w, string css, string klass, bool add)
 	{
@@ -22,7 +22,7 @@ namespace PanelCss
 			} catch (GLib.Error e) {}
 		}
 	}
-	internal string generate_background(string name, Gdk.RGBA color)
+	internal string generate_background(string? name, Gdk.RGBA color)
 	{
 		if (name != null)
 			return ".-vala-panel-background{\n

@@ -23,10 +23,11 @@ nodist_libvalapanel_la_SOURCES = libvalapanel-resources.c
 libvalapanel_la_SOURCES = \
 	menu-maker.vala \
 	plugin-settings.vala \
-	css.vala 
+	css.vala \
+	panel-plugin.vala \
+	panel-toplevel.vala
 #	Misc.vala 
 #	configurator.vala 
-#	IconGrid.vala 
 #	Panel.vala 
 #	Plugin.vala 
 

@@ -36,7 +36,7 @@ namespace MenuMaker
 
 	public static GLib.MenuModel applications_model(string[] cats)
 	{
-		var builder = new Gtk.Builder.from_resource ("/org/vala/panel/lib/system-menus.ui");
+		var builder = new Gtk.Builder.from_resource("/org/vala/panel/lib/system-menus.ui");
 		var menu = (GLib.Menu) builder.get_object("categories");
 		foreach (var info in GLib.AppInfo.get_all ())
 			do_app_info((GLib.DesktopAppInfo)info,builder);
@@ -61,8 +61,8 @@ namespace MenuMaker
 
 	public static static GLib.MenuModel do_applications(bool do_settings)
 	{
-		string[] apps_cats = {"audiovideo","education","game","graphics","network",
-			             "office","utility","development","other"};
+		string[] apps_cats = {"audiovideo","education","game","graphics",
+							"network","office","utility","development","other"};
 		string[] settings_cats = {"settings"};
 		if (do_settings)
 			return applications_model (apps_cats);
@@ -140,7 +140,8 @@ namespace MenuMaker
 		for (int i = 0; i< menu2.get_n_items(); i++)
 		{
 			var link = menu2.get_item_link(i,GLib.Menu.LINK_SECTION);
-			string label = (string)menu2.get_item_attribute_value(i,"label",GLib.VariantType.STRING);
+			string label = (string)menu2.get_item_attribute_value(i,"label",
+			                                                      GLib.VariantType.STRING);
 			if (link != null)
 				menu1.append_section(label,link);
 		}
@@ -151,7 +152,8 @@ namespace MenuMaker
 		var menu = new GLib.Menu();
 		if (submenus)
 		{
-			var item = new GLib.MenuItem.submenu (_("Applications"),MenuMaker.do_applications (false));
+			var item = new GLib.MenuItem.submenu (_("Applications"),
+			                                      MenuMaker.do_applications (false));
 			item.set_attribute("icon","s",icon);
 			menu.append_item(item);
 			menu.append_submenu(_("Places"),MenuMaker.do_places());
@@ -159,7 +161,7 @@ namespace MenuMaker
 		}
 		else
 		{
-			menu.append(_("Vala Panel"),null);
+			menu.append(_("Vala ValaPanel"),null);
 			menu.append_section(null,MenuMaker.do_applications (false));
 			var section = new GLib.Menu();
 			section.append_submenu(_("Places"),MenuMaker.do_places());
