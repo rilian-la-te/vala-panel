@@ -28,7 +28,7 @@ namespace ValaPanel
 		public abstract Features get_features();
 	}
 	
-	public abstract class Applet : Gtk.Bin
+	public abstract class Applet : Gtk.EventBox
 	{
 		private GLib.Settings _settings;
 		private ValaPanel.Toplevel _toplevel;
@@ -61,6 +61,7 @@ namespace ValaPanel
 			this._toplevel = toplevel;
 			this.number = settings.number;
 			this._settings = settings.config_settings;
+			this.set_has_window(false);
 			applet = new PanelApplet();
 			this.constructor(toplevel,this.settings);
 			if (back == null)

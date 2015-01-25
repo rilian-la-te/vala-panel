@@ -11,12 +11,6 @@ namespace ValaPanel
 	{
 		internal static const string EDGE = "edge";
 	}
-	internal enum SizeType
-	{
-		SIZE_DYNAMIC,
-		SIZE_PIXEL,
-		SIZE_PERCENT
-	}
 	[Flags]
 	internal enum AppearanceHints
 	{
@@ -38,7 +32,8 @@ namespace ValaPanel
 		STRUT,
 		DOCK,
 		SHADOW,
-		ATTACHED
+		ATTACHED,
+		DYNAMIC
 	}
 	internal enum IconSizeHints
 	{
@@ -50,12 +45,6 @@ namespace ValaPanel
 		XL = 96,
 		XXL = 128,
 		XXXL = 256;
-	}
-	internal enum AlignType
-	{
-		START,
-		CENTER,
-		END
 	}
 	public class Toplevel : Gtk.ApplicationWindow
 	{
@@ -141,12 +130,6 @@ namespace ValaPanel
 		}
 		public string background_file
 		{get; set;}
-		internal AlignType alignment
-		{get; set;}
-		internal SizeType sizetype
-		{get; set;}
-		internal uint margin
-		{get;set;}
 
 		public static Toplevel allocate(Gtk.Application app)
 		{

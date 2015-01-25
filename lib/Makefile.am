@@ -47,7 +47,6 @@ libvalapanel_la_VALAFLAGS = \
 	--pkg gee-0.8
 
 libvalapanel_la_CFLAGS = \
-	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(GOBJECT_CFLAGS) \
 	$(GTK3_CFLAGS) \
 	$(LIBPEAS_CFLAGS) \
