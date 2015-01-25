@@ -11,8 +11,14 @@ namespace ValaPanel
 	{
 		internal static const string EDGE = "edge";
 	}
+	internal enum SizeType
+	{
+		SIZE_DYNAMIC,
+		SIZE_PIXEL,
+		SIZE_PERCENT
+	}
 	[Flags]
-	public enum AppearanceHints
+	internal enum AppearanceHints
 	{
 		GNOME,
 		BACKGROUND_COLOR,
@@ -22,34 +28,146 @@ namespace ValaPanel
 		FONT,
 		FONT_SIZE_ONLY
 	}
+	[Flags]
+	internal enum GeometryHints
+	{
+		AUTOHIDE,
+		SHOW_HIDDEN,
+		ABOVE,
+		BELOW,
+		STRUT,
+		DOCK,
+		SHADOW,
+		ATTACHED
+	}
+	internal enum IconSizeHints
+	{
+		XXS = 16,
+		XS = 22,
+		S = 24,
+		M = 32,
+		L = 48,
+		XL = 96,
+		XXL = 128,
+		XXXL = 256;
+	}
+	internal enum AlignType
+	{
+		START,
+		CENTER,
+		END
+	}
 	public class Toplevel : Gtk.ApplicationWindow
 	{
-		private AppearanceHints hints;
-		private Gtk.PositionType _edge;
+		private AppearanceHints ahints;
+		private GeometryHints ghints;
+		private IconSizeHints ihints;
 		private ToplevelSettings settings;
 		private PanelToplevel dummy;
-		private Gtk.Box _box;
-		internal Gtk.Box box
-		{
-			get {return _box;}
-		}
-		public Gtk.PositionType edge {
-			get {return _edge;}
-			set {
-				_edge = edge;
+		private Gtk.Box box;
+		private Gdk.Rectangle a;
+		private Gdk.Rectangle c;
+		private Gdk.RGBA bgc;
+		private Gdk.RGBA fgc;
+
+		private uint ah_visible;
+		private uint ah_far;
+		private uint ah_state;
+		private uint mouse_timeout;
+		private uint hide_timeout;
+
+		private ulong strut_size;
+		private ulong strut_lower;
+		private ulong strut_upper;
+		private int strut_edge;
+		
+		private uint initialized;
+
+		private string profile
+		{ get {
+			string profile;
+			GLib.Value v = Value(typeof(string));
+			this.get_application().get_property("profile",ref v);
+			return v.get_string();
 			}
 		}
+		
+		public Gtk.PositionType edge { get; set;}
 		public bool use_gnome_theme
-		{ get {return AppearanceHints.GNOME in hints;}
+		{ get {return AppearanceHints.GNOME in ahints;}
 		  set {
-			  hints = (use_gnome_theme == true) ?
-				  hints | AppearanceHints.GNOME :
-				  hints & (~AppearanceHints.GNOME);
+			  ahints = (use_gnome_theme == true) ?
+				  ahints | AppearanceHints.GNOME :
+				  ahints & (~AppearanceHints.GNOME);
 			  update_background();
 		  }
 		}
+		public Gtk.Orientation orientation
+		{
+			get {
+				return (_edge == Gtk.PositionType.TOP || _edge == Gtk.PositionType.BOTTOM)
+					? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+			}
+		}
+		public uint monitor
+		{get; set;}
+		internal string background
+		{owned get {return bgc.to_string();}
+		 set {bgc.parse(background);}
+		}
+		internal string foreground
+		{owned get {return fgc.to_string();}
+		 set {fgc.parse(foreground);}
+		}
+		public uint icon_size
+		{ get {return (uint) ihints;}
+		  set {
+			if (icon_size >= (uint)IconSizeHints.XXXL)
+				ihints = IconSizeHints.XXL;
+			else if (icon_size >= (uint)IconSizeHints.XXL)
+				ihints = IconSizeHints.XXL;
+			else if (icon_size >= (uint)IconSizeHints.XL)
+				ihints = IconSizeHints.XL;
+			else if (icon_size >= (uint)IconSizeHints.L)
+				ihints = IconSizeHints.L;
+			else if (icon_size >= (uint)IconSizeHints.M)
+				ihints = IconSizeHints.M;
+			else if (icon_size >= (uint)IconSizeHints.S)
+				ihints = IconSizeHints.S;
+			else if (icon_size >= (uint)IconSizeHints.XS)
+				ihints = IconSizeHints.XS;
+			else ihints = IconSizeHints.XXS;
+		  }
+		}
+		public string background_file
+		{get; set;}
+		internal AlignType alignment
+		{get; set;}
+		internal SizeType sizetype
+		{get; set;}
+		internal uint margin
+		{get;set;}
 
-
+		public static Toplevel allocate(Gtk.Application app)
+		{
+			Object o =  Object.new(typeof(Toplevel),
+			            "border-width", 0,
+                        "decorated", false,
+                        "name", "ValaPanel",
+                        "resizable", false,
+                        "title", "ValaPanel",
+                        "type-hint", Gdk.WindowTypeHint.DOCK,
+                        "window-position", Gtk.WindowPosition.NONE,
+                        "skip-taskbar-hint", true,
+                        "skip-pager-hint", true,
+                        "accept-focus", false,
+                        "application", app);
+			return (o as Toplevel);
+		}
+		
+		private void stop_ui()
+		{
+		}
 #if HAVE_GTK313
 		protected override Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
 		{
@@ -141,7 +259,7 @@ namespace ValaPanel
 			bool expand = false;
 			if ((f & Features.EXPAND_AVAILABLE) != 0)
 				expand = s.default_settings.get_boolean(Key.EXPAND);
-			_box.pack_start(applet,expand, true, 0);
+			box.pack_start(applet,expand, true, 0);
 			s.default_settings.bind(Key.BORDER,applet,"border-width",GLib.SettingsBindFlags.GET);
 			s.default_settings.bind(Key.POSITION,applet,"position",GLib.SettingsBindFlags.GET);
 			s.default_settings.bind(Key.PADDING,applet,"padding",GLib.SettingsBindFlags.GET);

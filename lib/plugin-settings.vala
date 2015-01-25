@@ -48,38 +48,32 @@ namespace ValaPanel
 
 	internal class ToplevelSettings : GLib.Object
 	{
-		private GLib.SList<PluginSettings> _plugins;
-		private GLib.Settings _settings;
-		private string _filename;
-		private GLib.SettingsBackend _backend;
-		private string _root_name;
-		private string _root_path;
-		internal GLib.SList<PluginSettings> plugins {
-			get {return _plugins;}
+		internal unowned GLib.SList<PluginSettings> plugins {
+			internal get; private set;
 		}
 		internal GLib.Settings settings {
-			get {return _settings;}
+			internal get; private set;
 		}
 		internal GLib.SettingsBackend backend {
-			get {return _backend;}
+			internal get; private set;
 		}
 		internal string filename {
-			get {return _filename;}
+			internal get; private set;
 		}
 		internal string root_name {
-			get {return _root_name;}
+			internal get; private set;
 		}		
 		internal string root_path {
-			get {return _root_path;}
+			internal get; private set;
 		}
 		
 		internal ToplevelSettings.full(string file, string schema, string path, string? root)
 		{
-			this._filename = file;
-			this._root_name = root;
-			this._root_path = path;
-			_backend = GLib.keyfile_settings_backend_new(file,path,root);
-			_settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
+			this.filename = file;
+			this.root_name = root;
+			this.root_path = path;
+			backend = GLib.keyfile_settings_backend_new(file,path,root);
+			settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
 		}
 
 		internal ToplevelSettings (string file)
@@ -91,13 +85,13 @@ namespace ValaPanel
 		{
 			var f = new GLib.KeyFile();
 			try{
-			f.load_from_file(this._filename,GLib.KeyFileFlags.KEEP_COMMENTS);
+			f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
 			} catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
 			var numlist = new GLib.SList<uint>();
 			var len = f.get_groups().length;
 			foreach (var grp in f.get_groups())
 			{
-				if (grp == this._root_name)
+				if (grp == this.root_name)
 					continue;
 				CompareFunc<uint> intcmp = (a, b) => {
 					return (int) (a > b) - (int) (a < b);
@@ -113,7 +107,7 @@ namespace ValaPanel
 		internal PluginSettings add_plugin_settings_full(string name, uint num)
 		{
 			var settings = new PluginSettings(this,name,num);
-			_plugins.append(settings);
+			plugins.append(settings);
 			return settings;
 		}
 
@@ -121,25 +115,25 @@ namespace ValaPanel
 		{
 			var num = find_free_num ();
 			var settings = new PluginSettings(this,name,num);
-			_plugins.append(settings);
+			plugins.append(settings);
 			return settings;
 		}
 		
 		internal void remove_plugin_settings(uint num)
 		{
-			foreach (var tmp in _plugins)
+			foreach (var tmp in plugins)
 			{
 				if (tmp.number == num)
 				{
-					_plugins.remove(tmp);
+					plugins.remove(tmp);
 					var f = new GLib.KeyFile();
 					try
 					{
-						f.load_from_file(this._filename,GLib.KeyFileFlags.KEEP_COMMENTS);
+						f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
 						if (f.has_group(num.to_string()))
 						{
 							f.remove_group(num.to_string());
-							f.save_to_file(this._filename);
+							f.save_to_file(this.filename);
 						}
 					}
 					catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
@@ -148,11 +142,11 @@ namespace ValaPanel
 		}
 		internal bool init_plugin_list()
 		{
-			if (_plugins != null)
+			if (plugins != null)
 				return false;
 			var f = new GLib.KeyFile();
 			try {
-				f.load_from_file(this._filename,GLib.KeyFileFlags.KEEP_COMMENTS);
+				f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
 			}
 			catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
 			var groups = f.get_groups();
@@ -178,7 +172,7 @@ namespace ValaPanel
 		}
 		internal PluginSettings? get_settings_by_num(uint num)
 		{
-			foreach (var pl in _plugins)
+			foreach (var pl in plugins)
 				if (pl.number == num)
 					return pl;
 			return null;
