@@ -34,6 +34,7 @@ libvalapanel_la_SOURCES = \
 libvalapanel_la_VALAFLAGS = \
 	--library=libvalapanel \
 	-H libvalapanel.h \
+	--vapi=$(top_srcdir)/vapi/vala-panel.vapi \
 	--vapidir=../vapi \
 	--vapidir=. \
 	--pkg gtk+-3.0 \

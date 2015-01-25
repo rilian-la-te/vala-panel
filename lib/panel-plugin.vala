@@ -8,7 +8,7 @@ private class PanelApplet : Gtk.Bin
 namespace ValaPanel
 {
 	[Flags]
-	public enum SupportedPluginFeatures
+	public enum Features
 	{
 		CONFIG,
 		MENU,
@@ -23,7 +23,9 @@ namespace ValaPanel
 
 	public interface Plugin : Peas.ExtensionBase
 	{
-		public abstract ValaPanel.Applet get_applet_widget();
+		public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+		                                                   GLib.Settings settings);
+		public abstract Features get_features();
 	}
 	
 	public abstract class Applet : Gtk.Bin
@@ -33,7 +35,7 @@ namespace ValaPanel
 		private Gtk.Widget back;
 		private PanelApplet applet;
 		internal uint number;
-		public abstract SupportedPluginFeatures features
+		public abstract Features features
 		{
 			construct;
 			get;

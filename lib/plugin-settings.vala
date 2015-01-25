@@ -11,11 +11,11 @@ namespace ValaPanel
 	{
 		private static const string NAME = "plugin-type";
 		private static const string SCHEMA = "has-schema";
-		private static const string EXPAND = "is-expanded";
+		internal static const string EXPAND = "is-expanded";
 		private static const string CAN_EXPAND = "can-expand";
-		private static const string PADDING = "padding";
-		private static const string BORDER = "border";
-		private static const string POSITION = "position";
+		internal static const string PADDING = "padding";
+		internal static const string BORDER = "border";
+		internal static const string POSITION = "position";
 	}
 	
 	internal class PluginSettings : GLib.Object
@@ -110,8 +110,16 @@ namespace ValaPanel
 			return len;
 		}
 		
-		internal PluginSettings add_plugin_settings(string name, uint num)
+		internal PluginSettings add_plugin_settings_full(string name, uint num)
 		{
+			var settings = new PluginSettings(this,name,num);
+			_plugins.append(settings);
+			return settings;
+		}
+
+		internal PluginSettings add_plugin_settings(string name)
+		{
+			var num = find_free_num ();
 			var settings = new PluginSettings(this,name,num);
 			_plugins.append(settings);
 			return settings;
@@ -156,7 +164,7 @@ namespace ValaPanel
 					name.strip();
 					name.delimit("'",' ');
 					var config = f.get_boolean(group,Key.SCHEMA);
-					var s = add_plugin_settings(name,int.parse(name));
+					var s = add_plugin_settings_full(name,int.parse(name));
 					s.init_configuration(this,config);
 				}
 				catch (GLib.KeyFileError e)
