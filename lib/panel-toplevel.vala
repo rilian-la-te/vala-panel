@@ -10,6 +10,7 @@ namespace ValaPanel
 	namespace Key 
 	{
 		internal static const string EDGE = "edge";
+		internal static const string WIDTH = "width";
 	}
 	[Flags]
 	internal enum AppearanceHints
@@ -33,7 +34,7 @@ namespace ValaPanel
 		DOCK,
 		SHADOW,
 		ATTACHED,
-		DYNAMIC
+		DYNAMIC		
 	}
 	internal enum IconSizeHints
 	{
@@ -48,16 +49,25 @@ namespace ValaPanel
 	}
 	public class Toplevel : Gtk.ApplicationWindow
 	{
-		private AppearanceHints ahints;
-		private GeometryHints ghints;
-		private IconSizeHints ihints;
 		private ToplevelSettings settings;
 		private PanelToplevel dummy;
 		private Gtk.Box box;
+
+		private GeometryHints ghints;
+		private int height;
+		private int width;
 		private Gdk.Rectangle a;
 		private Gdk.Rectangle c;
+
+		private AppearanceHints ahints;
 		private Gdk.RGBA bgc;
 		private Gdk.RGBA fgc;
+		private Gtk.CssProvider provider;
+		private IconSizeHints ihints;
+
+		internal Gtk.Dialog plugin_pref_dialog;
+		internal Gtk.Dialog pref_dialog;
+
 
 		private uint ah_visible;
 		private uint ah_far;
@@ -70,7 +80,7 @@ namespace ValaPanel
 		private ulong strut_upper;
 		private int strut_edge;
 		
-		private uint initialized;
+		private bool initialized;
 
 		private string profile
 		{ get {
@@ -98,7 +108,7 @@ namespace ValaPanel
 					? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
 			}
 		}
-		public uint monitor
+		public int monitor
 		{get; set;}
 		internal string background
 		{owned get {return bgc.to_string();}
@@ -147,10 +157,94 @@ namespace ValaPanel
                         "application", app);
 			return (o as Toplevel);
 		}
+
+		internal Toplevel()
+		{
+			Gdk.Visual visual = this.get_screen().get_rgba_visual();
+			if (visual != null)
+				this.set_visual(visual);
+			dummy = new PanelToplevel();
+			
+			this.destroy.connect((a)=>
+			{
+				stop_ui ();
+			});
+		}
 		
 		private void stop_ui()
 		{
+			if (pref_dialog != null)
+				pref_dialog.response(Gtk.ResponseType.CLOSE);
+			if (plugin_pref_dialog != null)
+				plugin_pref_dialog.response(Gtk.ResponseType.CLOSE);
+			if (initialized)
+			{
+				this.get_application().remove_window(this);
+				Gdk.flush();
+				initialized = false;
+			}
+			if (this.get_child()!=null)
+			{
+				box.destroy();
+				box = null;
+			}
 		}
+
+/*
+ * Position calculating.
+ */
+		internal override void size_allocate(Gtk.Allocation a)
+		{
+			int x,y,w;
+			if ((ghints & GeometryHints.DYNAMIC) > 0 && box != null)
+			{
+				if (orientation == Gtk.Orientation.HORIZONTAL)
+					box.get_preferred_width(null, out w);
+				else
+					box.get_preferred_height(null, out w);
+				if (w!=width)
+						settings.settings.set_int(Key.WIDTH,w);
+			}
+			if (!this.get_realized())
+				return;
+			this.get_window().get_origin(out x, out y);
+			_calculate_position (out a);
+			this.a.x = a.x;
+			this.a.y = a.y;
+			if (a.width != this.a.width || a.height != this.a.height || this.a.x != x || this.a.y != y)
+			{
+				this.a.width = a.width;
+				this.a.height = a.height;
+				this.set_size_request(this.a.width, this.a.height);
+				this.move(this.a.x, this.a.y);
+				
+			}
+			if (this.get_mapped())
+				establish_autohide ();
+		}
+
+		private void _calculate_position(out Gtk.Allocation a)
+		{
+			var screen = this.get_screen();
+			Gdk.Rectangle marea = Gdk.Rectangle();
+			if (monitor < 0)
+			{
+				marea.x = 0;
+				marea.y = 0;
+				marea.width = screen.get_width();
+				marea.height = screen.get_height();
+			}
+			else if (monitor < screen.get_n_monitors())
+				screen.get_monitor_geometry(monitor,out marea);
+			if (orientation == Gtk.Orientation.HORIZONTAL)
+			{
+				a.width = width;
+			}
+		}
+
+/*
+* Gnome Panel hack.
+*/
 #if HAVE_GTK313
 		protected override Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
 		{
@@ -174,7 +268,13 @@ namespace ValaPanel
 			}
 		return path;
 		}
-		
+
+
+
+/* 
+ * Plugins stuff.
+ */
+
 		public void popup_position_helper(Gtk.Widget near, Gtk.Widget popup,
 		                                  out int x, out int y) 
 		{
@@ -253,7 +353,13 @@ namespace ValaPanel
 		{
 			return new Gtk.Menu();
 		}
-		
+
+		private void set_strut()
+		{
+		}
+		private void establish_autohide()
+		{
+		}
 		private void update_background()
 		{
 			

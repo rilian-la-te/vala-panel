@@ -22,6 +22,20 @@ namespace PanelCSS
 			} catch (GLib.Error e) {}
 		}
 	}
+	public Gtk.CssProvider? apply_with_provider(Gtk.Widget w, string css, string klass)
+	{
+		var context = w.get_style_context();
+		w.reset_style();
+		var provider = new Gtk.CssProvider();
+		try 
+		{
+			provider.load_from_data(css,css.length);
+			context.add_provider(provider,1000);
+			context.add_class(klass);
+			return provider;
+		} catch (GLib.Error e) {}
+		return null;
+	}
 	internal string generate_background(string? name, Gdk.RGBA color)
 	{
 		if (name != null)
