@@ -1,6 +1,3 @@
-using Gtk;
-using Peas;
-
 private class PanelToplevel : Gtk.Bin
 {		
 }
@@ -33,8 +30,13 @@ namespace ValaPanel
 		STRUT,
 		DOCK,
 		SHADOW,
-		ATTACHED,
 		DYNAMIC		
+	}
+	internal enum AlignmentType
+	{
+		START,
+		CENTER,
+		END
 	}
 	internal enum IconSizeHints
 	{
@@ -56,6 +58,8 @@ namespace ValaPanel
 		private GeometryHints ghints;
 		private int height;
 		private int width;
+		private AlignmentType align;
+		private int margin;
 		private Gdk.Rectangle a;
 		private Gdk.Rectangle c;
 
@@ -164,11 +168,7 @@ namespace ValaPanel
 			if (visual != null)
 				this.set_visual(visual);
 			dummy = new PanelToplevel();
-			
-			this.destroy.connect((a)=>
-			{
-				stop_ui ();
-			});
+			this.destroy.connect((a)=>{stop_ui ();});
 		}
 		
 		private void stop_ui()
@@ -223,7 +223,7 @@ namespace ValaPanel
 				establish_autohide ();
 		}
 
-		private void _calculate_position(out Gtk.Allocation a)
+		private void _calculate_position(ref Gtk.Allocation a)
 		{
 			var screen = this.get_screen();
 			Gdk.Rectangle marea = Gdk.Rectangle();
@@ -239,7 +239,44 @@ namespace ValaPanel
 			if (orientation == Gtk.Orientation.HORIZONTAL)
 			{
 				a.width = width;
+				a.x = marea.x;
+				calculate_width(marea.width,align,margin,ref a.width, ref a.x);
+				a.height = (!autohide || ah_visible) ? height :
+										(ghints & GeometryHints.SHOW_HIDDEN > 0) ? 1 : 0;
+				a.x = marea.x + ((edge == Gtk.PositionType.TOP) ? 0 : marea.width - a.width);
 			}
+			else
+			{
+				a.height = width;
+				a.y = marea.y;
+				calculate_width(marea.height,align,margin,ref a.height, ref a.y);
+				a.width = (!autohide || ah_visible) ? height :
+										(ghints & GeometryHints.SHOW_HIDDEN > 0) ? 1 : 0;
+				a.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : marea.height - a.height);
+			}
+		}
+		
+		private void calculate_position()
+		{
+			_calculate_position(ref (this.a as Gtk.Allocation));
+		}
+		
+		private static void calculate_width(int scrw, AlignmentType align, int margin,
+											int margin, ref int panw, ref int x)
+		{
+			panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw; 
+			panw = (int)(((double)scrw * (double) panw)/100.0);
+			margin = (align != AlignmentType.CENTER && margin > srcw) ? 0 : margin;
+			panw = int.min(scrw - margin, panw);
+			if (align = AlignmentType.LEFT)
+				x+=margin;
+			else if (align = AlignmentType.RIGHT)
+			{
+				x += scrw - panw - margin;
+				x = (x < 0) ? 0 : x;
+			}
+			else if (align = AlignmentType.CENTER)
+				x += (scrw - panw)/2;
 		}
 
 /*
