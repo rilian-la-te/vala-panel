@@ -30,7 +30,7 @@ namespace ValaPanel
 		STRUT,
 		DOCK,
 		SHADOW,
-		DYNAMIC		
+		DYNAMIC
 	}
 	internal enum AlignmentType
 	{
@@ -169,13 +169,15 @@ namespace ValaPanel
 			return (o as Toplevel);
 		}
 
-		internal Toplevel()
+		protected Toplevel()
 		{
 			Gdk.Visual visual = this.get_screen().get_rgba_visual();
 			if (visual != null)
 				this.set_visual(visual);
 			dummy = new PanelToplevel();
 			this.destroy.connect((a)=>{stop_ui ();});
+			a = Gdk.Rectangle();
+			c = Gdk.Rectangle();
 		}
 		
 		private void stop_ui()
@@ -200,7 +202,7 @@ namespace ValaPanel
 /*
  * Position calculating.
  */
-		internal override void size_allocate(Gtk.Allocation a)
+		protected override void size_allocate(Gtk.Allocation a)
 		{
 			int x,y,w;
 			if ((ghints & GeometryHints.DYNAMIC) > 0 && box != null)
@@ -285,7 +287,57 @@ namespace ValaPanel
 			else if (align = AlignmentType.CENTER)
 				x += (scrw - panw)/2;
 		}
-
+		
+		protected override void get_preferred_width(out int min, out int nat)
+		{
+			Gtk.Requisition req = Gtk.Requisition();
+			this.get_preferred_size(out req, null);
+			min = nat = req.width;
+		}
+		protected override void get_preferred_height(out int min, out int nat)
+		{
+			Gtk.Requisition req = Gtk.Requisition();
+			this.get_preferred_size(out req, null);
+			min = nat = req.height;
+		}
+		protected override void get_preferred_size (out Gtk.Requisition min,
+													out Gtk.Requisition nat)
+		{
+			if (!ah_visible)
+				box.get_preferred_size(out min, out nat);
+			var rect = Gdk.Rectangle();
+			rect.width = min.width;
+			rect.height = min.height;
+			_calculate_position(ref rect as Gtk.Allocation);
+			min.width = rect.width;
+			min.height = rect.height;
+			nat = min;
+		}
+/*
+ * Autohide stuff 
+ */
+		protected override void configure_event(Gdk.EventConfigure evt)
+		{
+			c.width = e.width;
+			c.height = e.height;
+			c.x = e.x;
+			c.y = e.y;
+		}
+		
+		protected override map_event(Gdk.EventAny e)
+		{
+			if (ghints & GeometryHints.AUTOHIDE > 0)
+				ah_start();
+		}
+		
+		private void establish_autohide()
+		{
+			
+		}
+		private void ah_start()
+		{
+			
+		}
 /*
 * Gnome Panel hack.
 */
@@ -399,9 +451,6 @@ namespace ValaPanel
 		}
 
 		private void set_strut()
-		{
-		}
-		private void establish_autohide()
 		{
 		}
 		private void update_background()
