@@ -316,7 +316,7 @@ namespace ValaPanel
 /*
  * Autohide stuff 
  */
-		protected override void configure_event(Gdk.EventConfigure evt)
+		protected override bool configure_event(Gdk.EventConfigure evt)
 		{
 			c.width = e.width;
 			c.height = e.height;
@@ -324,7 +324,7 @@ namespace ValaPanel
 			c.y = e.y;
 		}
 		
-		protected override map_event(Gdk.EventAny e)
+		protected override bool map_event(Gdk.EventAny e)
 		{
 			if (ghints & GeometryHints.AUTOHIDE > 0)
 				ah_start();
@@ -364,13 +364,57 @@ namespace ValaPanel
 			}
 		return path;
 		}
-
-
-
+/*
+ * Menus stuff
+ */
+		
+		protected override bool button_press_event(Gdk.EventButton e)
+		{
+			if (e.button == 3)
+			{
+				var menu = get_plugin_menu(null);
+				menu.popup(null,null,null,e.button,e.time);
+				return true;
+			}
+			return false;
+		}
+		
+		public Gtk.Menu get_plugin_menu(Applet? pl)
+		{
+			return new Gtk.Menu();
+		}
 /* 
  * Plugins stuff.
  */
-
+ 
+		private void on_extension_added(Peas.PluginInfo i, Object p)
+		{
+			var pl = p as ValaPanel.Plugin;
+			var type = i.get_external_data("Type");
+			add_to_panel(type, pl);
+		}
+		internal void add_to_panel(string type, Plugin pl)
+		{
+			var s = settings.add_plugin_settings (type);
+			place_applet (pl,s);
+		}
+		
+		internal void place_applet(Plugin pl, PluginSettings s)
+		{
+			var f = pl.get_features();
+			s.init_configuration(settings,((f & Features.CONFIG) != 0));
+			var applet = pl.get_applet_widget(this,s.config_settings);
+			bool expand = false;
+			if ((f & Features.EXPAND_AVAILABLE) != 0)
+				expand = s.default_settings.get_boolean(Key.EXPAND);
+			box.pack_start(applet,expand, true, 0);
+			s.default_settings.bind(Key.BORDER,applet,"border-width",GLib.SettingsBindFlags.GET);
+			s.default_settings.bind(Key.POSITION,applet,"position",GLib.SettingsBindFlags.GET);
+			s.default_settings.bind(Key.PADDING,applet,"padding",GLib.SettingsBindFlags.GET);
+			if ((f & Features.EXPAND_AVAILABLE)!=0)
+				s.default_settings.bind(Key.EXPAND,applet,"expand",GLib.SettingsBindFlags.DEFAULT);
+		}
+		
 		public void popup_position_helper(Gtk.Widget near, Gtk.Widget popup,
 		                                  out int x, out int y) 
 		{
@@ -417,39 +461,7 @@ namespace ValaPanel
 			x.clamp(a.x,a.x + a.width - pa.width);
 			y.clamp(a.y,a.y + a.height - pa.height);
 		}
-
-		private void on_extension_added(Peas.PluginInfo i, Object p)
-		{
-			var pl = p as ValaPanel.Plugin;
-			var type = i.get_external_data("Type");
-			add_to_panel(type, pl);
-		}
-		internal void add_to_panel(string type, Plugin pl)
-		{
-			var s = settings.add_plugin_settings (type);
-			place_applet (pl,s);
-		}
 		
-		internal void place_applet(Plugin pl, PluginSettings s)
-		{
-			var f = pl.get_features();
-			s.init_configuration(settings,((f & Features.CONFIG) != 0));
-			var applet = pl.get_applet_widget(this,s.config_settings);
-			bool expand = false;
-			if ((f & Features.EXPAND_AVAILABLE) != 0)
-				expand = s.default_settings.get_boolean(Key.EXPAND);
-			box.pack_start(applet,expand, true, 0);
-			s.default_settings.bind(Key.BORDER,applet,"border-width",GLib.SettingsBindFlags.GET);
-			s.default_settings.bind(Key.POSITION,applet,"position",GLib.SettingsBindFlags.GET);
-			s.default_settings.bind(Key.PADDING,applet,"padding",GLib.SettingsBindFlags.GET);
-			if ((f & Features.EXPAND_AVAILABLE)!=0)
-				s.default_settings.bind(Key.EXPAND,applet,"expand",GLib.SettingsBindFlags.DEFAULT);
-		}
-		public Gtk.Menu get_plugin_menu(Applet pl)
-		{
-			return new Gtk.Menu();
-		}
-
 		private void set_strut()
 		{
 		}
