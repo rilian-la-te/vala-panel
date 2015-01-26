@@ -56,7 +56,7 @@ namespace ValaPanel
 		private Gtk.Box box;
 
 		private GeometryHints ghints;
-		private int height;
+		private int h;
 		private int width;
 		private AlignmentType align;
 		private int margin;
@@ -86,6 +86,13 @@ namespace ValaPanel
 		
 		private bool initialized;
 
+		private int height
+		{
+			{ get {
+				return ((ghints & GeometryHints.SHADOW) > 0) ? h+5 : h;
+			}
+			set {h=height}}
+		}
 		private string profile
 		{ get {
 			string profile;
