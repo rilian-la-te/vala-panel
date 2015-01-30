@@ -10,6 +10,8 @@ public const string VERSION;
 public const string GETTEXT_PACKAGE;
 /* Configured paths - these variables are not present in config.h, they are
 * passed to underlying C code as cmd line macros. */
+public const string PACKAGE_DATA_DIR; 
+public const string PACKAGE_LOCALE_DIR; 
 public const string LOCALEDIR; 
 public const string PKGDATADIR; 
 public const string PKGLIBDIR; 

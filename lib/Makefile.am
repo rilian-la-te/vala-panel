@@ -25,7 +25,9 @@ libvalapanel_la_SOURCES = \
 	plugin-settings.vala \
 	css.vala \
 	panel-plugin.vala \
-	panel-toplevel.vala
+	panel-toplevel.vala \
+	misc.vala \
+	icon-grid.vala
 #	Misc.vala 
 #	configurator.vala 
 #	Panel.vala 
@@ -33,7 +35,7 @@ libvalapanel_la_SOURCES = \
 
 libvalapanel_la_VALAFLAGS = \
 	--library=libvalapanel \
-	-H libvalapanel.h \
+	-H vala-panel.h \
 	--vapi=$(top_srcdir)/vapi/vala-panel.vapi \
 	--vapidir=../vapi \
 	--vapidir=. \
@@ -53,8 +55,8 @@ libvalapanel_la_CFLAGS = \
 	-DG_SETTINGS_ENABLE_BACKEND \
 	-DGETTEXT_PACKAGE=\""vala-panel"\" \
 	-DPACKAGE_LIB_DIR=\""$(libdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)/simple-panel"\" \
-	-DPACKAGE_UI_DIR=\""$(datadir)/simple-panel/ui"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)/vala-panel"\" \
+	-DPACKAGE_UI_DIR=\""$(datadir)/vala-panel/ui"\" \
 	-DPACKAGE_BIN_DIR=\""$(bindir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
 
