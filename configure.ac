@@ -112,7 +112,9 @@ AC_CONFIG_FILES([Makefile
                 data/Makefile
                 lib/Makefile
                 po/Makefile.in
+                app/Makefile
                 vala-panel.pc
+                app/vala-panel.gresource.xml
                 data/libvalapanel.gresource.xml
                 data/default/panels/panel
                 data/two_panels/panels/top

@@ -41,10 +41,7 @@ vala_panel_VALAFLAGS = \
 	--pkg posix \
 	$(VALAFLAGS)
 
-if BUILD_PLUGIN_LOADER
-DYNAMIC_FLAGS = -export-dynamic
-endif
-vala_panel_LDFLAGS = $(DYNAMIC_FLAGS) -rpath $(pkglibdir)
+vala_panel_LDFLAGS = -export-dynamic -rpath $(pkglibdir)
 
 vala_panel_LDADD = \
 		$(top_builddir)/lib/libvalapanel.la \

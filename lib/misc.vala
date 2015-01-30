@@ -7,7 +7,7 @@ namespace ValaPanel
 	{
 		try{
 			var icon = new Gdk.Pixbuf.from_resource("/org/vala-panel/lib/panel.png");
-			w.set_icon(icon);	
+			w.set_icon(icon);
 		} catch (Error e)
 		{
 			stderr.printf("Unable to load icon: %s. Trying fallback...\n",e.message);
@@ -31,7 +31,7 @@ namespace ValaPanel
 			string cfg = GLib.Path.build_filename(dirname,name);
 			if (!(cfg.contains("~") || cfg[0] =='.'))
 			{
-				var panel = Compat.Toplevel.load(app,cfg,name);
+				var panel = Toplevel.load(app,cfg,name);
 				if (panel != null)
 					app.add_window(panel);
 			}
@@ -111,11 +111,11 @@ namespace ValaPanel
 	{
 		settings.bind(prop,map,prop,SettingsBindFlags.GET|SettingsBindFlags.SET|SettingsBindFlags.DEFAULT);
 	}
-	
+
 	public static void setup_button(Button b, Image? img = null, string? label = null)
 	{
 		PanelCSS.apply_from_resource(b,"/org/vala-panel/lib/style.css","-panel-button");
-//Children hierarhy: button => alignment => box => (label,image)
+/* Children hierarhy: button => alignment => box => (label,image) */
 		b.notify.connect((a,b)=>{
 			if (b.name == "label" || b.name == "image")
 			{
@@ -155,11 +155,11 @@ namespace ValaPanel
 			b.set_label(label);
 		b.set_relief(Gtk.ReliefStyle.NONE);
 	}
-	public static void setup_icon(Image img, Icon icon, Compat.Toplevel? top = null, int size = -1)
+	public static void setup_icon(Image img, Icon icon, Toplevel? top = null, int size = -1)
 	{
 		img.set_from_gicon(icon,IconSize.INVALID);
 		if (top != null)
-			top.bind_property(Compat.Key.ICON_SIZE,img,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+			top.bind_property(Key.ICON_SIZE,img,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
 		else if (size > 0)
 			img.set_pixel_size(size);
 		Gtk.IconTheme.get_default().changed.connect(()=>{
@@ -168,7 +168,7 @@ namespace ValaPanel
 			img.set_from_gicon(i,IconSize.INVALID);
 		});
 	}
-	public static void setup_icon_button(Button btn, Icon? icon = null, string? label = null, Compat.Toplevel? top = null)
+	public static void setup_icon_button(Button btn, Icon? icon = null, string? label = null, Toplevel? top = null)
 	{
 		PanelCSS.apply_from_resource(btn,"/org/vala-panel/lib/style.css","-panel-icon-button");
 		PanelCSS.apply_with_class(btn,"",Gtk.STYLE_CLASS_BUTTON,false);

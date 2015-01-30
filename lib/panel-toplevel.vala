@@ -1,13 +1,14 @@
 private class PanelToplevel : Gtk.Bin
-{		
+{
 }
 
 namespace ValaPanel
 {
-	namespace Key 
+	namespace Key
 	{
 		internal static const string EDGE = "edge";
 		internal static const string WIDTH = "width";
+		internal static const string ICON_SIZE = "icon-size"
 	}
 	[Flags]
 	internal enum AppearanceHints
@@ -83,7 +84,7 @@ namespace ValaPanel
 		private ulong strut_lower;
 		private ulong strut_upper;
 		private int strut_edge;
-		
+
 		private bool initialized;
 
 		private int height
@@ -101,7 +102,7 @@ namespace ValaPanel
 			return v.get_string();
 			}
 		}
-		
+
 		public Gtk.PositionType edge { get; set;}
 		public bool use_gnome_theme
 		{ get {return AppearanceHints.GNOME in ahints;}
@@ -152,24 +153,27 @@ namespace ValaPanel
 		public string background_file
 		{get; set;}
 
-		public static Toplevel allocate(Gtk.Application app)
+		[CCode (returns_floating_reference = true)]
+		public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
 		{
-			Object o =  Object.new(typeof(Toplevel),
-			            "border-width", 0,
-                        "decorated", false,
-                        "name", "ValaPanel",
-                        "resizable", false,
-                        "title", "ValaPanel",
-                        "type-hint", Gdk.WindowTypeHint.DOCK,
-                        "window-position", Gtk.WindowPosition.NONE,
-                        "skip-taskbar-hint", true,
-                        "skip-pager-hint", true,
-                        "accept-focus", false,
-                        "application", app);
-			return (o as Toplevel);
-		}
 
-		protected Toplevel()
+		}
+		public Toplevel(Gtk.Application app)
+		{
+			Object o =  Object(
+			            border-width: 0,
+                        decorated: false,
+                        name: "ValaPanel",
+                        resizable: false,
+                        title: "ValaPanel",
+                        type-hint: Gdk.WindowTypeHint.DOCK,
+                        window-position: Gtk.WindowPosition.NONE,
+                        skip-taskbar-hint: true,
+                        skip-pager-hint: true,
+                        accept-focus: false,
+                        application: app);
+		}
+		construct
 		{
 			Gdk.Visual visual = this.get_screen().get_rgba_visual();
 			if (visual != null)
@@ -179,7 +183,7 @@ namespace ValaPanel
 			a = Gdk.Rectangle();
 			c = Gdk.Rectangle();
 		}
-		
+
 		private void stop_ui()
 		{
 			if (pref_dialog != null)
@@ -226,7 +230,7 @@ namespace ValaPanel
 				this.a.height = a.height;
 				this.set_size_request(this.a.width, this.a.height);
 				this.move(this.a.x, this.a.y);
-				
+
 			}
 			if (this.get_mapped())
 				establish_autohide ();
@@ -264,16 +268,16 @@ namespace ValaPanel
 				a.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : marea.height - a.height);
 			}
 		}
-		
+
 		private void calculate_position()
 		{
 			_calculate_position(ref (this.a as Gtk.Allocation));
 		}
-		
+
 		private static void calculate_width(int scrw, AlignmentType align, int margin,
 											int margin, ref int panw, ref int x)
 		{
-			panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw; 
+			panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
 			panw = (int)(((double)scrw * (double) panw)/100.0);
 			margin = (align != AlignmentType.CENTER && margin > srcw) ? 0 : margin;
 			panw = int.min(scrw - margin, panw);
@@ -287,7 +291,7 @@ namespace ValaPanel
 			else if (align = AlignmentType.CENTER)
 				x += (scrw - panw)/2;
 		}
-		
+
 		protected override void get_preferred_width(out int min, out int nat)
 		{
 			Gtk.Requisition req = Gtk.Requisition();
@@ -314,7 +318,7 @@ namespace ValaPanel
 			nat = min;
 		}
 /*
- * Autohide stuff 
+ * Autohide stuff
  */
 		protected override bool configure_event(Gdk.EventConfigure evt)
 		{
@@ -323,20 +327,20 @@ namespace ValaPanel
 			c.x = e.x;
 			c.y = e.y;
 		}
-		
+
 		protected override bool map_event(Gdk.EventAny e)
 		{
 			if (ghints & GeometryHints.AUTOHIDE > 0)
 				ah_start();
 		}
-		
+
 		private void establish_autohide()
 		{
-			
+
 		}
 		private void ah_start()
 		{
-			
+
 		}
 /*
 * Gnome Panel hack.
@@ -367,7 +371,7 @@ namespace ValaPanel
 /*
  * Menus stuff
  */
-		
+
 		protected override bool button_press_event(Gdk.EventButton e)
 		{
 			if (e.button == 3)
@@ -378,15 +382,15 @@ namespace ValaPanel
 			}
 			return false;
 		}
-		
+
 		public Gtk.Menu get_plugin_menu(Applet? pl)
 		{
 			return new Gtk.Menu();
 		}
-/* 
+/*
  * Plugins stuff.
  */
- 
+
 		private void on_extension_added(Peas.PluginInfo i, Object p)
 		{
 			var pl = p as ValaPanel.Plugin;
@@ -398,7 +402,7 @@ namespace ValaPanel
 			var s = settings.add_plugin_settings (type);
 			place_applet (pl,s);
 		}
-		
+
 		internal void place_applet(Plugin pl, PluginSettings s)
 		{
 			var f = pl.get_features();
@@ -414,9 +418,9 @@ namespace ValaPanel
 			if ((f & Features.EXPAND_AVAILABLE)!=0)
 				s.default_settings.bind(Key.EXPAND,applet,"expand",GLib.SettingsBindFlags.DEFAULT);
 		}
-		
+
 		public void popup_position_helper(Gtk.Widget near, Gtk.Widget popup,
-		                                  out int x, out int y) 
+		                                  out int x, out int y)
 		{
 			Gtk.Allocation pa;
 			Gtk.Allocation a;
@@ -461,13 +465,13 @@ namespace ValaPanel
 			x.clamp(a.x,a.x + a.width - pa.width);
 			y.clamp(a.y,a.y + a.height - pa.height);
 		}
-		
+
 		private void set_strut()
 		{
 		}
 		private void update_background()
 		{
-			
+
 		}
 	}
 }

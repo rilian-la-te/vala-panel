@@ -1,0 +1,30 @@
+.-panel-run-dialog
+{
+	border-radius: 15px;
+	border: none;
+}
+.-panel-run-header
+{
+	background-image: none;
+	background-color: transparent;
+}
+.-panel-icon-button
+{
+	padding: 0px;
+	margin: 0px;
+	-GtkWidget-focus-line-width: 0px;
+	-GtkWidget-focus-padding: 0px;
+}
+.-panel-icon-button:hover,
+.-panel-icon-button:prelight,
+.-panel-icon-button.highlight,
+.-panel-icon-button:active:hover
+{
+	-gtk-image-effect: highlight;
+}
+.-panel-button
+{
+	color: inherit;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}

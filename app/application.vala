@@ -19,7 +19,7 @@ namespace ValaPanel
 		var app = new App();
 		return app.run(args);
 	}
-	
+
 	public class App: Gtk.Application
 	{
 		private static const string SCHEMA = "org.simple.panel";
@@ -55,7 +55,7 @@ namespace ValaPanel
 		public string css
 		{get {return _css;}
                 internal set {_css = value; apply_styling();}}
-				
+
 		private static const OptionEntry[] options =
 		{
 			{ "version", 'v', 0, OptionArg.NONE, null, N_("Print version and exit"), null },
@@ -87,13 +87,13 @@ namespace ValaPanel
 					profile: "default",
 					resource_base_path: "/org/vala-panel/app");
 		}
-		
+
 		construct
 		{
 			add_main_option_entries(options);
 			started = false;
 		}
-		
+
 		private string system_config_file_name(string name1, string? name2)
 		{
 			return GLib.Path.build_filename(name1,GETTEXT_PACKAGE,_profile,name2);
@@ -103,7 +103,7 @@ namespace ValaPanel
 			return GLib.Path.build_filename(GLib.Environment.get_user_config_dir(),
 								GETTEXT_PACKAGE,_profile,name1,name2);
 		}
-		
+
 		private void activate_preferences (SimpleAction act, Variant? param)
 		{
 			if(pref_dialog!=null)
@@ -132,7 +132,7 @@ namespace ValaPanel
 			pref_dialog.run();
 			pref_dialog.destroy();
 		}
-		
+
 		public override void startup()
 		{
 			base.startup();
@@ -142,18 +142,14 @@ namespace ValaPanel
 			GLib.Intl.textdomain(Config.GETTEXT_PACKAGE);
 			var datadir = Config.PACKAGE_DATA_DIR;
 			Gtk.IconTheme.get_default().append_search_path(datadir+"/images");
-			Compat.fm_gtk_init(null);
-			Compat.prepare_modules();
 			add_action_entries(app_entries,this);
 			add_action_entries(menu_entries,this);
 		}
 		public override void shutdown()
 		{
-			Compat.unload_modules();
-			Compat.fm_gtk_finalize();
 			base.shutdown();
 		}
-		
+
 		public override void activate()
 		{
 			if (!started)
@@ -175,7 +171,7 @@ namespace ValaPanel
 				}
 			}
 		}
-		
+
 		public override int handle_local_options(VariantDict opts)
 		{
 			if (opts.contains("version"))
@@ -218,7 +214,7 @@ namespace ValaPanel
 			activate();
 			return 0;
 		}
-		
+
 		private bool start_all_panels()
 		{
 			var panel_dir = user_config_file_name("panels",null);
@@ -237,13 +233,13 @@ namespace ValaPanel
 			}
 			return (this.get_windows() != null);
 		}
-		
+
 		private void ensure_user_config()
 		{
 			var dir = user_config_file_name("panels",null);
 			GLib.FileUtils.mkdir_with_parents(dir,0700);
 		}
-		
+
 		private void apply_styling()
 		{
 			if (Gtk.Settings.get_default()!=null)
@@ -288,11 +284,11 @@ namespace ValaPanel
 		}
 		private void activate_menu_callback(SimpleAction action, Variant? param)
 		{
-			Compat.activate_menu(action,param,this);
+//~ 			activate_menu(action,param,this);
 		}
 		private void activate_panel_preferences_callback(SimpleAction action, Variant? param)
 		{
-			Compat.activate_panel_preferences(action,param,this);
+//~ 			activate_panel_preferences(action,param,this);
 		}
 		internal void activate_about(SimpleAction action, Variant? param)
 		{
