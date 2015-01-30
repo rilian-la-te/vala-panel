@@ -28,10 +28,6 @@ libvalapanel_la_SOURCES = \
 	panel-toplevel.vala \
 	misc.vala \
 	icon-grid.vala
-#	Misc.vala 
-#	configurator.vala 
-#	Panel.vala 
-#	Plugin.vala 
 
 libvalapanel_la_VALAFLAGS = \
 	--library=libvalapanel \
@@ -39,6 +35,7 @@ libvalapanel_la_VALAFLAGS = \
 	--vapi=$(top_srcdir)/vapi/vala-panel.vapi \
 	--vapidir=../vapi \
 	--vapidir=. \
+	--pkg config \
 	--pkg gtk+-3.0 \
 	--pkg gio-2.0 \
 	--pkg gio-unix-2.0 \

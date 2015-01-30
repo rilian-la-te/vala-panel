@@ -17,23 +17,23 @@ namespace ValaPanel
 		public static const string BORDER = "border";
 		public static const string POSITION = "position";
 	}
-	
-	public class PluginSettings : GLib.Object
+
+	internal class PluginSettings : GLib.Object
 	{
 		internal string path_append;
 		internal GLib.Settings default_settings;
 		internal GLib.Settings config_settings;
 		internal uint number;
 
-		public PluginSettings(ToplevelSettings settings, string name, uint num)
+		internal PluginSettings(ToplevelSettings settings, string name, uint num)
 		{
 			this.number = num;
 			this.path_append = name;
-			var path = "%s%u/".printf(settings.root_path,this.number); 
+			var path = "%s%u/".printf(settings.root_path,this.number);
 			this.default_settings = new GLib.Settings.with_backend_and_path(
 				                                PLUGIN_SCHEMA, settings.backend, path);
 		}
-		public void init_configuration(ToplevelSettings settings, bool has_config)
+		internal void init_configuration(ToplevelSettings settings, bool has_config)
 		{
 			default_settings.set_boolean(Key.SCHEMA,has_config);
 			if (has_config)
@@ -46,30 +46,30 @@ namespace ValaPanel
 		}
 	}
 
-	public class ToplevelSettings : GLib.Object
+	internal class ToplevelSettings : GLib.Object
 	{
-		public unowned GLib.SList<PluginSettings> plugins {
-			public get; private set;
+		internal unowned GLib.SList<PluginSettings> plugins {
+			internal get; private set;
 		}
-		public GLib.Settings settings {
-			public get; private set;
+		internal GLib.Settings settings {
+			internal get; private set;
 		}
 		internal GLib.SettingsBackend backend {
 			internal get; private set;
 		}
-		public string filename {
-			public get; private set;
+		internal string filename {
+			internal get; private set;
 		}
 		internal string root_name {
 			internal get; private set;
-		}		
+		}
 		internal string root_schema {
 			internal get; private set;
-		}		
+		}
 		internal string root_path {
 			internal get; private set;
 		}
-		
+
 		internal ToplevelSettings.full(string file, string schema, string path, string? root)
 		{
 			this.filename = file;
@@ -80,12 +80,12 @@ namespace ValaPanel
 			settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
 		}
 
-		public ToplevelSettings (string file)
+		internal ToplevelSettings (string file)
 		{
 			ToplevelSettings.full(file,PANEL_SCHEMA,PANEL_PATH,ROOT_NAME);
 		}
 
-		public uint find_free_num()
+		internal uint find_free_num()
 		{
 			var f = new GLib.KeyFile();
 			try{
@@ -104,7 +104,7 @@ namespace ValaPanel
 					return i;
 			return len+1;
 		}
-		
+
 		internal PluginSettings add_plugin_settings_full(string name, uint num)
 		{
 			var settings = new PluginSettings(this,name,num);
@@ -112,15 +112,15 @@ namespace ValaPanel
 			return settings;
 		}
 
-		public PluginSettings add_plugin_settings(string name)
+		internal PluginSettings add_plugin_settings(string name)
 		{
 			var num = find_free_num ();
 			var settings = new PluginSettings(this,name,num);
 			plugins.append(settings);
 			return settings;
 		}
-		
-		public void remove_plugin_settings(uint num)
+
+		internal void remove_plugin_settings(uint num)
 		{
 			foreach (var tmp in plugins)
 			{
@@ -141,7 +141,7 @@ namespace ValaPanel
 				}
 			}
 		}
-		public bool init_plugin_list()
+		internal bool init_plugin_list()
 		{
 			if (plugins != null)
 				return false;
@@ -157,7 +157,7 @@ namespace ValaPanel
 			var groups = f.get_groups();
 			foreach (var group in groups)
 			{
-				try 
+				try
 				{
 					var name = f.get_string(group,Key.NAME);
 					name = name._delimit("'",' ')._strip();

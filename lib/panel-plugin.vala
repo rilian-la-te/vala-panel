@@ -2,7 +2,7 @@ using Gtk;
 using Peas;
 
 private class PanelApplet : Gtk.Bin
-{		
+{
 }
 
 namespace ValaPanel
@@ -25,14 +25,13 @@ namespace ValaPanel
 	{
 		public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
 		                                                   GLib.Settings settings);
-		public abstract Features get_features();
+		public abstract Features features
+		{get;}
 	}
-	
+
 	public abstract class Applet : Gtk.EventBox
-	{	
+	{
 		private PanelApplet applet;
-		public uint number
-		{internal get; private construct;}
 		public abstract Features features
 		{
 			construct;
@@ -54,9 +53,9 @@ namespace ValaPanel
 		public abstract Gtk.Window get_config_dialog();
 		public abstract void invoke_action(PluginAction action);
 		public abstract void update_context_menu(ref GLib.Menu parent_menu);
-		internal Applet(ValaPanel.Toplevel top, ValaPanel.PluginSettings s)
+		public Applet(ValaPanel.Toplevel top, GLib.Settings s)
 		{
-			Object(toplevel: top, settings: s.config_settings, number: s.number);
+			Object(toplevel: top, settings: s);
 		}
 		construct
 		{
@@ -78,7 +77,7 @@ namespace ValaPanel
 				return false;
 			});
 		}
-		public void init_background()
+		internal void init_background()
 		{
 			Gdk.RGBA color = Gdk.RGBA();
 			color.parse ("transparent");
