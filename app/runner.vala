@@ -214,7 +214,7 @@ namespace ValaPanel
 			this.show();
 			main_entry.grab_focus();
 			main_box.set_orientation(Gtk.Orientation.HORIZONTAL);
-			this.present();
+			this.present_with_time(Gtk.get_current_event_time());
 		}
 		
 		[GtkCallback]
