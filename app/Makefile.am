@@ -2,7 +2,7 @@
 
 bin_PROGRAMS =vala-panel
 
-simple_panel_CPPFLAGS = \
+vala_panel_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/libvalapanel \
@@ -14,6 +14,7 @@ simple_panel_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DG_SETTINGS_ENABLE_BACKEND \
 	$(PACKAGE_CFLAGS) \
+	$(LIBPEAS_CFLAGS) \
 	$(G_CAST_CHECKS)
 
 vala_panel_resdeps = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies vala-panel.gresource.xml)
@@ -35,6 +36,7 @@ vala_panel_VALAFLAGS = \
 	--pkg gtk+-3.0 \
 	--pkg gio-2.0 \
 	--pkg gio-unix-2.0 \
+	--pkg libpeas-1.0 \
 	--pkg config \
 	--pkg vala-panel \
 	--pkg gio-settingsbackend-2.0 \
@@ -46,7 +48,8 @@ vala_panel_LDFLAGS = -export-dynamic -rpath $(pkglibdir)
 vala_panel_LDADD = \
 		$(top_builddir)/lib/libvalapanel.la \
 		$(PACKAGE_LIBS) \
-		$(INTLLIBS)
+		$(INTLLIBS) \
+		$(LIBPEAS_LIBS)
 ##		$(X11_LIBS) \
 
 CLEANFILES = \

@@ -48,9 +48,8 @@ libvalapanel_la_VALAFLAGS = \
 	$(VALAFLAGS) \
 	--pkg gee-0.8
 
-libvalapanel_la_CFLAGS = \
-	$(GOBJECT_CFLAGS) \
-	$(GTK3_CFLAGS) \
+libvalapanel_la_CPPFLAGS = \
+	$(PACKAGE_CFLAGS) \
 	$(LIBPEAS_CFLAGS) \
 	-DG_SETTINGS_ENABLE_BACKEND \
 	-DGETTEXT_PACKAGE=\""vala-panel"\" \
@@ -61,8 +60,7 @@ libvalapanel_la_CFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
 
 libvalapanel_la_LIBADD = \
-	$(GOBJECT_LIBS) \
-	$(GTK3_LIBS) \
+	$(PACKAGE_LIBS) \
 	$(LIBPEAS_LIBS) \
 	-lm
 
