@@ -29,12 +29,10 @@ namespace ValaPanel
 	}
 	
 	public abstract class Applet : Gtk.EventBox
-	{
-		private GLib.Settings _settings;
-		private ValaPanel.Toplevel _toplevel;
-		private Gtk.Widget back;
+	{	
 		private PanelApplet applet;
-		internal uint number;
+		public uint number
+		{internal get; private construct;}
 		public abstract Features features
 		{
 			construct;
@@ -42,37 +40,38 @@ namespace ValaPanel
 		}
 		public Gtk.Widget background_widget
 		{
-			get {return back;}
+			public get; private set;
 		}
 		public ValaPanel.Toplevel toplevel
 		{
-			get {return _toplevel;}
+			public get; private construct;
 		}
 		public GLib.Settings settings
 		{
-			get {return _settings;}
+			public get; private construct;
 		}
-		public abstract void constructor (ValaPanel.Toplevel toplevel, GLib.Settings settings);
+		public abstract void create (ValaPanel.Toplevel toplevel, GLib.Settings settings);
 		public abstract Gtk.Window get_config_dialog();
 		public abstract void invoke_action(PluginAction action);
 		public abstract void update_context_menu(ref GLib.Menu parent_menu);
-		internal Applet(ValaPanel.Toplevel toplevel, ValaPanel.PluginSettings settings)
+		internal Applet(ValaPanel.Toplevel top, ValaPanel.PluginSettings s)
 		{
-			this._toplevel = toplevel;
-			this.number = settings.number;
-			this._settings = settings.config_settings;
+			Object(toplevel: top, settings: s.config_settings, number: s.number);
+		}
+		construct
+		{
 			this.set_has_window(false);
 			applet = new PanelApplet();
-			this.constructor(toplevel,this.settings);
-			if (back == null)
-				back = this;
+			this.create(toplevel,this.settings);
+			if (background_widget == null)
+				background_widget = this;
 			init_background();
 			this.button_press_event.connect((b)=>
 			{
 				if (b.button == 3 &&
 				    ((b.state & Gtk.accelerator_get_default_mod_mask ()) == 0))
 				{
-					_toplevel.get_plugin_menu(this).popup(null,null,null,
+					toplevel.get_plugin_menu(this).popup(null,null,null,
 					                                      b.button,b.time);
 					return true;
 				}
@@ -87,7 +86,7 @@ namespace ValaPanel
 			                          PanelCSS.generate_background(null,color),
 			                          "-vala-panel-background",
 			                          true);
-			PanelCSS.apply_with_class(back,
+			PanelCSS.apply_with_class(background_widget,
 			                          PanelCSS.generate_background(null,color),
 			                          "-vala-panel-background",
 			                          true);
@@ -95,7 +94,7 @@ namespace ValaPanel
 		public void set_popup_position(Gtk.Widget popup)
 		{
 			int x,y;
-			_toplevel.popup_position_helper(this,popup,out x, out y);
+			toplevel.popup_position_helper(this,popup,out x, out y);
 			popup.get_window().move(x,y);
 		}
 	}

@@ -8,7 +8,7 @@ namespace ValaPanel
 	{
 		internal static const string EDGE = "edge";
 		internal static const string WIDTH = "width";
-		internal static const string ICON_SIZE = "icon-size"
+		internal static const string ICON_SIZE = "icon-size";
 	}
 	[Flags]
 	internal enum AppearanceHints
@@ -57,11 +57,12 @@ namespace ValaPanel
 		private Gtk.Box box;
 
 		private GeometryHints ghints;
+		private Gtk.PositionType _edge;
 		private int h;
 		private int width;
+		private int _m;
 		private AlignmentType align;
-		private int margin;
-		private Gdk.Rectangle a;
+		private Gtk.Allocation a;
 		private Gdk.Rectangle c;
 
 		private AppearanceHints ahints;
@@ -74,7 +75,7 @@ namespace ValaPanel
 		internal Gtk.Dialog pref_dialog;
 
 
-		private uint ah_visible;
+		private bool ah_visible;
 		private uint ah_far;
 		private uint ah_state;
 		private uint mouse_timeout;
@@ -87,12 +88,21 @@ namespace ValaPanel
 
 		private bool initialized;
 
+		internal string panel_name
+		{get; set;}
+
 		private int height
-		{
-			{ get {
+		{ get {
 				return ((ghints & GeometryHints.SHADOW) > 0) ? h+5 : h;
 			}
-			set {h=height}}
+			set {h=height;}
+		}
+		private int panel_margin
+		{get {return _m;}
+		 set {
+			 _m = value;
+			 apply_props(false,true,false,true);
+		 }
 		}
 		private string profile
 		{ get {
@@ -103,15 +113,12 @@ namespace ValaPanel
 			}
 		}
 
-		public Gtk.PositionType edge { get; set;}
-		public bool use_gnome_theme
-		{ get {return AppearanceHints.GNOME in ahints;}
-		  set {
-			  ahints = (use_gnome_theme == true) ?
-				  ahints | AppearanceHints.GNOME :
-				  ahints & (~AppearanceHints.GNOME);
-			  update_background();
-		  }
+		public Gtk.PositionType edge {
+			get {return _edge;}
+			set {
+				_edge = value;
+				apply_props (true,true,false,true);
+			}
 		}
 		public Gtk.Orientation orientation
 		{
@@ -122,30 +129,57 @@ namespace ValaPanel
 		}
 		public int monitor
 		{get; set;}
+		public bool autohide
+		{ get {return GeometryHints.AUTOHIDE in ghints;}
+		  set {
+			  ghints = (value == true) ?
+				  ghints | GeometryHints.AUTOHIDE :
+				  ghints & (~GeometryHints.AUTOHIDE);
+			  apply_props (false,true,false,true);
+		  }
+		}
+		public bool show_hidden
+		{ get {return GeometryHints.SHOW_HIDDEN in ghints;}
+		  set {
+			  ghints = (value == true) ?
+				  ghints | GeometryHints.SHOW_HIDDEN :
+				  ghints & (~GeometryHints.SHOW_HIDDEN);
+			  apply_props (false,true,false,true);
+		  }
+		}
+		public bool use_gnome_theme
+		{ get {return AppearanceHints.GNOME in ahints;}
+		  set {
+			  ahints = (value == true) ?
+				  ahints | AppearanceHints.GNOME :
+				  ahints & (~AppearanceHints.GNOME);
+			   apply_props (false,false,true,false);
+		  }
+		}
 		internal string background
 		{owned get {return bgc.to_string();}
-		 set {bgc.parse(background);}
+		 set {bgc.parse(value);}
 		}
 		internal string foreground
 		{owned get {return fgc.to_string();}
-		 set {fgc.parse(foreground);}
+		 set {fgc.parse(value);}
 		}
 		public uint icon_size
 		{ get {return (uint) ihints;}
 		  set {
-			if (icon_size >= (uint)IconSizeHints.XXXL)
+			if (value >= (uint)IconSizeHints.XXXL)
 				ihints = IconSizeHints.XXL;
-			else if (icon_size >= (uint)IconSizeHints.XXL)
+			else if (value >= (uint)IconSizeHints.XXL)
 				ihints = IconSizeHints.XXL;
-			else if (icon_size >= (uint)IconSizeHints.XL)
+			else if (value >= (uint)IconSizeHints.XL)
 				ihints = IconSizeHints.XL;
-			else if (icon_size >= (uint)IconSizeHints.L)
+			else if (value >= (uint)IconSizeHints.L)
 				ihints = IconSizeHints.L;
-			else if (icon_size >= (uint)IconSizeHints.M)
+			else if (value >= (uint)IconSizeHints.M)
 				ihints = IconSizeHints.M;
-			else if (icon_size >= (uint)IconSizeHints.S)
+			else if (value >= (uint)IconSizeHints.S)
 				ihints = IconSizeHints.S;
-			else if (icon_size >= (uint)IconSizeHints.XS)
+			else if (value >= (uint)IconSizeHints.XS)
 				ihints = IconSizeHints.XS;
 			else ihints = IconSizeHints.XXS;
 		  }
@@ -153,25 +187,25 @@ namespace ValaPanel
 		public string background_file
 		{get; set;}
 
+		/* Constructors */
 		[CCode (returns_floating_reference = true)]
 		public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
 		{
-
+			return null;
 		}
-		public Toplevel(Gtk.Application app)
+		public Toplevel (Gtk.Application app)
 		{
-			Object o =  Object(
-			            border-width: 0,
-                        decorated: false,
-                        name: "ValaPanel",
-                        resizable: false,
-                        title: "ValaPanel",
-                        type-hint: Gdk.WindowTypeHint.DOCK,
-                        window-position: Gtk.WindowPosition.NONE,
-                        skip-taskbar-hint: true,
-                        skip-pager-hint: true,
-                        accept-focus: false,
-                        application: app);
+			 Object(border_width: 0,
+			decorated: false,
+			name: "ValaPanel",
+			resizable: false,
+			title: "ValaPanel",
+			type_hint: Gdk.WindowTypeHint.DOCK,
+			window_position: Gtk.WindowPosition.NONE,
+			skip_taskbar_hint: true,
+			skip_pager_hint: true,
+			accept_focus: false,
+			application: app);
 		}
 		construct
 		{
@@ -180,10 +214,33 @@ namespace ValaPanel
 				this.set_visual(visual);
 			dummy = new PanelToplevel();
 			this.destroy.connect((a)=>{stop_ui ();});
-			a = Gdk.Rectangle();
+			a = Gtk.Allocation();
 			c = Gdk.Rectangle();
 		}
 
+/* Property apply */
+		private void apply_props(bool conf = false,
+		                         bool geo = false,
+		                         bool appearance = false,
+		                         bool strut = false)
+		{
+			if (this.get_window()!= null)
+			{
+//    			if (conf)
+//        			set_configuration_changed();
+    			if (geo)
+        			this.queue_resize();
+    			if (appearance)
+				{
+        			update_background();
+//        			update_fonts(this as Gtk.Widget);
+//        			this.foreach(plugins_update_appearance);
+    			}
+//    			if (strut)
+//        			this.set_wm_strut();
+			}
+		}
+/* Common UI functions */
 		private void stop_ui()
 		{
 			if (pref_dialog != null)
@@ -209,6 +266,7 @@ namespace ValaPanel
 		protected override void size_allocate(Gtk.Allocation a)
 		{
 			int x,y,w;
+			base.size_allocate(a);
 			if ((ghints & GeometryHints.DYNAMIC) > 0 && box != null)
 			{
 				if (orientation == Gtk.Orientation.HORIZONTAL)
@@ -221,7 +279,7 @@ namespace ValaPanel
 			if (!this.get_realized())
 				return;
 			this.get_window().get_origin(out x, out y);
-			_calculate_position (out a);
+			_calculate_position (ref a);
 			this.a.x = a.x;
 			this.a.y = a.y;
 			if (a.width != this.a.width || a.height != this.a.height || this.a.x != x || this.a.y != y)
@@ -230,7 +288,6 @@ namespace ValaPanel
 				this.a.height = a.height;
 				this.set_size_request(this.a.width, this.a.height);
 				this.move(this.a.x, this.a.y);
-
 			}
 			if (this.get_mapped())
 				establish_autohide ();
@@ -253,66 +310,68 @@ namespace ValaPanel
 			{
 				a.width = width;
 				a.x = marea.x;
-				calculate_width(marea.width,align,margin,ref a.width, ref a.x);
+				calculate_width(marea.width,align,panel_margin,ref a.width, ref a.x);
 				a.height = (!autohide || ah_visible) ? height :
-										(ghints & GeometryHints.SHOW_HIDDEN > 0) ? 1 : 0;
+										show_hidden ? 1 : 0;
 				a.x = marea.x + ((edge == Gtk.PositionType.TOP) ? 0 : marea.width - a.width);
 			}
 			else
 			{
 				a.height = width;
 				a.y = marea.y;
-				calculate_width(marea.height,align,margin,ref a.height, ref a.y);
+				calculate_width(marea.height,align,panel_margin,ref a.height, ref a.y);
 				a.width = (!autohide || ah_visible) ? height :
-										(ghints & GeometryHints.SHOW_HIDDEN > 0) ? 1 : 0;
+										show_hidden ? 1 : 0;
 				a.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : marea.height - a.height);
 			}
 		}
 
 		private void calculate_position()
 		{
-			_calculate_position(ref (this.a as Gtk.Allocation));
+			_calculate_position(ref a);
 		}
 
 		private static void calculate_width(int scrw, AlignmentType align, int margin,
-											int margin, ref int panw, ref int x)
+											ref int panw, ref int x)
 		{
 			panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
 			panw = (int)(((double)scrw * (double) panw)/100.0);
-			margin = (align != AlignmentType.CENTER && margin > srcw) ? 0 : margin;
+			margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
 			panw = int.min(scrw - margin, panw);
-			if (align = AlignmentType.LEFT)
+			if (align == AlignmentType.START)
 				x+=margin;
-			else if (align = AlignmentType.RIGHT)
+			else if (align == AlignmentType.END)
 			{
 				x += scrw - panw - margin;
 				x = (x < 0) ? 0 : x;
 			}
-			else if (align = AlignmentType.CENTER)
+			else if (align == AlignmentType.CENTER)
 				x += (scrw - panw)/2;
 		}
 
 		protected override void get_preferred_width(out int min, out int nat)
 		{
+			base.get_preferred_width_internal(out min, out nat);
 			Gtk.Requisition req = Gtk.Requisition();
-			this.get_preferred_size(out req, null);
+			this.get_panel_preferred_size(out req, null);
 			min = nat = req.width;
 		}
 		protected override void get_preferred_height(out int min, out int nat)
 		{
+			base.get_preferred_height_internal(out min, out nat);
 			Gtk.Requisition req = Gtk.Requisition();
-			this.get_preferred_size(out req, null);
+			this.get_panel_preferred_size(out req, null);
 			min = nat = req.height;
 		}
-		protected override void get_preferred_size (out Gtk.Requisition min,
+		protected void get_panel_preferred_size (out Gtk.Requisition min,
 													out Gtk.Requisition nat)
 		{
 			if (!ah_visible)
 				box.get_preferred_size(out min, out nat);
-			var rect = Gdk.Rectangle();
+			var rect = Gtk.Allocation();
 			rect.width = min.width;
 			rect.height = min.height;
-			_calculate_position(ref rect as Gtk.Allocation);
+			_calculate_position(ref rect);
 			min.width = rect.width;
 			min.height = rect.height;
 			nat = min;
@@ -320,18 +379,20 @@ namespace ValaPanel
 /*
  * Autohide stuff
  */
-		protected override bool configure_event(Gdk.EventConfigure evt)
+		protected override bool configure_event(Gdk.EventConfigure e)
 		{
 			c.width = e.width;
 			c.height = e.height;
 			c.x = e.x;
 			c.y = e.y;
+			return base.configure_event (e);
 		}
 
 		protected override bool map_event(Gdk.EventAny e)
 		{
-			if (ghints & GeometryHints.AUTOHIDE > 0)
+			if (autohide)
 				ah_start();
+			return base.map_event(e);
 		}
 
 		private void establish_autohide()
@@ -468,6 +529,7 @@ namespace ValaPanel
 
 		private void set_strut()
 		{
+
 		}
 		private void update_background()
 		{
