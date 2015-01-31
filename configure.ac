@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(vala-panel, 0.1,99, ria.freelander@gmail.com)
+AC_INIT(vala-panel, 0.1.99, http://vala-panel.github.io/, vala-panel)
 AM_INIT_AUTOMAKE([-Wno-portability no-dist-gzip dist-xz foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 
