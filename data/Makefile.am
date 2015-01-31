@@ -23,9 +23,9 @@ two_panels_config_paneldir = $(sysconfdir)/xdg/simple-panel/two_panels/panels
 #        $(top_srcdir)/plugins/xkb/xkb.h
 
 panel_gschemas_in_in = \
-        gschemas/org.simple.panel.gschema.xml.in.in \
-        gschemas/org.simple.panel.toplevel.plugin.gschema.xml.in.in
-#        gschemas/org.simple.panel.toplevel.gschema.xml.in.in \
+        gschemas/org.valapanel.gschema.xml.in.in \
+        gschemas/org.valapanel.toplevel.plugin.gschema.xml.in.in \
+        gschemas/org.valapanel.toplevel.gschema.xml.in.in 
 #        gschemas/org.simple.panel.builtin.gschema.xml.in.in \
 #        gschemas/org.simple.panel.X.gschema.xml.in.in \
 #        gschemas/org.simple.panel.plugins.gschema.xml.in.in

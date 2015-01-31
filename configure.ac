@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT([Vala Panel], 0.1,0, [ria.freelander@gmail.com])
+AC_INIT(vala-panel, 0.1,99, ria.freelander@gmail.com)
 AM_INIT_AUTOMAKE([-Wno-portability no-dist-gzip dist-xz foreign subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 
@@ -94,21 +94,9 @@ fi
 
 AC_SUBST(VALAFLAGS)
 
-#AC_CONFIG_FILES([Makefile
-#                data/Makefile
-#                lib/Makefile
-#                src/Makefile
-#                applets/Makefile
-#                po/Makefile.in
-#                vala-panel.pc
-#                data/budgie-desktop.desktop
-#                lib/libvalapanel.gresource.xml
-#                src/vala-panel.gresource.xml
-#                data/default/panels/panel
-#                data/two_panels/panels/top
-#                data/two_panels/panels/bottom
- #               ])
 AC_CONFIG_FILES([Makefile
+                applets/Makefile
+                applets/test/Makefile
                 data/Makefile
                 lib/Makefile
                 po/Makefile.in

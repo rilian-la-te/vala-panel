@@ -1,33 +1,34 @@
 using GLib;
 using Gtk;
+using Gdk;
 
 namespace ValaPanel
 {
 	namespace Key
 	{
-		internal static const string EDGE = "edge";
-		internal static const string ALIGNMENT = "alignment";
-		internal static const string HEIGHT = "height";
-		internal static const string WIDTH = "width";
-		internal static const string DYNAMIC = "is-dynamic";
-		internal static const string AUTOHIDE = "autohide";
-		internal static const string SHOW_HIDDEN = "show-hidden";
-		internal static const string STRUT = "strut";
-		internal static const string DOCK = "dock";
-		internal static const string MONITOR = "monitor";
-		internal static const string MARGIN = "panel-margin";
-		internal static const string ICON_SIZE = "icon-size";
-		internal static const string BACKGROUND_COLOR = "background-color";
-		internal static const string FOREGROUND_COLOR = "foreground-color";
-		internal static const string BACKGROUND_FILE = "background-file";
-		internal static const string FONT_SIZE = "font-size";
-		internal static const string FONT = "font";
-		internal static const string CORNERS_SIZE = "round-corners-size";
-		internal static const string USE_BACKGROUND_COLOR = "use-background-color";
-		internal static const string USE_FOREGROUND_COLOR = "use-foreground-color";
-		internal static const string USE_FONT = "use-font";
-		internal static const string FONT_SIZE_ONLY = "font-size-only";
-		internal static const string USE_BACKGROUND_FILE = "use-background-file";
+		public static const string EDGE = "edge";
+		public static const string ALIGNMENT = "alignment";
+		public static const string HEIGHT = "height";
+		public static const string WIDTH = "width";
+		public static const string DYNAMIC = "is-dynamic";
+		public static const string AUTOHIDE = "autohide";
+		public static const string SHOW_HIDDEN = "show-hidden";
+		public static const string STRUT = "strut";
+		public static const string DOCK = "dock";
+		public static const string MONITOR = "monitor";
+		public static const string MARGIN = "panel-margin";
+		public static const string ICON_SIZE = "icon-size";
+		public static const string BACKGROUND_COLOR = "background-color";
+		public static const string FOREGROUND_COLOR = "foreground-color";
+		public static const string BACKGROUND_FILE = "background-file";
+		public static const string FONT_SIZE = "font-size";
+		public static const string FONT = "font";
+		public static const string CORNERS_SIZE = "round-corners-size";
+		public static const string USE_BACKGROUND_COLOR = "use-background-color";
+		public static const string USE_FOREGROUND_COLOR = "use-foreground-color";
+		public static const string USE_FONT = "use-font";
+		public static const string FONT_SIZE_ONLY = "font-size-only";
+		public static const string USE_BACKGROUND_FILE = "use-background-file";
 	}
 	internal enum AlignmentType
 	{
@@ -412,11 +413,6 @@ namespace ValaPanel
 			}
 		}
 
-		private void calculate_position()
-		{
-			_calculate_position(ref a);
-		}
-
 		private static void calculate_width(int scrw, AlignmentType align, int margin,
 											ref int panw, ref int x)
 		{
@@ -712,17 +708,20 @@ namespace ValaPanel
 	    {
 	        var plugin = p as AppletPlugin;
 	        var type = i.get_module_name();
+	        if (loaded_applet_plugins.contains(type))
+				return;
 	        loaded_applet_plugins.insert(type,plugin);
 
 	        // Iterate the children, and then load them into the panel
 			PluginSettings? pl = null;
 			foreach (var s in settings.plugins)
-				if (s.default_settings.get_string(Key.NAME) == type) pl=s;
-			if (pl != null)
-			{
-				loaded_types.insert(type,0);
-				load_applet(pl);
-			}
+				if (s.default_settings.get_string(Key.NAME) == type)
+				{
+					pl = s;
+					if (!loaded_types.contains(type))
+						loaded_types.insert(type,0);
+					load_applet(pl);
+				}
 	    }
 		internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
 		{
@@ -817,9 +816,150 @@ namespace ValaPanel
 /*
  * Properties handling
  */
+		private bool panel_edge_can_strut(out ulong size)
+		{
+			ulong s = 0;
+			size = 0;
+			if (!get_mapped())
+				return false;
+			if (autohide)
+				s =(show_hidden)? 1 : 0;
+			else switch (orientation)
+			{
+				case Gtk.Orientation.VERTICAL:
+					s = a.width;
+					break;
+				case Gtk.Orientation.HORIZONTAL:
+					s = a.height;
+					break;
+				default: return false;
+			}
+			if (monitor < 0)
+			{
+				size = s;
+				return true;
+			}
+			if (monitor >= get_screen().get_n_monitors())
+				return false;
+			Gdk.Rectangle rect, rect2;
+			get_screen().get_monitor_geometry(monitor, out rect);
+			switch(edge)
+			{
+		        case PositionType.LEFT:
+		            rect.width = rect.x;
+		            rect.x = 0;
+		            s += rect.width;
+		            break;
+		        case PositionType.RIGHT:
+		            rect.x += rect.width;
+		            rect.width = get_screen().get_width() - rect.x;
+		            s += rect.width;
+		            break;
+		        case PositionType.TOP:
+		            rect.height = rect.y;
+		            rect.y = 0;
+		            s += rect.height;
+		            break;
+		        case PositionType.BOTTOM:
+		            rect.y += rect.height;
+		            rect.height = get_screen().get_height() - rect.y;
+		            s += rect.height;
+		            break;
+		    }
+			if (rect.height == 0 || rect.width == 0) ; /* on a border of monitor */
+		    else
+		    {
+		        var n = get_screen().get_n_monitors();
+		        for (var i = 0; i < n; i++)
+		        {
+		            if (i == monitor)
+		                continue;
+		            get_screen().get_monitor_geometry(i, out rect2);
+		            if (rect.intersect(rect2, null))
+		                /* that monitor lies over the edge */
+		                return false;
+		        }
+		    }
+			size = s;
+			return true;
+		}
 		private void update_strut()
 		{
+		    int index;
+		    Gdk.Atom atom;
+		    ulong strut_size = 0;
+		    ulong strut_lower = 0;
+		    ulong strut_upper = 0;
 
+		    if (!get_mapped())
+		        return;
+		    /* most wm's tend to ignore struts of unmapped windows, and that's how
+		     * lxpanel hides itself. so no reason to set it. */
+		    if (autohide && !show_hidden)
+		        return;
+
+		    /* Dispatch on edge to set up strut parameters. */
+		    switch (edge)
+		    {
+		        case PositionType.LEFT:
+		            index = 0;
+		            strut_lower = a.y;
+		            strut_upper = a.y + a.height;
+		            break;
+		        case PositionType.RIGHT:
+		            index = 1;
+		            strut_lower = a.y;
+		            strut_upper = a.y + a.height;
+		            break;
+		        case PositionType.TOP:
+		            index = 2;
+		            strut_lower = a.x;
+		            strut_upper = a.x + a.width;
+		            break;
+		        case PositionType.BOTTOM:
+		            index = 3;
+		            strut_lower = a.x;
+		            strut_upper = a.x + a.width;
+		            break;
+		        default:
+		            return;
+		    }
+
+		    /* Set up strut value in property format. */
+		    ulong desired_strut[12];
+		    if (strut &&
+		        panel_edge_can_strut(out strut_size))
+		    {
+		        desired_strut[index] = strut_size;
+		        desired_strut[4 + index * 2] = strut_lower;
+		        desired_strut[5 + index * 2] = strut_upper-1;
+		    }
+		    /* If strut value changed, set the property value on the panel window.
+		     * This avoids property change traffic when the panel layout is recalculated but strut geometry hasn't changed. */
+		    if ((this.strut_size != strut_size) || (this.strut_lower != strut_lower) || (this.strut_upper != strut_upper) || (this.strut_edge != this.edge))
+		    {
+		        this.strut_size = strut_size;
+		        this.strut_lower = strut_lower;
+		        this.strut_upper = strut_upper;
+		        this.strut_edge = this.edge;
+		        /* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
+		         * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
+				var xwin = get_window();
+		        if (strut_size != 0)
+		        {
+		            atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
+		            Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,12);
+		            atom = Atom.intern_static_string("_NET_WM_STRUT");
+		            Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,4);
+		        }
+		        else
+		        {
+		            atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
+		            Gdk.property_delete(xwin,atom);
+		            atom = Atom.intern_static_string("_NET_WM_STRUT");
+		            Gdk.property_delete(xwin,atom);
+		        }
+		    }
 		}
 		private void update_appearance()
 		{

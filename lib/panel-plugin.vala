@@ -38,11 +38,6 @@ namespace ValaPanel
 	[CCode (cname = "PanelApplet")]
 	public abstract class Applet : Gtk.EventBox
 	{
-		public abstract Features features
-		{
-			construct;
-			get;
-		}
 		public Gtk.Widget background_widget
 		{
 			public get; private set;
@@ -57,12 +52,15 @@ namespace ValaPanel
 		}
 		public uint number
 		{
-			public get; private construct;
+			internal get; private construct;
 		}
-		public abstract void create (ValaPanel.Toplevel toplevel, GLib.Settings settings);
-		public abstract Gtk.Window get_config_dialog();
-		public abstract void invoke_action(PluginAction action);
-		public abstract void update_context_menu(ref GLib.Menu parent_menu);
+		public abstract void create();
+		public virtual Gtk.Window? get_config_dialog()
+		{
+			return null;
+		}
+		public virtual void invoke_action(PluginAction action){}
+		public virtual void update_context_menu(ref GLib.Menu parent_menu){}
 		public Applet(ValaPanel.Toplevel top, GLib.Settings s, uint num)
 		{
 			Object(toplevel: top, settings: s, number: num);
@@ -70,7 +68,7 @@ namespace ValaPanel
 		construct
 		{
 			this.set_has_window(false);
-			this.create(toplevel,this.settings);
+			this.create();
 			if (background_widget == null)
 				background_widget = this;
 			init_background();

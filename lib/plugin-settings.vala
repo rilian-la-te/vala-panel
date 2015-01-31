@@ -2,20 +2,20 @@ using GLib;
 
 namespace ValaPanel
 {
-	private static const string PLUGIN_SCHEMA = "org.simple.panel.toplevel.plugin";
-	private static const string PANEL_SCHEMA = "org.simple.panel.toplevel";
-	private static const string PANEL_PATH = "/org/simple/panel/toplevel/";
+	private static const string PLUGIN_SCHEMA = "org.valapanel.toplevel.plugin";
+	private static const string PANEL_SCHEMA = "org.valapanel.toplevel";
+	private static const string PANEL_PATH = "/org/vala-panel/toplevel/";
 	private static const string ROOT_NAME = "toplevel-settings";
 
 	namespace Key
 	{
-		public static const string NAME = "plugin-type";
+		internal static const string NAME = "plugin-type";
 		private static const string SCHEMA = "has-schema";
-		public static const string EXPAND = "is-expanded";
-		public static const string CAN_EXPAND = "can-expand";
-		public static const string PADDING = "padding";
-		public static const string BORDER = "border";
-		public static const string POSITION = "position";
+		internal static const string EXPAND = "is-expanded";
+		internal static const string CAN_EXPAND = "can-expand";
+		internal static const string PADDING = "padding";
+		internal static const string BORDER = "border";
+		internal static const string POSITION = "position";
 	}
 
 	internal class PluginSettings : GLib.Object

@@ -1,5 +1,5 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
-  <schema id="org.simple.panel" path="/org/simple/panel/">
+  <schema id="org.valapanel" path="/org/vala-panel/">
     <key name="is-dark" type="b">
       <default>false</default>
       <_summary>Use dark theme for panel.</_summary>

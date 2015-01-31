@@ -18,6 +18,5 @@ SUBDIRS = \
 	data \
 	lib\
 	app\
+	applets\
 	po 
-#	src 
-#	applets 
