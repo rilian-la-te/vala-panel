@@ -1,9 +1,6 @@
 using GLib;
 using Gtk;
 
-private class PanelToplevel : Gtk.Bin
-{
-}
 namespace ValaPanel
 {
 	namespace Key
@@ -31,8 +28,6 @@ namespace ValaPanel
 		internal static const string USE_FONT = "use-font";
 		internal static const string FONT_SIZE_ONLY = "font-size-only";
 		internal static const string USE_BACKGROUND_FILE = "use-background-file";
-		internal static const string USE_GNOME = "use-gnome-theme";
-
 	}
 	internal enum AlignmentType
 	{
@@ -57,13 +52,15 @@ namespace ValaPanel
 		HIDDEN,
 		WAITING
 	}
+	[CCode (cname = "PanelToplevel")]
 	public class Toplevel : Gtk.ApplicationWindow, Gtk.Orientable
 	{
 		private static Peas.Engine engine;
 		private static ulong mon_handler;
-		internal static HashTable<string,string> loaded_types;
+		internal static HashTable<string,uint> loaded_types;
+		internal static HashTable<string,AppletPlugin> loaded_applet_plugins;
+		private Peas.ExtensionSet extset;
 		private ToplevelSettings settings;
-		private PanelToplevel dummy;
 		private Gtk.Box box;
 		private int _mon;
 		private int _w;
@@ -96,7 +93,7 @@ namespace ValaPanel
 												Key.MONITOR,Key.AUTOHIDE,Key.SHOW_HIDDEN,
 												Key.MARGIN,Key.DOCK,Key.STRUT,
 												Key.DYNAMIC};
-		private static const string[] anames = {Key.USE_GNOME,Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
+		private static const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
 												Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
 												Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
 												Key.USE_BACKGROUND_FILE, Key.USE_FONT,
@@ -196,7 +193,9 @@ namespace ValaPanel
 		static construct
 		{
 			engine = Peas.Engine.get_default();
-			loaded_types = new HashTable<string,string>(str_hash,str_equal);
+			engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
+			loaded_types = new HashTable<string,uint>(str_hash,str_equal);
+			loaded_applet_plugins = new HashTable<string,AppletPlugin>(str_hash,str_equal);
 		}
 		private static void monitors_changed_cb(Gdk.Screen scr, void* data)
 		{
@@ -238,12 +237,15 @@ namespace ValaPanel
 				application: app,
 				panel_name: name);
 		}
+/*
+ * Big constructor
+ */
 		construct
 		{
+			extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
 			Gdk.Visual visual = this.get_screen().get_rgba_visual();
 			if (visual != null)
 				this.set_visual(visual);
-			dummy = new PanelToplevel();
 			this.destroy.connect((a)=>{stop_ui ();});
 			a = Gtk.Allocation();
 			c = Gdk.Rectangle();
@@ -260,6 +262,12 @@ namespace ValaPanel
 			});
 			var filename = user_config_file_name("panels",profile,panel_name);
 			settings = new ToplevelSettings(filename);
+			this.extset.extension_added.connect(on_extension_added);
+			engine.load_plugin.connect_after((i)=>
+			{
+				var ext = extset.get_extension(i);
+				on_extension_added(i,ext);
+			});
 			this.add_action_entries(panel_entries,this);
 			settings_as_action(this,settings.settings,Key.EDGE);
 			settings_as_action(this,settings.settings,Key.ALIGNMENT);
@@ -280,7 +288,6 @@ namespace ValaPanel
 			settings_as_action(this,settings.settings,Key.FONT_SIZE);
 			settings_as_action(this,settings.settings,Key.FONT_SIZE_ONLY);
 			settings_as_action(this,settings.settings,Key.CORNERS_SIZE);
-			settings_as_action(this,settings.settings,Key.USE_GNOME);
 			settings_as_action(this,settings.settings,Key.USE_BACKGROUND_COLOR);
 			settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
 			settings_as_action(this,settings.settings,Key.USE_FONT);
@@ -453,8 +460,26 @@ namespace ValaPanel
 			min.width = rect.width;
 			min.height = rect.height;
 		}
-/*
- * Autohide stuff
+/****************************************************
+ *         autohide : borrowed from fbpanel         *
+ ****************************************************/
+
+/* Autohide is behaviour when panel hides itself when mouse is "far enough"
+ * and pops up again when mouse comes "close enough".
+ * Formally, it's a state machine with 3 states that driven by mouse
+ * coordinates and timer:
+ * 1. VISIBLE - ensures that panel is visible. When/if mouse goes "far enough"
+ *      switches to WAITING state
+ * 2. WAITING - starts timer. If mouse comes "close enough", stops timer and
+ *      switches to VISIBLE.  If timer expires, switches to HIDDEN
+ * 3. HIDDEN - hides panel. When mouse comes "close enough" switches to VISIBLE
+ *
+ * Note 1
+ * Mouse coordinates are queried every PERIOD milisec
+ *
+ * Note 2
+ * If mouse is less then GAP pixels to panel it's considered to be close,
+ * otherwise it's far
  */
  		private static const int PERIOD = 200;
 		private static const int GAP = 2;
@@ -504,7 +529,88 @@ namespace ValaPanel
 		}
 		private void ah_state_set(AutohideState new_state)
 		{
-
+			var rect = Gtk.Allocation();
+			if (this.ah_state != new_state)
+			{
+				ah_state = new_state;
+				switch (new_state)
+				{
+					case AutohideState.VISIBLE:
+						this.ah_visible = true;
+						_calculate_position(ref rect);
+						this.move(rect.x,rect.y);
+						this.show();
+						box.show();
+						this.stick();
+						this.queue_resize();
+						break;
+					case AutohideState.WAITING:
+						if (hide_timeout > 0) Source.remove(hide_timeout);
+						hide_timeout = Timeout.add(2*PERIOD, ah_state_hide_timeout);
+						break;
+					case AutohideState.HIDDEN:
+						if (show_hidden)
+						{
+							box.hide();
+							this.queue_resize();
+						}
+						else
+							this.hide();
+						this.ah_visible = false;
+						break;
+				}
+			}
+			else if (autohide && ah_far)
+			{
+				switch(new_state)
+				{
+					case AutohideState.VISIBLE:
+						ah_state_set(AutohideState.WAITING);
+						break;
+					case AutohideState.WAITING:
+						if (hide_timeout > 0) Source.remove(hide_timeout);
+						hide_timeout = 0;
+						break;
+					case AutohideState.HIDDEN:
+						if (show_hidden && box.get_visible())
+						{
+							box.hide();
+							this.show();
+						}
+						else if (this.get_visible())
+						{
+							this.hide();
+							box.show();
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (new_state)
+				{
+					case AutohideState.VISIBLE:
+						break;
+					case AutohideState.WAITING:
+						if (hide_timeout > 0) Source.remove(hide_timeout);
+						hide_timeout = 0;
+						break;
+					case AutohideState.HIDDEN:
+						if (hide_timeout > 0) Source.remove(hide_timeout);
+						hide_timeout = 0;
+						ah_state_set(AutohideState.VISIBLE);
+						break;
+				}
+			}
+		}
+		private bool ah_state_hide_timeout()
+		{
+			if (!MainContext.current_source().is_destroyed())
+			{
+				ah_state_set(AutohideState.HIDDEN);
+				hide_timeout = 0;
+			}
+			return false;
 		}
 		private bool mouse_watch()
 		{
@@ -516,34 +622,36 @@ namespace ValaPanel
 			var dev = manager.get_client_pointer();
 			dev.get_position(null, out x, out y);
 
-			return true;
-		}
-/*
-* Gnome Panel hack.
-*/
-#if HAVE_GTK313
-		protected override Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
-		{
-			Gtk.WidgetPath path = base.get_path_for_child(child);
-#else
-		protected override unowned Gtk.WidgetPath get_path_for_child(Gtk.Widget child)
-		{
-			unowned Gtk.WidgetPath path = base.get_path_for_child(child);
-#endif
-			if (use_gnome_theme)
+			var cx = a.x;
+			var cy = a.y;
+			var cw = (c.width != 1) ? c.width : 0;
+			var ch = (c.height != 1) ? c.height : 0;
+			if (ah_state == AutohideState.HIDDEN)
 			{
-				path.iter_set_object_type(0, typeof(PanelToplevel));
-				for (int i=0; i<path.length(); i++)
+				switch (edge)
 				{
-					if (path.iter_get_object_type(i) == typeof(Applet))
-					{
-						path.iter_set_object_type(i, typeof(PanelApplet));
+					case Gtk.PositionType.LEFT:
+						cw = GAP;
 						break;
-					}
+					case Gtk.PositionType.RIGHT:
+						cx += (cw-GAP);
+						cw = GAP;
+						break;
+					case Gtk.PositionType.TOP:
+						ch = GAP;
+						break;
+					case Gtk.PositionType.BOTTOM:
+						cy += (ch-GAP);
+						ch = GAP;
+						break;
 				}
 			}
-		return path;
+			ah_far = ((x<cx)||(x>cx+cw)||(y<cy)||(y>cy+ch));
+			ah_state_set(this.ah_state);
+			return true;
 		}
+/* end of the autohide code
+ * ------------------------------------------------------------- */
 /*
  * Menus stuff
  */
@@ -566,38 +674,94 @@ namespace ValaPanel
 /*
  * Plugins stuff.
  */
-
-		private void on_extension_added(Peas.PluginInfo i, Object p)
-		{
-			var pl = p as ValaPanel.Plugin;
-			var type = i.get_module_name();
-			add_to_panel(type, pl);
-		}
-		internal void add_to_panel(string type, Plugin pl)
-		{
-			var s = settings.add_plugin_settings (type);
-			place_applet (pl,s);
-		}
-
 		internal void load_applet(PluginSettings s)
 		{
+			/* Determine if the plugin is loaded yet. */
+			string name = s.default_settings.get_string(Key.NAME);
 
+			if (loaded_types.contains(name))
+			{
+				var count = loaded_types.lookup(name);
+				var plugin = loaded_applet_plugins.lookup(name);
+				if (plugin!=null)
+				{
+					place_applet(plugin,s);
+					loaded_types.insert(name,count+1);
+					return;
+				}
+			}
+
+			// Got this far we actually need to load the underlying plugin
+			unowned Peas.PluginInfo? plugin = null;
+
+			foreach(var plugini in engine.get_plugin_list())
+			{
+				if (plugini.get_module_name() == name)
+				{
+					plugin = plugini;
+					break;
+				}
+			}
+			if (plugin == null) {
+				warning("Could not find plugin: %s", name);
+				return;
+			}
+			engine.try_load_plugin(plugin);
 		}
+	    private void on_extension_added(Peas.PluginInfo i, Object p)
+	    {
+	        var plugin = p as AppletPlugin;
+	        var type = i.get_module_name();
+	        loaded_applet_plugins.insert(type,plugin);
 
-		internal void place_applet(Plugin pl, PluginSettings s)
+	        // Iterate the children, and then load them into the panel
+			PluginSettings? pl = null;
+			foreach (var s in settings.plugins)
+				if (s.default_settings.get_string(Key.NAME) == type) pl=s;
+			if (pl != null)
+			{
+				loaded_types.insert(type,0);
+				load_applet(pl);
+			}
+	    }
+		internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
 		{
-			var f = pl.features;
+			var f = applet_plugin.features;
 			s.init_configuration(settings,((f & Features.CONFIG) != 0));
-			var applet = pl.get_applet_widget(this,s.config_settings);
+			var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
 			bool expand = false;
 			if ((f & Features.EXPAND_AVAILABLE) != 0)
 				expand = s.default_settings.get_boolean(Key.EXPAND);
-			box.pack_start(applet,expand, true, 0);
+			var position = s.default_settings.get_int(Key.POSITION);
+			box.pack_start(applet,expand, true, position);
 			s.default_settings.bind(Key.BORDER,applet,"border-width",GLib.SettingsBindFlags.GET);
 			s.default_settings.bind(Key.POSITION,applet,"position",GLib.SettingsBindFlags.GET);
 			s.default_settings.bind(Key.PADDING,applet,"padding",GLib.SettingsBindFlags.GET);
 			if ((f & Features.EXPAND_AVAILABLE)!=0)
 				s.default_settings.bind(Key.EXPAND,applet,"expand",GLib.SettingsBindFlags.DEFAULT);
+			applet.destroy.connect(()=>{applet_removed(applet.number);});
+		}
+		internal void remove_applet(Applet applet)
+		{
+			box.remove(applet);
+			applet.destroy();
+		}
+		internal void applet_removed(uint num)
+		{
+			PluginSettings s = settings.get_settings_by_num(num);
+			var name = s.default_settings.get_string(Key.NAME);
+			var count = loaded_types.lookup(name);
+			count -= 1;
+			if (count == 0)
+			{
+				loaded_types.remove(name);
+				var pl = loaded_applet_plugins.lookup(name);
+				var info = pl.plugin_info;
+				engine.try_unload_plugin(info);
+			}
+			else
+				loaded_types.insert(name,count);
+			settings.remove_plugin_settings(num);
 		}
 
 		public void popup_position_helper(Gtk.Widget near, Gtk.Widget popup,
@@ -650,7 +814,9 @@ namespace ValaPanel
 		{
 
 		}
-
+/*
+ * Properties handling
+ */
 		private void update_strut()
 		{
 

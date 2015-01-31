@@ -1,12 +1,10 @@
 using Gtk;
 using Peas;
 
-private class PanelApplet : Gtk.Bin
-{
-}
-
 namespace ValaPanel
 {
+	internal static const string PLUGINS_DIRECTORY = Config.PACKAGE_LIB_DIR+"/vala-panel/applets";
+	internal static const string PLUGINS_DATA = Config.PACKAGE_DATA_DIR+"/applets";
 	[Flags]
 	public enum Features
 	{
@@ -16,22 +14,30 @@ namespace ValaPanel
 		EXPAND_AVAILABLE,
 		CONTEXT_MENU
 	}
+	public enum PluginPackType
+	{
+		START,
+		CENTER,
+		END
+	}
 	public enum PluginAction
 	{
 		MENU
 	}
 
-	public interface Plugin : Peas.ExtensionBase
+	public interface AppletPlugin : Peas.ExtensionBase
 	{
 		public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-		                                                   GLib.Settings settings);
+		                                                   GLib.Settings settings,
+		                                                   uint number);
 		public abstract Features features
 		{get;}
 	}
 
+
+	[CCode (cname = "PanelApplet")]
 	public abstract class Applet : Gtk.EventBox
 	{
-		private PanelApplet applet;
 		public abstract Features features
 		{
 			construct;
@@ -45,7 +51,11 @@ namespace ValaPanel
 		{
 			public get; private construct;
 		}
-		public GLib.Settings settings
+		public unowned GLib.Settings settings
+		{
+			public get; private construct;
+		}
+		public uint number
 		{
 			public get; private construct;
 		}
@@ -53,14 +63,13 @@ namespace ValaPanel
 		public abstract Gtk.Window get_config_dialog();
 		public abstract void invoke_action(PluginAction action);
 		public abstract void update_context_menu(ref GLib.Menu parent_menu);
-		public Applet(ValaPanel.Toplevel top, GLib.Settings s)
+		public Applet(ValaPanel.Toplevel top, GLib.Settings s, uint num)
 		{
-			Object(toplevel: top, settings: s);
+			Object(toplevel: top, settings: s, number: num);
 		}
 		construct
 		{
 			this.set_has_window(false);
-			applet = new PanelApplet();
 			this.create(toplevel,this.settings);
 			if (background_widget == null)
 				background_widget = this;
