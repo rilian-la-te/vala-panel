@@ -1,5 +1,5 @@
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
-  <schema id="org.simple.panel.toplevel.plugin">
+  <schema id="org.valapanel.toplevel.plugin">
     <key name="plugin-type" type="s">
       <default>''</default>
       <_summary>Type of panel plugin.</_summary>

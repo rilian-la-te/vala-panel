@@ -104,7 +104,7 @@ namespace ValaPanel
 		{get; internal construct;}
 
 		private string profile
-		{ get {
+		{ owned get {
 			GLib.Value v = Value(typeof(string));
 			this.get_application().get_property("profile",ref v);
 			return v.get_string();
