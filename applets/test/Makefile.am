@@ -2,8 +2,8 @@
 
 EXTRA_DIST =
 pkglib_LTLIBRARIES =
-pkglibdir = $(libdir)/vala-panel/plugins
-plugindir = $(datadir)/vala-panel/plugins
+pkglibdir = $(libdir)/vala-panel/applets
+plugindir = $(datadir)/vala-panel/applets
 plugin_DATA =
 
 

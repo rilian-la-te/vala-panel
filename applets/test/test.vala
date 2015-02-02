@@ -2,7 +2,7 @@ using ValaPanel;
 public class LockKeysApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-		                            GLib.Settings settings,
+		                            GLib.Settings? settings,
 		                            uint number)
     {
         return new LockKeysAppletImpl(toplevel,settings,number);
@@ -22,7 +22,7 @@ public class LockKeysAppletImpl : Applet
     Gdk.Keymap map;
 
     public LockKeysAppletImpl(ValaPanel.Toplevel toplevel,
-		                            GLib.Settings settings,
+		                            GLib.Settings? settings,
 		                            uint number)
     {
 		base(toplevel,settings,number);

@@ -30,12 +30,10 @@
       <_summary>Plugin padding</_summary>
       <_description>Plugin padding in internal GtkBox.</_description>
     </key>
-<!-- (Useless)
     <key name="border" type="i">
       <default>0</default>
       <_summary>Plugin border size</_summary>
       <_description>Plugin border size in internal GtkBox.</_description>
     </key>
--->
   </schema>
 </schemalist>

@@ -150,7 +150,21 @@ namespace ValaPanel
 		{get; set;}
 		public bool is_dynamic
 		{get; set;}
-		public bool use_gnome_theme
+		public bool use_font
+		{get; set;}
+		public bool use_background_color
+		{get; set;}
+		public bool use_foreground_color
+		{get; set;}
+		public bool use_background_file
+		{get; set;}		
+		public bool font_size_only
+		{get; set;}
+		public uint font_size
+		{get; set;}
+		public uint round_corners_size
+		{get; set;}
+		public string font
 		{get; set;}
 		internal string background_color
 		{owned get {return bgc.to_string();}
@@ -296,7 +310,7 @@ namespace ValaPanel
 				if (p.name in anames)
 					this.update_appearance();
 				if (p.name == Key.EDGE)
-					box.set_orientation(orientation);
+					if (box != null) box.set_orientation(orientation);
 			});
 			this.add_action_entries(panel_entries,this);
 			this.extset.extension_added.connect(on_extension_added);
@@ -356,7 +370,7 @@ namespace ValaPanel
 /*
  * Position calculating.
  */
-		protected override void size_allocate(Gtk.Allocation a)
+		protected override void size_allocate(Gtk.Allocation alloc)
 		{
 			int x,y,w;
 			base.size_allocate(a);
@@ -371,22 +385,22 @@ namespace ValaPanel
 			}
 			if (!this.get_realized())
 				return;
-			this.get_window().get_origin(out x, out y);
-			_calculate_position (ref a);
-			this.a.x = a.x;
-			this.a.y = a.y;
-			if (a.width != this.a.width || a.height != this.a.height || this.a.x != x || this.a.y != y)
+			get_window().get_origin(out x, out y);
+			_calculate_position (ref alloc);
+			this.a.x = alloc.x;
+			this.a.y = alloc.y;
+			if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x || this.a.y != y)
 			{
-				this.a.width = a.width;
-				this.a.height = a.height;
+				this.a.width = alloc.width;
+				this.a.height = alloc.height;
 				this.set_size_request(this.a.width, this.a.height);
-				this.move(this.a.x, this.a.y);
+				this.move(a.x, a.y);
 			}
 			if (this.get_mapped())
 				establish_autohide ();
 		}
 
-		private void _calculate_position(ref Gtk.Allocation a)
+		private void _calculate_position(ref Gtk.Allocation alloc)
 		{
 			var screen = this.get_screen();
 			Gdk.Rectangle marea = Gdk.Rectangle();
@@ -401,21 +415,21 @@ namespace ValaPanel
 				screen.get_monitor_geometry(monitor,out marea);
 			if (orientation == Gtk.Orientation.HORIZONTAL)
 			{
-				a.width = width;
-				a.x = marea.x;
-				calculate_width(marea.width,alignment,panel_margin,ref a.width, ref a.x);
-				a.height = (!autohide || ah_visible) ? height :
+				alloc.width = width;
+				alloc.x = marea.x;
+				calculate_width(marea.width,alignment,panel_margin,ref alloc.width, ref alloc.x);
+				alloc.height = (!autohide || ah_visible) ? height :
 										show_hidden ? 1 : 0;
-				a.x = marea.x + ((edge == Gtk.PositionType.TOP) ? 0 : marea.width - a.width);
+				alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
 			}
 			else
 			{
-				a.height = width;
-				a.y = marea.y;
-				calculate_width(marea.height,alignment,panel_margin,ref a.height, ref a.y);
-				a.width = (!autohide || ah_visible) ? height :
+				alloc.height = width;
+				alloc.y = marea.y;
+				calculate_width(marea.height,alignment,panel_margin,ref alloc.height, ref alloc.y);
+				alloc.width = (!autohide || ah_visible) ? height :
 										show_hidden ? 1 : 0;
-				a.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : marea.height - a.height);
+				alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
 			}
 		}
 
@@ -453,7 +467,7 @@ namespace ValaPanel
 		}
 		protected void get_panel_preferred_size (ref Gtk.Requisition min)
 		{
-			if (!ah_visible)
+			if (!ah_visible && box != null)
 				box.get_preferred_size(out min, null);
 			var rect = Gtk.Allocation();
 			rect.width = min.width;
@@ -727,6 +741,7 @@ namespace ValaPanel
 					if (!loaded_types.contains(type))
 						loaded_types.insert(type,0);
 					load_applet(pl);
+					return;
 				}
 	    }
 		internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)

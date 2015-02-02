@@ -28,7 +28,7 @@ namespace ValaPanel
 	public interface AppletPlugin : Peas.ExtensionBase
 	{
 		public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-		                                                   GLib.Settings settings,
+		                                                   GLib.Settings? settings,
 		                                                   uint number);
 		public abstract Features features
 		{get;}
@@ -40,19 +40,19 @@ namespace ValaPanel
 	{
 		public Gtk.Widget background_widget
 		{
-			public get; private set;
+			get; set;
 		}
 		public ValaPanel.Toplevel toplevel
 		{
-			public get; private construct;
+			get; construct;
 		}
-		public unowned GLib.Settings settings
+		public unowned GLib.Settings? settings
 		{
-			public get; private construct;
+			get; construct;
 		}
 		public uint number
 		{
-			internal get; private construct;
+			internal get; construct;
 		}
 		public abstract void create();
 		public virtual Gtk.Window? get_config_dialog()
@@ -61,7 +61,7 @@ namespace ValaPanel
 		}
 		public virtual void invoke_action(PluginAction action){}
 		public virtual void update_context_menu(ref GLib.Menu parent_menu){}
-		public Applet(ValaPanel.Toplevel top, GLib.Settings s, uint num)
+		public Applet(ValaPanel.Toplevel top, GLib.Settings? s, uint num)
 		{
 			Object(toplevel: top, settings: s, number: num);
 		}
@@ -88,10 +88,6 @@ namespace ValaPanel
 		{
 			Gdk.RGBA color = Gdk.RGBA();
 			color.parse ("transparent");
-			PanelCSS.apply_with_class(this,
-			                          PanelCSS.generate_background(null,color),
-			                          "-vala-panel-background",
-			                          true);
 			PanelCSS.apply_with_class(background_widget,
 			                          PanelCSS.generate_background(null,color),
 			                          "-vala-panel-background",
