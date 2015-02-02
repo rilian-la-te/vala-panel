@@ -197,6 +197,7 @@ namespace ValaPanel
 			engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
 			loaded_types = new HashTable<string,uint>(str_hash,str_equal);
 			loaded_applet_plugins = new HashTable<string,AppletPlugin>(str_hash,str_equal);
+			print("static constructor\n");
 		}
 		private static void monitors_changed_cb(Gdk.Screen scr, void* data)
 		{
@@ -221,6 +222,7 @@ namespace ValaPanel
 		{
 			if (GLib.FileUtils.test(config_file,FileTest.EXISTS))
 				return new Toplevel(app,config_name);
+			stderr.printf("Cannot find config file %s\n",config_file);
 			return null;
 		}
 		public Toplevel (Gtk.Application app, string name)
@@ -243,6 +245,7 @@ namespace ValaPanel
  */
 		construct
 		{
+			print("instance constructor\n");
 			extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
 			Gdk.Visual visual = this.get_screen().get_rgba_visual();
 			if (visual != null)
@@ -305,6 +308,9 @@ namespace ValaPanel
  */
 		private void stop_ui()
 		{
+			print("stop ui\n");
+			if (autohide)
+				ah_stop();
 			if (pref_dialog != null)
 				pref_dialog.response(Gtk.ResponseType.CLOSE);
 			if (plugin_pref_dialog != null)
@@ -319,12 +325,11 @@ namespace ValaPanel
 				box.destroy();
 				box = null;
 			}
-			this.unmap();
-			this.unrealize();
 		}
 
 		private void start_ui()
 		{
+			print("start ui\n");
 			a.x = a.y = a.width = a.height = 0;
 			set_wmclass("panel","vala-panel");
 			this.get_application().add_window(this);

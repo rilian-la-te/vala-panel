@@ -166,6 +166,7 @@ namespace ValaPanel
 				}
 				else
 				{
+					print("Started\n");
 					started = true;
 					apply_styling();
 				}
@@ -217,10 +218,12 @@ namespace ValaPanel
 
 		private bool start_all_panels()
 		{
+			print("Starting panels\n");
 			var panel_dir = user_config_file_name("panels",null);
 			start_panels_from_dir((Gtk.Application)this,panel_dir);
 			if (this.get_windows() != null)
 				return true;
+			print("Strange...\n");
 			var dirs = GLib.Environment.get_system_config_dirs();
 			if (dirs == null)
 				return false;
