@@ -22,9 +22,9 @@ namespace ValaPanel
 
 	public class App: Gtk.Application
 	{
-		private static const string SCHEMA = "org.simple.panel";
+		private static const string SCHEMA = "org.valapanel";
 		private static const string NAME = "global";
-		private static const string PATH = "/org/simple/panel/";
+		private static const string PATH = "/org/vala-panel/";
 		private bool started = false;
 		private SettingsBackend config_backend;
 		private Dialog? pref_dialog;
@@ -218,12 +218,10 @@ namespace ValaPanel
 
 		private bool start_all_panels()
 		{
-			print("Starting panels\n");
 			var panel_dir = user_config_file_name("panels",null);
 			start_panels_from_dir((Gtk.Application)this,panel_dir);
 			if (this.get_windows() != null)
 				return true;
-			print("Strange...\n");
 			var dirs = GLib.Environment.get_system_config_dirs();
 			if (dirs == null)
 				return false;

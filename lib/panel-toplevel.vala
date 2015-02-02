@@ -54,7 +54,7 @@ namespace ValaPanel
 		WAITING
 	}
 	[CCode (cname = "PanelToplevel")]
-	public class Toplevel : Gtk.ApplicationWindow, Gtk.Orientable
+	public class Toplevel : Gtk.ApplicationWindow
 	{
 		private static Peas.Engine engine;
 		private static ulong mon_handler;
@@ -101,7 +101,7 @@ namespace ValaPanel
 												Key.FONT_SIZE_ONLY, Key.FONT, Key.FONT_SIZE};
 
 		public string panel_name
-		{get; private construct;}
+		{get; internal construct;}
 
 		private string profile
 		{ get {
@@ -116,7 +116,7 @@ namespace ValaPanel
 		{get {return _w;}
 		 set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
 		}
-		private AlignmentType alignment
+		internal AlignmentType alignment
 		{get; set;}
 		internal int panel_margin
 		{get; set;}
@@ -197,7 +197,6 @@ namespace ValaPanel
 			engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
 			loaded_types = new HashTable<string,uint>(str_hash,str_equal);
 			loaded_applet_plugins = new HashTable<string,AppletPlugin>(str_hash,str_equal);
-			print("static constructor\n");
 		}
 		private static void monitors_changed_cb(Gdk.Screen scr, void* data)
 		{
@@ -225,6 +224,9 @@ namespace ValaPanel
 			stderr.printf("Cannot find config file %s\n",config_file);
 			return null;
 		}
+/*
+ * Big constructor
+ */
 		public Toplevel (Gtk.Application app, string name)
 		{
 			Object(border_width: 0,
@@ -239,40 +241,13 @@ namespace ValaPanel
 				accept_focus: false,
 				application: app,
 				panel_name: name);
+				setup();
 		}
-/*
- * Big constructor
- */
-		construct
+		
+		private void setup()
 		{
-			print("instance constructor\n");
-			extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
-			Gdk.Visual visual = this.get_screen().get_rgba_visual();
-			if (visual != null)
-				this.set_visual(visual);
-			this.destroy.connect((a)=>{stop_ui ();});
-			a = Gtk.Allocation();
-			c = Gdk.Rectangle();
-			this.notify.connect((s,p)=> {
-				if (p.name in gnames)
-				{
-					this.queue_draw();
-					this.update_strut();
-				}
-				if (p.name in anames)
-					this.update_appearance();
-				if (p.name == Key.EDGE)
-					box.set_orientation(orientation);
-			});
 			var filename = user_config_file_name("panels",profile,panel_name);
 			settings = new ToplevelSettings(filename);
-			this.extset.extension_added.connect(on_extension_added);
-			engine.load_plugin.connect_after((i)=>
-			{
-				var ext = extset.get_extension(i);
-				on_extension_added(i,ext);
-			});
-			this.add_action_entries(panel_entries,this);
 			settings_as_action(this,settings.settings,Key.EDGE);
 			settings_as_action(this,settings.settings,Key.ALIGNMENT);
 			settings_as_action(this,settings.settings,Key.HEIGHT);
@@ -298,17 +273,44 @@ namespace ValaPanel
 			settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
 			if (monitor < Gdk.Screen.get_default().get_n_monitors())
 				start_ui();
-			var app = get_application();
+			var panel_app = get_application();
 			if (mon_handler != 0)
 				mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
-											(GLib.Callback)(monitors_changed_cb),app);
+											(GLib.Callback)(monitors_changed_cb),panel_app);
+		}
+		construct
+		{
+			extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
+			Gdk.Visual visual = this.get_screen().get_rgba_visual();
+			if (visual != null)
+				this.set_visual(visual);
+			this.destroy.connect((a)=>{stop_ui ();});
+			a = Gtk.Allocation();
+			c = Gdk.Rectangle();
+			this.notify.connect((s,p)=> {
+				if (p.name in gnames)
+				{
+					this.queue_draw();
+					this.update_strut();
+				}
+				if (p.name in anames)
+					this.update_appearance();
+				if (p.name == Key.EDGE)
+					box.set_orientation(orientation);
+			});
+			this.add_action_entries(panel_entries,this);
+			this.extset.extension_added.connect(on_extension_added);
+			engine.load_plugin.connect_after((i)=>
+			{
+				var ext = extset.get_extension(i);
+				on_extension_added(i,ext);
+			});
 		}
 /*
  * Common UI functions
  */
 		private void stop_ui()
 		{
-			print("stop ui\n");
 			if (autohide)
 				ah_stop();
 			if (pref_dialog != null)
@@ -329,7 +331,6 @@ namespace ValaPanel
 
 		private void start_ui()
 		{
-			print("start ui\n");
 			a.x = a.y = a.width = a.height = 0;
 			set_wmclass("panel","vala-panel");
 			this.get_application().add_window(this);

@@ -6,10 +6,10 @@ vala_panel_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/libvalapanel \
-	-DGETTEXT_PACKAGE=\""simple-panel"\" \
+	-DGETTEXT_PACKAGE=\""vala-panel"\" \
 	-DPACKAGE_LIB_DIR=\""$(libdir)"\" \
-	-DPACKAGE_DATA_DIR=\""$(datadir)/simple-panel"\" \
-	-DPACKAGE_UI_DIR=\""$(datadir)/simple-panel/ui"\" \
+	-DPACKAGE_DATA_DIR=\""$(datadir)/vala-panel"\" \
+	-DPACKAGE_UI_DIR=\""$(datadir)/vala-panel/ui"\" \
 	-DPACKAGE_BIN_DIR=\""$(bindir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DG_SETTINGS_ENABLE_BACKEND \
