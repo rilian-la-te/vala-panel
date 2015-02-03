@@ -3,7 +3,7 @@ using Gtk;
 
 namespace ValaPanel
 {
-	internal static string user_config_file_name(string name1, string profile, string name2)
+	internal static string user_config_file_name(string name1, string profile, string? name2)
 	{
 		return GLib.Path.build_filename(GLib.Environment.get_user_config_dir(),
 								Config.GETTEXT_PACKAGE,profile,name1,name2);

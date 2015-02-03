@@ -22,6 +22,25 @@ namespace PanelCSS
 			} catch (GLib.Error e) {}
 		}
 	}
+	public void toggle_class(Widget w, string klass, bool apply)
+	{
+		var context = w.get_style_context();
+		if (apply) context.add_class(klass);
+		else context.remove_class(klass);
+	}
+	public CssProvider? add_css_to_widget(Widget w, string css)
+	{
+		var context = w.get_style_context();
+		w.reset_style();
+		var provider = new Gtk.CssProvider();
+		try 
+		{
+			provider.load_from_data(css,css.length);
+			context.add_provider(provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+			return provider;
+		} catch (GLib.Error e) {}
+		return null;
+	}
 	public Gtk.CssProvider? apply_with_provider(Gtk.Widget w, string css, string klass)
 	{
 		var context = w.get_style_context();

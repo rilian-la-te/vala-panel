@@ -166,7 +166,6 @@ namespace ValaPanel
 				}
 				else
 				{
-					print("Started\n");
 					started = true;
 					apply_styling();
 				}

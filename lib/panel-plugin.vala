@@ -14,11 +14,11 @@ namespace ValaPanel
 		EXPAND_AVAILABLE,
 		CONTEXT_MENU
 	}
-	public enum PluginPackType
+	public enum AppletPackType
 	{
-		START,
-		CENTER,
-		END
+		START = 0,
+		CENTER = 2,
+		END = 1
 	}
 	public enum PluginAction
 	{
@@ -38,6 +38,15 @@ namespace ValaPanel
 	[CCode (cname = "PanelApplet")]
 	public abstract class Applet : Gtk.EventBox
 	{
+		private Dialog? dialog;
+		static const GLib.ActionEntry[] config_entry =
+		{
+			{"configure",activate_configure,null,null,null}
+		};
+		static const GLib.ActionEntry[] remove_entry =
+		{
+			{"remove",activate_remove,null,null,null}
+		};
 		public Gtk.Widget background_widget
 		{
 			get; set;
@@ -55,7 +64,7 @@ namespace ValaPanel
 			internal get; construct;
 		}
 		public abstract void create();
-		public virtual Gtk.Window? get_config_dialog()
+		public virtual Gtk.Dialog? get_config_dialog()
 		{
 			return null;
 		}
@@ -67,6 +76,7 @@ namespace ValaPanel
 		}
 		construct
 		{
+			SimpleActionGroup grp = new SimpleActionGroup();
 			this.set_has_window(false);
 			this.create();
 			if (background_widget == null)
@@ -83,6 +93,10 @@ namespace ValaPanel
 				}
 				return false;
 			});
+			if (this.get_config_dialog()!=null)
+				grp.add_action_entries(config_entry,this);
+			grp.add_action_entries(remove_entry,this);
+			this.insert_action_group("applet",grp);
 		}
 		internal void init_background()
 		{
@@ -98,6 +112,33 @@ namespace ValaPanel
 			int x,y;
 			toplevel.popup_position_helper(this,popup,out x, out y);
 			popup.get_window().move(x,y);
+		}
+		public void activate_configure(SimpleAction act, Variant? param)
+		{
+		    if (dialog != null)
+		    {
+				int x,y;
+				var dlg = get_config_dialog();
+				this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
+				/* adjust config dialog window position to be near plugin */
+				dlg.set_transient_for(toplevel);
+				toplevel.popup_position_helper(this,dlg,out x, out y);
+				dlg.move(x,y);
+				dialog = dlg;
+			}
+			dialog.present();
+		}
+		public void activate_remove(SimpleAction act, Variant? param)
+		{		
+		    /* If the configuration dialog is open, there will certainly be a crash if the
+		     * user manipulates the Configured Plugins list, after we remove this entry.
+		     * Close the configuration dialog if it is open. */
+		    if (toplevel.pref_dialog != null)
+		    {
+		        toplevel.pref_dialog.destroy();
+		        toplevel.pref_dialog = null;
+		    }
+		    toplevel.remove_applet(this);
 		}
 	}
 }

@@ -13,8 +13,7 @@ namespace ValaPanel
 		private static const string SCHEMA = "has-schema";
 		internal static const string EXPAND = "is-expanded";
 		internal static const string CAN_EXPAND = "can-expand";
-		internal static const string PADDING = "padding";
-		internal static const string BORDER = "border";
+		internal static const string PACK = "pack-type";
 		internal static const string POSITION = "position";
 	}
 

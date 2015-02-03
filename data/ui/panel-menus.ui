@@ -3,13 +3,13 @@
   <menu id="panel-context-menu">
     <section id="plugin-section">
         <item>
-          <attribute name="label" translatable="yes">Configure plugin...</attribute>
-          <attribute name="action">win.config-plugin</attribute>
+          <attribute name="label" translatable="yes">Configure applet...</attribute>
+          <attribute name="action">applet.configure</attribute>
           <attribute name='hidden-when'>action-missing</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">Remove plugin</attribute>
-          <attribute name="action">win.remove-plugin</attribute>
+          <attribute name="label" translatable="yes">Remove applet</attribute>
+          <attribute name="action">applet.remove</attribute>
           <attribute name='hidden-when'>action-missing</attribute>
         </item>
     </section>

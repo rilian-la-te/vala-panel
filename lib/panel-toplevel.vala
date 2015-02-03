@@ -21,7 +21,6 @@ namespace ValaPanel
 		public static const string BACKGROUND_COLOR = "background-color";
 		public static const string FOREGROUND_COLOR = "foreground-color";
 		public static const string BACKGROUND_FILE = "background-file";
-		public static const string FONT_SIZE = "font-size";
 		public static const string FONT = "font";
 		public static const string CORNERS_SIZE = "round-corners-size";
 		public static const string USE_BACKGROUND_COLOR = "use-background-color";
@@ -73,9 +72,7 @@ namespace ValaPanel
 		private Gdk.RGBA fgc;
 		private Gtk.CssProvider provider;
 
-		internal Gtk.Dialog plugin_pref_dialog;
 		internal Gtk.Dialog pref_dialog;
-
 
 		private bool ah_visible;
 		private bool ah_far;
@@ -98,7 +95,7 @@ namespace ValaPanel
 												Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
 												Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
 												Key.USE_BACKGROUND_FILE, Key.USE_FONT,
-												Key.FONT_SIZE_ONLY, Key.FONT, Key.FONT_SIZE};
+												Key.FONT_SIZE_ONLY, Key.FONT};
 
 		public string panel_name
 		{get; internal construct;}
@@ -121,7 +118,7 @@ namespace ValaPanel
 		internal int panel_margin
 		{get; set;}
 		public Gtk.PositionType edge
-		{get; set;}
+		{get; set construct;}
 		public Gtk.Orientation orientation
 		{
 			get {
@@ -131,7 +128,7 @@ namespace ValaPanel
 		}
 		public int monitor
 		{get {return _mon;}
-		 set {
+		 set construct{
 			int mons = 1;
 			var screen = Gdk.Screen.get_default();
 			if (screen != null)
@@ -238,6 +235,11 @@ namespace ValaPanel
 			stderr.printf("Cannot find config file %s\n",config_file);
 			return null;
 		}
+		[CCode (returns_floating_reference = true)]
+		public static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
+		{
+			return new Toplevel.from_position(app,name,mon,e);
+		}
 /*
  * Big constructor
  */
@@ -255,13 +257,35 @@ namespace ValaPanel
 				accept_focus: false,
 				application: app,
 				panel_name: name);
-				setup();
+				setup(false);
 		}
-		
-		private void setup()
+		public Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
+		{
+			Object(border_width: 0,
+				decorated: false,
+				name: "ValaPanel",
+				resizable: false,
+				title: "ValaPanel",
+				type_hint: Gdk.WindowTypeHint.DOCK,
+				window_position: Gtk.WindowPosition.NONE,
+				skip_taskbar_hint: true,
+				skip_pager_hint: true,
+				accept_focus: false,
+				application: app,
+				panel_name: name);
+			monitor = mon;
+			this.edge = e;
+			setup(true);
+		}
+		private void setup(bool use_internal_values)
 		{
 			var filename = user_config_file_name("panels",profile,panel_name);
 			settings = new ToplevelSettings(filename);
+			if (use_internal_values)
+			{
+				settings.settings.set_int(Key.MONITOR, monitor);
+				settings.settings.set_enum(Key.EDGE, edge);
+			}
 			settings_as_action(this,settings.settings,Key.EDGE);
 			settings_as_action(this,settings.settings,Key.ALIGNMENT);
 			settings_as_action(this,settings.settings,Key.HEIGHT);
@@ -278,9 +302,8 @@ namespace ValaPanel
 			settings_as_action(this,settings.settings,Key.FOREGROUND_COLOR);
 			settings_as_action(this,settings.settings,Key.BACKGROUND_FILE);
 			settings_as_action(this,settings.settings,Key.FONT);
-			settings_as_action(this,settings.settings,Key.FONT_SIZE);
-			settings_as_action(this,settings.settings,Key.FONT_SIZE_ONLY);
 			settings_as_action(this,settings.settings,Key.CORNERS_SIZE);
+			settings_as_action(this,settings.settings,Key.FONT_SIZE_ONLY);
 			settings_as_action(this,settings.settings,Key.USE_BACKGROUND_COLOR);
 			settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
 			settings_as_action(this,settings.settings,Key.USE_FONT);
@@ -329,8 +352,6 @@ namespace ValaPanel
 				ah_stop();
 			if (pref_dialog != null)
 				pref_dialog.response(Gtk.ResponseType.CLOSE);
-			if (plugin_pref_dialog != null)
-				plugin_pref_dialog.response(Gtk.ResponseType.CLOSE);
 			if (initialized)
 			{
 				Gdk.flush();
@@ -353,6 +374,8 @@ namespace ValaPanel
 			box = new Box(this.orientation,0);
 			box.set_baseline_position(Gtk.BaselinePosition.CENTER);
 			box.set_border_width(0);
+			box.set_hexpand(true);
+			box.set_vexpand(true);
 			this.add(box);
 			box.show();
 			this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
@@ -685,7 +708,20 @@ namespace ValaPanel
 
 		public Gtk.Menu get_plugin_menu(Applet? pl)
 		{
-			return new Gtk.Menu();
+		    var builder = new Builder.from_resource("/org/vala-panel/lib/menus.ui");
+		    var gmenu = builder.get_object("panel-context-menu") as GLib.Menu;
+		    if (pl != null)
+		    {
+		        var gmenusection = builder.get_object("plugin-section") as GLib.Menu;
+		        pl.update_context_menu(ref gmenusection);
+		    }
+		    var ret = new Gtk.Menu.from_model(gmenu as MenuModel);
+		    if (pl != null)
+		        ret.attach_to_widget(pl,null);
+		    else
+		        ret.attach_to_widget(this,null);
+		    ret.show_all();
+		    return ret;
 		}
 /*
  * Plugins stuff.
@@ -749,16 +785,38 @@ namespace ValaPanel
 			var f = applet_plugin.features;
 			s.init_configuration(settings,((f & Features.CONFIG) != 0));
 			var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
-			bool expand = false;
-			if ((f & Features.EXPAND_AVAILABLE) != 0)
-				expand = s.default_settings.get_boolean(Key.EXPAND);
 			var position = s.default_settings.get_int(Key.POSITION);
-			box.pack_start(applet,expand, true, position);
-			s.default_settings.bind(Key.BORDER,applet,"border-width",GLib.SettingsBindFlags.GET);
-			s.default_settings.bind(Key.POSITION,applet,"position",GLib.SettingsBindFlags.GET);
-			s.default_settings.bind(Key.PADDING,applet,"padding",GLib.SettingsBindFlags.GET);
+			box.pack_start(applet,false, true, position);
+			((Widget)applet).child_notify.connect((pspec) => {
+				if (pspec.name == Key.PACK)
+				{
+					PackType pack;
+					box.child_get(applet,"pack-type",out pack,null);
+					s.default_settings.set_enum(Key.PACK,pack);
+				}
+				if (pspec.name == Key.POSITION)
+				{
+					int pos;
+					box.child_get(applet,"position",out pos,null);
+					s.default_settings.set_uint(Key.POSITION, pos);
+				}
+			});
+			s.default_settings.changed.connect((name) => {
+				if (name == Key.PACK)
+				{
+					var pack = (PackType)s.default_settings.get_enum(Key.PACK);
+					box.set_child_packing(applet,false,true,0,pack);
+				} else if (name == Key.POSITION)
+				{
+					var pos = s.default_settings.get_int(Key.POSITION);
+					box.reorder_child(applet,pos);
+				}
+			});
 			if ((f & Features.EXPAND_AVAILABLE)!=0)
-				s.default_settings.bind(Key.EXPAND,applet,"expand",GLib.SettingsBindFlags.DEFAULT);
+			{
+				s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.DEFAULT);
+				s.default_settings.bind(Key.EXPAND,applet,"vexpand",GLib.SettingsBindFlags.DEFAULT);
+			}
 			applet.destroy.connect(()=>{applet_removed(applet.number);});
 		}
 		internal void remove_applet(Applet applet)
@@ -984,22 +1042,185 @@ namespace ValaPanel
 		}
 		private void update_appearance()
 		{
-
+			if (provider != null)
+				this.get_style_context().remove_provider(provider);
+			if (font == null)
+				return;
+		    StringBuilder str = new StringBuilder();
+	        str.append_printf(".-simple-panel-background {\n");
+            if (use_background_color)
+                str.append_printf(" background-color: %s;\n",background_color);
+            else
+                str.append_printf(" background-color: transparent;\n");
+            if (use_background_file)
+            {
+                str.append_printf(" background-image: url('%s');\n",background_file);
+/* Feature proposed: Background repeat */
+//~                 if (false)
+//~                     str.append_printf(" background-repeat: no-repeat;\n");
+            }
+            else
+                str.append_printf(" background-image: none;\n");
+	        str.append_printf("}\n");
+/* Feature proposed: Panel Layout and Shadow */
+//~ 	        str.append_printf(".-simple-panel-shadow {\n");
+//~ 	        str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
+//~ 	        str.append_printf(" border-style: none;\n margin: 3px;\n");
+//~ 	        str.append_printf("}\n");
+	        str.append_printf(".-simple-panel-round-corners {\n");
+	        str.append_printf(" border-radius: %upx;\n",round_corners_size);
+	        str.append_printf("}\n");
+		    Pango.FontDescription desc = Pango.FontDescription.from_string(font);		    
+	        str.append_printf(".-simple-panel-font-size {\n");
+	        str.append_printf(" font-size: %dpx;\n",desc.get_size()/Pango.SCALE);
+	        str.append_printf("}\n");
+		    str.append_printf(".-simple-panel-font {\n");
+	        var family = desc.get_family();
+	        var weight = desc.get_weight();
+	        var style = desc.get_style();
+	        var variant = desc.get_variant();
+	        str.append_printf(" font-style: %s;\n",(style == Pango.Style.ITALIC) ? "italic" : ((style == Pango.Style.OBLIQUE) ? "oblique" : "normal"));
+	        str.append_printf(" font-variant: %s;\n",(variant == Pango.Variant.SMALL_CAPS) ? "small-caps" : "normal");
+	        str.append_printf(" font-weight: %s;\n",(weight <= Pango.Weight.SEMILIGHT) ? "light" : (weight >= Pango.Weight.SEMIBOLD ? "bold" : "normal"));
+	        str.append_printf(" font-family: %s;\n",family);
+	        str.append_printf("}\n");
+			str.append_printf(".-simple-panel-foreground-color {\n");
+			str.append_printf(" color: %s;\n",foreground_color);
+			str.append_printf("}\n");
+		    str.append_printf("\0");
+		    var css = str.str;
+		    provider = PanelCSS.add_css_to_widget(this as Widget, css);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-background",use_background_color || use_background_file);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-shadow",false);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-round-corners",round_corners_size > 0);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-font-size",use_font);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-font", use_font && !font_size_only);
+		    PanelCSS.toggle_class(this as Widget,"-simple-panel-foreground-color",use_foreground_color);
 		}
 /*
  * Actions stuff
  */
+		/* If there is a panel on this edge and it is not the panel being configured, set the edge unavailable. */
+		bool panel_edge_available(int edge, int monitor, bool include_this)
+		{
+			foreach (var w in application.get_windows())
+			{
+				Toplevel pl = w as Toplevel;
+				if (((pl != this)|| include_this) && (pl.edge == edge) && ((pl._mon == _mon)||pl._mon<0))
+					return false;
+		        }
+		    return true;
+		}
+		/* FIXME: Potentially we can support multiple panels at the same edge,
+		 * but currently this cannot be done due to some positioning problems. */
+		static string gen_panel_name(string profile, PositionType edge, int mon)
+		{
+		    string? edge_str = null;
+		    if (edge == PositionType.TOP)
+		        edge_str="top";
+		    if (edge == PositionType.BOTTOM)
+		        edge_str="bottom";
+		    if (edge == PositionType.LEFT)
+		        edge_str="left";
+		    if (edge == PositionType.RIGHT)
+		        edge_str="right";
+		    string dir = user_config_file_name("panels",profile, null);
+		    for(var i = 0; i < int.MAX; ++i )
+		    {
+		        var name = "%s-m%d-%d".printf(edge_str, mon, i);
+		        var f = Path.build_filename( dir, name, null );
+		        if( !FileUtils.test( f, FileTest.EXISTS ) )
+					return name;
+		    }
+		    return "panel-max";
+		}
 		public void activate_new_panel(SimpleAction act, Variant? param)
 		{
-
+			int new_mon = -2;
+			PositionType new_edge = PositionType.TOP;
+			var found = false;
+		    /* Allocate the edge. */
+		    assert(Gdk.Screen.get_default()!=null);
+		    var monitors = Gdk.Screen.get_default().get_n_monitors();
+		    /* try to allocate edge on current monitor first */
+		    var m = _mon;
+		    if (m < 0)
+		    {
+		        /* panel is spanned over the screen, guess from pointer now */
+		        int x, y;
+		        var manager = Gdk.Screen.get_default().get_display().get_device_manager();
+		        var device = manager.get_client_pointer ();
+		        Gdk.Screen scr;
+		        device.get_position(out scr, out x, out y);
+		        m = scr.get_monitor_at_point(x, y);
+		    }
+		    for (int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
+		    {
+		        if (panel_edge_available((PositionType)e, m, true))
+		        {
+		            new_edge = (PositionType)e;
+		            new_mon = m;
+		            found = true;
+		        }
+		    }
+		    /* try all monitors */
+		    if (!found)
+			    for(m=0; m<monitors; ++m)
+			    {
+			        /* try each of the four edges */
+			        for(int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
+			        {
+			            if(panel_edge_available((PositionType)e,m,true)) {
+			                new_edge = (PositionType)e;
+			                new_mon = m;
+							found = true;
+			            }
+			        }
+			    }
+			if (!found)
+			{
+			    warning("Error adding panel: There is no room for another panel. All the edges are taken.");
+			    var msg = new MessageDialog
+			            (this,
+			             DialogFlags.DESTROY_WITH_PARENT,
+			             MessageType.ERROR,ButtonsType.CLOSE,
+			             N_("There is no room for another panel. All the edges are taken."));
+				apply_window_icon(msg as Gtk.Window);
+			    msg.set_title(_("Error"));
+			    msg.run();
+			    msg.destroy();
+			    return;
+			}
+		    var new_name = gen_panel_name(profile,new_edge,new_mon);
+		    var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
+//~ 		    new_toplevel.configure("geometry"); FIXME: Readd it after write ConfigDialog
+		    new_toplevel.show_all();
+		    new_toplevel.queue_draw();
 		}
 		public void activate_remove_panel(SimpleAction act, Variant? param)
 		{
-
+		    var dlg = new MessageDialog.with_markup(this,
+													DialogFlags.MODAL,
+													MessageType.QUESTION,
+													ButtonsType.OK_CANCEL,
+													N_("Really delete this panel?\n<b>Warning: This can not be recovered.</b>"));
+			apply_window_icon(dlg as Gtk.Window);
+		    dlg.set_title(_("Confirm"));
+		    var ok = (dlg.run() == ResponseType.OK );
+		    dlg.destroy();
+		    if( ok )
+		    {
+		        string pr = this.profile;
+		        this.stop_ui();
+		        this.destroy();
+		        /* delete the config file of this panel */
+		        var fname = user_config_file_name("panels",pr,panel_name);
+		        FileUtils.unlink( fname );
+		    }
 		}
 		public void activate_panel_settings(SimpleAction act, Variant? param)
 		{
-
+//~ 			this.configure("appearance"); FIXME: Implement it after write Configurator
 		}
 	}
 }
