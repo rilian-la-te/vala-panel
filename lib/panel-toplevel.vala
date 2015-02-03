@@ -29,7 +29,7 @@ namespace ValaPanel
 		public static const string FONT_SIZE_ONLY = "font-size-only";
 		public static const string USE_BACKGROUND_FILE = "use-background-file";
 	}
-	internal enum AlignmentType
+	public enum AlignmentType
 	{
 		START = 0,
 		CENTER = 1,
@@ -107,18 +107,18 @@ namespace ValaPanel
 			return v.get_string();
 			}
 		}
-		internal int height
-		{ get; set;}
-		internal int width
+		public int height
+		{ get; internal set;}
+		public int width
 		{get {return _w;}
-		 set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
+		 internal set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
 		}
-		internal AlignmentType alignment
-		{get; set;}
-		internal int panel_margin
-		{get; set;}
+		public AlignmentType alignment
+		{get; internal set;}
+		public int panel_margin
+		{get; internal set;}
 		public Gtk.PositionType edge
-		{get; set construct;}
+		{get; internal set construct;}
 		public Gtk.Orientation orientation
 		{
 			get {
@@ -128,7 +128,7 @@ namespace ValaPanel
 		}
 		public int monitor
 		{get {return _mon;}
-		 set construct{
+		 internal set construct{
 			int mons = 1;
 			var screen = Gdk.Screen.get_default();
 			if (screen != null)
@@ -138,42 +138,42 @@ namespace ValaPanel
 				_mon = value;
 		 }}
 		public bool dock
-		{get; set;}
+		{get; internal set;}
 		public bool strut
-		{get; set;}
+		{get; internal set;}
 		public bool autohide
-		{get; set;}
+		{get; internal set;}
 		public bool show_hidden
-		{get; set;}
+		{get; internal set;}
 		public bool is_dynamic
-		{get; set;}
+		{get; internal set;}
 		public bool use_font
-		{get; set;}
+		{get; internal set;}
 		public bool use_background_color
-		{get; set;}
+		{get; internal set;}
 		public bool use_foreground_color
-		{get; set;}
+		{get; internal set;}
 		public bool use_background_file
-		{get; set;}		
+		{get; internal set;}		
 		public bool font_size_only
-		{get; set;}
+		{get; internal set;}
 		public uint font_size
-		{get; set;}
+		{get; internal set;}
 		public uint round_corners_size
-		{get; set;}
+		{get; internal set;}
 		public string font
-		{get; set;}
-		internal string background_color
+		{get; internal set;}
+		public string background_color
 		{owned get {return bgc.to_string();}
-		 set {bgc.parse(value);}
+		 internal set {bgc.parse(value);}
 		}
-		internal string foreground_color
+		public string foreground_color
 		{owned get {return fgc.to_string();}
-		 set {fgc.parse(value);}
+		 internal set {fgc.parse(value);}
 		}
 		public uint icon_size
 		{ get {return (uint) ihints;}
-		  set {
+		  internal set {
 			if (value >= (uint)IconSizeHints.XXXL)
 				ihints = IconSizeHints.XXL;
 			else if (value >= (uint)IconSizeHints.XXL)
@@ -192,7 +192,7 @@ namespace ValaPanel
 		  }
 		}
 		public string background_file
-		{get; set;}
+		{get; internal set;}
 		static const GLib.ActionEntry[] panel_entries =
 		{
 			{"new-panel", activate_new_panel, null, null, null},
@@ -243,7 +243,7 @@ namespace ValaPanel
 /*
  * Big constructor
  */
-		public Toplevel (Gtk.Application app, string name)
+		private Toplevel (Gtk.Application app, string name)
 		{
 			Object(border_width: 0,
 				decorated: false,
@@ -259,7 +259,7 @@ namespace ValaPanel
 				panel_name: name);
 				setup(false);
 		}
-		public Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
+		private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
 		{
 			Object(border_width: 0,
 				decorated: false,
@@ -706,7 +706,7 @@ namespace ValaPanel
 			return false;
 		}
 
-		public Gtk.Menu get_plugin_menu(Applet? pl)
+		internal Gtk.Menu get_plugin_menu(Applet? pl)
 		{
 		    var builder = new Builder.from_resource("/org/vala-panel/lib/menus.ui");
 		    var gmenu = builder.get_object("panel-context-menu") as GLib.Menu;
@@ -1101,7 +1101,7 @@ namespace ValaPanel
  * Actions stuff
  */
 		/* If there is a panel on this edge and it is not the panel being configured, set the edge unavailable. */
-		bool panel_edge_available(int edge, int monitor, bool include_this)
+		private bool panel_edge_available(int edge, int monitor, bool include_this)
 		{
 			foreach (var w in application.get_windows())
 			{
@@ -1113,7 +1113,7 @@ namespace ValaPanel
 		}
 		/* FIXME: Potentially we can support multiple panels at the same edge,
 		 * but currently this cannot be done due to some positioning problems. */
-		static string gen_panel_name(string profile, PositionType edge, int mon)
+		private static string gen_panel_name(string profile, PositionType edge, int mon)
 		{
 		    string? edge_str = null;
 		    if (edge == PositionType.TOP)
@@ -1134,7 +1134,7 @@ namespace ValaPanel
 		    }
 		    return "panel-max";
 		}
-		public void activate_new_panel(SimpleAction act, Variant? param)
+		private void activate_new_panel(SimpleAction act, Variant? param)
 		{
 			int new_mon = -2;
 			PositionType new_edge = PositionType.TOP;
@@ -1197,7 +1197,7 @@ namespace ValaPanel
 		    new_toplevel.show_all();
 		    new_toplevel.queue_draw();
 		}
-		public void activate_remove_panel(SimpleAction act, Variant? param)
+		private void activate_remove_panel(SimpleAction act, Variant? param)
 		{
 		    var dlg = new MessageDialog.with_markup(this,
 													DialogFlags.MODAL,
@@ -1218,7 +1218,7 @@ namespace ValaPanel
 		        FileUtils.unlink( fname );
 		    }
 		}
-		public void activate_panel_settings(SimpleAction act, Variant? param)
+		private void activate_panel_settings(SimpleAction act, Variant? param)
 		{
 //~ 			this.configure("appearance"); FIXME: Implement it after write Configurator
 		}

@@ -113,7 +113,7 @@ namespace ValaPanel
 			toplevel.popup_position_helper(this,popup,out x, out y);
 			popup.get_window().move(x,y);
 		}
-		public void activate_configure(SimpleAction act, Variant? param)
+		private void activate_configure(SimpleAction act, Variant? param)
 		{
 		    if (dialog != null)
 		    {
@@ -128,7 +128,7 @@ namespace ValaPanel
 			}
 			dialog.present();
 		}
-		public void activate_remove(SimpleAction act, Variant? param)
+		private void activate_remove(SimpleAction act, Variant? param)
 		{		
 		    /* If the configuration dialog is open, there will certainly be a crash if the
 		     * user manipulates the Configured Plugins list, after we remove this entry.
