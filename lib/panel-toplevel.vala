@@ -60,7 +60,7 @@ namespace ValaPanel
 		internal static HashTable<string,uint> loaded_types;
 		internal static HashTable<string,AppletPlugin> loaded_applet_plugins;
 		private Peas.ExtensionSet extset;
-		private ToplevelSettings settings;
+		internal ToplevelSettings settings;
 		private Gtk.Box box;
 		private int _mon;
 		private int _w;
@@ -72,7 +72,7 @@ namespace ValaPanel
 		private Gdk.RGBA fgc;
 		private Gtk.CssProvider provider;
 
-		internal Gtk.Dialog pref_dialog;
+		internal ConfigureDialog pref_dialog;
 
 		private bool ah_visible;
 		private bool ah_far;
@@ -283,7 +283,7 @@ namespace ValaPanel
 			settings = new ToplevelSettings(filename);
 			if (use_internal_values)
 			{
-				settings.settings.set_int(Key.MONITOR, monitor);
+				settings.settings.set_int(Key.MONITOR, _mon);
 				settings.settings.set_enum(Key.EDGE, edge);
 			}
 			settings_as_action(this,settings.settings,Key.EDGE);
@@ -325,15 +325,17 @@ namespace ValaPanel
 			a = Gtk.Allocation();
 			c = Gdk.Rectangle();
 			this.notify.connect((s,p)=> {
+				if (p.name == Key.EDGE)
+					if (box != null) box.set_orientation(orientation);
+				if (p.name == Key.AUTOHIDE)
+					ah_visible = (autohide)? false : true;
 				if (p.name in gnames)
 				{
-					this.queue_draw();
+					this.queue_resize();
 					this.update_strut();
 				}
 				if (p.name in anames)
 					this.update_appearance();
-				if (p.name == Key.EDGE)
-					if (box != null) box.set_orientation(orientation);
 			});
 			this.add_action_entries(panel_entries,this);
 			this.extset.extension_added.connect(on_extension_added);
@@ -417,10 +419,11 @@ namespace ValaPanel
 				this.a.width = alloc.width;
 				this.a.height = alloc.height;
 				this.set_size_request(this.a.width, this.a.height);
-				this.move(a.x, a.y);
+				this.move(this.a.x, this.a.y);
+				this.update_strut();
 			}
 			if (this.get_mapped())
-				establish_autohide ();
+				establish_autohide();
 		}
 
 		private void _calculate_position(ref Gtk.Allocation alloc)
@@ -607,8 +610,6 @@ namespace ValaPanel
 						ah_state_set(AutohideState.WAITING);
 						break;
 					case AutohideState.WAITING:
-						if (hide_timeout > 0) Source.remove(hide_timeout);
-						hide_timeout = 0;
 						break;
 					case AutohideState.HIDDEN:
 						if (show_hidden && box.get_visible())
@@ -616,11 +617,12 @@ namespace ValaPanel
 							box.hide();
 							this.show();
 						}
-						else if (this.get_visible())
+						else if (this.get_visible()&& !show_hidden)
 						{
 							this.hide();
 							box.show();
 						}
+						this.ah_visible = false;
 						break;
 				}
 			}
@@ -633,10 +635,9 @@ namespace ValaPanel
 					case AutohideState.WAITING:
 						if (hide_timeout > 0) Source.remove(hide_timeout);
 						hide_timeout = 0;
+						ah_state_set(AutohideState.VISIBLE);
 						break;
 					case AutohideState.HIDDEN:
-						if (hide_timeout > 0) Source.remove(hide_timeout);
-						hide_timeout = 0;
 						ah_state_set(AutohideState.VISIBLE);
 						break;
 				}
@@ -726,6 +727,11 @@ namespace ValaPanel
 /*
  * Plugins stuff.
  */
+		internal void add_applet(string type)
+		{
+			PluginSettings s = settings.add_plugin_settings(type);
+			load_applet(s);
+		}
 		internal void load_applet(PluginSettings s)
 		{
 			/* Determine if the plugin is loaded yet. */
@@ -785,8 +791,8 @@ namespace ValaPanel
 			var f = applet_plugin.features;
 			s.init_configuration(settings,((f & Features.CONFIG) != 0));
 			var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
-			var position = s.default_settings.get_int(Key.POSITION);
-			box.pack_start(applet,false, true, position);
+			var position = s.default_settings.get_uint(Key.POSITION);
+			box.pack_start(applet,false, true, (int)position);
 			((Widget)applet).child_notify.connect((pspec) => {
 				if (pspec.name == Key.PACK)
 				{
@@ -973,8 +979,8 @@ namespace ValaPanel
 		    if (!get_mapped())
 		        return;
 		    /* most wm's tend to ignore struts of unmapped windows, and that's how
-		     * lxpanel hides itself. so no reason to set it. */
-		    if (autohide && !show_hidden)
+		     * panel hides itself. so no reason to set it. If it was be, it must be removed */
+		    if (autohide && !show_hidden && this.strut_size == 0)
 		        return;
 
 		    /* Dispatch on edge to set up strut parameters. */
@@ -1101,14 +1107,15 @@ namespace ValaPanel
  * Actions stuff
  */
 		/* If there is a panel on this edge and it is not the panel being configured, set the edge unavailable. */
-		private bool panel_edge_available(int edge, int monitor, bool include_this)
+		internal bool panel_edge_available(int edge, int monitor, bool include_this)
 		{
 			foreach (var w in application.get_windows())
-			{
-				Toplevel pl = w as Toplevel;
-				if (((pl != this)|| include_this) && (pl.edge == edge) && ((pl._mon == _mon)||pl._mon<0))
-					return false;
-		        }
+				if (w is Toplevel)
+				{
+					Toplevel pl = w as Toplevel;
+					if (((pl != this)|| include_this) && (pl.edge == edge) && ((pl._mon == _mon)||pl._mon<0))
+						return false;
+				}
 		    return true;
 		}
 		/* FIXME: Potentially we can support multiple panels at the same edge,
@@ -1193,7 +1200,7 @@ namespace ValaPanel
 			}
 		    var new_name = gen_panel_name(profile,new_edge,new_mon);
 		    var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
-//~ 		    new_toplevel.configure("geometry"); FIXME: Readd it after write ConfigDialog
+		    new_toplevel.configure("position");
 		    new_toplevel.show_all();
 		    new_toplevel.queue_draw();
 		}
@@ -1220,7 +1227,14 @@ namespace ValaPanel
 		}
 		private void activate_panel_settings(SimpleAction act, Variant? param)
 		{
-//~ 			this.configure("appearance"); FIXME: Implement it after write Configurator
+			this.configure("appearance");
+		}
+		private void configure(string page)
+		{
+			if (pref_dialog == null)
+				pref_dialog = new ConfigureDialog(this);
+			pref_dialog.prefs_stack.set_visible_child_name(page);
+			pref_dialog.present();
 		}
 	}
 }

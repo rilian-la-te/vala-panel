@@ -5,7 +5,7 @@
   <object class="GtkAboutDialog" id="valapanel-about">
     <property name="can_focus">False</property>
     <property name="destroy_with_parent">True</property>
-    <property name="icon">panel.png</property>
+    <property name="icon">panel.svg</property>
     <property name="type_hint">normal</property>
     <property name="program_name">Vala Panel</property>
     <property name="comments" translatable="yes">Simple GTK+ desktop panel. </property>

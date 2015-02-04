@@ -2,23 +2,22 @@
 
 EXTRA_DIST = 
 
-panel_resources = $(shell glib-compile-resources --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/libvalapanel.gresource.xml)
+panel_resources = $(shell glib-compile-resources --generate-dependencies libvalapanel.gresource.xml)
 
 BUILT_SOURCES = \
 	libvalapanel-resources.h \
 	libvalapanel-resources.c
 
 # resources
-libvalapanel-resources.h: $(top_srcdir)/data/libvalapanel.gresource.xml
-	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-header $(top_srcdir)/data/libvalapanel.gresource.xml
+libvalapanel-resources.h: libvalapanel.gresource.xml
+	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-header libvalapanel.gresource.xml
 
-libvalapanel-resources.c: $(top_srcdir)/data/libvalapanel.gresource.xml $(panel_resources)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $(top_srcdir)/data/libvalapanel.gresource.xml
+libvalapanel-resources.c: libvalapanel.gresource.xml $(panel_resources)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source libvalapanel.gresource.xml
 
 
 pkglib_LTLIBRARIES = libvalapanel.la
 
-libvalapanel_la_CPPFLAGS = $(simple_panel_CPPFLAGS)
 nodist_libvalapanel_la_SOURCES = libvalapanel-resources.c
 libvalapanel_la_SOURCES = \
 	menu-maker.vala \
@@ -27,12 +26,15 @@ libvalapanel_la_SOURCES = \
 	panel-plugin.vala \
 	panel-toplevel.vala \
 	misc.vala \
-	icon-grid.vala
+	icon-grid.vala \
+	configurator.vala 
 
 libvalapanel_la_VALAFLAGS = \
 	--library=libvalapanel \
 	-H vala-panel.h \
+	--target-glib=2.40 \
 	--vapi=$(top_srcdir)/vapi/vala-panel.vapi \
+	--gresources=$(srcdir)/libvalapanel.gresource.xml \
 	--vapidir=../vapi \
 	--vapidir=. \
 	--pkg config \

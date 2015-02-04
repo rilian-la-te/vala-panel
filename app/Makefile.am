@@ -19,7 +19,7 @@ vala_panel_CPPFLAGS = \
 
 vala_panel_resdeps = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies vala-panel.gresource.xml)
 
-vala-panel-resources.c: vala-panel.gresource.xml $(simple_panel_resdeps)
+vala-panel-resources.c: vala-panel.gresource.xml $(vala_panel_resdeps)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source vala-panel.gresource.xml
 
 BUILT_SOURCES = \

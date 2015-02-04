@@ -29,6 +29,7 @@
             <property name="receives_default">False</property>
             <property name="relief">none</property>
             <property name="image_position">right</property>
+            <property name="tooltip_text" translatable="yes">Terminal toggle button</property>
             <property name="always_show_image">True</property>
             <child>
               <object class="GtkImage" id="image-terminal">
@@ -55,6 +56,7 @@
             <property name="primary_icon_name">system-run-symbolic</property>
             <property name="secondary_icon_name">go-next-symbolic</property>
             <property name="placeholder_text" translatable="yes">Enter application name...</property>
+            <property name="tooltip_text" translatable="yes">Runnable command name</property>
             <signal name="activate" handler="on_entry_activated" swapped="no"/>
             <signal name="changed" handler="on_entry_changed" swapped="no"/>
             <signal name="icon-press" handler="on_icon_activated" swapped="no"/>
@@ -72,6 +74,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="relief">none</property>
+            <property name="tooltip_text" translatable="yes">Cancel button</property>
             <property name="always_show_image">True</property>
             <child>
               <object class="GtkImage" id="image-close">
