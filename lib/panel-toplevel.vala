@@ -57,10 +57,10 @@ namespace ValaPanel
 	{
 		private static Peas.Engine engine;
 		private static ulong mon_handler;
-		internal static HashTable<string,uint> loaded_types;
-		internal static HashTable<string,AppletPlugin> loaded_applet_plugins;
+		private static HashTable<string,uint> loaded_types;
+		private static HashTable<string,AppletPlugin> loaded_applet_plugins;
 		private Peas.ExtensionSet extset;
-		internal ToplevelSettings settings;
+		private ToplevelSettings settings;
 		private Gtk.Box box;
 		private int _mon;
 		private int _w;
@@ -406,7 +406,7 @@ namespace ValaPanel
 				else
 					box.get_preferred_height(null, out w);
 				if (w!=width)
-						settings.settings.set_int(Key.WIDTH,w);
+					settings.settings.set_int(Key.WIDTH,w);
 			}
 			if (!this.get_realized())
 				return;
@@ -438,12 +438,32 @@ namespace ValaPanel
 				marea.height = screen.get_height();
 			}
 			else if (monitor < screen.get_n_monitors())
-				screen.get_monitor_geometry(monitor,out marea);
+			{
+				marea = screen.get_monitor_workarea(monitor);
+				var hmod = (autohide && show_hidden) ? 1 : height;
+				switch (edge)
+				{
+					case PositionType.TOP:
+						marea.x -= hmod;
+						marea.height += hmod;
+						break;
+					case PositionType.BOTTOM:
+						marea.height += hmod;
+						break;
+					case PositionType.LEFT:
+						marea.y -= hmod;
+						marea.width += hmod;
+						break;
+					case PositionType.RIGHT:
+						marea.width += hmod;
+						break;
+				}
+			}
 			if (orientation == Gtk.Orientation.HORIZONTAL)
 			{
 				alloc.width = width;
 				alloc.x = marea.x;
-				calculate_width(marea.width,alignment,panel_margin,ref alloc.width, ref alloc.x);
+				calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref alloc.x);
 				alloc.height = (!autohide || ah_visible) ? height :
 										show_hidden ? 1 : 0;
 				alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
@@ -452,18 +472,21 @@ namespace ValaPanel
 			{
 				alloc.height = width;
 				alloc.y = marea.y;
-				calculate_width(marea.height,alignment,panel_margin,ref alloc.height, ref alloc.y);
+				calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref alloc.y);
 				alloc.width = (!autohide || ah_visible) ? height :
 										show_hidden ? 1 : 0;
 				alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
 			}
 		}
 
-		private static void calculate_width(int scrw, AlignmentType align, int margin,
-											ref int panw, ref int x)
+		private static void calculate_width(int scrw, bool dyn, AlignmentType align,
+											int margin,	ref int panw, ref int x)
 		{
-			panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
-			panw = (int)(((double)scrw * (double) panw)/100.0);
+			if (!dyn)
+			{
+				panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
+				panw = (int)(((double)scrw * (double) panw)/100.0);
+			}
 			margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
 			panw = int.min(scrw - margin, panw);
 			if (align == AlignmentType.START)
@@ -491,7 +514,7 @@ namespace ValaPanel
 			this.get_panel_preferred_size(ref req);
 			min = nat = req.height;
 		}
-		protected void get_panel_preferred_size (ref Gtk.Requisition min)
+		private void get_panel_preferred_size (ref Gtk.Requisition min)
 		{
 			if (!ah_visible && box != null)
 				box.get_preferred_size(out min, null);
@@ -730,13 +753,13 @@ namespace ValaPanel
 		internal void add_applet(string type)
 		{
 			PluginSettings s = settings.add_plugin_settings(type);
+			s.default_settings.set_string(Key.NAME,type);
 			load_applet(s);
 		}
 		internal void load_applet(PluginSettings s)
 		{
 			/* Determine if the plugin is loaded yet. */
 			string name = s.default_settings.get_string(Key.NAME);
-
 			if (loaded_types.contains(name))
 			{
 				var count = loaded_types.lookup(name);
@@ -788,40 +811,14 @@ namespace ValaPanel
 	    }
 		internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
 		{
-			var f = applet_plugin.features;
-			s.init_configuration(settings,((f & Features.CONFIG) != 0));
+			s.init_configuration(settings,applet_plugin.plugin_info.get_external_data(Data.CONFIG)!=null);
 			var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
 			var position = s.default_settings.get_uint(Key.POSITION);
 			box.pack_start(applet,false, true, (int)position);
-			((Widget)applet).child_notify.connect((pspec) => {
-				if (pspec.name == Key.PACK)
-				{
-					PackType pack;
-					box.child_get(applet,"pack-type",out pack,null);
-					s.default_settings.set_enum(Key.PACK,pack);
-				}
-				if (pspec.name == Key.POSITION)
-				{
-					int pos;
-					box.child_get(applet,"position",out pos,null);
-					s.default_settings.set_uint(Key.POSITION, pos);
-				}
-			});
-			s.default_settings.changed.connect((name) => {
-				if (name == Key.PACK)
-				{
-					var pack = (PackType)s.default_settings.get_enum(Key.PACK);
-					box.set_child_packing(applet,false,true,0,pack);
-				} else if (name == Key.POSITION)
-				{
-					var pos = s.default_settings.get_int(Key.POSITION);
-					box.reorder_child(applet,pos);
-				}
-			});
-			if ((f & Features.EXPAND_AVAILABLE)!=0)
+			if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
 			{
-				s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.DEFAULT);
-				s.default_settings.bind(Key.EXPAND,applet,"vexpand",GLib.SettingsBindFlags.DEFAULT);
+				s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
+				applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
 			}
 			applet.destroy.connect(()=>{applet_removed(applet.number);});
 		}
@@ -894,9 +891,41 @@ namespace ValaPanel
 			x.clamp(a.x,a.x + a.width - pa.width);
 			y.clamp(a.y,a.y + a.height - pa.height);
 		}
-		private void update_applet_positions()
+		internal void update_applet_positions()
 		{
-
+		    var children = box.get_children();
+		    for (unowned List<unowned Widget> l = children; l != null; l = l.next)
+		    {
+				var idx = get_applet_settings(l.data as Applet).default_settings.get_uint(Key.POSITION);
+				box.reorder_child((l.data as Applet),(int)idx);
+		    }
+		}
+		internal List<unowned Widget> get_applets_list()
+		{
+			return box.get_children();
+		}
+		internal unowned List<Peas.PluginInfo> get_all_types()
+		{
+			return engine.get_plugin_list();
+		}
+		internal unowned AppletPlugin get_plugin(Applet pl)
+		{
+			return loaded_applet_plugins.lookup((settings.get_settings_by_num(pl.number)
+										.default_settings.get_string(Key.NAME)));
+		}
+		internal PluginSettings get_applet_settings(Applet pl)
+		{
+			return settings.get_settings_by_num(pl.number);
+		}
+		internal uint get_applet_position(Applet pl)
+		{
+			int res;
+			box.child_get(pl,"position",out res, null);
+			return (uint)res;
+		}
+		internal void set_applet_position(Applet pl, int pos)
+		{
+			box.reorder_child(pl,pos);
 		}
 /*
  * Properties handling
@@ -1227,7 +1256,7 @@ namespace ValaPanel
 		}
 		private void activate_panel_settings(SimpleAction act, Variant? param)
 		{
-			this.configure("appearance");
+			this.configure(param.get_string());
 		}
 		private void configure(string page)
 		{
@@ -1235,6 +1264,7 @@ namespace ValaPanel
 				pref_dialog = new ConfigureDialog(this);
 			pref_dialog.prefs_stack.set_visible_child_name(page);
 			pref_dialog.present();
+			pref_dialog.destroy.connect(()=>{pref_dialog = null;});
 		}
 	}
 }

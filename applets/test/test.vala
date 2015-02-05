@@ -7,10 +7,6 @@ public class LockKeysApplet : AppletPlugin, Peas.ExtensionBase
     {
         return new LockKeysAppletImpl(toplevel,settings,number);
     }
-    public Features features
-    {get{
-		return Features.EXPAND_AVAILABLE;
-	}}
 }
 
 public class LockKeysAppletImpl : Applet

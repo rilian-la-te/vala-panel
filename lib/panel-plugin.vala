@@ -3,38 +3,35 @@ using Peas;
 
 namespace ValaPanel
 {
+	namespace Data
+	{
+		public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
+		public const string CONFIG = "ValaPanel-Configurable";
+		public const string EXPANDABLE = "ValaPanel-Expandable";
+	}
 	internal static const string PLUGINS_DIRECTORY = Config.PACKAGE_LIB_DIR+"/vala-panel/applets";
 	internal static const string PLUGINS_DATA = Config.PACKAGE_DATA_DIR+"/applets";
-	[Flags]
-	public enum Features
-	{
-		CONFIG,
-		MENU,
-		ONE_PER_SYSTEM,
-		EXPAND_AVAILABLE,
-		CONTEXT_MENU
-	}
 	public enum AppletPackType
 	{
 		START = 0,
 		CENTER = 2,
 		END = 1
 	}
-	public enum PluginAction
-	{
-		MENU
-	}
-
 	public interface AppletPlugin : Peas.ExtensionBase
 	{
 		public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
 		                                                   GLib.Settings? settings,
 		                                                   uint number);
-		public abstract Features features
-		{get;}
 	}
-
-
+	public interface AppletPluginActionable : AppletPlugin
+	{
+		public abstract void add_actions(Toplevel top);
+		public abstract void remove_actions(Toplevel top);
+	}
+	public interface AppletConfigurable
+	{
+		public abstract Gtk.Dialog get_config_dialog();
+	}
 	[CCode (cname = "PanelApplet")]
 	public abstract class Applet : Gtk.EventBox
 	{
@@ -64,11 +61,6 @@ namespace ValaPanel
 			internal get; construct;
 		}
 		public abstract void create();
-		public virtual Gtk.Dialog? get_config_dialog()
-		{
-			return null;
-		}
-		public virtual void invoke_action(PluginAction action){}
 		public virtual void update_context_menu(ref GLib.Menu parent_menu){}
 		public Applet(ValaPanel.Toplevel top, GLib.Settings? s, uint num)
 		{
@@ -93,7 +85,7 @@ namespace ValaPanel
 				}
 				return false;
 			});
-			if (this.get_config_dialog()!=null)
+			if (this is AppletConfigurable)
 				grp.add_action_entries(config_entry,this);
 			grp.add_action_entries(remove_entry,this);
 			this.insert_action_group("applet",grp);
@@ -115,10 +107,14 @@ namespace ValaPanel
 		}
 		private void activate_configure(SimpleAction act, Variant? param)
 		{
-		    if (dialog != null)
+			show_config_dialog();
+		}
+		internal void show_config_dialog()
+		{
+			if (dialog != null)
 		    {
 				int x,y;
-				var dlg = get_config_dialog();
+				var dlg = (this as AppletConfigurable).get_config_dialog();
 				this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
 				/* adjust config dialog window position to be near plugin */
 				dlg.set_transient_for(toplevel);
