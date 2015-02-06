@@ -284,7 +284,7 @@ namespace ValaPanel
 		}
 		private void activate_menu_callback(SimpleAction action, Variant? param)
 		{
-//~ 			activate_menu(action,param,this);
+			activate_menu(action,param,this);
 		}
 		private void activate_panel_preferences_callback(SimpleAction action, Variant? param)
 		{

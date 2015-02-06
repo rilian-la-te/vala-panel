@@ -36,6 +36,22 @@ namespace ValaPanel
 			stderr.printf("No panel with this name found.\n");
 		}
 	}
+	public void activate_menu(SimpleAction simple, Variant? param, void* data)
+	{
+		Gtk.Application app = data as Gtk.Application;
+		foreach(var win in app.get_windows())
+		{
+			if (win is Toplevel)
+			{
+				var p = win as Toplevel;
+				foreach(var pl in p.get_applets_list())
+				{
+					if (pl is AppletMenu)
+						(pl as AppletMenu).show_system_menu();
+				}
+			}
+		}
+	}
 	public static void start_panels_from_dir(Gtk.Application app, string dirname)
 	{
 		Dir dir;

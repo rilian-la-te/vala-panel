@@ -22,10 +22,9 @@ namespace ValaPanel
 		                                                   GLib.Settings? settings,
 		                                                   uint number);
 	}
-	public interface AppletPluginActionable : AppletPlugin
+	public interface AppletMenu
 	{
-		public abstract void add_actions(Toplevel top);
-		public abstract void remove_actions(Toplevel top);
+		public abstract void show_system_menu();
 	}
 	public interface AppletConfigurable
 	{
