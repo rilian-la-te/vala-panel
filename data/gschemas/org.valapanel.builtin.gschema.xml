@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.simple.panel.toplevel.dclock">
+  <schema id="org.valapanel.toplevel.dclock">
     <key name="clock-format" type="s">
       <default>'%R'</default>
     </key>
@@ -19,7 +19,7 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.dirmenu">
+  <schema id="org.valapanel.toplevel.dirmenu">
     <key name="name" type="ms">
       <default>nothing</default>
     </key>
@@ -30,12 +30,12 @@
       <default>'system-file-manager'</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.space">
+  <schema id="org.valapanel.toplevel.space">
     <key name="size" type="i">
       <default>2</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.menumodel">
+  <schema id="org.valapanel.toplevel.menumodel">
     <key name="menu-caption" type="ms">
       <default>nothing</default>
     </key>

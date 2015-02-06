@@ -162,7 +162,6 @@ namespace ValaPanel
 			toplevel.bind_property(Key.DYNAMIC,spin_width,"sensitive",BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
 		    toplevel.bind_property(Key.HEIGHT,spin_height,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 		    toplevel.bind_property(Key.AUTOHIDE,sw_show_hidden,"sensitive",BindingFlags.SYNC_CREATE);
-		    sw_show_hidden.set_sensitive(toplevel.autohide);
 		    toplevel.bind_property(Key.ICON_SIZE,spin_iconsize,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 		    toplevel.bind_property(Key.CORNERS_SIZE,spin_corners,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 			/* background */

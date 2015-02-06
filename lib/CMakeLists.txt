@@ -3,6 +3,7 @@ vala_precompile(VALA_C
 	misc.vala
     misc.vala
     configurator.vala
+    generic-config-dialog.vala
     css.vala
     icon-grid.vala
     menu-maker.vala
