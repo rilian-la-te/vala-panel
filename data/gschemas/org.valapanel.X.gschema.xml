@@ -21,17 +21,6 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.kbled">
-    <key name="numlock-on" type="b">
-      <default>true</default>
-    </key>
-    <key name="capslock-on" type="b">
-      <default>true</default>
-    </key>
-    <key name="scrllock-on" type="b">
-      <default>true</default>
-    </key>
-  </schema>
   <schema id="org.simple.panel.toplevel.xkb">
     <key name="layout-per-window" type="b">
       <default>false</default>

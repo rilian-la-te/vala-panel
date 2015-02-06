@@ -88,11 +88,11 @@ namespace ValaPanel
 
 		private bool initialized;
 
-		private static const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
+		public static const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
 												Key.MONITOR,Key.AUTOHIDE,Key.SHOW_HIDDEN,
 												Key.MARGIN,Key.DOCK,Key.STRUT,
 												Key.DYNAMIC};
-		private static const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
+		public static const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
 												Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
 												Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
 												Key.USE_BACKGROUND_FILE, Key.USE_FONT,

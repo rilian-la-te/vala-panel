@@ -132,4 +132,15 @@
       <default>true</default>
     </key>
   </schema>
+  <schema id="org.valapanel.toplevel.kbled">
+    <key name="numlock-on" type="b">
+      <default>true</default>
+    </key>
+    <key name="capslock-on" type="b">
+      <default>true</default>
+    </key>
+    <key name="scrllock-on" type="b">
+      <default>true</default>
+    </key>
+  </schema>
 </schemalist>

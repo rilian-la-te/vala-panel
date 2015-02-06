@@ -1,6 +1,5 @@
 INCLUDE(GResource)
-vala_precompile(VALA_C
-	misc.vala
+vala_precompile(VALA_C ${LIBNAME}
     misc.vala
     configurator.vala
     generic-config-dialog.vala
@@ -17,7 +16,7 @@ OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --target-glib=2.40
-    --gresources=${CMAKE_SOURCE_DIR}/lib/libvalapanel.gresource.xml
+    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
     --thread
 GENERATE_VAPI
     ${APPNAME}
@@ -35,7 +34,7 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 # Core Library
 #####
 
-# Bild library for plugins and application
+# Build library for plugins and application
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})

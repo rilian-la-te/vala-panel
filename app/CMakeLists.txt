@@ -1,6 +1,5 @@
 INCLUDE(GResource)
-vala_precompile(VALA_C
-	application.vala
+vala_precompile(VALA_C ${APPNAME}
     application.vala
     runner.vala
     ${CMAKE_BINARY_DIR}/vapi/config.vala
@@ -13,7 +12,7 @@ OPTIONS
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --target-glib=2.40
-    --gresources=${CMAKE_SOURCE_DIR}/app/vala-panel.gresource.xml
+    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.gresource.xml
     --thread
 )
 

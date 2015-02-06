@@ -1,5 +1,4 @@
-vala_precompile(VALA_C
-	test.vala
+vala_precompile(VALA_C testapplet
     test.vala
 PACKAGES
     ${CORE_PACKAGES}
@@ -9,7 +8,6 @@ OPTIONS
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --target-glib=2.40
-    --gresources=${CMAKE_SOURCE_DIR}/lib/libvalapanel.gresource.xml
     --thread
 )
 #####

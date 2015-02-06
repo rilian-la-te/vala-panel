@@ -2,7 +2,7 @@ using GLib;
 using Gtk;
 using Config;
 
-namespace ValaPanel.Configurator
+namespace ValaPanel
 {
 	public enum GenericConfigType
 	{
@@ -15,6 +15,10 @@ namespace ValaPanel.Configurator
 	    TRIM,
 	    EXTERNAL
 	}
+}
+
+namespace ValaPanel.Configurator
+{
 	private Dialog generic_config_dlg_internal(string title, Toplevel p,
 											   Applet plugin,
 	                                           va_list args)
