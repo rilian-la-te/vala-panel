@@ -13,7 +13,7 @@ public class Kbled: Applet, AppletConfigurable
 {
 	private static const string CAPS_ON = "capslock-on";
 	private static const string NUM_ON = "numlock-on";
-    IconGrid widget;
+    FlowBox widget;
     Gtk.Image caps;
     Gtk.Image num;
     Gdk.Keymap keymap;
@@ -35,27 +35,28 @@ public class Kbled: Applet, AppletConfigurable
 	}
 	public override void create()
 	{
-        widget = new IconGrid(toplevel.orientation, (int)toplevel.icon_size,(int)toplevel.icon_size,0,1,toplevel.height);
+		IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
+        widget = new FlowBox();
+        widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
+        widget.selection_mode = SelectionMode.NONE;
         add(widget);
 		caps = new Image();
 		toplevel.bind_property(Key.ICON_SIZE,caps,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+		settings.bind(CAPS_ON,caps,"visible",SettingsBindFlags.GET);
+		caps.show();
+		widget.add(caps);
 		num = new Image();
 		toplevel.bind_property(Key.ICON_SIZE,num,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
-		settings.bind(CAPS_ON,caps,"visible",SettingsBindFlags.GET);
+		num.show();
 		settings.bind(NUM_ON,num,"visible",SettingsBindFlags.GET);
-        widget.add(caps);
         widget.add(num);
+        widget.foreach((w)=>{w.get_style_context().remove_class("grid-child");});
         keymap = Gdk.Keymap.get_default();
         keymap.state_changed.connect(on_state_changed);
-
         on_state_changed();
-
-        toplevel.notify.connect((o,a)=> {
-			if (a.name in Toplevel.gnames)
-				widget.set_geometry(toplevel.orientation,(int)toplevel.icon_size,(int)toplevel.icon_size,0,0,toplevel.height);
+        toplevel.notify["edge"].connect((o,a)=> {
+			widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
-		caps.show();
-		num.show();
         show_all();
     }
 
@@ -65,10 +66,10 @@ public class Kbled: Applet, AppletConfigurable
         caps.set_sensitive(keymap.get_caps_lock_state());
         if (keymap.get_caps_lock_state()) {
             caps.set_tooltip_text("Caps lock is active");
-            caps.set_from_resource("/org/vala-panel/kbled/images/capslock-on.png");
+            caps.set_from_icon_name("capslock-on",IconSize.INVALID);
         } else {
             caps.set_tooltip_text("Caps lock is not active");
-            caps.set_from_resource("/org/vala-panel/kbled/images/capslock-off.png");
+            caps.set_from_icon_name("capslock-off",IconSize.INVALID);
         }
     }
 
@@ -77,11 +78,11 @@ public class Kbled: Applet, AppletConfigurable
     {
         num.set_sensitive(keymap.get_num_lock_state());
         if (keymap.get_num_lock_state()) {
-            caps.set_tooltip_text("Num lock is active");
-            caps.set_from_resource("/org/vala-panel/kbled/images/numlock-on.png");
+            num.set_tooltip_text("Num lock is active");
+            num.set_from_icon_name("numlock-on",IconSize.INVALID);
         } else {
-            caps.set_tooltip_text("Num lock is not active");
-            caps.set_from_resource("/org/vala-panel/kbled/images/numlock-off.png");
+            num.set_tooltip_text("Num lock is not active");
+            num.set_from_icon_name("numlock-off",IconSize.INVALID);
         }
     }
     protected void on_state_changed()

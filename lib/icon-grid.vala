@@ -132,7 +132,7 @@ namespace ValaPanel
 			foreach (var child in this.children)
 				if (child.get_visible())
 				{
-					child.get_preferred_size(out req,null);
+					child.get_preferred_size(null,out req);
 					element_check_requisition(ref req);
 					cha.width = int.min(req.width,chw);
 					cha.height = int.min(req.height,chh);
@@ -234,7 +234,7 @@ namespace ValaPanel
 				foreach (var child in children)
 					if (child.get_visible())
 					{
-						child.get_preferred_size(out ch_req, null);
+						child.get_preferred_size(null,out ch_req);
 						element_check_requisition(ref ch_req);
 						if (row==0)
 							colnum++;

@@ -1,0 +1,49 @@
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=vala-panel
+base_path=/home/athor/Downloads/Panel/vala-panel/
+description=
+file_patterns=*.vala;*.vapi;
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=-1
+
+[VTE]
+last_dir=/home/athor
+
+[build-menu]
+NF_00_LB=_Make
+NF_00_CM=make
+NF_00_WD=
+NF_01_LB=Make Custom _Target...
+NF_01_CM=make 
+NF_01_WD=
+NF_02_LB=Make _Object
+NF_02_CM=make %e.o
+NF_02_WD=
+EX_00_LB=_Execute
+EX_00_CM=./%e
+EX_00_WD=
+
+[gproject]
+source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;
+header_patterns=*.h;*.H;*.hpp;*.hxx;*.h++;*.hh;*.m;
+ignored_dirs_patterns=.*;CVS;
+generate_tags=false
