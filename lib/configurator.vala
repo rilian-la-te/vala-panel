@@ -21,8 +21,8 @@ namespace ValaPanel
 		MenuButton alignment_button;
 		[GtkChild (name="monitors-button")]
 		MenuButton monitors_button;
-		[GtkChild (name="sw-show-hidden")]	
-		Switch sw_show_hidden;			
+		[GtkChild (name="box-show-hidden")]	
+		Box sw_show_hidden;			
 		[GtkChild (name="spin-margin")]
 		SpinButton spin_margin;
 		[GtkChild (name="spin-iconsize")]

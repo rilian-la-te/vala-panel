@@ -177,10 +177,13 @@
                       <object class="GtkMenuButton" id="edge-button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="menu-model">edge-menu</property>
                         <property name="receives_default">True</property>
+                        <property name="menu-model">edge-menu</property>
                         <property name="halign">start</property>
                         <property name="relief">none</property>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -195,6 +198,9 @@
                         <property name="receives_default">True</property>
                         <property name="halign">start</property>
                         <property name="relief">none</property>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -208,6 +214,9 @@
                         <property name="receives_default">True</property>
                         <property name="halign">start</property>
                         <property name="relief">none</property>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -452,18 +461,6 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkSwitch" id="sw-show-hidden">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="halign">center</property>
-                        <property name="action_name">win.show-hidden</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">6</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkSwitch" id="sw-autohide">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -497,6 +494,30 @@
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="box-show-hidden">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkSwitch" id="sw-show-hidden">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">center</property>
+                            <property name="action_name">win.show-hidden</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">6</property>
                       </packing>
                     </child>
                   </object>
@@ -797,10 +818,10 @@
                         <property name="spacing">2</property>
                         <child>
                           <object class="GtkButton" id="add-button">
-                            <signal name="clicked" handler="on_add_plugin" swapped="no"/>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
+                            <signal name="clicked" handler="on_add_plugin" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image1">
                                 <property name="visible">True</property>
@@ -818,10 +839,10 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="remove-button">
-                            <signal name="clicked" handler="on_remove_plugin" swapped="no"/>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
+                            <signal name="clicked" handler="on_remove_plugin" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image2">
                                 <property name="visible">True</property>
@@ -881,10 +902,10 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="down-button">
-                            <signal name="clicked" handler="on_movedown_plugin" swapped="no"/>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
+                            <signal name="clicked" handler="on_movedown_plugin" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image5">
                                 <property name="visible">True</property>
