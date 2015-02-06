@@ -1,0 +1,25 @@
+<schemalist>
+  <schema id="org.valapanel" path="/org/vala-panel/">
+    <key name="is-dark" type="b">
+      <default>false</default>
+    </key>
+    <key name="is-custom" type="b">
+      <default>false</default>
+    </key>
+    <key name="css" type="s">
+      <default>""</default>
+    </key>
+    <key name="logout-command" type="s">
+      <default>"gnome-logout"</default>
+    </key>
+    <key name="shutdown-command" type="s">
+      <default>"gnome-logout"</default>
+    </key>
+    <key name="terminal-command" type="s">
+      <default>"sakura"</default>
+    </key>
+    <key name="confirm-panel-remove" type="b">
+      <default>true</default>
+    </key>
+  </schema>
+</schemalist>

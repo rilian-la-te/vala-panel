@@ -1,0 +1,543 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-06 21:12+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/menu-maker.vala:83
+msgid "Home"
+msgstr ""
+
+#: ../lib/menu-maker.vala:93
+msgid "Desktop"
+msgstr ""
+
+#: ../lib/menu-maker.vala:109
+msgid "Search..."
+msgstr ""
+
+#: ../lib/menu-maker.vala:134
+msgid "Control center"
+msgstr ""
+
+#: ../lib/menu-maker.vala:160
+msgid "Applications"
+msgstr ""
+
+#: ../lib/menu-maker.vala:164 ../lib/menu-maker.vala:172
+msgid "Places"
+msgstr ""
+
+#: ../lib/menu-maker.vala:165 ../data/ui/system-menus.ui:41
+msgid "System"
+msgstr ""
+
+#: ../lib/menu-maker.vala:169
+msgid "Vala Panel"
+msgstr ""
+
+#: ../lib/panel-toplevel.vala:1224
+msgid "There is no room for another panel. All the edges are taken."
+msgstr ""
+
+#: ../lib/panel-toplevel.vala:1226
+msgid "Error"
+msgstr ""
+
+#: ../lib/panel-toplevel.vala:1243
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning: This can not be recovered.</b>"
+msgstr ""
+
+#: ../lib/panel-toplevel.vala:1245
+msgid "Confirm"
+msgstr ""
+
+#: ../lib/configurator.vala:76 ../lib/configurator.vala:93
+#: ../data/ui/panel-pref.ui:6
+msgid "Top"
+msgstr ""
+
+#: ../lib/configurator.vala:79 ../lib/configurator.vala:96
+#: ../data/ui/panel-pref.ui:11
+msgid "Bottom"
+msgstr ""
+
+#: ../lib/configurator.vala:82 ../lib/configurator.vala:99
+#: ../data/ui/panel-pref.ui:16
+msgid "Left"
+msgstr ""
+
+#: ../lib/configurator.vala:85 ../lib/configurator.vala:102
+#: ../data/ui/panel-pref.ui:21
+msgid "Right"
+msgstr ""
+
+#: ../lib/configurator.vala:111 ../lib/configurator.vala:125
+msgid "Start"
+msgstr ""
+
+#: ../lib/configurator.vala:114 ../lib/configurator.vala:128
+msgid "Center"
+msgstr ""
+
+#: ../lib/configurator.vala:117 ../lib/configurator.vala:131
+msgid "End"
+msgstr ""
+
+#: ../lib/configurator.vala:144 ../lib/configurator.vala:209
+msgid "All"
+msgstr ""
+
+#: ../lib/configurator.vala:209
+msgid "%d"
+msgstr ""
+
+#: ../lib/configurator.vala:282
+msgid "Currently loaded plugins"
+msgstr ""
+
+#: ../lib/configurator.vala:291
+msgid "Stretch"
+msgstr ""
+
+#: ../lib/configurator.vala:351
+msgid "Available plugins"
+msgstr ""
+
+#: ../app/application.vala:61
+msgid "Print version and exit"
+msgstr ""
+
+#: ../app/application.vala:62
+msgid "Use specified profile"
+msgstr ""
+
+#: ../app/application.vala:62
+msgid "profile"
+msgstr ""
+
+#: ../app/application.vala:63
+msgid "Run command on already opened panel"
+msgstr ""
+
+#: ../app/application.vala:63
+msgid "cmd"
+msgstr ""
+
+#: ../app/application.vala:179
+msgid "%s - Version %s\n"
+msgstr ""
+
+#: ../app/application.vala:210
+msgid ""
+"%s: invalid command - %s. Doing nothing.\n"
+"Valid commands: %s\n"
+msgstr ""
+
+#: ../lib/pref.ui:8
+msgid "_Top"
+msgstr ""
+
+#: ../lib/pref.ui:13
+msgid "_Bottom"
+msgstr ""
+
+#: ../lib/pref.ui:18
+msgid "_Left"
+msgstr ""
+
+#: ../lib/pref.ui:23
+msgid "_Right"
+msgstr ""
+
+#: ../lib/pref.ui:32 ../data/ui/panel-pref.ui:30
+msgid "_Start"
+msgstr ""
+
+#: ../lib/pref.ui:37 ../data/ui/panel-pref.ui:35
+msgid "_Center"
+msgstr ""
+
+#: ../lib/pref.ui:42 ../data/ui/panel-pref.ui:40
+msgid "_End"
+msgstr ""
+
+#: ../lib/pref.ui:84
+msgid "Panel preferences"
+msgstr ""
+
+#: ../lib/pref.ui:148 ../data/ui/panel-pref.ui:204
+msgid "Margin:"
+msgstr ""
+
+#: ../lib/pref.ui:222
+msgid "Edge:"
+msgstr ""
+
+#: ../lib/pref.ui:234
+msgid "Alignment:"
+msgstr ""
+
+#: ../lib/pref.ui:246
+msgid "Monitor:"
+msgstr ""
+
+#: ../lib/pref.ui:258
+msgid "Advanced properties"
+msgstr ""
+
+#: ../lib/pref.ui:275
+msgid "Count as dock:"
+msgstr ""
+
+#: ../lib/pref.ui:287
+msgid "Reserve space:"
+msgstr ""
+
+#: ../lib/pref.ui:323
+msgid "Placement properties"
+msgstr ""
+
+#: ../lib/pref.ui:338
+msgid "Position"
+msgstr ""
+
+#: ../lib/pref.ui:364
+msgid "Icon size:"
+msgstr ""
+
+#: ../lib/pref.ui:376
+msgid "Height:"
+msgstr ""
+
+#: ../lib/pref.ui:401
+msgid "Width:"
+msgstr ""
+
+#: ../lib/pref.ui:425
+msgid "Size properties"
+msgstr ""
+
+#: ../lib/pref.ui:442
+msgid "Automatic hide panel"
+msgstr ""
+
+#: ../lib/pref.ui:483
+msgid "Show hidden:"
+msgstr ""
+
+#: ../lib/pref.ui:495
+msgid "Autohide:"
+msgstr ""
+
+#: ../lib/pref.ui:505 ../data/ui/panel-pref.ui:766
+msgid "Size"
+msgstr ""
+
+#: ../lib/pref.ui:521
+msgid "Foreground color:"
+msgstr ""
+
+#: ../lib/pref.ui:533
+msgid "Background image:"
+msgstr ""
+
+#: ../lib/pref.ui:545
+msgid "Background color:"
+msgstr ""
+
+#: ../lib/pref.ui:557
+msgid "Font:"
+msgstr ""
+
+#: ../lib/pref.ui:569
+msgid "Round corners size:"
+msgstr ""
+
+#: ../lib/pref.ui:649
+msgid "Select background color"
+msgstr ""
+
+#: ../lib/pref.ui:663
+msgid "Select foreground color"
+msgstr ""
+
+#: ../lib/pref.ui:676
+msgid "Select an Image"
+msgstr ""
+
+#: ../lib/pref.ui:695
+msgid "Select panel font"
+msgstr ""
+
+#: ../lib/pref.ui:707
+msgid "Size only"
+msgstr ""
+
+#: ../lib/pref.ui:733 ../data/ui/panel-pref.ui:826
+msgid "Appearance"
+msgstr ""
+
+#: ../lib/pref.ui:913 ../data/ui/panel-pref.ui:1005
+msgid "Plugins"
+msgstr ""
+
+#: ../app/app-runner.ui:10
+msgid "Run..."
+msgstr ""
+
+#: ../app/app-runner.ui:32
+msgid "Terminal toggle button"
+msgstr ""
+
+#: ../app/app-runner.ui:58
+msgid "Enter application name..."
+msgstr ""
+
+#: ../app/app-runner.ui:59
+msgid "Runnable command name"
+msgstr ""
+
+#: ../app/app-runner.ui:77
+msgid "Cancel button"
+msgstr ""
+
+#: ../data/ui/app-about.ui:11
+msgid "Simple GTK+ desktop panel. "
+msgstr ""
+
+#: ../data/ui/app-about.ui:13
+msgid "https://vala-panel.github.io"
+msgstr ""
+
+#. Replace this string by your names, one name per line.
+#: ../data/ui/app-about.ui:29
+msgid "translator-credits"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:6
+msgid "Audio and Video"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:11
+msgid "Education"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:16
+msgid "Game"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:21
+msgid "Graphics"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:26 ../data/ui/system-menus.ui:81
+msgid "Network"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:31
+msgid "Office"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:36
+msgid "Settings"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:46
+msgid "Utility"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:51
+msgid "Development"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:56
+msgid "Other"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:67
+msgid "Computer"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:73
+msgid "Trash"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:87
+msgid "Connect to server..."
+msgstr ""
+
+#: ../data/ui/system-menus.ui:95
+msgid "Recent documents"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:107
+msgid "Run"
+msgstr ""
+
+#: ../data/ui/system-menus.ui:114
+msgid "Log Out..."
+msgstr ""
+
+#: ../data/ui/system-menus.ui:119
+msgid "Shut down..."
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:49 ../data/ui/panel-pref.ui:100
+msgid "Dynamic"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:53 ../data/ui/panel-pref.ui:103
+msgid "Pixels"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:57
+msgid "Percent"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:106
+msgid "% Percent"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:239
+msgid "<b>Position</b>"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:315 ../data/ui/panel-pref.ui:361
+msgid "x"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:408
+msgid "<b>Size</b>"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:430
+msgid "Minimize panel when not in use with size: "
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:484
+msgid "Autohide"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:509
+msgid "Make window managers treat the panel as dock"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:526
+msgid "Reserve space, and not covered by maximized windows"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:547
+msgid "<b>Properties</b>"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:561
+msgid "Geometry"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:581
+msgid "GTK Window"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:596
+msgid "Gnome Panel"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:619 ../data/ui/panel-pref.ui:723
+msgid "Color"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:659
+msgid "Image"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:677
+msgid "Select an image file"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:693
+msgid "<b>Background</b>"
+msgstr ""
+
+#: ../data/ui/panel-pref.ui:812
+msgid "<b>Font</b>"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:8
+msgid "Application preferences"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:52
+msgid "Logout manager..."
+msgstr ""
+
+#: ../data/ui/app-pref.ui:68
+msgid "Shutdown application..."
+msgstr ""
+
+#: ../data/ui/app-pref.ui:82
+msgid "Preferred Applications:"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:108
+msgid "Use dark theme"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:129
+msgid "Use custom CSS"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:148
+msgid "Select a CSS File"
+msgstr ""
+
+#: ../data/ui/app-pref.ui:170
+msgid "Widget Style"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:6
+msgid "Configure applet..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:11
+msgid "Remove applet"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:18
+msgid "Panel Items..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:25
+msgid "Panel Settings..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:30
+msgid "New Panel"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:34
+msgid "Remove this Panel"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:40
+msgid "Application Settings"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:44
+msgid "About"
+msgstr ""

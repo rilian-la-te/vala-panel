@@ -1,0 +1,6 @@
+include(GSettings)
+add_schema("org.valapanel.gschema.xml")
+add_schema("org.valapanel.toplevel.gschema.xml")
+add_schema("org.valapanel.toplevel.plugin.gschema.xml")
+add_schema("org.valapanel.builtin.gschema.xml")
+add_schema("org.valapanel.plugins.gschema.xml")

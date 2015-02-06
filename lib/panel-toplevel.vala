@@ -1,6 +1,7 @@
 using GLib;
 using Gtk;
 using Gdk;
+using Config;
 
 namespace ValaPanel
 {

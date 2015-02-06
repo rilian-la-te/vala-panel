@@ -1,0 +1,58 @@
+<schemalist>
+  <schema id="org.simple.panel.toplevel.dclock">
+    <key name="clock-format" type="s">
+      <default>'%R'</default>
+    </key>
+    <key name="tooltip-format" type="s">
+      <default>'%A %x'</default>
+    </key>
+    <key name="click-action" type="ms">
+      <default>nothing</default>
+    </key>
+    <key name="icon-only" type="b">
+      <default>false</default>
+    </key>
+    <key name="bold-font" type="b">
+      <default>true</default>
+    </key>
+    <key name="center-text" type="b">
+      <default>true</default>
+    </key>
+  </schema>
+  <schema id="org.simple.panel.toplevel.dirmenu">
+    <key name="name" type="ms">
+      <default>nothing</default>
+    </key>
+    <key name="path" type="s">
+      <default>'~'</default>
+    </key>
+    <key name="icon" type="s">
+      <default>'system-file-manager'</default>
+    </key>
+  </schema>
+  <schema id="org.simple.panel.toplevel.space">
+    <key name="size" type="i">
+      <default>2</default>
+    </key>
+  </schema>
+  <schema id="org.simple.panel.toplevel.menumodel">
+    <key name="menu-caption" type="ms">
+      <default>nothing</default>
+    </key>
+    <key name="icon-name" type="ms">
+      <default>'start-here-symbolic'</default>
+    </key>
+    <key name="is-system-menu" type="b">
+      <default>true</default>
+    </key>
+    <key name="is-internal-menu" type="b">
+      <default>true</default>
+    </key>
+    <key name="is-menu-bar" type="b">
+      <default>true</default>
+    </key>
+    <key name="model-file" type="ms">
+      <default>nothing</default>
+    </key>
+  </schema>
+</schemalist>

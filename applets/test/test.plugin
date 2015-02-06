@@ -1,0 +1,5 @@
+[Plugin]
+Module=testapplet
+Name=Lock Keys Applet
+Description=Indicators for capslock and numlock
+X-ValaPanel-Expandable=yes

@@ -137,10 +137,10 @@ namespace ValaPanel
 		{
 			base.startup();
 			GLib.Intl.setlocale(LocaleCategory.CTYPE,"");
-			GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.PACKAGE_LOCALE_DIR);
+			GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.LOCALE_DIR);
 			GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
 			GLib.Intl.textdomain(Config.GETTEXT_PACKAGE);
-			var datadir = Config.PACKAGE_DATA_DIR;
+			var datadir = Config.DATADIR;
 			Gtk.IconTheme.get_default().append_search_path(datadir+"/images");
 			add_action_entries(app_entries,this);
 			add_action_entries(menu_entries,this);

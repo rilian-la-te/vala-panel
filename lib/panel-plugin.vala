@@ -1,5 +1,6 @@
 using Gtk;
 using Peas;
+using Config;
 
 namespace ValaPanel
 {
@@ -9,8 +10,6 @@ namespace ValaPanel
 		public const string CONFIG = "ValaPanel-Configurable";
 		public const string EXPANDABLE = "ValaPanel-Expandable";
 	}
-	internal static const string PLUGINS_DIRECTORY = Config.PACKAGE_LIB_DIR+"/vala-panel/applets";
-	internal static const string PLUGINS_DATA = Config.PACKAGE_DATA_DIR+"/applets";
 	public enum AppletPackType
 	{
 		START = 0,

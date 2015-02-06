@@ -1,0 +1,27 @@
+<schemalist>
+  <enum id="PackType">
+    <value nick="start" value="0"/>
+    <value nick="end" value="1"/>
+    <value nick="center" value="2"/>
+  </enum>
+  <schema id="org.valapanel.toplevel.plugin">
+    <key name="plugin-type" type="s">
+      <default>''</default>
+    </key>
+    <key name="has-schema" type="b">
+      <default>false</default>
+    </key>
+    <key name="can-expand" type="b">
+      <default>false</default>
+    </key>
+    <key name="is-expanded" type="b">
+      <default>false</default>
+    </key>
+    <key name="position" type="u">
+      <default>0</default>
+    </key>
+    <key name="pack-type" enum="PackType">
+      <default>'start'</default>
+    </key>
+  </schema>
+</schemalist>
