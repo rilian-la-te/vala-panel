@@ -1259,7 +1259,7 @@ namespace ValaPanel
 		{
 			this.configure(param.get_string());
 		}
-		private void configure(string page)
+		internal void configure(string page)
 		{
 			if (pref_dialog == null)
 				pref_dialog = new ConfigureDialog(this);

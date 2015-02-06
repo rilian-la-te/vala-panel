@@ -19,6 +19,23 @@ namespace ValaPanel
 			w.set_icon_name("start-here-symbolic");
 		}
 	}
+	public void activate_panel_preferences(SimpleAction simple, Variant? param, void* data)
+	{
+		Gtk.Application app = data as Gtk.Application;
+		foreach(var win in app.get_windows())
+		{
+			if (win is Toplevel)
+			{
+				var p = win as Toplevel;
+				if (p.panel_name == param.get_string())
+				{
+					p.configure("position");
+					break;
+				}
+			}
+			stderr.printf("No panel with this name found.\n");
+		}
+	}
 	public static void start_panels_from_dir(Gtk.Application app, string dirname)
 	{
 		Dir dir;
