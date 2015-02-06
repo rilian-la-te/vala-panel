@@ -387,6 +387,7 @@ namespace ValaPanel
 			        toplevel.update_applet_positions();
 			        update_plugin_list_model();
 				}
+				update_widget_position_keys();
 			});
 		
 		    scroll.set_min_content_width(320);

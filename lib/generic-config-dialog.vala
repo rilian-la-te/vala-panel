@@ -131,13 +131,10 @@ namespace ValaPanel.Configurator
 	    dlg_vbox.show_all();
 	    return dlg;
 	}
-	
 	public static Dialog generic_config_dlg(string title, Toplevel toplevel,
 									Applet applet, ...)
 	{
-		Dialog dlg;
 		var l = va_list();
-		dlg = generic_config_dlg_internal(title,toplevel,applet,l);
-		return dlg;
+		return generic_config_dlg_internal(title,toplevel,applet,l);
 	}	
 }

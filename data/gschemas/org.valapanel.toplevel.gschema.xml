@@ -1,11 +1,11 @@
 <schemalist>
-  <enum id="GtkPositionType">
+  <enum id="org.valapanel.GtkPositionType">
     <value nick="left" value="0"/>
     <value nick="right" value="1"/>
     <value nick="top" value="2"/>
     <value nick="bottom" value="3"/>
   </enum>
-  <enum id="AlignType">
+  <enum id="org.valapanel.AlignType">
     <value nick="start" value="0"/>
     <value nick="center" value="1"/>
     <value nick="end" value="2"/>
@@ -17,7 +17,7 @@
     <key name="monitor" type="i">
       <default>-1</default>
     </key>
-    <key name="edge" enum="GtkPositionType">
+    <key name="edge" enum="org.valapanel.GtkPositionType">
       <default>'top'</default>
     </key>
     <key name="height" type="i">
@@ -30,7 +30,7 @@
     <key name="is-dynamic" type="b">
       <default>false</default>
     </key>
-    <key name="alignment" enum="AlignType">
+    <key name="alignment" enum="org.valapanel.AlignType">
       <default>'center'</default>
     </key>
     <key name="icon-size" type="i">

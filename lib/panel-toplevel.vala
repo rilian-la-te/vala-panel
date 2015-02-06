@@ -384,9 +384,7 @@ namespace ValaPanel
 			this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
 			settings.init_plugin_list();
 			foreach(var pl in settings.plugins)
-			{
 				load_applet(pl);
-			}
 			update_applet_positions();
 			this.present();
 			this.autohide = autohide;
@@ -807,6 +805,7 @@ namespace ValaPanel
 					if (!loaded_types.contains(type))
 						loaded_types.insert(type,0);
 					load_applet(pl);
+					update_applet_positions();
 					return;
 				}
 	    }
@@ -838,6 +837,7 @@ namespace ValaPanel
 			{
 				loaded_types.remove(name);
 				var pl = loaded_applet_plugins.lookup(name);
+				loaded_applet_plugins.remove(name);
 				var info = pl.plugin_info;
 				engine.try_unload_plugin(info);
 			}

@@ -28,6 +28,7 @@ namespace ValaPanel
 	}
 	public interface AppletConfigurable
 	{
+		[CCode (returns_floating_reference = true)]	
 		public abstract Gtk.Dialog get_config_dialog();
 	}
 	[CCode (cname = "PanelApplet")]
@@ -109,7 +110,7 @@ namespace ValaPanel
 		}
 		internal void show_config_dialog()
 		{
-			if (dialog != null)
+			if (dialog == null)
 		    {
 				int x,y;
 				var dlg = (this as AppletConfigurable).get_config_dialog();
@@ -119,6 +120,7 @@ namespace ValaPanel
 				toplevel.popup_position_helper(this,dlg,out x, out y);
 				dlg.move(x,y);
 				dialog = dlg;
+				dialog.unmap.connect(()=>{dialog.destroy(); dialog = null;});
 			}
 			dialog.present();
 		}

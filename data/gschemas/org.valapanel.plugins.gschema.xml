@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.simple.panel.toplevel.batt">
+  <schema id="org.valapanel.toplevel.batt">
     <key name="alarm-command" type="s">
       <default>'xmessage "Battery Low"'</default>
     </key>
@@ -31,7 +31,7 @@
       <default>false</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.netstatus">
+  <schema id="org.valapanel.toplevel.netstatus">
     <key name="interface" type="s">
       <default>'eth0'</default>
     </key>
@@ -39,12 +39,12 @@
       <default>'network-admin --configure %i'</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.netstat">
+  <schema id="org.valapanel.toplevel.netstat">
     <key name="config-cmd" type="ms">
       <default>nothing</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.monitors">
+  <schema id="org.valapanel.toplevel.monitors">
     <key name="display-cpu-monitor" type="b">
       <default>true</default>
     </key>
@@ -61,7 +61,7 @@
       <default>'green'</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.thermal">
+  <schema id="org.valapanel.toplevel.thermal">
     <key name="auto-temperature-levels" type="b">
       <default>true</default>
     </key>
@@ -87,7 +87,7 @@
       <default>'green'</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.weather">
+  <schema id="org.valapanel.toplevel.weather">
     <key name="alias" type="s">
       <default>''</default>
     </key>
@@ -113,12 +113,12 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.indicator">
+  <schema id="org.valapanel.toplevel.indicator">
     <key name="enabled-indicators" type="as">
       <default>['applications']</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.volumealsa">
+  <schema id="org.valapanel.toplevel.volumealsa">
     <key name="card-id" type="s">
       <default>'default'</default>
     </key>
