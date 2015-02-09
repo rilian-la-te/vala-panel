@@ -32,6 +32,7 @@
   </schema>
   <schema id="org.valapanel.toplevel.space">
     <key name="size" type="i">
+   	  <range min="0" max="100000"/>
       <default>2</default>
     </key>
   </schema>

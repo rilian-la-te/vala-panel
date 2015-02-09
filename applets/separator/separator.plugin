@@ -1,0 +1,4 @@
+[Plugin]
+Module=separator
+Name=Separator
+Description=Draws separator on panel

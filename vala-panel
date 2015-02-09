@@ -16,7 +16,7 @@ indent_mode=2
 name=vala-panel
 base_path=/home/athor/Downloads/Panel/vala-panel/
 description=
-file_patterns=*.vala;*.vapi;
+file_patterns=*.vala;*.vapi;*.plugin;CMakeLists.txt;
 
 [long line marker]
 long_line_behaviour=1
