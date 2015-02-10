@@ -89,7 +89,7 @@ namespace ValaPanel
 			grp.add_action_entries(remove_entry,this);
 			this.insert_action_group("applet",grp);
 		}
-		internal void init_background()
+		public void init_background()
 		{
 			Gdk.RGBA color = Gdk.RGBA();
 			color.parse ("transparent");
@@ -98,10 +98,56 @@ namespace ValaPanel
 			                          "-vala-panel-background",
 			                          true);
 		}
+		public void popup_position_helper(Gtk.Widget popup,
+		                                  out int x, out int y)
+		{
+			Gtk.Allocation pa;
+			Gtk.Allocation a;
+			Gdk.Screen screen;
+			popup.realize();
+			popup.get_allocation(out pa);
+			if (popup.is_toplevel())
+			{
+				Gdk.Rectangle ext;
+				popup.get_window().get_frame_extents(out ext);
+				pa.width = ext.width;
+				pa.height = ext.height;
+			}
+			get_allocation(out a);
+			get_window().get_origin(out x, out y);
+			if (get_has_window())
+			{
+				x += a.x;
+				y += a.y;
+			}
+			switch (toplevel.edge)
+			{
+				case Gtk.PositionType.TOP:
+					y+=a.height;
+					break;
+				case Gtk.PositionType.BOTTOM:
+					y-=pa.height;
+					break;
+				case Gtk.PositionType.LEFT:
+					x+=a.width;
+					break;
+				case Gtk.PositionType.RIGHT:
+					x-=pa.width;
+					break;
+			}
+			if (has_screen())
+				screen = get_screen();
+			else
+				screen = Gdk.Screen.get_default();
+			var monitor = screen.get_monitor_at_point(x,y);
+			a = (Gtk.Allocation)screen.get_monitor_workarea(monitor);
+			x.clamp(a.x,a.x + a.width - pa.width);
+			y.clamp(a.y,a.y + a.height - pa.height);
+		}
 		public void set_popup_position(Gtk.Widget popup)
 		{
 			int x,y;
-			toplevel.popup_position_helper(this,popup,out x, out y);
+			popup_position_helper(popup,out x, out y);
 			popup.get_window().move(x,y);
 		}
 		private void activate_configure(SimpleAction act, Variant? param)
@@ -117,7 +163,7 @@ namespace ValaPanel
 				this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
 				/* adjust config dialog window position to be near plugin */
 				dlg.set_transient_for(toplevel);
-				toplevel.popup_position_helper(this,dlg,out x, out y);
+				popup_position_helper(dlg,out x, out y);
 				dlg.move(x,y);
 				dialog = dlg;
 				dialog.unmap.connect(()=>{dialog.destroy(); dialog = null;});

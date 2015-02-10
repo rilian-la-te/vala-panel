@@ -37,10 +37,10 @@
     </key>
   </schema>
   <schema id="org.valapanel.toplevel.menumodel">
-    <key name="menu-caption" type="ms">
-      <default>nothing</default>
+    <key name="menu-caption" type="s">
+      <default>''</default>
     </key>
-    <key name="icon-name" type="ms">
+    <key name="icon-name" type="s">
       <default>'start-here-symbolic'</default>
     </key>
     <key name="is-system-menu" type="b">
@@ -52,8 +52,8 @@
     <key name="is-menu-bar" type="b">
       <default>true</default>
     </key>
-    <key name="model-file" type="ms">
-      <default>nothing</default>
+    <key name="model-file" type="s">
+      <default>''</default>
     </key>
   </schema>
 </schemalist>

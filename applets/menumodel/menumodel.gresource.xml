@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gresources>
+  <gresource prefix="/org/vala-panel/menumodel">
+    <file compressed="true" preprocess="xml-stripblanks">system-menus.ui</file>
+  </gresource>
+</gresources>
