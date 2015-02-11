@@ -276,8 +276,9 @@ namespace ValaPanel
 			}
 			config_backend = GLib.keyfile_settings_backend_new(user_file,PATH,NAME);
 			config = new GLib.Settings.with_backend_and_path(SCHEMA,config_backend,PATH);
-			settings_as_action(this,config,Key.LOGOUT);
-			settings_as_action(this,config,Key.SHUTDOWN);
+			settings_bind(this,config,Key.LOGOUT);
+			settings_bind(this,config,Key.SHUTDOWN);
+			settings_bind(this,config,Key.TERMINAL);
 			settings_as_action(this,config,Key.DARK);
 			settings_as_action(this,config,Key.CUSTOM);
 			settings_as_action(this,config,Key.CSS);
@@ -295,6 +296,7 @@ namespace ValaPanel
 			var builder = new Builder.from_resource("/org/vala-panel/app/about.ui");
 			var d = builder.get_object("valapanel-about") as AboutDialog;
 			d.set_version(Config.VERSION);
+			d.window_position = Gtk.WindowPosition.CENTER;
 			d.run();
 			d.destroy();
 		}

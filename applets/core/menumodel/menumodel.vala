@@ -73,11 +73,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 		Gtk.Menu menuw = new Gtk.Menu.from_model(menu);
 		MenuMaker.apply_menu_properties(menuw.get_children(),menu);
 		menuw.attach_to_widget(this,null);
-		menuw.popup(null,null,
-					(m,out x,out y,out push)=>{
-						popup_position_helper(m,out x, out y);
-						push=true;
-					},
+		menuw.popup(null,null,menu_position_func,
 					0, Gdk.CURRENT_TIME);
 		menuw.focus_out_event.connect((event)=>{menuw.destroy();return false;});
 		show_system_menu_idle = 0;

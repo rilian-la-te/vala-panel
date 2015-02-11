@@ -11,13 +11,13 @@
     </key>
   </schema>
   <schema id="org.valapanel.toplevel.dirmenu">
-    <key name="name" type="ms">
-      <default>nothing</default>
+    <key name="caption" type="s">
+      <default>''</default>
     </key>
-    <key name="path" type="s">
+    <key name="dir-path" type="s">
       <default>'~'</default>
     </key>
-    <key name="icon" type="s">
+    <key name="icon-name" type="s">
       <default>'system-file-manager'</default>
     </key>
   </schema>
