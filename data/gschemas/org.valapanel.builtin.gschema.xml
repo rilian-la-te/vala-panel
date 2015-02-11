@@ -1,21 +1,12 @@
 <schemalist>
-  <schema id="org.valapanel.toplevel.dclock">
+  <schema id="org.valapanel.toplevel.clock">
     <key name="clock-format" type="s">
       <default>'%R'</default>
     </key>
     <key name="tooltip-format" type="s">
       <default>'%A %x'</default>
     </key>
-    <key name="click-action" type="ms">
-      <default>nothing</default>
-    </key>
-    <key name="icon-only" type="b">
-      <default>false</default>
-    </key>
     <key name="bold-font" type="b">
-      <default>true</default>
-    </key>
-    <key name="center-text" type="b">
       <default>true</default>
     </key>
   </schema>

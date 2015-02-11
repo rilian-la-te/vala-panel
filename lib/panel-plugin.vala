@@ -73,6 +73,7 @@ namespace ValaPanel
 			if (background_widget == null)
 				background_widget = this;
 			init_background();
+			this.border_width = 0;
 			this.button_press_event.connect((b)=>
 			{
 				if (b.button == 3 &&
@@ -115,7 +116,7 @@ namespace ValaPanel
 			}
 			get_allocation(out a);
 			get_window().get_origin(out x, out y);
-			if (get_has_window())
+			if (!get_has_window())
 			{
 				x += a.x;
 				y += a.y;
@@ -141,14 +142,17 @@ namespace ValaPanel
 				screen = Gdk.Screen.get_default();
 			var monitor = screen.get_monitor_at_point(x,y);
 			a = (Gtk.Allocation)screen.get_monitor_workarea(monitor);
-			x.clamp(a.x,a.x + a.width - pa.width);
-			y.clamp(a.y,a.y + a.height - pa.height);
+			x = x.clamp(a.x,a.x + a.width - pa.width);
+			y = y.clamp(a.y,a.y + a.height - pa.height);
 		}
 		public void set_popup_position(Gtk.Widget popup)
 		{
 			int x,y;
 			popup_position_helper(popup,out x, out y);
-			popup.get_window().move(x,y);
+			if (popup is Gtk.Window)
+				(popup as Window).move(x,y);
+			else
+				popup.get_window().move(x,y);
 		}
 		private void activate_configure(SimpleAction act, Variant? param)
 		{
