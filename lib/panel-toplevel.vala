@@ -53,13 +53,18 @@ namespace ValaPanel
 		HIDDEN,
 		WAITING
 	}
+	private struct PluginData
+	{
+		AppletPlugin plugin;
+		uint count;
+	}
 	[CCode (cname = "PanelToplevel")]
 	public class Toplevel : Gtk.ApplicationWindow
 	{
 		private static Peas.Engine engine;
 		private static ulong mon_handler;
-		private static HashTable<string,uint> loaded_types;
-		private static HashTable<string,AppletPlugin> loaded_applet_plugins;
+		private static HashTable<string,PluginData?> loaded_types;
+		private HashTable<string,uint> local_applets;
 		private Peas.ExtensionSet extset;
 		private ToplevelSettings settings;
 		private Gtk.Box box;
@@ -207,8 +212,7 @@ namespace ValaPanel
 		{
 			engine = Peas.Engine.get_default();
 			engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
-			loaded_types = new HashTable<string,uint>(str_hash,str_equal);
-			loaded_applet_plugins = new HashTable<string,AppletPlugin>(str_hash,str_equal);
+			loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
 		}
 		private static void monitors_changed_cb(Gdk.Screen scr, void* data)
 		{
@@ -319,6 +323,7 @@ namespace ValaPanel
 		construct
 		{
 			extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
+			local_applets = new HashTable<string,uint>(str_hash,str_equal);
 			Gdk.Visual visual = this.get_screen().get_rgba_visual();
 			if (visual != null)
 				this.set_visual(visual);
@@ -763,16 +768,15 @@ namespace ValaPanel
 			string name = s.default_settings.get_string(Key.NAME);
 			if (loaded_types.contains(name))
 			{
-				var count = loaded_types.lookup(name);
-				var plugin = loaded_applet_plugins.lookup(name);
-				if (plugin!=null)
+				PluginData? data = loaded_types.lookup(name);
+				if (data!=null)
 				{
-					place_applet(plugin,s);
-					loaded_types.insert(name,count+1);
+					place_applet(data.plugin,s);
+					data.count +=1;
+					loaded_types.insert(name,data);
 					return;
 				}
 			}
-
 			// Got this far we actually need to load the underlying plugin
 			unowned Peas.PluginInfo? plugin = null;
 
@@ -794,18 +798,22 @@ namespace ValaPanel
 	    {
 	        var plugin = p as AppletPlugin;
 	        var type = i.get_module_name();
-	        if (loaded_applet_plugins.contains(type))
+	        if (!loaded_types.contains(type))
+	        {
+				var data = PluginData();
+				data.plugin = plugin;
+				data.count = 0;
+				loaded_types.insert(type,data);
+			}
+			if (local_applets.contains(type))
 				return;
-	        loaded_applet_plugins.insert(type,plugin);
-
 	        // Iterate the children, and then load them into the panel
 			PluginSettings? pl = null;
 			foreach (var s in settings.plugins)
 				if (s.default_settings.get_string(Key.NAME) == type)
 				{
 					pl = s;
-					if (!loaded_types.contains(type))
-						loaded_types.insert(type,0);
+					local_applets.insert(type,0);
 					load_applet(pl);
 					update_applet_positions();
 					return;
@@ -834,18 +842,17 @@ namespace ValaPanel
 		{
 			PluginSettings s = settings.get_settings_by_num(num);
 			var name = s.default_settings.get_string(Key.NAME);
-			var count = loaded_types.lookup(name);
-			count -= 1;
-			if (count == 0)
+			var data = loaded_types.lookup(name);
+			data.count -= 1;
+			if (data.count == 0)
 			{
+				var pl = loaded_types.lookup(name).plugin;
 				loaded_types.remove(name);
-				var pl = loaded_applet_plugins.lookup(name);
-				loaded_applet_plugins.remove(name);
 				var info = pl.plugin_info;
 				engine.try_unload_plugin(info);
 			}
 			else
-				loaded_types.insert(name,count);
+				loaded_types.insert(name,data);
 			settings.remove_plugin_settings(num);
 		}
 		internal void update_applet_positions()
@@ -867,8 +874,8 @@ namespace ValaPanel
 		}
 		internal unowned AppletPlugin get_plugin(Applet pl)
 		{
-			return loaded_applet_plugins.lookup((settings.get_settings_by_num(pl.number)
-										.default_settings.get_string(Key.NAME)));
+			return loaded_types.lookup((settings.get_settings_by_num(pl.number)
+										.default_settings.get_string(Key.NAME))).plugin;
 		}
 		internal PluginSettings get_applet_settings(Applet pl)
 		{
