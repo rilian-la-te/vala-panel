@@ -383,6 +383,7 @@ namespace ValaPanel
 			box.show();
 			this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
 			settings.init_plugin_list();
+			this.show();
 			foreach(var pl in settings.plugins)
 				load_applet(pl);
 			update_applet_positions();
