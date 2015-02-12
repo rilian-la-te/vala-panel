@@ -120,8 +120,10 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 		this.background_widget = menubar;
 		init_background();
 		menubar.show();
+		var orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
+		menubar.set_pack_direction(orient);	
 		toplevel.notify["edge"].connect(()=>{
-			var orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
+			orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
 			menubar.set_pack_direction(orient);			
 		});
 		Gtk.IconTheme.get_default().changed.connect(()=>{

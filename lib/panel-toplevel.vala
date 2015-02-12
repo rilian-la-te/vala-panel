@@ -439,25 +439,26 @@ namespace ValaPanel
 			}
 			else if (monitor < screen.get_n_monitors())
 			{
-				marea = screen.get_monitor_workarea(monitor);
-				var hmod = (autohide && show_hidden) ? 1 : height;
-				switch (edge)
-				{
-					case PositionType.TOP:
-						marea.x -= hmod;
-						marea.height += hmod;
-						break;
-					case PositionType.BOTTOM:
-						marea.height += hmod;
-						break;
-					case PositionType.LEFT:
-						marea.y -= hmod;
-						marea.width += hmod;
-						break;
-					case PositionType.RIGHT:
-						marea.width += hmod;
-						break;
-				}
+				screen.get_monitor_geometry(monitor,out marea);
+//~ 				marea = screen.get_monitor_workarea(monitor);
+//~ 				var hmod = (autohide && show_hidden) ? 1 : height;
+//~ 				switch (edge)
+//~ 				{
+//~ 					case PositionType.TOP:
+//~ 						marea.x -= hmod;
+//~ 						marea.height += hmod;
+//~ 						break;
+//~ 					case PositionType.BOTTOM:
+//~ 						marea.height += hmod;
+//~ 						break;
+//~ 					case PositionType.LEFT:
+//~ 						marea.y -= hmod;
+//~ 						marea.width += hmod;
+//~ 						break;
+//~ 					case PositionType.RIGHT:
+//~ 						marea.width += hmod;
+//~ 						break;
+//~ 				}
 			}
 			if (orientation == Gtk.Orientation.HORIZONTAL)
 			{
