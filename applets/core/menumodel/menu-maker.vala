@@ -14,9 +14,10 @@ namespace MenuMaker
 			var icon = (info.get_icon() != null) 
 						? info.get_icon().to_string() 
 						: "application-x-executable";
-			item.set_attribute("icon","s",icon);
+			item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s",icon);
+			item.set_attribute(ATTRIBUTE_DND_SOURCE,"b",true);
 			if(info.get_description() != null)
-				item.set_attribute("tooltip","s",info.get_description());
+				item.set_attribute(ATTRIBUTE_TOOLTIP,"s",info.get_description());
 			var cats_str = info.get_categories() ?? " ";
 			var cats = cats_str.split_set(";");
 			foreach (var cat in cats)
@@ -80,7 +81,7 @@ namespace MenuMaker
 		var menu = (GLib.Menu) builder.get_object("places-menu");
 		var section = (GLib.Menu) builder.get_object("folders-section");
 		var item = new GLib.MenuItem(_("Home"),null);
-		item.set_attribute("icon","s","user-home");
+		item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","user-home");
 		string path=null;
 		try 
 		{
@@ -88,6 +89,7 @@ namespace MenuMaker
 		} 
 		catch (GLib.ConvertError e){}
 		item.set_action_and_target("app.launch-uri","s",path);
+		item.set_attribute(ATTRIBUTE_DND_SOURCE,"b",true);
 		section.append_item(item);
 		item = new GLib.MenuItem(_("Desktop"),null);
 		try 
@@ -96,7 +98,8 @@ namespace MenuMaker
 			                               GLib.UserDirectory.DESKTOP));
 		} 
 		catch (GLib.ConvertError e){}
-		item.set_attribute("icon","s","user-desktop");
+		item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","user-desktop");
+		item.set_attribute("dnd-target","b",true);
 		item.set_action_and_target("app.launch-uri","s",path);
 		section.append_item(item);
 		section = (GLib.Menu) builder.get_object("recent-section");
@@ -106,7 +109,10 @@ namespace MenuMaker
 		if (info != null)
 		{
 			item = new GLib.MenuItem(_("Search..."),null);
-			item.set_attribute("icon","s","system-search");
+			item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","system-search");
+			if(info.get_description() != null)
+				item.set_attribute(ATTRIBUTE_TOOLTIP,"s",info.get_description());
+			item.set_attribute(ATTRIBUTE_DND_SOURCE,"b",true);
 			item.set_action_and_target("app.launch-id","s",info.get_id());
 			section.prepend_item(item);
 		}
@@ -131,7 +137,10 @@ namespace MenuMaker
 		if (info != null)
 		{
 			var item = new GLib.MenuItem(_("Control center"),null);
-			item.set_attribute("icon","s","preferences-system");
+			item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","preferences-system");
+			if(info.get_description() != null)
+				item.set_attribute(ATTRIBUTE_TOOLTIP,"s",info.get_description());
+			item.set_attribute(ATTRIBUTE_DND_SOURCE,"b",true);
 			item.set_action_and_target("app.launch-id","s",info.get_id());
 			menu.append_item(item);
 		}
@@ -146,7 +155,7 @@ namespace MenuMaker
 		{
 			var item = new GLib.MenuItem.submenu (_("Applications"),
 			                                      MenuMaker.create_applications_menu (false));
-			item.set_attribute("icon","s",icon);
+			item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s",icon);
 			menu.append_item(item);
 			menu.append_submenu(_("Places"),MenuMaker.create_places_menu());
 			menu.append_submenu(_("System"),MenuMaker.create_system_menu());

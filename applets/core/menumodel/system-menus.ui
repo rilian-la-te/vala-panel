@@ -66,12 +66,14 @@
           <attribute name="icon">computer</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">computer:///</attribute>
+          <attribute name="x-dnd-source" type="b">true</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Trash</attribute>
           <attribute name="icon">user-trash</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">trash:///</attribute>
+          <attribute name="x-dnd-source" type="b">true</attribute>
         </item>
     </section>
     <section id="network-mounts">
@@ -80,12 +82,14 @@
           <attribute name="icon">network-workgroup</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">network:///</attribute>
+          <attribute name="x-dnd-source" type="b">true</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Connect to server...</attribute>
           <attribute name="icon">network-server</attribute>
           <attribute name="action">app.launch-id</attribute>
           <attribute name="target">nautilus-connect-server.desktop</attribute>
+          <attribute name="x-dnd-source" type="b">true</attribute>
         </item>
     </section>
     <section id="recent-section">
