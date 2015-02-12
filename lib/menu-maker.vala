@@ -56,6 +56,7 @@ namespace MenuMaker
         string[]? uri_list = null;
         string? str = null;
 		Variant? val = null;
+		bool is_command = false;
 		MenuAttributeIter attr_iter = section.iterate_item_attributes(model_item);
 		while(attr_iter.get_next(out str,out val))
 		{
@@ -66,9 +67,22 @@ namespace MenuMaker
 				uri_list = new string[1];
 				uri_list[0] = val.get_string();
 			}
+			if (str == GLib.Menu.ATTRIBUTE_ACTION && ("command" in val.get_string()))
+				is_command = true;
 		}
 		if (uri_list != null)
 		{
+			if (icon == null)
+			{
+				try{
+					icon = Icon.new_for_string("system-run-symbolic"); 
+				} catch (Error e){}
+			}
+			if (is_command)
+			{
+				Variant v = new Variant("(ssb)",icon.serialize(),uri_list[0],false);
+				uri_list[0] = v.print(true);
+			}
 		// Make the this widget a DnD source.
 			Gtk.drag_source_set (
 					item,                      // widget will be drag-able

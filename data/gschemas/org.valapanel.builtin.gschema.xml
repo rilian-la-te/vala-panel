@@ -47,4 +47,9 @@
       <default>''</default>
     </key>
   </schema>
+  <schema id="org.valapanel.toplevel.launchbar">
+    <key name="launch-buttons" type="as">
+      <default>[]</default>
+    </key>
+  </schema>
 </schemalist>

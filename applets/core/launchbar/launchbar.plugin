@@ -1,0 +1,5 @@
+[Plugin]
+Module=launchbar
+Name=Quickstart
+Description=Container for application launchers.
+X-ValaPanel-Configurable=true
