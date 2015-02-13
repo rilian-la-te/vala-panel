@@ -1,6 +1,0 @@
-[Plugin]
-Module=space
-Name=Space
-Description=Just some space on panel
-X-ValaPanel-Configurable=true
-X-ValaPanel-Expandable=true

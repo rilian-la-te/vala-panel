@@ -1,6 +1,5 @@
 add_subdirectory(kbled)
 add_subdirectory(separator)
-add_subdirectory(space)
 add_subdirectory(menumodel)
 add_subdirectory(clock)
 add_subdirectory(dirmenu)

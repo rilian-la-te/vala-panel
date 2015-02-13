@@ -101,7 +101,7 @@ private class LaunchButton: FlowBoxChild
 	{
 		if (is_bootstrap)
 		{
-			this.get_launchbar().show_config_dialog();
+			this.get_launchbar().show_applet_dlg("desktop");
 			return;
 		}
 		if (info == null)
@@ -147,12 +147,15 @@ public class Launchbar: Applet
 	}
 	private void activate_add_applet(GLib.Action act, Variant? param)
 	{
+		show_applet_dlg(param.get_string());
+	}
+	internal void show_applet_dlg(string param)
+	{
 		if (applet_dialog == null)
 		    {
 				int x,y;
 				Dialog dlg;
-				var t = param.get_string();
-				if (t == "uri")
+				if (param == "uri")
 					dlg = get_file_dlg();
 				else dlg = get_program_dlg();
 				this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
