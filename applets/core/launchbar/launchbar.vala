@@ -24,6 +24,7 @@ private class LaunchButton: FlowBoxChild
 	}
 	construct
 	{
+		var commit = false;
 		var ebox = new EventBox();
 		Icon? icon;
 		get_style_context().remove_class("grid-child");
@@ -60,7 +61,7 @@ private class LaunchButton: FlowBoxChild
 			data.set_uris(uri_list);
 		});
 		this.drag_data_delete.connect((context)=>{
-			this.get_launchbar().commit_ids();
+			commit = true;
 			this.destroy();
 		});
 		this.drag_failed.connect((context,result)=>{
@@ -70,6 +71,10 @@ private class LaunchButton: FlowBoxChild
 				this.get_launchbar().undo_removal_request();
 			}
 			else
+				commit = true;
+		});
+		this.drag_end.connect((context)=>{
+			if (commit)
 				this.get_launchbar().commit_ids();
 		});
 		ebox.add(img);
