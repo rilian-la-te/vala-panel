@@ -10,6 +10,7 @@ public class LaunchbarApplet : AppletPlugin, Peas.ExtensionBase
         return new Launchbar(toplevel,settings,number);
     }
 }
+private const string BOOTSTRAP = "launchbar-bootstrap";
 private class LaunchButton: FlowBoxChild
 {
 	public string id
@@ -18,6 +19,7 @@ private class LaunchButton: FlowBoxChild
 	{get; set;}
 	private AppInfo? info;
 	private string? uri;
+	private bool is_bootstrap;
 	internal LaunchButton(string str)
 	{
 		Object(id: str);
@@ -33,9 +35,29 @@ private class LaunchButton: FlowBoxChild
 			info = new DesktopAppInfo(id) as AppInfo;
 		if (info == null)
 		{
-			uri = id;
-			string type = ContentType.guess(id,null,null);
-			info = AppInfo.get_default_for_type(type,true);
+			try
+			{
+				var filename = Filename.from_uri(id);
+				string type = ContentType.guess(id,null,null);
+				if (type == "application/x-desktop")
+					info = new DesktopAppInfo.from_filename(filename) as AppInfo;
+				else
+				{
+					icon = ContentType.get_icon(type);
+					if (FileUtils.test(filename,FileTest.IS_EXECUTABLE))
+						info = AppInfo.create_from_commandline(filename,null,0);
+					else
+					{
+						info = AppInfo.get_default_for_type(type,true);
+						uri = id;
+					}
+				}
+			} catch (GLib.Error e){}
+		}
+		if (id == BOOTSTRAP)
+		{
+			icon = new ThemedIcon.with_default_fallbacks("list-add-symbolic");
+			is_bootstrap = true;
 		}
 		Image img = new Image();
 		if (icon == null)
@@ -53,7 +75,6 @@ private class LaunchButton: FlowBoxChild
 		drag_source_set_icon_gicon(this,icon);
 		this.drag_begin.connect((context)=>{
 			this.get_launchbar().request_remove_id(id);
-			this.hide();
 		});
 		this.drag_data_get.connect((context,data,type,time)=>{
 			var uri_list = new string[1];
@@ -62,26 +83,27 @@ private class LaunchButton: FlowBoxChild
 		});
 		this.drag_data_delete.connect((context)=>{
 			commit = true;
-			this.destroy();
 		});
 		this.drag_failed.connect((context,result)=>{
-			if (result == Gtk.DragResult.USER_CANCELLED)
-			{
-				this.show();
-				this.get_launchbar().undo_removal_request();
-			}
-			else
+			if (!(result == Gtk.DragResult.USER_CANCELLED))
 				commit = true;
 		});
 		this.drag_end.connect((context)=>{
 			if (commit)
 				this.get_launchbar().commit_ids();
+			else 
+				this.get_launchbar().undo_removal_request();
 		});
 		ebox.add(img);
 		this.add(ebox);
 	}
 	internal void launch()
 	{
+		if (is_bootstrap)
+		{
+			this.get_launchbar().show_config_dialog();
+			return;
+		}
 		if (info == null)
 		{
 			warning("No AppInfo for id: %s",id);
@@ -105,12 +127,17 @@ private class LaunchButton: FlowBoxChild
 		return this.get_parent().get_parent() as Launchbar;
 	}
 }
-public class Launchbar: Applet, AppletConfigurable
+public class Launchbar: Applet
 {
+	private const GLib.ActionEntry[] launchbar_entries =
+	{
+		{"add-applet",activate_add_applet,"s",null,null}
+	};
 	private static const string BUTTONS = "launch-buttons";
     FlowBox layout;
     string[]? ids;
     string[]? prev_ids;
+    Dialog? applet_dialog;
 
     public Launchbar(ValaPanel.Toplevel toplevel,
 		                            GLib.Settings? settings,
@@ -118,12 +145,72 @@ public class Launchbar: Applet, AppletConfigurable
     {
 		base(toplevel,settings,number);
 	}
-	public Dialog get_config_dialog()
+	private void activate_add_applet(GLib.Action act, Variant? param)
 	{
-		Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
-							toplevel, this,
-							_("Show CapsLock"), null, GenericConfigType.TRIM);
-		return dlg; 
+		if (applet_dialog == null)
+		    {
+				int x,y;
+				Dialog dlg;
+				var t = param.get_string();
+				if (t == "uri")
+					dlg = get_file_dlg();
+				else dlg = get_program_dlg();
+				this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
+				/* adjust config dialog window position to be near plugin */
+				dlg.set_transient_for(toplevel);
+				popup_position_helper(dlg,out x, out y);
+				dlg.move(x,y);
+				applet_dialog = dlg;
+				applet_dialog.unmap.connect(()=>{applet_dialog.destroy(); applet_dialog = null;});
+			}
+			applet_dialog.present();
+	}
+	private Dialog get_program_dlg()
+	{
+		var dlg = new AppChooserDialog.for_content_type(toplevel,0,"application/octet-stream");
+		dlg.set_heading("Add launcher from installed applications");
+		var w = dlg.get_widget() as AppChooserWidget;
+		w.show_all = true;
+		dlg.response.connect((resp)=>{
+			var info = dlg.get_app_info();
+			if (resp == ResponseType.OK && info != null)
+			{
+				var id = info.get_id();
+				if (!(id in ids))
+				{
+					ids += id;
+					commit_ids();
+				}
+				else
+					stderr.printf(_("Quicklaunch already contains this application.\n"));
+			}
+			dlg.destroy();
+		});
+		return dlg;
+	}
+	private Dialog get_file_dlg()
+	{
+		var dlg = new FileChooserDialog(_("Select a file for launcher"),
+											toplevel,
+											FileChooserAction.OPEN,
+											_("_Cancel"), ResponseType.CANCEL,
+											_("_OK"), ResponseType.OK,
+											null);
+		dlg.response.connect((resp)=>{
+			var uri = dlg.get_uri();
+			if (resp == ResponseType.OK)
+			{
+				if (!(uri in ids))
+				{
+					ids += uri;
+					commit_ids();
+				}
+				else
+					stderr.printf(_("Quicklaunch already contains this URI.\n"));
+			}
+			dlg.destroy();
+		});
+		return dlg;
 	}
 	public override void create()
 	{
@@ -157,7 +244,15 @@ public class Launchbar: Applet, AppletConfigurable
 			layout.unselect_child(lb);
 		});
         show_all();
+        var grp = new SimpleActionGroup();
+        grp.add_action_entries(launchbar_entries,this);
+        this.insert_action_group("launchbar",grp);
     }
+    protected override void update_context_menu(ref GLib.Menu parent)
+    {
+		parent.prepend(_("Add application..."),"launchbar.add-applet('%s')".printf("desktop"));
+		parent.prepend(_("Add file..."),"launchbar.add-applet('%s')".printf("uri"));
+	}
     internal void request_remove_id(string id)
     {
 		int idx;
@@ -224,6 +319,7 @@ public class Launchbar: Applet, AppletConfigurable
 	}
     private void load_buttons(string[] loaded_ids)
     {
+		string[] widget_ids = {};
 		prev_ids = ids;
 		ids = loaded_ids;
 		foreach(var w in layout.get_children())
@@ -231,18 +327,25 @@ public class Launchbar: Applet, AppletConfigurable
 			var lb = w as LaunchButton;
 			if (!(lb.id in ids))
 				layout.remove(w);
+			else widget_ids += lb.id;
 		}
 		foreach(var id in ids)
 		{
-			if (!(id in prev_ids))
+			if (!(id in widget_ids))
 			{
 				var btn = new LaunchButton(id);
 				toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
 				layout.add(btn);
-				layout.show_all();
 			}
 		}
 		layout.invalidate_sort();
+		if (ids.length == 0)
+		{
+			var btn = new LaunchButton(BOOTSTRAP);
+			toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
+			layout.add(btn);
+		}
+		layout.show_all();
 	}
 	private int launchbar_layout_sort_func(FlowBoxChild a, FlowBoxChild b)
 	{

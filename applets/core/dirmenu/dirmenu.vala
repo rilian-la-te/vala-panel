@@ -39,14 +39,12 @@ public class Dirmenu: Applet, AppletConfigurable
 		settings.bind(DIR,this,DIR,SettingsBindFlags.GET);
 		settings.bind(ICON,this,ICON,SettingsBindFlags.GET);
 		settings.bind(LABEL,this,LABEL,SettingsBindFlags.GET);
-		try{
-			setup_icon(img,Icon.new_for_string(icon_name),toplevel);
-		} catch (GLib.Error e){stderr.printf("Incorrect icon name:%s\n",icon_name);}
+		setup_icon(img,set_icon(),toplevel);
 		setup_button(button as Button,img,caption);
 		button.set_popup(create_menu(dir_path,false));
 		this.notify.connect((pspec)=>{
 			if (pspec.name == ICON)
-				(button.image as Image).set_from_icon_name(icon_name,IconSize.INVALID);
+				(button.image as Image).set_from_gicon(set_icon(),IconSize.INVALID);
 			if (pspec.name == LABEL)
 				button.set_label(caption);
 			if (pspec.name == DIR)
@@ -54,6 +52,14 @@ public class Dirmenu: Applet, AppletConfigurable
 		});
 		this.add(button);
 		this.show_all();
+	}
+	private Icon set_icon(){
+		Icon? icon = null;
+		try
+		{
+			icon = Icon.new_for_string(icon_name);
+		} catch (GLib.Error e) {}
+		return icon ?? new ThemedIcon.with_default_fallbacks("system-file-manager");
 	}
 	private Gtk.Menu create_menu(string directory,bool at_top)
 	{
@@ -89,7 +95,7 @@ public class Dirmenu: Applet, AppletConfigurable
 	        /* Create and initialize menu item. */
 	        Gtk.MenuItem item = new Gtk.MenuItem();
 	        var box = new Box(Orientation.HORIZONTAL,10);
-	        		var img = new Image.from_icon_name("folder-symbolic",IconSize.MENU);
+	        		var img = new Image.from_gicon(new ThemedIcon.with_default_fallbacks("folder-symbolic"),IconSize.MENU);
 	        box.pack_start(img,false,true);
 	        var lbl = new Label(cursor.dirname);
 	        box.pack_start(lbl,false,true);
