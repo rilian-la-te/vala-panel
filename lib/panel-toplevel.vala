@@ -842,6 +842,12 @@ namespace ValaPanel
 		{
 			PluginSettings s = settings.get_settings_by_num(num);
 			var name = s.default_settings.get_string(Key.NAME);
+			var count = local_applets.lookup(name);
+			count--;
+			if (count == 0)
+				local_applets.remove(name);
+			else
+				local_applets.insert(name,count);
 			var data = loaded_types.lookup(name);
 			data.count -= 1;
 			if (data.count == 0)
