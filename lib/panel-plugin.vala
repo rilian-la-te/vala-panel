@@ -57,7 +57,7 @@ namespace ValaPanel
 		}
 		public uint number
 		{
-			internal get; construct;
+			get; construct;
 		}
 		public abstract void create();
 		public virtual void update_context_menu(ref GLib.Menu parent_menu){}
