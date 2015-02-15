@@ -8,4 +8,6 @@ namespace GLib
 		[CCode (cname = "g_mkdir_with_parents", cheader_filename = "glib.h")]
 		public static int mkdir_with_parents(string name, int mode);
 	}
+	[CCode (cname = "g_variant_dict_insert", cheader_filename = "glib.h")]
+	public void variant_dict_insert(GLib.VariantDict dict, string format, ...);
 }

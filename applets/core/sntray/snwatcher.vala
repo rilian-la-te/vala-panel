@@ -9,8 +9,6 @@ public interface SNWatcherIface: Object
 	public signal void status_notifier_host_registered();
 	public signal void status_notifier_item_unregistered(out string item);
 	public signal void status_notifier_host_unregistered();
-	public signal void service_registered(out string service);
-	public signal void service_unregistered(out string service);
 	/* Public properties */
 	public abstract string[] registered_status_notifier_items
 	{owned get;protected set;}
@@ -30,10 +28,7 @@ public class SNWatcher : Object
 	public signal void status_notifier_host_registered();
 	public signal void status_notifier_item_unregistered(out string item);
 	public signal void status_notifier_host_unregistered();
-	public signal void service_registered(out string service);
-	public signal void service_unregistered(out string service);
 	/* Hashes */
-	private HashTable<string,SNItemIface> items;
 	private HashTable<string,uint> name_watcher;
 	private HashTable<string,uint> hosts;
 	/* Public properties */
@@ -59,29 +54,20 @@ public class SNWatcher : Object
 			path = "/StatusNotifierItem";
 		}
 		var id = get_id(name,path);
-		if (id in items)
+		if (id in name_watcher)
 		{
 			warning("Trying to register already registered item");
 		}
 		else
 		{
-			SNItemIface? item = null;
-			try{
-				item = Bus.get_proxy_sync(BusType.SESSION, name, path);
-			} catch (GLib.Error e){}
-			if (item != null)
-			{
-				items.insert(id,item);
-				var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
-													null,
-													() => {remove(id);}
-													);
-				name_watcher.insert(id,name_handler);
-				registered_status_notifier_items = get_registered_items();
-				status_notifier_item_registered(out id);
-				service_registered(out id);
-				/* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
-			}					
+			var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
+												null,
+												() => {remove(get_id(name,path));}
+												);
+			name_watcher.insert(id,name_handler);
+			registered_status_notifier_items = get_registered_items();
+			status_notifier_item_registered(out id);
+			/* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/				
 		}
 	}
 	/* stub. For now SNTray will X-ValaPanel-Once */
@@ -104,11 +90,9 @@ public class SNWatcher : Object
 	private void remove(string id)
 	{
 		string outer = id.dup();
-		items.remove(id);
 		uint name = name_watcher.lookup(id);
 		name_watcher.remove(id);
 		Bus.unwatch_name(name);
-		service_unregistered(out outer);
 		status_notifier_item_unregistered(out outer);
 		registered_status_notifier_items = get_registered_items();
 		/* FIXME PropertiesChanged for RegisteredStatusNotifierItems*/
@@ -119,7 +103,7 @@ public class SNWatcher : Object
 	}
 	private string[] get_registered_items()
 	{
-		var items_list = items.get_keys();
+		var items_list = name_watcher.get_keys();
 		string [] ret = {};
 		foreach(var item in items_list)
 			ret += item;
@@ -127,7 +111,6 @@ public class SNWatcher : Object
 	}
 	construct
 	{
-		items = new HashTable<string,SNItemIface>(str_hash, str_equal);
 		name_watcher = new HashTable<string,uint>(str_hash, str_equal);
 		hosts = new HashTable<string,uint>(str_hash, str_equal);
 	}

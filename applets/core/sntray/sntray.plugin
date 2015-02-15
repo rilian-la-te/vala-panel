@@ -1,5 +1,5 @@
 [Plugin]
 Module=sntray
-Name=StatusNotifier Tray
+Name=StatusNotifier
 Description=System tray in KDE StatusNotifierItem format
-#X-ValaPanel-OnePerSystem=true
+X-ValaPanel-Configurable=true

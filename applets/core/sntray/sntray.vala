@@ -10,11 +10,25 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
         return new SNTray(toplevel,settings,number);
     }
 }
-public class SNTray: Applet
+public class SNTray: Applet, AppletConfigurable
 {
+	static const string SHOW_APPS = "show-application-status";
+	static const string SHOW_COMM = "show-communications";
+	static const string SHOW_SYS = "show-system";
+	static const string SHOW_HARD = "show-hardware";
+	static SNHost host;
+	internal bool show_application_status
+	{get; set;}
+	internal bool show_communications
+	{get; set;}
+	internal bool show_system
+	{get; set;}
+	internal bool show_hardware
+	{get; set;}
+	internal IconSize icon_size
+	{get; set;}
 	HashTable<string,SNItem> items;
 	FlowBox layout;
-	static SNHost host;
 	static construct
 	{
 		host = new SNHost.from_path("org.kde.StatusNotifierHost-valapanel%d".printf(Gdk.CURRENT_TIME));
@@ -23,19 +37,45 @@ public class SNTray: Applet
 	{
 		base(top,settings,number);
 	}
+	public Dialog get_config_dialog()
+	{
+		return Configurator.generic_config_dlg(_("StatusNotifier"),
+							toplevel, this,
+							_("Show applications status items"), SHOW_APPS, GenericConfigType.BOOL,
+							_("Show communications applications"), SHOW_COMM, GenericConfigType.BOOL,
+							_("Show system services"), SHOW_SYS, GenericConfigType.BOOL,
+							_("Show hardware services"), SHOW_HARD, GenericConfigType.BOOL);
+	}
 	public override void create()
 	{
 		items = new HashTable<string,SNItem>(str_hash, str_equal);
 		layout = new FlowBox();
-		layout.activate_on_single_click = true;
+		settings.bind(SHOW_APPS,this,SHOW_APPS,SettingsBindFlags.GET);
+		settings.bind(SHOW_COMM,this,SHOW_COMM,SettingsBindFlags.GET);
+		settings.bind(SHOW_SYS,this,SHOW_SYS,SettingsBindFlags.GET);
+		settings.bind(SHOW_HARD,this,SHOW_HARD,SettingsBindFlags.GET);
+		settings.changed.connect((k)=>{layout.invalidate_filter();});
 		layout.selection_mode = SelectionMode.SINGLE;
+		layout.activate_on_single_click = false;
         layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
 		layout.child_activated.connect((ch)=>{
-			(ch as SNItem).context_menu();
-			layout.unselect_child(ch);
+			(ch as SNItem).primary_activate();
+		});
+		layout.selected_children_changed.connect(()=>{
+			foreach(var ch in layout.get_selected_children())
+				(ch as SNItem).context_menu();
+		});
+		layout.set_sort_func((ch1,ch2)=>{return (int)(ch1 as SNItem).ordering_index - (int)(ch2 as SNItem).ordering_index;});
+		layout.set_filter_func((ch)=>{
+			var item = ch as SNItem;
+			if (show_application_status && item.cat == SNCategory.APPLICATION) return true;
+			if (show_communications && item.cat == SNCategory.COMMUNICATIONS) return true;
+			if (show_system && item.cat == SNCategory.SYSTEM) return true;
+			if (show_hardware && item.cat == SNCategory.HARDWARE) return true;
+			return false;
 		});
 		this.add(layout);
 		host.watcher_registered.connect(()=>{
@@ -63,7 +103,7 @@ public class SNTray: Applet
 	internal void request_remove_item(FlowBoxChild child, string item)
 	{
 		items.remove(item);
-		this.remove(child);
+		layout.remove(child);
 		child.destroy();
 	}
 } // End class

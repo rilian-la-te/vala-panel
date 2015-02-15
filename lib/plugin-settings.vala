@@ -90,13 +90,13 @@ namespace ValaPanel
 			try{
 			f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
 			} catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
-			var numtable = new GLib.HashTable<int,int>(direct_hash,direct_equal);
+			var numtable = new GLib.GenericSet<int>(direct_hash,direct_equal);
 			var len = f.get_groups().length;
 			foreach (var grp in f.get_groups())
 			{
 				if (grp == this.root_name)
 					continue;
-				numtable.insert(int.parse(grp),int.parse(grp));
+				numtable.add(int.parse(grp));
 			}
 			for (var i = 0; i < len; i++)
 				if (!numtable.contains(i))
