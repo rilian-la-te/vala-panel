@@ -5,6 +5,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snitem.vala
     snhost.vala
     dbusmenu.vala
+    snitemproxy.vala
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
