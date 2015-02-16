@@ -183,6 +183,10 @@ public class DBusMenuItem : Object
 	{
 		client.request_about_to_show(this.id);
 	}
+	public bool wants_separator()
+	{
+		return get_string_property("type") == "separator";
+	}
 }
 public class DBusMenuClient : Object
 {
@@ -238,7 +242,6 @@ public class DBusMenuClient : Object
 		try{
 			iface.get_layout(0,-1,props,out rev, out layout);
 		} catch (Error e) {stderr.printf("Cannot update layout. Error: %s",e.message);}
-		layout_revision = rev;
 		parse_layout(rev,layout);
 		clean_items();
 		if (layout_update_required)
@@ -258,7 +261,7 @@ public class DBusMenuClient : Object
 		for(var child = chiter.next_value(); child != null; child = chiter.next_value())
 		{
 			child = child.get_variant();
-			parse_layout(layout_revision,child);
+			parse_layout(rev,child);
 			int child_id = child.get_child_value(0).get_int32();
 			children_ids += child_id;
 		}
@@ -270,11 +273,11 @@ public class DBusMenuClient : Object
 			Variant val;
 			while(props_iter.next("{sv}",out name, out val))
 				item.set_variant_property(name, val);
-		/* make sure our children are all at the right place, and exist */
-		var old_children_ids = item.get_children_ids();
-		int i = 0;
-		foreach(var new_id in children_ids)
-		{
+			/* make sure our children are all at the right place, and exist */
+			var old_children_ids = item.get_children_ids();
+			int i = 0;
+			foreach(var new_id in children_ids)
+			{
 				var old_child = -1;
 				foreach(var old_id in old_children_ids)
 					if (new_id == old_id)
@@ -286,7 +289,7 @@ public class DBusMenuClient : Object
 				if (old_child < 0)
 					item.add_child(new_id,i);
 				else
-					item.move_child(new_id,i);
+					item.move_child(old_child,i);
 				i++;
 			}
 			foreach (var old_id in old_children_ids)
@@ -297,11 +300,12 @@ public class DBusMenuClient : Object
 			items.insert(id, new DBusMenuItem(id,this,props,children_ids));
 			request_properties.begin(id);
 		}
+		layout_revision = rev;
 	}
 	private void clean_items()
 	{
-		/* Traverses the list of cached menu items and removes everyone that is not in the list
-		/  so we don't keep alive unused items */
+	/* Traverses the list of cached menu items and removes everyone that is not in the list
+	/  so we don't keep alive unused items */
 	var tag = new DateTime.now_utc();
 	List<int> traverse = new List<int>();
 	traverse.append(0);
@@ -367,22 +371,27 @@ public class DBusMenuClient : Object
 		}
 	}
 }
-public class DBusMenuGtkItem : CheckMenuItem
+public interface DBusMenuGtkItemIface : Object
+{
+	public abstract DBusMenuItem item
+	{get; protected set;}
+}
+public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 {
 	private static const string[] allowed_properties = {"visible","enabled","label","type",
 											"children-display","toggle-type",
 											"toggle-state","icon-name","icon-data"};	
 	public DBusMenuItem item
-	{get; private set;}
+	{get; protected set;}
 	private bool has_indicator;
 	private Box box;
 	private Image image;
 	private new Label label;
 	private ulong activate_handler;
-        private bool is_themed_icon;
-	public DBusMenuGtkItem(DBusMenuItem item)
+    private bool is_themed_icon;
+	public DBusMenuGtkMainItem(DBusMenuItem item)
 	{
-                is_themed_icon = false;
+		is_themed_icon = false;
 		this.item = item;
 		box = new Box(Orientation.HORIZONTAL, 5);
 		image = new Image();
@@ -399,6 +408,7 @@ public class DBusMenuGtkItem : CheckMenuItem
 		activate_handler = this.activate.connect(on_toggled_cb);
 		this.select.connect(on_select_cb);
 		this.deselect.connect(on_deselect_cb);
+		this.notify["visible"].connect(()=>{this.visible=item.get_bool_property("visible");});
 	}
 	private void init()
 	{
@@ -438,7 +448,7 @@ public class DBusMenuGtkItem : CheckMenuItem
 				else
 					this.active = false;
 				break;
-                        case "icon-name":
+			case "icon-name":
 			case "icon-data":
 				update_icon(val);
 				break;
@@ -489,7 +499,10 @@ public class DBusMenuGtkItem : CheckMenuItem
 	private void on_child_added_cb(int id,DBusMenuItem item)
 	{
 		if (this.submenu != null)
-			this.submenu.append(new DBusMenuGtkItem(item));
+			if (item.wants_separator())
+				this.submenu.append(new DBusMenuGTKSeparatorItem(item));
+			else
+				this.submenu.append(new DBusMenuGtkMainItem(item));
 		else
 		{
 			this.item = item;
@@ -500,9 +513,8 @@ public class DBusMenuGtkItem : CheckMenuItem
 	{
 		if (this.submenu != null)
 			foreach(var ch in this.submenu.get_children())
-				if (ch is DBusMenuGtkItem)
-					if ((ch as DBusMenuGtkItem).item == item)
-						this.submenu.remove(ch);
+				if ((ch as DBusMenuGtkItemIface).item == item)
+					this.submenu.remove(ch);
 		else
 			this.get_parent().remove(this);
 	}
@@ -510,9 +522,8 @@ public class DBusMenuGtkItem : CheckMenuItem
 	{
 		if (this.submenu != null)
 			foreach(var ch in this.submenu.get_children())
-				if (ch is DBusMenuGtkItem)
-					if ((ch as DBusMenuGtkItem).item == item)
-						this.submenu.reorder_child(ch,newpos);
+				if ((ch as DBusMenuGtkItemIface).item == item)
+					this.submenu.reorder_child(ch,newpos);
 	}
 	private void on_toggled_cb()
 	{
@@ -537,6 +548,28 @@ public class DBusMenuGtkItem : CheckMenuItem
 			base.draw_indicator(cr);
 	}
 }
+public class DBusMenuGTKSeparatorItem: SeparatorMenuItem, DBusMenuGtkItemIface
+{
+	public DBusMenuItem item
+	{get; protected set;}
+	public DBusMenuGTKSeparatorItem(DBusMenuItem item)
+	{
+		this.item = item;
+		item.property_changed.connect(on_prop_changed_cb);
+	}
+	private void on_prop_changed_cb(string name, Variant? val)
+	{
+		switch (name)
+		{
+			case "visible":
+				this.visible = val.get_boolean();
+				break;
+			case "enabled":
+				this.sensitive = val.get_boolean();
+				break;
+		}
+	}
+} 
 public class DBusMenuGTKClient : DBusMenuClient
 {
 	private Gtk.Menu root_menu;
@@ -576,22 +609,20 @@ public class DBusMenuGTKClient : DBusMenuClient
 	public void on_child_moved_cb(int oldpos, int newpos, DBusMenuItem item)
 	{
 		foreach(var ch in root_menu.get_children())
-			if (ch is DBusMenuGtkItem)
-				if ((ch as DBusMenuGtkItem).item == item)
-					root_menu.reorder_child(ch,newpos);
+			if ((ch as DBusMenuGtkItemIface).item == item)
+				root_menu.reorder_child(ch,newpos);
 	}
 	public void on_child_removed_cb(int id, DBusMenuItem item)
 	{
 		foreach(var ch in root_menu.get_children())
-			if (ch is DBusMenuGtkItem)
-				if ((ch as DBusMenuGtkItem).item == item)
-					root_menu.remove(ch);
+			if ((ch as DBusMenuGtkItemIface).item == item)
+				root_menu.remove(ch);
 	}
 	private void append_with_separators(DBusMenuItem item)
 	{
-		if (item.get_string_property("type") == "separator")
-			root_menu.append(new SeparatorMenuItem());
+		if (item.wants_separator())
+			root_menu.append(new DBusMenuGTKSeparatorItem(item));
 		else
-			root_menu.append(new DBusMenuGtkItem(item));
+			root_menu.append(new DBusMenuGtkMainItem(item));
 	}
 }
