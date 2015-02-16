@@ -180,6 +180,7 @@ public class SNItemProxy: Object
 	{
 		this.bus_name = bus_name;
 		this.object_path = object_path;
+		print("%s,%s\n",bus_name,object_path);
 		try
 		{
 			this.iface = Bus.get_proxy_sync (BusType.SESSION,bus_name,object_path);
@@ -193,9 +194,9 @@ public class SNItemProxy: Object
 		init_properties();
 		props_iface.properties_changed.connect((src,props,inv)=>{if (src == FreeDesktopProperties.KDE_NAME) props_changed_burst(props);});
 		iface.new_status.connect((st)=>{this.status = st;});
-		iface.new_icon.connect(()=>{one_icon_direct_cb(IconType.MAIN);});
-		iface.new_overlay_icon.connect(()=>{one_icon_direct_cb(IconType.OVERLAY);});
-		iface.new_attention_icon.connect(()=>{one_icon_direct_cb(IconType.ATTENTION);});
+		iface.new_icon.connect(()=>{this.main_icon = one_icon_direct_cb(IconType.MAIN);});
+		iface.new_overlay_icon.connect(()=>{this.overlay_icon = one_icon_direct_cb(IconType.OVERLAY);});
+		iface.new_attention_icon.connect(()=>{this.attention_icon = one_icon_direct_cb(IconType.ATTENTION);});
 		iface.new_icon_theme_path.connect((pt)=>{this.icon_theme_path = pt;});
 		iface.x_ayatana_new_label.connect((lb,g)=>{this.label = lb; this.label_guide = g;});
 		iface.new_tool_tip.connect(()=>{tooltip_direct_cb();});
@@ -264,13 +265,17 @@ public class SNItemProxy: Object
 				appender = "";
 				break;
 		}
+		Variant? icon_namev = null;
+		Variant? icon_pixmap = null;
 		try
 		{
-			var icon_namev = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconName");
-			var icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
-			return from_direct_props(icon_namev,icon_pixmap);
-		} catch (Error e) {stderr.printf("Cannot set icon: %s\n",e.message);}
-		return null;
+			icon_namev = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconName");
+		} catch (Error e) {}
+		try
+		{
+			icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
+		} catch (Error e) {}
+		return from_direct_props(icon_namev,icon_pixmap);
 	}
 	private Icon? from_direct_props(Variant? icon_namev, Variant? icon_pixmapv)
 	{

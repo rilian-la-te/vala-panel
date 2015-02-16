@@ -56,17 +56,14 @@ public class SNTray: Applet, AppletConfigurable
 		settings.bind(SHOW_HARD,this,SHOW_HARD,SettingsBindFlags.GET);
 		settings.changed.connect((k)=>{layout.invalidate_filter();});
 		layout.selection_mode = SelectionMode.SINGLE;
-		layout.activate_on_single_click = false;
+		layout.activate_on_single_click = true;
         layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
 		layout.child_activated.connect((ch)=>{
-			(ch as SNItem).primary_activate();
-		});
-		layout.selected_children_changed.connect(()=>{
-			foreach(var ch in layout.get_selected_children())
-				(ch as SNItem).context_menu();
+			layout.select_child(ch);
+			(ch as SNItem).context_menu();
 		});
 		layout.set_sort_func((ch1,ch2)=>{return (int)(ch1 as SNItem).ordering_index - (int)(ch2 as SNItem).ordering_index;});
 		layout.set_filter_func((ch)=>{
