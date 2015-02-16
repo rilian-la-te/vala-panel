@@ -11,26 +11,26 @@ public interface DBusMenuIface : Object
 	public abstract string[] icon_theme_path {owned get;}
 	/* layout signature is "(ia{sv}av)" */
 	public abstract void get_layout(int parent_id,
-									int recursion_depth,
-									string[] property_names,
-									out uint revision,
-									[DBus (signature = "(ia{sv}av)")] out Variant layout) throws IOError;
+					int recursion_depth,
+					string[] property_names,
+					out uint revision,
+					[DBus (signature = "(ia{sv}av)")] out Variant layout) throws IOError;
 	/* properties signature is "a(ia{sv})" */
 	public abstract void get_group_properties(
-							int[] ids,
-							string[] property_names,
-							[DBus (signature = "a(ia{sv})")] out Variant properties) throws IOError;
+						int[] ids,
+						string[] property_names,
+						[DBus (signature = "a(ia{sv})")] out Variant properties) throws IOError;
 	public abstract void get_property(int id, string name, out Variant value) throws IOError;
 	public abstract void event(int id, string event_id, Variant? data, uint timestamp) throws IOError;
 	/* events signature is a(isvu) */
 	public abstract void event_group( [DBus (signature = "a(isvu)")] Variant events,
-										out int[] id_errors) throws IOError;
+									out int[] id_errors) throws IOError;
 	public abstract void about_to_show(int id, out bool need_update) throws IOError;
 	public abstract void about_to_show_group(int[] ids, out int[] updates_needed, out int[] id_errors) throws IOError;
 	/*updated properties signature is a(ia{sv}), removed is a(ias)*/
 	public abstract signal void items_properties_updated(
-										[DBus (signature = "a(ia{sv})")] Variant updated_props,
-										[DBus (signature="a(ias)")] Variant removed_props);
+							[DBus (signature = "a(ia{sv})")] Variant updated_props,
+							[DBus (signature="a(ias)")] Variant removed_props);
 	public abstract signal void layout_updated(uint revision, int parent);
 	public abstract signal void item_activation_requested(int id, uint timestamp);
 }	
@@ -50,6 +50,7 @@ public class PropertyStore : Object
 			dict.remove(name);
 		else if (val.is_of_type(type) && type != null)
 			dict.insert(name,val);
+		init_default();
 	}
 	construct
 	{
@@ -75,6 +76,10 @@ public class PropertyStore : Object
 			while(iter.next ("{sv}", out name, out v))
 				this.set_prop(name,v);
 		}
+		init_default();
+	}
+	private void init_default()
+	{
 		if(!dict.contains("visible"))
 			dict.insert("visible", new Variant.boolean(true));
 		if(!dict.contains("enabled"))
@@ -83,7 +88,7 @@ public class PropertyStore : Object
 			dict.insert("type", new Variant.string("standard"));
 		if(!dict.contains("label"))
 			dict.insert("label", new Variant.string(""));
-	} 
+	}
 }
 
 public class DBusMenuItem : Object
@@ -133,9 +138,9 @@ public class DBusMenuItem : Object
 		var old_value = this.store.get_prop(name);
 		this.store.set_prop(name, val);
 		var new_value = this.store.get_prop(name);
-        if (new_value != null && old_value == null
+		if (new_value != null && old_value == null
 			|| old_value == null && new_value != null
-			|| old_value.compare(new_value) != 0)
+			|| !old_value.equal(new_value))
             this.property_changed(name,new_value);
 	}
 	public void add_child(int id, int pos)
@@ -221,8 +226,8 @@ public class DBusMenuClient : Object
 			layout_update_required = true;
 		else layout_update.begin();
 	}
-    /* the original implementation will only request partial layouts if somehow possible
-    / we try to save us from multiple kinds of race conditions by always requesting a full layout */
+	/* the original implementation will only request partial layouts if somehow possible
+	/ we try to save us from multiple kinds of race conditions by always requesting a full layout */
 	private async void layout_update()
 	{
 		layout_update_required = false;
@@ -265,11 +270,11 @@ public class DBusMenuClient : Object
 			Variant val;
 			while(props_iter.next("{sv}",out name, out val))
 				item.set_variant_property(name, val);
-            /* make sure our children are all at the right place, and exist */
-            var old_children_ids = item.get_children_ids();
-            int i = 0;
-            foreach(var new_id in children_ids)
-            {
+		/* make sure our children are all at the right place, and exist */
+		var old_children_ids = item.get_children_ids();
+		int i = 0;
+		foreach(var new_id in children_ids)
+		{
 				var old_child = -1;
 				foreach(var old_id in old_children_ids)
 					if (new_id == old_id)
@@ -293,26 +298,25 @@ public class DBusMenuClient : Object
 			request_properties.begin(id);
 		}
 	}
-	/*FIXME: Not working */
 	private void clean_items()
 	{
 		/* Traverses the list of cached menu items and removes everyone that is not in the list
 		/  so we don't keep alive unused items */
-        var tag = new DateTime.now_utc();
-        List<int> traverse = new List<int>();
-        traverse.append(0);
-        while (traverse.length() > 0) {
-            var item = this.get_item(traverse.data);
-            traverse.delete_link(traverse);
-            item.gc_tag = tag;
-            traverse.concat(item.get_children_ids());
-        }
-        SList<int> remover = new SList<int>();
-        items.foreach((k,v)=>{if (v.gc_tag != tag) remover.append(k);});
+	var tag = new DateTime.now_utc();
+	List<int> traverse = new List<int>();
+	traverse.append(0);
+	while (traverse.length() > 0) {
+		var item = this.get_item(traverse.data);
+		traverse.delete_link(traverse);
+		item.gc_tag = tag;
+		traverse.concat(item.get_children_ids());
+	}
+	SList<int> remover = new SList<int>();
+	items.foreach((k,v)=>{if (v.gc_tag != tag) remover.append(k);});
 		foreach(var i in remover)
 			items.remove(i);
 	}
-    /* we don't need to cache and burst-send that since it will not happen that frequently */
+	/* we don't need to cache and burst-send that since it will not happen that frequently */
 	public void request_about_to_show(int id)
 	{
 		var need_update = false;
@@ -375,8 +379,10 @@ public class DBusMenuGtkItem : CheckMenuItem
 	private Image image;
 	private new Label label;
 	private ulong activate_handler;
+        private bool is_themed_icon;
 	public DBusMenuGtkItem(DBusMenuItem item)
 	{
+                is_themed_icon = false;
 		this.item = item;
 		box = new Box(Orientation.HORIZONTAL, 5);
 		image = new Image();
@@ -384,6 +390,7 @@ public class DBusMenuGtkItem : CheckMenuItem
 		box.add(image);
 		box.add(label);
 		this.add(box);
+		this.show_all();
 		this.init();
 		item.property_changed.connect(on_prop_changed_cb);
 		item.child_added.connect(on_child_added_cb);
@@ -392,7 +399,6 @@ public class DBusMenuGtkItem : CheckMenuItem
 		activate_handler = this.activate.connect(on_toggled_cb);
 		this.select.connect(on_select_cb);
 		this.deselect.connect(on_deselect_cb);
-		this.show_all();
 	}
 	private void init()
 	{
@@ -432,7 +438,7 @@ public class DBusMenuGtkItem : CheckMenuItem
 				else
 					this.active = false;
 				break;
-			case "icon-name":
+                        case "icon-name":
 			case "icon-data":
 				update_icon(val);
 				break;
@@ -464,18 +470,19 @@ public class DBusMenuGtkItem : CheckMenuItem
 	{
 		if (val == null)
 		{
+			is_themed_icon = false;
 			image.hide();
 			return;
 		}
 		Icon? icon = null;
-		if (val.get_type_string()=="s")
-			icon = new ThemedIcon.with_default_fallbacks(val.get_string()+"-symbolic");
-		else
+		if (val.get_type_string() == "s")
 		{
-			uint8[] pixmap;
-			val.get("ay", out pixmap);
-			icon = new BytesIcon(new Bytes(pixmap));
+			is_themed_icon = true;
+			icon = new ThemedIcon.with_default_fallbacks(val.get_string()+"-symbolic");
 		}
+		else if (!is_themed_icon && val.get_type_string() == "ay")
+			icon = new BytesIcon(val.get_data_as_bytes());
+		else return;
 		image.set_from_gicon(icon,IconSize.MENU);
 		image.show();
 	}
@@ -548,6 +555,8 @@ public class DBusMenuGTKClient : DBusMenuClient
 		get_root_item().child_removed.connect(on_child_removed_cb);
 		foreach(var ch in get_root_item().get_children())
 			append_with_separators(ch);
+		foreach(var path in iface.icon_theme_path)
+			IconTheme.get_default().append_search_path(path);
 		root_menu.show_all();
 	}
 	public void open_state_changed_cb()

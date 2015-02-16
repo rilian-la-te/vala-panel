@@ -5,24 +5,24 @@ using Gtk;
 public enum SNCategory
 {
 	[DBus (value = "ApplicationStatus")]
-    APPLICATION,
-    [DBus (value = "Communications")]
-    COMMUNICATIONS,
-    [DBus (value = "SystemServices")]
-    SYSTEM,
-    [DBus (value = "Hardware")]
-    HARDWARE
+	APPLICATION,
+	[DBus (value = "Communications")]
+	COMMUNICATIONS,
+	[DBus (value = "SystemServices")]
+	SYSTEM,
+	[DBus (value = "Hardware")]
+	HARDWARE
 }
 
 [DBus (use_string_marshalling = true)]
 public enum SNStatus
 {
 	[DBus (value = "Passive")]
-    PASSIVE,
-    [DBus (value = "Active")]
-    ACTIVE,
-    [DBus (value = "NeedsAttention")]
-    NEEDS_ATTENTION
+	PASSIVE,
+	[DBus (value = "Active")]
+	ACTIVE,
+	[DBus (value = "NeedsAttention")]
+	NEEDS_ATTENTION
 }
 
 [DBus (name = "org.kde.StatusNotifierItem")]
@@ -37,7 +37,7 @@ public interface SNItemIface : Object
 	{owned get;}
 	public abstract string title
 	{owned get;}
-	public abstract string window_id
+	public abstract int window_id
 	{owned get;}
 	/* Menu properties */
 	[DBus(signature = "o")]
@@ -50,25 +50,24 @@ public interface SNItemIface : Object
 	{owned get;}
 	public abstract string icon_name
 	{owned get;}
-	[DBus(signature = "(iiay)")]
+	[DBus(signature = "a(iiay)")]
 	public abstract Variant icon_pixmap
 	{owned get;}
 	public abstract string overlay_icon_name
 	{owned get;}
-	[DBus(signature = "(iiay)")]
+	[DBus(signature = "a(iiay)")]
 	public abstract Variant overlay_icon_pixmap
 	{owned get;}
 	public abstract string attention_icon_name
 	{owned get;}
-	[DBus(signature = "(iiay)")]
+	[DBus(signature = "a(iiay)")]
 	public abstract Variant attention_icon_pixmap
-	{owned get;}
+	{[DBus(signature = "a(iiay)")] owned get;}
 	public abstract string attention_movie_name
 	{owned get;}
 	/* Tooltip */
-	[DBus(signature = "(s(iiay)ss)")]
-	public abstract Variant tool_tip
-	{owned get;}
+	[DBus(signature = "sa(iiay)ss")]
+	public abstract Variant tool_tip {[DBus(signature = "sa(iiay)ss")]owned get;}
 	/* Methods */
 	public abstract void context_menu(int x, int y) throws IOError;
 	public abstract void activate(int x, int y) throws IOError;
@@ -143,6 +142,7 @@ public class SNItem : FlowBoxChild
 		box.add(label);
 		ebox.add(box);
 		this.add(ebox);
+		this.has_tooltip = true;
 		if (iface != null)
 		{
 			/* FIXME: It is not by spec */
@@ -214,8 +214,9 @@ public class SNItem : FlowBoxChild
 		iface_new_icon_cb();
 		iface_new_overlay_icon_cb();
 	}
-	private bool change_icon(Image? image, string? icon_name, Variant? pixmap, out Icon? outicon)
+	private bool change_icon(Image? image, string? icon_name, Variant? pixmaps, out Icon? outicon)
 	{
+		print("%s,%s\n",icon_name ?? "no name",pixmaps!= null ? pixmaps.print(false) : "no pixmap");
 		Icon? icon = null;
 		if (icon_name != null && icon_name.length > 0)
 		{
@@ -224,12 +225,26 @@ public class SNItem : FlowBoxChild
 		}
 		if (icon == null)
 		{
-			uint8 [] pixbuf;
-			int width, height;
-			if (pixmap != null)
+			var first = true;
+			if (pixmaps != null)
 			{
-				pixmap.get("iiay",out width, out height, out pixbuf);
-				icon = new BytesIcon(new Bytes(pixbuf));
+				var iter = pixmaps.iterator();
+				for (var pixmap = iter.next_value();pixmap!=null;pixmap = iter.next_value())
+				{
+					Variant pixbuf = pixmap.get_child_value(2);
+					if (first)
+					{
+						var base_icon = new BytesIcon(pixbuf.get_data_as_bytes());
+						icon = new EmblemedIcon(base_icon,null);
+						first = false;
+					}
+					else
+					{
+						var emblem_icon = new BytesIcon(pixbuf.get_data_as_bytes());
+						var emblem = new Emblem(emblem_icon);
+						(icon as EmblemedIcon).add_emblem(emblem);
+					}
+				}
 			}
 			else
 				icon = null;
@@ -240,6 +255,7 @@ public class SNItem : FlowBoxChild
 			{
 				image.visible = true;
 				image.set_from_gicon(icon,IconSize.MENU);
+				image.set_pixel_size(22);
 			}
 			outicon = icon;
 			return true;
@@ -255,14 +271,9 @@ public class SNItem : FlowBoxChild
 	}
 	private bool query_tooltip_cb(int x, int y, bool keyboard, Tooltip tip)
 	{
-		if(!this.has_tooltip)
-			return false;
 		Variant? tooltip = iface.tool_tip;
 		if(tooltip == null)
-		{
-			this.has_tooltip = false;
 			return false;
-		}
 		string icon_name = tooltip.get_child_value(0).get_string();
 		Variant icon_pixmap = tooltip.get_child_value(1);
 		string name = tooltip.get_child_value(2).get_string();
