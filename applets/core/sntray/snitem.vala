@@ -73,6 +73,11 @@ public class SNItem : FlowBoxChild
 		ebox.leave_notify_event.connect((e)=>{
 			this.get_style_context().remove_class("-panel-launch-button-selected");
 		});
+		ebox.button_press_event.connect((e)=>{
+			if (e.button == 2)
+				this.primary_activate();
+			return false;
+		});
 		proxy.notify.connect((pspec)=>{
 			if (pspec.name == "status")
 				iface_new_status_cb();

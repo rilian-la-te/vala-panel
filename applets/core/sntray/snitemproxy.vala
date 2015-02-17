@@ -311,37 +311,31 @@ public class SNItemProxy: Object
 		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
 		if (icon_name != null && icon_name.length > 0)
 		{
-			while (!IconTheme.get_default().has_icon(icon_name)) {/*Wait for icon become available*/}
-			var icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
-			(icon as ThemedIcon).prepend_name(icon_name+"-panel");
-			return icon;
+				var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+				new_icon.prepend_name(icon_name+"-panel");
+				if (prev_icon != null && prev_icon is ThemedIcon)
+					themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
+				return new_icon;
 		}
-		else
+		else if (pixmaps != null)
 		{
-			Icon? icon = null;
-			var first = true;
-			if (pixmaps != null)
+			var iter = pixmaps.iterator();
+			for (var pixmap = iter.next_value(); pixmap!=null; pixmap = iter.next_value())
 			{
-				var iter = pixmaps.iterator();
-				for (var pixmap = iter.next_value(); pixmap!=null; pixmap = iter.next_value())
-				{
-					Variant pixbuf = pixmap.get_child_value(2);
-					if (first)
-					{
-						var base_icon = new BytesIcon(pixbuf.get_data_as_bytes());
-						icon = new EmblemedIcon(base_icon,null);
-						first = false;
-					}
-					else
-					{
-						var emblem_icon = new BytesIcon(pixbuf.get_data_as_bytes());
-						var emblem = new Emblem(emblem_icon);
-						(icon as EmblemedIcon).add_emblem(emblem);
-					}
-				}
-				return icon;
+				/*FIXME: Need a find suitable icon for size */
+				Variant pixbuf = pixmap.get_child_value(2);
+				return new BytesIcon(pixbuf.get_data_as_bytes());
 			}
 		}
 		return prev_icon;
+	}
+	private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon prev_icon)
+	{
+		if(IconTheme.get_default().has_icon(icon.get_names()[2]))	
+			return;
+		if((prev_icon.get_names().length <= 3) || IconTheme.get_default().has_icon(prev_icon.get_names()[2]))
+			icon.append_name(prev_icon.get_names()[2]);
+		else if (prev_icon.get_names().length > 3)
+			icon.append_name(prev_icon.get_names()[3]);
 	}
 }
