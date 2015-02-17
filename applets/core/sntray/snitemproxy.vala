@@ -193,9 +193,9 @@ public class SNItemProxy: Object
 		init_properties();
 		props_iface.properties_changed.connect((src,props,inv)=>{if (src == FreeDesktopProperties.KDE_NAME) props_changed_burst(props);});
 		iface.new_status.connect((st)=>{this.status = st;});
-		iface.new_icon.connect(()=>{this.main_icon = one_icon_direct_cb(IconType.MAIN);});
-		iface.new_overlay_icon.connect(()=>{this.overlay_icon = one_icon_direct_cb(IconType.OVERLAY);});
-		iface.new_attention_icon.connect(()=>{this.attention_icon = one_icon_direct_cb(IconType.ATTENTION);});
+		iface.new_icon.connect(()=>{one_icon_direct_cb("");});
+		iface.new_overlay_icon.connect(()=>{one_icon_direct_cb("Overlay");});
+		iface.new_attention_icon.connect(()=>{one_icon_direct_cb("Attention");});
 		iface.new_icon_theme_path.connect(on_path_cb);
 		iface.x_ayatana_new_label.connect((lb,g)=>{this.label = lb; this.label_guide = g;});
 		iface.new_tool_tip.connect(tooltip_direct_cb);
@@ -239,16 +239,21 @@ public class SNItemProxy: Object
 		/* Main icon */
 		var icon_namev = props.lookup("IconName");
 		var icon_pixmap = props.lookup("IconPixmap");
-		main_icon = from_direct_props(main_icon,icon_namev,icon_pixmap);
+		change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
+			main_icon = change_icon.end(res);
+		});
 		/* Attention icon */
 		icon_namev = props.lookup("AttentionIconName");
 		icon_pixmap = props.lookup("AttentionIconPixmap");
-		attention_icon = from_direct_props(attention_icon,icon_namev,icon_pixmap);
+		change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
+			attention_icon = change_icon.end(res);
+		});		
 		/* Overlay icon */
 		icon_namev = props.lookup("OverlayIconName");
 		icon_pixmap = props.lookup("OverlayIconPixmap");
-		overlay_icon = from_direct_props(overlay_icon,icon_namev,icon_pixmap);
-
+		change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
+			overlay_icon = change_icon.end(res);
+		});
 	}
 	private void on_path_cb(string? new_path)
 	{
@@ -258,41 +263,28 @@ public class SNItemProxy: Object
 			this.icon_theme_path = new_path;
 		}
 	}
-	private Icon? one_icon_direct_cb(IconType type)
+	private void one_icon_direct_cb(string appender)
 	{
-		string appender;
-		Icon? prev_icon;
-		switch(type)
-		{
-			case IconType.ATTENTION:
-				appender = "Attention";
-				prev_icon = attention_icon;
-				break;
-			case IconType.OVERLAY:
-				appender = "Overlay";
-				prev_icon = overlay_icon;
-				break;
-			default:
-				prev_icon = main_icon;
-				appender = "";
-				break;
-		}
 		Variant? icon_namev = null;
 		Variant? icon_pixmap = null;
 		try
 		{
 			icon_namev = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconName");
+			if (icon_namev == null)
+				icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
 		} catch (Error e) {}
-		try
-		{
-			icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
-		} catch (Error e) {}
-		return from_direct_props(prev_icon,icon_namev,icon_pixmap);
-	}
-	private Icon? from_direct_props(Icon? prev_icon, Variant? icon_namev, Variant? icon_pixmapv)
-	{
-		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
-		return change_icon(prev_icon, icon_name,icon_pixmapv);
+		if (appender == "Attention")
+			change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
+				attention_icon = change_icon.end(res);
+			});
+		else if (appender == "Overlay")
+			change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
+				overlay_icon = change_icon.end(res);
+			});
+		else
+			change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
+				main_icon = change_icon.end(res);
+			});
 	}
 	private void tooltip_direct_cb()
 	{
@@ -306,21 +298,25 @@ public class SNItemProxy: Object
 		this.has_tooltip = true;
 		if (tooltipv== null)
 			return;
-		var icon_name = tooltipv.get_child_value(0).get_string();
+		var icon_namev = tooltipv.get_child_value(0);
 		var icon_pixmap = tooltipv.get_child_value(1);
-		tooltip_icon = change_icon(tooltip_icon, icon_name, icon_pixmap);
+		change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
+			tooltip_icon = change_icon.end(res);
+		});
 		/*FIXME: Markup parser */
 		tooltip_markup = tooltipv.get_child_value(2).get_string()+ tooltipv.get_child_value(3).get_string();
 	}
-	private Icon? change_icon(Icon? prev_icon, string? icon_name, Variant? pixmaps)
+	private async Icon? change_icon(Icon? prev_icon, Variant? icon_namev, Variant? pixmaps)
 	{
-		if (icon_name != null && icon_name.length > 0 && IconTheme.get_default().has_icon(icon_name))
+		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
+		if (icon_name != null && icon_name.length > 0)
 		{
+			while (!IconTheme.get_default().has_icon(icon_name)) {/*Wait for icon become available*/}
 			var icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
 			(icon as ThemedIcon).prepend_name(icon_name+"-panel");
 			return icon;
 		}
-		else if (icon_name == null || icon_name.length == 0)
+		else
 		{
 			Icon? icon = null;
 			var first = true;
