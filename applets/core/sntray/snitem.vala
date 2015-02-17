@@ -21,7 +21,7 @@ public class SNItem : FlowBoxChild
 	private Image overlay_image;
 	private Overlay icon_overlay;
 	private bool is_attention_icon;
-	DBusMenuGTKClient? client;
+	DBusMenuGtkClient? client;
 	Gtk.Menu menu;
 	public SNItem (string n, ObjectPath p)
 	{
@@ -137,6 +137,7 @@ public class SNItem : FlowBoxChild
 		if (proxy.main_icon != null)
 		{
 			image.set_from_gicon(proxy.main_icon,IconSize.MENU);
+			image.set_pixel_size(16);
 			image.show();
 		}
 		else
@@ -183,7 +184,7 @@ public class SNItem : FlowBoxChild
 		/*FIXME: MenuModel support */
 		if (client == null)
 		{
-			client = new DBusMenuGTKClient(object_name,proxy.menu);
+			client = new DBusMenuGtkClient(object_name,proxy.menu);
 			menu = new Gtk.Menu();
 			client.attach_to_menu(menu);
 			menu.attach_to_widget(this,null);

@@ -303,6 +303,7 @@ public class SNItemProxy: Object
 		tooltip_icon = change_icon(icon_name, icon_pixmap);
 		/*FIXME: Markup parser */
 		tooltip_markup = tooltipv.get_child_value(2).get_string()+ tooltipv.get_child_value(3).get_string();
+//~ 		print("%s\n",tooltip_markup);
 	}
 	private Icon? change_icon(string? icon_name, Variant? pixmaps)
 	{

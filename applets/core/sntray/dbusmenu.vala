@@ -37,11 +37,12 @@ public interface DBusMenuIface : Object
 
 public class PropertyStore : Object
 {
-	HashTable<string,Variant> dict;
+	VariantDict dict;
 	HashTable<string,VariantType> checker;
 	public Variant? get_prop(string name)
 	{
-		return dict.lookup(name);
+		var type = checker.lookup(name);
+		return (type != null) ? dict.lookup_value(name,type) : null;
 	}
 	public void set_prop(string name, Variant? val)
 	{
@@ -49,12 +50,12 @@ public class PropertyStore : Object
 		if (val == null)
 			dict.remove(name);
 		else if (val.is_of_type(type) && type != null)
-			dict.insert(name,val);
+			dict.insert_value(name,val);
 		init_default();
 	}
 	construct
 	{
-		dict = new HashTable<string,Variant>(str_hash,str_equal);
+		dict = new VariantDict();
 		checker = new HashTable<string,VariantType>(str_hash,str_equal);
 		checker.insert("visible", VariantType.BOOLEAN);
 		checker.insert("enabled", VariantType.BOOLEAN);
@@ -81,13 +82,13 @@ public class PropertyStore : Object
 	private void init_default()
 	{
 		if(!dict.contains("visible"))
-			dict.insert("visible", new Variant.boolean(true));
+			dict.insert_value("visible", new Variant.boolean(true));
 		if(!dict.contains("enabled"))
-			dict.insert("enabled", new Variant.boolean(true));
+			dict.insert_value("enabled", new Variant.boolean(true));
 		if(!dict.contains("type"))
-			dict.insert("type", new Variant.string("standard"));
+			dict.insert_value("type", new Variant.string("standard"));
 		if(!dict.contains("label"))
-			dict.insert("label", new Variant.string(""));
+			dict.insert_value("label", new Variant.string(""));
 	}
 }
 
@@ -103,15 +104,12 @@ public class DBusMenuItem : Object
 	public signal void child_added(int id, DBusMenuItem item);
 	public signal void child_removed(int id, DBusMenuItem item);
 	public signal void child_moved(int oldpos, int newpos, DBusMenuItem item);
-	public DBusMenuItem (int id, DBusMenuClient iface, Variant props, int[]? children_ids)
+	public DBusMenuItem (int id, DBusMenuClient iface, Variant props, List<int> children_ids)
 	{
-		this.children_ids = new List<int>();
+		this.children_ids = children_ids.copy();
 		this.client = iface;
 		this.store = new PropertyStore(props);
 		this.id = id;
-		if (children_ids != null)
-			foreach(var child in children_ids)
-				this.children_ids.append(child);
 	}
 	public Variant get_variant_property(string name)
 	{
@@ -169,6 +167,10 @@ public class DBusMenuItem : Object
 			ret.append(client.get_item(id));
 		return ret;
 	}
+	public int get_child_position(int child_id)
+	{
+		return children_ids.index(child_id);
+	}
 	public void handle_event(string event_id, Variant? data, uint timestamp)
 	{
 		try
@@ -209,7 +211,7 @@ public class DBusMenuClient : Object
 		} catch (Error e) {stderr.printf("Cannot get menu! Error: %s",e.message);}
 		VariantDict props = new VariantDict();
 		variant_dict_insert(props,"children-display","s","submenu");
-		var item = new DBusMenuItem(0,this,props.end(),null);
+		var item = new DBusMenuItem(0,this,props.end(),new List<int>());
 		items.insert(0,item);
 		request_layout_update();
 		iface.layout_updated.connect((rev,parent)=>{request_layout_update();});
@@ -257,17 +259,17 @@ public class DBusMenuClient : Object
 		Variant props = layout.get_child_value(1);
 		Variant children = layout.get_child_value(2);
 		VariantIter chiter = children.iterator();
-		int[] children_ids = {};
+		List<int> children_ids = new List<int>();
 		for(var child = chiter.next_value(); child != null; child = chiter.next_value())
 		{
 			child = child.get_variant();
 			parse_layout(rev,child);
 			int child_id = child.get_child_value(0).get_int32();
-			children_ids += child_id;
+			children_ids.append(child_id);
 		}
 		if (id in items)
 		{
-			var item = items.lookup(id);
+			unowned DBusMenuItem item = items.lookup(id);
 			VariantIter props_iter = props.iterator();
 			string name;
 			Variant val;
@@ -432,7 +434,10 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 				break;
 			case "children-display":
 				if (val != null && val.get_string() == "submenu")
+				{
 					this.submenu = new Gtk.Menu();
+					this.submenu.insert.connect(on_child_insert_cb);
+				}
 				else
 					this.submenu = null;
 				break;
@@ -480,8 +485,12 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 	{
 		if (val == null)
 		{
-			is_themed_icon = false;
-			image.hide();
+			var icon = image.gicon;
+			if (!(icon != null && icon is ThemedIcon && is_themed_icon))
+			{
+				is_themed_icon = false;
+				image.hide();
+			}
 			return;
 		}
 		Icon? icon = null;
@@ -499,14 +508,12 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 	private void on_child_added_cb(int id,DBusMenuItem item)
 	{
 		if (this.submenu != null)
-			if (item.wants_separator())
-				this.submenu.append(new DBusMenuGTKSeparatorItem(item));
-			else
-				this.submenu.append(new DBusMenuGtkMainItem(item));
+			this.submenu.append (DBusMenuGtkClient.new_item(item) as Gtk.MenuItem);
 		else
 		{
-			this.item = item;
-			this.init();
+			stderr.printf("Adding new item to item without submenu! Creating new submenu...\n");
+			this.submenu = new Gtk.Menu();
+			this.submenu.append (DBusMenuGtkClient.new_item(item) as Gtk.MenuItem);
 		}
 	}
 	private void on_child_removed_cb(int id, DBusMenuItem item)
@@ -514,9 +521,9 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 		if (this.submenu != null)
 			foreach(var ch in this.submenu.get_children())
 				if ((ch as DBusMenuGtkItemIface).item == item)
-					this.submenu.remove(ch);
+					ch.destroy();
 		else
-			this.get_parent().remove(this);
+			stderr.printf("Cannot remove a child from item without submenu!\n");
 	}
 	private void on_child_moved_cb(int oldpos, int newpos, DBusMenuItem item)
 	{
@@ -524,6 +531,8 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 			foreach(var ch in this.submenu.get_children())
 				if ((ch as DBusMenuGtkItemIface).item == item)
 					this.submenu.reorder_child(ch,newpos);
+		else
+			stderr.printf("Cannot move a child of item with has no children!\n");
 	}
 	private void on_toggled_cb()
 	{
@@ -542,7 +551,12 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 		if (this.submenu != null)
 			item.handle_event("closed",null,0);
 	}
-	public override void draw_indicator(Cairo.Context cr)
+	private void on_child_insert_cb(Widget w, int pos)
+	{
+		var ch = w as DBusMenuGtkItemIface;
+		this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
+	}
+	protected override void draw_indicator(Cairo.Context cr)
 	{
 		if (has_indicator)
 			base.draw_indicator(cr);
@@ -556,6 +570,7 @@ public class DBusMenuGTKSeparatorItem: SeparatorMenuItem, DBusMenuGtkItemIface
 	{
 		this.item = item;
 		item.property_changed.connect(on_prop_changed_cb);
+		this.show_all();
 	}
 	private void on_prop_changed_cb(string name, Variant? val)
 	{
@@ -570,10 +585,16 @@ public class DBusMenuGTKSeparatorItem: SeparatorMenuItem, DBusMenuGtkItemIface
 		}
 	}
 } 
-public class DBusMenuGTKClient : DBusMenuClient
+public class DBusMenuGtkClient : DBusMenuClient
 {
 	private Gtk.Menu root_menu;
-	public DBusMenuGTKClient(string object_name, string object_path)
+	public static DBusMenuGtkItemIface new_item(DBusMenuItem item)
+	{
+		if (item.wants_separator())
+			return new DBusMenuGTKSeparatorItem(item);
+		return new DBusMenuGtkMainItem(item);
+	}
+	public DBusMenuGtkClient(string object_name, string object_path)
 	{
 		base(object_name,object_path);
 		this.root_menu = null;
@@ -583,16 +604,17 @@ public class DBusMenuGTKClient : DBusMenuClient
 		root_menu = menu;
 		root_menu.foreach((c)=>{menu.remove(c);});
 		root_menu.notify["visible"].connect(open_state_changed_cb);
+		root_menu.insert.connect(on_child_insert_cb);
 		get_root_item().child_added.connect(on_child_added_cb);
 		get_root_item().child_moved.connect(on_child_moved_cb);
 		get_root_item().child_removed.connect(on_child_removed_cb);
 		foreach(var ch in get_root_item().get_children())
-			append_with_separators(ch);
+			root_menu.append(new_item(ch) as Gtk.MenuItem);
 		foreach(var path in iface.icon_theme_path)
 			IconTheme.get_default().append_search_path(path);
 		root_menu.show_all();
 	}
-	public void open_state_changed_cb()
+	private void open_state_changed_cb()
 	{
 		if (root_menu.visible)
 		{
@@ -602,27 +624,25 @@ public class DBusMenuGTKClient : DBusMenuClient
 		else
 			get_root_item().handle_event("closed",null,0);
 	}
-	public void on_child_added_cb(int id, DBusMenuItem item)
+	private void on_child_added_cb(int id, DBusMenuItem item)
 	{
-		append_with_separators(item);
+		root_menu.append(new_item(item) as Gtk.MenuItem);
 	}
-	public void on_child_moved_cb(int oldpos, int newpos, DBusMenuItem item)
+	private void on_child_moved_cb(int oldpos, int newpos, DBusMenuItem item)
 	{
 		foreach(var ch in root_menu.get_children())
 			if ((ch as DBusMenuGtkItemIface).item == item)
 				root_menu.reorder_child(ch,newpos);
 	}
-	public void on_child_removed_cb(int id, DBusMenuItem item)
+	private void on_child_removed_cb(int id, DBusMenuItem item)
 	{
 		foreach(var ch in root_menu.get_children())
 			if ((ch as DBusMenuGtkItemIface).item == item)
-				root_menu.remove(ch);
+				ch.destroy();
 	}
-	private void append_with_separators(DBusMenuItem item)
+	private void on_child_insert_cb(Widget w, int pos)
 	{
-		if (item.wants_separator())
-			root_menu.append(new DBusMenuGTKSeparatorItem(item));
-		else
-			root_menu.append(new DBusMenuGtkMainItem(item));
+		var ch = w as DBusMenuGtkItemIface;
+		root_menu.reorder_child(w,get_root_item().get_child_position(ch.item.id));
 	}
 }
