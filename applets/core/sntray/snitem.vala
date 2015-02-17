@@ -93,6 +93,10 @@ public class SNItem : FlowBoxChild
 			this.get_applet().request_remove_item(this,object_name+(string)object_path);
 		});
 		this.query_tooltip.connect(query_tooltip_cb);
+		IconTheme.get_default().changed.connect(()=>{
+			overlay_image.set_from_gicon(overlay_image.gicon,IconSize.MENU);
+			image.set_from_gicon(image.gicon,IconSize.MENU);
+		});
 		this.show_all();
 	}
 	private void init_all()

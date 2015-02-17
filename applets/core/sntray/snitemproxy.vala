@@ -180,7 +180,6 @@ public class SNItemProxy: Object
 	{
 		this.bus_name = bus_name;
 		this.object_path = object_path;
-		print("%s,%s\n",bus_name,object_path);
 		try
 		{
 			this.iface = Bus.get_proxy_sync (BusType.SESSION,bus_name,object_path);

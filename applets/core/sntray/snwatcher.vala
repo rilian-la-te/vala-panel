@@ -35,7 +35,7 @@ public class SNWatcher : Object
 	public string[] registered_status_notifier_items
 	{owned get; protected set;}
 	public bool is_status_notifier_host_registered
-	{get {return hosts.size()>0;}}
+	{get {return true;}}
 	public int protocol_version 
 	{get {return 1;}}
 	/* Public methods */
@@ -64,6 +64,7 @@ public class SNWatcher : Object
 												null,
 												() => {remove(get_id(name,path));}
 												);
+			print("%s,%s\n",name,path);
 			name_watcher.insert(id,name_handler);
 			registered_status_notifier_items = get_registered_items();
 			status_notifier_item_registered(out id);

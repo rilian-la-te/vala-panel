@@ -29,6 +29,7 @@ public class SNTray: Applet, AppletConfigurable
 	{get; set;}
 	HashTable<string,SNItem> items;
 	FlowBox layout;
+	ulong watcher_registration_handler;
 	static construct
 	{
 		host = new SNHost.from_path("org.kde.StatusNotifierHost-valapanel%d".printf(Gdk.CURRENT_TIME));
@@ -75,12 +76,21 @@ public class SNTray: Applet, AppletConfigurable
 			return false;
 		});
 		this.add(layout);
-		host.watcher_registered.connect(()=>{
-			recreate_items();
-			host.watcher_items_changed.connect(()=>{
+		host.watcher_items_changed.connect(()=>{
 				recreate_items();
-			});
 		});
+		watcher_registration_handler = host.notify["watcher-registered"].connect(()=>{
+			if (host.watcher_registered)
+			{
+				recreate_items();
+				SignalHandler.disconnect(host,watcher_registration_handler);
+			}
+		});
+		if (host.watcher_registered)
+		{
+			recreate_items();
+			SignalHandler.disconnect(host,watcher_registration_handler);
+		}
 		show_all();
 	}
 	private void recreate_items()

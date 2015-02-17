@@ -5,13 +5,13 @@ public class SNHost: Object
 {
 	public string object_path
 	{private get; construct;}
+	public bool watcher_registered
+	{get; private set;}
 	private SNWatcher nested_watcher;
 	private SNWatcherIface outer_watcher;
 	private uint owned_name;
 	private uint watched_name;
 	private bool is_nested_watcher;
-	private bool watcher_registration_emitted;
-	public signal void watcher_registered();
 	public signal void watcher_items_changed();
 	public static string gen_object_path(Applet pl)
 	{
@@ -40,11 +40,7 @@ public class SNHost: Object
 			nested_watcher.register_status_notifier_host(object_path);
 			nested_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
 			nested_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
-			if(!watcher_registration_emitted)
-			{
-				watcher_registered();
-				watcher_registration_emitted = true;
-			}
+			watcher_registered = true;
 		} catch (IOError e) {
 			stderr.printf ("Could not register service. Waiting for external watcher\n");
 		}
@@ -76,17 +72,20 @@ public class SNHost: Object
 			outer_watcher.register_status_notifier_host(object_path);
 			outer_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
 			outer_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
-		} catch (Error e){stderr.printf("%s\n",e.message);}
-		if(!watcher_registration_emitted)
+		} catch (Error e){
+			stderr.printf("%s\n",e.message);
+			return;
+			}
+		if(!watcher_registered)
 		{
-			watcher_registered();
-			watcher_registration_emitted = true;
+			is_nested_watcher = false;
+			watcher_registered = true;
 		}
 	}
 	construct
 	{
 		is_nested_watcher = true;
-		watcher_registration_emitted = false;
+		watcher_registered = false;
 		create_nested_watcher();
 	}
 	~SNHost()
