@@ -314,13 +314,13 @@ public class SNItemProxy: Object
 	}
 	private Icon? change_icon(Icon? prev_icon, string? icon_name, Variant? pixmaps)
 	{
-		if (icon_name != null && icon_name.length > 0)
+		if (icon_name != null && icon_name.length > 0 && IconTheme.get_default().has_icon(icon_name))
 		{
 			var icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
 			(icon as ThemedIcon).prepend_name(icon_name+"-panel");
 			return icon;
 		}
-		else
+		else if (icon_name == null || icon_name.length == 0)
 		{
 			Icon? icon = null;
 			var first = true;
@@ -345,8 +345,7 @@ public class SNItemProxy: Object
 				}
 				return icon;
 			}
-			else
-				return prev_icon;
 		}
+		return prev_icon;
 	}
 }
