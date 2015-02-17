@@ -196,10 +196,10 @@ public class SNItemProxy: Object
 		iface.new_icon.connect(()=>{this.main_icon = one_icon_direct_cb(IconType.MAIN);});
 		iface.new_overlay_icon.connect(()=>{this.overlay_icon = one_icon_direct_cb(IconType.OVERLAY);});
 		iface.new_attention_icon.connect(()=>{this.attention_icon = one_icon_direct_cb(IconType.ATTENTION);});
-		iface.new_icon_theme_path.connect((pt)=>{this.icon_theme_path = pt;});
+		iface.new_icon_theme_path.connect(on_path_cb);
 		iface.x_ayatana_new_label.connect((lb,g)=>{this.label = lb; this.label_guide = g;});
-		iface.new_tool_tip.connect(()=>{tooltip_direct_cb();});
-		iface.new_title.connect(()=>{title_direct_cb();});
+		iface.new_tool_tip.connect(tooltip_direct_cb);
+		iface.new_title.connect(title_direct_cb);
 	}
 	private void init_properties()
 	{
@@ -210,19 +210,20 @@ public class SNItemProxy: Object
 	}
 	private void props_changed_burst(HashTable<string,Variant?> props)
 	{
-		all_icons_direct_cb(props);
-		var label = props.lookup("ToolTip");
+		var	label = props.lookup("IconThemePath");
+		if (label != null)
+			on_path_cb(label.get_string());
+		label = props.lookup("ToolTip");
 		unbox_tooltip(label);
 		label = props.lookup("XAyatanaLabel");
-		this.label = (label != null) ? label.get_string() : null;
+		this.label = (label != null) ? label.get_string() : this.label;
 		label = props.lookup("XAyatanaLabelGuide");
-		this.label_guide = (label != null) ? label.get_string() : null;
+		this.label_guide = (label != null) ? label.get_string() : this.label_guide;
 		label = props.lookup("Title");
-		this.title = (label != null) ? label.get_string() : null;
+		this.title = (label != null) ? label.get_string() : this.title;
 		label = props.lookup("Status");
-		this.status = (label != null) ? status_from_string(label.get_string()) : SNStatus.PASSIVE;
-		label = props.lookup("IconThemePath");
-		this.icon_theme_path = (label != null) ? label.get_string() : null;
+		this.status = (label != null) ? status_from_string(label.get_string()) : this.status;
+		all_icons_direct_cb(props);
 	}
 	private void title_direct_cb()
 	{
@@ -238,29 +239,41 @@ public class SNItemProxy: Object
 		/* Main icon */
 		var icon_namev = props.lookup("IconName");
 		var icon_pixmap = props.lookup("IconPixmap");
-		main_icon = from_direct_props(icon_namev,icon_pixmap);
+		main_icon = from_direct_props(main_icon,icon_namev,icon_pixmap);
 		/* Attention icon */
 		icon_namev = props.lookup("AttentionIconName");
 		icon_pixmap = props.lookup("AttentionIconPixmap");
-		attention_icon = from_direct_props(icon_namev,icon_pixmap);
+		attention_icon = from_direct_props(attention_icon,icon_namev,icon_pixmap);
 		/* Overlay icon */
 		icon_namev = props.lookup("OverlayIconName");
 		icon_pixmap = props.lookup("OverlayIconPixmap");
-		overlay_icon = from_direct_props(icon_namev,icon_pixmap);
+		overlay_icon = from_direct_props(overlay_icon,icon_namev,icon_pixmap);
 
+	}
+	private void on_path_cb(string? new_path)
+	{
+		if (new_path != null)
+		{
+			IconTheme.get_default().append_search_path(new_path);
+			this.icon_theme_path = new_path;
+		}
 	}
 	private Icon? one_icon_direct_cb(IconType type)
 	{
 		string appender;
+		Icon? prev_icon;
 		switch(type)
 		{
 			case IconType.ATTENTION:
 				appender = "Attention";
+				prev_icon = attention_icon;
 				break;
 			case IconType.OVERLAY:
 				appender = "Overlay";
+				prev_icon = overlay_icon;
 				break;
 			default:
+				prev_icon = main_icon;
 				appender = "";
 				break;
 		}
@@ -274,12 +287,12 @@ public class SNItemProxy: Object
 		{
 			icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
 		} catch (Error e) {}
-		return from_direct_props(icon_namev,icon_pixmap);
+		return from_direct_props(prev_icon,icon_namev,icon_pixmap);
 	}
-	private Icon? from_direct_props(Variant? icon_namev, Variant? icon_pixmapv)
+	private Icon? from_direct_props(Icon? prev_icon, Variant? icon_namev, Variant? icon_pixmapv)
 	{
 		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
-		return change_icon(icon_name,icon_pixmapv);
+		return change_icon(prev_icon, icon_name,icon_pixmapv);
 	}
 	private void tooltip_direct_cb()
 	{
@@ -290,30 +303,26 @@ public class SNItemProxy: Object
 	}
 	private void unbox_tooltip(Variant? tooltipv)
 	{
+		this.has_tooltip = true;
 		if (tooltipv== null)
-		{
-			this.has_tooltip = true;
 			return;
-		}
-		else
-			this.has_tooltip = false;
 		var icon_name = tooltipv.get_child_value(0).get_string();
 		var icon_pixmap = tooltipv.get_child_value(1);
-		tooltip_icon = change_icon(icon_name, icon_pixmap);
+		tooltip_icon = change_icon(tooltip_icon, icon_name, icon_pixmap);
 		/*FIXME: Markup parser */
 		tooltip_markup = tooltipv.get_child_value(2).get_string()+ tooltipv.get_child_value(3).get_string();
-//~ 		print("%s\n",tooltip_markup);
 	}
-	private Icon? change_icon(string? icon_name, Variant? pixmaps)
+	private Icon? change_icon(Icon? prev_icon, string? icon_name, Variant? pixmaps)
 	{
-		Icon? icon = null;
 		if (icon_name != null && icon_name.length > 0)
 		{
-			icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+			var icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
 			(icon as ThemedIcon).prepend_name(icon_name+"-panel");
+			return icon;
 		}
-		if (icon == null)
+		else
 		{
+			Icon? icon = null;
 			var first = true;
 			if (pixmaps != null)
 			{
@@ -334,10 +343,10 @@ public class SNItemProxy: Object
 						(icon as EmblemedIcon).add_emblem(emblem);
 					}
 				}
+				return icon;
 			}
 			else
-				icon = null;
+				return prev_icon;
 		}
-		return icon;
 	}
 }

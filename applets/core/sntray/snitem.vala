@@ -131,7 +131,7 @@ public class SNItem : FlowBoxChild
 	private bool query_tooltip_cb(int x, int y, bool keyboard, Tooltip tip)
 	{
 		tip.set_icon_from_gicon(proxy.tooltip_icon,IconSize.DND);
-		tip.set_markup(proxy.tooltip_markup ?? proxy.title);
+		tip.set_text(proxy.tooltip_markup ?? proxy.title);
 		return true;
 	}
 	private void iface_new_icon_cb()
