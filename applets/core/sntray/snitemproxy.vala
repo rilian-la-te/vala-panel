@@ -129,6 +129,7 @@ public class SNItemProxy: Object
 {
 	private SNItemIface iface;
 	private FreeDesktopProperties props_iface;
+	private bool use_attention_icon;
 	public string bus_name
 	{private get; internal construct;}
 	public string object_path
@@ -143,9 +144,11 @@ public class SNItemProxy: Object
 	public bool items_in_menu {get {return iface.items_in_menu;}}
 	/* Icon properties */
 	public string icon_theme_path {get; private set;}
-	public Icon? main_icon {get; private set;}
-	public Icon? overlay_icon {get; private set;}
-	public Icon? attention_icon {get; private set;}
+	public EmblemedIcon? icon
+	{get; private set;}
+	private Icon? main_icon;
+	private Emblem? overlay_icon;
+	private Icon? attention_icon;
 	public string attention_movie_name {owned get {return iface.attention_movie_name;}}
 	/* Tooltip */
 	public bool has_tooltip {get; private set;}
@@ -180,6 +183,7 @@ public class SNItemProxy: Object
 	{
 		this.bus_name = bus_name;
 		this.object_path = object_path;
+		use_attention_icon = false;
 		try
 		{
 			this.iface = Bus.get_proxy_sync (BusType.SESSION,bus_name,object_path);
@@ -236,23 +240,39 @@ public class SNItemProxy: Object
 	/*FIXME: icons and tooltip always direct now */
 	private void all_icons_direct_cb(HashTable<string,Variant?> props)
 	{
-		/* Main icon */
-		var icon_namev = props.lookup("IconName");
-		var icon_pixmap = props.lookup("IconPixmap");
-		change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
-			main_icon = change_icon.end(res);
+		/* Overlay icon */
+		var icon_namev = props.lookup("OverlayIconName");
+		var icon_pixmap = props.lookup("OverlayIconPixmap");
+		change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
+			var res_icon = change_icon.end(res);
+			if (res_icon != null)
+				overlay_icon = new Emblem(res_icon);
+			else
+				overlay_icon = null;
+			if (icon != null)
+				icon.clear_emblems();
+			if (icon != null && overlay_icon != null)
+				icon.add_emblem(overlay_icon);
 		});
 		/* Attention icon */
 		icon_namev = props.lookup("AttentionIconName");
 		icon_pixmap = props.lookup("AttentionIconPixmap");
 		change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
 			attention_icon = change_icon.end(res);
-		});		
-		/* Overlay icon */
-		icon_namev = props.lookup("OverlayIconName");
-		icon_pixmap = props.lookup("OverlayIconPixmap");
-		change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
-			overlay_icon = change_icon.end(res);
+			if (attention_icon != null)
+			{
+				use_attention_icon = true;
+				icon = new EmblemedIcon(attention_icon,overlay_icon);
+			}
+			else use_attention_icon = false;
+		});
+		/* Main icon */
+		icon_namev = props.lookup("IconName");
+		icon_pixmap = props.lookup("IconPixmap");
+		change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
+			main_icon = change_icon.end(res);
+			if (!use_attention_icon)
+				icon = new EmblemedIcon(main_icon,overlay_icon);
 		});
 	}
 	private void on_path_cb(string? new_path)
@@ -276,14 +296,30 @@ public class SNItemProxy: Object
 		if (appender == "Attention")
 			change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
 				attention_icon = change_icon.end(res);
+				if (attention_icon != null)
+				{
+					use_attention_icon = true;
+					icon = new EmblemedIcon(attention_icon,overlay_icon);
+				}
+				else use_attention_icon = false;
 			});
 		else if (appender == "Overlay")
 			change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
-				overlay_icon = change_icon.end(res);
+				var res_icon = change_icon.end(res);
+				if (res_icon != null)
+					overlay_icon = new Emblem(res_icon);
+				else
+					overlay_icon = null;
+				if (icon != null)
+					icon.clear_emblems();
+				if (icon != null && overlay_icon != null)
+					icon.add_emblem(overlay_icon);
 			});
 		else
 			change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
 				main_icon = change_icon.end(res);
+				if (!use_attention_icon)
+					icon = new EmblemedIcon(main_icon,overlay_icon);
 			});
 	}
 	private void tooltip_direct_cb()
@@ -311,31 +347,33 @@ public class SNItemProxy: Object
 		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
 		if (icon_name != null && icon_name.length > 0)
 		{
-				var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
-				new_icon.prepend_name(icon_name+"-panel");
-				if (prev_icon != null && prev_icon is ThemedIcon)
-					themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
-				return new_icon;
+			var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+			themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
+			return new_icon;
 		}
 		else if (pixmaps != null)
 		{
 			var iter = pixmaps.iterator();
 			for (var pixmap = iter.next_value(); pixmap!=null; pixmap = iter.next_value())
 			{
-				/*FIXME: Need a find suitable icon for size */
+				/*FIXME: Need a find suitable icon for size. Now just pick smaller */
 				Variant pixbuf = pixmap.get_child_value(2);
 				return new BytesIcon(pixbuf.get_data_as_bytes());
 			}
 		}
-		return prev_icon;
+		return null;
 	}
-	private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon prev_icon)
+	private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon? prev_icon)
 	{
-		if(IconTheme.get_default().has_icon(icon.get_names()[2]))	
+		for (int i = icon.get_names().length - 1; i >= 0; i--)
+			if(IconTheme.get_default().has_icon(icon.get_names()[i]))
+				return;
+		IconTheme.get_default().rescan_if_needed();
+		if (prev_icon == null)
 			return;
-		if((prev_icon.get_names().length <= 3) || IconTheme.get_default().has_icon(prev_icon.get_names()[2]))
+		if((prev_icon.get_names().length <= 2) || IconTheme.get_default().has_icon(prev_icon.get_names()[1]))
+			icon.append_name(prev_icon.get_names()[1]);
+		else if (prev_icon.get_names().length > 2)
 			icon.append_name(prev_icon.get_names()[2]);
-		else if (prev_icon.get_names().length > 3)
-			icon.append_name(prev_icon.get_names()[3]);
 	}
 }

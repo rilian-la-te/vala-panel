@@ -18,8 +18,6 @@ public class SNItem : FlowBoxChild
 	private Box box;
 	private Label label;
 	private Image image;
-	private Image overlay_image;
-	private Overlay icon_overlay;
 	private bool is_attention_icon;
 	DBusMenuGtkClient? client;
 	Gtk.Menu menu;
@@ -38,11 +36,7 @@ public class SNItem : FlowBoxChild
 		box = new Box(Orientation.HORIZONTAL,0);
 		label = new Label(null);
 		image = new Image();
-		overlay_image = new Image();
-		icon_overlay = new Overlay();
-		icon_overlay.add(image);
-		icon_overlay.add_overlay(overlay_image);
-		box.add(icon_overlay);
+		box.add(image);
 		box.add(label);
 		ebox.add(box);
 		this.add(ebox);
@@ -81,12 +75,8 @@ public class SNItem : FlowBoxChild
 		proxy.notify.connect((pspec)=>{
 			if (pspec.name == "status")
 				iface_new_status_cb();
-			if (pspec.name == "main-icon")
+			if (pspec.name == "icon")
 				iface_new_icon_cb();
-			if (pspec.name == "overlay-icon")
-				iface_new_overlay_icon_cb();
-			if (pspec.name == "attention-icon")
-				iface_new_attention_icon_cb();
 			if (pspec.name == "label")
 				iface_new_label_cb();
 			if (pspec.name == "main-icon")
@@ -99,7 +89,6 @@ public class SNItem : FlowBoxChild
 		});
 		this.query_tooltip.connect(query_tooltip_cb);
 		IconTheme.get_default().changed.connect(()=>{
-			overlay_image.set_from_gicon(overlay_image.gicon,IconSize.MENU);
 			image.set_from_gicon(image.gicon,IconSize.MENU);
 		});
 		this.show_all();
@@ -116,8 +105,6 @@ public class SNItem : FlowBoxChild
 	{
 		IconTheme.get_default().append_search_path(proxy.icon_theme_path);
 		iface_new_icon_cb();
-		iface_new_overlay_icon_cb();
-		iface_new_attention_icon_cb();
 	}
 	private void iface_new_status_cb()
 	{
@@ -141,37 +128,15 @@ public class SNItem : FlowBoxChild
 	}
 	private void iface_new_icon_cb()
 	{
-		if (is_attention_icon)
-			return;
-		if (proxy.main_icon != null)
+		if (proxy.icon != null)
 		{
-			image.set_from_gicon(proxy.main_icon,IconSize.MENU);
+			image.set_from_gicon(proxy.icon,IconSize.MENU);
 			image.set_pixel_size(16);
 			image.show();
 		}
 		else
 			image.hide();
 			
-	}
-	private void iface_new_overlay_icon_cb()
-	{
-		if (proxy.overlay_icon != null)
-		{
-			overlay_image.set_from_gicon(proxy.overlay_icon,IconSize.MENU);
-			overlay_image.show();
-		}
-		else
-			overlay_image.hide();
-	}
-	private void iface_new_attention_icon_cb()
-	{
-		if (proxy.attention_icon != null)
-		{
-			image.set_from_gicon(proxy.attention_icon,IconSize.MENU);
-			is_attention_icon = true;
-			image.show();
-		}
-		iface_new_icon_cb();
 	}
 	private void iface_new_label_cb()
 	{
