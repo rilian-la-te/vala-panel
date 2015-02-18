@@ -136,6 +136,8 @@ public class DBusMenuItem : Object
 		var old_value = this.store.get_prop(name);
 		this.store.set_prop(name, val);
 		var new_value = this.store.get_prop(name);
+		if ((old_value ?? new_value) == null)
+			return;
 		if (new_value != null && old_value == null
 			|| old_value == null && new_value != null
 			|| !old_value.equal(new_value))
@@ -437,6 +439,8 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 				{
 					this.submenu = new Gtk.Menu();
 					this.submenu.insert.connect(on_child_insert_cb);
+					foreach(var item in this.item.get_children())
+						submenu.add(DBusMenuGtkClient.new_item(item));
 				}
 				else
 					this.submenu = null;
@@ -487,10 +491,7 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 		{
 			var icon = image.gicon;
 			if (!(icon != null && icon is ThemedIcon && is_themed_icon))
-			{
 				is_themed_icon = false;
-				image.hide();
-			}
 			return;
 		}
 		Icon? icon = null;
@@ -503,17 +504,17 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 			icon = new BytesIcon(val.get_data_as_bytes());
 		else return;
 		image.set_from_gicon(icon,IconSize.MENU);
-		image.show();
+		image.set_pixel_size(16);
 	}
 	private void on_child_added_cb(int id,DBusMenuItem item)
 	{
 		if (this.submenu != null)
-			this.submenu.append (DBusMenuGtkClient.new_item(item) as Gtk.MenuItem);
+			this.submenu.append (DBusMenuGtkClient.new_item(item));
 		else
 		{
 			stderr.printf("Adding new item to item without submenu! Creating new submenu...\n");
 			this.submenu = new Gtk.Menu();
-			this.submenu.append (DBusMenuGtkClient.new_item(item) as Gtk.MenuItem);
+			this.submenu.append (DBusMenuGtkClient.new_item(item));
 		}
 	}
 	private void on_child_removed_cb(int id, DBusMenuItem item)
@@ -540,11 +541,8 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 	}
 	private void on_select_cb()
 	{
-		if (this.submenu != null)
-		{
-			item.handle_event("opened",null,0);
-			item.request_about_to_show();
-		}
+		item.handle_event("opened",null,0);
+		item.request_about_to_show();
 	}
 	private void on_deselect_cb()
 	{
@@ -555,6 +553,7 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 	{
 		var ch = w as DBusMenuGtkItemIface;
 		this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
+		this.submenu.queue_resize();
 	}
 	protected override void draw_indicator(Cairo.Context cr)
 	{
@@ -588,7 +587,7 @@ public class DBusMenuGTKSeparatorItem: SeparatorMenuItem, DBusMenuGtkItemIface
 public class DBusMenuGtkClient : DBusMenuClient
 {
 	private Gtk.Menu root_menu;
-	public static DBusMenuGtkItemIface new_item(DBusMenuItem item)
+	public static Gtk.MenuItem new_item(DBusMenuItem item)
 	{
 		if (item.wants_separator())
 			return new DBusMenuGTKSeparatorItem(item);
@@ -603,7 +602,8 @@ public class DBusMenuGtkClient : DBusMenuClient
 	{
 		root_menu = menu;
 		root_menu.foreach((c)=>{menu.remove(c);});
-		root_menu.notify["visible"].connect(open_state_changed_cb);
+		root_menu.realize.connect(open_cb);
+		root_menu.unrealize.connect(close_cb);
 		root_menu.insert.connect(on_child_insert_cb);
 		get_root_item().child_added.connect(on_child_added_cb);
 		get_root_item().child_moved.connect(on_child_moved_cb);
@@ -614,19 +614,19 @@ public class DBusMenuGtkClient : DBusMenuClient
 			IconTheme.get_default().append_search_path(path);
 		root_menu.show_all();
 	}
-	private void open_state_changed_cb()
+	private void open_cb()
 	{
-		if (root_menu.visible)
-		{
-			get_root_item().handle_event("opened",null,0);
-			get_root_item().request_about_to_show();
-		}
-		else
-			get_root_item().handle_event("closed",null,0);
+		get_root_item().handle_event("opened",null,0);
+		get_root_item().request_about_to_show();
+		root_menu.queue_resize();
+	}
+	private void close_cb()
+	{
+		get_root_item().handle_event("closed",null,0);
 	}
 	private void on_child_added_cb(int id, DBusMenuItem item)
 	{
-		root_menu.append(new_item(item) as Gtk.MenuItem);
+		root_menu.append(new_item(item));
 	}
 	private void on_child_moved_cb(int oldpos, int newpos, DBusMenuItem item)
 	{
