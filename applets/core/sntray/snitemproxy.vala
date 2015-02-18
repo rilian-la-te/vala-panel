@@ -347,9 +347,14 @@ public class SNItemProxy: Object
 		var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
 		if (icon_name != null && icon_name.length > 0)
 		{
-			var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
-			themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
-			return new_icon;
+			if (icon_name[0] == '/')
+				return new FileIcon(File.new_for_path(icon_name));
+			else
+			{
+				var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+				themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
+				return new_icon;
+			}
 		}
 		else if (pixmaps != null)
 		{
@@ -365,15 +370,18 @@ public class SNItemProxy: Object
 	}
 	private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon? prev_icon)
 	{
-		for (int i = icon.get_names().length - 1; i >= 0; i--)
-			if(IconTheme.get_default().has_icon(icon.get_names()[i]))
+		var icon_names = icon.get_names();
+		for (int i = icon_names.length - 1; i >= 0; i--)
+			if(IconTheme.get_default().has_icon(icon_names[i]))
 				return;
 		IconTheme.get_default().rescan_if_needed();
 		if (prev_icon == null)
 			return;
-		if((prev_icon.get_names().length <= 2) || IconTheme.get_default().has_icon(prev_icon.get_names()[1]))
-			icon.append_name(prev_icon.get_names()[1]);
-		else if (prev_icon.get_names().length > 2)
-			icon.append_name(prev_icon.get_names()[2]);
+		var prev_names = prev_icon.get_names();
+		var len = prev_names.length;
+		if((len <= 2) || IconTheme.get_default().has_icon(prev_names[1]))
+			icon.append_name(prev_names[1]);
+		else if (len > 2)
+			icon.append_name(prev_names[2]);
 	}
 }

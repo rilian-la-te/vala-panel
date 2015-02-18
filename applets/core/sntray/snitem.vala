@@ -36,6 +36,8 @@ public class SNItem : FlowBoxChild
 		box = new Box(Orientation.HORIZONTAL,0);
 		label = new Label(null);
 		image = new Image();
+		/* FIXME: Remove hardcoded size */
+		image.set_pixel_size(16);
 		box.add(image);
 		box.add(label);
 		ebox.add(box);
@@ -89,7 +91,7 @@ public class SNItem : FlowBoxChild
 		});
 		this.query_tooltip.connect(query_tooltip_cb);
 		IconTheme.get_default().changed.connect(()=>{
-			image.set_from_gicon(image.gicon,IconSize.MENU);
+			iface_new_icon_cb();
 		});
 		this.show_all();
 	}
@@ -131,7 +133,6 @@ public class SNItem : FlowBoxChild
 		if (proxy.icon != null)
 		{
 			image.set_from_gicon(proxy.icon,IconSize.MENU);
-			image.set_pixel_size(16);
 			image.show();
 		}
 		else
