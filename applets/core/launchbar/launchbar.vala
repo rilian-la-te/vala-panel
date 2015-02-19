@@ -91,7 +91,7 @@ private class LaunchButton: FlowBoxChild
 		this.drag_end.connect((context)=>{
 			if (commit)
 				this.get_launchbar().commit_ids();
-			else 
+			else
 				this.get_launchbar().undo_removal_request();
 		});
 		ebox.add(img);
@@ -235,12 +235,12 @@ public class Launchbar: Applet
         layout.drag_drop.connect(drag_drop_cb);
         layout.drag_data_received.connect(drag_data_received_cb);
         layout.set_sort_func(launchbar_layout_sort_func);
-        var loaded_ids = settings.get_strv(BUTTONS);
-        load_buttons(loaded_ids);
         settings.changed.connect(()=>{
-			loaded_ids = settings.get_strv(BUTTONS);
+			var loaded_ids = settings.get_strv(BUTTONS);
 			load_buttons(loaded_ids);
 		});
+        var loaded_ids = settings.get_strv(BUTTONS);
+        load_buttons(loaded_ids);
 		layout.child_activated.connect((ch)=>{
 			var lb = ch as LaunchButton;
 			lb.launch();

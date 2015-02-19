@@ -90,6 +90,7 @@ public class SNItem : FlowBoxChild
 			this.get_applet().request_remove_item(this,object_name+(string)object_path);
 		});
 		this.query_tooltip.connect(query_tooltip_cb);
+		this.popup_menu.connect(context_menu);
 		IconTheme.get_default().changed.connect(()=>{
 			iface_new_icon_cb();
 		});
@@ -124,9 +125,20 @@ public class SNItem : FlowBoxChild
 	}
 	private bool query_tooltip_cb(int x, int y, bool keyboard, Tooltip tip)
 	{
-		tip.set_icon_from_gicon(proxy.tooltip_icon,IconSize.DND);
-		tip.set_text(proxy.tooltip_markup ?? proxy.title);
+		tip.set_icon_from_gicon(proxy.tooltip_icon,IconSize.DIALOG);
+		tip.set_markup(proxy.tooltip_markup ?? proxy.title);
 		return true;
+	}
+	private Image? find_img_in_container(Container container)
+	{
+		foreach (var ch in container.get_children())
+		{
+			if (ch is Image)
+				return ch as Image;
+			else if (ch is Container)
+				return (find_img_in_container(ch as Container));
+		}
+		return null;
 	}
 	private void iface_new_icon_cb()
 	{
@@ -137,7 +149,7 @@ public class SNItem : FlowBoxChild
 		}
 		else
 			image.hide();
-			
+
 	}
 	private void iface_new_label_cb()
 	{
@@ -183,23 +195,25 @@ public class SNItem : FlowBoxChild
 				stderr.printf("%s\n",e.message);
 		}
 	}
-	public void context_menu()
+	public bool context_menu()
 	{
 		int x,y;
 		if (proxy.items_in_menu || proxy.menu != null)
 		{
 			menu.unmap.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
 			menu.popup(null,null,get_applet().menu_position_func,0,0);
-			return;
+			return true;
 		}
 		get_applet().popup_position_helper(this,out x,out y);
 		try
 		{
 			proxy.context_menu(x,y);
+			return true;
 		}
 		catch (Error e) {
 				stderr.printf("%s\n",e.message);
 		}
+		return false;
 	}
 	public void scroll (int x, int y)
 	{

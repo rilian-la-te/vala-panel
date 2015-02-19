@@ -153,6 +153,7 @@ public class SNItemProxy: Object
 	/* Tooltip */
 	public bool has_tooltip {get; private set;}
 	public Icon? tooltip_icon {get; private set;}
+	public string? tooltip_text {get; private set;}
 	public string? tooltip_markup {get; private set;}
 	public signal void proxy_destroyed();
 	/* Ayatana */
@@ -336,11 +337,24 @@ public class SNItemProxy: Object
 			return;
 		var icon_namev = tooltipv.get_child_value(0);
 		var icon_pixmap = tooltipv.get_child_value(1);
-		change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
-			tooltip_icon = change_icon.end(res);
-		});
-		/*FIXME: Markup parser */
-		tooltip_markup = tooltipv.get_child_value(2).get_string()+ tooltipv.get_child_value(3).get_string();
+		var raw_text = tooltipv.get_child_value(2).get_string() + tooltipv.get_child_value(3).get_string();
+		if (raw_text.index_of("</") >= 0)
+		{
+			var markup_parser = new QRichTextParser(raw_text);
+			markup_parser.translate_markup();
+			tooltip_markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
+			change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
+				tooltip_icon = (markup_parser.icon != null)	? markup_parser.icon: change_icon.end(res);
+			});
+		}
+		else
+		{
+			tooltip_markup = raw_text;
+			change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
+				tooltip_icon = change_icon.end(res);
+			});
+		}
+		Tooltip.trigger_tooltip_query(Gdk.Display.get_default());
 	}
 	private async Icon? change_icon(Icon? prev_icon, Variant? icon_namev, Variant? pixmaps)
 	{

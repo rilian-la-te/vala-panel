@@ -6,6 +6,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snhost.vala
     dbusmenu.vala
     snitemproxy.vala
+    qrichtextparser.vala
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
