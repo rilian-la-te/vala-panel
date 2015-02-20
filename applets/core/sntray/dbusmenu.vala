@@ -49,7 +49,7 @@ public class PropertyStore : Object
 		VariantType type = checker.lookup(name);
 		if (val == null)
 			dict.remove(name);
-		else if (val.is_of_type(type) && type != null)
+		else if (type != null && val.is_of_type(type))
 			dict.insert_value(name,val);
 		init_default();
 	}
@@ -65,6 +65,7 @@ public class PropertyStore : Object
 		checker.insert("toggle-type", VariantType.STRING);
 		checker.insert("icon-name", VariantType.STRING);
 		checker.insert("accessible-desc", VariantType.STRING);
+		checker.insert("shortcut", new VariantType("aas"));
 		checker.insert("toggle-state", VariantType.INT32);
 		checker.insert("icon-data", new VariantType("ay"));
 	}
@@ -372,7 +373,8 @@ public class DBusMenuClient : Object
 					items.lookup(req_id).set_variant_property(key,val);
 			else
 				while(ch_iter.next("s",out key))
-					items.lookup(req_id).set_variant_property(key,null);
+					if (items.lookup(req_id) != null)
+						items.lookup(req_id).set_variant_property(key,null);
 		}
 	}
 }
@@ -385,7 +387,7 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 {
 	private static const string[] allowed_properties = {"visible","enabled","label","type",
 											"children-display","toggle-type",
-											"toggle-state","icon-name","icon-data"};
+											"toggle-state","icon-name","icon-data","accessible-desc"};
 	public DBusMenuItem item
 	{get; protected set;}
 	private bool has_indicator;
@@ -459,7 +461,7 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 					this.active = false;
 				break;
 			case "accessible-desc":
-				this.set_tooltip_text(item.get_string_property("accessible-desc"));
+				this.set_tooltip_text(val != null ? val.get_string() : null);
 				break;
 			case "icon-name":
 			case "icon-data":
