@@ -269,19 +269,14 @@ public class SNItemProxy: Object
 		change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
 			attention_icon = change_icon.end(res);
 			if (attention_icon != null)
-			{
-				use_attention_icon = true;
 				icon = new EmblemedIcon(attention_icon,overlay_icon);
-			}
-			else use_attention_icon = false;
 		});
 		/* Main icon */
 		icon_namev = props.lookup("IconName");
 		icon_pixmap = props.lookup("IconPixmap");
 		change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
 			main_icon = change_icon.end(res);
-			if (!use_attention_icon)
-				icon = new EmblemedIcon(main_icon,overlay_icon);
+			icon = new EmblemedIcon(main_icon,overlay_icon);
 		});
 	}
 	private void on_path_cb(string? new_path)
@@ -328,7 +323,10 @@ public class SNItemProxy: Object
 			change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
 				main_icon = change_icon.end(res);
 				if (!use_attention_icon)
+				{
 					icon = new EmblemedIcon(main_icon,overlay_icon);
+					use_attention_icon = false;
+				}
 			});
 	}
 	private void tooltip_direct_cb()
@@ -361,7 +359,6 @@ public class SNItemProxy: Object
 			change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
 				tooltip_icon = change_icon.end(res);
 			});
-			print(iface.icon_accessible_desc);
 		}
 		Tooltip.trigger_tooltip_query(Gdk.Display.get_default());
 	}
@@ -419,9 +416,9 @@ public class SNItemProxy: Object
 	private void accessible_desc_cb(Variant? desc, Variant? adesc)
 	{
 		if (adesc != null && use_attention_icon)
-			accessible_desc = adesc.get_string();
+			accessible_desc = adesc.get_string().length > 0 ? adesc.get_string() : null;
 		else if (desc != null)
-			accessible_desc = desc.get_string();
+			accessible_desc = desc.get_string().length > 0 ? desc.get_string() : null;
 		else
 			accessible_desc = null;
 	}

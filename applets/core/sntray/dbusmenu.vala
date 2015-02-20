@@ -33,7 +33,7 @@ public interface DBusMenuIface : Object
 							[DBus (signature="a(ias)")] Variant removed_props);
 	public abstract signal void layout_updated(uint revision, int parent);
 	public abstract signal void item_activation_requested(int id, uint timestamp);
-}	
+}
 
 public class PropertyStore : Object
 {
@@ -64,6 +64,7 @@ public class PropertyStore : Object
 		checker.insert("children-display", VariantType.STRING);
 		checker.insert("toggle-type", VariantType.STRING);
 		checker.insert("icon-name", VariantType.STRING);
+		checker.insert("accessible-desc", VariantType.STRING);
 		checker.insert("toggle-state", VariantType.INT32);
 		checker.insert("icon-data", new VariantType("ay"));
 	}
@@ -72,7 +73,7 @@ public class PropertyStore : Object
 		if (props != null)
 		{
 			VariantIter iter = props.iterator();
-			string name; 
+			string name;
 			Variant v;
 			while(iter.next ("{sv}", out name, out v))
 				this.set_prop(name,v);
@@ -250,7 +251,7 @@ public class DBusMenuClient : Object
 		clean_items();
 		if (layout_update_required)
 			yield layout_update();
-		else 
+		else
 			layout_update_in_progress = false;
 	}
 	private void parse_layout(uint rev, Variant layout)
@@ -384,7 +385,7 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 {
 	private static const string[] allowed_properties = {"visible","enabled","label","type",
 											"children-display","toggle-type",
-											"toggle-state","icon-name","icon-data"};	
+											"toggle-state","icon-name","icon-data"};
 	public DBusMenuItem item
 	{get; protected set;}
 	private bool has_indicator;
@@ -456,6 +457,9 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 					this.active = true;
 				else
 					this.active = false;
+				break;
+			case "accessible-desc":
+				this.set_tooltip_text(item.get_string_property("accessible-desc"));
 				break;
 			case "icon-name":
 			case "icon-data":
@@ -583,7 +587,7 @@ public class DBusMenuGTKSeparatorItem: SeparatorMenuItem, DBusMenuGtkItemIface
 				break;
 		}
 	}
-} 
+}
 public class DBusMenuGtkClient : DBusMenuClient
 {
 	private Gtk.Menu root_menu;
