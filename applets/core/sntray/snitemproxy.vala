@@ -63,6 +63,8 @@ public interface SNItemIface : Object
 	{owned get;}
 	public abstract string icon_name
 	{owned get;}
+	public abstract string icon_accessible_desc
+	{owned get;}
 	[DBus(signature = "a(iiay)")]
 	public abstract Variant icon_pixmap
 	{owned get;}
@@ -72,6 +74,8 @@ public interface SNItemIface : Object
 	public abstract Variant overlay_icon_pixmap
 	{owned get;}
 	public abstract string attention_icon_name
+	{owned get;}
+	public abstract string attention_accessible_desc
 	{owned get;}
 	[DBus(signature = "a(iiay)")]
 	public abstract Variant attention_icon_pixmap
@@ -153,13 +157,14 @@ public class SNItemProxy: Object
 	/* Tooltip */
 	public bool has_tooltip {get; private set;}
 	public Icon? tooltip_icon {get; private set;}
-	public string? tooltip_text {get; private set;}
 	public string? tooltip_markup {get; private set;}
-	public signal void proxy_destroyed();
+	public string? accessible_desc {get; private set;}
 	/* Ayatana */
 	public string? label {get; private set;}
 	public string? label_guide {get; private set;}
 	public uint index {get {return iface.x_ayatana_ordering_index;}}
+	/* Signals and functions */
+	public signal void proxy_destroyed();
 	public void context_menu(int x, int y) throws Error
 	{
 		iface.context_menu(x,y);
@@ -198,9 +203,9 @@ public class SNItemProxy: Object
 		init_properties();
 		props_iface.properties_changed.connect((src,props,inv)=>{if (src == FreeDesktopProperties.KDE_NAME) props_changed_burst(props);});
 		iface.new_status.connect((st)=>{this.status = st;});
-		iface.new_icon.connect(()=>{one_icon_direct_cb("");});
-		iface.new_overlay_icon.connect(()=>{one_icon_direct_cb("Overlay");});
-		iface.new_attention_icon.connect(()=>{one_icon_direct_cb("Attention");});
+		iface.new_icon.connect(()=>{one_icon_direct_cb(""); accessible_desc_direct_cb();});
+		iface.new_overlay_icon.connect(()=>{one_icon_direct_cb("Overlay"); accessible_desc_direct_cb();});
+		iface.new_attention_icon.connect(()=>{one_icon_direct_cb("Attention"); accessible_desc_direct_cb();});
 		iface.new_icon_theme_path.connect(on_path_cb);
 		iface.x_ayatana_new_label.connect((lb,g)=>{this.label = lb; this.label_guide = g;});
 		iface.new_tool_tip.connect(tooltip_direct_cb);
@@ -229,6 +234,9 @@ public class SNItemProxy: Object
 		label = props.lookup("Status");
 		this.status = (label != null) ? status_from_string(label.get_string()) : this.status;
 		all_icons_direct_cb(props);
+		label = props.lookup("IconAccessibleDesc");
+		var alabel = props.lookup("AttentionAccessibleDesc");
+		accessible_desc_cb(label,alabel);
 	}
 	private void title_direct_cb()
 	{
@@ -338,7 +346,7 @@ public class SNItemProxy: Object
 		var icon_namev = tooltipv.get_child_value(0);
 		var icon_pixmap = tooltipv.get_child_value(1);
 		var raw_text = tooltipv.get_child_value(2).get_string() + tooltipv.get_child_value(3).get_string();
-		if (raw_text.index_of("</") >= 0)
+		if (raw_text != null && raw_text.index_of("</") >= 0)
 		{
 			var markup_parser = new QRichTextParser(raw_text);
 			markup_parser.translate_markup();
@@ -353,6 +361,7 @@ public class SNItemProxy: Object
 			change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
 				tooltip_icon = change_icon.end(res);
 			});
+			print(iface.icon_accessible_desc);
 		}
 		Tooltip.trigger_tooltip_query(Gdk.Display.get_default());
 	}
@@ -397,5 +406,23 @@ public class SNItemProxy: Object
 			icon.append_name(prev_names[1]);
 		else if (len > 2)
 			icon.append_name(prev_names[2]);
+	}
+	private void accessible_desc_direct_cb()
+	{
+		try
+		{
+			var desc = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"IconAccessibleDesc");
+			var adesc = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"AttentionAccessibleDesc");
+			accessible_desc_cb(desc,adesc);
+		} catch (Error e) {}
+	}
+	private void accessible_desc_cb(Variant? desc, Variant? adesc)
+	{
+		if (adesc != null && use_attention_icon)
+			accessible_desc = adesc.get_string();
+		else if (desc != null)
+			accessible_desc = desc.get_string();
+		else
+			accessible_desc = null;
 	}
 }
