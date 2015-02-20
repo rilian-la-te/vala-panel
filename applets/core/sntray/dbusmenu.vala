@@ -257,7 +257,8 @@ public class DBusMenuClient : Object
 	}
 	private void parse_layout(uint rev, Variant layout)
 	{
-		if (rev < layout_revision) return;
+		/* Removed revision handling because of bug */
+//~ 		if (rev < layout_revision) return;
 		/* layout signature must be "(ia{sv}av)" */
 		int id = layout.get_child_value(0).get_int32();
 		Variant props = layout.get_child_value(1);
@@ -350,14 +351,14 @@ public class DBusMenuClient : Object
 			iface.get_group_properties(requested_props_ids,names,out props);
 		} catch (GLib.Error e) {stderr.printf("%s\n",e.message);}
 		requested_props_ids = {};
-		parse_props(props,false);
+		parse_props(props);
 	}
     private void props_updated_cb (Variant updated_props, Variant removed_props)
     {
-		parse_props(updated_props,false);
-		parse_props(removed_props,true);
+		parse_props(updated_props);
+		parse_props(removed_props);
     }
-    private void parse_props(Variant props, bool is_removing)
+    private void parse_props(Variant props)
     {
 		/*updated properties signature is a(ia{sv}), removed is a(ias)*/
 		var iter = props.iterator();
@@ -366,15 +367,23 @@ public class DBusMenuClient : Object
 			int req_id = props_req.get_child_value(0).get_int32();
 			Variant props_id = props_req.get_child_value(1);
 			var ch_iter = props_id.iterator();
-			string key;
-			Variant val;
-			if (!is_removing)
-				while(ch_iter.next("{sv}",out key, out val))
-					items.lookup(req_id).set_variant_property(key,val);
-			else
-				while(ch_iter.next("s",out key))
+			Variant? val;
+			for (val = ch_iter.next_value(); val != null; val = ch_iter.next_value())
+			{
+				if (val.get_type_string() == "{sv}")
+				{
+					var key = val.get_child_value(0).get_string();
+					var prop = val.get_child_value(1).get_variant();
+					if (items.lookup(req_id) != null)
+						items.lookup(req_id).set_variant_property(key,prop);
+				}
+				else if (val.get_type_string() == "s")
+				{
+					var key = val.get_string();
 					if (items.lookup(req_id) != null)
 						items.lookup(req_id).set_variant_property(key,null);
+				}
+			}
 		}
 	}
 }
