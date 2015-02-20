@@ -129,17 +129,6 @@ public class SNItem : FlowBoxChild
 		tip.set_markup(proxy.tooltip_markup ?? proxy.accessible_desc ?? proxy.title);
 		return true;
 	}
-	private Image? find_img_in_container(Container container)
-	{
-		foreach (var ch in container.get_children())
-		{
-			if (ch is Image)
-				return ch as Image;
-			else if (ch is Container)
-				return (find_img_in_container(ch as Container));
-		}
-		return null;
-	}
 	private void iface_new_icon_cb()
 	{
 		if (proxy.icon != null)
@@ -168,14 +157,16 @@ public class SNItem : FlowBoxChild
 	}
 	private void setup_inner_menu()
 	{
+		menu = new Gtk.Menu();
+		menu.attach_to_widget(this,null);
+		menu.vexpand = true;
 		/*FIXME: MenuModel support */
 		if (client == null)
 		{
 			client = new DBusMenuGtkClient(object_name,proxy.menu);
-			menu = new Gtk.Menu();
 			client.attach_to_menu(menu);
-			menu.attach_to_widget(this,null);
 		}
+
 	}
 	public void primary_activate()
 	{
@@ -200,8 +191,9 @@ public class SNItem : FlowBoxChild
 		int x,y;
 		if (proxy.items_in_menu || proxy.menu != null)
 		{
-			menu.unmap.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
-			menu.popup(null,null,get_applet().menu_position_func,0,0);
+			menu.hide.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
+			menu.popup(null,null,get_applet().menu_position_func,0,get_current_event_time());
+			menu.reposition();
 			return true;
 		}
 		get_applet().popup_position_helper(this,out x,out y);

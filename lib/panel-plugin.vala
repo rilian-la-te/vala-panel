@@ -28,7 +28,7 @@ namespace ValaPanel
 	}
 	public interface AppletConfigurable
 	{
-		[CCode (returns_floating_reference = true)]	
+		[CCode (returns_floating_reference = true)]
 		public abstract Gtk.Dialog get_config_dialog();
 	}
 	[CCode (cname = "PanelApplet")]
@@ -114,6 +114,16 @@ namespace ValaPanel
 				pa.width = ext.width;
 				pa.height = ext.height;
 			}
+			if (popup is Gtk.Menu)
+			{
+				int min, nat, new_height = 0;
+				foreach (var item in (popup as Gtk.Menu).get_children())
+				{
+					item.get_preferred_height(out min, out nat);
+					new_height += nat;
+				}
+				pa.height = int.max(pa.height,new_height);
+			}
 			get_allocation(out a);
 			get_window().get_origin(out x, out y);
 			if (!get_has_window())
@@ -157,7 +167,7 @@ namespace ValaPanel
 		public void menu_position_func(Gtk.Menu m, out int x, out int y, out bool push)
 		{
 			popup_position_helper(m,out x, out y);
-			push=true;
+			push = true;
 		}
 		private void activate_configure(SimpleAction act, Variant? param)
 		{
@@ -180,7 +190,7 @@ namespace ValaPanel
 			dialog.present();
 		}
 		private void activate_remove(SimpleAction act, Variant? param)
-		{		
+		{
 		    /* If the configuration dialog is open, there will certainly be a crash if the
 		     * user manipulates the Configured Plugins list, after we remove this entry.
 		     * Close the configuration dialog if it is open. */

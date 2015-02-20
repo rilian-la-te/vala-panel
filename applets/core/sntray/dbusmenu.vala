@@ -476,6 +476,9 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 			case "icon-data":
 				update_icon(val);
 				break;
+			case "shortcut":
+			/* FIXME: Accels support*/
+				break;
 		}
 		if(activate_handler > 0)
 			SignalHandler.unblock(this,activate_handler);
