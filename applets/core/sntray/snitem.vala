@@ -19,7 +19,7 @@ public class SNItem : FlowBoxChild
 	private Label label;
 	private Image image;
 	private bool is_attention_icon;
-	DBusMenuGtkClient? client;
+	DBusMenu.GtkClient? client;
 	Gtk.Menu menu;
 	public SNItem (string n, ObjectPath p)
 	{
@@ -161,7 +161,7 @@ public class SNItem : FlowBoxChild
 		/*FIXME: MenuModel support */
 		if (client == null)
 		{
-			client = new DBusMenuGtkClient(object_name,proxy.menu);
+			client = new DBusMenu.GtkClient(object_name,proxy.menu);
 			client.attach_to_menu(menu);
 		}
 
