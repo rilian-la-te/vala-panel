@@ -137,6 +137,7 @@ public class QRichTextParser : Object
 				pango_markup_builder.append_printf("%d. ",list_order);
 			if (list_type == ListType.DOT)
 				pango_markup_builder.append_printf("+ ");
+			list_order++;
 		}
 		if (name == "img")
 		{
