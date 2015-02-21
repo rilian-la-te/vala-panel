@@ -1,6 +1,8 @@
-using ValaPanel;
 using Gtk;
 using GLib;
+using ValaPanel;
+using StatusNotifier;
+
 public class SNApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
@@ -16,24 +18,7 @@ public class SNTray: Applet, AppletConfigurable
 	static const string SHOW_COMM = "show-communications";
 	static const string SHOW_SYS = "show-system";
 	static const string SHOW_HARD = "show-hardware";
-	static SNHost host;
-	internal bool show_application_status
-	{get; set;}
-	internal bool show_communications
-	{get; set;}
-	internal bool show_system
-	{get; set;}
-	internal bool show_hardware
-	{get; set;}
-	internal IconSize icon_size
-	{get; set;}
-	HashTable<string,SNItem> items;
-	FlowBox layout;
-	ulong watcher_registration_handler;
-	static construct
-	{
-		host = new SNHost.from_path("org.kde.StatusNotifierHost-valapanel%d".printf(Gdk.CURRENT_TIME));
-	}
+	ItemBox layout;
 	public SNTray (Toplevel top, GLib.Settings? settings, uint number)
 	{
 		base(top,settings,number);
@@ -49,69 +34,19 @@ public class SNTray: Applet, AppletConfigurable
 	}
 	public override void create()
 	{
-		items = new HashTable<string,SNItem>(str_hash, str_equal);
-		layout = new FlowBox();
-		settings.bind(SHOW_APPS,this,SHOW_APPS,SettingsBindFlags.GET);
-		settings.bind(SHOW_COMM,this,SHOW_COMM,SettingsBindFlags.GET);
-		settings.bind(SHOW_SYS,this,SHOW_SYS,SettingsBindFlags.GET);
-		settings.bind(SHOW_HARD,this,SHOW_HARD,SettingsBindFlags.GET);
+		layout = new ItemBox();
+		settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.GET);
+		settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.GET);
+		settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.GET);
+		settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.GET);
 		settings.changed.connect((k)=>{layout.invalidate_filter();});
-		layout.selection_mode = SelectionMode.SINGLE;
-		layout.activate_on_single_click = true;
         layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
-		layout.child_activated.connect((ch)=>{
-			layout.select_child(ch);
-			(ch as SNItem).context_menu();
-		});
-		layout.set_sort_func((ch1,ch2)=>{return (int)(ch1 as SNItem).ordering_index - (int)(ch2 as SNItem).ordering_index;});
-		layout.set_filter_func((ch)=>{
-			var item = ch as SNItem;
-			if (show_application_status && item.cat == SNCategory.APPLICATION) return true;
-			if (show_communications && item.cat == SNCategory.COMMUNICATIONS) return true;
-			if (show_system && item.cat == SNCategory.SYSTEM) return true;
-			if (show_hardware && item.cat == SNCategory.HARDWARE) return true;
-			return false;
-		});
+        layout.set_menu_position_func((m,x,y,p)=>{this.menu_position_func(m,out x, out y, out p);});
 		this.add(layout);
-		host.watcher_items_changed.connect(()=>{
-				recreate_items();
-		});
-		watcher_registration_handler = host.notify["watcher-registered"].connect(()=>{
-			if (host.watcher_registered)
-			{
-				recreate_items();
-				SignalHandler.disconnect(host,watcher_registration_handler);
-			}
-		});
-		if (host.watcher_registered)
-		{
-			recreate_items();
-			SignalHandler.disconnect(host,watcher_registration_handler);
-		}
 		show_all();
-	}
-	private void recreate_items()
-	{
-		string[] new_items = host.watcher_items();
-		foreach (var item in new_items)
-		{
-			string[] np = item.split("/",2);
-			if (!items.contains(item))
-			{
-				var snitem = new SNItem(np[0],(ObjectPath)("/"+np[1]));
-				items.insert(item, snitem);
-				layout.add(snitem);
-			}
-		}
-	}
-	internal void request_remove_item(FlowBoxChild child, string item)
-	{
-		items.remove(item);
-		layout.remove(child);
-		child.destroy();
 	}
 } // End class
 

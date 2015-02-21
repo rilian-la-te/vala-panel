@@ -3,13 +3,21 @@ using Gtk;
 
 namespace DBusMenu
 {
+	[DBus (use_string_marshalling = true)]
+	public enum Status
+	{
+		[DBus (value = "normal")]
+		NORMAL,
+		[DBus (value = "notice")]
+		NOTICE
+	}
 	[DBus (name = "com.canonical.dbusmenu")]
 	public interface Iface : Object
 	{
 		public abstract uint version {get;}
 		public abstract string text_direction {owned get;}
 		[DBus (use_string_marshalling = true)]
-		public abstract SNStatus status {get;}
+		public abstract Status status {get;}
 		public abstract string[] icon_theme_path {owned get;}
 		/* layout signature is "(ia{sv}av)" */
 		public abstract void get_layout(int parent_id,
