@@ -38,8 +38,6 @@ namespace StatusNotifier
 			box = new Box(Orientation.HORIZONTAL,0);
 			label = new Label(null);
 			image = new Image();
-			/* FIXME: Remove hardcoded size */
-			image.set_pixel_size(16);
 			box.add(image);
 			box.add(label);
 			ebox.add(box);
@@ -93,6 +91,9 @@ namespace StatusNotifier
 			this.popup_menu.connect(context_menu);
 			IconTheme.get_default().changed.connect(()=>{
 				iface_new_icon_cb();
+			});
+			this.parent_set.connect((prev)=>{
+				get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
 			});
 			this.show_all();
 		}

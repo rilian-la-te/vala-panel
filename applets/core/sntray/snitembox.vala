@@ -20,7 +20,8 @@ namespace StatusNotifier
 		{get; set;}
 		public int icon_size
 		{get; set;}
-		internal unowned MenuPositionFunc? menu_position_func;
+		public unowned MenuPositionFunc? menu_position_func
+		{internal get; set;}
 		static construct
 		{
 			host = new Host("org.kde.StatusNotifierHost-itembox%d".printf(Gdk.CURRENT_TIME));
@@ -69,10 +70,6 @@ namespace StatusNotifier
 			Object(orientation: Orientation.HORIZONTAL,
 				   selection_mode: SelectionMode.SINGLE,
 				   activate_on_single_click: true);
-		}
-		public void set_menu_position_func(MenuPositionFunc? func)
-		{
-			this.menu_position_func = func;
 		}
 		private void recreate_items()
 		{
