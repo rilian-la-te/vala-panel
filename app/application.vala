@@ -131,6 +131,7 @@ namespace ValaPanel
 			});
 			pref_dialog.run();
 			pref_dialog.destroy();
+			pref_dialog = null;
 		}
 
 		public override void startup()
