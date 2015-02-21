@@ -555,12 +555,15 @@ public class DBusMenuGtkMainItem : CheckMenuItem, DBusMenuGtkItemIface
 	}
 	private void on_toggled_cb()
 	{
-		item.handle_event("clicked",new Variant.int32(0),0);
+		item.handle_event("clicked",new Variant.int32(0),get_current_event_time());
 	}
 	private void on_select_cb()
 	{
-		item.handle_event("opened",null,0);
-		item.request_about_to_show();
+		if (this.submenu != null)
+		{
+			item.handle_event("opened",null,0);
+			item.request_about_to_show();
+		}
 	}
 	private void on_deselect_cb()
 	{
