@@ -291,7 +291,7 @@ namespace StatusNotifier
 		{
 			if (new_path != null)
 			{
-				IconTheme.get_default().append_search_path(new_path);
+				IconTheme.get_default().prepend_search_path(new_path);
 				this.icon_theme_path = new_path;
 			}
 		}
@@ -401,6 +401,7 @@ namespace StatusNotifier
 			}
 			return null;
 		}
+		/*FIXME: Workaround for gtk+ < 3.15.8 */
 		private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon? prev_icon)
 		{
 			var icon_names = icon.get_names();

@@ -20,6 +20,7 @@ public class SNTray: Applet, AppletConfigurable
 	static const string SHOW_HARD = "show-hardware";
 	static const string SHOW_PASSIVE = "show-passive";
 	static const string INDICATOR_SIZE = "indicator-size";
+	static const string INDEX_OVERRIDE = "index-override";
 
 	ItemBox layout;
 	public SNTray (Toplevel top, GLib.Settings? settings, uint number)
@@ -46,7 +47,12 @@ public class SNTray: Applet, AppletConfigurable
 		settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.GET);
 		settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.GET);
 		settings.bind(INDICATOR_SIZE,layout,"icon-size",SettingsBindFlags.GET);
-		settings.changed.connect((k)=>{layout.invalidate_filter();});
+		settings.changed[INDEX_OVERRIDE].connect(()=>{
+			var val = settings.get_value(INDEX_OVERRIDE);
+			layout.index_override = new VariantDict(val);
+		});
+		var val = settings.get_value(INDEX_OVERRIDE);
+		layout.index_override = new VariantDict(val);
         layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;

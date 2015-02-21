@@ -60,6 +60,9 @@
       <range min="16" max="48"/>
       <default>22</default>
     </key>
+    <key name="index-override" type="a{sv}">
+      <default>[]</default>
+    </key>
     <key name="show-application-status" type="b">
       <default>true</default>
     </key>

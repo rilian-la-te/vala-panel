@@ -15,6 +15,8 @@ namespace StatusNotifier
 		{get {return proxy.index;}}
 		public Category cat
 		{get {return proxy.category;}}
+		public string id
+		{owned get {return proxy.id;}}
 		private ItemProxy proxy;
 		private EventBox ebox;
 		private Box box;
@@ -43,23 +45,41 @@ namespace StatusNotifier
 			ebox.add(box);
 			this.add(ebox);
 			init_all();
+			ebox.add_events(Gdk.EventMask.SCROLL_MASK);
 			ebox.scroll_event.connect((e)=>{
-				double dx,dy;
-				int x,y;
-				if (e.get_scroll_deltas(out dx, out dy))
+				switch (e.direction)
 				{
-					x = (int) Math.round(dx);
-					y = (int) Math.round(dy);
+					case Gdk.ScrollDirection.LEFT:
+						scroll(-120, "horizontal");
+						break;
+					case Gdk.ScrollDirection.RIGHT:
+						scroll(120, "horizontal");
+						break;
+					case Gdk.ScrollDirection.DOWN:
+						scroll(-120, "vertical");
+						break;
+					case Gdk.ScrollDirection.UP:
+						scroll(120, "vertical");
+	                break;
+	                case Gdk.ScrollDirection.SMOOTH:
+						double dx,dy;
+						e.get_scroll_deltas(out dx, out dy);
+						var x = (int) Math.round(dx);
+						var y = (int) Math.round(dy);
+						if (x.abs() > y.abs())
+							scroll(x,"horizontal");
+						else if (y.abs() > x.abs())
+							scroll(y,"vertical");
+						else
+							info("Scroll value very small\n");
+						break;
 				}
-				else
-				{
-					x = (int) Math.round(e.x - e.x_root);
-					y = (int) Math.round(e.y - e.y_root);
-				}
-				scroll(x,y);
+				return false;
 			});
 			ebox.button_press_event.connect((e)=>{
 				if (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS)
+					this.primary_activate();
+				if (e.button == 2)
 					this.primary_activate();
 				return false;
 			});
@@ -69,16 +89,13 @@ namespace StatusNotifier
 			ebox.leave_notify_event.connect((e)=>{
 				this.get_style_context().remove_class("-panel-launch-button-selected");
 			});
-			ebox.button_press_event.connect((e)=>{
-				if (e.button == 2)
-					this.primary_activate();
-				return false;
-			});
 			proxy.notify.connect((pspec)=>{
 				if (pspec.name == "status")
 					iface_new_status_cb();
 				if (pspec.name == "icon")
 					iface_new_icon_cb();
+				if (pspec.name == "icon-theme-path")
+					iface_new_path_cb();
 				if (pspec.name == "label")
 					iface_new_label_cb();
 				if (pspec.name == "category" || pspec.name == "status")
@@ -107,7 +124,7 @@ namespace StatusNotifier
 		}
 		private void iface_new_path_cb()
 		{
-			IconTheme.get_default().append_search_path(proxy.icon_theme_path);
+			IconTheme.get_default().prepend_search_path(proxy.icon_theme_path);
 			iface_new_icon_cb();
 		}
 		private void iface_new_status_cb()
@@ -134,7 +151,7 @@ namespace StatusNotifier
 		{
 			if (proxy.icon != null)
 			{
-				image.set_from_gicon(proxy.icon,IconSize.MENU);
+				image.set_from_gicon(proxy.icon,IconSize.INVALID);
 				image.show();
 			}
 			else
@@ -208,14 +225,11 @@ namespace StatusNotifier
 			}
 			return false;
 		}
-		public void scroll (int x, int y)
+		public void scroll (int delta, string direction)
 		{
 			try
 			{
-				if(x != 0)
-					proxy.scroll(x,"horizontal");
-				if(y != 0)
-					proxy.scroll(y, "vertical");
+				proxy.scroll(delta,direction);
 			}
 			catch (Error e) {
 					stderr.printf("%s\n",e.message);

@@ -8,6 +8,8 @@ namespace StatusNotifier
 		static Host host;
 		ulong watcher_registration_handler;
 		HashTable<string,Item> items;
+		public VariantDict index_override
+		{get; set;}
 		public bool show_application_status
 		{get; set;}
 		public bool show_communications
@@ -29,6 +31,7 @@ namespace StatusNotifier
 		construct
 		{
 			items = new HashTable<string,Item>(str_hash, str_equal);
+			index_override = new VariantDict();
 			show_application_status = true;
 			show_communications = true;
 			show_system = true;
@@ -39,16 +42,14 @@ namespace StatusNotifier
 				select_child(ch);
 				(ch as Item).context_menu();
 			});
-			set_sort_func((ch1,ch2)=>{return (int)(ch1 as Item).ordering_index - (int)(ch2 as Item).ordering_index;});
-			set_filter_func((ch)=>{
-				var item = ch as Item;
-				if (!show_passive && item.status == Status.PASSIVE) return false;
-				if (show_application_status && item.cat == Category.APPLICATION) return true;
-				if (show_communications && item.cat == Category.COMMUNICATIONS) return true;
-				if (show_system && item.cat == Category.SYSTEM) return true;
-				if (show_hardware && item.cat == Category.HARDWARE) return true;
-				return false;
+			notify.connect((pspec)=>{
+				if (pspec.name == "index-override")
+					invalidate_sort();
+				else
+					invalidate_filter();
 			});
+			set_sort_func(sort_cb);
+			set_filter_func(filter_cb);
 			host.watcher_items_changed.connect(()=>{
 					recreate_items();
 			});
@@ -90,6 +91,28 @@ namespace StatusNotifier
 			items.remove(item);
 			this.remove(child);
 			child.destroy();
+		}
+		private bool filter_cb(FlowBoxChild ch)
+		{
+			var item = ch as Item;
+			if (!show_passive && item.status == Status.PASSIVE) return false;
+			if (show_application_status && item.cat == Category.APPLICATION) return true;
+			if (show_communications && item.cat == Category.COMMUNICATIONS) return true;
+			if (show_system && item.cat == Category.SYSTEM) return true;
+			if (show_hardware && item.cat == Category.HARDWARE) return true;
+			return false;
+		}
+		private int sort_cb(FlowBoxChild ch1, FlowBoxChild ch2)
+		{
+			var left = ch1 as Item;
+			var right = ch2 as Item;
+			var lpos = left.ordering_index;
+			var rpos = right.ordering_index;
+			if (index_override.contains(left.id))
+				lpos = index_override.lookup_value(left.id,VariantType.UINT32).get_uint32();
+			if (index_override.contains(right.id))
+				rpos = index_override.lookup_value(right.id,VariantType.UINT32).get_uint32();
+			return (int)lpos - (int)rpos;
 		}
 	}
 }

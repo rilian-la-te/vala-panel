@@ -21,44 +21,44 @@ namespace ValaPanel
 		MenuButton alignment_button;
 		[GtkChild (name="monitors-button")]
 		MenuButton monitors_button;
-		[GtkChild (name="box-show-hidden")]	
-		Box sw_show_hidden;			
+		[GtkChild (name="box-show-hidden")]
+		Box sw_show_hidden;
 		[GtkChild (name="spin-margin")]
 		SpinButton spin_margin;
 		[GtkChild (name="spin-iconsize")]
 		SpinButton spin_iconsize;
 		[GtkChild (name="spin-height")]
 		SpinButton spin_height;
-		[GtkChild (name="spin-width")]		
+		[GtkChild (name="spin-width")]
 		SpinButton spin_width;
-		[GtkChild (name="spin-corners")]		
+		[GtkChild (name="spin-corners")]
 		SpinButton spin_corners;
-		[GtkChild (name="font-selector")]	
-		FontButton font_selector;	
-		[GtkChild (name="font-box")]	
-		Box font_box;	
+		[GtkChild (name="font-selector")]
+		FontButton font_selector;
+		[GtkChild (name="font-box")]
+		Box font_box;
 		[GtkChild (name="color-background")]
 		ColorButton color_background;
 		[GtkChild (name="color-foreground")]
-		ColorButton color_foreground;		
-		[GtkChild (name="chooser-background")]	
-		FileChooserButton file_background;	
-		[GtkChild (name="plugin-list")]	
-		TreeView plugin_list;	
+		ColorButton color_foreground;
+		[GtkChild (name="chooser-background")]
+		FileChooserButton file_background;
+		[GtkChild (name="plugin-list")]
+		TreeView plugin_list;
 		[GtkChild (name="plugin-desc")]
 		Label plugin_desc;
 		[GtkChild (name="add-button")]
 		Button adding_button;
 		[GtkChild (name="configure-button")]
-		Button configure_button;		
+		Button configure_button;
 		[GtkChild (name="prefs")]
-		internal Stack prefs_stack;	
-		
+		internal Stack prefs_stack;
+
 		const GLib.ActionEntry[] entries_monitor =
 		{
 			{"configure-monitors", null,"i","-2" ,state_configure_monitor}
 		};
-		
+
 		internal ConfigureDialog(Toplevel top)
 		{
 			Object(toplevel: top, application: top.get_application(),window_position: WindowPosition.CENTER);
@@ -156,7 +156,7 @@ namespace ValaPanel
 		    /* margin */
 		    toplevel.bind_property(Key.MARGIN,spin_margin,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 		    spin_margin.set_sensitive(toplevel.alignment != AlignmentType.CENTER);
-		    
+
 		    /* size */
 		    toplevel.bind_property(Key.WIDTH,spin_width,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
 			toplevel.bind_property(Key.DYNAMIC,spin_width,"sensitive",BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
@@ -217,7 +217,7 @@ namespace ValaPanel
 		private void on_sel_plugin_changed(TreeSelection tree_sel)
 		{
 		    TreeIter it;
-		    TreeModel model;		
+		    TreeModel model;
 		    Applet pl;
 		    if( tree_sel.get_selected(out model, out it ) )
 		    {
@@ -236,7 +236,7 @@ namespace ValaPanel
 		    {
 		        Applet pl;
 		        bool expand;
-		        model.get(it, Column.DATA, out pl, Column.EXPAND, out expand, -1 );		
+		        model.get(it, Column.DATA, out pl, Column.EXPAND, out expand, -1 );
 		        if (toplevel.get_plugin(pl).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
 		        {
 					expand = !expand;
@@ -282,7 +282,7 @@ namespace ValaPanel
 		            textrender, "text", Column.NAME, null );
 		    col.expand = true;
 		    plugin_list.append_column(col );
-		
+
 		    var render = new CellRendererToggle();
 		    render.activatable = true;
 		    render.toggled.connect(on_plugin_expand_toggled);
@@ -297,7 +297,7 @@ namespace ValaPanel
 				TreeSelection tree_sel = plugin_list.get_selection();
 				TreeModel model;
 				TreeIter iter;
-				Applet pl;		
+				Applet pl;
 				if( ! tree_sel.get_selected(out model, out iter ) )
 					return;
 				model.get(iter, Column.DATA, out pl, -1);
@@ -317,7 +317,7 @@ namespace ValaPanel
 			TreeSelection tree_sel = plugin_list.get_selection();
 			TreeModel model;
 			TreeIter iter;
-			Applet pl;		
+			Applet pl;
 			if( ! tree_sel.get_selected(out model, out iter ) )
 				return;
 			model.get(iter, Column.DATA, out pl, -1);
@@ -344,17 +344,17 @@ namespace ValaPanel
 		    scroll.add(view);
 		    var tree_sel = view.get_selection();
 		    tree_sel.set_mode(SelectionMode.BROWSE );
-		
+
 		    var render = new CellRendererText();
 		    var col = new TreeViewColumn.with_attributes(
 		                                            _("Available plugins"),
 		                                            render, "text", 0, null );
 		    view.append_column(col);
-		
+
 		    var list = new ListStore( 2,
 		                             typeof(string),
 		                             typeof(string));
-		
+
 		    /* Populate list of available plugins.
 		     * Omit plugins that can only exist once per system if it is already configured. */
 		    foreach(var type in toplevel.get_all_types())
@@ -389,18 +389,18 @@ namespace ValaPanel
 				}
 				update_widget_position_keys();
 			});
-		
+
 		    scroll.set_min_content_width(320);
 		    scroll.set_min_content_height(200);
 		    dlg.show_all();
-		} 	
-		[GtkCallback]	
+		}
+		[GtkCallback]
 		private void on_remove_plugin()
 		{
 		    TreeIter it;
 		    TreeModel model;
 		    var tree_sel = plugin_list.get_selection();
-		    Applet pl;		
+		    Applet pl;
 		    if( tree_sel.get_selected(out model, out it) )
 		    {
 		        var tree_path = model.get_path(it );
@@ -411,7 +411,7 @@ namespace ValaPanel
 		        tree_sel.select_path(tree_path );
 				toplevel.remove_applet(pl);
 		    }
-		}	
+		}
 		private void update_widget_position_keys()
 		{
 			foreach(var w in toplevel.get_applets_list())
@@ -436,14 +436,14 @@ namespace ValaPanel
 		    do{
 		        if( tree_sel.iter_is_selected(it) )
 		        {
-		            Applet pl;		
+		            Applet pl;
 		            model.get(it, Column.DATA, out pl, -1 );
 		            (model as ListStore).move_before(ref it, prev );
-		
+
 		            var i = toplevel.get_applet_position(pl);
 		            /* reorder in config, 0 is Global */
 		            i = i > 0 ? i : 0;
-		
+
 		            /* reorder in panel */
 		            toplevel.set_applet_position(pl,(int)i-1);
 		            update_widget_position_keys();
@@ -459,17 +459,17 @@ namespace ValaPanel
 		    TreeModel model;
 		    var tree_sel = plugin_list.get_selection();
 		    Applet pl;
-				
+
 		    if(!tree_sel.get_selected(out model, out it))
 		        return;
 		    next = it;
 		    if( !model.iter_next(ref next) )
 		        return;
-		
+
 		    model.get(it, Column.DATA, out pl, -1 );
-		
+
 		    (model as ListStore).move_after(ref it, next );
-		
+
 		    var i = toplevel.get_applet_position(pl);
 		    /* reorder in panel */
 		    toplevel.set_applet_position(pl,(int)i+1);
