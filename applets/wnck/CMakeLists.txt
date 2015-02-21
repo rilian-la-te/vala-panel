@@ -8,5 +8,5 @@ if (ENABLE_WNCK)
 endif()
 
 if (ENABLE_WNCK)
-
+	add_subdirectory(tasklist)
 endif()

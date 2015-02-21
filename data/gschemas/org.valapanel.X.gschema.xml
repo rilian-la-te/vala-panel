@@ -1,4 +1,5 @@
 <schemalist>
+<!--
   <schema id="org.simple.panel.toplevel.wincmd">
     <key name="left-button-command" enum="org.simple.panel.WcCommand">
       <default>'iconify'</default>
@@ -53,29 +54,12 @@
       <default>''</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.launchtaskbar">
-    <key name="mode" enum="org.simple.panel.LtbMode">
-      <default>'launchtaskbar'</default>
-    </key>
-    <key name="launch-buttons" type="as">
-      <default>[]</default>
-    </key>
-    <key name="tooltips" type="b">
-      <default>true</default>
-    </key>
+-->
+  <schema id="org.valapanel.toplevel.tasklist">
     <key name="icons-only" type="b">
       <default>false</default>
     </key>
     <key name="all-desktops" type="b">
-      <default>true</default>
-    </key>
-    <key name="same-monitor-only" type="b">
-      <default>false</default>
-    </key>
-    <key name="use-wheel" type="b">
-      <default>true</default>
-    </key>
-    <key name="urgency-hint" type="b">
       <default>true</default>
     </key>
     <key name="flat-buttons" type="b">
@@ -84,11 +68,14 @@
     <key name="grouped-tasks" type="b">
       <default>false</default>
     </key>
-    <key name="task-width" type="i">
-      <default>200</default>
+    <key name="grouping-limit" type="i">
+      <default>5</default>
     </key>
-    <key name="spacing" type="i">
-      <default>1</default>
+    <key name="middle-click-close" type="b">
+      <default>false</default>
+    </key>
+    <key name="switch-workspace-on-unminimize" type="b">
+      <default>false</default>
     </key>
   </schema>
 </schemalist>

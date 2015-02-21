@@ -1,0 +1,6 @@
+[Plugin]
+Module=tasklist
+Name=Tasklist
+Description=Shows opened windows.
+X-ValaPanel-Expandable=true
+X-ValaPanel-Configurable=true
