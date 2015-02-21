@@ -1,10 +1,6 @@
 Vala Panel
 ---
 
-Simple, yet elegant panel.
-
-What's that? Not a fork.  Technically.
-
 This is Vala rewrite of SimplePanel, GTK3 LXPanel fork.
 
 *TODO:*
@@ -17,13 +13,7 @@ This is Vala rewrite of SimplePanel, GTK3 LXPanel fork.
  * Taskbar DBus library for compositor (1.0)
  * Redo ValaPanelIconGrid using GtkFlowBox and such wonders. (poss v2.0)
 
-*Implementation note:*
-
-All elements are written entirely from scratch, using GTK and Vala.
-A rewrite took place to lower the barrier of entry for new contributors
-and to ease maintainence.
-
-*vala-panel:*
+*Some notes about realization*
 
 Plugin based panel. Users/developers can provide their own custom applets,
 which are fully integrated. They can be moved, added, removed again, and
@@ -45,9 +35,14 @@ even broken
 
 
 
-Lastly, always set --prefix=/usr when using autogen.sh, or configure, otherwise you
-won't be able to start the desktop on most distros
+Lastly, always set -DCMAKE_INSTALL_PREXIX=/usr when using autogen.sh, or configure, otherwise you
+won't be able to start the panel on most distros
 
 Author
 ===
  * Athor <ria.freelander@gmail.com>
+
+Inspirations
+===
+ * Budgie Desktop <https://github.com/evolve-os/budgie-desktop/>
+ * LXPanel <https://github.com/lxde/lxpanel>
