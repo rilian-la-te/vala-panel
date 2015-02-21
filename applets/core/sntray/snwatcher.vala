@@ -14,7 +14,7 @@ public interface SNWatcherIface: Object
 	{owned get;protected set;}
 	public abstract bool is_status_notifier_host_registered
 	{get;}
-	public abstract int protocol_version 
+	public abstract int protocol_version
 	{get;}
 	/* Public methods */
 	public abstract void register_status_notifier_item(string service) throws IOError;
@@ -36,7 +36,7 @@ public class SNWatcher : Object
 	{owned get; protected set;}
 	public bool is_status_notifier_host_registered
 	{get {return true;}}
-	public int protocol_version 
+	public int protocol_version
 	{get {return 1;}}
 	/* Public methods */
 	public void register_status_notifier_item(string service, BusName sender)
@@ -48,7 +48,7 @@ public class SNWatcher : Object
 			name = (string)sender;
 			path = service;
 		}
-		else 
+		else
 		{
 			name = service;
 			path = "/StatusNotifierItem";
@@ -68,13 +68,12 @@ public class SNWatcher : Object
 			name_watcher.insert(id,name_handler);
 			registered_status_notifier_items = get_registered_items();
 			status_notifier_item_registered(out id);
-			/* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/				
+			/* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
 		}
 	}
-	/* stub. For now SNTray will X-ValaPanel-Once */
 	public void register_status_notifier_host(string service) throws IOError
 	{
-		/* FIXME: Hosts management */
+		/* FIXME: Hosts management untested with non-ValaPanel hosts*/
 		hosts.insert(service,Bus.watch_name(BusType.SESSION,service,GLib.BusNameWatcherFlags.NONE,
 				null,
 				() => {remove_host(service);}
@@ -118,5 +117,6 @@ public class SNWatcher : Object
 	~SNWatcher()
 	{
 		name_watcher.foreach((k,v)=>{Bus.unwatch_name(v);});
+		hosts.foreach((k,v)=>{Bus.unwatch_name(v);});
 	}
 }

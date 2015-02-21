@@ -81,8 +81,6 @@ public class SNItem : FlowBoxChild
 				iface_new_icon_cb();
 			if (pspec.name == "label")
 				iface_new_label_cb();
-			if (pspec.name == "main-icon")
-				iface_new_icon_cb();
 			if (pspec.name == "category" || pspec.name == "status")
 				this.changed();
 		});

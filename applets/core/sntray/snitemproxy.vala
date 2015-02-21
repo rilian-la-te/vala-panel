@@ -344,7 +344,7 @@ public class SNItemProxy: Object
 		var icon_namev = tooltipv.get_child_value(0);
 		var icon_pixmap = tooltipv.get_child_value(1);
 		var raw_text = tooltipv.get_child_value(2).get_string() + tooltipv.get_child_value(3).get_string();
-		if (raw_text != null && raw_text.index_of("</") >= 0)
+		if (raw_text != null && (raw_text.index_of("</") >= 0 || raw_text.index_of("/>") >= 0))
 		{
 			var markup_parser = new QRichTextParser(raw_text);
 			markup_parser.translate_markup();
