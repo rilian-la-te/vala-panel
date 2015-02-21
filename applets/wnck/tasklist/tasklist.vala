@@ -13,15 +13,12 @@ public class Tasklist: Applet, AppletConfigurable
 {
     Wnck.Tasklist widget;
 	private static const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
-	private static const string KEY_ICONS_ONLY = "icons-only";
 	private static const string KEY_ALL_DESKTOPS = "all-desktops";
-	private static const string KEY_FLAT_BUTTONS = "flat-buttons";
 	private static const string KEY_GROUPING = "grouped-tasks";
 	private static const string KEY_GROUPING_LIMIT = "grouping-limit";
 	private static const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
-	internal bool icons_only
-	{get; set;}
-	internal bool flat_buttons
+	private static const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
+	internal int unexpanded_limit
 	{get; set;}
     public Tasklist(ValaPanel.Toplevel toplevel,
 		                            GLib.Settings? settings,
@@ -35,15 +32,14 @@ public class Tasklist: Applet, AppletConfigurable
 		this.add(widget);
 		toplevel.notify["edge"].connect((pspec)=>{widget.set_orientation(toplevel.orientation);});
 		widget.set_button_relief(ReliefStyle.NONE);
-		settings.bind(KEY_ICONS_ONLY,this,KEY_ICONS_ONLY,SettingsBindFlags.GET);
-		settings.bind(KEY_FLAT_BUTTONS,this,KEY_FLAT_BUTTONS,SettingsBindFlags.GET);
+		settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
 		settings.changed.connect((key)=>{
 			if (key == KEY_ALL_DESKTOPS)
 				widget.set_include_all_workspaces(settings.get_boolean(key));
 			if (key == KEY_SWITCH_UNMIN)
 				widget.set_switch_workspace_on_unminimize(settings.get_boolean(key));
 			if (key == KEY_GROUPING)
-				widget.set_grouping(settings.get_boolean(key) ? Wnck.TasklistGroupingType.AUTO_GROUP : Wnck.TasklistGroupingType.NEVER_GROUP);
+				widget.set_grouping(settings.get_boolean(key) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
 			if (key == KEY_MIDDLE_CLICK_CLOSE)
 				widget.set_middle_click_close(settings.get_boolean(key));
 			if (key == KEY_GROUPING_LIMIT)
@@ -51,10 +47,24 @@ public class Tasklist: Applet, AppletConfigurable
 		});
 		widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
 		widget.set_switch_workspace_on_unminimize(settings.get_boolean(KEY_SWITCH_UNMIN));
-		widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.AUTO_GROUP : Wnck.TasklistGroupingType.NEVER_GROUP);
+		widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
 		widget.set_middle_click_close(settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE));
 		widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
 		this.show_all();
+	}
+	public override void get_preferred_height(out int min, out int nat)
+	{
+		if (toplevel.orientation == Orientation.VERTICAL)
+			min = nat = unexpanded_limit;
+		else
+			base.get_preferred_height_internal(out min, out nat);
+	}
+	public override void get_preferred_width(out int min, out int nat)
+	{
+		if (toplevel.orientation == Orientation.HORIZONTAL)
+			min = nat = unexpanded_limit;
+		else
+			base.get_preferred_width_internal(out min, out nat);
 	}
 	public Dialog get_config_dialog()
 	{
@@ -65,8 +75,7 @@ public class Tasklist: Applet, AppletConfigurable
 							_("Close windows on middle click"), KEY_MIDDLE_CLICK_CLOSE, GenericConfigType.BOOL,
 							_("Group windows when needed"), KEY_GROUPING, GenericConfigType.BOOL,
 							_("Ungrouped buttons limit"), KEY_GROUPING_LIMIT, GenericConfigType.INT,
-							_("Icons only"), KEY_ICONS_ONLY, GenericConfigType.BOOL,
-							_("Flat buttons"), KEY_FLAT_BUTTONS, GenericConfigType.BOOL);
+							_("Unexpanded size limit"), KEY_UNEXPANDED_LIMIT, GenericConfigType.INT);
 	}
 } // End class
 

@@ -56,14 +56,8 @@
   </schema>
 -->
   <schema id="org.valapanel.toplevel.tasklist">
-    <key name="icons-only" type="b">
-      <default>false</default>
-    </key>
     <key name="all-desktops" type="b">
       <default>true</default>
-    </key>
-    <key name="flat-buttons" type="b">
-      <default>false</default>
     </key>
     <key name="grouped-tasks" type="b">
       <default>false</default>
@@ -76,6 +70,9 @@
     </key>
     <key name="switch-workspace-on-unminimize" type="b">
       <default>false</default>
+    </key>
+    <key name="unexpanded-limit" type="i">
+      <default>600</default>
     </key>
   </schema>
 </schemalist>
