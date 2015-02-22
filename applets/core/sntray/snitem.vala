@@ -12,30 +12,30 @@ namespace StatusNotifier
 		public Status status
 		{get; private set;}
 		public uint ordering_index
-		{get {return proxy.index;}}
+		{get {return iface.x_ayatana_ordering_index;}}
 		public Category cat
-		{get {return proxy.category;}}
+		{get {return iface.category;}}
 		public string id
-		{owned get {return proxy.id;}}
-		private ItemProxy proxy;
-		private EventBox ebox;
-		private Box box;
-		private Label label;
-		private Image image;
-		private bool is_attention_icon;
-		DBusMenu.GtkClient? client;
-		Gtk.Menu menu;
+		{owned get {return iface.id;}}
 		public Item (string n, ObjectPath p)
 		{
 			Object(object_path: p, object_name: n);
 		}
 		construct
 		{
-			is_attention_icon = false;
+			try
+			{
+				this.iface = Bus.get_proxy_sync (BusType.SESSION,object_name,object_path);
+				uint id;
+				id = Bus.watch_name(BusType.SESSION,object_name,BusNameWatcherFlags.NONE,
+					null,
+					() => {Bus.unwatch_name(id); get_applet().request_remove_item(this,object_name+(string)object_path);}
+					);
+			} catch (IOError e) {stderr.printf ("%s\n", e.message); this.destroy();}
 			PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","grid-child");
-			proxy = new ItemProxy(object_name,object_path);
-			proxy.bind_property("has-tooltip",this,"has-tooltip",BindingFlags.SYNC_CREATE);
 			client = null;
+			this.has_tooltip = true;
+			icon_theme = IconTheme.get_default();
 			ebox = new EventBox();
 			box = new Box(Orientation.HORIZONTAL,0);
 			label = new Label(null);
@@ -89,25 +89,18 @@ namespace StatusNotifier
 			ebox.leave_notify_event.connect((e)=>{
 				this.get_style_context().remove_class("-panel-launch-button-selected");
 			});
-			proxy.notify.connect((pspec)=>{
-				if (pspec.name == "status")
-					iface_new_status_cb();
-				if (pspec.name == "icon")
-					iface_new_icon_cb();
-				if (pspec.name == "icon-theme-path")
-					iface_new_path_cb();
-				if (pspec.name == "label")
-					iface_new_label_cb();
-				if (pspec.name == "category" || pspec.name == "status")
-					this.changed();
-			});
-			proxy.proxy_destroyed.connect(()=>{
-				this.get_applet().request_remove_item(this,object_name+(string)object_path);
-			});
+			iface.new_status.connect(iface_new_status_cb);
+			iface.new_icon.connect(iface_new_icon_cb);
+			iface.new_overlay_icon.connect(iface_new_icon_cb);
+			iface.new_attention_icon.connect(iface_new_icon_cb);
+			iface.new_icon_theme_path.connect(iface_new_path_cb);
+			iface.x_ayatana_new_label.connect(iface_new_label_cb);
+			iface.new_tool_tip.connect(iface_new_tooltip_cb);
+			iface.new_title.connect(iface_new_title_cb);
 			this.query_tooltip.connect(query_tooltip_cb);
 			this.popup_menu.connect(context_menu);
-			IconTheme.get_default().changed.connect(()=>{
-				iface_new_icon_cb();
+			icon_theme.changed.connect(()=>{
+				image.set_from_gicon(image.gicon,IconSize.INVALID);
 			});
 			this.parent_set.connect((prev)=>{
 				if (get_applet() != null)
@@ -117,21 +110,23 @@ namespace StatusNotifier
 		}
 		private void init_all()
 		{
-			if (proxy.items_in_menu || proxy.menu != null)
+			if (iface.items_in_menu || iface.menu != null)
 				setup_inner_menu();
-			iface_new_status_cb();
-			iface_new_path_cb();
-			iface_new_label_cb();
+			title = iface.title;
+			iface_new_status_cb(iface.status);
+			iface_new_path_cb(iface.icon_theme_path);
+			iface_new_label_cb(iface.x_ayatana_label,iface.x_ayatana_label_guide);
+			unbox_tooltip(iface.tool_tip,out tooltip_icon, out markup);
 		}
-		private void iface_new_path_cb()
+		private void iface_new_path_cb(string? path)
 		{
-			IconTheme.get_default().prepend_search_path(proxy.icon_theme_path);
+			if (path != null)
+				IconTheme.get_default().prepend_search_path(path);
 			iface_new_icon_cb();
 		}
-		private void iface_new_status_cb()
+		private void iface_new_status_cb(Status status)
 		{
-			this.status = proxy.status;
-			switch(this.status)
+			switch(status)
 			{
 				case Status.PASSIVE:
 				case Status.ACTIVE:
@@ -144,26 +139,15 @@ namespace StatusNotifier
 		}
 		private bool query_tooltip_cb(int x, int y, bool keyboard, Tooltip tip)
 		{
-			tip.set_icon_from_gicon(proxy.tooltip_icon ?? proxy.icon,IconSize.DIALOG);
-			tip.set_markup(proxy.tooltip_markup ?? proxy.accessible_desc ?? proxy.title);
+			tip.set_icon_from_gicon(tooltip_icon ?? image.gicon,IconSize.DIALOG);
+			tip.set_markup(markup ?? accessible_desc ?? title);
 			return true;
 		}
-		private void iface_new_icon_cb()
+		private void iface_new_label_cb(string? label, string? guide)
 		{
-			if (proxy.icon != null)
+			if (label != null)
 			{
-				image.set_from_gicon(proxy.icon,IconSize.INVALID);
-				image.show();
-			}
-			else
-				image.hide();
-
-		}
-		private void iface_new_label_cb()
-		{
-			if (proxy.label != null)
-			{
-				this.label.set_text(proxy.label);
+				this.label.set_text(label);
 				this.label.show();
 			}
 			else
@@ -182,7 +166,7 @@ namespace StatusNotifier
 			/*FIXME: MenuModel support */
 			if (client == null)
 			{
-				client = new DBusMenu.GtkClient(object_name,proxy.menu);
+				client = new DBusMenu.GtkClient(object_name,iface.menu);
 				client.attach_to_menu(menu);
 			}
 
@@ -193,13 +177,18 @@ namespace StatusNotifier
 			ebox.get_window().get_origin(out x, out y);
 			try
 			{
-				proxy.activate(x,y);
+				iface.activate(x,y);
 				return;
 			}
-			catch (Error e) {}
+			catch (Error e) {/* This only means that method not supported*/}
 			try
 			{
-				proxy.secondary_activate(x,y);
+				iface.x_ayatana_secondary_activate(get_current_event_time());
+				return;
+			} catch (Error e){/* This only means that method not supported*/}
+			try
+			{
+				iface.secondary_activate(x,y);
 			}
 			catch (Error e) {
 					stderr.printf("%s\n",e.message);
@@ -208,7 +197,7 @@ namespace StatusNotifier
 		public bool context_menu()
 		{
 			int x,y;
-			if (proxy.items_in_menu || proxy.menu != null)
+			if (iface.items_in_menu || iface.menu != null)
 			{
 				menu.hide.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
 				menu.popup(null,null,get_applet().menu_position_func,0,get_current_event_time());
@@ -218,7 +207,7 @@ namespace StatusNotifier
 			ebox.get_window().get_origin(out x, out y);
 			try
 			{
-				proxy.context_menu(x,y);
+				iface.context_menu(x,y);
 				return true;
 			}
 			catch (Error e) {
@@ -230,11 +219,129 @@ namespace StatusNotifier
 		{
 			try
 			{
-				proxy.scroll(delta,direction);
+				iface.scroll(delta,direction);
 			}
 			catch (Error e) {
 					stderr.printf("%s\n",e.message);
 			}
 		}
+		private void iface_new_title_cb()
+		{
+			try
+			{
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION,object_name, object_path);
+				this.title = item.title;
+			} catch (Error e) {stderr.printf("Cannot set title: %s\n",e.message);}
+		}
+		private void unbox_tooltip(ToolTip tooltip, out Icon? icon, out string? markup)
+		{
+			var raw_text = tooltip.title + tooltip.description;
+			var is_pango_markup = true;
+			if (raw_text != null)
+			{
+				try
+				{
+					Pango.parse_markup(raw_text,-1,'\0',null,null,null);
+				} catch (Error e){is_pango_markup = false;}
+			}
+			if (!is_pango_markup)
+			{
+				var markup_parser = new QRichTextParser(raw_text);
+				markup_parser.translate_markup();
+				markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
+				var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap);
+				icon = (markup_parser.icon != null)	? markup_parser.icon: res_icon;
+			}
+			else
+			{
+				markup = raw_text;
+				icon = change_icon(tooltip.icon_name, tooltip.pixmap);
+			}
+		}
+		private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps)
+		{
+			if (icon_name != null && icon_name.length > 0)
+			{
+				if (icon_name[0] == '/')
+					return new FileIcon(File.new_for_path(icon_name));
+				else if (icon_theme.has_icon(icon_name)
+						|| icon_theme.has_icon(icon_name+"-symbolic")
+						|| iface.icon_theme_path == null
+						|| iface.icon_theme_path.length == 0)
+					return new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+				else return find_file_icon(icon_name,iface.icon_theme_path);
+			}
+			/* FIXME: Choose pixmap size */
+			else if (pixmaps.length > 0 && pixmaps[0].bytes.length > 0)
+				return new BytesIcon(new Bytes(pixmaps[0].bytes));
+			return null;
+		}
+		private Icon? find_file_icon(string? icon_name, string? path)
+		{
+			if (path == null || path.length == 0)
+				return null;
+			try
+			{
+				var dir = Dir.open(path);
+				for (var ch = dir.read_name(); ch!= null; ch = dir.read_name())
+				{
+					var f = File.new_for_path(path+"/"+ch);
+					if (ch[0:ch.last_index_of(".")] == icon_name)
+						return new FileIcon(f);
+					var t = f.query_file_type(FileQueryInfoFlags.NONE);
+					Icon? ret = null;
+					if (t == FileType.DIRECTORY)
+						ret = find_file_icon(icon_name,path+"/"+ch);
+					if (ret != null)
+						return ret;
+				}
+			} catch (Error e) {stderr.printf("%s\n",e.message);}
+			return null;
+		}
+		private void iface_new_tooltip_cb()
+		{
+			try{
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
+				unbox_tooltip(item.tool_tip,out tooltip_icon, out markup);
+			} catch (Error e){stderr.printf("Cannot set tooltip:%s\n",e.message);}
+		}
+		private void iface_new_icon_cb()
+		{
+			try
+			{
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
+				var main_icon = change_icon(item.icon_name,item.icon_pixmap);
+				var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap);
+				var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap);
+				if (overlay_icon != null)
+					overlay_icon = new Emblem(overlay_icon);
+				var icon = new EmblemedIcon(attention_icon ?? main_icon ?? (image.gicon as EmblemedIcon).gicon,overlay_icon as Emblem);
+				if (icon != null)
+				{
+					image.set_from_gicon(icon,IconSize.INVALID);
+					image.show();
+				}
+				else
+					image.hide();
+				if (item.attention_accessible_desc != null && item.attention_accessible_desc.length > 0)
+					accessible_desc = item.attention_accessible_desc;
+				else if (item.icon_accessible_desc != null && item.icon_accessible_desc.length > 0)
+					accessible_desc = item.icon_accessible_desc;
+				else accessible_desc = null;
+			} catch (Error e) {stderr.printf("%s\n",e.message);}
+		}
+
+		ItemIface iface;
+		EventBox ebox;
+		Box box;
+		Label label;
+		Image image;
+		Icon? tooltip_icon;
+		string markup;
+		string accessible_desc;
+		string title;
+		DBusMenu.GtkClient? client;
+		Gtk.Menu menu;
+		IconTheme icon_theme;
 	}
 }
