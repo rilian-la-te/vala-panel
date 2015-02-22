@@ -110,7 +110,8 @@ namespace StatusNotifier
 				iface_new_icon_cb();
 			});
 			this.parent_set.connect((prev)=>{
-				get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
+				if (get_applet() != null)
+					get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
 			});
 			this.show_all();
 		}

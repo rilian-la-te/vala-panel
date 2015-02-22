@@ -26,67 +26,45 @@ namespace StatusNotifier
 		[DBus (value = "NeedsAttention")]
 		NEEDS_ATTENTION
 	}
-	internal Status st_from_string(string str)
+	private struct IconPixmap
 	{
-		switch(str)
-		{
-			case "NeedsAttention":
-				return Status.NEEDS_ATTENTION;
-			case "Active":
-				return Status.ACTIVE;
-			case "Passive":
-				return Status.PASSIVE;
-		}
-		return Status.PASSIVE;
+	    int width;
+	    int height;
+	    uint8[] bytes;
 	}
 
+	private struct ToolTip
+	{
+	    string icon_name;
+	    IconPixmap[] pixmap;
+	    string title;
+	    string description;
+	}
 	[DBus (name = "org.kde.StatusNotifierItem")]
-	public interface ItemIface : Object
+	private interface ItemIface : Object
 	{
 		/* Base properties */
-		public abstract Category category
-		{owned get;}
-		public abstract string id
-		{owned get;}
-		public abstract Status status
-		{owned get;}
-		public abstract string title
-		{owned get;}
-		public abstract int window_id
-		{owned get;}
+		public abstract Category category {owned get;}
+		public abstract string id {owned get;}
+		public abstract Status status {owned get;}
+		public abstract string title {owned get;}
+		public abstract int window_id {owned get;}
 		/* Menu properties */
-		[DBus(signature = "o")]
-		public abstract ObjectPath menu
-		{owned get;}
-		public abstract bool items_in_menu
-		{owned get;}
+		public abstract ObjectPath menu {owned get;}
+		public abstract bool items_in_menu {owned get;}
 		/* Icon properties */
-		public abstract string icon_theme_path
-		{owned get;}
-		public abstract string icon_name
-		{owned get;}
-		public abstract string icon_accessible_desc
-		{owned get;}
-		[DBus(signature = "a(iiay)")]
-		public abstract Variant icon_pixmap
-		{owned get;}
-		public abstract string overlay_icon_name
-		{owned get;}
-		[DBus(signature = "a(iiay)")]
-		public abstract Variant overlay_icon_pixmap
-		{owned get;}
-		public abstract string attention_icon_name
-		{owned get;}
-		public abstract string attention_accessible_desc
-		{owned get;}
-		[DBus(signature = "a(iiay)")]
-		public abstract Variant attention_icon_pixmap
-		{owned get;}
-		public abstract string attention_movie_name
-		{owned get;}
+		public abstract string icon_theme_path {owned get;}
+		public abstract string icon_name {owned get;}
+		public abstract string icon_accessible_desc {owned get;}
+		public abstract IconPixmap[] icon_pixmap {owned get;}
+		public abstract string overlay_icon_name {owned get;}
+		public abstract IconPixmap[] overlay_icon_pixmap {owned get;}
+		public abstract string attention_icon_name {owned get;}
+		public abstract string attention_accessible_desc {owned get;}
+		public abstract IconPixmap[] attention_icon_pixmap {owned get;}
+		public abstract string attention_movie_name {owned get;}
 		/* Tooltip */
-		[DBus(signature = "(sa(iiay)ss)")]
-		public abstract Variant tool_tip {owned get;}
+		public abstract ToolTip tool_tip {owned get;}
 		/* Methods */
 		public abstract void context_menu(int x, int y) throws IOError;
 		public abstract void activate(int x, int y) throws IOError;
@@ -108,34 +86,10 @@ namespace StatusNotifier
 		public abstract signal void x_ayatana_new_label(string label, string guide);
 	}
 
-	[DBus (name = "org.freedesktop.DBus.Properties")]
-	public interface FreeDesktopProperties : Object{
-		[DBus (visible="false")]
-		public static const string NAME = "org.freedesktop.DBus.Properties";
-		[DBus (visible="false")]
-		public static const string KDE_NAME = "org.kde.StatusNotifierItem";
-		[DBus (name="Get")]
-		public abstract Variant get_one(string interface_name, string property_name) throws IOError;
-		public abstract HashTable<string, Variant?> get_all(string interface_name) throws IOError;
-		public signal void properties_changed (string source, HashTable<string, Variant?> changed_properties,
-												string[] invalid );
-
-	}
-
-	private enum IconType
-	{
-		MAIN,
-		OVERLAY,
-		ATTENTION
-	}
-
-	/* "a(iiay)" - array of ByteIcons */
-	/* "(sa(iiay)ss)" - tooltip */
 	/* FIXME: Icons always use DirectAccess now */
 	public class ItemProxy: Object
 	{
 		private ItemIface iface;
-		private FreeDesktopProperties props_iface;
 		private bool use_attention_icon;
 		public string bus_name
 		{private get; internal construct;}
@@ -195,25 +149,22 @@ namespace StatusNotifier
 		}
 		construct
 		{
-			this.bus_name = bus_name;
-			this.object_path = object_path;
 			use_attention_icon = false;
 			try
 			{
 				this.iface = Bus.get_proxy_sync (BusType.SESSION,bus_name,object_path);
 				uint id;
-				id = Bus.watch_name(BusType.SESSION,bus_name,GLib.BusNameWatcherFlags.NONE,
+				id = Bus.watch_name(BusType.SESSION,bus_name,BusNameWatcherFlags.NONE,
 					null,
 					() => {Bus.unwatch_name(id); this.proxy_destroyed();}
 					);
-				this.props_iface = Bus.get_proxy_sync (BusType.SESSION,bus_name,object_path,DBusProxyFlags.GET_INVALIDATED_PROPERTIES);
 			} catch (IOError e) {stderr.printf ("%s\n", e.message); this.proxy_destroyed();}
 			init_properties();
-			props_iface.properties_changed.connect((src,props,inv)=>{if (src == FreeDesktopProperties.KDE_NAME) props_changed_burst(props);});
+			on_path_cb(iface.icon_theme_path);
 			iface.new_status.connect((st)=>{this.status = st;});
-			iface.new_icon.connect(()=>{one_icon_direct_cb(""); accessible_desc_direct_cb();});
-			iface.new_overlay_icon.connect(()=>{one_icon_direct_cb("Overlay"); accessible_desc_direct_cb();});
-			iface.new_attention_icon.connect(()=>{one_icon_direct_cb("Attention"); accessible_desc_direct_cb();});
+			iface.new_icon.connect(()=>{main_icon_direct_cb(); accessible_desc_direct_cb();});
+			iface.new_overlay_icon.connect(()=>{overlay_icon_direct_cb(); accessible_desc_direct_cb();});
+			iface.new_attention_icon.connect(()=>{attention_icon_direct_cb(); accessible_desc_direct_cb();});
 			iface.new_icon_theme_path.connect(on_path_cb);
 			iface.x_ayatana_new_label.connect((lb,g)=>{this.label = lb; this.label_guide = g;});
 			iface.new_tool_tip.connect(tooltip_direct_cb);
@@ -221,71 +172,36 @@ namespace StatusNotifier
 		}
 		private void init_properties()
 		{
-			try{
-				var props = props_iface.get_all(FreeDesktopProperties.KDE_NAME);
-				props_changed_burst(props);
-			} catch (Error e) {stderr.printf("Cannot set properties: %s\n",e.message);}
-		}
-		private void props_changed_burst(HashTable<string,Variant?> props)
-		{
-			var	label = props.lookup("IconThemePath");
-			if (label != null)
-				on_path_cb(label.get_string());
-			label = props.lookup("ToolTip");
-			unbox_tooltip(label);
-			label = props.lookup("XAyatanaLabel");
-			this.label = (label != null) ? label.get_string() : this.label;
-			label = props.lookup("XAyatanaLabelGuide");
-			this.label_guide = (label != null) ? label.get_string() : this.label_guide;
-			label = props.lookup("Title");
-			this.title = (label != null) ? label.get_string() : this.title;
-			label = props.lookup("Status");
-			this.status = (label != null) ? st_from_string(label.get_string()) : this.status;
-			all_icons_direct_cb(props);
-			label = props.lookup("IconAccessibleDesc");
-			var alabel = props.lookup("AttentionAccessibleDesc");
-			accessible_desc_cb(label,alabel);
+			this.title = iface.title;
+			this.status = iface.status;
+			this.label = iface.x_ayatana_label;
+			this.label_guide = iface.x_ayatana_label_guide;
+			var new_overlay_icon = change_icon(null,iface.overlay_icon_name, iface.overlay_icon_pixmap);
+			if (new_overlay_icon != null)
+				overlay_icon = new Emblem(new_overlay_icon);
+			this.attention_icon = change_icon(null,iface.attention_icon_name, iface.attention_icon_pixmap);
+			this.main_icon = change_icon(null,iface.icon_name, iface.icon_pixmap);
+			if (this.attention_icon != null)
+			{
+				icon = new EmblemedIcon(this.attention_icon,this.overlay_icon);
+				this.use_attention_icon = true;
+			}
+			else
+			{
+				icon = new EmblemedIcon(this.main_icon,this.overlay_icon);
+				this.use_attention_icon = false;
+			}
+			on_path_cb(iface.icon_theme_path);
+			unbox_tooltip(iface.tool_tip);
+
 		}
 		private void title_direct_cb()
 		{
 			try
 			{
-				var titlev = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"Title");
-				this.title = (titlev != null) ? titlev.get_string() : null;
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION,bus_name, object_path);
+				this.title = item.title;
 			} catch (Error e) {stderr.printf("Cannot set title: %s\n",e.message);}
-		}
-		/*FIXME: icons and tooltip always direct now */
-		private void all_icons_direct_cb(HashTable<string,Variant?> props)
-		{
-			/* Overlay icon */
-			var icon_namev = props.lookup("OverlayIconName");
-			var icon_pixmap = props.lookup("OverlayIconPixmap");
-			change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
-				var res_icon = change_icon.end(res);
-				if (res_icon != null)
-					overlay_icon = new Emblem(res_icon);
-				else
-					overlay_icon = null;
-				if (icon != null)
-					icon.clear_emblems();
-				if (icon != null && overlay_icon != null)
-					icon.add_emblem(overlay_icon);
-			});
-			/* Attention icon */
-			icon_namev = props.lookup("AttentionIconName");
-			icon_pixmap = props.lookup("AttentionIconPixmap");
-			change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
-				attention_icon = change_icon.end(res);
-				if (attention_icon != null)
-					icon = new EmblemedIcon(attention_icon,overlay_icon);
-			});
-			/* Main icon */
-			icon_namev = props.lookup("IconName");
-			icon_pixmap = props.lookup("IconPixmap");
-			change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
-				main_icon = change_icon.end(res);
-				icon = new EmblemedIcon(main_icon,overlay_icon);
-			});
 		}
 		private void on_path_cb(string? new_path)
 		{
@@ -295,89 +211,92 @@ namespace StatusNotifier
 				this.icon_theme_path = new_path;
 			}
 		}
-		private void one_icon_direct_cb(string appender)
+		private void attention_icon_direct_cb()
 		{
-			Variant? icon_namev = null;
-			Variant? icon_pixmap = null;
 			try
 			{
-				icon_namev = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconName");
-				if (icon_namev == null)
-					icon_pixmap = props_iface.get_one(FreeDesktopProperties.KDE_NAME,appender+"IconPixmap");
-			} catch (Error e) {}
-			if (appender == "Attention")
-				change_icon.begin(attention_icon,icon_namev,icon_pixmap,(obj,res)=>{
-					attention_icon = change_icon.end(res);
-					if (attention_icon != null)
-					{
-						use_attention_icon = true;
-						icon = new EmblemedIcon(attention_icon,overlay_icon);
-					}
-					else use_attention_icon = false;
-				});
-			else if (appender == "Overlay")
-				change_icon.begin(overlay_icon,icon_namev,icon_pixmap,(obj,res)=>{
-					var res_icon = change_icon.end(res);
-					if (res_icon != null)
-						overlay_icon = new Emblem(res_icon);
-					else
-						overlay_icon = null;
-					if (icon != null)
-						icon.clear_emblems();
-					if (icon != null && overlay_icon != null)
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, bus_name, object_path);
+				attention_icon = change_icon(attention_icon,item.attention_icon_name,item.attention_icon_pixmap);
+				if (attention_icon != null)
+				{
+					use_attention_icon = true;
+					icon = new EmblemedIcon(attention_icon,overlay_icon);
+				}
+				else
+				{
+					use_attention_icon = false;
+					main_icon = change_icon(main_icon,item.icon_name,item.icon_pixmap);
+					icon = new EmblemedIcon(main_icon, overlay_icon);
+				}
+			} catch (Error e) {stderr.printf("%s\n",e.message);}
+		}
+		private void overlay_icon_direct_cb()
+		{
+			try
+			{
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, bus_name, object_path);
+				var res_icon = change_icon(overlay_icon,item.overlay_icon_name,item.overlay_icon_pixmap);
+				if (res_icon != null)
+					overlay_icon = new Emblem(res_icon);
+				else
+					overlay_icon = null;
+				if (icon != null)
+				{
+					icon.clear_emblems();
+					if (overlay_icon != null)
 						icon.add_emblem(overlay_icon);
-				});
-			else
-				change_icon.begin(main_icon,icon_namev,icon_pixmap,(obj,res)=>{
-					main_icon = change_icon.end(res);
-					if (!use_attention_icon)
-					{
-						icon = new EmblemedIcon(main_icon,overlay_icon);
-						use_attention_icon = false;
-					}
-				});
+				}
+			} catch (Error e) {stderr.printf("%s\n",e.message);}
+		}
+		private void main_icon_direct_cb()
+		{
+			try
+			{
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, bus_name, object_path);
+				main_icon = change_icon(main_icon,item.icon_name,item.icon_pixmap);
+				if (!use_attention_icon)
+				{
+					icon = new EmblemedIcon(main_icon,overlay_icon);
+					use_attention_icon = false;
+				}
+			} catch (Error e) {stderr.printf("%s\n",e.message);}
 		}
 		private void tooltip_direct_cb()
 		{
 			try{
-				var tooltipv = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"ToolTip");
-				unbox_tooltip(tooltipv);
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, bus_name, object_path);
+				unbox_tooltip(item.tool_tip);
 			} catch (Error e){stderr.printf("Cannot set tooltip:%s\n",e.message);}
 		}
-		private void unbox_tooltip(Variant? tooltipv)
+		private void unbox_tooltip(ToolTip tooltip)
 		{
 			this.has_tooltip = true;
-			if (tooltipv== null)
-				return;
-			var icon_namev = tooltipv.get_child_value(0);
-			var icon_pixmap = tooltipv.get_child_value(1);
-			var raw_text = tooltipv.get_child_value(2).get_string() + tooltipv.get_child_value(3).get_string();
+			var raw_text = tooltip.title + tooltip.description;
 			var is_pango_markup = true;
-			try
+			if (raw_text != null)
 			{
-				Pango.parse_markup(raw_text,-1,'\0',null,null,null);
-			} catch (Error e){is_pango_markup = false;}
+				try
+				{
+					Pango.parse_markup(raw_text,-1,'\0',null,null,null);
+				} catch (Error e){is_pango_markup = false;}
+			}
 			if (!is_pango_markup)
 			{
 				var markup_parser = new QRichTextParser(raw_text);
 				markup_parser.translate_markup();
 				tooltip_markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
-				change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
-					tooltip_icon = (markup_parser.icon != null)	? markup_parser.icon: change_icon.end(res);
-				});
+				var res_icon = change_icon(tooltip_icon, tooltip.icon_name, tooltip.pixmap);
+				tooltip_icon = (markup_parser.icon != null)	? markup_parser.icon: res_icon;
 			}
 			else
 			{
 				tooltip_markup = raw_text;
-				change_icon.begin(tooltip_icon, icon_namev, icon_pixmap,(obj,res) => {
-					tooltip_icon = change_icon.end(res);
-				});
+				tooltip_icon = change_icon(tooltip_icon, tooltip.icon_name, tooltip.pixmap);
 			}
 			Tooltip.trigger_tooltip_query(Gdk.Display.get_default());
 		}
-		private async Icon? change_icon(Icon? prev_icon, Variant? icon_namev, Variant? pixmaps)
+		private Icon? change_icon(Icon? prev_icon, string? icon_name, IconPixmap[] pixmaps)
 		{
-			var icon_name = (icon_namev != null) ? icon_namev.get_string() : null;
 			if (icon_name != null && icon_name.length > 0)
 			{
 				if (icon_name[0] == '/')
@@ -385,56 +304,35 @@ namespace StatusNotifier
 				else
 				{
 					var new_icon = new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
-					themed_icon_generate_fallback(ref new_icon,prev_icon as ThemedIcon);
+					themed_icon_determine_rescan(new_icon);
 					return new_icon;
 				}
 			}
-			else if (pixmaps != null)
-			{
-				var iter = pixmaps.iterator();
-				for (var pixmap = iter.next_value(); pixmap!=null; pixmap = iter.next_value())
-				{
-					/*FIXME: Need a find suitable icon for size. Now just pick smaller */
-					Variant pixbuf = pixmap.get_child_value(2);
-					return new BytesIcon(pixbuf.get_data_as_bytes());
-				}
-			}
+			/* FIXME: Choose pixmap size */
+			else if (pixmaps.length > 0)
+				return new BytesIcon(new Bytes(pixmaps[0].bytes));
 			return null;
 		}
 		/*FIXME: Workaround for gtk+ < 3.15.8 */
-		private void themed_icon_generate_fallback(ref ThemedIcon icon, ThemedIcon? prev_icon)
+		private void themed_icon_determine_rescan(ThemedIcon icon)
 		{
-			var icon_names = icon.get_names();
+			unowned string[] icon_names = icon.get_names();
 			for (int i = icon_names.length - 1; i >= 0; i--)
 				if(IconTheme.get_default().has_icon(icon_names[i]))
 					return;
 			IconTheme.get_default().rescan_if_needed();
-			if (prev_icon == null)
-				return;
-			var prev_names = prev_icon.get_names();
-			var len = prev_names.length;
-			if((len <= 2) || IconTheme.get_default().has_icon(prev_names[1]))
-				icon.append_name(prev_names[1]);
-			else if (len > 2)
-				icon.append_name(prev_names[2]);
 		}
 		private void accessible_desc_direct_cb()
 		{
 			try
 			{
-				var desc = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"IconAccessibleDesc");
-				var adesc = props_iface.get_one(FreeDesktopProperties.KDE_NAME,"AttentionAccessibleDesc");
-				accessible_desc_cb(desc,adesc);
-			} catch (Error e) {}
-		}
-		private void accessible_desc_cb(Variant? desc, Variant? adesc)
-		{
-			if (adesc != null && use_attention_icon)
-				accessible_desc = adesc.get_string().length > 0 ? adesc.get_string() : null;
-			else if (desc != null)
-				accessible_desc = desc.get_string().length > 0 ? desc.get_string() : null;
-			else
-				accessible_desc = null;
+				ItemIface item = Bus.get_proxy_sync(BusType.SESSION,bus_name, object_path);
+				if (item.attention_accessible_desc != null && use_attention_icon)
+					accessible_desc = item.attention_accessible_desc;
+				else if (item.icon_accessible_desc != null)
+					accessible_desc = item.icon_accessible_desc;
+				else accessible_desc = null;
+			} catch (Error e) {stderr.printf("Method not supported\n");}
 		}
 	}
 }
