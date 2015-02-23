@@ -75,13 +75,7 @@ namespace StatusNotifier
 				}
 				return false;
 			});
-			ebox.button_press_event.connect((e)=>{
-				if (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS)
-					this.primary_activate();
-				else if (e.button == 2)
-					this.primary_activate();
-				return false;
-			});
+			ebox.button_press_event.connect(button_press_event_cb);
 			ebox.enter_notify_event.connect((e)=>{
 				this.get_style_context().add_class("-panel-launch-button-selected");
 			});
@@ -123,6 +117,33 @@ namespace StatusNotifier
 			iface.new_title.connect(iface_new_title_cb);
 			this.changed();
 			this.show();
+		}
+		private bool button_press_event_cb(Gdk.EventButton e)
+		{
+				if (e.button == 3)
+				{
+					try
+					{
+						iface.activate((int)Math.round(e.x_root),(int)Math.round(e.y_root));
+						return true;
+					}
+					catch (Error e) {stderr.printf("%s\n",e.message);}
+				}
+				else if (e.button == 2)
+				{
+					try
+					{
+						iface.x_ayatana_secondary_activate(e.time);
+						return true;
+					} catch (Error e){/* This only means that method not supported*/}
+					try
+					{
+						iface.secondary_activate((int)Math.round(e.x_root),(int)Math.round(e.y_root));
+						return true;
+					}
+					catch (Error e) {stderr.printf("%s\n",e.message);}
+				}
+				return false;
 		}
 		private void iface_new_path_cb(string? path)
 		{
@@ -176,29 +197,6 @@ namespace StatusNotifier
 				client.attach_to_menu(menu);
 			}
 
-		}
-		public void primary_activate()
-		{
-			int x,y;
-			ebox.get_window().get_origin(out x, out y);
-			try
-			{
-				iface.activate(x,y);
-				return;
-			}
-			catch (Error e) {/* This only means that method not supported*/}
-			try
-			{
-				iface.x_ayatana_secondary_activate(get_current_event_time());
-				return;
-			} catch (Error e){/* This only means that method not supported*/}
-			try
-			{
-				iface.secondary_activate(x,y);
-			}
-			catch (Error e) {
-					stderr.printf("%s\n",e.message);
-			}
 		}
 		public bool context_menu()
 		{
