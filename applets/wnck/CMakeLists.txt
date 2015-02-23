@@ -9,4 +9,5 @@ endif()
 
 if (ENABLE_WNCK)
 	add_subdirectory(tasklist)
+	add_subdirectory(pager)
 endif()

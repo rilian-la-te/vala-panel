@@ -1,0 +1,4 @@
+[Plugin]
+Module=pager
+Name=Pager
+Description=Shows desktops.

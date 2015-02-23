@@ -79,7 +79,7 @@ namespace ValaPanel
 				if (b.button == 3 &&
 				    ((b.state & Gtk.accelerator_get_default_mod_mask ()) == 0))
 				{
-					toplevel.get_plugin_menu(this).popup(null,null,null,
+					toplevel.get_plugin_menu(this).popup(null,null,menu_position_func,
 					                                      b.button,b.time);
 					return true;
 				}
