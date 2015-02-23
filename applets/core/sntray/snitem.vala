@@ -87,9 +87,6 @@ namespace StatusNotifier
 
 			this.query_tooltip.connect(query_tooltip_cb);
 			this.popup_menu.connect(context_menu);
-			this.notify["use-symbolic"].connect(()=>{
-				iface_new_icon_cb();
-			});
 			icon_theme.changed.connect(()=>{
 				image.set_from_gicon(image.gicon,IconSize.INVALID);
 			});
@@ -123,6 +120,9 @@ namespace StatusNotifier
 			iface.x_ayatana_new_label.connect(iface_new_label_cb);
 			iface.new_tool_tip.connect(iface_new_tooltip_cb);
 			iface.new_title.connect(iface_new_title_cb);
+			this.notify["use-symbolic"].connect(()=>{
+				iface_new_icon_cb();
+			});
 			this.changed();
 			this.show();
 		}
