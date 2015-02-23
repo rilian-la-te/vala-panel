@@ -175,10 +175,10 @@ public class QRichTextParser : Object
 			ins_name = name;
 		if ((name in span_aliases) || (name in pango_names) || (name in translated_to_pango) || (name in special_spans))
 			pango_markup_builder.append_printf("</%s>",ins_name);
-		if (name == "td")
-			pango_markup_builder.append_printf(" ");
 		if (name in newline_at_end)
 			pango_markup_builder.append_printf("\n");
+		if (name == "td")
+			pango_markup_builder.append_printf(" ");
 		if (name in lists)
 			list_type = ListType.NONE;
 	}
@@ -213,5 +213,7 @@ public class QRichTextParser : Object
 		catch(Error e) {/* Not reachable, to silence a compiler*/}
 		pango_markup = pango_markup_builder.str;
 		pango_markup_builder.erase();
+		if (pango_markup.contains("&"))
+			pango_markup = pango_markup.replace("&","&amp;");
 	}
 }
