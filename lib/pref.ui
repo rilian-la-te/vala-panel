@@ -105,10 +105,9 @@
             <property name="can_focus">False</property>
             <property name="spacing">10</property>
             <child>
-              <object class="GtkStackSwitcher" id="prefs-switcher">
+              <object class="GtkStackSidebar" id="prefs-switcher">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
                 <property name="stack">prefs</property>
               </object>
               <packing>

@@ -199,7 +199,7 @@ namespace ValaPanel
 			this.insert_action_group("conf",conf);
 			this.insert_action_group("win",toplevel);
 			this.insert_action_group("app",toplevel.application);
-    	}
+		}
 		private void state_configure_monitor(SimpleAction act, Variant? param)
 		{
 			int state = act.get_state().get_int32();

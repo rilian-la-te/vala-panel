@@ -1,3 +1,7 @@
+if (NOT(GTK316_FOUND))
+	set (SIDEBAR_SOURCES "sidebar.vala")
+endif()
+
 INCLUDE(GResource)
 vala_precompile(VALA_C ${LIBNAME}
     misc.vala
@@ -9,6 +13,7 @@ vala_precompile(VALA_C ${LIBNAME}
     panel-plugin.vala
     panel-toplevel.vala
     plugin-settings.vala
+    ${SIDEBAR_SOURCES}
     ${CMAKE_BINARY_DIR}/vapi/config.vala
 PACKAGES
     ${CORE_PACKAGES}

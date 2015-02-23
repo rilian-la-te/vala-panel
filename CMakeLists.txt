@@ -45,31 +45,20 @@ add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 add_definitions(-w) # Disable gcc warnings
 
 find_package (PkgConfig)
-pkg_check_modules (GTK+ REQUIRED
-  gtk+-3.0>=3.12)
-
-pkg_check_modules (GLIB REQUIRED
-  glib-2.0>=2.40)
-  
-pkg_check_modules (GIO REQUIRED
-  gio-2.0>=2.40
-  gio-unix-2.0>=2.40
-  gthread-2.0)
-
-pkg_check_modules (PEAS REQUIRED
-  libpeas-1.0>=1.2
-  libpeas-gtk-1.0>=1.2
-  gmodule-2.0)
 
 pkg_check_modules (CORE REQUIRED
-  gtk+-3.0
-  glib-2.0
-  gio-2.0
-  gio-unix-2.0
-  gthread-2.0
-  libpeas-1.0
-  libpeas-gtk-1.0
-  gmodule-2.0)
+  gtk+-3.0>=3.12
+  glib-2.0>=2.40
+  gio-2.0>=2.40
+  gio-unix-2.0>=2.40
+  gthread-2.0>=2.40
+  libpeas-1.0>=1.2
+  libpeas-gtk-1.0>=1.2
+  gmodule-2.0>=2.40)
+
+pkg_check_modules (GTK316
+  gtk+-3.0>=3.15
+)
 
 set(CORE_PACKAGES
   gtk+-3.0
@@ -104,4 +93,3 @@ ADD_SUBDIRECTORY(po)
 
 #Additional install
 #install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/vala-panel.desktop DESTINATION share/applications)
-
