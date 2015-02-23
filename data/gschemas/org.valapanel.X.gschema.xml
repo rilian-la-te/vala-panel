@@ -14,14 +14,6 @@
       <default>'window-manager'</default>
     </key>
   </schema>
-  <schema id="org.simple.panel.toplevel.deskno">
-    <key name="bold-font" type="b">
-      <default>false</default>
-    </key>
-    <key name="wm-labels" type="b">
-      <default>true</default>
-    </key>
-  </schema>
   <schema id="org.simple.panel.toplevel.xkb">
     <key name="layout-per-window" type="b">
       <default>false</default>
@@ -55,6 +47,14 @@
     </key>
   </schema>
 -->
+  <schema id="org.valapanel.toplevel.deskno">
+    <key name="bold-font" type="b">
+      <default>false</default>
+    </key>
+    <key name="wm-labels" type="b">
+      <default>true</default>
+    </key>
+  </schema>
   <schema id="org.valapanel.toplevel.tasklist">
     <key name="all-desktops" type="b">
       <default>true</default>
