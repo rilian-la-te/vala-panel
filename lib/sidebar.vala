@@ -71,9 +71,11 @@ public class StackSidebar : Gtk.Bin
         list.set_header_func(update_header);
         list.set_sort_func(sort_list);
         list.row_selected.connect(on_row_selected);
-        scroll.add(list);
-
-        get_style_context().add_class("sidebar");
+        var box = new Box(Orientation.HORIZONTAL, 0);
+        scroll.add(box);
+		box.add(list);
+		box.add(new Separator(Orientation.VERTICAL));
+        list.get_style_context().remove_class("list");
         this.show_all();
     }
 
