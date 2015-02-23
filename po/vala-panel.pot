@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-06 21:12+0600\n"
+"POT-Creation-Date: 2015-02-24 02:08+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,73 +17,63 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/menu-maker.vala:83
-msgid "Home"
+#: ../lib/generic-config-dialog.vala:27
+msgid "_Close"
 msgstr ""
 
-#: ../lib/menu-maker.vala:93
-msgid "Desktop"
+#: ../lib/generic-config-dialog.vala:74 ../lib/generic-config-dialog.vala:112
+msgid "Select a file"
 msgstr ""
 
-#: ../lib/menu-maker.vala:109
-msgid "Search..."
+#: ../lib/generic-config-dialog.vala:104
+msgid "_Browse"
 msgstr ""
 
-#: ../lib/menu-maker.vala:134
-msgid "Control center"
+#: ../lib/generic-config-dialog.vala:112
+msgid "Select a directory"
 msgstr ""
 
-#: ../lib/menu-maker.vala:160
-msgid "Applications"
+#: ../lib/generic-config-dialog.vala:115
+#: ../applets/core/launchbar/launchbar.vala:199
+msgid "_Cancel"
 msgstr ""
 
-#: ../lib/menu-maker.vala:164 ../lib/menu-maker.vala:172
-msgid "Places"
+#: ../lib/generic-config-dialog.vala:116
+#: ../applets/core/launchbar/launchbar.vala:200
+msgid "_OK"
 msgstr ""
 
-#: ../lib/menu-maker.vala:165 ../data/ui/system-menus.ui:41
-msgid "System"
-msgstr ""
-
-#: ../lib/menu-maker.vala:169
-msgid "Vala Panel"
-msgstr ""
-
-#: ../lib/panel-toplevel.vala:1224
+#: ../lib/panel-toplevel.vala:1194
 msgid "There is no room for another panel. All the edges are taken."
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1226
+#: ../lib/panel-toplevel.vala:1196
 msgid "Error"
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1243
+#: ../lib/panel-toplevel.vala:1213
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1245
+#: ../lib/panel-toplevel.vala:1215
 msgid "Confirm"
 msgstr ""
 
 #: ../lib/configurator.vala:76 ../lib/configurator.vala:93
-#: ../data/ui/panel-pref.ui:6
 msgid "Top"
 msgstr ""
 
 #: ../lib/configurator.vala:79 ../lib/configurator.vala:96
-#: ../data/ui/panel-pref.ui:11
 msgid "Bottom"
 msgstr ""
 
 #: ../lib/configurator.vala:82 ../lib/configurator.vala:99
-#: ../data/ui/panel-pref.ui:16
 msgid "Left"
 msgstr ""
 
 #: ../lib/configurator.vala:85 ../lib/configurator.vala:102
-#: ../data/ui/panel-pref.ui:21
 msgid "Right"
 msgstr ""
 
@@ -99,23 +89,23 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: ../lib/configurator.vala:144 ../lib/configurator.vala:209
+#: ../lib/configurator.vala:144 ../lib/configurator.vala:208
 msgid "All"
 msgstr ""
 
-#: ../lib/configurator.vala:209
+#: ../lib/configurator.vala:208
 msgid "%d"
 msgstr ""
 
-#: ../lib/configurator.vala:282
+#: ../lib/configurator.vala:281
 msgid "Currently loaded plugins"
 msgstr ""
 
-#: ../lib/configurator.vala:291
+#: ../lib/configurator.vala:290
 msgid "Stretch"
 msgstr ""
 
-#: ../lib/configurator.vala:351
+#: ../lib/configurator.vala:350
 msgid "Available plugins"
 msgstr ""
 
@@ -139,14 +129,247 @@ msgstr ""
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.vala:179
+#: ../app/application.vala:180
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.vala:210
+#: ../app/application.vala:211
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
+msgstr ""
+
+#: ../applets/core/separator/separator.vala:49
+msgid "Separator Applet"
+msgstr ""
+
+#: ../applets/core/separator/separator.vala:51 ../lib/pref.ui:517
+msgid "Size"
+msgstr ""
+
+#: ../applets/core/separator/separator.vala:52
+msgid "Visible separator"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:56
+msgid "Custom Menu"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:57
+msgid ""
+"If internal menu is enabled, menu file will not be used, predefeined menu "
+"will be used instead."
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:58
+msgid "Is internal menu"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:59
+msgid "Is system menu (can be keybound)"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:60
+msgid "Is Menubar"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:61
+#: ../applets/core/dirmenu/dirmenu.vala:181
+msgid "Icon"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:62
+msgid "Caption (for button only)"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:63
+msgid "Menu file name"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:83
+msgid "Home"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:94
+msgid "Desktop"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:111
+msgid "Search..."
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:139
+msgid "Control center"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:156
+msgid "Applications"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:160
+#: ../applets/core/menumodel/menu-maker.vala:168
+msgid "Places"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:161
+#: ../applets/core/menumodel/system-menus.ui:40
+msgid "System"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.vala:165
+msgid "Vala Panel"
+msgstr ""
+
+#: ../applets/core/kbled/kbled.vala:29
+msgid "Keyboard LED"
+msgstr ""
+
+#: ../applets/core/kbled/kbled.vala:31
+msgid "Show CapsLock"
+msgstr ""
+
+#: ../applets/core/kbled/kbled.vala:32
+msgid "Show NumLock"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:33
+msgid "StatusNotifier"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:35
+msgid "Use symbolic icons"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:36
+msgid "Indicator icon size"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:37
+msgid "Show applications status items"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:38
+msgid "Show communications applications"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:39
+msgid "Show system services"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:40
+msgid "Show hardware services"
+msgstr ""
+
+#: ../applets/core/sntray/sntray.vala:41
+msgid "Show passive items"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.vala:188
+msgid "Quicklaunch already contains this application.\n"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.vala:196
+msgid "Select a file for launcher"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.vala:212
+msgid "Quicklaunch already contains this URI.\n"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.vala:256
+msgid "Add application..."
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.vala:257
+msgid "Add file..."
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.vala:127
+msgid "_Open"
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.vala:134
+msgid "Open in _Terminal"
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.vala:177
+msgid "Directory Menu"
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.vala:179
+msgid "Directory"
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.vala:180
+msgid "Label"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:86
+msgid "Digital Clock"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:88
+msgid "Clock Format"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:89
+msgid "Tooltip Format"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:90
+msgid "Format codes: man 3 strftime; %n for line break"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:91 ../applets/wnck/deskno/deskno.vala:33
+msgid "Bold font"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:71
+msgid "Tasklist Applet"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:73
+msgid "Show windows from all desktops"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:74
+msgid "Show window`s workspace on unminimize"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:75
+msgid "Close windows on middle click"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:76
+msgid "Group windows when needed"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:77
+msgid "Ungrouped buttons limit"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.vala:78
+msgid "Unexpanded size limit"
+msgstr ""
+
+#: ../applets/wnck/pager/pager.vala:81
+msgid "Workspaces..."
+msgstr ""
+
+#: ../applets/wnck/deskno/deskno.vala:31
+msgid "Desktop Number / Workspace Name"
+msgstr ""
+
+#: ../applets/wnck/deskno/deskno.vala:34
+msgid "Display desktop names"
+msgstr ""
+
+#: ../applets/wnck/wincmd/wincmd.vala:44
+msgid "Minimize All Windows"
+msgstr ""
+
+#: ../applets/wnck/wincmd/wincmd.vala:46
+msgid "Alternately iconify/shade and raise"
 msgstr ""
 
 #: ../lib/pref.ui:8
@@ -165,23 +388,23 @@ msgstr ""
 msgid "_Right"
 msgstr ""
 
-#: ../lib/pref.ui:32 ../data/ui/panel-pref.ui:30
+#: ../lib/pref.ui:32
 msgid "_Start"
 msgstr ""
 
-#: ../lib/pref.ui:37 ../data/ui/panel-pref.ui:35
+#: ../lib/pref.ui:37
 msgid "_Center"
 msgstr ""
 
-#: ../lib/pref.ui:42 ../data/ui/panel-pref.ui:40
+#: ../lib/pref.ui:42
 msgid "_End"
 msgstr ""
 
-#: ../lib/pref.ui:84
+#: ../lib/pref.ui:87
 msgid "Panel preferences"
 msgstr ""
 
-#: ../lib/pref.ui:148 ../data/ui/panel-pref.ui:204
+#: ../lib/pref.ui:139
 msgid "Margin:"
 msgstr ""
 
@@ -237,64 +460,92 @@ msgstr ""
 msgid "Automatic hide panel"
 msgstr ""
 
-#: ../lib/pref.ui:483
+#: ../lib/pref.ui:471
 msgid "Show hidden:"
 msgstr ""
 
-#: ../lib/pref.ui:495
+#: ../lib/pref.ui:483
 msgid "Autohide:"
 msgstr ""
 
-#: ../lib/pref.ui:505 ../data/ui/panel-pref.ui:766
-msgid "Size"
-msgstr ""
-
-#: ../lib/pref.ui:521
+#: ../lib/pref.ui:533
 msgid "Foreground color:"
 msgstr ""
 
-#: ../lib/pref.ui:533
+#: ../lib/pref.ui:545
 msgid "Background image:"
 msgstr ""
 
-#: ../lib/pref.ui:545
+#: ../lib/pref.ui:557
 msgid "Background color:"
 msgstr ""
 
-#: ../lib/pref.ui:557
+#: ../lib/pref.ui:569
 msgid "Font:"
 msgstr ""
 
-#: ../lib/pref.ui:569
+#: ../lib/pref.ui:581
 msgid "Round corners size:"
 msgstr ""
 
-#: ../lib/pref.ui:649
+#: ../lib/pref.ui:661
 msgid "Select background color"
 msgstr ""
 
-#: ../lib/pref.ui:663
+#: ../lib/pref.ui:675
 msgid "Select foreground color"
 msgstr ""
 
-#: ../lib/pref.ui:676
+#: ../lib/pref.ui:688
 msgid "Select an Image"
 msgstr ""
 
-#: ../lib/pref.ui:695
+#: ../lib/pref.ui:707
 msgid "Select panel font"
 msgstr ""
 
-#: ../lib/pref.ui:707
+#: ../lib/pref.ui:719
 msgid "Size only"
 msgstr ""
 
-#: ../lib/pref.ui:733 ../data/ui/panel-pref.ui:826
+#: ../lib/pref.ui:745
 msgid "Appearance"
 msgstr ""
 
-#: ../lib/pref.ui:913 ../data/ui/panel-pref.ui:1005
+#: ../lib/pref.ui:925
 msgid "Plugins"
+msgstr ""
+
+#: ../lib/panel-menus.ui:6
+msgid "Configure applet..."
+msgstr ""
+
+#: ../lib/panel-menus.ui:11
+msgid "Remove applet"
+msgstr ""
+
+#: ../lib/panel-menus.ui:18
+msgid "Panel Items..."
+msgstr ""
+
+#: ../lib/panel-menus.ui:25
+msgid "Panel Settings..."
+msgstr ""
+
+#: ../lib/panel-menus.ui:30
+msgid "New Panel"
+msgstr ""
+
+#: ../lib/panel-menus.ui:34
+msgid "Remove this Panel"
+msgstr ""
+
+#: ../lib/panel-menus.ui:40
+msgid "Application Settings"
+msgstr ""
+
+#: ../lib/panel-menus.ui:44
+msgid "About"
 msgstr ""
 
 #: ../app/app-runner.ui:10
@@ -317,227 +568,116 @@ msgstr ""
 msgid "Cancel button"
 msgstr ""
 
-#: ../data/ui/app-about.ui:11
+#: ../app/app-about.ui:11
 msgid "Simple GTK+ desktop panel. "
 msgstr ""
 
-#: ../data/ui/app-about.ui:13
+#: ../app/app-about.ui:13
 msgid "https://vala-panel.github.io"
 msgstr ""
 
 #. Replace this string by your names, one name per line.
-#: ../data/ui/app-about.ui:29
+#: ../app/app-about.ui:29
 msgid "translator-credits"
 msgstr ""
 
-#: ../data/ui/system-menus.ui:6
-msgid "Audio and Video"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:11
-msgid "Education"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:16
-msgid "Game"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:21
-msgid "Graphics"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:26 ../data/ui/system-menus.ui:81
-msgid "Network"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:31
-msgid "Office"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:36
-msgid "Settings"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:46
-msgid "Utility"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:51
-msgid "Development"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:56
-msgid "Other"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:67
-msgid "Computer"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:73
-msgid "Trash"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:87
-msgid "Connect to server..."
-msgstr ""
-
-#: ../data/ui/system-menus.ui:95
-msgid "Recent documents"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:107
-msgid "Run"
-msgstr ""
-
-#: ../data/ui/system-menus.ui:114
-msgid "Log Out..."
-msgstr ""
-
-#: ../data/ui/system-menus.ui:119
-msgid "Shut down..."
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:49 ../data/ui/panel-pref.ui:100
-msgid "Dynamic"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:53 ../data/ui/panel-pref.ui:103
-msgid "Pixels"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:57
-msgid "Percent"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:106
-msgid "% Percent"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:239
-msgid "<b>Position</b>"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:315 ../data/ui/panel-pref.ui:361
-msgid "x"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:408
-msgid "<b>Size</b>"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:430
-msgid "Minimize panel when not in use with size: "
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:484
-msgid "Autohide"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:509
-msgid "Make window managers treat the panel as dock"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:526
-msgid "Reserve space, and not covered by maximized windows"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:547
-msgid "<b>Properties</b>"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:561
-msgid "Geometry"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:581
-msgid "GTK Window"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:596
-msgid "Gnome Panel"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:619 ../data/ui/panel-pref.ui:723
-msgid "Color"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:659
-msgid "Image"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:677
-msgid "Select an image file"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:693
-msgid "<b>Background</b>"
-msgstr ""
-
-#: ../data/ui/panel-pref.ui:812
-msgid "<b>Font</b>"
-msgstr ""
-
-#: ../data/ui/app-pref.ui:8
+#: ../app/app-pref.ui:8
 msgid "Application preferences"
 msgstr ""
 
-#: ../data/ui/app-pref.ui:52
+#: ../app/app-pref.ui:52
 msgid "Logout manager..."
 msgstr ""
 
-#: ../data/ui/app-pref.ui:68
+#: ../app/app-pref.ui:68
 msgid "Shutdown application..."
 msgstr ""
 
-#: ../data/ui/app-pref.ui:82
+#: ../app/app-pref.ui:82
 msgid "Preferred Applications:"
 msgstr ""
 
-#: ../data/ui/app-pref.ui:108
+#: ../app/app-pref.ui:108
 msgid "Use dark theme"
 msgstr ""
 
-#: ../data/ui/app-pref.ui:129
+#: ../app/app-pref.ui:129
 msgid "Use custom CSS"
 msgstr ""
 
-#: ../data/ui/app-pref.ui:148
+#: ../app/app-pref.ui:148
 msgid "Select a CSS File"
 msgstr ""
 
-#: ../data/ui/app-pref.ui:170
+#: ../app/app-pref.ui:170
 msgid "Widget Style"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:6
-msgid "Configure applet..."
+#: ../applets/core/menumodel/system-menus.ui:5
+msgid "Audio and Video"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:11
-msgid "Remove applet"
+#: ../applets/core/menumodel/system-menus.ui:10
+msgid "Education"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:18
-msgid "Panel Items..."
+#: ../applets/core/menumodel/system-menus.ui:15
+msgid "Game"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:25
-msgid "Panel Settings..."
+#: ../applets/core/menumodel/system-menus.ui:20
+msgid "Graphics"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:30
-msgid "New Panel"
+#: ../applets/core/menumodel/system-menus.ui:25
+#: ../applets/core/menumodel/system-menus.ui:81
+msgid "Network"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:34
-msgid "Remove this Panel"
+#: ../applets/core/menumodel/system-menus.ui:30
+msgid "Office"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:40
-msgid "Application Settings"
+#: ../applets/core/menumodel/system-menus.ui:35
+msgid "Settings"
 msgstr ""
 
-#: ../data/ui/panel-menus.ui:44
-msgid "About"
+#: ../applets/core/menumodel/system-menus.ui:45
+msgid "Utility"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:50
+msgid "Development"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:55
+msgid "Other"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:65
+msgid "Computer"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:72
+msgid "Trash"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:88
+msgid "Connect to server..."
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:97
+msgid "Recent documents"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:109
+msgid "Run"
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:116
+msgid "Log Out..."
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:121
+msgid "Shut down..."
 msgstr ""

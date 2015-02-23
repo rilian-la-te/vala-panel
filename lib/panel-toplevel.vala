@@ -160,7 +160,7 @@ namespace ValaPanel
 		public bool use_foreground_color
 		{get; internal set;}
 		public bool use_background_file
-		{get; internal set;}		
+		{get; internal set;}
 		public bool font_size_only
 		{get; internal set;}
 		public uint font_size
@@ -262,7 +262,7 @@ namespace ValaPanel
 				accept_focus: false,
 				application: app,
 				panel_name: name);
-				setup(false);
+			setup(false);
 		}
 		private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
 		{
@@ -1076,7 +1076,7 @@ namespace ValaPanel
 	        str.append_printf(".-simple-panel-round-corners {\n");
 	        str.append_printf(" border-radius: %upx;\n",round_corners_size);
 	        str.append_printf("}\n");
-		    Pango.FontDescription desc = Pango.FontDescription.from_string(font);		    
+		    Pango.FontDescription desc = Pango.FontDescription.from_string(font);
 	        str.append_printf(".-simple-panel-font-size {\n");
 	        str.append_printf(" font-size: %dpx;\n",desc.get_size()/Pango.SCALE);
 	        str.append_printf("}\n");

@@ -280,16 +280,16 @@ namespace StatusNotifier
 		}
 		private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps)
 		{
-			var symbolic_prefix = (use_symbolic) ? "-symbolic" : "";
+			var new_name = (use_symbolic) ? icon_name+"-symbolic" : icon_name;
 			if (icon_name != null && icon_name.length > 0)
 			{
 				if (icon_name[0] == '/')
 					return new FileIcon(File.new_for_path(icon_name));
 				else if (icon_theme.has_icon(icon_name)
-						|| icon_theme.has_icon(icon_name+symbolic_prefix)
+						|| icon_theme.has_icon(new_name)
 						|| iface.icon_theme_path == null
 						|| iface.icon_theme_path.length == 0)
-					return new ThemedIcon.with_default_fallbacks(icon_name+symbolic_prefix);
+					return new ThemedIcon.with_default_fallbacks(new_name);
 				else return find_file_icon(icon_name,iface.icon_theme_path);
 			}
 			/* FIXME: Choose pixmap size */
