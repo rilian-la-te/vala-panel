@@ -78,6 +78,7 @@ namespace DBusMenu
 			checker.insert("shortcut", new VariantType("aas"));
 			checker.insert("toggle-state", VariantType.INT32);
 			checker.insert("icon-data", new VariantType("ay"));
+			checker.insert("disposition", VariantType.STRING);
 		}
 		public PropertyStore (Variant? props)
 		{
@@ -101,6 +102,8 @@ namespace DBusMenu
 				dict.insert_value("type", new Variant.string("standard"));
 			if(!dict.contains("label"))
 				dict.insert_value("label", new Variant.string(""));
+			if(!dict.contains("disposition"))
+				dict.insert_value("disposition", new Variant.string("normal"));
 		}
 	}
 
@@ -230,6 +233,7 @@ namespace DBusMenu
 			request_layout_update();
 			iface.layout_updated.connect((rev,parent)=>{request_layout_update();});
 			iface.items_properties_updated.connect(props_updated_cb);
+			iface.item_activation_requested.connect(request_activation_cb);
 			requested_props_ids = {};
 		}
 		public Item? get_root_item()
@@ -239,6 +243,10 @@ namespace DBusMenu
 		public Item? get_item(int id)
 		{
 			return items.lookup(id);
+		}
+		private void request_activation_cb(int id, uint timestamp)
+		{
+			get_item(id).handle_event("clicked",new Variant.int32(0),timestamp);
 		}
 		private void request_layout_update()
 		{
