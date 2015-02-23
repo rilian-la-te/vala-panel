@@ -10,6 +10,8 @@ namespace StatusNotifier
 		HashTable<string,Item> items;
 		public VariantDict index_override
 		{get; set;}
+		public bool symbolic_icons
+		{get; set;}
 		public bool show_application_status
 		{get; set;}
 		public bool show_communications

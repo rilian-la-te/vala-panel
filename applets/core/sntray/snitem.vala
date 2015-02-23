@@ -17,6 +17,8 @@ namespace StatusNotifier
 		{get; private set;}
 		public string id
 		{get; private set;}
+		internal bool use_symbolic
+		{get; set;}
 		public Item (string n, ObjectPath p)
 		{
 			Object(object_path: p, object_name: n);
@@ -85,12 +87,18 @@ namespace StatusNotifier
 
 			this.query_tooltip.connect(query_tooltip_cb);
 			this.popup_menu.connect(context_menu);
+			this.notify["use-symbolic"].connect(()=>{
+				iface_new_icon_cb();
+			});
 			icon_theme.changed.connect(()=>{
 				image.set_from_gicon(image.gicon,IconSize.INVALID);
 			});
 			this.parent_set.connect((prev)=>{
 				if (get_applet() != null)
+				{
 					get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
+					get_applet().bind_property("symbolic-icons",this,"use-symbolic",BindingFlags.SYNC_CREATE);
+				}
 			});
 			ebox.show_all();
 		}
@@ -272,15 +280,16 @@ namespace StatusNotifier
 		}
 		private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps)
 		{
+			var symbolic_prefix = (use_symbolic) ? "-symbolic" : "";
 			if (icon_name != null && icon_name.length > 0)
 			{
 				if (icon_name[0] == '/')
 					return new FileIcon(File.new_for_path(icon_name));
 				else if (icon_theme.has_icon(icon_name)
-						|| icon_theme.has_icon(icon_name+"-symbolic")
+						|| icon_theme.has_icon(icon_name+symbolic_prefix)
 						|| iface.icon_theme_path == null
 						|| iface.icon_theme_path.length == 0)
-					return new ThemedIcon.with_default_fallbacks(icon_name+"-symbolic");
+					return new ThemedIcon.with_default_fallbacks(icon_name+symbolic_prefix);
 				else return find_file_icon(icon_name,iface.icon_theme_path);
 			}
 			/* FIXME: Choose pixmap size */

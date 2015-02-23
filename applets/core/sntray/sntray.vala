@@ -20,6 +20,7 @@ public class SNTray: Applet, AppletConfigurable
 	static const string SHOW_HARD = "show-hardware";
 	static const string SHOW_PASSIVE = "show-passive";
 	static const string INDICATOR_SIZE = "indicator-size";
+	static const string USE_SYMBOLIC = "symbolic-icons";
 	static const string INDEX_OVERRIDE = "index-override";
 
 	ItemBox layout;
@@ -31,6 +32,7 @@ public class SNTray: Applet, AppletConfigurable
 	{
 		return Configurator.generic_config_dlg(_("StatusNotifier"),
 							toplevel, this,
+							_("Use symbolic icons"), USE_SYMBOLIC, GenericConfigType.BOOL,
 							_("Indicator icon size"), INDICATOR_SIZE, GenericConfigType.INT,
 							_("Show applications status items"), SHOW_APPS, GenericConfigType.BOOL,
 							_("Show communications applications"), SHOW_COMM, GenericConfigType.BOOL,
@@ -47,6 +49,7 @@ public class SNTray: Applet, AppletConfigurable
 		settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.GET);
 		settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.GET);
 		settings.bind(INDICATOR_SIZE,layout,"icon-size",SettingsBindFlags.GET);
+		settings.bind(USE_SYMBOLIC,layout,USE_SYMBOLIC,SettingsBindFlags.GET);
 		settings.changed[INDEX_OVERRIDE].connect(()=>{
 			var val = settings.get_value(INDEX_OVERRIDE);
 			layout.index_override = new VariantDict(val);
