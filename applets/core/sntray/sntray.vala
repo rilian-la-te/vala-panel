@@ -56,11 +56,11 @@ public class SNTray: Applet, AppletConfigurable
 		});
 		var val = settings.get_value(INDEX_OVERRIDE);
 		layout.index_override = new VariantDict(val);
-        layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
-        toplevel.notify["edge"].connect((o,a)=> {
+		layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
+		toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
-        });
-        layout.menu_position_func = this.menu_position_func;
+		});
+		layout.menu_position_func = this.menu_position_func;
 		this.add(layout);
 		show_all();
 	}
