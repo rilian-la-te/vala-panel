@@ -38,12 +38,11 @@ public class Deskno: Applet, AppletConfigurable
 		label = new Label(null);
 		settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
 		settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
-	    /* FIXME: use some global setting for border */
 	    toplevel.notify.connect((pspec)=>{
 			if (pspec.name == "edge" || pspec.name == "monitor")
 				name_update();
 		});
-		settings.changed.connect((key)=>{
+		this.notify.connect((pspec)=>{
 			name_update();
 		});
 		screen_handler = Wnck.Screen.get_default().active_workspace_changed.connect(()=>{

@@ -1,19 +1,5 @@
 <schemalist>
 <!--
-  <schema id="org.simple.panel.toplevel.wincmd">
-    <key name="left-button-command" enum="org.simple.panel.WcCommand">
-      <default>'iconify'</default>
-    </key>
-    <key name="middle-button-command" enum="org.simple.panel.WcCommand">
-      <default>'shade'</default>
-    </key>
-    <key name="toggle-iconify-and-shade" type="b">
-      <default>false</default>
-    </key>
-    <key name="image" type="s">
-      <default>'window-manager'</default>
-    </key>
-  </schema>
   <schema id="org.simple.panel.toplevel.xkb">
     <key name="layout-per-window" type="b">
       <default>false</default>
@@ -47,6 +33,25 @@
     </key>
   </schema>
 -->
+  <enum id="org.valapanel.WcCommand">
+    <value nick="none" value="0"/>
+    <value nick="iconify" value="1"/>
+    <value nick="shade" value="2"/>
+  </enum>
+  <schema id="org.valapanel.toplevel.wincmd">
+    <key name="left-button-command" enum="org.valapanel.WcCommand">
+      <default>'iconify'</default>
+    </key>
+    <key name="middle-button-command" enum="org.valapanel.WcCommand">
+      <default>'shade'</default>
+    </key>
+    <key name="toggle-iconify-and-shade" type="b">
+      <default>false</default>
+    </key>
+    <key name="icon" type="s">
+      <default>'preferences-desktop-wallpaper-symbolic'</default>
+    </key>
+  </schema>
   <schema id="org.valapanel.toplevel.deskno">
     <key name="bold-font" type="b">
       <default>false</default>
