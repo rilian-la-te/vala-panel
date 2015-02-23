@@ -108,9 +108,9 @@ namespace StatusNotifier
 			var right = ch2 as Item;
 			var lpos = left.ordering_index;
 			var rpos = right.ordering_index;
-			if (index_override.contains(left.id))
+			if (left.id != null && index_override.contains(left.id))
 				lpos = index_override.lookup_value(left.id,VariantType.UINT32).get_uint32();
-			if (index_override.contains(right.id))
+			if (right.id != null && index_override.contains(right.id))
 				rpos = index_override.lookup_value(right.id,VariantType.UINT32).get_uint32();
 			return (int)lpos - (int)rpos;
 		}

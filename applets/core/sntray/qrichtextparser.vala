@@ -110,13 +110,13 @@ public class QRichTextParser : Object
 			foreach (var attr in attr_names)
 			{
 				if (attr == "bgcolor")
-					pango_markup_builder.append_printf("background=%s ",attr_values[i]);
+					pango_markup_builder.append_printf("background=\"%s\" ",attr_values[i]);
 				if (attr == "color")
-					pango_markup_builder.append_printf("foreground=%s ",attr_values[i]);
+					pango_markup_builder.append_printf("foreground=\"%s\" ",attr_values[i]);
 				if (attr == "size")
-					pango_markup_builder.append_printf("size=%d ",int.parse(attr_values[i]) * Pango.SCALE);
+					pango_markup_builder.append_printf("size=\"%s\" ",parse_size(attr_values[i]));
 				if (attr == "face")
-					pango_markup_builder.append_printf("face=%s ",attr_values[i]);
+					pango_markup_builder.append_printf("face=\"%s\" ",attr_values[i]);
 				i++;
 			}
 			pango_markup_builder.append_printf(">");
@@ -186,6 +186,17 @@ public class QRichTextParser : Object
 	private void visit_text (MarkupParseContext context, string text, size_t text_len) throws MarkupError
 	{
 		pango_markup_builder.append_printf("%s",text.replace("\n","").strip());
+	}
+	private string parse_size(string size)
+	{
+		if (size.contains("+"))
+			return "larger";
+		else if (size.contains("-"))
+			return "smaller";
+		else if (size.contains("pt") || size.contains("px"))
+			return "%d".printf(int.parse(size)*Pango.SCALE);
+		else
+			return size;
 	}
 
 	public bool parse (string markup) throws MarkupError {

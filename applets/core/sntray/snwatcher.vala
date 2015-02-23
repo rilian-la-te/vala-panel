@@ -39,7 +39,7 @@ namespace StatusNotifier
 		public bool is_status_notifier_host_registered
 		{get {return true;}}
 		public int protocol_version
-		{get {return 1;}}
+		{get {return 0;}}
 		/* Public methods */
 		public void register_status_notifier_item(string service, BusName sender)
 		{
@@ -66,7 +66,6 @@ namespace StatusNotifier
 													null,
 													() => {remove(get_id(name,path));}
 													);
-				print("%s,%s\n",name,path);
 				name_watcher.insert(id,name_handler);
 				registered_status_notifier_items = get_registered_items();
 				status_notifier_item_registered(out id);

@@ -12,27 +12,27 @@ namespace StatusNotifier
 		public Status status
 		{get; private set;}
 		public uint ordering_index
-		{get {return iface.x_ayatana_ordering_index;}}
+		{get; private set;}
 		public Category cat
-		{get {return iface.category;}}
+		{get; private set;}
 		public string id
-		{owned get {return iface.id;}}
+		{get; private set;}
 		public Item (string n, ObjectPath p)
 		{
 			Object(object_path: p, object_name: n);
 		}
 		construct
 		{
+			PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","grid-child");
 			try
 			{
-				this.iface = Bus.get_proxy_sync (BusType.SESSION,object_name,object_path);
 				uint id;
 				id = Bus.watch_name(BusType.SESSION,object_name,BusNameWatcherFlags.NONE,
 					null,
 					() => {Bus.unwatch_name(id); get_applet().request_remove_item(this,object_name+(string)object_path);}
 					);
+				init_proxy.begin();
 			} catch (IOError e) {stderr.printf ("%s\n", e.message); this.destroy();}
-			PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","grid-child");
 			client = null;
 			this.has_tooltip = true;
 			icon_theme = IconTheme.get_default();
@@ -44,7 +44,6 @@ namespace StatusNotifier
 			box.add(label);
 			ebox.add(box);
 			this.add(ebox);
-			init_all();
 			ebox.add_events(Gdk.EventMask.SCROLL_MASK);
 			ebox.scroll_event.connect((e)=>{
 				switch (e.direction)
@@ -79,7 +78,7 @@ namespace StatusNotifier
 			ebox.button_press_event.connect((e)=>{
 				if (e.type == Gdk.EventType.DOUBLE_BUTTON_PRESS)
 					this.primary_activate();
-				if (e.button == 2)
+				else if (e.button == 2)
 					this.primary_activate();
 				return false;
 			});
@@ -89,14 +88,7 @@ namespace StatusNotifier
 			ebox.leave_notify_event.connect((e)=>{
 				this.get_style_context().remove_class("-panel-launch-button-selected");
 			});
-			iface.new_status.connect(iface_new_status_cb);
-			iface.new_icon.connect(iface_new_icon_cb);
-			iface.new_overlay_icon.connect(iface_new_icon_cb);
-			iface.new_attention_icon.connect(iface_new_icon_cb);
-			iface.new_icon_theme_path.connect(iface_new_path_cb);
-			iface.x_ayatana_new_label.connect(iface_new_label_cb);
-			iface.new_tool_tip.connect(iface_new_tooltip_cb);
-			iface.new_title.connect(iface_new_title_cb);
+
 			this.query_tooltip.connect(query_tooltip_cb);
 			this.popup_menu.connect(context_menu);
 			icon_theme.changed.connect(()=>{
@@ -106,17 +98,31 @@ namespace StatusNotifier
 				if (get_applet() != null)
 					get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
 			});
-			this.show_all();
+			ebox.show_all();
 		}
-		private void init_all()
+		private async void init_proxy() throws Error
 		{
+			this.iface = yield Bus.get_proxy(BusType.SESSION,object_name,object_path);
 			if (iface.items_in_menu || iface.menu != null)
 				setup_inner_menu();
 			title = iface.title;
+			this.ordering_index = iface.x_ayatana_ordering_index;
+			this.cat = iface.category;
+			this.id = iface.id;
 			iface_new_status_cb(iface.status);
 			iface_new_path_cb(iface.icon_theme_path);
 			iface_new_label_cb(iface.x_ayatana_label,iface.x_ayatana_label_guide);
 			unbox_tooltip(iface.tool_tip,out tooltip_icon, out markup);
+			iface.new_status.connect(iface_new_status_cb);
+			iface.new_icon.connect(iface_new_icon_cb);
+			iface.new_overlay_icon.connect(iface_new_icon_cb);
+			iface.new_attention_icon.connect(iface_new_icon_cb);
+			iface.new_icon_theme_path.connect(iface_new_path_cb);
+			iface.x_ayatana_new_label.connect(iface_new_label_cb);
+			iface.new_tool_tip.connect(iface_new_tooltip_cb);
+			iface.new_title.connect(iface_new_title_cb);
+			this.changed();
+			this.show();
 		}
 		private void iface_new_path_cb(string? path)
 		{
@@ -235,7 +241,7 @@ namespace StatusNotifier
 		}
 		private void unbox_tooltip(ToolTip tooltip, out Icon? icon, out string? markup)
 		{
-			var raw_text = tooltip.title + tooltip.description;
+			var raw_text = tooltip.title + "\n" + tooltip.description;
 			var is_pango_markup = true;
 			if (raw_text != null)
 			{
@@ -246,7 +252,7 @@ namespace StatusNotifier
 			}
 			if (!is_pango_markup)
 			{
-				var markup_parser = new QRichTextParser(raw_text);
+				var markup_parser = new QRichTextParser("<markup>"+ tooltip.title + "<br/>" + tooltip.description +"</markup>");
 				markup_parser.translate_markup();
 				markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
 				var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap);
