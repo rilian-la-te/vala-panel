@@ -2,4 +2,3 @@
 Module=cpu
 Name=CPU Graph
 Description=Draws CPU graph on panel.
-X-ValaPanel-Configurable=true;
