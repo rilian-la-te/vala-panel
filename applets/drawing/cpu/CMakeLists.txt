@@ -1,4 +1,4 @@
-set(PLUGIN_NAME wincmd)
+set(PLUGIN_NAME cpu)
 vala_precompile(VALA_C ${PLUGIN_NAME}
     ${PLUGIN_NAME}.vala
 PACKAGES
