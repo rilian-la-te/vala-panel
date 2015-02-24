@@ -286,7 +286,7 @@ namespace StatusNotifier
 				if (icon_name[0] == '/')
 					return new FileIcon(File.new_for_path(icon_name));
 				else if (icon_theme.has_icon(icon_name)
-						|| icon_theme.has_icon(new_name)
+						|| (new_name == icon_name || icon_theme.has_icon(new_name))
 						|| iface.icon_theme_path == null
 						|| iface.icon_theme_path.length == 0)
 					return new ThemedIcon.with_default_fallbacks(new_name);

@@ -85,11 +85,11 @@ include_directories(${CMAKE_BINARY_DIR}/lib)
 #set requred variables
 set(TARGET_GLIB ${GLIB_VERSION_MAJOR}.${GLIB_VERSION_MINOR})
 
+ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(data)
 ADD_SUBDIRECTORY(lib)
 ADD_SUBDIRECTORY(app)
 ADD_SUBDIRECTORY(applets)
-ADD_SUBDIRECTORY(po)
 
 #Additional install
 #install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/vala-panel.desktop DESTINATION share/applications)

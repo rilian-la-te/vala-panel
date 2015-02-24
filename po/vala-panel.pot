@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-24 02:08+0600\n"
+"POT-Creation-Date: 2015-02-24 19:32+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -233,6 +233,7 @@ msgid "Show NumLock"
 msgstr ""
 
 #: ../applets/core/sntray/sntray.vala:33
+#: ../applets/core/sntray/sntray.plugin.desktop.in:4
 msgid "StatusNotifier"
 msgstr ""
 
@@ -680,4 +681,8 @@ msgstr ""
 
 #: ../applets/core/menumodel/system-menus.ui:121
 msgid "Shut down..."
+msgstr ""
+
+#: ../applets/core/sntray/sntray.plugin.desktop.in:5
+msgid "System tray in KDE StatusNotifierItem format"
 msgstr ""

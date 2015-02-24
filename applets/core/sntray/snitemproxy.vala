@@ -26,14 +26,14 @@ namespace StatusNotifier
 		[DBus (value = "NeedsAttention")]
 		NEEDS_ATTENTION
 	}
-	private struct IconPixmap
+	public struct IconPixmap
 	{
 	    int width;
 	    int height;
 	    uint8[] bytes;
 	}
 
-	private struct ToolTip
+	public struct ToolTip
 	{
 	    string icon_name;
 	    IconPixmap[] pixmap;
