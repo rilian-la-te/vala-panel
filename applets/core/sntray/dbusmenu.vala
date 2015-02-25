@@ -625,7 +625,7 @@ namespace DBusMenu
 	}
 	public class GtkClient : Client
 	{
-		private Gtk.Menu root_menu;
+		private Gtk.MenuShell root_menu;
 		public static Gtk.MenuItem new_item(Item item)
 		{
 			if (item.wants_separator())
@@ -643,7 +643,6 @@ namespace DBusMenu
 			root_menu.foreach((c)=>{menu.remove(c);});
 			root_menu.realize.connect(open_cb);
 			root_menu.unrealize.connect(close_cb);
-			root_menu.insert.connect(on_child_insert_cb);
 			get_root_item().child_added.connect(on_child_added_cb);
 			get_root_item().child_moved.connect(on_child_moved_cb);
 			get_root_item().child_removed.connect(on_child_removed_cb);
@@ -665,24 +664,22 @@ namespace DBusMenu
 		}
 		private void on_child_added_cb(int id, Item item)
 		{
-			root_menu.append(new_item(item));
+			root_menu.insert(new_item(item),get_root_item().get_child_position(item.id));
 		}
 		private void on_child_moved_cb(int oldpos, int newpos, Item item)
 		{
 			foreach(var ch in root_menu.get_children())
 				if ((ch as GtkItemIface).item == item)
-					root_menu.reorder_child(ch,newpos);
+				{
+					root_menu.remove(ch);
+					root_menu.insert(ch,newpos);
+				}
 		}
 		private void on_child_removed_cb(int id, Item item)
 		{
 			foreach(var ch in root_menu.get_children())
 				if ((ch as GtkItemIface).item == item)
 					ch.destroy();
-		}
-		private void on_child_insert_cb(Widget w, int pos)
-		{
-			var ch = w as GtkItemIface;
-			root_menu.reorder_child(w,get_root_item().get_child_position(ch.item.id));
 		}
 	}
 }

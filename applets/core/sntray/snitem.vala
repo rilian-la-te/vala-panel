@@ -25,7 +25,15 @@ namespace StatusNotifier
 		}
 		construct
 		{
-			PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","grid-child");
+			var context = this.get_style_context();
+			this.reset_style();
+			var provider = new Gtk.CssProvider();
+			File ruri = File.new_for_uri("resource://org/vala-panel/sntray/style.css");
+			try
+			{
+				provider.load_from_file(ruri);
+				context.add_provider(provider,STYLE_PROVIDER_PRIORITY_APPLICATION);
+			} catch (GLib.Error e) {}
 			try
 			{
 				uint id;
