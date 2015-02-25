@@ -33,7 +33,8 @@ namespace StatusNotifier
 			{
 				provider.load_from_file(ruri);
 				context.add_provider(provider,STYLE_PROVIDER_PRIORITY_APPLICATION);
-			} catch (GLib.Error e) {}
+				context.add_class("panel-launch-button");
+			} catch (GLib.Error e) {/* Errors cannot thrown there*/}
 			try
 			{
 				uint id;
