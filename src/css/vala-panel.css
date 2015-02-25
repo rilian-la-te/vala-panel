@@ -1,0 +1,19 @@
+.-panel-launch-button
+{
+	padding: 2px;
+	margin: 0px;
+	border-radius: 2px;
+}
+.-panel-launch-button:hover,
+.-panel-launch-button:prelight,
+.-panel-launch-button.highlight,
+.-panel-launch-button:active:hover,
+.-panel-launch-button-selected
+{
+	-gtk-image-effect: highlight;
+}
+
+.-panel-launch-button:selected
+{
+	outline-offset: -2px;
+}

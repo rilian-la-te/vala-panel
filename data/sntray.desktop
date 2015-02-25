@@ -1,0 +1,7 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+Name=StatusNotifier Plugin
+Comment=Display AppIndicators in FlowBox.
+X-XFCE-Module=sntray
+X-XFCE-API=2.0
