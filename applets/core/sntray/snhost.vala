@@ -33,7 +33,6 @@ namespace StatusNotifier
 				nested_watcher.register_status_notifier_host(object_path);
 				nested_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
 				nested_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
-				watcher_registered = true;
 			} catch (IOError e) {
 				stderr.printf ("Could not register service. Waiting for external watcher\n");
 			}
@@ -42,7 +41,10 @@ namespace StatusNotifier
 		{
 			owned_name = Bus.own_name (BusType.SESSION, "org.kde.StatusNotifierWatcher", BusNameOwnerFlags.NONE,
 				on_bus_aquired,
-				() => {is_nested_watcher = true;},
+				() => {
+					watcher_registered = true;
+					is_nested_watcher = true;
+					},
 				() =>
 					{
 						is_nested_watcher = false;
@@ -54,7 +56,11 @@ namespace StatusNotifier
 			try{
 				outer_watcher = Bus.get_proxy_sync(BusType.SESSION,"org.kde.StatusNotifierWatcher","/StatusNotifierWatcher");
 				watched_name = Bus.watch_name(BusType.SESSION,"org.kde.StatusNotifierWatcher",GLib.BusNameWatcherFlags.NONE,
-														null,
+														() => {
+															nested_watcher = null;
+															is_nested_watcher = false;
+															watcher_registered = true;
+															},
 														() => {
 															Bus.unwatch_name(watched_name);
 															is_nested_watcher = true;
@@ -65,14 +71,9 @@ namespace StatusNotifier
 				outer_watcher.register_status_notifier_host(object_path);
 				outer_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
 				outer_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
-			} catch (Error e){
+			} catch (Error e) {
 				stderr.printf("%s\n",e.message);
 				return;
-				}
-			if(!watcher_registered)
-			{
-				is_nested_watcher = false;
-				watcher_registered = true;
 			}
 		}
 		construct
