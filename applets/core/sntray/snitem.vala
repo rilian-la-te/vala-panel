@@ -217,6 +217,7 @@ namespace StatusNotifier
 						var connection = Bus.get_sync(BusType.SESSION);
 						remote_action_group = DBusActionGroup.get(connection,object_name,iface.x_valapanel_action_group);
 						remote_menu_model = DBusMenuModel.get(connection,object_name,iface.menu);
+						this.insert_action_group("indicator",remote_action_group);
 					} catch (Error e) {stderr.printf("Cannot create GMenuModel: %s",e.message);}
 				}
 				else

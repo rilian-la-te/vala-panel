@@ -82,6 +82,7 @@ namespace DBusMenu
 			checker.insert("x-valapanel-secondary-icon-name", VariantType.STRING);
 			checker.insert("x-valapanel-icon-size", VariantType.INT32);
 			checker.insert("x-valapanel-min-value", VariantType.DOUBLE);
+			checker.insert("x-valapanel-current-value", VariantType.DOUBLE);
 			checker.insert("x-valapanel-max-value", VariantType.DOUBLE);
 			checker.insert("x-valapanel-step-increment", VariantType.DOUBLE);
 			checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
@@ -676,6 +677,9 @@ namespace DBusMenu
 					break;
 				case "x-valapanel-min-value":
 					adj.lower = val.get_double();
+					break;
+				case "x-valapanel-current-value":
+					adj.value = val.get_double();
 					break;
 				case "x-valapanel-max-value":
 					adj.upper = val.get_double();
