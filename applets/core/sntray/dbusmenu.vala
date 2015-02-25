@@ -79,6 +79,14 @@ namespace DBusMenu
 			checker.insert("toggle-state", VariantType.INT32);
 			checker.insert("icon-data", new VariantType("ay"));
 			checker.insert("disposition", VariantType.STRING);
+			checker.insert("x-valapanel-secondary-icon-name", VariantType.STRING);
+			checker.insert("x-valapanel-icon-size", VariantType.INT32);
+			checker.insert("x-valapanel-min-value", VariantType.DOUBLE);
+			checker.insert("x-valapanel-max-value", VariantType.DOUBLE);
+			checker.insert("x-valapanel-step-increment", VariantType.DOUBLE);
+			checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
+			checker.insert("x-valapanel-draw-value", VariantType.BOOLEAN);
+			checker.insert("x-valapanel-format-value", VariantType.STRING);
 		}
 		public PropertyStore (Variant? props)
 		{
@@ -201,10 +209,6 @@ namespace DBusMenu
 		public void request_about_to_show()
 		{
 			client.request_about_to_show(this.id);
-		}
-		public bool wants_separator()
-		{
-			return get_string_property("type") == "separator";
 		}
 	}
 	public class Client : Object
@@ -497,6 +501,9 @@ namespace DBusMenu
 				case "shortcut":
 				/* FIXME: Accels support*/
 					break;
+				case "x-valapanel-icon-size":
+					image.set_pixel_size(val.get_int32());
+					break;
 			}
 			if(activate_handler > 0)
 				SignalHandler.unblock(this,activate_handler);
@@ -600,11 +607,11 @@ namespace DBusMenu
 				base.draw_indicator(cr);
 		}
 	}
-	public class GTKSeparatorItem: SeparatorMenuItem, GtkItemIface
+	public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
 	{
 		public Item item
 		{get; protected set;}
-		public GTKSeparatorItem(Item item)
+		public GtkSeparatorItem(Item item)
 		{
 			this.item = item;
 			item.property_changed.connect(on_prop_changed_cb);
@@ -623,13 +630,96 @@ namespace DBusMenu
 			}
 		}
 	}
+	public class GtkSliderItem: Gtk.MenuItem, GtkItemIface
+	{
+		public Item item
+		{get; protected set;}
+		private Box box;
+		private Image primary;
+		private Image secondary;
+		private Scale slider;
+		private Adjustment adj;
+		private string item_format;
+		public GtkSliderItem(Item item)
+		{
+			this.item = item;
+			box = new Box(Orientation.HORIZONTAL,5);
+			primary = new Image();
+			secondary = new Image();
+			adj = new Adjustment(0,0,0,0,0,0);
+			slider = new Scale(Orientation.HORIZONTAL,adj);
+			box.add(primary);
+			box.add(slider);
+			box.add(secondary);
+			this.add(box);
+			item.property_changed.connect(on_prop_changed_cb);
+			adj.value_changed.connect(on_value_changed_cb);
+			slider.format_value.connect(on_value_format_cb);
+			slider.value_pos = PositionType.RIGHT;
+			this.show_all();
+		}
+		private void on_prop_changed_cb(string name, Variant? val)
+		{
+			switch (name)
+			{
+				case "visible":
+					this.visible = val.get_boolean();
+					break;
+				case "enabled":
+					this.sensitive = val.get_boolean();
+					break;
+				case "icon-name":
+					primary.set_from_gicon (icon_from_name(val),IconSize.MENU);
+					break;
+				case "x-valapanel-secondary-icon-name":
+					secondary.set_from_gicon (icon_from_name(val),IconSize.MENU);
+					break;
+				case "x-valapanel-min-value":
+					adj.lower = val.get_double();
+					break;
+				case "x-valapanel-max-value":
+					adj.upper = val.get_double();
+					break;
+				case "x-valapanel-step-increment":
+					adj.step_increment = val.get_double();
+					break;
+				case "x-valapanel-page-increment":
+					adj.page_increment = val.get_double();
+					break;
+				case "x-valapanel-draw-value":
+					slider.draw_value = val.get_boolean();
+					break;
+				case "x-valapanel-format-value":
+					this.item_format = val.get_string();
+					break;
+			}
+		}
+		private Icon icon_from_name(Variant? namev)
+		{
+			if (namev != null)
+			{
+				return new ThemedIcon.with_default_fallbacks(namev.get_string() + "-symbolic");
+			}
+			return new ThemedIcon.with_default_fallbacks("image-missing-symbolic");
+		}
+		private void on_value_changed_cb()
+		{
+			item.handle_event("value-changed",new Variant.double(adj.value),get_current_event_time());
+		}
+		private string on_value_format_cb(double val)
+		{
+			return item_format.printf(val);
+		}
+	}
 	public class GtkClient : Client
 	{
 		private Gtk.MenuShell root_menu;
 		public static Gtk.MenuItem new_item(Item item)
 		{
-			if (item.wants_separator())
-				return new GTKSeparatorItem(item);
+			if (item.get_string_property("type") == "separator")
+				return new GtkSeparatorItem(item);
+			else if (item.get_string_property("type") == "slider")
+				return new GtkSliderItem(item);
 			return new GtkMainItem(item);
 		}
 		public GtkClient(string object_name, string object_path)
@@ -680,6 +770,16 @@ namespace DBusMenu
 			foreach(var ch in root_menu.get_children())
 				if ((ch as GtkItemIface).item == item)
 					ch.destroy();
+		}
+		public static bool check (string bus_name, string object_path)
+		{
+			try
+			{
+				Iface iface = Bus.get_proxy_sync(BusType.SESSION,bus_name,object_path);
+				if (iface.version < 2) return false;
+				else return true;
+			} catch (Error e){}
+			return false;
 		}
 	}
 }

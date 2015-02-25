@@ -207,10 +207,23 @@ namespace StatusNotifier
 			menu.attach_to_widget(this,null);
 			menu.vexpand = true;
 			/*FIXME: MenuModel support */
-			if (client == null)
+			if (client == null && remote_menu_model == null)
 			{
-				client = new DBusMenu.GtkClient(object_name,iface.menu);
-				client.attach_to_menu(menu);
+				use_menumodel = !DBusMenu.GtkClient.check(object_name,iface.menu);
+				if (use_menumodel)
+				{
+					try
+					{
+						var connection = Bus.get_sync(BusType.SESSION);
+						remote_action_group = DBusActionGroup.get(connection,object_name,iface.x_valapanel_action_group);
+						remote_menu_model = DBusMenuModel.get(connection,object_name,iface.menu);
+					} catch (Error e) {stderr.printf("Cannot create GMenuModel: %s",e.message);}
+				}
+				else
+				{
+					client = new DBusMenu.GtkClient(object_name,iface.menu);
+					client.attach_to_menu(menu);
+				}
 			}
 
 		}
@@ -359,7 +372,6 @@ namespace StatusNotifier
 				else accessible_desc = null;
 			} catch (Error e) {stderr.printf("%s\n",e.message);}
 		}
-
 		ItemIface iface;
 		EventBox ebox;
 		Box box;
@@ -369,7 +381,10 @@ namespace StatusNotifier
 		string markup;
 		string accessible_desc;
 		string title;
+		bool use_menumodel;
 		DBusMenu.GtkClient? client;
+		MenuModel remote_menu_model;
+		GLib.ActionGroup remote_action_group;
 		Gtk.Menu menu;
 		IconTheme icon_theme;
 	}

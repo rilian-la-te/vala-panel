@@ -52,6 +52,8 @@ namespace StatusNotifier
 		/* Menu properties */
 		public abstract ObjectPath menu {owned get;}
 		public abstract bool items_in_menu {owned get;}
+		/* MenuModel properties */
+		public abstract ObjectPath x_valapanel_action_group {owned get;}
 		/* Icon properties */
 		public abstract string icon_theme_path {owned get;}
 		public abstract string icon_name {owned get;}
