@@ -170,6 +170,7 @@ namespace StatusNotifier
 		}
 		private void iface_new_status_cb(Status status)
 		{
+			this.status = status;
 			switch(status)
 			{
 				case Status.PASSIVE:

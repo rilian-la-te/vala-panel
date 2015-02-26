@@ -38,7 +38,7 @@ public class SNTray: Applet, AppletConfigurable
 							_("Show communications applications"), SHOW_COMM, GenericConfigType.BOOL,
 							_("Show system services"), SHOW_SYS, GenericConfigType.BOOL,
 							_("Show hardware services"), SHOW_HARD, GenericConfigType.BOOL,
-							_("Show passive items"), SHOW_HARD, GenericConfigType.BOOL);
+							_("Show passive items"), SHOW_PASSIVE, GenericConfigType.BOOL);
 	}
 	public override void create()
 	{
