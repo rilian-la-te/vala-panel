@@ -292,16 +292,16 @@ namespace StatusNotifier
 				var markup_parser = new QRichTextParser(str);
 				markup_parser.translate_markup();
 				markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
-				var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap);
+				var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap,48);
 				icon = (markup_parser.icon != null)	? markup_parser.icon: res_icon;
 			}
 			else
 			{
 				markup = raw_text;
-				icon = change_icon(tooltip.icon_name, tooltip.pixmap);
+				icon = change_icon(tooltip.icon_name, tooltip.pixmap,48);
 			}
 		}
-		private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps)
+		private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps, int icon_size)
 		{
 			var new_name = (use_symbolic) ? icon_name+"-symbolic" : icon_name;
 			if (icon_name != null && icon_name.length > 0)
@@ -315,9 +315,37 @@ namespace StatusNotifier
 					return new ThemedIcon.with_default_fallbacks(new_name);
 				else return find_file_icon(icon_name,iface.icon_theme_path);
 			}
-			/* FIXME: Choose pixmap size */
-			else if (pixmaps.length > 0 && pixmaps[0].bytes.length > 0)
-				return new BytesIcon(new Bytes(pixmaps[0].bytes));
+			else if (pixmaps.length > 0)
+			{
+				Gdk.Pixbuf? pixbuf = null;
+				foreach (var pixmap in pixmaps)
+				{
+					uint[] new_bytes = (uint[]) pixmap.bytes;
+		            for (int i = 0; i < new_bytes.length; i++) {
+		                new_bytes[i] = new_bytes[i].to_big_endian();
+		            }
+
+		            pixmap.bytes = (uint8[]) new_bytes;
+		            for (int i = 0; i < pixmap.bytes.length; i = i+4) {
+		                uint8 red = pixmap.bytes[i];
+		                pixmap.bytes[i] = pixmap.bytes[i+2];
+		                pixmap.bytes[i+2] = red;
+		            }
+					pixbuf = new Gdk.Pixbuf.from_data(pixmap.bytes,
+                                                Gdk.Colorspace.RGB,
+                                                true,
+                                                8,
+                                                pixmap.width,
+                                                pixmap.height,
+                                                Cairo.Format.ARGB32.stride_for_width(pixmap.width));
+                    if (pixmap.height >= icon_size && pixmap.width >= icon_size)
+						break;
+				}
+		        if (pixbuf.width > icon_size) {
+		            pixbuf = pixbuf.scale_simple(icon_size, icon_size, Gdk.InterpType.BILINEAR);
+		        }
+		        return pixbuf;
+			}
 			return null;
 		}
 		private Icon? find_file_icon(string? icon_name, string? path)
@@ -354,9 +382,9 @@ namespace StatusNotifier
 			try
 			{
 				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
-				var main_icon = change_icon(item.icon_name,item.icon_pixmap);
-				var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap);
-				var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap);
+				var main_icon = change_icon(item.icon_name,item.icon_pixmap,image.pixel_size);
+				var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap,image.pixel_size);
+				var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4);
 				if (overlay_icon != null)
 					overlay_icon = new Emblem(overlay_icon);
 				var icon = new EmblemedIcon(attention_icon ?? main_icon ?? (image.gicon as EmblemedIcon).gicon,overlay_icon as Emblem);
