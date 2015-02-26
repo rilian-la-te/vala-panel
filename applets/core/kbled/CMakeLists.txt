@@ -9,7 +9,7 @@ OPTIONS
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --target-glib=2.40
-    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/kbled.gresource.xml
+    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
 )
 #####
@@ -18,7 +18,7 @@ OPTIONS
 INCLUDE(GResource)
 glib_compile_resources(RESOURCES
 	source
-    	kbled.gresource.xml
+    	${PLUGIN_NAME}.gresource.xml
 )
 
 # Build library for plugin

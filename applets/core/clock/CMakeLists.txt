@@ -9,7 +9,7 @@ OPTIONS
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --target-glib=2.40
-    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/kbled.gresource.xml
+    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
 )
 #####
