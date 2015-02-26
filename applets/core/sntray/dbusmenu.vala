@@ -276,7 +276,7 @@ namespace DBusMenu
 			Variant layout;
 			try{
 				iface.get_layout(0,-1,props,out rev, out layout);
-			} catch (Error e) {stderr.printf("Cannot update layout. Error: %s",e.message);}
+			} catch (Error e) {stderr.printf("Cannot update layout. Error: %s",e.message); return;}
 			parse_layout(rev,layout);
 			clean_items();
 			if (layout_update_required)
@@ -616,13 +616,15 @@ namespace DBusMenu
 	}
 	public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
 	{
+		private static const string[] allowed_properties = {"visible","enabled"};
 		public Item item
 		{get; protected set;}
 		public GtkSeparatorItem(Item item)
 		{
 			this.item = item;
-			item.property_changed.connect(on_prop_changed_cb);
 			this.show_all();
+			this.init();
+			item.property_changed.connect(on_prop_changed_cb);
 		}
 		private void on_prop_changed_cb(string name, Variant? val)
 		{
@@ -636,9 +638,18 @@ namespace DBusMenu
 					break;
 			}
 		}
+		private void init()
+		{
+			foreach (var prop in allowed_properties)
+				on_prop_changed_cb(prop,item.get_variant_property(prop));
+		}
 	}
 	public class GtkSliderItem: Gtk.MenuItem, GtkItemIface
 	{
+		private static const string[] allowed_properties = {"visible","enabled","icon-name","x-valapanel-secondary-icon-name",
+															"x-valapanel-min-value","x-valapanel-current-value","x-valapanel-max-value",
+															"x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
+															"x-valapanel-format-value"};
 		public Item item
 		{get; protected set;}
 		private Box box;
@@ -659,11 +670,12 @@ namespace DBusMenu
 			box.add(slider);
 			box.add(secondary);
 			this.add(box);
+			this.show_all();
+			this.init();
 			item.property_changed.connect(on_prop_changed_cb);
 			adj.value_changed.connect(on_value_changed_cb);
 			slider.format_value.connect(on_value_format_cb);
 			slider.value_pos = PositionType.RIGHT;
-			this.show_all();
 		}
 		private void on_prop_changed_cb(string name, Variant? val)
 		{
@@ -720,6 +732,11 @@ namespace DBusMenu
 		{
 			return item_format.printf(val);
 		}
+		private void init()
+		{
+			foreach (var prop in allowed_properties)
+				on_prop_changed_cb(prop,item.get_variant_property(prop));
+		}
 	}
 	public class GtkClient : Client
 	{
@@ -739,6 +756,8 @@ namespace DBusMenu
 		}
 		public void attach_to_menu(Gtk.Menu menu)
 		{
+			foreach (var path in iface.icon_theme_path)
+				IconTheme.get_default().prepend_search_path(path);
 			root_menu = menu;
 			root_menu.foreach((c)=>{menu.remove(c);});
 			root_menu.realize.connect(open_cb);
@@ -750,7 +769,7 @@ namespace DBusMenu
 				root_menu.append(new_item(ch) as Gtk.MenuItem);
 			foreach(var path in iface.icon_theme_path)
 				IconTheme.get_default().append_search_path(path);
-			root_menu.show_all();
+			root_menu.show();
 		}
 		private void open_cb()
 		{

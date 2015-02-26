@@ -27,6 +27,7 @@ public class QRichTextParser : Object
 	private StringBuilder pango_markup_builder;
 	private ListType list_type;
 	private int list_order;
+	private int table_depth;
 	public string pango_markup
 	{get; private set;}
 	public Icon? icon
@@ -37,6 +38,7 @@ public class QRichTextParser : Object
 		context = new MarkupParseContext (parser, 0, this, null);
 		init_sets();
 		icon = null;
+		table_depth = 0;
 	}
 	public QRichTextParser (string markup)
 	{
@@ -86,7 +88,6 @@ public class QRichTextParser : Object
 		special_spans.insert("h5","span size=\"larger\" style=\"italic\"");
 		special_spans.insert("h6","span size=\"larger\"");
 		newline_at_end = new GenericSet<string>(str_hash,str_equal);
-		newline_at_end.add("br");
 		newline_at_end.add("hr");
 		newline_at_end.add("tr");
 		newline_at_end.add("li");
@@ -161,6 +162,10 @@ public class QRichTextParser : Object
 				i++;
 			}
 		}
+		if (name == "br")
+			pango_markup_builder.append_printf("\n");
+		if (name == "table")
+			table_depth++;
 	}
 
 	// </name>
@@ -179,13 +184,18 @@ public class QRichTextParser : Object
 			pango_markup_builder.append_printf("\n");
 		if (name == "td")
 			pango_markup_builder.append_printf(" ");
+		if (name == "table")
+			table_depth--;
 		if (name in lists)
 			list_type = ListType.NONE;
 	}
 
 	private void visit_text (MarkupParseContext context, string text, size_t text_len) throws MarkupError
 	{
-		pango_markup_builder.append_printf("%s",text.replace("\n","").strip());
+		string new_text = text.replace("\n","");
+		if (table_depth > 0)
+			new_text = text.replace("\n","").strip();
+		pango_markup_builder.append_printf("%s",new_text);
 	}
 	private string parse_size(string size)
 	{
