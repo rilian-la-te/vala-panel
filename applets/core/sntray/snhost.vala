@@ -23,7 +23,14 @@ namespace StatusNotifier
 			if (is_nested_watcher)
 				return nested_watcher.registered_status_notifier_items;
 			else
-				return outer_watcher.registered_status_notifier_items;
+			{
+				WatcherIface? outer = null;
+				try
+				{
+					outer = Bus.get_proxy_sync(BusType.SESSION,"org.kde.StatusNotifierWatcher","/StatusNotifierWatcher");
+				} catch (Error e) {stderr.printf("%s\n",e.message);}
+				return (outer != null) ? outer.registered_status_notifier_items : outer_watcher.registered_status_notifier_items;
+			}
 		}
 		private void on_bus_aquired(DBusConnection conn)
 		{
@@ -44,12 +51,11 @@ namespace StatusNotifier
 				() => {
 					watcher_registered = true;
 					is_nested_watcher = true;
-					},
-				() =>
-					{
-						is_nested_watcher = false;
-						create_out_watcher();
-					});
+				},
+				() => {
+					is_nested_watcher = false;
+					create_out_watcher();
+				});
 		}
 		private void create_out_watcher()
 		{
