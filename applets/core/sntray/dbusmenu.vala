@@ -43,6 +43,7 @@ namespace DBusMenu
 								[DBus (signature="a(ias)")] Variant removed_props);
 		public abstract signal void layout_updated(uint revision, int parent);
 		public abstract signal void item_activation_requested(int id, uint timestamp);
+		public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
 	}
 
 	public class PropertyStore : Object
@@ -239,6 +240,7 @@ namespace DBusMenu
 			iface.layout_updated.connect((rev,parent)=>{request_layout_update();});
 			iface.items_properties_updated.connect(props_updated_cb);
 			iface.item_activation_requested.connect(request_activation_cb);
+			iface.x_valapanel_item_value_changed.connect(request_value_cb);
 			requested_props_ids = {};
 		}
 		public Item? get_root_item()
@@ -252,6 +254,10 @@ namespace DBusMenu
 		private void request_activation_cb(int id, uint timestamp)
 		{
 			get_item(id).handle_event("clicked",new Variant.int32(0),timestamp);
+		}
+		private void request_value_cb(int id, uint timestamp)
+		{
+			get_item(id).handle_event("value-changed",new Variant.double(get_item(id).get_variant_property("x-valapanel-current-value").get_double()),timestamp);
 		}
 		private void request_layout_update()
 		{
