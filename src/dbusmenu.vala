@@ -666,6 +666,7 @@ namespace DBusMenu
 			secondary = new Image();
 			adj = new Adjustment(0,0,0,0,0,0);
 			slider = new Scale(Orientation.HORIZONTAL,adj);
+			slider.hexpand = true;
 			box.add(primary);
 			box.add(slider);
 			box.add(secondary);
