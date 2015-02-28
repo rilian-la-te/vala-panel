@@ -12,8 +12,8 @@ PACKAGES
     gtk+-3.0
 CUSTOM_VAPIS
     vapi/libxfce4panel-2.0.vapi
-    vapi/gio-addons-2.0.vapi
 OPTIONS
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
