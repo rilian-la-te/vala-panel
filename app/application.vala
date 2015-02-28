@@ -238,7 +238,7 @@ namespace ValaPanel
 		private void ensure_user_config()
 		{
 			var dir = user_config_file_name("panels",null);
-			GLib.FileUtils.mkdir_with_parents(dir,0700);
+			GLib.DirUtils.create_with_parents(dir,0700);
 		}
 
 		private void apply_styling()
