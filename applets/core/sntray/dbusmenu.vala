@@ -233,7 +233,7 @@ namespace DBusMenu
 				this.iface = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
 			} catch (Error e) {stderr.printf("Cannot get menu! Error: %s",e.message);}
 			VariantDict props = new VariantDict();
-			variant_dict_insert(props,"children-display","s","submenu");
+			props.insert("children-display","s","submenu");
 			var item = new Item(0,this,props.end(),new List<int>());
 			items.insert(0,item);
 			request_layout_update();
@@ -666,6 +666,7 @@ namespace DBusMenu
 			secondary = new Image();
 			adj = new Adjustment(0,0,0,0,0,0);
 			slider = new Scale(Orientation.HORIZONTAL,adj);
+			slider.hexpand = true;
 			box.add(primary);
 			box.add(slider);
 			box.add(secondary);
