@@ -646,7 +646,7 @@ namespace DBusMenu
 	}
 	public class GtkSliderItem: Gtk.MenuItem, GtkItemIface
 	{
-		private static const string[] allowed_properties = {"visible","enabled","icon-name","x-valapanel-secondary-icon-name",
+		private static const string[] allowed_properties = {"visible","enabled","icon-name",
 															"x-valapanel-min-value","x-valapanel-current-value","x-valapanel-max-value",
 															"x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
 															"x-valapanel-format-value"};
@@ -654,22 +654,20 @@ namespace DBusMenu
 		{get; protected set;}
 		private Box box;
 		private Image primary;
-		private Image secondary;
 		private Scale slider;
 		private Adjustment adj;
 		private string item_format;
+		private bool grabbed;
 		public GtkSliderItem(Item item)
 		{
 			this.item = item;
 			box = new Box(Orientation.HORIZONTAL,5);
 			primary = new Image();
-			secondary = new Image();
-			adj = new Adjustment(0,0,0,0,0,0);
+			adj = new Adjustment(0,0,double.MAX,0,0,0);
 			slider = new Scale(Orientation.HORIZONTAL,adj);
 			slider.hexpand = true;
 			box.add(primary);
 			box.add(slider);
-			box.add(secondary);
 			this.add(box);
 			this.show_all();
 			this.init();
@@ -677,6 +675,10 @@ namespace DBusMenu
 			adj.value_changed.connect(on_value_changed_cb);
 			slider.format_value.connect(on_value_format_cb);
 			slider.value_pos = PositionType.RIGHT;
+			this.add_events (Gdk.EventMask.SCROLL_MASK
+							|Gdk.EventMask.POINTER_MOTION_MASK
+							|Gdk.EventMask.BUTTON_MOTION_MASK);
+			this.set_size_request(200,-1);
 		}
 		private void on_prop_changed_cb(string name, Variant? val)
 		{
@@ -690,9 +692,6 @@ namespace DBusMenu
 					break;
 				case "icon-name":
 					primary.set_from_gicon (icon_from_name(val),IconSize.MENU);
-					break;
-				case "x-valapanel-secondary-icon-name":
-					secondary.set_from_gicon (icon_from_name(val),IconSize.MENU);
 					break;
 				case "x-valapanel-min-value":
 					adj.lower = val.get_double();
@@ -737,6 +736,33 @@ namespace DBusMenu
 		{
 			foreach (var prop in allowed_properties)
 				on_prop_changed_cb(prop,item.get_variant_property(prop));
+		}
+		protected override bool button_press_event(Gdk.EventButton event)
+		{
+			slider.event(event);
+			if (!grabbed)
+				grabbed = true;
+			return true;
+		}
+		protected override bool button_release_event(Gdk.EventButton event)
+		{
+			slider.event (event);
+			if (grabbed)
+			{
+				grabbed = false;
+				this.grab_broken_event (null);
+			}
+			return true;
+		}
+		protected override bool motion_notify_event(Gdk.EventMotion event)
+		{
+			slider.event (event);
+			return true;
+		}
+		protected override bool scroll_event(Gdk.EventScroll event)
+		{
+			slider.event (event);
+			return true;
 		}
 	}
 	public class GtkClient : Client
