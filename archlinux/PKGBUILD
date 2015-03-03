@@ -10,7 +10,7 @@ license=('GPL3')
 depends=('gtk3' 'xfce4-panel>=4.11.2')
 makedepends=('cmake' 'vala')
 source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/archive/${pkgver}.tar.gz")
-sha256sums=('03ca532584a7030d4f59ee733c9f47d456c6359f515f182260e9d79149d5df4c')
+sha256sums=('87addfccb4d2f76e932f24419ac8df780aaa4ff96afa699e113d2f729e3bade7')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
