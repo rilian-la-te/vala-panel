@@ -1,7 +1,7 @@
 # Maintainer: rilian-la-te <ria.freelander@gmail.com>
 
 pkgname=xfce4-sntray-plugin
-pkgver=0.1.6
+pkgver=0.1.7
 pkgrel=1
 pkgdesc="Plugin for xfce4-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
 url="https://github.com/rilian-la-te/xfce4-sntray-plugin"
@@ -10,7 +10,7 @@ license=('GPL3')
 depends=('gtk3' 'xfce4-panel>=4.11.2')
 makedepends=('cmake' 'vala')
 source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/archive/${pkgver}.tar.gz")
-sha256sums=('fa45bfc7b0d27263ae3dbe51576464034431a605fd3c14c829f2e2a010aabb7f')
+sha256sums=('6236da4b89e6b3412fedcf715ba1012b76992e30efe4d81a887f0f5870bbcaaf')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
