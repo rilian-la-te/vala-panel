@@ -37,11 +37,6 @@ namespace StatusNotifier
 			} catch (GLib.Error e) {/* Errors cannot thrown there*/}
 			try
 			{
-				uint id;
-				id = Bus.watch_name(BusType.SESSION,object_name,BusNameWatcherFlags.NONE,
-					null,
-					() => {Bus.unwatch_name(id); get_applet().request_remove_item(this,object_name+(string)object_path);}
-					);
 				init_proxy.begin();
 			} catch (IOError e) {stderr.printf ("%s\n", e.message); this.destroy();}
 			client = null;
@@ -165,7 +160,10 @@ namespace StatusNotifier
 		private void iface_new_path_cb(string? path)
 		{
 			if (path != null)
+			{
+				icon_theme_path = path;
 				IconTheme.get_default().prepend_search_path(path);
+			}
 			iface_new_icon_cb();
 		}
 		private void iface_new_status_cb(Status status)
@@ -311,10 +309,10 @@ namespace StatusNotifier
 					return new FileIcon(File.new_for_path(icon_name));
 				else if (icon_theme.has_icon(icon_name)
 						|| icon_theme.has_icon(new_name)
-						|| iface.icon_theme_path == null
-						|| iface.icon_theme_path.length == 0)
+						|| icon_theme_path == null
+						|| icon_theme_path.length == 0)
 					return new ThemedIcon.with_default_fallbacks(new_name);
-				else return find_file_icon(icon_name,iface.icon_theme_path);
+				else return find_file_icon(icon_name,icon_theme_path);
 			}
 			else if (pixmaps.length > 0)
 			{
@@ -412,6 +410,7 @@ namespace StatusNotifier
 		string markup;
 		string accessible_desc;
 		string title;
+		string icon_theme_path;
 		bool use_menumodel;
 		DBusMenu.GtkClient? client;
 		MenuModel remote_menu_model;

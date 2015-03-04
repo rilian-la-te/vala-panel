@@ -52,8 +52,23 @@ namespace StatusNotifier
 			});
 			set_sort_func(sort_cb);
 			set_filter_func(filter_cb);
-			host.watcher_items_changed.connect(()=>{
-					recreate_items();
+			host.watcher_item_added.connect((item)=>{
+				string[] np = item.split("/",2);
+				if (!items.contains(item))
+				{
+					var snitem = new Item(np[0],(ObjectPath)("/"+np[1]));
+					items.insert(item, snitem);
+					this.add(snitem);
+				}
+			});
+			host.watcher_item_removed.connect((item)=>{
+				var child = items.lookup(item);
+				if (child != null)
+				{
+					items.remove(item);
+					this.remove(child);
+					child.destroy();
+				}
 			});
 			watcher_registration_handler = host.notify["watcher-registered"].connect(()=>{
 				if (host.watcher_registered)
@@ -87,12 +102,6 @@ namespace StatusNotifier
 					this.add(snitem);
 				}
 			}
-		}
-		internal void request_remove_item(FlowBoxChild child, string item)
-		{
-			items.remove(item);
-			this.remove(child);
-			child.destroy();
 		}
 		private bool filter_cb(FlowBoxChild ch)
 		{

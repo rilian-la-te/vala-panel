@@ -7,9 +7,9 @@ namespace StatusNotifier
 	public interface WatcherIface: Object
 	{
 		/* Signals */
-		public signal void status_notifier_item_registered(out string item);
+		public signal void status_notifier_item_registered(string item);
 		public signal void status_notifier_host_registered();
-		public signal void status_notifier_item_unregistered(out string item);
+		public signal void status_notifier_item_unregistered(string item);
 		public signal void status_notifier_host_unregistered();
 		/* Public properties */
 		public abstract string[] registered_status_notifier_items
@@ -26,9 +26,9 @@ namespace StatusNotifier
 	public class Watcher : Object
 	{
 		/* Signals */
-		public signal void status_notifier_item_registered(out string item);
+		public signal void status_notifier_item_registered(string item);
 		public signal void status_notifier_host_registered();
-		public signal void status_notifier_item_unregistered(out string item);
+		public signal void status_notifier_item_unregistered(string item);
 		public signal void status_notifier_host_unregistered();
 		/* Hashes */
 		private HashTable<string,uint> name_watcher;
@@ -63,12 +63,25 @@ namespace StatusNotifier
 			else
 			{
 				var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
-													null,
+													()=>{
+														Idle.add(()=>{
+															try
+															{
+																ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
+																if (ping_iface.id == null)
+																{
+																	remove(get_id(name,path));
+																	return false;
+																}
+															} catch (Error e) {remove(get_id(name,path));}
+															return true;
+														});
+													},
 													() => {remove(get_id(name,path));}
 													);
 				name_watcher.insert(id,name_handler);
 				registered_status_notifier_items = get_registered_items();
-				status_notifier_item_registered(out id);
+				status_notifier_item_registered(id);
 				/* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
 			}
 		}
@@ -92,9 +105,9 @@ namespace StatusNotifier
 		{
 			string outer = id.dup();
 			uint name = name_watcher.lookup(id);
-			name_watcher.remove(id);
 			Bus.unwatch_name(name);
-			status_notifier_item_unregistered(out outer);
+			name_watcher.remove(id);
+			status_notifier_item_unregistered(outer);
 			registered_status_notifier_items = get_registered_items();
 			/* FIXME PropertiesChanged for RegisteredStatusNotifierItems*/
 		}
