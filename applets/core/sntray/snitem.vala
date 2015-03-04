@@ -173,9 +173,11 @@ namespace StatusNotifier
 			{
 				case Status.PASSIVE:
 				case Status.ACTIVE:
+					iface_new_icon_cb();
 					this.get_style_context().remove_class(STYLE_CLASS_NEEDS_ATTENTION);
 					break;
 				case Status.NEEDS_ATTENTION:
+					iface_new_icon_cb();
 					this.get_style_context().add_class(STYLE_CLASS_NEEDS_ATTENTION);
 					break;
 			}
@@ -387,7 +389,8 @@ namespace StatusNotifier
 				var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4);
 				if (overlay_icon != null)
 					overlay_icon = new Emblem(overlay_icon);
-				var icon = new EmblemedIcon(attention_icon ?? main_icon ?? (image.gicon as EmblemedIcon).gicon,overlay_icon as Emblem);
+				var icon = new EmblemedIcon((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ? attention_icon
+												: (main_icon ?? (image.gicon as EmblemedIcon).gicon),overlay_icon as Emblem);
 				if (icon != null)
 				{
 					image.set_from_gicon(icon,IconSize.INVALID);
@@ -395,7 +398,7 @@ namespace StatusNotifier
 				}
 				else
 					image.hide();
-				if (item.attention_accessible_desc != null && item.attention_accessible_desc.length > 0)
+				if (item.status == Status.NEEDS_ATTENTION && item.attention_accessible_desc != null && item.attention_accessible_desc.length > 0)
 					accessible_desc = item.attention_accessible_desc;
 				else if (item.icon_accessible_desc != null && item.icon_accessible_desc.length > 0)
 					accessible_desc = item.icon_accessible_desc;
