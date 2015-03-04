@@ -374,6 +374,7 @@ namespace StatusNotifier
 			try{
 				ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
 				unbox_tooltip(item.tool_tip,out tooltip_icon, out markup);
+				this.trigger_tooltip_query();
 			} catch (Error e){stderr.printf("Cannot set tooltip:%s\n",e.message);}
 		}
 		private void iface_new_icon_cb()
