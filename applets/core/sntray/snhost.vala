@@ -13,7 +13,8 @@ namespace StatusNotifier
 		private uint owned_name;
 		private uint watched_name;
 		private bool is_nested_watcher;
-		public signal void watcher_items_changed();
+		public signal void watcher_item_added(string id);
+		public signal void watcher_item_removed(string id);
 		public Host(string path)
 		{
 			Object(object_path: path);
@@ -38,8 +39,8 @@ namespace StatusNotifier
 				nested_watcher = new Watcher();
 				conn.register_object ("/StatusNotifierWatcher", nested_watcher);
 				nested_watcher.register_status_notifier_host(object_path);
-				nested_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
-				nested_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
+				nested_watcher.status_notifier_item_registered.connect((id)=>{watcher_item_added(id);});
+				nested_watcher.status_notifier_item_unregistered.connect((id)=>{watcher_item_removed(id);});
 			} catch (IOError e) {
 				stderr.printf ("Could not register service. Waiting for external watcher\n");
 			}
@@ -75,8 +76,8 @@ namespace StatusNotifier
 														);
 
 				outer_watcher.register_status_notifier_host(object_path);
-				outer_watcher.status_notifier_item_registered.connect(()=>{watcher_items_changed();});
-				outer_watcher.status_notifier_item_unregistered.connect(()=>{watcher_items_changed();});
+				outer_watcher.status_notifier_item_registered.connect((id)=>{watcher_item_added(id);});
+				outer_watcher.status_notifier_item_unregistered.connect((id)=>{watcher_item_removed(id);});
 			} catch (Error e) {
 				stderr.printf("%s\n",e.message);
 				return;
