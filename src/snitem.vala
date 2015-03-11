@@ -391,7 +391,7 @@ namespace StatusNotifier
 					overlay_icon = new Emblem(overlay_icon);
 				var icon = new EmblemedIcon((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ? attention_icon
 												: (main_icon ?? (image.gicon as EmblemedIcon).gicon),overlay_icon as Emblem);
-				if (icon != null)
+				if ((attention_icon ?? main_icon ?? overlay_icon) != null)
 				{
 					image.set_from_gicon(icon,IconSize.INVALID);
 					image.show();
