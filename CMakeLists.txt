@@ -8,11 +8,15 @@ include(GResource)
 
 find_package(Vala)
 find_package(PkgConfig)
+set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 
 add_definitions(-w) # Disable gcc warnings
+add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 pkg_check_modules(GTK+ REQUIRED gtk+-3.0)
 pkg_check_modules(LIBXFCE4PANEL REQUIRED libxfce4panel-2.0)
+pkg_check_modules(XFCONF REQUIRED libxfconf-0)
 
+add_subdirectory(po)
 add_subdirectory(data)
 add_subdirectory(src)
 

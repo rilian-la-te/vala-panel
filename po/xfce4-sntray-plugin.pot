@@ -1,0 +1,106 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-17 00:08+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/snconfig.ui:38
+msgid "StatusNotifier Configuration"
+msgstr ""
+
+#: ../src/snconfig.ui:86
+msgid "Show Application Status"
+msgstr ""
+
+#: ../src/snconfig.ui:101
+msgid "Show Communications"
+msgstr ""
+
+#: ../src/snconfig.ui:116
+msgid "Show System Services"
+msgstr ""
+
+#: ../src/snconfig.ui:131
+msgid "Show Hardware"
+msgstr ""
+
+#: ../src/snconfig.ui:146
+msgid "Show Other"
+msgstr ""
+
+#: ../src/snconfig.ui:161
+msgid "Show Passive"
+msgstr ""
+
+#: ../src/snconfig.ui:180
+msgid "Categories visibility"
+msgstr ""
+
+#: ../src/snconfig.ui:206
+msgid "Use symbolic icons"
+msgstr ""
+
+#: ../src/snconfig.ui:228
+msgid "Indicator size:"
+msgstr ""
+
+#: ../src/snconfig.ui:266
+msgid "Appearance properties"
+msgstr ""
+
+#: ../src/snconfig.ui:285
+msgid "Core"
+msgstr ""
+
+#: ../src/snconfig.ui:309 ../src/snconfig.ui:396
+msgid "Icon"
+msgstr ""
+
+#: ../src/snconfig.ui:320 ../src/snconfig.ui:407
+msgid "Name"
+msgstr ""
+
+#: ../src/snconfig.ui:331 ../src/snconfig.ui:418
+msgid "Override"
+msgstr ""
+
+#: ../src/snconfig.ui:344
+msgid "Index"
+msgstr ""
+
+#: ../src/snconfig.ui:369
+msgid "Order"
+msgstr ""
+
+#: ../src/snconfig.ui:431
+msgid "Visible"
+msgstr ""
+
+#: ../src/snconfig.ui:454
+msgid "Visibility"
+msgstr ""
+
+#: ../data/sntray.desktop.xfce.in:5
+msgid "StatusNotifier Plugin"
+msgstr ""
+
+#: ../data/sntray.desktop.xfce.in:6
+msgid "Display AppIndicators in FlowBox"
+msgstr ""
+
+#: ../data/sntray.desktop.xfce.in:7
+msgid "applications-system"
+msgstr ""

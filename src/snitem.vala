@@ -19,6 +19,13 @@ namespace StatusNotifier
 		{get; private set;}
 		internal bool use_symbolic
 		{get; set;}
+		internal string title
+		{get; private set;}
+		internal Icon icon
+		{owned get {
+			return image.gicon;
+			}
+		}
 		public Item (string n, ObjectPath p)
 		{
 			Object(object_path: p, object_name: n);
@@ -129,6 +136,7 @@ namespace StatusNotifier
 			});
 			this.changed();
 			this.show();
+			get_applet().item_added(object_name+(string)object_path);
 		}
 		private bool button_press_event_cb(Gdk.EventButton e)
 		{
@@ -413,7 +421,6 @@ namespace StatusNotifier
 		Icon? tooltip_icon;
 		string markup;
 		string accessible_desc;
-		string title;
 		string icon_theme_path;
 		bool use_menumodel;
 		DBusMenu.GtkClient? client;

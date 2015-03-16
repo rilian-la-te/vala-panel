@@ -13,7 +13,9 @@ namespace StatusNotifier
 		[DBus (value = "SystemServices")]
 		SYSTEM,
 		[DBus (value = "Hardware")]
-		HARDWARE
+		HARDWARE,
+		[DBus (value = "Other")]
+		OTHER
 	}
 
 	[DBus (use_string_marshalling = true)]

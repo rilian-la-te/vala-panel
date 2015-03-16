@@ -4,6 +4,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snitem.vala
     snhost.vala
     snitembox.vala
+    snconfig.vala
     dbusmenu.vala
     snitemproxy.vala
     qrichtextparser.vala
@@ -12,6 +13,7 @@ PACKAGES
     gtk+-3.0
 CUSTOM_VAPIS
     vapi/libxfce4panel-2.0.vapi
+    vapi/libxfconf-0.vapi
 OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
     --target-glib=2.40
@@ -23,8 +25,8 @@ OPTIONS
 #####
 INCLUDE(GResource)
 glib_compile_resources(RESOURCES
-	source
-    	${PLUGIN_NAME}.gresource.xml
+    source
+        ${PLUGIN_NAME}.gresource.xml
 )
 
 add_library (${PLUGIN_NAME} SHARED
@@ -32,8 +34,8 @@ add_library (${PLUGIN_NAME} SHARED
     ${RESOURCES}
 )
 
-include_directories(${GTK+_INCLUDE_DIRS} ${LIBXFCE4PANEL_INCLUDE_DIRS})
-target_link_libraries(${PLUGIN_NAME} ${GTK+_LIBRARIES} ${LIBXFCE4PANEL_LIBRARIES})
+include_directories(${GTK+_INCLUDE_DIRS} ${LIBXFCE4PANEL_INCLUDE_DIRS} ${XFCONF_INCLUDE_DIRS})
+target_link_libraries(${PLUGIN_NAME} ${GTK+_LIBRARIES} ${LIBXFCE4PANEL_LIBRARIES} ${XFCONF_LIBRARIES})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION lib/xfce4/panel/plugins)

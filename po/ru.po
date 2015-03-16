@@ -1,0 +1,108 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Gofer <vovka@hotbox.ru>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xfce4-sntray-plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-17 00:08+0600\n"
+"PO-Revision-Date: 2015-03-17 00:09+0600\n"
+"Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
+"Language-Team: Russian <hsh@runtu.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-POOTLE-MTIME: 1407841216.000000\n"
+
+#: ../src/snconfig.ui:38
+msgid "StatusNotifier Configuration"
+msgstr "Настройка апплета StatusNotifier"
+
+#: ../src/snconfig.ui:86
+msgid "Show Application Status"
+msgstr "Показывать значки приложений"
+
+#: ../src/snconfig.ui:101
+msgid "Show Communications"
+msgstr "Показывать значки коммуникаций"
+
+#: ../src/snconfig.ui:116
+msgid "Show System Services"
+msgstr "Показывать значки системных служб"
+
+#: ../src/snconfig.ui:131
+msgid "Show Hardware"
+msgstr "Показывать значки служб устройств"
+
+#: ../src/snconfig.ui:146
+msgid "Show Other"
+msgstr "Показывать остальные значки"
+
+#: ../src/snconfig.ui:161
+msgid "Show Passive"
+msgstr "Показывать значки служб в пассивном режиме"
+
+#: ../src/snconfig.ui:180
+msgid "Categories visibility"
+msgstr "Фильтр по категориям"
+
+#: ../src/snconfig.ui:206
+msgid "Use symbolic icons"
+msgstr "Использовать монохромные значки"
+
+#: ../src/snconfig.ui:228
+msgid "Indicator size:"
+msgstr "Размер значка:"
+
+#: ../src/snconfig.ui:266
+msgid "Appearance properties"
+msgstr "Внешний вид"
+
+#: ../src/snconfig.ui:285
+msgid "Core"
+msgstr "Общее"
+
+#: ../src/snconfig.ui:309 ../src/snconfig.ui:396
+msgid "Icon"
+msgstr "Значок"
+
+#: ../src/snconfig.ui:320 ../src/snconfig.ui:407
+msgid "Name"
+msgstr "Имя"
+
+#: ../src/snconfig.ui:331 ../src/snconfig.ui:418
+msgid "Override"
+msgstr "Настройка"
+
+#: ../src/snconfig.ui:344
+msgid "Index"
+msgstr "Индекс"
+
+#: ../src/snconfig.ui:369
+msgid "Order"
+msgstr "Порядок"
+
+#: ../src/snconfig.ui:431
+msgid "Visible"
+msgstr "Видимый"
+
+#: ../src/snconfig.ui:454
+msgid "Visibility"
+msgstr "Видимость"
+
+#: ../data/sntray.desktop.xfce.in:5
+msgid "StatusNotifier Plugin"
+msgstr "Апплет StatusNotifier"
+
+#: ../data/sntray.desktop.xfce.in:6
+msgid "Display AppIndicators in FlowBox"
+msgstr "Показывает значки AppIndicators (трей KDE)"
+
+#: ../data/sntray.desktop.xfce.in:7
+msgid "applications-system"
+msgstr "applications-system"
