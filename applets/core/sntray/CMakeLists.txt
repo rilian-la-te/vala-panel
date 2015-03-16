@@ -4,6 +4,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snwatcher.vala
     snitem.vala
     snhost.vala
+    snconfig.vala
     snitembox.vala
     dbusmenu.vala
     snitemproxy.vala

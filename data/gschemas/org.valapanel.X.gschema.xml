@@ -1,38 +1,4 @@
 <schemalist>
-<!--
-  <schema id="org.simple.panel.toplevel.xkb">
-    <key name="layout-per-window" type="b">
-      <default>false</default>
-    </key>
-    <key name="keep-system-layouts" type="b">
-      <default>true</default>
-    </key>
-    <key name="use-existing-options" type="b">
-      <default>true</default>
-    </key>
-    <key name="image-size" type="i">
-      <default>2</default>
-    </key>
-    <key name="display-type" enum="org.simple.panel.DispType">
-      <default>'text'</default>
-    </key>
-    <key name="keyboard-model" type="s">
-      <default>'pc105'</default>
-    </key>
-    <key name="keyboard-layouts" type="s">
-      <default>'us,ru'</default>
-    </key>
-    <key name="keyboard-layout-variants" type="s">
-      <default>','</default>
-    </key>
-    <key name="layout-changing-options" type="s">
-      <default>'grp:shift_caps_toggle'</default>
-    </key>
-    <key name="advanced-options" type="s">
-      <default>''</default>
-    </key>
-  </schema>
--->
   <enum id="org.valapanel.WcCommand">
     <value nick="none" value="0"/>
     <value nick="iconify" value="1"/>

@@ -3,12 +3,26 @@ using GLib;
 
 namespace StatusNotifier
 {
+	public static const string SHOW_APPS = "show-application-status";
+	public static const string SHOW_COMM = "show-communications";
+	public static const string SHOW_SYS = "show-system";
+	public static const string SHOW_HARD = "show-hardware";
+	public static const string SHOW_OTHER = "show-other";
+	public static const string SHOW_PASSIVE = "show-passive";
+	public static const string INDICATOR_SIZE = "indicator-size";
+	public static const string USE_SYMBOLIC = "symbolic-icons";
+	public static const string INDEX_OVERRIDE = "index-override";
+	public static const string FILTER_OVERRIDE = "filter-override";
+
 	public class ItemBox : FlowBox
 	{
 		static Host host;
 		ulong watcher_registration_handler;
-		HashTable<string,Item> items;
-		public VariantDict index_override
+		internal HashTable<string,Item> items
+		{get; private set;}
+		public HashTable<string,Variant?> index_override
+		{get; set;}
+		public HashTable<string,Variant?> filter_override
 		{get; set;}
 		public bool symbolic_icons
 		{get; set;}
@@ -20,12 +34,16 @@ namespace StatusNotifier
 		{get; set;}
 		public bool show_hardware
 		{get; set;}
+		public bool show_other
+		{get; set;}
 		public bool show_passive
 		{get; set;}
 		public int icon_size
 		{get; set;}
 		public unowned MenuPositionFunc? menu_position_func
 		{internal get; set;}
+		internal signal void item_added(string id);
+		internal signal void item_removed(string id);
 		static construct
 		{
 			host = new Host("org.kde.StatusNotifierHost-itembox%d".printf(Gdk.CURRENT_TIME));
@@ -33,7 +51,8 @@ namespace StatusNotifier
 		construct
 		{
 			items = new HashTable<string,Item>(str_hash, str_equal);
-			index_override = new VariantDict();
+			index_override = new HashTable<string,int>(str_hash,str_equal);
+			filter_override = new HashTable<string,bool>(str_hash,str_equal);
 			show_application_status = true;
 			show_communications = true;
 			show_system = true;
@@ -65,6 +84,8 @@ namespace StatusNotifier
 				var child = items.lookup(item);
 				if (child != null)
 				{
+					var snitem = items.lookup(item);
+					item_removed(snitem.id);
 					items.remove(item);
 					this.remove(child);
 					child.destroy();
@@ -106,24 +127,27 @@ namespace StatusNotifier
 		private bool filter_cb(FlowBoxChild ch)
 		{
 			var item = ch as Item;
+			if (item.id != null && filter_override.contains(item.id))
+				return filter_override.lookup(item.id).get_boolean();
 			if (!show_passive && item.status == Status.PASSIVE) return false;
 			if (show_application_status && item.cat == Category.APPLICATION) return true;
 			if (show_communications && item.cat == Category.COMMUNICATIONS) return true;
 			if (show_system && item.cat == Category.SYSTEM) return true;
 			if (show_hardware && item.cat == Category.HARDWARE) return true;
+			if (show_other && item.cat == Category.OTHER) return true;
 			return false;
 		}
 		private int sort_cb(FlowBoxChild ch1, FlowBoxChild ch2)
 		{
 			var left = ch1 as Item;
 			var right = ch2 as Item;
-			var lpos = left.ordering_index;
-			var rpos = right.ordering_index;
+			int lpos = (int)left.ordering_index;
+			int rpos = (int)right.ordering_index;
 			if (left.id != null && index_override.contains(left.id))
-				lpos = index_override.lookup_value(left.id,VariantType.UINT32).get_uint32();
+				lpos = index_override.lookup(left.id).get_int32();
 			if (right.id != null && index_override.contains(right.id))
-				rpos = index_override.lookup_value(right.id,VariantType.UINT32).get_uint32();
-			return (int)lpos - (int)rpos;
+				rpos = index_override.lookup(right.id).get_int32();
+			return lpos - rpos;
 		}
 	}
 }

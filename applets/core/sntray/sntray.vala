@@ -14,15 +14,6 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class SNTray: Applet, AppletConfigurable
 {
-	static const string SHOW_APPS = "show-application-status";
-	static const string SHOW_COMM = "show-communications";
-	static const string SHOW_SYS = "show-system";
-	static const string SHOW_HARD = "show-hardware";
-	static const string SHOW_PASSIVE = "show-passive";
-	static const string INDICATOR_SIZE = "indicator-size";
-	static const string USE_SYMBOLIC = "symbolic-icons";
-	static const string INDEX_OVERRIDE = "index-override";
-
 	ItemBox layout;
 	public SNTray (Toplevel top, GLib.Settings? settings, uint number)
 	{
@@ -30,32 +21,29 @@ public class SNTray: Applet, AppletConfigurable
 	}
 	public Dialog get_config_dialog()
 	{
-		return Configurator.generic_config_dlg(_("StatusNotifier"),
-							toplevel, this,
-							_("Use symbolic icons"), USE_SYMBOLIC, GenericConfigType.BOOL,
-							_("Indicator icon size"), INDICATOR_SIZE, GenericConfigType.INT,
-							_("Show applications status items"), SHOW_APPS, GenericConfigType.BOOL,
-							_("Show communications applications"), SHOW_COMM, GenericConfigType.BOOL,
-							_("Show system services"), SHOW_SYS, GenericConfigType.BOOL,
-							_("Show hardware services"), SHOW_HARD, GenericConfigType.BOOL,
-							_("Show passive items"), SHOW_PASSIVE, GenericConfigType.BOOL);
+		var dlg = new ConfigDialog(layout);
+		dlg.configure_icon_size = true;
+		return dlg;
 	}
 	public override void create()
 	{
 		layout = new ItemBox();
-		settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.GET);
-		settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.GET);
-		settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.GET);
-		settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.GET);
-		settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.GET);
-		settings.bind(INDICATOR_SIZE,layout,"icon-size",SettingsBindFlags.GET);
-		settings.bind(USE_SYMBOLIC,layout,USE_SYMBOLIC,SettingsBindFlags.GET);
-		settings.changed[INDEX_OVERRIDE].connect(()=>{
-			var val = settings.get_value(INDEX_OVERRIDE);
-			layout.index_override = new VariantDict(val);
-		});
-		var val = settings.get_value(INDEX_OVERRIDE);
-		layout.index_override = new VariantDict(val);
+		settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
+		settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.DEFAULT);
+		settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.DEFAULT);
+		settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.DEFAULT);
+		settings.bind(SHOW_OTHER,layout,SHOW_OTHER,SettingsBindFlags.DEFAULT);
+		settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.DEFAULT);
+		settings.bind(INDICATOR_SIZE,layout,"icon-size",SettingsBindFlags.DEFAULT);
+		settings.bind(USE_SYMBOLIC,layout,USE_SYMBOLIC,SettingsBindFlags.DEFAULT);
+		settings.bind_with_mapping(INDEX_OVERRIDE,layout,INDEX_OVERRIDE,SettingsBindFlags.DEFAULT,
+								   (SettingsBindGetMappingShared)get_vardict,
+								   (SettingsBindSetMappingShared)set_vardict,
+								   (void*)"i",null);
+		settings.bind_with_mapping(FILTER_OVERRIDE,layout,FILTER_OVERRIDE,SettingsBindFlags.DEFAULT,
+		                           (SettingsBindGetMappingShared)get_vardict,
+		                           (SettingsBindSetMappingShared)set_vardict,
+		                           (void*)"b",null);
 		layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
 		toplevel.notify["edge"].connect((o,a)=> {
 			layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
@@ -63,6 +51,26 @@ public class SNTray: Applet, AppletConfigurable
 		layout.menu_position_func = this.menu_position_func;
 		this.add(layout);
 		show_all();
+	}
+	private static bool get_vardict(Value val, Variant variant,void* data)
+	{
+		var iter = variant.iterator();
+		string name;
+		Variant inner_val;
+		var dict = new HashTable<string,Variant?>(str_hash,str_equal);
+		while(iter.next("{sv}",out name, out inner_val))
+			dict.insert(name,inner_val);
+		val.set_boxed((void*)dict);
+		return true;
+	}
+	private static Variant set_vardict(Value val, VariantType type,void* data)
+	{
+		var builder = new VariantBuilder(type);
+		var table = (HashTable<string,Variant?>)val.get_boxed();
+		table.foreach((k,v)=>{
+			builder.add("{sv}",k,v);
+		});
+		return builder.end();
 	}
 } // End class
 

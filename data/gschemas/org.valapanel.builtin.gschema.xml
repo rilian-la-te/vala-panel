@@ -63,6 +63,9 @@
     <key name="index-override" type="a{sv}">
       <default>[]</default>
     </key>
+    <key name="filter-override" type="a{sv}">
+      <default>[]</default>
+    </key>
     <key name="symbolic-icons" type="b">
       <default>true</default>
     </key>
@@ -76,6 +79,9 @@
       <default>true</default>
     </key>
     <key name="show-hardware" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-other" type="b">
       <default>true</default>
     </key>
     <key name="show-passive" type="b">
