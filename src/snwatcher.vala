@@ -64,11 +64,13 @@ namespace StatusNotifier
             {
                 var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
                                                     ()=>{
-                                                        ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
-                                                        ping_iface.notify["id"].connect(()=>{
-                                                            if (ping_iface.id == null)
-                                                                remove(get_id(name,path));
-                                                        });
+                                                        try {
+                                                            ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
+                                                            ping_iface.notify["id"].connect(()=>{
+                                                                if (ping_iface.id == null)
+                                                                    remove(get_id(name,path));
+                                                            });
+                                                        } catch (Error e) {remove(get_id(name,path));}
                                                     },
                                                     () => {remove(get_id(name,path));}
                                                     );
