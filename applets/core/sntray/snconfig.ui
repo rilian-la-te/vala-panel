@@ -317,7 +317,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-indexes-name">
-                        <property name="title" translatable="yes">Item</property>
+                        <property name="title" translatable="yes">Name</property>
                         <child>
                           <object class="GtkCellRendererText" id="renderer-index-name"/>
                           <attributes>
@@ -328,7 +328,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-indexes-toggle">
-                        <property name="title" translatable="yes">Override Index</property>
+                        <property name="title" translatable="yes">Override</property>
                         <child>
                           <object class="GtkCellRendererToggle" id="renderer-index-override">
                             <signal name="toggled" handler="on_index_override" swapped="no"/>
@@ -341,7 +341,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-indexes-index">
-                        <property name="title" translatable="yes">Custom Index</property>
+                        <property name="title" translatable="yes">Index</property>
                         <child>
                           <object class="GtkCellRendererSpin" id="renderer-index-index">
                             <property name="editable">True</property>
@@ -366,7 +366,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Indexes</property>
+                <property name="label" translatable="yes">Order</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -404,7 +404,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-filter-name">
-                        <property name="title" translatable="yes">Item</property>
+                        <property name="title" translatable="yes">Name</property>
                         <child>
                           <object class="GtkCellRendererText" id="renderer-filter-name"/>
                           <attributes>
@@ -415,7 +415,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-filter-override">
-                        <property name="title" translatable="yes">Override Visibility</property>
+                        <property name="title" translatable="yes">Override</property>
                         <child>
                           <object class="GtkCellRendererToggle" id="renderer-filter-override">
                             <signal name="toggled" handler="on_filter_override" swapped="no"/>
@@ -428,7 +428,7 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="column-filter-visible">
-                        <property name="title" translatable="yes">Visible</property>
+                        <property name="title" translatable="yes">Visible?</property>
                         <child>
                           <object class="GtkCellRendererToggle" id="renderer-filter-visible">
                             <signal name="toggled" handler="on_filter_visible" swapped="no"/>
@@ -451,7 +451,7 @@
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Filter</property>
+                <property name="label" translatable="yes">Visibility</property>
               </object>
               <packing>
                 <property name="position">2</property>
