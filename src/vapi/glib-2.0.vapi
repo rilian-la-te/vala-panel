@@ -1914,6 +1914,15 @@ namespace GLib {
 		public int get_max_threads ();
 		public uint get_num_threads ();
 		public uint unprocessed ();
+		[CCode (cname = "g_thread_pool_free")]
+		void _free (bool immediate, bool wait);
+		[CCode (cname = "vala__g_thread_pool_free_wrapper")]
+		public static void free (owned ThreadPool? pool, bool immediate, bool wait) {
+			ThreadPool* ptr = (owned) pool;
+			if (ptr != null) {
+				((ThreadPool)ptr)._free (immediate, wait);
+			}
+		}
 		public static void set_max_unused_threads (int max_threads);
 		public static int get_max_unused_threads ();
 		public static uint get_num_unused_threads ();
@@ -2257,6 +2266,7 @@ namespace GLib {
 
 	public static string convert (string str, ssize_t len, string to_codeset, string from_codeset, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
+	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 
 	[SimpleType]
 	public struct IConv {

@@ -71,7 +71,7 @@ namespace Xfce {
         public void menu_insert_item (Gtk.MenuItem item);
         public void menu_show_about ();
         public void menu_show_configure ();
-        public static void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in, void* panel_plugin);
+        public static void position_menu (Gtk.Menu menu, ref int x, ref int y, out bool push_in, void* panel_plugin);
         public void position_widget (Gtk.Widget menu_widget, Gtk.Widget attach_widget, int x, int y);
         public void register_menu (Gtk.Menu menu);
         public void remove ();
