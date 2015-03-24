@@ -240,7 +240,7 @@ namespace ValaPanel
 		        if (toplevel.get_plugin(pl).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
 		        {
 					expand = !expand;
-					(model as ListStore).set(it,Column.EXPAND,expand,-1);
+					(model as Gtk.ListStore).set(it,Column.EXPAND,expand,-1);
 		            PluginSettings s = toplevel.get_applet_settings(pl);
 		            s.default_settings.set_boolean(Key.EXPAND,expand);
 		        }
@@ -257,7 +257,7 @@ namespace ValaPanel
 		private void update_plugin_list_model()
 		{
 			TreeIter it;
-			var list = new ListStore( 3, typeof(string), typeof(bool), typeof(Applet) );
+			var list = new Gtk.ListStore( 3, typeof(string), typeof(bool), typeof(Applet) );
 		    var plugins = toplevel.get_applets_list();
 		    foreach(var widget in plugins)
 		    {
@@ -351,7 +351,7 @@ namespace ValaPanel
 		                                            render, "text", 0, null );
 		    view.append_column(col);
 
-		    var list = new ListStore( 2,
+		    var list = new Gtk.ListStore( 2,
 		                             typeof(string),
 		                             typeof(string));
 
@@ -407,7 +407,7 @@ namespace ValaPanel
 		        model.get(it, Column.DATA, out pl, -1);
 		        if( tree_path.get_indices()[0] >= model.iter_n_children(null))
 		            tree_path.prev();
-		        (model as ListStore).remove(it);
+		        (model as Gtk.ListStore).remove(it);
 		        tree_sel.select_path(tree_path );
 				toplevel.remove_applet(pl);
 		    }
@@ -438,7 +438,7 @@ namespace ValaPanel
 		        {
 		            Applet pl;
 		            model.get(it, Column.DATA, out pl, -1 );
-		            (model as ListStore).move_before(ref it, prev );
+		            (model as Gtk.ListStore).move_before(ref it, prev );
 
 		            var i = toplevel.get_applet_position(pl);
 		            /* reorder in config, 0 is Global */
@@ -468,7 +468,7 @@ namespace ValaPanel
 
 		    model.get(it, Column.DATA, out pl, -1 );
 
-		    (model as ListStore).move_after(ref it, next );
+		    (model as Gtk.ListStore).move_after(ref it, next );
 
 		    var i = toplevel.get_applet_position(pl);
 		    /* reorder in panel */

@@ -25,8 +25,9 @@
  *
  * Modified by Athor <ria.freelander@gmail.com> for Vala Panel
  */
+using Gtk;
 
-namespace Gtk {
+namespace ValaPanel {
 
 class SidebarItem : Gtk.Box
 {
@@ -46,6 +47,7 @@ class SidebarItem : Gtk.Box
     }
 
 }
+[CCode (cname = "GtkStackSidebar")]
 public class StackSidebar : Gtk.Bin
 {
 	private Gtk.Stack? _stack;

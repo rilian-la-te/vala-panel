@@ -951,8 +951,7 @@ namespace ValaPanel
 		            s += rect.height;
 		            break;
 		    }
-			if (rect.height == 0 || rect.width == 0) ; /* on a border of monitor */
-		    else
+			if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
 		    {
 		        var n = get_screen().get_n_monitors();
 		        for (var i = 0; i < n; i++)
