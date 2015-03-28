@@ -817,8 +817,10 @@ namespace DBusMenu
             foreach(var ch in root_menu.get_children())
                 if ((ch as GtkItemIface).item == item)
                 {
+                    ch.ref();
                     root_menu.remove(ch);
                     root_menu.insert(ch,newpos);
+                    ch.unref();
                 }
         }
         private void on_child_removed_cb(int id, Item item)
