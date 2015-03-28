@@ -99,7 +99,10 @@ namespace StatusNotifier
             this.query_tooltip.connect(query_tooltip_cb);
             this.popup_menu.connect(context_menu);
             icon_theme.changed.connect(()=>{
-                image.set_from_gicon(image.gicon,IconSize.INVALID);
+                if (image.storage_type == ImageType.GICON)
+                    image.set_from_gicon(image.gicon,IconSize.INVALID);
+                else
+                    iface_new_icon_cb();
             });
             this.parent_set.connect((prev)=>{
                 if (get_applet() != null)
@@ -402,6 +405,17 @@ namespace StatusNotifier
                 if ((attention_icon ?? main_icon ?? overlay_icon) != null)
                 {
                     image.set_from_gicon(icon,IconSize.INVALID);
+                    var icon_info = icon_theme.lookup_by_gicon(icon,image.pixel_size,IconLookupFlags.GENERIC_FALLBACK);
+                    if (icon_info != null)
+                    {
+                        var icon_pixbuf = icon_info.load_icon();
+                        var aspect_ratio = (double) icon_pixbuf.width / (double) icon_pixbuf.height;
+                        if (aspect_ratio != 1)
+                        {
+                            icon_pixbuf = icon_pixbuf.scale_simple((int)Math.round(aspect_ratio*image.pixel_size),image.pixel_size,Gdk.InterpType.BILINEAR);
+                            image.set_from_pixbuf(icon_pixbuf);
+                        }
+                    }
                     image.show();
                 }
                 else
