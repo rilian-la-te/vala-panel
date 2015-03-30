@@ -8,11 +8,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         widget = new ItemBox();
         add(widget);
         add_action_widget(widget);
-#if VALA_0_28
         widget.menu_position_func = (menu,ref x,ref y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
-#else
-        widget.menu_position_func = (menu,out x,out y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
-#endif
         widget.icon_size = (int)this.size/(int)this.nrows - 2;
         widget.show_passive = true;
         widget.orientation = (this.mode != Xfce.PanelPluginMode.DESKBAR) ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
