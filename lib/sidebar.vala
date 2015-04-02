@@ -27,8 +27,8 @@
  */
 using Gtk;
 
-namespace ValaPanel {
-
+namespace GtkStack
+{
 class SidebarItem : Gtk.Box
 {
     public Gtk.Label label;
@@ -47,10 +47,9 @@ class SidebarItem : Gtk.Box
     }
 
 }
-[CCode (cname = "GtkStackSidebar")]
-public class StackSidebar : Gtk.Bin
+public class Sidebar : Gtk.Bin
 {
-	private Gtk.Stack? _stack;
+    private Gtk.Stack? _stack;
     public Gtk.Stack? stack
     {get {return _stack;} set construct {set_new_stack(value);}}
     private Gtk.ScrolledWindow scroll;
@@ -58,11 +57,11 @@ public class StackSidebar : Gtk.Bin
     private HashTable<Gtk.Widget?,Gtk.ListBoxRow?> rows;
     private bool in_child_changed = false;
 
-    public StackSidebar()
+    public Sidebar()
     {
-		Object();
-	}
-	construct
+        Object();
+    }
+    construct
     {
         rows = new HashTable<Gtk.Widget?,Gtk.ListBoxRow?>(null, null);
         scroll = new Gtk.ScrolledWindow(null, null);
@@ -75,13 +74,13 @@ public class StackSidebar : Gtk.Bin
         list.row_selected.connect(on_row_selected);
         var box = new Box(Orientation.HORIZONTAL, 0);
         scroll.add(box);
-		box.add(list);
-		box.add(new Separator(Orientation.VERTICAL));
+        box.add(list);
+        box.add(new Separator(Orientation.VERTICAL));
         list.get_style_context().remove_class("list");
         this.show_all();
     }
 
-    ~StackSidebar()
+    ~Sidebar()
     {
         if (_stack != null) {
             disconnect_stack_signals();
