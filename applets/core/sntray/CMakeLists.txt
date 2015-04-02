@@ -6,7 +6,6 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snhost.vala
     snconfig.vala
     snitembox.vala
-    dbusmenu.vala
     snitemproxy.vala
     qrichtextparser.vala
 PACKAGES
