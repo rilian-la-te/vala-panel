@@ -47,7 +47,7 @@ class SidebarItem : Gtk.Box
     }
 
 }
-public class Sidebar : Gtk.Bin
+internal class Sidebar : Gtk.Bin
 {
     private Gtk.Stack? _stack;
     public Gtk.Stack? stack
