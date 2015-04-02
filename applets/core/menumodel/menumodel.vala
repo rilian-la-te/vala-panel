@@ -38,7 +38,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 	internal bool system
 	{get; set;}
 	internal bool intern
-	{get; set;} 
+	{get; set;}
 	internal bool bar
 	{get; set;}
 	internal string? caption
@@ -91,6 +91,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 		settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
 		button = menumodel_widget_create();
 		button.show();
+		var gtksettings = this.get_settings();
+		gtksettings.gtk_shell_shows_menubar = false;
 		this.show_all();
 		this.notify.connect((pspec)=>{
 			if ((pspec.name == "intern")
@@ -121,10 +123,10 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 		init_background();
 		menubar.show();
 		var orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
-		menubar.set_pack_direction(orient);	
+		menubar.set_pack_direction(orient);
 		toplevel.notify["edge"].connect(()=>{
 			orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
-			menubar.set_pack_direction(orient);			
+			menubar.set_pack_direction(orient);
 		});
 		Gtk.IconTheme.get_default().changed.connect(()=>{
 			MenuMaker.apply_menu_properties(menubar.get_children(),menu);

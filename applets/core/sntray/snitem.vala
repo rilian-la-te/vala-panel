@@ -412,8 +412,7 @@ namespace StatusNotifier
                         var aspect_ratio = (double) icon_pixbuf.width / (double) icon_pixbuf.height;
                         if (aspect_ratio != 1)
                         {
-                            icon_info = icon_theme.lookup_by_gicon(icon,(int)Math.round(image.pixel_size*aspect_ratio),IconLookupFlags.GENERIC_FALLBACK);
-                            icon_pixbuf = icon_info.load_icon();
+                            icon_pixbuf = icon_pixbuf.scale_simple((int)Math.round(aspect_ratio*image.pixel_size),image.pixel_size,Gdk.InterpType.BILINEAR);
                             image.set_from_pixbuf(icon_pixbuf);
                         }
                     }
