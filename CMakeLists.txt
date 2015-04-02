@@ -16,6 +16,9 @@ pkg_check_modules(GTK+ REQUIRED gtk+-3.0)
 pkg_check_modules(LIBXFCE4PANEL REQUIRED libxfce4panel-2.0)
 pkg_check_modules(XFCONF REQUIRED libxfconf-0)
 
+# Configuration
+configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
+
 add_subdirectory(po)
 add_subdirectory(data)
 add_subdirectory(src)

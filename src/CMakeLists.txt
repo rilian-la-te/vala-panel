@@ -9,6 +9,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     snitemproxy.vala
     qrichtextparser.vala
     xfce4-sntray-applet.vala
+    ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 PACKAGES
     gtk+-3.0
 CUSTOM_VAPIS
