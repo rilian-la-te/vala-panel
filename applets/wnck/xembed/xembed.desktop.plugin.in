@@ -3,4 +3,3 @@ Module=xembed
 Name=XEmbed Tray
 Description=Old XEmbed-based tray
 X-ValaPanel-Once=true;
-X-ValaPanel-Configurable=true;
