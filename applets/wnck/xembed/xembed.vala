@@ -28,6 +28,7 @@ public class XEmbedTray: Applet
         toplevel.notify["edge"].connect((o,a)=> {
             plugin.plugin.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
+        this.show_all();
     }
 } // End class
 

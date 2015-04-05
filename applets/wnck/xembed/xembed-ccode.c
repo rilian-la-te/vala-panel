@@ -417,6 +417,7 @@ static void balloon_message_data_event(TrayPlugin * tr, XClientMessageEvent * xe
 /* Handler for request dock message. */
 static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xevent)
 {
+    GtkWidget* flowbox_child;
     /* Search for the window in the client list.  Set up context to do an insert right away if needed. */
     TrayClient * tc_pred = NULL;
     TrayClient * tc_cursor;
@@ -438,8 +439,12 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
 
     /* Add the socket to the icon grid. */
     gtk_widget_set_size_request(tc->socket,22,22);
-    gtk_container_add(GTK_CONTAINER(tr->plugin), tc->socket);
+    flowbox_child = gtk_flow_box_child_new();
+    gtk_widget_set_app_paintable(GTK_WIDGET(flowbox_child),TRUE);
+    gtk_container_add(GTK_CONTAINER(tr->plugin), flowbox_child);
+    gtk_container_add(GTK_CONTAINER(flowbox_child), tc->socket);
     gtk_widget_show(tc->socket);
+    gtk_widget_show(flowbox_child);
     gdk_window_set_composited (gtk_widget_get_window(tc->socket),TRUE);
 
     /* Connect the socket to the plug.  This can only be done after the socket is realized. */
