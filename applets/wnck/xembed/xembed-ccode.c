@@ -111,22 +111,6 @@ static TrayClient * client_lookup(TrayPlugin * tr, Window window)
     return NULL;
 }
 
-#if 0
-static void client_print(TrayPlugin * tr, char c, TrayClient * tc, XClientMessageEvent * xevent)
-{
-        char *name = get_utf8_property(tc->window, a_NET_WM_NAME);
-        int pid = get_net_wm_pid(tc->window);
-        XClientMessageEvent xcm = {0};
-        if (!xevent)
-            xevent = &xcm;
-        g_debug("tray: %c%p, winid 0x%lx: %s (PID %d), plug %p, serial no %lu, send_event %c, format %d",
-                c, tc, tc->window, name, pid,
-                gtk_socket_get_plug_window(GTK_SOCKET(tc->socket)),
-                xevent->serial, xevent->send_event ? 'y' : 'n', xevent->format);
-        g_free(name);
-}
-#endif
-
 /* Delete a client. */
 static void client_delete(TrayPlugin * tr, TrayClient * tc, gboolean unlink, gboolean remove)
 {
@@ -158,8 +142,11 @@ static void client_delete(TrayPlugin * tr, TrayClient * tc, gboolean unlink, gbo
     if (remove)
     {
         GtkWidget* widget = gtk_widget_get_parent(tc->socket);
-        gtk_widget_destroy(tc->socket);
-        gtk_widget_destroy(widget);
+        if (GTK_IS_WIDGET(tc->socket))
+            gtk_widget_destroy(tc->socket);
+        gtk_container_remove(GTK_CONTAINER(tr->plugin),widget);
+        if (GTK_IS_WIDGET(widget))
+            gtk_widget_destroy(widget);
     }
 
     /* Deallocate the client structure. */
@@ -450,6 +437,7 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
     gtk_widget_show(tc->socket);
     gtk_widget_show(flowbox_child);
     gdk_window_set_composited (gtk_widget_get_window(tc->socket),TRUE);
+    panel_css_apply_from_resource(flowbox_child,"/org/vala-panel/lib/style.css","-panel-launch-button");
 
     /* Connect the socket to the plug.  This can only be done after the socket is realized. */
     gtk_socket_add_id(GTK_SOCKET(tc->socket), tc->window);
@@ -459,6 +447,7 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
     if (gtk_socket_get_plug_window ( GTK_SOCKET(tc->socket) ) == NULL) {
         //fprintf(stderr, "Notice: removing plug %ud\n", tc->window );
         gtk_widget_destroy(tc->socket);
+        gtk_widget_destroy(flowbox_child);
         g_free(tc);
         return;
     }
@@ -621,16 +610,14 @@ tray_draw_icon (GtkWidget *widget, gpointer   data)
 {
       cairo_t *cr = data;
       GtkAllocation allocation;
-      GtkAllocation parent_alloc;
 
       gtk_widget_get_allocation (widget, &allocation);
-      gtk_widget_get_allocation (gtk_widget_get_parent(widget), &parent_alloc);
       cairo_save (cr);
       gdk_cairo_set_source_window (cr,
                                    gtk_widget_get_window (widget),
-                                   allocation.x-parent_alloc.x,
-                                   allocation.y-parent_alloc.y);
-      cairo_rectangle (cr, allocation.x-parent_alloc.x, allocation.y-parent_alloc.y, allocation.width, allocation.height);
+                                   allocation.x,
+                                   allocation.y);
+      cairo_rectangle (cr, allocation.x, allocation.y, allocation.width, allocation.height);
       cairo_clip (cr);
       cairo_paint (cr);
       cairo_restore (cr);
