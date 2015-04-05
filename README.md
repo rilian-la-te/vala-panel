@@ -4,20 +4,21 @@ Vala Panel
 This is Vala rewrite of SimplePanel, GTK3 LXPanel fork.
 
 *TODO:*
- * ~~Rewrite core panel in Vala (0.2)~~ (done)
- * ~~Rewrite builtin plugins in Vala using libpeas. (0.2)~~ (done)
- * Write Vala Panel Plugin wrapper for LXTray from simple-panel (it is less buggy) (0.2)
- * Make global menus from Unity Appindicator (rewrite it on Vala but without Ubuntu deps) (0.3)
- * Write Notification Center Applet (0.4)
- * Wayland support, make compositor and complete Wayland support(1.0)
- * Taskbar DBus library for compositor (1.0)
- * Redo ValaPanelIconGrid using GtkFlowBox and such wonders. (poss v2.0)
+ * [x] Rewrite core panel in Vala (0.2)
+ * [x] Rewrite builtin plugins in Vala using libpeas. (0.2)
+ * [x] Write Vala Panel Plugin wrapper for LXTray from simple-panel (it is less buggy) (0.2) (done in XEmbed plugin)
+ * [x] Make global menus from Unity Appindicator (rewrite it on Vala but without Ubuntu deps) (0.3) (see https://github.com/rilian-la-te/vala-panel-appmenu)
+ * [ ] Write a window buttons applet (0.3)
+ * [ ] Write Notification Center Applet (0.4)
+ * [ ] Wayland support, make compositor and complete Wayland support(1.0)
+ * [ ] Taskbar DBus library for compositor (1.0)
+ * ~~[ ] Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
 *Some notes about realization*
 
 Plugin based panel. Users/developers can provide their own custom applets,
 which are fully integrated. They can be moved, added, removed again, and
-even broken
+even broken.
 
 *Dependencies:*
 
@@ -28,9 +29,8 @@ even broken
  * valac
  
 *Plugins:*
- * upower-glib (>= 0.9.20)
  * libwnck (>= 3.4.7)
- * gee-0.8 (not gee-1.0!)
+ * libX11
 
 
 
@@ -44,7 +44,10 @@ Author
 
 Special thanks:
 ===
- * Ikey Doherty <ikey@evolve-os.com> for sidebar widget and icontasklist
+ * Ikey Doherty <ikey@evolve-os.com> for sidebar widget.
+ * LXPanel team <https://github.com/lxde/lxpanel> for doing a base for my fork.
+ Altrough one piece from lxpanel code in this is tray, but many inspirations is carrying around
+ (Notable examples is generic-config-dialog.vala and most positioning and autohide code in toplevel.vala)
 
 Inspirations
 ===
