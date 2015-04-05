@@ -156,7 +156,11 @@ static void client_delete(TrayPlugin * tr, TrayClient * tc, gboolean unlink, gbo
 
     /* Remove the socket from the icon grid. */
     if (remove)
+    {
+        GtkWidget* widget = gtk_widget_get_parent(tc->socket);
         gtk_widget_destroy(tc->socket);
+        gtk_widget_destroy(widget);
+    }
 
     /* Deallocate the client structure. */
     g_free(tc);
