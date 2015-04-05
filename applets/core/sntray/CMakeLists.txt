@@ -38,7 +38,7 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-target_link_libraries (${PLUGIN_NAME} ${LIBS})
+target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY})

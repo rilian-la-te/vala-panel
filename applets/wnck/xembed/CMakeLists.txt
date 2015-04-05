@@ -31,7 +31,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 add_definitions (${LIB_CFLAGS})
-target_link_libraries (${PLUGIN_NAME} ${LIBS})
+target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
 
 # Install plugin stuffs
