@@ -632,14 +632,19 @@ tray_draw_icon (GtkWidget *widget, gpointer   data)
       cairo_restore (cr);
 }
 
-
 static void
-tray_draw_box (GtkWidget *box,
-                  cairo_t   *cr)
+tray_draw_child (GtkWidget *box,
+                 cairo_t   *cr)
 {
     gtk_container_foreach (GTK_CONTAINER (box), tray_draw_icon, cr);
 }
 
+static void
+tray_draw_box (GtkWidget *box,
+               cairo_t   *cr)
+{
+    gtk_container_foreach (GTK_CONTAINER (box), tray_draw_child, cr);
+}
 
 /* Plugin constructor. */
 TrayPlugin *tray_constructor(PanelApplet* applet)
