@@ -10,6 +10,7 @@ PACKAGES
     glib-2.0
     gobject-2.0
 OPTIONS
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
     --target-glib=2.40
     --thread
 GENERATE_VAPI
@@ -39,7 +40,7 @@ macro(precompile_core)
         gtk+-3.0
         vala-dbusmenu
     OPTIONS
-        --vapidir=${CMAKE_SOURCE_DIR}/vapi
+        --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.40
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/sntray.gresource.xml
