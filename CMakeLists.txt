@@ -9,9 +9,9 @@ OPTIONS
     --target-glib=2.40
     --thread
 GENERATE_VAPI
-    vala-dbusmenu
+    ../vapi/vala-dbusmenu
 GENERATE_HEADER
-    vala-dbusmenu
+    ../lib/vala-dbusmenu
 )
 
 #####
