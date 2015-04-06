@@ -1,15 +1,16 @@
 # Maintainer: rilian-la-te <ria.freelander@gmail.com>
 
-pkgname=xfce4-sntray-plugin
+pkgbase=xfce4-sntray-plugin
+pkgname=('xfce4-sntray-plugin' 'vala-panel-sntray' 'xfce4-sntray-plugin-translations')
 _cmakename=cmake-vala
-pkgver=0.3.4
+_dbusmenuname=vala-dbusmenu
+pkgver=0.3.5
 pkgrel=1
-pkgdesc="Plugin for xfce4-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
+pkgdesc="Plugin for xfce4-panel and vala-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
 url="https://github.com/rilian-la-te/xfce4-sntray-plugin"
 arch=('i686' 'x86_64')
 license=('GPL3')
-depends=('gtk3' 'xfce4-panel>=4.11.2')
-makedepends=('cmake' 'vala')
+makedepends=('cmake' 'vala' 'gtk3' 'xfce4-panel>=4.11.2' 'vala-panel-git')
 optdepends=('vala-panel-extras-volume: ALSA volume applet'
             'vala-panel-extras-battery: UPower battery applet'
             'vala-panel-extras-weather: Weather applet'
@@ -18,24 +19,62 @@ optdepends=('vala-panel-extras-volume: ALSA volume applet'
             'appindicator-gtk2: Gtk2 applications for StatusNotifier'
             'appindicator-gtk3: Gtk3 applications for StatusNotifier')
 source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/archive/${pkgver}.tar.gz"
-        "git://github.com/rilian-la-te/${_cmakename}.git")
+        "git://github.com/rilian-la-te/${_cmakename}.git"
+        "git://github.com/rilian-la-te/${_dbusmenuname}.git")
 sha256sums=('ea420ef07651b1f8bc4fa634ada111bedb7371acf8eb1c7e41c03f0f6d6940e6'
-            'SKIP')
+            'SKIP' 'SKIP')
 
 prepare() {
   cd "${srcdir}/${_cmakename}"
-  cp -r . "${srcdir}/${pkgname}-${pkgver}/cmake/vala"
+  cp -r . "${srcdir}/${pkgbase}-${pkgver}/cmake/vala"
+  cd "${srcdir}/${_dbusmenuname}"
+  cp -r . "${srcdir}/${pkgbase}-${pkgver}/src/dbusmenu"
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgbase}-${pkgver}"
   cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
-package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
+package_xfce4-sntray-plugin() {
+  pkgdesc="Plugin for xfce4-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
+  depends('gtk3' 'xfce4-panel>=4.11.2')
+  optdepends=('vala-panel-extras-volume: ALSA volume applet'
+            'vala-panel-extras-battery: UPower battery applet'
+            'vala-panel-extras-weather: Weather applet'
+            'vala-panel-extras-xkb: XKB applet'
+            'sni-qt: Qt applications for StatusNotifier'
+            'appindicator-gtk2: Gtk2 applications for StatusNotifier'
+            'appindicator-gtk3: Gtk3 applications for StatusNotifier')
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  make -C "lib" DESTDIR="${pkgdir}" install
+  make -C "data" DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}/usr/lib/vala-panel"
+  rm -rf "${pkgdir}/usr/share/glib-2.0"
 }
-
-
+package_vala-panel-sntray() {
+  pkgdesc="Plugin for vala-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
+  depends('gtk3' 'vala-panel' 'libpeas')
+  install=vala-panel-sntray.install
+  optdepends=('vala-panel-extras-volume: ALSA volume applet'
+            'vala-panel-extras-battery: UPower battery applet'
+            'vala-panel-extras-weather: Weather applet'
+            'vala-panel-extras-xkb: XKB applet'
+            'sni-qt: Qt applications for StatusNotifier'
+            'appindicator-gtk2: Gtk2 applications for StatusNotifier'
+            'appindicator-gtk3: Gtk3 applications for StatusNotifier')
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  make -C "lib" DESTDIR="${pkgdir}" install
+  make -C "data" DESTDIR="${pkgdir}" install
+  rm -rf "${pkgdir}/usr/lib/xfce4"
+  rm -rf "${pkgdir}/usr/share/xfce4"
+}
+package_xfce4-sntray-plugin-translations() {
+  pkgdesc="Translations for StatusNotifier Menu"
+  optdepends=('vala-panel-sntray-plugin'
+              'xfce4-sntray-plugin')
+  arch=('any')
+  cd "${srcdir}/${pkgbase}"
+  make -C "po" DESTDIR="${pkgdir}" install
+}

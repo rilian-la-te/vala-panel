@@ -4,5 +4,5 @@ Encoding=UTF-8
 Name=StatusNotifier Plugin
 Comment=Display AppIndicators in FlowBox
 Icon=applications-system
-X-XFCE-Module=sntray
+X-XFCE-Module=sntray-xfce
 X-XFCE-API=2.0

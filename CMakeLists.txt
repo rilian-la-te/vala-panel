@@ -13,8 +13,22 @@ set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 add_definitions(-w) # Disable gcc warnings
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 pkg_check_modules(GTK+ REQUIRED gtk+-3.0)
-pkg_check_modules(LIBXFCE4PANEL REQUIRED libxfce4panel-2.0)
-pkg_check_modules(XFCONF REQUIRED libxfconf-0)
+
+option(ENABLE_XFCE "Enable xfce4-panel plugin" ON)
+if (ENABLE_XFCE)
+    pkg_check_modules(XFCE libxfce4panel-2.0 libxfconf-0)
+    if (NOT XFCE_FOUND)
+        set(ENABLE_XFCE OFF)
+    endif()
+endif()
+
+option(ENABLE_VALAPANEL "Enable vala-panel plugin" ON)
+if (ENABLE_VALAPANEL)
+    pkg_check_modules(VALAPANEL vala-panel libpeas-1.0)
+    if (NOT XFCE_FOUND)
+        set(ENABLE_VALAPANEL OFF)
+    endif()
+endif()
 
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
