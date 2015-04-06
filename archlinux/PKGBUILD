@@ -21,8 +21,9 @@ optdepends=('vala-panel-extras-volume: ALSA volume applet'
 source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/archive/${pkgver}.tar.gz"
         "git://github.com/rilian-la-te/${_cmakename}.git"
         "git://github.com/rilian-la-te/${_dbusmenuname}.git")
-sha256sums=('ea420ef07651b1f8bc4fa634ada111bedb7371acf8eb1c7e41c03f0f6d6940e6'
-            'SKIP' 'SKIP')
+sha256sums=('b373cf2f33b2be0e0058f95132056356a0e0596d1304bb996ed3aa1fafcdef77'
+            'SKIP'
+            'SKIP')
 
 prepare() {
   cd "${srcdir}/${_cmakename}"
@@ -39,7 +40,7 @@ build() {
 
 package_xfce4-sntray-plugin() {
   pkgdesc="Plugin for xfce4-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
-  depends('gtk3' 'xfce4-panel>=4.11.2')
+  depends=('gtk3' 'xfce4-panel>=4.11.2')
   optdepends=('vala-panel-extras-volume: ALSA volume applet'
             'vala-panel-extras-battery: UPower battery applet'
             'vala-panel-extras-weather: Weather applet'
@@ -48,14 +49,14 @@ package_xfce4-sntray-plugin() {
             'appindicator-gtk2: Gtk2 applications for StatusNotifier'
             'appindicator-gtk3: Gtk3 applications for StatusNotifier')
   cd "${srcdir}/${pkgbase}-${pkgver}"
-  make -C "lib" DESTDIR="${pkgdir}" install
+  make -C "src" DESTDIR="${pkgdir}" install
   make -C "data" DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}/usr/lib/vala-panel"
   rm -rf "${pkgdir}/usr/share/glib-2.0"
 }
 package_vala-panel-sntray() {
   pkgdesc="Plugin for vala-panel to show StatusNotifierItems (AppIndicators) via FlowBox"
-  depends('gtk3' 'vala-panel' 'libpeas')
+  depends=('gtk3' 'vala-panel' 'libpeas')
   install=vala-panel-sntray.install
   optdepends=('vala-panel-extras-volume: ALSA volume applet'
             'vala-panel-extras-battery: UPower battery applet'
@@ -65,7 +66,7 @@ package_vala-panel-sntray() {
             'appindicator-gtk2: Gtk2 applications for StatusNotifier'
             'appindicator-gtk3: Gtk3 applications for StatusNotifier')
   cd "${srcdir}/${pkgbase}-${pkgver}"
-  make -C "lib" DESTDIR="${pkgdir}" install
+  make -C "src" DESTDIR="${pkgdir}" install
   make -C "data" DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}/usr/lib/xfce4"
   rm -rf "${pkgdir}/usr/share/xfce4"
@@ -75,6 +76,6 @@ package_xfce4-sntray-plugin-translations() {
   optdepends=('vala-panel-sntray-plugin'
               'xfce4-sntray-plugin')
   arch=('any')
-  cd "${srcdir}/${pkgbase}"
+  cd "${srcdir}/${pkgbase}-${pkgver}"
   make -C "po" DESTDIR="${pkgdir}" install
 }
