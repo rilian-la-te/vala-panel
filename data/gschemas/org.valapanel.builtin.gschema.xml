@@ -55,37 +55,4 @@
       <default>[]</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.sntray">
-    <key name="indicator-size" type="i">
-      <range min="16" max="48"/>
-      <default>22</default>
-    </key>
-    <key name="index-override" type="a{sv}">
-      <default>[]</default>
-    </key>
-    <key name="filter-override" type="a{sv}">
-      <default>[]</default>
-    </key>
-    <key name="symbolic-icons" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-application-status" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-communications" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-system" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-hardware" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-other" type="b">
-      <default>true</default>
-    </key>
-    <key name="show-passive" type="b">
-      <default>true</default>
-    </key>
-  </schema>
 </schemalist>
