@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-24 17:38+0600\n"
-"PO-Revision-Date: 2015-02-24 18:08+0600\n"
+"POT-Creation-Date: 2015-04-09 23:10+0600\n"
+"PO-Revision-Date: 2015-04-09 23:13+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: ../lib/generic-config-dialog.vala:27
@@ -45,15 +45,15 @@ msgstr "О_тмена"
 msgid "_OK"
 msgstr "_ОК"
 
-#: ../lib/panel-toplevel.vala:1194
+#: ../lib/panel-toplevel.vala:1194 ../lib/panel-toplevel.vala:1193
 msgid "There is no room for another panel. All the edges are taken."
 msgstr "Нет места для новой панели. Все стороны экрана заняты."
 
-#: ../lib/panel-toplevel.vala:1196
+#: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../lib/panel-toplevel.vala:1213
+#: ../lib/panel-toplevel.vala:1213 ../lib/panel-toplevel.vala:1212
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
@@ -61,7 +61,7 @@ msgstr ""
 "Вы точно хотите удалить панель?\n"
 "<b>Внимание: это необратимая операция.</b>"
 
-#: ../lib/panel-toplevel.vala:1215
+#: ../lib/panel-toplevel.vala:1215 ../lib/panel-toplevel.vala:1214
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -133,11 +133,11 @@ msgstr "Выполнить команду на открытом приложен
 msgid "cmd"
 msgstr "cmd"
 
-#: ../app/application.vala:180
+#: ../app/application.vala:180 ../app/application.vala:179
 msgid "%s - Version %s\n"
 msgstr "%s - Версия %s\n"
 
-#: ../app/application.vala:211
+#: ../app/application.vala:211 ../app/application.vala:210
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
@@ -228,7 +228,8 @@ msgstr "Система"
 msgid "Vala Panel"
 msgstr "Vala Panel"
 
-#: ../applets/core/kbled/kbled.vala:29 ../applets/core/kbled/kbled.plugin:4
+#: ../applets/core/kbled/kbled.vala:29
+#: ../applets/core/kbled/kbled.desktop.plugin.in:4
 msgid "Keyboard LED"
 msgstr "Клавиатурный индикатор"
 
@@ -241,7 +242,7 @@ msgid "Show NumLock"
 msgstr "Показать NumLock"
 
 #: ../applets/core/sntray/sntray.vala:33
-#: ../applets/core/sntray/sntray.plugin:4
+#: ../applets/core/sntray/sntray.plugin.desktop.in:4
 msgid "StatusNotifier"
 msgstr "StatusNotifier"
 
@@ -484,11 +485,11 @@ msgstr "Цвет шрифта:"
 
 #: ../lib/pref.ui:545
 msgid "Background image:"
-msgstr "Цвет фона:"
+msgstr "Фоновое изображение:"
 
 #: ../lib/pref.ui:557
 msgid "Background color:"
-msgstr "Фоновое изображение:"
+msgstr "Цвет фона:"
 
 #: ../lib/pref.ui:569
 msgid "Font:"
@@ -695,83 +696,99 @@ msgstr "Выход из системы..."
 msgid "Shut down..."
 msgstr "Завершение работы..."
 
-#: ../applets/core/separator/separator.plugin:4
-msgid "Separator"
-msgstr "Разделитель"
-
-#: ../applets/core/separator/separator.plugin:5
-msgid "Draws separator and makes space on panel"
-msgstr "Рисует разделители и занимает размер"
-
-#: ../applets/core/menumodel/menumodel.plugin:4
-msgid "Applications Menu"
-msgstr "Меню"
-
-#: ../applets/core/menumodel/menumodel.plugin:5
-msgid "Applications or custom menu in GMenuModel format."
-msgstr "Меню приложений или любой файл в формате GMenuModel"
-
-#: ../applets/core/kbled/kbled.plugin:5
-msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
-msgstr "Индикаторы клавиш CapsLock, NumLock и ScrollLock"
-
-#: ../applets/core/sntray/sntray.plugin:5
+#: ../applets/core/sntray/sntray.plugin.desktop.in:5
 msgid "System tray in KDE StatusNotifierItem format"
 msgstr "Системный лоток в формате KDE StatusNotifierItem"
 
-#: ../applets/core/launchbar/launchbar.plugin:4
+#: ../applets/core/separator/separator.desktop.plugin.in:4
+msgid "Separator"
+msgstr "Разделитель"
+
+#: ../applets/core/separator/separator.desktop.plugin.in:5
+msgid "Draws separator and makes space on panel"
+msgstr "Рисует разделители и занимает размер"
+
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
+msgid "Applications Menu"
+msgstr "Меню"
+
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
+msgid "Applications or custom menu in GMenuModel format."
+msgstr "Меню приложений или любой файл в формате GMenuModel"
+
+#: ../applets/core/kbled/kbled.desktop.plugin.in:5
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr "Индикаторы клавиш CapsLock, NumLock и ScrollLock"
+
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
 msgid "Quickstart"
 msgstr "Быстрый запуск"
 
-#: ../applets/core/launchbar/launchbar.plugin:5
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:5
 msgid "Container for application launchers."
 msgstr "Содержит значки быстрого запуска"
 
-#: ../applets/core/dirmenu/dirmenu.plugin:4
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
 msgid "Directory menu"
 msgstr "Меню папки"
 
-#: ../applets/core/dirmenu/dirmenu.plugin:5
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:5
 msgid "This menu shows filesystem hierarchy, started from given dir."
 msgstr "Показывает всю иерарахию папок с корнем в данной папке."
 
-#: ../applets/core/clock/clock.plugin:4
+#: ../applets/core/clock/clock.desktop.plugin.in:3
 msgid "Clock"
 msgstr "Часы"
 
-#: ../applets/core/clock/clock.plugin:5
+#: ../applets/core/clock/clock.desktop.plugin.in:4
 msgid "Digital clock with calendar"
 msgstr "Цифровые часы с календарем"
 
-#: ../applets/wnck/tasklist/tasklist.plugin:4
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+msgid "CPU Graph"
+msgstr "График процессора"
+
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:5
+msgid "Draws CPU graph on panel."
+msgstr "Рисует график загрузки процессора на панели"
+
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
 msgid "Tasklist"
 msgstr "Панель задач"
 
-#: ../applets/wnck/tasklist/tasklist.plugin:5
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:5
 msgid "Shows opened windows."
 msgstr "Показывает открытые приложения"
 
-#: ../applets/wnck/pager/pager.plugin:4
+#: ../applets/wnck/pager/pager.desktop.plugin.in:4
 msgid "Pager"
 msgstr "Переключатель рабочих столов"
 
-#: ../applets/wnck/pager/pager.plugin:5
+#: ../applets/wnck/pager/pager.desktop.plugin.in:5
 msgid "Shows desktops."
 msgstr "Показывает рабочие столы"
 
-#: ../applets/wnck/deskno/deskno.plugin:4
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
+msgid "XEmbed Tray"
+msgstr "Трей XEmbed"
+
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:5
+msgid "Old XEmbed-based tray"
+msgstr "Устаревший трей XEmbed"
+
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
 msgid "Desktop Number"
 msgstr "Номер рабочего стола"
 
-#: ../applets/wnck/deskno/deskno.plugin:5
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:5
 msgid "Shows desktop name or number. Switch on click."
 msgstr "Показывает имя или номер рабочего стола. Переключает по щелчку мыши"
 
-#: ../applets/wnck/wincmd/wincmd.plugin:4
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
 msgid "Show Desktop"
 msgstr "Показать рабочий стол"
 
-#: ../applets/wnck/wincmd/wincmd.plugin:5
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
 msgid "Can shows desktop and shades window."
 msgstr "Может сворачивать все окна в заголовок или на панель задач."
 

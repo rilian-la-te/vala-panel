@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-24 19:32+0600\n"
+"POT-Creation-Date: 2015-04-09 23:10+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,21 +43,21 @@ msgstr ""
 msgid "_OK"
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1194
+#: ../lib/panel-toplevel.vala:1194 ../lib/panel-toplevel.vala:1193
 msgid "There is no room for another panel. All the edges are taken."
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1196
+#: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
 msgid "Error"
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1213
+#: ../lib/panel-toplevel.vala:1213 ../lib/panel-toplevel.vala:1212
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
 msgstr ""
 
-#: ../lib/panel-toplevel.vala:1215
+#: ../lib/panel-toplevel.vala:1215 ../lib/panel-toplevel.vala:1214
 msgid "Confirm"
 msgstr ""
 
@@ -129,11 +129,11 @@ msgstr ""
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.vala:180
+#: ../app/application.vala:180 ../app/application.vala:179
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.vala:211
+#: ../app/application.vala:211 ../app/application.vala:210
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
@@ -221,6 +221,7 @@ msgid "Vala Panel"
 msgstr ""
 
 #: ../applets/core/kbled/kbled.vala:29
+#: ../applets/core/kbled/kbled.desktop.plugin.in:4
 msgid "Keyboard LED"
 msgstr ""
 
@@ -685,4 +686,96 @@ msgstr ""
 
 #: ../applets/core/sntray/sntray.plugin.desktop.in:5
 msgid "System tray in KDE StatusNotifierItem format"
+msgstr ""
+
+#: ../applets/core/separator/separator.desktop.plugin.in:4
+msgid "Separator"
+msgstr ""
+
+#: ../applets/core/separator/separator.desktop.plugin.in:5
+msgid "Draws separator and makes space on panel"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
+msgid "Applications Menu"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
+msgid "Applications or custom menu in GMenuModel format."
+msgstr ""
+
+#: ../applets/core/kbled/kbled.desktop.plugin.in:5
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
+msgid "Quickstart"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:5
+msgid "Container for application launchers."
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
+msgid "Directory menu"
+msgstr ""
+
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:5
+msgid "This menu shows filesystem hierarchy, started from given dir."
+msgstr ""
+
+#: ../applets/core/clock/clock.desktop.plugin.in:3
+msgid "Clock"
+msgstr ""
+
+#: ../applets/core/clock/clock.desktop.plugin.in:4
+msgid "Digital clock with calendar"
+msgstr ""
+
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+msgid "CPU Graph"
+msgstr ""
+
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:5
+msgid "Draws CPU graph on panel."
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
+msgid "Tasklist"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:5
+msgid "Shows opened windows."
+msgstr ""
+
+#: ../applets/wnck/pager/pager.desktop.plugin.in:4
+msgid "Pager"
+msgstr ""
+
+#: ../applets/wnck/pager/pager.desktop.plugin.in:5
+msgid "Shows desktops."
+msgstr ""
+
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
+msgid "XEmbed Tray"
+msgstr ""
+
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:5
+msgid "Old XEmbed-based tray"
+msgstr ""
+
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
+msgid "Desktop Number"
+msgstr ""
+
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:5
+msgid "Shows desktop name or number. Switch on click."
+msgstr ""
+
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
+msgid "Show Desktop"
+msgstr ""
+
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
+msgid "Can shows desktop and shades window."
 msgstr ""
