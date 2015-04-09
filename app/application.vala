@@ -103,7 +103,6 @@ namespace ValaPanel
 			return GLib.Path.build_filename(GLib.Environment.get_user_config_dir(),
 								GETTEXT_PACKAGE,_profile,name1,name2);
 		}
-
 		private void activate_preferences (SimpleAction act, Variant? param)
 		{
 			if(pref_dialog!=null)
@@ -215,30 +214,6 @@ namespace ValaPanel
 			activate();
 			return 0;
 		}
-        public bool copy_recursive (GLib.File src, GLib.File dest, GLib.FileCopyFlags flags = GLib.FileCopyFlags.NONE, GLib.Cancellable? cancellable = null) throws GLib.Error {
-            GLib.FileType src_type = src.query_file_type (GLib.FileQueryInfoFlags.NONE, cancellable);
-            if ( src_type == GLib.FileType.DIRECTORY )
-            {
-                dest.make_directory (cancellable);
-                src.copy_attributes (dest, flags, cancellable);
-                string src_path = src.get_path ();
-                string dest_path = dest.get_path ();
-                GLib.FileEnumerator enumerator = src.enumerate_children (GLib.FileAttribute.STANDARD_NAME, GLib.FileQueryInfoFlags.NONE, cancellable);
-                for ( GLib.FileInfo? info = enumerator.next_file (cancellable) ; info != null ; info = enumerator.next_file (cancellable) )
-                {
-                copy_recursive (
-                    GLib.File.new_for_path (GLib.Path.build_filename (src_path, info.get_name ())),
-                    GLib.File.new_for_path (GLib.Path.build_filename (dest_path, info.get_name ())),
-                    flags,
-                    cancellable);
-                }
-            }
-            else if ( src_type == GLib.FileType.REGULAR )
-            {
-                src.copy (dest, flags, cancellable);
-            }
-            return true;
-        }
 		private bool start_all_panels()
 		{
 			var panel_dir = user_config_file_name("panels",null);
@@ -250,11 +225,15 @@ namespace ValaPanel
 				return false;
 			foreach(var dir in dirs)
 			{
-				var sys_dir = system_config_file_name(dir,"panels");
+				var sys_dir = system_config_file_name(dir,null);
                 if(FileUtils.test(sys_dir,FileTest.EXISTS))
                 {
-                    copy_recursive(File.new_for_path(sys_dir),File.new_for_path(panel_dir));
-                    start_panels_from_dir((Gtk.Application)this,panel_dir);
+                    try
+                    {
+                        Process.spawn_command_line_sync(("cp -r %s %s").printf(sys_dir,
+                                                                        Path.build_filename(GLib.Environment.get_user_config_dir(),GETTEXT_PACKAGE)));
+                        start_panels_from_dir((Gtk.Application)this,panel_dir);
+                    } catch (Error e) {stderr.printf("%s\n",e.message);}
                     if (this.get_windows() != null)
                         return true;
                 }
