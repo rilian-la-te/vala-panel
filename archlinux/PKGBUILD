@@ -3,7 +3,7 @@
 _pkgname=vala-panel
 pkgname=${_pkgname}-git
 _cmakename=cmake-vala
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Gtk3 panel for compositing window managers"
 url="https://github.com/rilian-la-te/vala-panel"
