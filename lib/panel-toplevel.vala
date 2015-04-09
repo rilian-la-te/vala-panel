@@ -56,7 +56,7 @@ namespace ValaPanel
 	private struct PluginData
 	{
 		AppletPlugin plugin;
-		uint count;
+		int count;
 	}
 	[CCode (cname = "PanelToplevel")]
 	public class Toplevel : Gtk.ApplicationWindow
@@ -774,6 +774,8 @@ namespace ValaPanel
 				{
 					place_applet(data.plugin,s);
 					data.count +=1;
+                    var count = local_applets.lookup(name);
+                    local_applets.insert(name,count++);
 					loaded_types.insert(name,data);
 					return;
 				}
@@ -845,13 +847,13 @@ namespace ValaPanel
 			var name = s.default_settings.get_string(Key.NAME);
 			var count = local_applets.lookup(name);
 			count--;
-			if (count == 0)
+			if (count <= 0)
 				local_applets.remove(name);
 			else
 				local_applets.insert(name,count);
 			var data = loaded_types.lookup(name);
 			data.count -= 1;
-			if (data.count == 0)
+			if (data.count <= 0)
 			{
 				var pl = loaded_types.lookup(name).plugin;
 				loaded_types.remove(name);
