@@ -1,22 +1,23 @@
 [toplevel-settings]
 strut=true
 monitor=-1
-background-type='custom-image'
+background-type='image'
 edge='top'
 height=26
 icon-size=24
 auto-hide=false
 enable-font-color=true
 font-color='rgb(255,255,255)'
-background-file='/usr/local/share/simple-panel/images/background.png'
+background-file='@CMAKE_INSTALL_PREFIX@/share/simple-panel/images/background.png'
 
 
 [0]
-plugin-type='space'
+plugin-type='separator'
 has-schema=true
 can-expand=true
 size=2
 position=0
+show-separator=false
 
 [1]
 plugin-type='menumodel'
@@ -30,18 +31,18 @@ is-system-menu=true
 is-menu-bar=false
 
 [2]
-plugin-type='launchtaskbar'
+plugin-type='launchbar'
 has-schema=true
 can-expand=true
-launch-buttons=['menu://applications/System/pcmanfm.desktop', 'menu://applications/System/gnome-terminal.desktop', 'menu://applications/Internet/firefox.desktop']
+launch-buttons=['pcmanfm.desktop', 'gnome-terminal.desktop', 'firefox.desktop']
 position=2
-mode='launchbar'
 
 [3]
-plugin-type='space'
+plugin-type='separator'
 has-schema=true
 can-expand=true
 size=4
+show-separator=false
 position=3
 
 [4]
@@ -55,9 +56,10 @@ image='gnome-window-manager'
 toggle-iconify-and-shade=true
 
 [5]
-plugin-type='space'
+plugin-type='separator'
 has-schema=true
 can-expand=true
+show-separator=false
 size=4
 position=5
 
@@ -68,23 +70,20 @@ is-expanded=false
 position=6
 
 [7]
-plugin-type='space'
+plugin-type='separator'
 has-schema=true
 can-expand=true
 size=4
 position=7
 
 [8]
-plugin-type='launchtaskbar'
+plugin-type='tasklist'
 has-schema=true
 can-expand=true
 is-expanded=true
-launch-buttons=[]
 position=8
-flat-buttons=true
 grouped-tasks=true
 all-desktops=false
-mode='taskbar'
 
 [9]
 plugin-type='cpu'
@@ -92,37 +91,18 @@ has-schema=false
 is-expanded=false
 position=9
 
-[10]
-plugin-type='volumealsa'
-has-schema=true
-is-expanded=false
-position=10
-card-id='default'
-channel-id='Master'
-mixer='gnome-alsamixer'
-use-symbolic-icons=false
-
-[11]
-plugin-type='batt'
-has-schema=true
-is-expanded=false
-position=11
-show-percentage=true
-
 [12]
-plugin-type='tray'
+plugin-type='xembed'
 has-schema=false
 is-expanded=false
-position=12
+position=10
 
 [13]
-plugin-type='dclock'
+plugin-type='clock'
 has-schema=true
 is-expanded=false
 clock-format='%R'
 tooltip-format='%A %x'
 bold-font=false
-icon-only=false
-center-text=true
-position=13
+position=11
 

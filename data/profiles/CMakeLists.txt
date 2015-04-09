@@ -1,0 +1,3 @@
+add_subdirectory(default)
+add_subdirectory(two_panels)
+add_subdirectory(appmenu)

@@ -3,7 +3,6 @@ edge='bottom'
 monitor=-1
 height=26
 auto-hide=false
-background-type='gnome'
 
 [1]
 plugin-type='wincmd'
@@ -16,20 +15,19 @@ image='gnome-window-manager'
 toggle-iconify-and-shade=true
 
 [2]
-plugin-type='space'
+plugin-type='separator'
 has-schema=true
 is-expanded=false
 position=1
+show-separator=false
 size=4
 
 [3]
-plugin-type='launchtaskbar'
+plugin-type='tasklist'
 has-schema=true
 can-expand=true
-launch-buttons=[]
 position=2
 is-expanded=true
-mode='taskbar'
 
 [4]
 plugin-type='pager'

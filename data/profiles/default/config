@@ -1,0 +1,5 @@
+[global]
+is-dark=false
+is-custom=false
+logout-command='openbox --exit'
+shutdown-command='/home/rilian-la-te/.config/openbox/shutdown.sh'

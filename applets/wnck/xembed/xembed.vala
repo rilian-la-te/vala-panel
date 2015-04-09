@@ -29,6 +29,7 @@ public class XEmbedTray: Applet
             plugin.plugin.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         this.show_all();
+        plugin.plugin.queue_resize();
     }
 } // End class
 

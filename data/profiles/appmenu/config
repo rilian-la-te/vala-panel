@@ -1,0 +1,5 @@
+[global]
+is-dark=false
+is-custom=false
+logout-command='lxsession-logout'
+shutdown-command='lxsession-logout'
