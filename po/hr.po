@@ -135,7 +135,7 @@ msgid "\"%s\" Settings"
 msgstr "\"%s\" Postavke"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:23
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Visina:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:48
@@ -461,7 +461,7 @@ msgid "Geometry"
 msgstr "Geometrija"
 
 #: ../data/ui/panel-pref.glade.h:24
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Veličina ikone:"
 
 #: ../data/ui/panel-pref.glade.h:25 ../src/plugins/xkb/xkb-plugin.c:1479
@@ -485,7 +485,7 @@ msgid "Make window managers treat the panel as dock"
 msgstr "Neka upravitelji prozora tretiraju panel kao dock"
 
 #: ../data/ui/panel-pref.glade.h:31
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Margina:"
 
 #: ../data/ui/panel-pref.glade.h:32

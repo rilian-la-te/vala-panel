@@ -132,7 +132,7 @@ msgid "Panel"
 msgstr "Pult"
 
 #: ../src/panel.c:1309 ../src/panel.c:1317 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Višina:"
 
 #: ../src/panel.c:1310 ../src/panel.c:1316 ../data/ui/panel-pref.glade.h:21
@@ -423,7 +423,7 @@ msgid "Alignment:"
 msgstr "Poravnava:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Odmik:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -435,7 +435,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Položaj</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Velikost ikon:"
 
 #: ../data/ui/panel-pref.glade.h:24

@@ -135,7 +135,7 @@ msgid "\"%s\" Settings"
 msgstr "Opțiuni pentru „%s”"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Înălțime:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
@@ -437,7 +437,7 @@ msgid "Alignment:"
 msgstr "Aliniere:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Margine:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -450,7 +450,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Poziție</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Mărimea iconițelor:"
 
 #: ../data/ui/panel-pref.glade.h:24

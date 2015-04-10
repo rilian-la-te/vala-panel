@@ -131,7 +131,7 @@ msgid "\"%s\" Settings"
 msgstr "'%s' Настройки"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Височина:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
@@ -425,7 +425,7 @@ msgid "Alignment:"
 msgstr "Подравняване:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Граница:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -437,7 +437,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Позиция</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Размер на иконата:"
 
 #: ../data/ui/panel-pref.glade.h:24

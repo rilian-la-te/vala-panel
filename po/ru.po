@@ -416,8 +416,8 @@ msgid "Panel preferences"
 msgstr "Настройки панели"
 
 #: ../lib/pref.ui:139
-msgid "Margin:"
-msgstr "Отступ:"
+msgid "Margin in px:"
+msgstr "Отступ в px:"
 
 #: ../lib/pref.ui:222
 msgid "Edge:"
@@ -452,16 +452,16 @@ msgid "Position"
 msgstr "Позиция"
 
 #: ../lib/pref.ui:364
-msgid "Icon size:"
-msgstr "Размер значков:"
+msgid "Icon size in px:"
+msgstr "Размер значков в px:"
 
 #: ../lib/pref.ui:376
-msgid "Height:"
-msgstr "Высота:"
+msgid "Height in px:"
+msgstr "Толщина в px:"
 
 #: ../lib/pref.ui:401
 msgid "Width:"
-msgstr "Ширина:"
+msgstr "Длина:"
 
 #: ../lib/pref.ui:425
 msgid "Size properties"

@@ -131,7 +131,7 @@ msgid "Panel"
 msgstr "Панель"
 
 #: ../src/panel.c:1343 ../src/panel.c:1351 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Биіктігі:"
 
 #: ../src/panel.c:1344 ../src/panel.c:1350 ../data/ui/panel-pref.glade.h:21
@@ -425,7 +425,7 @@ msgid "Alignment:"
 msgstr "Туралауы:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Шеті:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -437,7 +437,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Орны</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Таңбаша өлшемі:"
 
 #: ../data/ui/panel-pref.glade.h:24

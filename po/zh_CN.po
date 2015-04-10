@@ -133,7 +133,7 @@ msgid "Panel"
 msgstr "面板"
 
 #: ../src/panel.c:1309 ../src/panel.c:1317 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "高度："
 
 #: ../src/panel.c:1310 ../src/panel.c:1316 ../data/ui/panel-pref.glade.h:21
@@ -424,7 +424,7 @@ msgid "Alignment:"
 msgstr "排列方式："
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "边距："
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -436,7 +436,7 @@ msgid "<b>Position</b>"
 msgstr "<b>位置</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "图标大小："
 
 #: ../data/ui/panel-pref.glade.h:24

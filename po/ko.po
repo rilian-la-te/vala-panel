@@ -131,7 +131,7 @@ msgid "\"%s\" Settings"
 msgstr "\"%s\" 설정"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "높이:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
@@ -433,7 +433,7 @@ msgid "Alignment:"
 msgstr "정렬:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "여백:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -446,7 +446,7 @@ msgid "<b>Position</b>"
 msgstr "<b>위치</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "아이콘 크기:"
 
 #: ../data/ui/panel-pref.glade.h:24

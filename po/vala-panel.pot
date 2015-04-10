@@ -407,7 +407,7 @@ msgid "Panel preferences"
 msgstr ""
 
 #: ../lib/pref.ui:139
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr ""
 
 #: ../lib/pref.ui:222
@@ -443,11 +443,11 @@ msgid "Position"
 msgstr ""
 
 #: ../lib/pref.ui:364
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr ""
 
 #: ../lib/pref.ui:376
-msgid "Height:"
+msgid "Height in px:"
 msgstr ""
 
 #: ../lib/pref.ui:401
