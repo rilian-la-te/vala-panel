@@ -137,6 +137,7 @@ namespace ValaPanel
                         }
                     }
                     catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
+                    return;
                 }
             }
         }

@@ -19,6 +19,7 @@ source=("git://github.com/rilian-la-te/${_pkgname}.git"
         "git://github.com/rilian-la-te/${_cmakename}.git"
         "git://github.com/rilian-la-te/${_dbusmenuname}.git")
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP')
 
 pkgver() {
