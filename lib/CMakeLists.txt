@@ -8,7 +8,7 @@ vala_precompile(VALA_C ${LIBNAME}
     configurator.vala
     generic-config-dialog.vala
     css.vala
-    dbusmenu.vala
+    dbusmenu/dbusmenu.vala
     icon-grid.vala
     menu-maker.vala
     panel-plugin.vala
