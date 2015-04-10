@@ -88,7 +88,7 @@ namespace ValaPanel
         {
             var f = new GLib.KeyFile();
             try{
-            f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
+                f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
             } catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
             var numtable = new GLib.GenericSet<int>(direct_hash,direct_equal);
             var len = f.get_groups().length;
