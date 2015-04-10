@@ -134,7 +134,7 @@ msgid "\"%s\" Settings"
 msgstr "„%s“ nustatymai"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:23
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Aukštis:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:48
@@ -462,7 +462,7 @@ msgid "Geometry"
 msgstr "Geometrija"
 
 #: ../data/ui/panel-pref.glade.h:24
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Piktogramos dydis:"
 
 #: ../data/ui/panel-pref.glade.h:25 ../src/plugins/xkb/xkb-plugin.c:1479
@@ -486,7 +486,7 @@ msgid "Make window managers treat the panel as dock"
 msgstr "Langų tvarkyklės skydelį matys kaip doką"
 
 #: ../data/ui/panel-pref.glade.h:31
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Paraštė:"
 
 #: ../data/ui/panel-pref.glade.h:32

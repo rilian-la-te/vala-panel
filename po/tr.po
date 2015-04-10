@@ -137,7 +137,7 @@ msgid "\"%s\" Settings"
 msgstr "\"%s\" Ayarları"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Yükseklik:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
@@ -433,7 +433,7 @@ msgid "Alignment:"
 msgstr "Hizalama:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Kıyı boşluğu:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -445,7 +445,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Konum</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Simge boyutu:"
 
 #: ../data/ui/panel-pref.glade.h:24

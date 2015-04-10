@@ -132,7 +132,7 @@ msgid "Panel"
 msgstr "Panel"
 
 #: ../src/panel.c:1309 ../src/panel.c:1317 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Tinggi:"
 
 #: ../src/panel.c:1310 ../src/panel.c:1316 ../data/ui/panel-pref.glade.h:21
@@ -423,8 +423,8 @@ msgid "Alignment:"
 msgstr "Perataan:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
-msgstr "Margin:"
+msgid "Margin in px:"
+msgstr "Margin in px:"
 
 #: ../data/ui/panel-pref.glade.h:19
 msgid "Monitor:"
@@ -435,7 +435,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Posisi</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Ukuran ikon:"
 
 #: ../data/ui/panel-pref.glade.h:24

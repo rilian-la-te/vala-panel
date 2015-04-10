@@ -131,7 +131,7 @@ msgid "Panel"
 msgstr "Lubaawo"
 
 #: ../src/panel.c:1309 ../src/panel.c:1317 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
+msgid "Height in px:"
 msgstr "Obugulumivu:"
 
 #: ../src/panel.c:1310 ../src/panel.c:1316 ../data/ui/panel-pref.glade.h:21
@@ -434,7 +434,7 @@ msgid "Alignment:"
 msgstr "Gye lugwa:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
+msgid "Margin in px:"
 msgstr "Gye lugwa lulekeyo akabanga ka:"
 
 #: ../data/ui/panel-pref.glade.h:19
@@ -446,7 +446,7 @@ msgid "<b>Position</b>"
 msgstr "<b>Obusangiro bwa lwo</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
+msgid "Icon size in px:"
 msgstr "Bunene bw'obufaananyi obuyunzi:"
 
 #: ../data/ui/panel-pref.glade.h:24

@@ -131,8 +131,8 @@ msgid "\"%s\" Settings"
 msgstr "\"%s\" Settings"
 
 #: ../src/panel.c:1109 ../src/panel.c:1117 ../data/ui/panel-pref.glade.h:22
-msgid "Height:"
-msgstr "Height:"
+msgid "Height in px:"
+msgstr "Height in px:"
 
 #: ../src/panel.c:1110 ../src/panel.c:1116 ../data/ui/panel-pref.glade.h:21
 msgid "Width:"
@@ -432,8 +432,8 @@ msgid "Alignment:"
 msgstr "Alignment:"
 
 #: ../data/ui/panel-pref.glade.h:18
-msgid "Margin:"
-msgstr "Margin:"
+msgid "Margin in px:"
+msgstr "Margin in px:"
 
 #: ../data/ui/panel-pref.glade.h:19
 #, fuzzy
@@ -445,8 +445,8 @@ msgid "<b>Position</b>"
 msgstr "<b>Position</b>"
 
 #: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size:"
-msgstr "Icon size:"
+msgid "Icon size in px:"
+msgstr "Icon size in px:"
 
 #: ../data/ui/panel-pref.glade.h:24
 msgid "<b>Size</b>"
