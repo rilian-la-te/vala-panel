@@ -68,6 +68,7 @@ namespace ValaPanel
         private Peas.ExtensionSet extset;
         private ToplevelSettings settings;
         private Gtk.Box box;
+        private Gtk.Menu context_menu;
         private int _mon;
         private int _w;
         private Gtk.Allocation a;
@@ -746,13 +747,15 @@ namespace ValaPanel
                 var gmenusection = builder.get_object("plugin-section") as GLib.Menu;
                 pl.update_context_menu(ref gmenusection);
             }
-            var ret = new Gtk.Menu.from_model(gmenu as MenuModel);
+            if (context_menu != null)
+                context_menu.destroy();
+            context_menu = new Gtk.Menu.from_model(gmenu as MenuModel);
             if (pl != null)
-                ret.attach_to_widget(pl,null);
+                context_menu.attach_to_widget(pl,null);
             else
-                ret.attach_to_widget(this,null);
-            ret.show_all();
-            return ret;
+                context_menu.attach_to_widget(this,null);
+            context_menu.show_all();
+            return context_menu;
         }
 /*
  * Plugins stuff.
