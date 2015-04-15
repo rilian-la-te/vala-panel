@@ -731,9 +731,18 @@ namespace ValaPanel
         {
             if (e.button == 3)
             {
-                var menu = get_plugin_menu(null);
-                menu.popup(null,null,null,e.button,e.time);
-                return true;
+                if (context_menu == null)
+                {
+                    var menu = get_plugin_menu(null);
+                    menu.popup(null,null,null,e.button,e.time);
+                    return true;
+                }
+                else
+                {
+                    context_menu.destroy();
+                    context_menu = null;
+                    return true;
+                }
             }
             return false;
         }
