@@ -58,27 +58,25 @@ namespace StatusNotifier
             var id = get_id(name,path);
             if (id in name_watcher)
             {
-                warning("Trying to register already registered item");
+                warning("Trying to register already registered item. Reregistering new...");
+                remove(id);
             }
-            else
-            {
-                var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
-                                                    ()=>{
-                                                        try {
-                                                            ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
-                                                            ping_iface.notify["id"].connect(()=>{
-                                                                if (ping_iface.id == null)
-                                                                    remove(get_id(name,path));
-                                                            });
-                                                        } catch (Error e) {remove(get_id(name,path));}
-                                                    },
-                                                    () => {remove(get_id(name,path));}
-                                                    );
-                name_watcher.insert(id,name_handler);
-                registered_status_notifier_items = get_registered_items();
-                status_notifier_item_registered(id);
-                /* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
-            }
+            var name_handler = Bus.watch_name(BusType.SESSION,name,GLib.BusNameWatcherFlags.NONE,
+                                                ()=>{
+                                                    try {
+                                                        ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
+                                                        ping_iface.notify.connect((pspec)=>{
+                                                            if (ping_iface.id == null || ping_iface.title == null || ping_iface.id.length <= 0 || ping_iface.title.length <= 0)
+                                                                remove(get_id(name,path));
+                                                        });
+                                                    } catch (Error e) {remove(get_id(name,path));}
+                                                },
+                                                () => {remove(get_id(name,path));}
+                                                );
+            name_watcher.insert(id,name_handler);
+            registered_status_notifier_items = get_registered_items();
+            status_notifier_item_registered(id);
+            /* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
         }
         public void register_status_notifier_host(string service) throws IOError
         {
