@@ -23,6 +23,8 @@ public class XEmbedTray: Applet
     public override void create()
     {
         plugin = new XEmbed.Plugin(this);
+        if (plugin == null || plugin.plugin == null || !(plugin.plugin is Widget))
+            return;
         this.add(plugin.plugin);
         plugin.plugin.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         toplevel.notify["edge"].connect((o,a)=> {
