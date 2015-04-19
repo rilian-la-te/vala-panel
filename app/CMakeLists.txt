@@ -18,8 +18,8 @@ OPTIONS
 
 add_definitions(-DG_SETTINGS_ENABLE_BACKEND)
 glib_compile_resources(GLIB_RESOURCES_APP
-	source
-    	vala-panel.gresource.xml
+    source
+        vala-panel.gresource.xml
 )
 
 #####
@@ -29,4 +29,4 @@ glib_compile_resources(GLIB_RESOURCES_APP
 add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
 target_link_libraries (${APPNAME} ${LIBNAME})
 
-install (TARGETS ${APPNAME} RUNTIME DESTINATION bin)
+install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

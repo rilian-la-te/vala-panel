@@ -1,5 +1,5 @@
 if (NOT(GTK316_FOUND))
-	set (SIDEBAR_SOURCES "sidebar.vala")
+    set (SIDEBAR_SOURCES "sidebar.vala")
 endif()
 
 INCLUDE(GResource)
@@ -32,8 +32,8 @@ GENERATE_HEADER
 
 add_definitions(-DG_SETTINGS_ENABLE_BACKEND)
 glib_compile_resources(GLIB_RESOURCES_LIB
-	source
-    	libvalapanel.gresource.xml
+    source
+        libvalapanel.gresource.xml
 )
 
 #####
@@ -58,10 +58,10 @@ set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${LIBVERSION}.0
     SOVERSION ${SOVERSION})
 
-install (TARGETS ${LIBNAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install (TARGETS ${LIBNAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Install lib stuffs
-install (FILES ${CMAKE_BINARY_DIR}/${APPNAME}.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.vapi DESTINATION share/vala/vapi/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.deps DESTINATION share/vala/vapi/)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.h DESTINATION include/vala-panel/)
+install (FILES ${CMAKE_BINARY_DIR}/${APPNAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.vapi DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.deps DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/)
