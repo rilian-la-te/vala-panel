@@ -5,6 +5,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
 include(ValaPrecompile)
 include(GResource)
+include(GNUInstallDirs)
 
 find_package(Vala)
 find_package(PkgConfig)

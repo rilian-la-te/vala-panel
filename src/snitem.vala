@@ -173,7 +173,7 @@ namespace StatusNotifier
             if (path != null)
             {
                 icon_theme_path = path;
-                IconTheme.get_default().prepend_search_path(path);
+                IconTheme.get_default().append_search_path(path);
             }
             iface_new_icon_cb();
         }
