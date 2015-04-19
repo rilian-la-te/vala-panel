@@ -94,7 +94,7 @@ if (ENABLE_XFCE)
     target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES})
 
     # Install plugin stuffs
-    install(TARGETS sntray-xfce DESTINATION lib/xfce4/panel/plugins)
+    install(TARGETS sntray-xfce DESTINATION ${CMAKE_INSTALL_LIBDIR}/xfce4/panel/plugins)
 endif()
 #################
 # Vala Panel part
@@ -126,5 +126,5 @@ if (ENABLE_VALAPANEL)
     target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES})
 
     # Install plugin stuffs
-    install(TARGETS sntray-valapanel DESTINATION lib/vala-panel/applets)
+    install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)
 endif()

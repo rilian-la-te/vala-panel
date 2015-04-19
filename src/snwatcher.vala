@@ -37,7 +37,7 @@ namespace StatusNotifier
         public string[] registered_status_notifier_items
         {owned get; protected set;}
         public bool is_status_notifier_host_registered
-        {get {return true;}}
+        {get; private set; default = true;}
         public int protocol_version
         {get {return 0;}}
         /* Public methods */
@@ -66,7 +66,10 @@ namespace StatusNotifier
                                                     try {
                                                         ItemIface ping_iface = Bus.get_proxy_sync(BusType.SESSION,name,path);
                                                         ping_iface.notify.connect((pspec)=>{
-                                                            if (ping_iface.id == null || ping_iface.title == null || ping_iface.id.length <= 0 || ping_iface.title.length <= 0)
+                                                            if (ping_iface.id == null ||
+                                                            ping_iface.title == null ||
+                                                            ping_iface.id.length <= 0 ||
+                                                            ping_iface.title.length <= 0)
                                                                 remove(get_id(name,path));
                                                         });
                                                     } catch (Error e) {remove(get_id(name,path));}
