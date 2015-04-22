@@ -24,13 +24,13 @@ list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 #
 
 include(GetGitRevisionDescription)
-git_describe(VERSION_LONG --tags --dirty=-dirty)
+git_describe(VERSION_LONG --tags)
 
 #parse the version information into pieces.
-string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION_LONG}")
-string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION_LONG}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION_LONG}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION_LONG}")
+string(REGEX REPLACE "^v*([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION_LONG}")
+string(REGEX REPLACE "^v*[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION_LONG}")
+string(REGEX REPLACE "^v*[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION_LONG}")
+string(REGEX REPLACE "^v*[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION_LONG}")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 # Add 'make dist' command for creating release tarball
