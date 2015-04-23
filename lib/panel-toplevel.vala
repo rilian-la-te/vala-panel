@@ -63,9 +63,9 @@ namespace ValaPanel
     {
         private static Peas.Engine engine;
         private static ulong mon_handler;
+        private static Peas.ExtensionSet extset;
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
-        private Peas.ExtensionSet extset;
         private ToplevelSettings settings;
         private Gtk.Box box;
         private Gtk.Menu context_menu;
@@ -214,6 +214,7 @@ namespace ValaPanel
             engine = Peas.Engine.get_default();
             engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
             loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
+            extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
         }
         private static void monitors_changed_cb(Gdk.Screen scr, void* data)
         {
@@ -323,7 +324,6 @@ namespace ValaPanel
         }
         construct
         {
-            extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
             local_applets = new HashTable<string,int>(str_hash,str_equal);
             Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
@@ -345,7 +345,7 @@ namespace ValaPanel
                     this.update_appearance();
             });
             this.add_action_entries(panel_entries,this);
-            this.extset.extension_added.connect(on_extension_added);
+            extset.extension_added.connect(on_extension_added);
             engine.load_plugin.connect_after((i)=>
             {
                 var ext = extset.get_extension(i);
