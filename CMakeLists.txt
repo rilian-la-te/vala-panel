@@ -41,7 +41,7 @@ set (CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 set (CPACK_SOURCE_GENERATOR "TGZ")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION}")
-set (CPACK_SOURCE_IGNORE_FILES "/build/;/.git/;/.gitignore;/.gitmodules;~$;${CPACK_SOURCE_IGNORE_FILES}")
+set (CPACK_SOURCE_IGNORE_FILES "/build/;;/.gitignore;/.gitmodules;~$;${CPACK_SOURCE_IGNORE_FILES}")
 
 # Variables for CPack binary packages
 set (CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
@@ -71,7 +71,7 @@ else(DPKG_PROGRAM)
 endif(DPKG_PROGRAM)
 
 # Add 'make packages' command for building Debian and RPM packages
-set (CPACK_GENERATOR "RPM")
+set (CPACK_GENERATOR "DEB")
 include (CPack)
 
 add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
