@@ -55,7 +55,7 @@ add_library (${LIBNAME} SHARED
 target_link_libraries (${LIBNAME} ${LIBS})
 
 set_target_properties (${LIBNAME} PROPERTIES
-    VERSION ${LIBVERSION}.0
+    VERSION ${VERSION}
     SOVERSION ${SOVERSION})
 
 install (TARGETS ${LIBNAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT bin)
