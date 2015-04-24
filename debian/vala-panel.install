@@ -1,0 +1,3 @@
+usr/bin/*
+etc/xdg/*
+usr/share/glib-2.0/schemas/org.valapanel.gschema.xml

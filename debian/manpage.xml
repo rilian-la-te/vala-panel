@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+<!--
+
+`xsltproc -''-nonet \
+          -''-param man.charmap.use.subset "0" \
+          -''-param make.year.ranges "1" \
+          -''-param make.single.year.ranges "1" \
+          /usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl \
+          manpage.xml'
+
+A manual page <package>.<section> will be generated. You may view the
+manual page with: nroff -man <package>.<section> | less'. A typical entry
+in a Makefile or Makefile.am is:
+
+DB2MAN = /usr/share/sgml/docbook/stylesheet/xsl/docbook-xsl/manpages/docbook.xsl
+XP     = xsltproc -''-nonet -''-param man.charmap.use.subset "0"
+
+manpage.1: manpage.xml
+        $(XP) $(DB2MAN) $<
+
+The xsltproc binary is found in the xsltproc package. The XSL files are in
+docbook-xsl. A description of the parameters you can use can be found in the
+docbook-xsl-doc-* packages. Please remember that if you create the nroff
+version in one of the debian/rules file targets (such as build), you will need
+to include xsltproc and docbook-xsl in your Build-Depends control field.
+Alternatively use the xmlto command/package. That will also automatically
+pull in xsltproc and docbook-xsl.
+
+Notes for using docbook2x: docbook2x-man does not automatically create the
+AUTHOR(S) and COPYRIGHT sections. In this case, please add them manually as
+<refsect1> ... </refsect1>.
+
+To disable the automatic creation of the AUTHOR(S) and COPYRIGHT sections
+read /usr/share/doc/docbook-xsl/doc/manpages/authors.html. This file can be
+found in the docbook-xsl-doc-html package.
+
+Validation can be done using: `xmllint -''-noout -''-valid manpage.xml`
+
+General documentation about man-pages and man-page-formatting:
+man(1), man(7), http://www.tldp.org/HOWTO/Man-Page/
+
+-->
+
+  <!-- Fill in your name for FIRSTNAME and SURNAME. -->
+  <!ENTITY dhfirstname "Konstantin">
+  <!ENTITY dhsurname   "P.">
+  <!-- dhusername could also be set to "&dhfirstname; &dhsurname;". -->
+  <!ENTITY dhusername  "athor">
+  <!ENTITY dhemail     "ria.freelander@gmail.com">
+  <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
+       allowed: see man(7), man(1) and
+       http://www.tldp.org/HOWTO/Man-Page/q2.html. -->
+  <!ENTITY dhsection   "1">
+  <!-- TITLE should be something like "User commands" or similar (see
+       http://www.tldp.org/HOWTO/Man-Page/q2.html). -->
+  <!ENTITY dhtitle     "Vala Panel User Manual">
+  <!ENTITY dhucpackage "Vala Panel">
+  <!ENTITY dhpackage   "vala-panel">
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>&dhtitle;</title>
+    <productname>&dhpackage;</productname>
+    <authorgroup>
+      <author>
+       <firstname>&dhfirstname;</firstname>
+        <surname>&dhsurname;</surname>
+        <contrib>Wrote this manpage for the Debian system.</contrib>
+        <address>
+          <email>&dhemail;</email>
+        </address>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2015</year>
+      <holder>&dhusername;</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for the Debian system
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 3 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+      <para>On Debian systems, the complete text of the GNU General Public
+        License can be found in
+        <filename>/usr/share/common-licenses/GPL</filename>.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>&dhucpackage;</refentrytitle>
+    <manvolnum>&dhsection;</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&dhpackage;</refname>
+    <refpurpose> Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&dhpackage;</command>
+      <!-- These are several examples, how syntaxes could look -->
+      <arg choice="opt">
+        <group choice="req">
+          <arg choice="plain"><option>-c</option></arg>
+          <arg choice="plain"><option>--command</option></arg>
+        </group>
+        <replaceable class="option">command name</replaceable>
+      </arg>
+      <arg choice="opt">
+        <group choice="req">
+          <arg choice="plain"><option>-p</option></arg>
+          <arg choice="plain"><option>--profile</option></arg>
+        </group>
+        <replaceable class="option">profile name</replaceable>
+      </arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <command>&dhpackage;</command>
+      <!-- Normally the help and version options make the programs stop
+           right after outputting the requested information. -->
+      <group choice="opt">
+        <arg choice="plain">
+          <group choice="req">
+            <arg choice="plain"><option>-h</option></arg>
+            <arg choice="plain"><option>--help</option></arg>
+          </group>
+        </arg>
+        <arg choice="plain">
+          <group choice="req">
+            <arg choice="plain"><option>-v</option></arg>
+            <arg choice="plain"><option>--version</option></arg>
+          </group>
+        </arg>
+      </group>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>This manual page documents briefly the
+      <command>&dhpackage;</command> command.</para>
+    <para>This manual page was written for the Debian distribution
+      because the original program does not have a manual page.</para>
+    <para><command>&dhpackage;</command> is a program that runs a panel</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The program follows the usual GNU command line syntax,
+      with long options starting with two dashes (`-').  A summary of
+      options is included below.  For a complete description, see the
+      <citerefentry>
+        <refentrytitle>info</refentrytitle>
+        <manvolnum>1</manvolnum>
+      </citerefentry> files.</para>
+    <variablelist>
+      <!-- Use the variablelist.term.separator and the
+           variablelist.term.break.after parameters to
+           control the term elements. -->
+      <varlistentry>
+        <term><option>-c <replaceable>command</replaceable></option></term>
+        <term><option>--command=<replaceable>command name</replaceable></option></term>
+        <listitem>
+          <para>Runs specific command on already opened panel.
+		Valid commands without arguments are: menu, preferences, run, about, logout, shutdown and quit.
+		Valid commands with one string argument are launch-id, launch-uri, launch-command and panel-preferences.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p <replaceable>profile</replaceable></option></term>
+        <term><option>--profile=<replaceable>profile name</replaceable></option></term>
+        <listitem>
+          <para>Runs panel with specified profile. This option will have an effect only if panel is not runs now.
+		There are three preinstalled profiles: default, two_panels and appmenu.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-h</option></term>
+        <term><option>--help</option></term>
+        <listitem>
+          <para>Show summary of options.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-v</option></term>
+        <term><option>--version</option></term>
+        <listitem>
+          <para>Show version of program.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="files">
+    <title>FILES</title>
+    <variablelist>
+      <varlistentry>
+        <term><filename>${$XDG_CONFIG_HOME}/vala-panel/</filename></term>
+        <listitem>
+          <para>The per-user configuration folder to control the
+             behaviour of <application>&dhpackage;</application>.
+	     It contains subfolders only, and it must contain at least one subfolder after a first run of <application>&dhpackage;</application>.
+	     Each subfolder is a profile for panel, and its name used as profile name with profile options.
+	     See default profiles for futher reference.
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
