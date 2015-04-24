@@ -3,7 +3,7 @@ cmake_policy (VERSION 2.8)
 project (vala-panel)
 enable_testing ()
 include(GNUInstallDirs)
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
 set (DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/vala-panel")
 set (PKGDATADIR "${DATADIR}")
 set (GETTEXT_PACKAGE "vala-panel")
@@ -35,13 +35,45 @@ set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 # Add 'make dist' command for creating release tarball
 set (CPACK_PACKAGE_VERSION ${VERSION})
+set (CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set (CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 set (CPACK_SOURCE_GENERATOR "TGZ")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION}")
 set (CPACK_SOURCE_IGNORE_FILES "/build/;/.git/;/.gitignore;/.gitmodules;~$;${CPACK_SOURCE_IGNORE_FILES}")
 
-include (CPack)
-add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
+# Variables for CPack binary packages
+set (CPACK_PACKAGE_NAME ${CMAKE_PROJECT_NAME})
+set (CPACK_PACKAGE_RELEASE "1")
+set (CPACK_PACKAGE_CONTACT "Konstantin P. <ria.freelander@gmail.com>")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas.")
+set (CPACK_PACKAGE_DESCRIPTION "Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.\nIn fact, it was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it completery rewritten in Vala.\nIt offers same functionality as LXPanel, but:\n1. It has slightly more memory usage\n2. X11 dependency is stripped from panel core (but it is not tested on Wayland right now)\n3. Some of former LXPanel plugins is separate binaries now, and lives in another packages.")
+set (CPACK_COMPONENTS_ALL "bin;dev;plugins-base;plugins-wnck")
+set (CPACK_COMPONENT_dev_DEPENDS "bin")
+set (CPACK_COMPONENT_plugins-base_DEPENDS "bin")
+set (CPACK_COMPONENT_plugins-wnck_DEPENDS "bin")
 
+# Variables and functions for building deb packages
+set (CPACK_DEB_COMPONENT_INSTALL ON)
+set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set (CPACK_DEBIAN_PACKAGE_SECTION "x11")
+set (CPACK_DEBIAN_PACKAGE_REVISION ${CPACK_PACKAGE_RELEASE})
+string(TOLOWER "${CPACK_PACKAGE_NAME}" CPACK_PACKAGE_NAME_LOWERCASE)
+find_program(DPKG_PROGRAM dpkg DOC "dpkg program of Debian-based systems")
+if(DPKG_PROGRAM)
+   execute_process(COMMAND ${DPKG_PROGRAM} --print-architecture
+      OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME_LOWERCASE}-${VERSION}-${CPACK_DEBIAN_PACKAGE_REVISION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
+else(DPKG_PROGRAM)
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME_LOWERCASE}-${VERSION}-${CPACK_DEBIAN_PACKAGE_REVISION}_${CMAKE_SYSTEM_NAME}")
+endif(DPKG_PROGRAM)
+
+# Add 'make packages' command for building Debian and RPM packages
+set (CPACK_GENERATOR "RPM")
+include (CPack)
+
+add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/vapi/config.vala.in ${CMAKE_BINARY_DIR}/vapi/config.vala)
 configure_file (${CMAKE_SOURCE_DIR}/${APPNAME}.pc.cmake ${CMAKE_BINARY_DIR}/${APPNAME}.pc)

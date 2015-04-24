@@ -18,8 +18,8 @@ OPTIONS
 #####
 INCLUDE(GResource)
 glib_compile_resources(RESOURCES
-	source
-    	${PLUGIN_NAME}.gresource.xml
+    source
+        ${PLUGIN_NAME}.gresource.xml
 )
 
 # Build library for plugin
@@ -35,5 +35,5 @@ add_library (${PLUGIN_NAME} MODULE
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 
 # Install plugin stuffs
-install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.plugin DESTINATION ${PLUGINS_DIRECTORY})
+install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
