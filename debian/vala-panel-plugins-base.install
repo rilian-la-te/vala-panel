@@ -6,10 +6,10 @@ usr/lib/*/vala-panel/applets/libkbled.so
 usr/lib/*/vala-panel/applets/liblaunchbar.so
 usr/lib/*/vala-panel/applets/libmenumodel.so
 usr/lib/*/vala-panel/applets/libseparator.so
-usr/share/vala-panel/applets/clock.plugin
-usr/share/vala-panel/applets/cpu.plugin
-usr/share/vala-panel/applets/dirmenu.plugin
-usr/share/vala-panel/applets/kbled.plugin
-usr/share/vala-panel/applets/launchbar.plugin
-usr/share/vala-panel/applets/menumodel.plugin
-usr/share/vala-panel/applets/separator.plugin
+usr/lib/*/vala-panel/applets/clock.plugin
+usr/lib/*/vala-panel/applets/cpu.plugin
+usr/lib/*/vala-panel/applets/dirmenu.plugin
+usr/lib/*/vala-panel/applets/kbled.plugin
+usr/lib/*/vala-panel/applets/launchbar.plugin
+usr/lib/*/vala-panel/applets/menumodel.plugin
+usr/lib/*/vala-panel/applets/separator.plugin
