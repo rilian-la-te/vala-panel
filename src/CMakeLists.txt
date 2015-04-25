@@ -91,7 +91,7 @@ if (ENABLE_XFCE)
     )
     add_dependencies(sntray-xfce sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${XFCE_INCLUDE_DIRS})
-    target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES})
+    target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES} -lm)
 
     # Install plugin stuffs
     install(TARGETS sntray-xfce DESTINATION ${CMAKE_INSTALL_LIBDIR}/xfce4/panel/plugins)
@@ -123,7 +123,7 @@ if (ENABLE_VALAPANEL)
     )
     add_dependencies(sntray-valapanel sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${VALAPANEL_INCLUDE_DIRS})
-    target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES})
+    target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES} -lm)
 
     # Install plugin stuffs
     install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)
