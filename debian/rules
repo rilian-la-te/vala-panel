@@ -32,10 +32,8 @@ override_dh_auto_configure:
 	dh_auto_configure --buildsystem=cmake -- -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
 override_dh_strip:
-	dh_strip --package=vala-panel --dbg-package=vala-panel-dbg
-	dh_strip --package=libvalapanel --dbg-package=libvalapanel-dbg
-	dh_strip --package=vala-panel-plugins-base --dbg-package=vala-panel-plugins-base-dbg
-	dh_strip --package=vala-panel-plugins-wnck --dbg-package=vala-panel-plugins-wnck-dbg
+	dh_strip --package=xfce4-sntray-plugin --dbg-package=xfce4-sntray-plugin-dbg
+	dh_strip --package=vala-panel-sntray--dbg-package=vala-panel-sntray-dbg
 
 # debmake generated override targets
 # This is example for Cmake (See http://bugs.debian.org/641051 )
