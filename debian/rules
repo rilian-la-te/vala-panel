@@ -33,7 +33,7 @@ override_dh_auto_configure:
 
 override_dh_strip:
 	dh_strip --package=xfce4-sntray-plugin --dbg-package=xfce4-sntray-plugin-dbg
-	dh_strip --package=vala-panel-sntray--dbg-package=vala-panel-sntray-dbg
+	dh_strip --package=vala-panel-sntray --dbg-package=vala-panel-sntray-dbg
 
 # debmake generated override targets
 # This is example for Cmake (See http://bugs.debian.org/641051 )
