@@ -400,9 +400,12 @@ namespace StatusNotifier
                 var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4);
                 if (overlay_icon != null)
                     overlay_icon = new Emblem(overlay_icon);
-                var icon = new EmblemedIcon((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ? attention_icon
+                bool build_icon = ((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ||  (main_icon != null) || (image.gicon != null));
+                GLib.EmblemedIcon? icon = null;
+                if (build_icon)
+                    icon = new EmblemedIcon((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ? attention_icon
                                                 : (main_icon ?? (image.gicon as EmblemedIcon).gicon),overlay_icon as Emblem);
-                if ((attention_icon ?? main_icon ?? overlay_icon) != null)
+                if ((attention_icon ?? main_icon ?? overlay_icon) != null && icon != null)
                 {
                     image.set_from_gicon(icon,IconSize.INVALID);
                     var icon_info = icon_theme.lookup_by_gicon(icon,image.pixel_size,IconLookupFlags.GENERIC_FALLBACK);
