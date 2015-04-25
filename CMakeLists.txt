@@ -38,7 +38,7 @@ add_subdirectory(po)
 add_subdirectory(data)
 add_subdirectory(src)
 
-set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-0.1)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-${CPACK_PACKAGE_VERSION})
 set(CPACK_SOURCE_GENERATOR TXZ)
 set(CPACK_SOURCE_IGNORE_FILES /build/;.gitignore;.*~;.kdev4;temp)
 set(CPACK_PACKAGE_VERSION ${VERSION})
