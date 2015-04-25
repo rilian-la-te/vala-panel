@@ -10,7 +10,7 @@ include(GNUInstallDirs)
 find_package(Vala)
 find_package(PkgConfig)
 set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
-
+set (VERSION "0.3.8")
 add_definitions(-w) # Disable gcc warnings
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 pkg_check_modules(GTK+ REQUIRED gtk+-3.0)
@@ -40,5 +40,6 @@ add_subdirectory(src)
 
 set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-0.1)
 set(CPACK_SOURCE_GENERATOR TXZ)
-set(CPACK_SOURCE_IGNORE_FILES /build/;.gitignore;.*~;.git;.kdev4;temp)
+set(CPACK_SOURCE_IGNORE_FILES /build/;.gitignore;.*~;.kdev4;temp)
+set(CPACK_PACKAGE_VERSION ${VERSION})
 INCLUDE(CPack)
