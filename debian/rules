@@ -33,7 +33,7 @@ override_dh_auto_configure:
 
 override_dh_strip:
 	dh_strip --package=vala-panel --dbg-package=vala-panel-dbg
-	dh_strip --package=libvalapanel --dbg-package=libvalapanel-dbg
+	dh_strip --package=libvalapanel0 --dbg-package=libvalapanel0-dbg
 	dh_strip --package=vala-panel-plugins-base --dbg-package=vala-panel-plugins-base-dbg
 	dh_strip --package=vala-panel-plugins-wnck --dbg-package=vala-panel-plugins-wnck-dbg
 
