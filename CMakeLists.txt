@@ -103,8 +103,12 @@ pkg_check_modules (CORE REQUIRED
   libpeas-gtk-1.0>=1.2
   gmodule-2.0>=2.40)
 
-pkg_check_modules (GTK316
+pkg_check_modules (GTK316 QUIET
   gtk+-3.0>=3.15
+)
+
+pkg_check_modules (GTK314 QUIET
+  gtk+-3.0>=3.13
 )
 
 set(CORE_PACKAGES
