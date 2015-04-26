@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 cmake_policy (VERSION 2.8)
-project (vala-panel)
+project (vala-panel C)
 enable_testing ()
 include(GNUInstallDirs)
 set (DATADIR "${CMAKE_INSTALL_FULL_DATADIR}/vala-panel")
@@ -14,7 +14,7 @@ set (SOVERSION 0)
 set (PLUGINS_DIRECTORY "${CMAKE_INSTALL_FULL_LIBDIR}/vala-panel/applets/")
 set (PLUGINS_DATA "${DATADIR}/applets/")
 set (PLUGINS_DATA_INSTALL "${DATADIR_INSTALL}/applets")
-set (PROFILES_DIR "/${CMAKE_INSTALL_SYSCONFDIR}/xdg/${APPNAME}")
+set (PROFILES_DIR "${CMAKE_INSTALL_SYSCONFDIR}/xdg/${APPNAME}")
 set (PREFIX ${CMAKE_INSTALL_PREFIX})
 set (DOLLAR "$")
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -72,6 +72,12 @@ endif(DPKG_PROGRAM)
 # Add 'make packages' command for building Debian and RPM packages
 set (CPACK_GENERATOR "DEB")
 include (CPack)
+
+#Add RPM build support
+include (UseRPMTools)
+if (RPMTools_FOUND)
+   RPMTools_ADD_RPM_TARGETS(package ${CMAKE_SOURCE_DIR}/rpm/vala-panel.spec.in)
+endif(RPMTools_FOUND)
 
 add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Configuration
