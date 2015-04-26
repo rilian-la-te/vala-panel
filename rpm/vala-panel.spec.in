@@ -12,10 +12,9 @@ BuildRequires: gettext
 BuildRequires: vala >= 0.24.0
 BuildRequires: gtk3-devel >= 3.12.0
 BuildRequires: libpeas-devel >= 1.2.0
-%if 0%{?suse_version} >= 1010
+%if %{defined suse_version}
 BuildRequires: libwnck-devel >= 3.4.0
-%endif
-%if 0%{?suse_version} != 1010
+%else
 BuildRequires: libwnck3-devel >= 3.4.0
 %endif
 Requires: @CMAKE_PROJECT_NAME@-libs >= @CPACK_PACKAGE_VERSION@
