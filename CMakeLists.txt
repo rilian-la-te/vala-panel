@@ -110,6 +110,10 @@ pkg_check_modules (GTK314 QUIET
   gtk+-3.0>=3.13
 )
 
+pkg_check_modules (GLIB242 QUIET
+    gio-2.0>=2.41.0
+)
+
 set(CORE_PACKAGES
   gtk+-3.0
   glib-2.0

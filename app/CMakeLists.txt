@@ -1,3 +1,6 @@
+if(GLIB242_FOUND)
+    set(GLIB242_DEFINE -D GLIB242)
+endif()
 INCLUDE(GResource)
 vala_precompile(VALA_C ${APPNAME}
     application.vala
@@ -14,6 +17,7 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.gresource.xml
     --thread
+    ${GLIB242_DEFINE}
 )
 
 add_definitions(-DG_SETTINGS_ENABLE_BACKEND)
