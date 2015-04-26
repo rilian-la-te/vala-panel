@@ -25,13 +25,7 @@ override_dh_auto_clean:
 	dh_auto_clean --buildsystem=cmake
 
 override_dh_auto_build:
-        xsltproc --nonet \
-         --param make.year.ranges 1 \
-         --param make.single.year.ranges 1 \
-         --param man.charmap.use.subset 0 \
-         -o debian/ \
-http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl\
-        debian/vala-panel.1.xml
+	docbook-to-man debian/vala-panel.1.sgml > debian/vala-panel.1
 	dh_auto_build --buildsystem=cmake
 
 # consider using -DUSE_VERSIONED_DIR=ON if backporting
