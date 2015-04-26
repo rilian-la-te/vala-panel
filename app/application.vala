@@ -84,11 +84,11 @@ namespace ValaPanel
         {
             Object(application_id: "org.valapanel.application",
                     flags: GLib.ApplicationFlags.HANDLES_COMMAND_LINE,
-                    profile: "default",
 #if VALA_0_26
+                    profile: "default",
                     resource_base_path: "/org/vala-panel/app");
 #else
-                    );
+                    profile: "default");
 #endif
         }
 
