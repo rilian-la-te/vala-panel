@@ -7,7 +7,7 @@ License: LGPL-3.0+
 %else
 License: LGPLv3.0+
 %endif
-URL: https://github.com/rilian-la-te/vala-panel
+URL: https://github.com/rilian-la-te/@CMAKE_PROJECT_NAME@
 Source: @CPACK_SOURCE_PACKAGE_FILE_NAME@.tar.gz
 Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
