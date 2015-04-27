@@ -1,4 +1,10 @@
-xfce4-sntray-plugin (0.3.12.2-1) unstable; urgency=low
+xfce4-sntray-plugin (0.3.12.2-2) vivid; urgency=low
+
+  * Fixed debian makedepend
+
+ -- Konstantin <ria.freelander@gmail.com>  Mon, 27 Apr 2015 00:57:09 +0600
+
+xfce4-sntray-plugin (0.3.12.2-1) vivid; urgency=low
 
   * New upstream version
 
