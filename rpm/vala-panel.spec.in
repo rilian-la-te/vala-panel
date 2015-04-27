@@ -46,6 +46,8 @@ make install DESTDIR=%{buildroot}
 %clean
 rm -rf %{buildroot}
 
+%post
+ldconfig
 
 %postun
 ldconfig
@@ -56,8 +58,7 @@ fi
 
 %posttrans
 set -o monitor
-ldconfig
-    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files
 %defattr(644,root,root,755)
