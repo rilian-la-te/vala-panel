@@ -46,7 +46,9 @@ make install DESTDIR=%{buildroot}
 %clean
 rm -rf %{buildroot}
 
+
 %postun
+ldconfig
 set -o monitor
 if [ $1 -eq 0 ] ; then
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
@@ -54,11 +56,13 @@ fi
 
 %posttrans
 set -o monitor
+ldconfig
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files
 %defattr(644,root,root,755)
 %doc README.md
+%{_mandir}/man1/vala-panel.1*
 %attr(755,root,root) %{_bindir}/vala-panel
 %{_datadir}/glib-2.0/schemas/org.valapanel.gschema.xml
 %config %{_sysconfdir}/xdg/vala-panel
