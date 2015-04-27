@@ -5,7 +5,7 @@ Group: User Interface/Desktops
 License: LGPLv3.0+
 URL: https://github.com/rilian-la-te/vala-panel
 Source: @CPACK_SOURCE_PACKAGE_FILE_NAME@.tar.gz
-Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas.
+Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: cmake >= 2.8.0
 BuildRequires: gettext
@@ -49,15 +49,17 @@ make install DESTDIR=%{buildroot}
 rm -rf %{buildroot}
 
 %postun
+set -o monitor
 if [ $1 -eq 0 ] ; then
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
 %posttrans
+set -o monitor
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
-%doc README.md
 %files
+%doc README.md
 %{_bindir}/vala-panel
 %{_datadir}/glib-2.0/schemas/org.valapanel.gschema.xml
 %{_sysconfdir}/xdg/*
@@ -72,15 +74,17 @@ This is a main library for @CMAKE_PROJECT_NAME@ package.
 %{_datarootdir}/locale/*
 %{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.plugin.gschema.xml
-%{_datadir}/vala-panel/images/*
+%{_datadir}/vala-panel/images
 %{_datadir}/icons/*
 
 %postun libs
+set -o monitor
 if [ $1 -eq 0 ] ; then
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
 %posttrans libs
+set -o monitor
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %package devel
@@ -91,17 +95,19 @@ This is a development files for @CMAKE_PROJECT_NAME@ package.
 %files devel
 %{_libdir}/libvalapanel.so
 %{_datarootdir}/vala/*
-%{_includedir}/vala-panel/*
+%{_includedir}/vala-panel
 %{_libdir}/pkgconfig/*
 
 %package plugins-base
 Group: User Interface/Desktops
-Summary: Plugins for @CMAKE_PROJECT_NAME@ - non X11 plugins.
+Summary: Plugins for @CMAKE_PROJECT_NAME@ - non X11 plugins
 %description plugins-base
  This package contains main plugins for @CMAKE_PROJECT_NAME@:
  clock, launchbar, applications menu and so on.
 %files plugins-base
 %{_datadir}/glib-2.0/schemas/org.valapanel.builtin.gschema.xml
+%dir %{_libdir}/vala-panel
+%dir %{_libdir}/vala-panel/applets
 %{_libdir}/vala-panel/applets/libclock.so
 %{_libdir}/vala-panel/applets/libcpu.so
 %{_libdir}/vala-panel/applets/libdirmenu.so
@@ -126,13 +132,15 @@ fi
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %package plugins-wnck
-Summary: Plugins for @CMAKE_PROJECT_NAME@ - X11 plugins.
+Summary: Plugins for @CMAKE_PROJECT_NAME@ - X11 plugins
 Group: User Interface/Desktops
 %description plugins-wnck
  This package contains X11 plugins for @CMAKE_PROJECT_NAME@:
  tasklist, system tray, and others.
 %files plugins-wnck
 %{_datadir}/glib-2.0/schemas/org.valapanel.X.gschema.xml
+%dir %{_libdir}/vala-panel
+%dir %{_libdir}/vala-panel/applets
 %{_libdir}/vala-panel/applets/libxembed.so
 %{_libdir}/vala-panel/applets/libdeskno.so
 %{_libdir}/vala-panel/applets/libtasklist.so
