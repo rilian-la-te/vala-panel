@@ -10,7 +10,9 @@ Vcs-Browser: https://github.com/rilian-la-te/vala-panel
 
 Package: vala-panel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libvalapanel0 (= ${binary:Version})
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: libvalapanel0
 Description: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas.
  Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
  It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is
@@ -38,11 +40,12 @@ Description: Vala Panel - debug info.
  .
  This package contains debug information for vala-panel binary.
 
-Package: libvalapanel0-dev
+Package: vala-panel-dev
 Section: libdevel
 Architecture: any
-Depends: libvalapanel0 (= ${binary:Version}), ${misc:Depends}
-Description: Shared library for vala-panel - development files
+Depends: vala-panel (= ${binary:Version}), ${misc:Depends}
+Replaces: libvalapanel0-dev
+Description: vala-panel - development files
  Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
  It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is
  completely rewritten in Vala. It offers same functionality as LXPanel, but:
@@ -54,40 +57,6 @@ Description: Shared library for vala-panel - development files
  .
  This package contains header files for building plugins
  or window managers with vala-panel support.
-
-Package: libvalapanel0
-Architecture: any
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Shared library for vala-panel - binary files
- Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
- It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is
- completely rewritten in Vala. It offers same functionality as LXPanel, but:
- 1. It has slightly more memory usage.
- 2. X11 dependency is stripped from panel core (but it is not tested on
-    another display servers, such as Wayland or Mir, right now).
- 3. Some of former LXPanel plugins is separate binaries now
-    and lives in another packages (Example is volume applet).
- .
- This package contains main library for vala-panel.
- It is required to run vala-panel application.
-
-Package: libvalapanel0-dbg
-Architecture: any
-Section: debug
-Priority: extra
-Depends: ${misc:Depends}, vala-panel (= ${binary:Version})
-Description: Shared library for vala-panel - debug info
- Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
- It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is
- completely rewritten in Vala. It offers same functionality as LXPanel, but:
- 1. It has slightly more memory usage.
- 2. X11 dependency is stripped from panel core (but it is not tested on
-    another display servers, such as Wayland or Mir, right now).
- 3. Some of former LXPanel plugins is separate binaries now
-    and lives in another packages (Example is volume applet).
- .
- This package contains debug information for vala-panel library.
 
 Package: vala-panel-plugins-base
 Architecture: any

@@ -30,11 +30,10 @@ override_dh_auto_build:
 
 # consider using -DUSE_VERSIONED_DIR=ON if backporting
 override_dh_auto_configure:
-	dh_auto_configure --buildsystem=cmake -- -DCMAKE_BUILD_TYPE=RelWithDebInfo
+	dh_auto_configure --buildsystem=cmake -- -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGSETTINGS_COMPILE=OFF -DCMAKE_INSTALL_SYSCONFDIR=/etc
 
 override_dh_strip:
 	dh_strip --package=vala-panel --dbg-package=vala-panel-dbg
-	dh_strip --package=libvalapanel0 --dbg-package=libvalapanel0-dbg
 	dh_strip --package=vala-panel-plugins-base --dbg-package=vala-panel-plugins-base-dbg
 	dh_strip --package=vala-panel-plugins-wnck --dbg-package=vala-panel-plugins-wnck-dbg
 
