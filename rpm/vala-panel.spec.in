@@ -72,6 +72,7 @@ set -o monitor
 %package lang
 Group: User Interface/Desktops
 Summary: Translations for @CMAKE_PROJECT_NAME@
+BuildArch: noarch
 Requires: @CMAKE_PROJECT_NAME@ = @CPACK_PACKAGE_VERSION@
 %description lang
 This is a translation files for @CMAKE_PROJECT_NAME@ package.

@@ -1,0 +1,47 @@
+.TH "Vala Panel" "1" 
+.SH "NAME" 
+vala-panel \(em  Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas. 
+.SH "SYNOPSIS" 
+.PP 
+\fBvala-panel\fR [         {\fB-c\fP  | \fB\-\-command\fP }          \fIcommand name\fR       ]  [         {\fB-p\fP  | \fB\-\-profile\fP }          \fIprofile name\fR       ]  
+.PP 
+\fBvala-panel\fR [           {\fB-h\fP  | \fB\-\-help\fP }            |            {\fB-v\fP  | \fB\-\-version\fP }           ]  
+.SH "DESCRIPTION" 
+.PP 
+This manual page documents briefly the 
+\fBvala-panel\fR command. 
+.PP 
+This manual page was written for the Debian distribution 
+because the original program does not have a manual page. 
+.PP 
+\fBvala-panel\fR is a program that runs a panel 
+.SH "OPTIONS" 
+.PP 
+The program follows the usual GNU command line syntax, 
+with long options starting with two dashes (`\-').  A summary of 
+options is included below.  For a complete description, see the 
+\fBinfo\fP\fB(1)\fP files. 
+.IP "\fB-c \fIcommand\fR\fP" 10 
+.IP "\fB\-\-command=\fIcommand name\fR\fP" 10 
+Runs specific command on already opened panel. 
+Valid commands without arguments are: menu, preferences, run, about, logout, shutdown and quit. 
+Valid commands with one string argument are launch-id, launch-uri, launch-command and panel-preferences. 
+.IP "\fB-p \fIprofile\fR\fP" 10 
+.IP "\fB\-\-profile=\fIprofile name\fR\fP" 10 
+Runs panel with specified profile. This option will have an effect only if panel is not runs now. 
+There are three preinstalled profiles: default, two_panels and appmenu. 
+.IP "\fB-h\fP" 10 
+.IP "\fB\-\-help\fP" 10 
+Show summary of options. 
+.IP "\fB-v\fP" 10 
+.IP "\fB\-\-version\fP" 10 
+Show version of program. 
+.SH "FILES" 
+.IP "\fB${$XDG_CONFIG_HOME}/vala-panel/\fP" 10 
+The per-user configuration folder to control the 
+behaviour of \fBvala-panel\fP. 
+It contains subfolders only, and it must contain at least one subfolder after a first run of \fBvala-panel\fP. 
+Each subfolder is a profile for panel, and its name used as profile name with profile options. 
+See default profiles for futher reference. 
+ 
+.\" created by instant / docbook-to-man, Sun 26 Apr 2015, 14:16 
