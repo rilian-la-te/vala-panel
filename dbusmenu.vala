@@ -45,11 +45,12 @@ namespace DBusMenu
         public abstract signal void item_activation_requested(int id, uint timestamp);
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
-
-    public class PropertyStore : Object
+    [Compact, CCode (ref_function = "dbus_menu_property_store_ref", unref_function = "dbus_menu_property_store_unref")]
+    internal class PropertyStore
     {
-        VariantDict dict;
-        HashTable<string,VariantType> checker;
+        internal VariantDict dict;
+        internal HashTable<string,VariantType> checker;
+        internal int ref_count = 1;
         public Variant? get_prop(string name)
         {
             var type = checker.lookup(name);
@@ -64,7 +65,7 @@ namespace DBusMenu
                 dict.insert_value(name,val);
             init_default();
         }
-        construct
+        public PropertyStore (Variant? props)
         {
             dict = new VariantDict();
             checker = new HashTable<string,VariantType>(str_hash,str_equal);
@@ -89,9 +90,6 @@ namespace DBusMenu
             checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
             checker.insert("x-valapanel-draw-value", VariantType.BOOLEAN);
             checker.insert("x-valapanel-format-value", VariantType.STRING);
-        }
-        public PropertyStore (Variant? props)
-        {
             if (props != null)
             {
                 VariantIter iter = props.iterator();
@@ -115,6 +113,17 @@ namespace DBusMenu
             if(!dict.contains("disposition"))
                 dict.insert_value("disposition", new Variant.string("normal"));
         }
+        public unowned PropertyStore @ref ()
+        {
+            GLib.AtomicInt.add (ref this.ref_count, 1);
+            return this;
+        }
+        public void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
     }
 
     public class Item : Object
@@ -213,21 +222,17 @@ namespace DBusMenu
             client.request_about_to_show(this.id);
         }
     }
-    public class Client : Object
+    public class Client
     {
         private HashTable<int,Item> items;
         private bool layout_update_required;
         private bool layout_update_in_progress;
         private int[] requested_props_ids;
         private uint layout_revision;
-        public Iface iface
-        {get; private set;}
-        construct
-        {
-            items = new HashTable<int,Item>(direct_hash, direct_equal);
-        }
+        public Iface iface {get; private set;}
         public Client(string object_name, string object_path)
         {
+            items = new HashTable<int,Item>(direct_hash, direct_equal);
             layout_revision = 0;
             try{
                 this.iface = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
