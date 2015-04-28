@@ -223,12 +223,8 @@ internal class CpuMonitor : Monitor
         if (m!= null && m.stats != null)
         {
             int ring_pos = (m.ring_cursor == 0) ? m.pixmap_width - 1 : m.ring_cursor - 1;
-            string tooltip_text = _("CPU usage: %.2f%%").printf(m.stats[ring_pos] * 100);
             if (m.da != null)
-            {
-                m.da.has_tooltip = true;
-                m.da.set_tooltip_text(tooltip_text);
-            }
+                m.da.tooltip_text = _("CPU usage: %.2f%%").printf(m.stats[ring_pos] * 100);;
         }
     }
 }
@@ -315,16 +311,11 @@ internal class MemMonitor : Monitor
     {
         if (m!= null && m.stats != null)
         {
-            string tooltip_text;
             int ring_pos = (m.ring_cursor == 0) ? m.pixmap_width - 1 : m.ring_cursor - 1;
-            tooltip_text = _("RAM usage: %.1fMB (%.2f%%)").printf(
-                    m.stats[ring_pos] * m.total / 1024,
-                    m.stats[ring_pos] * 100);
             if (m.da != null)
-            {
-                m.da.has_tooltip = true;
-                m.da.set_tooltip_text(tooltip_text);
-            }
+                m.da.tooltip_text = _("RAM usage: %.1fMB (%.2f%%)").printf(
+                                            m.stats[ring_pos] * m.total / 1024,
+                                            m.stats[ring_pos] * 100);
         }
     }
 }
