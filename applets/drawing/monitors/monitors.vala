@@ -41,7 +41,7 @@ internal class Monitor
     internal unowned UpdateTooltipFunc update_tooltip;
     internal bool update()
     {
-        if (update_tooltip != null)
+        if (update_tooltip != null && this.da != null)
             update_tooltip(this);
         return update_monitor(this);
     }
@@ -128,6 +128,11 @@ internal class Monitor
             return true;
         });
     }
+    ~Monitor()
+    {
+        this.da.destroy();
+        this.da = null;
+    }
     protected void redraw_pixmap ()
     {
         Cairo.Context cr = new Cairo.Context(pixmap);
@@ -213,13 +218,17 @@ internal class CpuMonitor : Monitor
         }
         return true;
     }
-    internal static void tooltip_update_cpu(Monitor m)
+    internal static void tooltip_update_cpu(Monitor? m)
     {
-        if (m.stats != null)
+        if (m!= null && m.stats != null)
         {
             int ring_pos = (m.ring_cursor == 0) ? m.pixmap_width - 1 : m.ring_cursor - 1;
             string tooltip_text = _("CPU usage: %.2f%%").printf(m.stats[ring_pos] * 100);
-            m.da.set_tooltip_text(tooltip_text);
+            if (m.da != null)
+            {
+                m.da.has_tooltip = true;
+                m.da.set_tooltip_text(tooltip_text);
+            }
         }
     }
 }
@@ -302,16 +311,20 @@ internal class MemMonitor : Monitor
         m.redraw_pixmap ();
         return true;
     }
-    internal static void tooltip_update_mem(Monitor m)
+    internal static void tooltip_update_mem(Monitor? m)
     {
-        if (m.stats != null)
+        if (m!= null && m.stats != null)
         {
             string tooltip_text;
             int ring_pos = (m.ring_cursor == 0) ? m.pixmap_width - 1 : m.ring_cursor - 1;
             tooltip_text = _("RAM usage: %.1fMB (%.2f%%)").printf(
                     m.stats[ring_pos] * m.total / 1024,
                     m.stats[ring_pos] * 100);
-            m.da.set_tooltip_text(tooltip_text);
+            if (m.da != null)
+            {
+                m.da.has_tooltip = true;
+                m.da.set_tooltip_text(tooltip_text);
+            }
         }
     }
 }
@@ -373,6 +386,7 @@ public class Monitors: Applet, AppletConfigurable
             else if (key == RAM_CL && monitors[(int)MonitorType.RAM] != null)
                 monitors[(int)MonitorType.RAM].foreground_color.parse(settings.get_string(RAM_CL));
         });
+        this.destroy.connect(()=>{Source.remove(timer);});
         this.add(box);
         this.show_all();
     }
