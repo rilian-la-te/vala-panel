@@ -7,7 +7,7 @@ License: LGPL-3.0+
 %else
 License: LGPLv3.0+
 %endif
-URL: https://github.com/rilian-la-te/@CMAKE_PROJECT_NAME@
+URL: https://github.com/rilian-la-te/%{name}
 Source: @CPACK_SOURCE_PACKAGE_FILE_NAME@.tar.gz
 Summary: This package provides StatusNotifier plugin for xfce4-panel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -54,11 +54,11 @@ rm -rf %{buildroot}
 
 %package lang
 Group: User Interface/Desktops
-Summary: Translations for @CMAKE_PROJECT_NAME@
+Summary: Translations for %{name}
 BuildArch: noarch
 Requires: vala-panel-sntray-plugin
 %description lang
-This is a translation files for @CMAKE_PROJECT_NAME@ package.
+This is a translation files for %{name} package.
 %files lang -f %{name}.lang
 %defattr(644,root,root,755)
 
