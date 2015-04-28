@@ -66,7 +66,6 @@ set -o monitor
 %{_libdir}/libvalapanel.so.*
 %dir %{_datadir}/vala-panel
 %{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.plugin.gschema.xml
 %{_datadir}/vala-panel/images
 %{_datadir}/icons/*
 
@@ -104,6 +103,7 @@ Summary: Plugins for %{name} - non X11 plugins
 %files plugins-base
 %defattr(644,root,root,755)
 %{_datadir}/glib-2.0/schemas/org.valapanel.builtin.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.valapanel.plugins.gschema.xml
 %dir %{_libdir}/vala-panel
 %dir %{_libdir}/vala-panel/applets
 %{_libdir}/vala-panel/applets/libclock.so
@@ -113,6 +113,7 @@ Summary: Plugins for %{name} - non X11 plugins
 %{_libdir}/vala-panel/applets/liblaunchbar.so
 %{_libdir}/vala-panel/applets/libmenumodel.so
 %{_libdir}/vala-panel/applets/libseparator.so
+%{_libdir}/vala-panel/applets/libmonitors.so
 %{_libdir}/vala-panel/applets/clock.plugin
 %{_libdir}/vala-panel/applets/cpu.plugin
 %{_libdir}/vala-panel/applets/dirmenu.plugin
@@ -120,6 +121,7 @@ Summary: Plugins for %{name} - non X11 plugins
 %{_libdir}/vala-panel/applets/launchbar.plugin
 %{_libdir}/vala-panel/applets/menumodel.plugin
 %{_libdir}/vala-panel/applets/separator.plugin
+%{_libdir}/vala-panel/applets/monitors.plugin
 
 %postun plugins-base
 set -o monitor
