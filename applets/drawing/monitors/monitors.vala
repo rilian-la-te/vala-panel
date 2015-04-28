@@ -124,8 +124,12 @@ internal class Monitor
             return false;
         });
         da.button_press_event.connect((e)=>{
-            MenuMaker.activate_menu_launch_command(null,plugin.settings.get_value(Monitors.ACTION));
-            return true;
+            if (e.button == 1)
+            {
+                MenuMaker.activate_menu_launch_command(null,plugin.settings.get_value(Monitors.ACTION));
+                return true;
+            }
+            return false;
         });
     }
     ~Monitor()
