@@ -7,7 +7,7 @@ License: LGPL-3.0+
 %else
 License: LGPLv3.0+
 %endif
-URL: https://github.com/rilian-la-te/@CMAKE_PROJECT_NAME@
+URL: https://github.com/rilian-la-te/%{name}
 Source: @CPACK_SOURCE_PACKAGE_FILE_NAME@.tar.gz
 Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -72,22 +72,22 @@ set -o monitor
 
 %package lang
 Group: User Interface/Desktops
-Summary: Translations for @CMAKE_PROJECT_NAME@
+Summary: Translations for %{name}
 BuildArch: noarch
-Requires: @CMAKE_PROJECT_NAME@ = @CPACK_PACKAGE_VERSION@
+Requires: %{name} = %{version}
 %description lang
-This is a translation files for @CMAKE_PROJECT_NAME@ package.
+This is a translation files for %{name} package.
 %files lang -f %{name}.lang
 %defattr(644,root,root,755)
 
 %package devel
 Group: Development/Libraries
-Summary: Shared library for @CMAKE_PROJECT_NAME@ - development files
-Requires: @CMAKE_PROJECT_NAME@ = @CPACK_PACKAGE_VERSION@
+Summary: Shared library for %{name} - development files
+Requires: %{name} = %{version}
 Requires: pkgconfig
 %description devel
 Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
-This is a development files for @CMAKE_PROJECT_NAME@.
+This is a development files for %{name}.
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/libvalapanel.so
@@ -97,9 +97,9 @@ This is a development files for @CMAKE_PROJECT_NAME@.
 
 %package plugins-base
 Group: User Interface/Desktops
-Summary: Plugins for @CMAKE_PROJECT_NAME@ - non X11 plugins
+Summary: Plugins for %{name} - non X11 plugins
 %description plugins-base
- This package contains main plugins for @CMAKE_PROJECT_NAME@:
+ This package contains main plugins for %{name}:
  clock, launchbar, applications menu and so on.
 %files plugins-base
 %defattr(644,root,root,755)
@@ -132,10 +132,10 @@ set -o monitor
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %package plugins-wnck
-Summary: Plugins for @CMAKE_PROJECT_NAME@ - X11 plugins
+Summary: Plugins for %{name} - X11 plugins
 Group: User Interface/Desktops
 %description plugins-wnck
- This package contains X11 plugins for @CMAKE_PROJECT_NAME@:
+ This package contains X11 plugins for %{name}:
  tasklist, system tray, and others.
 %files plugins-wnck
 %defattr(644,root,root,755)
