@@ -43,22 +43,10 @@ namespace ValaPanel
         {
             {"remove",activate_remove,null,null,null}
         };
-        public Gtk.Widget background_widget
-        {
-            get; set;
-        }
-        public ValaPanel.Toplevel toplevel
-        {
-            get; construct;
-        }
-        public unowned GLib.Settings? settings
-        {
-            get; construct;
-        }
-        public uint number
-        {
-            get; construct;
-        }
+        public Gtk.Widget background_widget {get; set;}
+        public ValaPanel.Toplevel toplevel {get; construct;}
+        public unowned GLib.Settings? settings{get; construct;}
+        public uint number {get; construct;}
         public abstract void create();
         public virtual void update_context_menu(ref GLib.Menu parent_menu){}
         public Applet(ValaPanel.Toplevel top, GLib.Settings? s, uint num)
