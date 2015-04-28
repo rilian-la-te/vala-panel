@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-09 23:10+0600\n"
+"POT-Creation-Date: 2015-04-29 00:14+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,20 +44,24 @@ msgid "_OK"
 msgstr ""
 
 #: ../lib/panel-toplevel.vala:1194 ../lib/panel-toplevel.vala:1193
+#: ../lib/panel-toplevel.vala:1212
 msgid "There is no room for another panel. All the edges are taken."
 msgstr ""
 
 #: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
+#: ../lib/panel-toplevel.vala:1214
 msgid "Error"
 msgstr ""
 
 #: ../lib/panel-toplevel.vala:1213 ../lib/panel-toplevel.vala:1212
+#: ../lib/panel-toplevel.vala:1231
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
 msgstr ""
 
 #: ../lib/panel-toplevel.vala:1215 ../lib/panel-toplevel.vala:1214
+#: ../lib/panel-toplevel.vala:1233
 msgid "Confirm"
 msgstr ""
 
@@ -130,10 +134,12 @@ msgid "cmd"
 msgstr ""
 
 #: ../app/application.vala:180 ../app/application.vala:179
+#: ../app/application.vala:183
 msgid "%s - Version %s\n"
 msgstr ""
 
 #: ../app/application.vala:211 ../app/application.vala:210
+#: ../app/application.vala:214
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
@@ -778,4 +784,44 @@ msgstr ""
 
 #: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
 msgid "Can shows desktop and shades window."
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:231
+msgid "CPU usage: %.2f%%"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:320
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:348
+msgid "Resource monitors"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:350
+msgid "Display CPU usage"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:351
+msgid "CPU color"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:352
+msgid "Display RAM usage"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:353
+msgid "RAM color"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.vala:354
+msgid "Action when clicked"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+msgid "Monitors Graph"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
+msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr ""

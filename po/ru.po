@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-09 23:10+0600\n"
-"PO-Revision-Date: 2015-04-09 23:13+0600\n"
+"POT-Creation-Date: 2015-04-29 00:14+0600\n"
+"PO-Revision-Date: 2015-04-29 00:16+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -46,14 +46,17 @@ msgid "_OK"
 msgstr "_ОК"
 
 #: ../lib/panel-toplevel.vala:1194 ../lib/panel-toplevel.vala:1193
+#: ../lib/panel-toplevel.vala:1212
 msgid "There is no room for another panel. All the edges are taken."
 msgstr "Нет места для новой панели. Все стороны экрана заняты."
 
 #: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
+#: ../lib/panel-toplevel.vala:1214
 msgid "Error"
 msgstr "Ошибка"
 
 #: ../lib/panel-toplevel.vala:1213 ../lib/panel-toplevel.vala:1212
+#: ../lib/panel-toplevel.vala:1231
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
@@ -62,6 +65,7 @@ msgstr ""
 "<b>Внимание: это необратимая операция.</b>"
 
 #: ../lib/panel-toplevel.vala:1215 ../lib/panel-toplevel.vala:1214
+#: ../lib/panel-toplevel.vala:1233
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -134,10 +138,12 @@ msgid "cmd"
 msgstr "cmd"
 
 #: ../app/application.vala:180 ../app/application.vala:179
+#: ../app/application.vala:183
 msgid "%s - Version %s\n"
 msgstr "%s - Версия %s\n"
 
 #: ../app/application.vala:211 ../app/application.vala:210
+#: ../app/application.vala:214
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
@@ -792,6 +798,46 @@ msgstr "Показать рабочий стол"
 msgid "Can shows desktop and shades window."
 msgstr "Может сворачивать все окна в заголовок или на панель задач."
 
+#: ../applets/drawing/monitors/monitors.vala:231
+msgid "CPU usage: %.2f%%"
+msgstr "Загрузка ЦП: %.2f%%"
+
+#: ../applets/drawing/monitors/monitors.vala:320
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr "Использовано ОЗУ: %.1fМб (%.2f%%)"
+
+#: ../applets/drawing/monitors/monitors.vala:348
+msgid "Resource monitors"
+msgstr "Мониторинг ресурсов"
+
+#: ../applets/drawing/monitors/monitors.vala:350
+msgid "Display CPU usage"
+msgstr "Показывает загрузку процессора"
+
+#: ../applets/drawing/monitors/monitors.vala:351
+msgid "CPU color"
+msgstr "Цвет ЦПУ"
+
+#: ../applets/drawing/monitors/monitors.vala:352
+msgid "Display RAM usage"
+msgstr "Показывать использование памяти"
+
+#: ../applets/drawing/monitors/monitors.vala:353
+msgid "RAM color"
+msgstr "Цвет ОЗУ"
+
+#: ../applets/drawing/monitors/monitors.vala:354
+msgid "Action when clicked"
+msgstr "Выполняемая команда при щелчке"
+
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+msgid "Monitors Graph"
+msgstr "Графики мониторинга"
+
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
+msgid "Draws monitors graph on panel (for CPU and RAM)."
+msgstr "Рисует графики используемых ресурсов на панели (для CPU и RAM)."
+
 #~ msgid "SimplePanel"
 #~ msgstr "SimplePanel"
 
@@ -999,9 +1045,6 @@ msgstr "Может сворачивать все окна в заголовок 
 
 #~ msgid "CPU Usage Monitor"
 #~ msgstr "Монитор загрузки процессора"
-
-#~ msgid "Display CPU usage"
-#~ msgstr "Показывает загрузку процессора"
 
 #~ msgid "Display workspace number, by cmeury@users.sf.net"
 #~ msgstr "Показывает номер рабочего места"
@@ -1716,24 +1759,6 @@ msgstr "Может сворачивать все окна в заголовок 
 
 #~ msgid "Add indicator applets to the panel"
 #~ msgstr "Добавить апплеты индикаторов на панель"
-
-#~ msgid "CPU usage: %.2f%%"
-#~ msgstr "Загрузка ЦП: %.2f%%"
-
-#~ msgid "RAM usage: %.1fMB (%.2f%%)"
-#~ msgstr "Использовано ОЗУ: %.1fМб (%.2f%%)"
-
-#~ msgid "Resource monitors"
-#~ msgstr "Мониторинг ресурсов"
-
-#~ msgid "CPU color"
-#~ msgstr "Цвет ЦПУ"
-
-#~ msgid "Display RAM usage"
-#~ msgstr "Показывать использование памяти"
-
-#~ msgid "RAM color"
-#~ msgstr "Цвет ОЗУ"
 
 #~ msgid "Action when clicked (default: lxtask)"
 #~ msgstr "Действие по щелчку (по умолчанию: отобразить календарь)"

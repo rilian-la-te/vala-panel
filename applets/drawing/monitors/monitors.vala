@@ -286,7 +286,7 @@ internal class MemMonitor : Monitor
         }
         if (readmask != 0)
         {
-            warning(""""monitors: Couldn't read all values from /proc/meminfo:
+            warning("""monitors: Could not read all values from /proc/meminfo:
                       readmask %x""", readmask);
             return false;
         }
@@ -308,7 +308,7 @@ internal class MemMonitor : Monitor
         if (m.ring_cursor >= m.pixmap_width)
             m.ring_cursor = 0;
         /* Redraw the pixmap, with the new sample */
-        m.redraw_pixmap ();
+        m.redraw_pixmap();
         return true;
     }
     internal static void tooltip_update_mem(Monitor? m)
