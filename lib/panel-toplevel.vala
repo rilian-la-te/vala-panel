@@ -391,7 +391,7 @@ namespace ValaPanel
             settings.init_plugin_list();
             this.show();
             this.stick();
-            foreach(var pl in settings.plugins)
+            foreach(unowned PluginSettings pl in settings.plugins)
                 load_applet(pl);
             update_applet_positions();
             this.present();
@@ -824,8 +824,8 @@ namespace ValaPanel
             if (local_applets.contains(type))
                 return;
             // Iterate the children, and then load them into the panel
-            PluginSettings? pl = null;
-            foreach (var s in settings.plugins)
+            unowned PluginSettings? pl = null;
+            foreach (unowned PluginSettings s in settings.plugins)
                 if (s.default_settings.get_string(Key.NAME) == type)
                 {
                     pl = s;

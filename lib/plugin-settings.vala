@@ -93,7 +93,6 @@ namespace ValaPanel
             plugins.append(settings);
             return settings;
         }
-
         internal PluginSettings add_plugin_settings(string name)
         {
             var num = find_free_num ();
