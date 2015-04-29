@@ -24,7 +24,6 @@ namespace ValaPanel
         internal GLib.Settings config_settings;
         internal uint number;
         internal int ref_count = 1;
-
         internal PluginSettings(ToplevelSettings settings, string name, uint num)
         {
             this.number = num;
@@ -66,7 +65,7 @@ namespace ValaPanel
         internal string root_name;
         internal string root_schema;
         internal string root_path;
-        internal int ref_count;
+        internal int ref_count = 1;
         internal ToplevelSettings.full(string file, string schema, string path, string? root)
         {
             this.filename = file;
@@ -108,7 +107,6 @@ namespace ValaPanel
             plugins.append(settings);
             return settings;
         }
-
         internal PluginSettings add_plugin_settings(string name)
         {
             var num = find_free_num ();
