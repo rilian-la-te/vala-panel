@@ -45,12 +45,11 @@ namespace DBusMenu
         public abstract signal void item_activation_requested(int id, uint timestamp);
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
-    [Compact, CCode (ref_function = "dbus_menu_property_store_ref", unref_function = "dbus_menu_property_store_unref")]
-    internal class PropertyStore
+    [Compact]
+    private class PropertyStore
     {
         internal VariantDict dict;
         internal HashTable<string,VariantType> checker;
-        internal int ref_count = 1;
         public Variant? get_prop(string name)
         {
             var type = checker.lookup(name);
@@ -113,17 +112,6 @@ namespace DBusMenu
             if(!dict.contains("disposition"))
                 dict.insert_value("disposition", new Variant.string("normal"));
         }
-        public unowned PropertyStore @ref ()
-        {
-            GLib.AtomicInt.add (ref this.ref_count, 1);
-            return this;
-        }
-        public void unref ()
-        {
-            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
-                this.free ();
-        }
-        private extern void free ();
     }
 
     public class Item : Object
