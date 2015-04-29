@@ -16,13 +16,14 @@ namespace ValaPanel
         internal static const string PACK = "pack-type";
         internal static const string POSITION = "position";
     }
+    [Compact, CCode (ref_function = "vala_panel_plugin_settings_ref", unref_function = "vala_panel_plugin_settings_unref")]
     internal class PluginSettings
     {
         internal string path_append;
         internal GLib.Settings default_settings;
         internal GLib.Settings config_settings;
         internal uint number;
-
+        internal int ref_count = 1;
         internal PluginSettings(ToplevelSettings settings, string name, uint num)
         {
             this.number = num;
@@ -42,7 +43,19 @@ namespace ValaPanel
                                                 id, settings.backend, path);
             }
         }
+        public unowned PluginSettings @ref ()
+        {
+            GLib.AtomicInt.add (ref this.ref_count, 1);
+            return this;
+        }
+        public void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
     }
+    [Compact, CCode (ref_function = "vala_panel_toplevel_settings_ref", unref_function = "vala_panel_toplevel_settings_unref")]
     internal class ToplevelSettings
     {
         internal unowned GLib.SList<PluginSettings> plugins;
@@ -52,6 +65,7 @@ namespace ValaPanel
         internal string root_name;
         internal string root_schema;
         internal string root_path;
+        internal int ref_count = 1;
         internal ToplevelSettings.full(string file, string schema, string path, string? root)
         {
             this.filename = file;
@@ -163,5 +177,16 @@ namespace ValaPanel
                     return pl;
             return null;
         }
+        public unowned ToplevelSettings @ref ()
+        {
+            GLib.AtomicInt.add (ref this.ref_count, 1);
+            return this;
+        }
+        public void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
     }
 }
