@@ -2,5 +2,6 @@
 
 <gresources>
   <gresource prefix="/org/vala-panel/launchbar">
+    <file compressed="true" preprocess="xml-stripblanks">config.ui</file>
   </gresource>
 </gresources>

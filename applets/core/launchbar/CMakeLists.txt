@@ -1,6 +1,8 @@
 set(PLUGIN_NAME launchbar)
 vala_precompile(VALA_C ${PLUGIN_NAME}
     ${PLUGIN_NAME}.vala
+    ${PLUGIN_NAME}-config.vala
+    ${PLUGIN_NAME}-button.vala
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
