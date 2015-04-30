@@ -161,8 +161,10 @@ namespace ValaPanel
         {
             show_config_dialog();
         }
-        internal void show_config_dialog()
+        public void show_config_dialog()
         {
+            if (!(this is AppletConfigurable))
+                return;
             if (dialog == null)
             {
                 int x,y;

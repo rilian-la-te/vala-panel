@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.18.1 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <object class="GtkBox" id="box1">
+  <object class="GtkBox" id="box-popover">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
@@ -20,102 +20,106 @@
       </packing>
     </child>
     <child>
-      <object class="GtkScrolledWindow" id="scrolledwindow1">
+      <object class="GtkStack" id="main-stack">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="shadow_type">in</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkViewport" id="viewport1">
+          <object class="GtkAppChooserWidget" id="choose-desktop">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="content_type">image/png</property>
+            <property name="show_recommended">False</property>
+            <property name="show_other">True</property>
+            <property name="show_all">True</property>
+            <property name="default_text" translatable="yes">Add launcher from installed applications</property>
+            <signal name="application-activated" handler="on_application_activated" swapped="no"/>
+          </object>
+          <packing>
+            <property name="name">page-apps</property>
+            <property name="title" translatable="yes">Applications</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="box2">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkStack" id="main-stack">
+              <object class="GtkFileChooserWidget" id="choose-file">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkAppChooserWidget" id="choose-desktop">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="show_default">True</property>
-                    <property name="show_fallback">True</property>
-                    <property name="show_other">True</property>
-                    <property name="show_all">True</property>
-                    <property name="default_text" translatable="yes">Choose new application to quicklaunch</property>
-                  </object>
-                  <packing>
-                    <property name="name">page-apps</property>
-                    <property name="title" translatable="yes">Applications</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box2">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkFileChooserWidget" id="choose-file">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="create_folders">False</property>
-                        <property name="preview_widget_active">False</property>
-                        <property name="use_preview_label">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">-1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkCheckButton" id="check-folder">
-                        <property name="label" translatable="yes">Add folder contents instead of folder.</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="xalign">0</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="name">page-fhs</property>
-                    <property name="title" translatable="yes">Files</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="create_folders">False</property>
+                <property name="preview_widget_active">False</property>
+                <property name="use_preview_label">False</property>
+                <signal name="file-activated" handler="on_file_activated" swapped="no"/>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">-1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="check-folder">
+                <property name="label" translatable="yes">Add folder contents instead of folder.</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
+          <packing>
+            <property name="name">page-fhs</property>
+            <property name="title" translatable="yes">Files</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">True</property>
+        <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
   </object>
-  <object class="GtkImage" id="image-cancel">
+  <object class="GtkImage" id="image-down">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="icon_name">window-close-symbolic</property>
+    <property name="icon_name">go-down-symbolic</property>
   </object>
-  <object class="GtkImage" id="image-ok">
+  <object class="GtkImage" id="image-remove">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="icon_name">list-add-symbolic</property>
+    <property name="icon_name">list-remove-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image-up">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-up-symbolic</property>
+  </object>
+  <object class="GtkListStore" id="liststore-currentitems">
+    <columns>
+      <!-- column-name ID -->
+      <column type="gchararray"/>
+      <!-- column-name Icon -->
+      <column type="GIcon"/>
+      <!-- column-name Display -->
+      <column type="gchararray"/>
+    </columns>
   </object>
   <template class="LaunchBarConfig" parent="GtkDialog">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Launch Bar Configuration</property>
     <property name="window_position">center</property>
-    <property name="default_width">320</property>
-    <property name="default_height">260</property>
-    <property name="icon">panel.png</property>
+    <property name="default_width">800</property>
+    <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
@@ -126,32 +130,6 @@
           <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="button-cancel">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image">image-cancel</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button-ok">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image">image-ok</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -160,21 +138,129 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkBox" id="box3">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkTreeView" id="treeview1">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="model">liststore-currentitems</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection" id="selection-items"/>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="colum-icon">
+                    <property name="title" translatable="yes">Icon</property>
+                    <child>
+                      <object class="GtkCellRendererPixbuf" id="renderer-icon">
+                        <property name="stock_size">4</property>
+                      </object>
+                      <attributes>
+                        <attribute name="gicon">1</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="column-id">
+                    <property name="title" translatable="yes">Name</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="renderer-id"/>
+                      <attributes>
+                        <attribute name="text">2</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="box4">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkMenuButton" id="button-add">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <child>
+                      <object class="GtkImage" id="image-add-top">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">list-add-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button-remove">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">image-remove</property>
+                    <signal name="clicked" handler="on_remove_button_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button-up">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">image-up</property>
+                    <signal name="clicked" handler="on_up_button_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button-down">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">image-down</property>
+                    <signal name="clicked" handler="on_down_button_clicked" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
     </child>
   </template>
-  <object class="GtkListStore" id="liststore-currentitems">
-    <columns>
-      <!-- column-name ID -->
-      <column type="gchararray"/>
-      <!-- column-name LaunchButton -->
-      <column type="gpointer"/>
-      <!-- column-name Icon -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
 </interface>

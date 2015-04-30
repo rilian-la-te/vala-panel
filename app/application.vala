@@ -285,7 +285,7 @@ namespace ValaPanel
                 try{src.copy(dest,FileCopyFlags.BACKUP,null,null);}
                 catch(Error e){warning("Cannot init global config: %s\n",e.message);}
             }
-            config_backend = GLib.keyfile_settings_backend_new(user_file,PATH,NAME);
+            config_backend = new GLib.KeyfileSettingsBackend(user_file,PATH,NAME);
             config = new GLib.Settings.with_backend_and_path(SCHEMA,config_backend,PATH);
             settings_bind(this,config,Key.LOGOUT);
             settings_bind(this,config,Key.SHUTDOWN);

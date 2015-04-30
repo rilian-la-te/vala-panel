@@ -10,100 +10,29 @@ namespace LaunchBar
                                         GLib.Settings? settings,
                                         uint number)
         {
-            return new Launchbar(toplevel,settings,number);
+            return new Bar(toplevel,settings,number);
         }
     }
-    public class Launchbar: Applet
+    private static const string BUTTONS = "launch-buttons";
+    public class Bar: Applet, AppletConfigurable
     {
-        private const GLib.ActionEntry[] launchbar_entries =
-        {
-            {"add-applet",activate_add_applet,"s",null,null}
-        };
-        private static const string BUTTONS = "launch-buttons";
+        internal string[]? ids;
         FlowBox layout;
-        string[]? ids;
         string[]? prev_ids;
-        Dialog? applet_dialog;
         AppInfoMonitor? app_monitor;
-        public Launchbar(ValaPanel.Toplevel toplevel,
+        public Bar(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
                                         uint number)
         {
             base(toplevel,settings,number);
         }
-        private void activate_add_applet(GLib.Action act, Variant? param)
+        private Dialog get_config_dialog()
         {
-            show_applet_dlg(param.get_string());
-        }
-        internal void show_applet_dlg(string param)
-        {
-            if (applet_dialog == null)
-                {
-                    int x,y;
-                    Dialog dlg;
-                    if (param == "uri")
-                        dlg = get_file_dlg();
-                    else dlg = get_program_dlg();
-                    this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
-                    /* adjust config dialog window position to be near plugin */
-                    dlg.set_transient_for(toplevel);
-                    popup_position_helper(dlg,out x, out y);
-                    dlg.move(x,y);
-                    applet_dialog = dlg;
-                    applet_dialog.unmap.connect(()=>{applet_dialog.destroy(); applet_dialog = null;});
-                }
-                applet_dialog.present();
-        }
-        private Dialog get_program_dlg()
-        {
-            var dlg = new AppChooserDialog.for_content_type(toplevel,0,"application/octet-stream");
-            dlg.set_heading("Add launcher from installed applications");
-            var w = dlg.get_widget() as AppChooserWidget;
-            w.show_all = true;
-            dlg.response.connect((resp)=>{
-                var info = dlg.get_app_info();
-                if (resp == ResponseType.OK && info != null)
-                {
-                    var id = info.get_id();
-                    if (!(id in ids))
-                    {
-                        ids += id;
-                        commit_ids();
-                    }
-                    else
-                        stderr.printf(_("Quicklaunch already contains this application.\n"));
-                }
-                dlg.destroy();
-            });
-            return dlg;
-        }
-        private Dialog get_file_dlg()
-        {
-            var dlg = new FileChooserDialog(_("Select a file for launcher"),
-                                                toplevel,
-                                                FileChooserAction.OPEN,
-                                                _("_Cancel"), ResponseType.CANCEL,
-                                                _("_OK"), ResponseType.OK,
-                                                null);
-            dlg.response.connect((resp)=>{
-                var uri = dlg.get_uri();
-                if (resp == ResponseType.OK)
-                {
-                    if (!(uri in ids))
-                    {
-                        ids += uri;
-                        commit_ids();
-                    }
-                    else
-                        stderr.printf(_("Quicklaunch already contains this URI.\n"));
-                }
-                dlg.destroy();
-            });
-            return dlg;
+            return new ConfigDialog(this);
         }
         private void update_buttons_from_gsettings()
         {
-            var loaded_ids = this.settings.get_strv(BUTTONS);
+            var loaded_ids = this.settings.get_strv(LaunchBar.BUTTONS);
             load_buttons(loaded_ids);
         }
         public override void create()
@@ -126,7 +55,7 @@ namespace LaunchBar
             layout.drag_drop.connect(drag_drop_cb);
             layout.drag_data_received.connect(drag_data_received_cb);
             layout.set_sort_func(launchbar_layout_sort_func);
-            settings.changed[BUTTONS].connect(update_buttons_from_gsettings);
+            settings.changed[LaunchBar.BUTTONS].connect(update_buttons_from_gsettings);
             app_monitor = AppInfoMonitor.get();
             app_monitor.changed.connect(update_buttons_from_gsettings);
             update_buttons_from_gsettings();
@@ -136,14 +65,6 @@ namespace LaunchBar
                 layout.unselect_child(lb);
             });
             show_all();
-            var grp = new SimpleActionGroup();
-            grp.add_action_entries(launchbar_entries,this);
-            this.insert_action_group("launchbar",grp);
-        }
-        protected override void update_context_menu(ref GLib.Menu parent)
-        {
-            parent.prepend(_("Add application..."),"launchbar.add-applet('%s')".printf("desktop"));
-            parent.prepend(_("Add file..."),"launchbar.add-applet('%s')".printf("uri"));
         }
         internal void request_remove_id(string id)
         {
@@ -155,7 +76,7 @@ namespace LaunchBar
         }
         internal void commit_ids()
         {
-            settings.set_strv(BUTTONS,ids);
+            settings.set_strv(LaunchBar.BUTTONS,ids);
         }
         internal void undo_removal_request()
         {
@@ -309,6 +230,26 @@ namespace LaunchBar
                 foreach(var s in arr3)
                     if(!(s in res)) res+=s;
             return res;
+        }
+        internal Icon get_icon_from_id (string id)
+        {
+            foreach(var ch in layout.get_children())
+            {
+                var bt = ch as LaunchBar.Button;
+                if (bt.id == id)
+                    return bt.icon;
+            }
+            return new ThemedIcon.with_default_fallbacks("image-missing-symbolic");
+        }
+        internal string get_display_name_from_id(string id)
+        {
+            foreach(var ch in layout.get_children())
+            {
+                var bt = ch as LaunchBar.Button;
+                if (bt.id == id)
+                    return bt.display_name;
+            }
+            return id;
         }
     } // End class
 }

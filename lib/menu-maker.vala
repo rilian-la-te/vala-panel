@@ -23,7 +23,7 @@ namespace MenuMaker
         }
     }
 
-    public static void activate_menu_launch_id(SimpleAction action, Variant? param)
+    public static void activate_menu_launch_id(SimpleAction? action, Variant? param)
     {
         var id = param.get_string();
         var info = new DesktopAppInfo(id);
@@ -42,7 +42,7 @@ namespace MenuMaker
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
 
-    public static void activate_menu_launch_uri(SimpleAction action, Variant? param)
+    public static void activate_menu_launch_uri(SimpleAction? action, Variant? param)
     {
         var uri = param.get_string();
         try{

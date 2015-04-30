@@ -72,7 +72,7 @@ namespace ValaPanel
             this.root_name = root;
             this.root_path = path;
             this.root_schema = schema;
-            backend = GLib.keyfile_settings_backend_new(file,path,root);
+            backend = new KeyfileSettingsBackend(file,path,root);
             settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
         }
 

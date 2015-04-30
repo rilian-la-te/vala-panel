@@ -21,6 +21,20 @@ namespace LaunchBar
         public string content_type {private get; construct;}
         public AppInfo info {private get; construct;}
         public ButtonType button_type {private get; public construct;}
+        public Icon icon {get; private set;}
+        public string display_name {
+            owned get {
+                if (button_type == ButtonType.BOOTSTRAP)
+                    return _("Bootstrap");
+                else if (button_type == ButtonType.DESKTOP)
+                    return info.get_name();
+                else if (button_type == ButtonType.EXECUTABLE)
+                    return uri;
+                else if (button_type == ButtonType.URI)
+                    return "%s %s".printf(info.get_id(),uri);
+                return id;
+            }
+        }
         internal Button(AppInfo? info, string? uri, ButtonType type)
         {
             Object(info: info, uri: uri, button_type: type);
@@ -33,7 +47,6 @@ namespace LaunchBar
         {
             var commit = false;
             var ebox = new EventBox();
-            Icon? icon;
             get_style_context().remove_class("grid-child");
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
             if (uri != null)
@@ -93,7 +106,7 @@ namespace LaunchBar
         {
             if (button_type == ButtonType.BOOTSTRAP)
             {
-                this.get_launchbar().show_applet_dlg("desktop");
+                this.get_launchbar().show_config_dialog();
                 return;
             }
             var context = this.get_toplevel().get_display().get_app_launch_context();
@@ -109,9 +122,9 @@ namespace LaunchBar
                     info.launch(null,context);
             } catch (GLib.Error e) {stderr.printf("%s",e.message);}
         }
-        private Launchbar get_launchbar()
+        private Bar get_launchbar()
         {
-            return this.get_parent().get_parent() as Launchbar;
+            return this.get_parent().get_parent() as Bar;
         }
     }
 }
