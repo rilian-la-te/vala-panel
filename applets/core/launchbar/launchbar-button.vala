@@ -42,7 +42,8 @@ namespace LaunchBar
                 icon = ContentType.get_icon(content_type);
             else if (info != null)
             {
-                id = info.get_id();
+                if (id == null)
+                    id = info.get_id();
                 icon = info.get_icon();
             }
             else if (button_type == ButtonType.BOOTSTRAP)
