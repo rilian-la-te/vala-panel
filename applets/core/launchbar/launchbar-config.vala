@@ -38,7 +38,7 @@ namespace LaunchBar
             popover.add(box_popover);
             popover.set_size_request(760,360);
             button_add.popover = popover;
-            box_popover.show_all();
+            box_popover.show();
             this.show_all();
         }
         private void add_uri(string uri, bool show_err = true)
@@ -56,20 +56,22 @@ namespace LaunchBar
         private void on_file_activated()
         {
                 var uri = choose_file.get_uri();
-                var path = choose_file.get_filename();
-                if (check_folder.active && FileUtils.test(path, FileTest.IS_DIR))
+                if (check_folder.active)
                 {
+                    uri = choose_file.get_current_folder_uri();
+                    var path = choose_file.get_current_folder();
                     try
                     {
                         Dir dir = Dir.open(path);
                         for (var ch = dir.read_name(); ch!= null; ch = dir.read_name())
                         {
-                                var ch_uri = Filename.to_uri(ch);
+                                var ch_uri = Filename.to_uri(path+"/"+ch);
                                 add_uri(ch_uri,false);
                         }
                         return;
                     } catch (GLib.Error e)
                     {
+                        print("%s %s\n",e.message, path);
                         show_error(_("Failed to add directory. Adding this file."));
                         add_uri(uri);
                     }

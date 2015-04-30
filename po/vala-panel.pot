@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 00:45+0600\n"
+"POT-Creation-Date: 2015-05-01 01:55+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,6 +51,7 @@ msgstr ""
 #: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
 #: ../lib/panel-toplevel.vala:1214
 #: ../applets/core/launchbar/launchbar-config.vala:188
+#: ../applets/core/launchbar/launchbar-config.vala:190
 msgid "Error"
 msgstr ""
 
@@ -286,6 +287,7 @@ msgstr ""
 
 #: ../applets/core/launchbar/launchbar.vala:188
 #: ../applets/core/launchbar/launchbar-config.vala:95
+#: ../applets/core/launchbar/launchbar-config.vala:97
 msgid "Quicklaunch already contains this application.\n"
 msgstr ""
 
@@ -845,6 +847,7 @@ msgid "Bootstrap"
 msgstr ""
 
 #: ../applets/core/launchbar/launchbar-config.vala:73
+#: ../applets/core/launchbar/launchbar-config.vala:75
 msgid "Failed to add directory. Adding this file."
 msgstr ""
 
@@ -866,4 +869,8 @@ msgstr ""
 
 #: ../applets/core/launchbar/config.ui:167
 msgid "Name"
+msgstr ""
+
+#: ../applets/core/launchbar/config.ui:64
+msgid "Add all displayed files after one is selected"
 msgstr ""

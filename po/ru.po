@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 00:45+0600\n"
-"PO-Revision-Date: 2015-05-01 00:47+0600\n"
+"POT-Creation-Date: 2015-05-01 01:55+0600\n"
+"PO-Revision-Date: 2015-05-01 01:55+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -53,6 +53,7 @@ msgstr "Нет места для новой панели. Все стороны 
 #: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
 #: ../lib/panel-toplevel.vala:1214
 #: ../applets/core/launchbar/launchbar-config.vala:188
+#: ../applets/core/launchbar/launchbar-config.vala:190
 msgid "Error"
 msgstr "Ошибка"
 
@@ -294,6 +295,7 @@ msgstr "Показывать пассивные значки"
 
 #: ../applets/core/launchbar/launchbar.vala:188
 #: ../applets/core/launchbar/launchbar-config.vala:95
+#: ../applets/core/launchbar/launchbar-config.vala:97
 msgid "Quicklaunch already contains this application.\n"
 msgstr "На этом апплете уже есть такое приложение.\n"
 
@@ -857,6 +859,7 @@ msgid "Bootstrap"
 msgstr "Стартовая кнопка"
 
 #: ../applets/core/launchbar/launchbar-config.vala:73
+#: ../applets/core/launchbar/launchbar-config.vala:75
 msgid "Failed to add directory. Adding this file."
 msgstr "Ошибка добавления каталога. Добавляю только этот файл."
 
@@ -879,6 +882,10 @@ msgstr "Настройка апплета быстрого запуска."
 #: ../applets/core/launchbar/config.ui:167
 msgid "Name"
 msgstr "Имя"
+
+#: ../applets/core/launchbar/config.ui:64
+msgid "Add all displayed files after one is selected"
+msgstr "Добавить все показываемые файлы при выборе одного."
 
 #~ msgid "SimplePanel"
 #~ msgstr "SimplePanel"
