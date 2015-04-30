@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-29 00:14+0600\n"
-"PO-Revision-Date: 2015-04-29 00:16+0600\n"
+"POT-Creation-Date: 2015-05-01 00:45+0600\n"
+"PO-Revision-Date: 2015-05-01 00:47+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.5.5\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: ../lib/generic-config-dialog.vala:27
@@ -52,6 +52,7 @@ msgstr "Нет места для новой панели. Все стороны 
 
 #: ../lib/panel-toplevel.vala:1196 ../lib/panel-toplevel.vala:1195
 #: ../lib/panel-toplevel.vala:1214
+#: ../applets/core/launchbar/launchbar-config.vala:188
 msgid "Error"
 msgstr "Ошибка"
 
@@ -103,7 +104,7 @@ msgstr "Все"
 
 #: ../lib/configurator.vala:208
 msgid "%d"
-msgstr ""
+msgstr "%d"
 
 #: ../lib/configurator.vala:281
 msgid "Currently loaded plugins"
@@ -189,6 +190,7 @@ msgstr "Является панелью меню."
 
 #: ../applets/core/menumodel/menumodel.vala:61
 #: ../applets/core/dirmenu/dirmenu.vala:181
+#: ../applets/core/launchbar/config.ui:154
 msgid "Icon"
 msgstr "Значок"
 
@@ -201,36 +203,46 @@ msgid "Menu file name"
 msgstr "Имя файла меню"
 
 #: ../applets/core/menumodel/menu-maker.vala:83
+#: ../applets/core/menumodel/menu-maker.vala:84
 msgid "Home"
 msgstr "Домашняя папка"
 
 #: ../applets/core/menumodel/menu-maker.vala:94
+#: ../applets/core/menumodel/menu-maker.vala:95
 msgid "Desktop"
 msgstr "Рабочий стол"
 
 #: ../applets/core/menumodel/menu-maker.vala:111
+#: ../applets/core/menumodel/menu-maker.vala:112
 msgid "Search..."
 msgstr "Поиск файла..."
 
 #: ../applets/core/menumodel/menu-maker.vala:139
+#: ../applets/core/menumodel/menu-maker.vala:140
 msgid "Control center"
 msgstr "Центр управления"
 
 #: ../applets/core/menumodel/menu-maker.vala:156
+#: ../applets/core/menumodel/menu-maker.vala:159
+#: ../applets/core/launchbar/config.ui:39
 msgid "Applications"
 msgstr "Приложения"
 
 #: ../applets/core/menumodel/menu-maker.vala:160
 #: ../applets/core/menumodel/menu-maker.vala:168
+#: ../applets/core/menumodel/menu-maker.vala:163
+#: ../applets/core/menumodel/menu-maker.vala:171
 msgid "Places"
 msgstr "Переход"
 
 #: ../applets/core/menumodel/menu-maker.vala:161
 #: ../applets/core/menumodel/system-menus.ui:40
+#: ../applets/core/menumodel/menu-maker.vala:164
 msgid "System"
 msgstr "Система"
 
 #: ../applets/core/menumodel/menu-maker.vala:165
+#: ../applets/core/menumodel/menu-maker.vala:168
 msgid "Vala Panel"
 msgstr "Vala Panel"
 
@@ -281,6 +293,7 @@ msgid "Show passive items"
 msgstr "Показывать пассивные значки"
 
 #: ../applets/core/launchbar/launchbar.vala:188
+#: ../applets/core/launchbar/launchbar-config.vala:95
 msgid "Quicklaunch already contains this application.\n"
 msgstr "На этом апплете уже есть такое приложение.\n"
 
@@ -289,6 +302,7 @@ msgid "Select a file for launcher"
 msgstr "Выберите файл для добавления на панель запуска"
 
 #: ../applets/core/launchbar/launchbar.vala:212
+#: ../applets/core/launchbar/launchbar-config.vala:53
 msgid "Quicklaunch already contains this URI.\n"
 msgstr "Панель запуска уже содержит этот адрес.\n"
 
@@ -837,6 +851,34 @@ msgstr "Графики мониторинга"
 #: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
 msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr "Рисует графики используемых ресурсов на панели (для CPU и RAM)."
+
+#: ../applets/core/launchbar/launchbar-button.vala:28
+msgid "Bootstrap"
+msgstr "Стартовая кнопка"
+
+#: ../applets/core/launchbar/launchbar-config.vala:73
+msgid "Failed to add directory. Adding this file."
+msgstr "Ошибка добавления каталога. Добавляю только этот файл."
+
+#: ../applets/core/launchbar/config.ui:34
+msgid "Add launcher from installed applications"
+msgstr "Добавить установленное приложение"
+
+#: ../applets/core/launchbar/config.ui:64
+msgid "Add folder contents instead of folder."
+msgstr "Добавить содержимое папки на панель вместо нее."
+
+#: ../applets/core/launchbar/config.ui:80
+msgid "Files"
+msgstr "Файлы"
+
+#: ../applets/core/launchbar/config.ui:119
+msgid "Launch Bar Configuration"
+msgstr "Настройка апплета быстрого запуска."
+
+#: ../applets/core/launchbar/config.ui:167
+msgid "Name"
+msgstr "Имя"
 
 #~ msgid "SimplePanel"
 #~ msgstr "SimplePanel"
@@ -1440,9 +1482,6 @@ msgstr "Рисует графики используемых ресурсов н
 #~ "Обратитесь к системному администратору для решения проблемы:\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "Name"
-#~ msgstr "Имя"
 
 #~ msgid "The interface name"
 #~ msgstr "Имя интерфейса"
