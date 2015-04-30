@@ -9,6 +9,7 @@ namespace LaunchBar
     {
         NONE,
         DESKTOP,
+        EXECUTABLE,
         URI,
         BOOTSTRAP
     }
@@ -37,7 +38,7 @@ namespace LaunchBar
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
             if (uri != null)
                 id = uri;
-            if (content_type != null)
+            if (content_type != null && button_type != ButtonType.DESKTOP)
                 icon = ContentType.get_icon(content_type);
             else if (info != null)
             {

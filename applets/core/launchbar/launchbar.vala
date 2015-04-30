@@ -274,7 +274,7 @@ namespace LaunchBar
                     if (FileUtils.test(filename,FileTest.IS_EXECUTABLE))
                     {
                         info = AppInfo.create_from_commandline(filename,null,0);
-                        return ButtonType.DESKTOP;
+                        return ButtonType.EXECUTABLE;
                     }
                     else
                     {
