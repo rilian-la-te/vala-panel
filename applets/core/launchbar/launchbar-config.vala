@@ -121,6 +121,8 @@ namespace LaunchBar
         {
             var uri = choose_file.get_current_folder_uri();
             var path = choose_file.get_current_folder();
+            if (uri == null || path == null)
+                return;
             try
             {
                 Dir dir = Dir.open(path);
