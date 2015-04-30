@@ -17,8 +17,6 @@ namespace LaunchBar
         AppChooserWidget choose_desktop;
         [GtkChild (name = "choose-file")]
         FileChooserWidget choose_file;
-        [GtkChild (name = "check-folder")]
-        CheckButton check_folder;
         [GtkChild (name = "box-popover")]
         Box box_popover;
         public ConfigDialog(Bar launchbar)
@@ -56,28 +54,7 @@ namespace LaunchBar
         private void on_file_activated()
         {
                 var uri = choose_file.get_uri();
-                if (check_folder.active)
-                {
-                    uri = choose_file.get_current_folder_uri();
-                    var path = choose_file.get_current_folder();
-                    try
-                    {
-                        Dir dir = Dir.open(path);
-                        for (var ch = dir.read_name(); ch!= null; ch = dir.read_name())
-                        {
-                                var ch_uri = Filename.to_uri(path+"/"+ch);
-                                add_uri(ch_uri,false);
-                        }
-                        return;
-                    } catch (GLib.Error e)
-                    {
-                        print("%s %s\n",e.message, path);
-                        show_error(_("Failed to add directory. Adding this file."));
-                        add_uri(uri);
-                    }
-                }
-                else
-                    add_uri(uri);
+                add_uri(uri);
         }
         [GtkCallback]
         private void on_application_activated()
@@ -137,6 +114,27 @@ namespace LaunchBar
                     current_items.swap(sel_iter, prev_iter);
                     update_ids_from_widget();
                 }
+            }
+        }
+        [GtkCallback]
+        private void on_add_all_files_clicked()
+        {
+            var uri = choose_file.get_current_folder_uri();
+            var path = choose_file.get_current_folder();
+            try
+            {
+                Dir dir = Dir.open(path);
+                for (var ch = dir.read_name(); ch!= null; ch = dir.read_name())
+                {
+                        var ch_uri = Filename.to_uri(path+"/"+ch);
+                        add_uri(ch_uri,false);
+                }
+                return;
+            } catch (GLib.Error e)
+            {
+                print("%s %s\n",e.message, path);
+                show_error(_("Failed to add directory content.\n Adding current directory as launcher."));
+                add_uri(uri);
             }
         }
         private void update_ids_from_widget()

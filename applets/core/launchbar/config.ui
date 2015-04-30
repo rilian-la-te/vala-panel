@@ -59,17 +59,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="check-folder">
-                <property name="label" translatable="yes">Add all displayed files after one is selected</property>
+              <object class="GtkButton" id="add-all-files">
+                <property name="label" translatable="yes">Add all displayed files</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="draw_indicator">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">center</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="on_add_all_files_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>

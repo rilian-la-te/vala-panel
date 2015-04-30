@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 01:55+0600\n"
-"PO-Revision-Date: 2015-05-01 01:55+0600\n"
+"POT-Creation-Date: 2015-05-01 02:47+0600\n"
+"PO-Revision-Date: 2015-05-01 02:48+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -226,6 +226,7 @@ msgstr "Центр управления"
 #: ../applets/core/menumodel/menu-maker.vala:156
 #: ../applets/core/menumodel/menu-maker.vala:159
 #: ../applets/core/launchbar/config.ui:39
+#: ../applets/core/launchbar/config.ui:38
 msgid "Applications"
 msgstr "Приложения"
 
@@ -296,6 +297,7 @@ msgstr "Показывать пассивные значки"
 #: ../applets/core/launchbar/launchbar.vala:188
 #: ../applets/core/launchbar/launchbar-config.vala:95
 #: ../applets/core/launchbar/launchbar-config.vala:97
+#: ../applets/core/launchbar/launchbar-config.vala:74
 msgid "Quicklaunch already contains this application.\n"
 msgstr "На этом апплете уже есть такое приложение.\n"
 
@@ -305,6 +307,7 @@ msgstr "Выберите файл для добавления на панель 
 
 #: ../applets/core/launchbar/launchbar.vala:212
 #: ../applets/core/launchbar/launchbar-config.vala:53
+#: ../applets/core/launchbar/launchbar-config.vala:51
 msgid "Quicklaunch already contains this URI.\n"
 msgstr "Панель запуска уже содержит этот адрес.\n"
 
@@ -864,6 +867,7 @@ msgid "Failed to add directory. Adding this file."
 msgstr "Ошибка добавления каталога. Добавляю только этот файл."
 
 #: ../applets/core/launchbar/config.ui:34
+#: ../applets/core/launchbar/config.ui:33
 msgid "Add launcher from installed applications"
 msgstr "Добавить установленное приложение"
 
@@ -886,6 +890,18 @@ msgstr "Имя"
 #: ../applets/core/launchbar/config.ui:64
 msgid "Add all displayed files after one is selected"
 msgstr "Добавить все показываемые файлы при выборе одного."
+
+#: ../applets/core/launchbar/launchbar-config.vala:136
+msgid ""
+"Failed to add directory content.\n"
+" Adding current directory as launcher."
+msgstr ""
+"Ошибка добавления содержимого каталога.\n"
+"Добавляется показываемая директория в качестве кнопки запуска."
+
+#: ../applets/core/launchbar/config.ui:63
+msgid "Add all displayed files"
+msgstr "Добавить все показываемые файлы."
 
 #~ msgid "SimplePanel"
 #~ msgstr "SimplePanel"

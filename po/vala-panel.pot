@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-01 01:55+0600\n"
+"POT-Creation-Date: 2015-05-01 02:47+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -218,6 +218,7 @@ msgstr ""
 #: ../applets/core/menumodel/menu-maker.vala:156
 #: ../applets/core/menumodel/menu-maker.vala:159
 #: ../applets/core/launchbar/config.ui:39
+#: ../applets/core/launchbar/config.ui:38
 msgid "Applications"
 msgstr ""
 
@@ -288,6 +289,7 @@ msgstr ""
 #: ../applets/core/launchbar/launchbar.vala:188
 #: ../applets/core/launchbar/launchbar-config.vala:95
 #: ../applets/core/launchbar/launchbar-config.vala:97
+#: ../applets/core/launchbar/launchbar-config.vala:74
 msgid "Quicklaunch already contains this application.\n"
 msgstr ""
 
@@ -297,6 +299,7 @@ msgstr ""
 
 #: ../applets/core/launchbar/launchbar.vala:212
 #: ../applets/core/launchbar/launchbar-config.vala:53
+#: ../applets/core/launchbar/launchbar-config.vala:51
 msgid "Quicklaunch already contains this URI.\n"
 msgstr ""
 
@@ -852,6 +855,7 @@ msgid "Failed to add directory. Adding this file."
 msgstr ""
 
 #: ../applets/core/launchbar/config.ui:34
+#: ../applets/core/launchbar/config.ui:33
 msgid "Add launcher from installed applications"
 msgstr ""
 
@@ -873,4 +877,14 @@ msgstr ""
 
 #: ../applets/core/launchbar/config.ui:64
 msgid "Add all displayed files after one is selected"
+msgstr ""
+
+#: ../applets/core/launchbar/launchbar-config.vala:136
+msgid ""
+"Failed to add directory content.\n"
+" Adding current directory as launcher."
+msgstr ""
+
+#: ../applets/core/launchbar/config.ui:63
+msgid "Add all displayed files"
 msgstr ""
