@@ -12,6 +12,7 @@ if (ENABLE_WNCK)
     add_subdirectory(pager)
     add_subdirectory(deskno)
     add_subdirectory(wincmd)
+    add_subdirectory(buttons)
 endif()
 
 option(ENABLE_X11 "Enables X11 system tray" ON)

@@ -149,11 +149,13 @@ Group: User Interface/Desktops
 %{_libdir}/vala-panel/applets/libtasklist.so
 %{_libdir}/vala-panel/applets/libwincmd.so
 %{_libdir}/vala-panel/applets/libpager.so
+%{_libdir}/vala-panel/applets/libbuttons.so
 %{_libdir}/vala-panel/applets/xembed.plugin
 %{_libdir}/vala-panel/applets/deskno.plugin
 %{_libdir}/vala-panel/applets/tasklist.plugin
 %{_libdir}/vala-panel/applets/wincmd.plugin
 %{_libdir}/vala-panel/applets/pager.plugin
+%{_libdir}/vala-panel/applets/buttons.plugin
 
 %postun plugins-wnck
 set -o monitor

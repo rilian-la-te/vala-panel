@@ -4,8 +4,10 @@ usr/lib/*/vala-panel/applets/libdeskno.so
 usr/lib/*/vala-panel/applets/libtasklist.so
 usr/lib/*/vala-panel/applets/libwincmd.so
 usr/lib/*/vala-panel/applets/libpager.so
+usr/lib/*/vala-panel/applets/libbuttons.so
 usr/lib/*/vala-panel/applets/xembed.plugin
 usr/lib/*/vala-panel/applets/deskno.plugin
 usr/lib/*/vala-panel/applets/tasklist.plugin
 usr/lib/*/vala-panel/applets/wincmd.plugin
 usr/lib/*/vala-panel/applets/pager.plugin
+usr/lib/*/vala-panel/applets/buttons.plugin

@@ -1,0 +1,4 @@
+[Plugin]
+Module=buttons
+Name=Window Buttons
+Description=Shows window buttons (such as minimize, maximize and close).
