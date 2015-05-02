@@ -65,6 +65,7 @@ internal class Monitor
     }
     internal Monitor(Monitors plugin, string color)
     {
+        this.ref_count = 1;
         da = new DrawingArea();
         da.set_size_request(DEFAULT_WIDTH, plugin.toplevel.height);
         da.add_events(Gdk.EventMask.BUTTON_PRESS_MASK);

@@ -41,10 +41,11 @@ namespace ValaPanel
         internal GLib.Settings default_settings;
         internal GLib.Settings config_settings;
         internal uint number;
-        internal Volatile ref_count = 1;
+        internal Volatile ref_count;
         internal PluginSettings(ToplevelSettings settings, string name, uint num)
         {
             this.number = num;
+            this.ref_count = 1;
             this.path_append = name;
             var path = "%s%u/".printf(settings.root_path,this.number);
             this.default_settings = new GLib.Settings.with_backend_and_path(
@@ -83,13 +84,14 @@ namespace ValaPanel
         internal string root_name;
         internal string root_schema;
         internal string root_path;
-        internal Volatile ref_count = 1;
+        internal Volatile ref_count;
         internal ToplevelSettings.full(string file, string schema, string path, string? root)
         {
             this.filename = file;
             this.root_name = root;
             this.root_path = path;
             this.root_schema = schema;
+            this.ref_count = 1;
             backend = new KeyfileSettingsBackend(file,path,root);
             settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
         }
