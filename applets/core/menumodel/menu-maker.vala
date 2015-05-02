@@ -73,7 +73,8 @@ namespace MenuMaker
             }
             var j = (i < 0) ? 0 : i;
             j = (j >= menu.get_n_items()) ? menu.get_n_items() - 1 : j;
-            if ((string)submenu.get_item_attribute_value(j,"x-cat",GLib.VariantType.STRING) in cats)
+            var cat = menu.get_item_attribute_value(j,"x-cat",GLib.VariantType.STRING);
+            if (cat != null && cat.get_string() in cats)
             {
                 menu.remove(j);
                 i--;
