@@ -219,8 +219,7 @@ static void balloon_message_display(TrayPlugin * tr, BalloonMessage * msg)
     g_signal_connect(tr->balloon_message_popup, "button-press-event", G_CALLBACK(balloon_message_activate_event), (gpointer) tr);
 
     /* Compute the desired position in screen coordinates near the tray plugin. */
-    int x;
-    int y;
+    int x, y;
 	vala_panel_applet_popup_position_helper(tr->applet, tr->balloon_message_popup, &x, &y);
 
     /* Show the popup. */

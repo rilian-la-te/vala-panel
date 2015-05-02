@@ -54,7 +54,7 @@ internal class Monitor
     internal double total;             /* Maximum possible value, as in mem_total*/
     internal int ring_cursor;       /* Cursor for ring/circular buffer        */
     internal int position;
-    internal int ref_count;
+    internal Volatile ref_count;
     internal unowned UpdateMonitorFunc update_monitor;
     internal unowned UpdateTooltipFunc update_tooltip;
     internal bool update()

@@ -16,6 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+[CCode (cname = "volatile int")]
+public struct Volatile : int {
+}
+
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib
 {
