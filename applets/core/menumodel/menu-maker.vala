@@ -79,6 +79,8 @@ namespace MenuMaker
                 menu.remove(j);
                 i--;
             }
+            if (i >= menu.get_n_items())
+                break;
         }
         menu.freeze();
         return (GLib.MenuModel) menu;
