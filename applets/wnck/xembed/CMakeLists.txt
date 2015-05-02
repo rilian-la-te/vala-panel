@@ -1,4 +1,19 @@
 set(PLUGIN_NAME xembed)
+vala_precompile(VALA_C_SOCKET ${PLUGIN_NAME}-internal
+    ${PLUGIN_NAME}-socket.vala
+PACKAGES
+    ${CORE_PACKAGES}
+    x11
+    gdk-x11-3.0
+GENERATE_HEADER
+    xembed-internal
+OPTIONS
+    --vapidir=${CMAKE_SOURCE_DIR}/vapi
+    --vapidir=${CMAKE_BINARY_DIR}/lib
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
+    --target-glib=2.40
+    --thread
+)
 vala_precompile(VALA_C ${PLUGIN_NAME}
     ${PLUGIN_NAME}.vala
 PACKAGES
@@ -26,6 +41,7 @@ include_directories(${CORE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BIN
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
+    ${VALA_C_SOCKET}
     xembed-ccode.c
     ${RESOURCES}
 )

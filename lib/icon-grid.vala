@@ -37,8 +37,7 @@ namespace ValaPanel
         int colnum;
         Gdk.Window? event_window;
         private int _spacing;
-        public int target_dimension
-        {get; set construct;}
+        public int target_dimension {get; set construct;}
         public bool aspect
         { get {return WidthFlags.ASPECT in fl;}
           set {fl = (value == true) ?
@@ -60,16 +59,12 @@ namespace ValaPanel
                   fl & (~WidthFlags.FILL);
               this.queue_resize();}
         }
-        public Gtk.Orientation orientation
-        {get; set;}
-        public int child_width
-        {get; set construct;}
+        public Gtk.Orientation orientation {get; set;}
+        public int child_width {get; set construct;}
         public int spacing
         {get {return _spacing;}
-         set construct
-         {_spacing = value; this.queue_resize();}}
-        public int child_height
-        {get; set construct;}
+         set construct {_spacing = value; this.queue_resize();}}
+        public int child_height {get; set construct;}
 
         public IconGrid(Gtk.Orientation or, int cw, int ch, int sp,
                         uint b, int td)

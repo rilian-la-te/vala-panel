@@ -34,6 +34,7 @@
 #include <X11/Xatom.h>
 
 #include "xembed-ccode.h"
+#include "xembed-internal.h"
 
 /* Standards reference:  http://standards.freedesktop.org/systemtray-spec/ */
 
@@ -425,10 +426,9 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
     tc->tr = tr;
 
     /* Allocate a socket.  This is the tray side of the Xembed connection. */
-    tc->socket = gtk_socket_new();
+    tc->socket = xembed_socket_new(gtk_widget_get_screen(GTK_WIDGET(tr->applet)),tc->window);
 
     /* Add the socket to the icon grid. */
-    gtk_widget_set_size_request(tc->socket,22,22);
     flowbox_child = gtk_flow_box_child_new();
     gtk_widget_set_app_paintable(GTK_WIDGET(flowbox_child),TRUE);
     gtk_container_add(GTK_CONTAINER(tr->plugin), flowbox_child);
@@ -436,8 +436,6 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
     gtk_widget_show(tc->socket);
     gtk_widget_show(flowbox_child);
     gdk_window_set_composited (gtk_widget_get_window(tc->socket),TRUE);
-    panel_css_apply_from_resource(flowbox_child,"/org/vala-panel/lib/style.css","-panel-launch-button");
-
     /* Connect the socket to the plug.  This can only be done after the socket is realized. */
     gtk_socket_add_id(GTK_SOCKET(tc->socket), tc->window);
 
@@ -450,6 +448,7 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
         g_free(tc);
         return;
     }
+    g_object_bind_property(vala_panel_applet_get_toplevel(tr->applet),"icon-size",tc->socket,"icon-size",G_BINDING_SYNC_CREATE);
     /* Link the client structure into the client list. */
     if (tc_pred == NULL)
     {
