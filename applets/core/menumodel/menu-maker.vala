@@ -65,21 +65,15 @@ namespace MenuMaker
         for(int i = 0; i < menu.get_n_items(); i++)
         {
             i = (i < 0) ? 0 : i;
+            string cat;
+            bool in_cat = menu.get_item_attribute(i,"x-cat","s",out cat);
             var submenu = (GLib.Menu)menu.get_item_link(i,GLib.Menu.LINK_SUBMENU);
-            if (submenu.get_n_items() <= 0)
+            if (submenu.get_n_items() <= 0 || (in_cat && cat in cats))
             {
                 menu.remove(i);
                 i--;
             }
-            var j = (i < 0) ? 0 : i;
-            j = (j >= menu.get_n_items()) ? menu.get_n_items() - 1 : j;
-            var cat = menu.get_item_attribute_value(j,"x-cat",GLib.VariantType.STRING);
-            if (cat != null && cat.get_string() in cats)
-            {
-                menu.remove(j);
-                i--;
-            }
-            if (i >= menu.get_n_items())
+            if (i >= menu.get_n_items() || menu.get_n_items() <= 0)
                 break;
         }
         menu.freeze();
