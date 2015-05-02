@@ -72,8 +72,8 @@ namespace MenuMaker
                 i--;
             }
             var j = (i < 0) ? 0 : i;
-            j = (j >= menu.get_n_items()) ? menu.get_n_items() -1 : j;
-            if ((string)menu.get_item_attribute_value(j,"x-cat",GLib.VariantType.STRING) in cats)
+            j = (j >= menu.get_n_items()) ? menu.get_n_items() - 1 : j;
+            if ((string)submenu.get_item_attribute_value(j,"x-cat",GLib.VariantType.STRING) in cats)
             {
                 menu.remove(j);
                 i--;
@@ -89,7 +89,7 @@ namespace MenuMaker
                             "network","office","utility","development","other"};
         string[] settings_cats = {"settings"};
         if (do_settings)
-            return applications_model (apps_cats);
+            return applications_model(apps_cats);
         else
             return applications_model(settings_cats);
     }
