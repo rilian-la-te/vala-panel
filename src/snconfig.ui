@@ -202,6 +202,21 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
+                          <object class="GtkCheckButton" id="check-labels">
+                            <property name="label" translatable="yes">Show labels near icons (if applications provides some)</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="xalign">0</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkCheckButton" id="check-symbolic">
                             <property name="label" translatable="yes">Use symbolic icons</property>
                             <property name="visible">True</property>
@@ -213,7 +228,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">0</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
@@ -254,7 +269,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">1</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
@@ -349,7 +364,7 @@
                             <signal name="edited" handler="on_index_index" swapped="no"/>
                           </object>
                           <attributes>
-                            <attribute name="visible">2</attribute>
+                            <attribute name="sensitive">2</attribute>
                             <attribute name="text">3</attribute>
                           </attributes>
                         </child>
@@ -434,7 +449,7 @@
                             <signal name="toggled" handler="on_filter_visible" swapped="no"/>
                           </object>
                           <attributes>
-                            <attribute name="visible">4</attribute>
+                            <attribute name="sensitive">4</attribute>
                             <attribute name="active">5</attribute>
                           </attributes>
                         </child>

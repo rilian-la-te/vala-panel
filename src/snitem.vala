@@ -5,22 +5,14 @@ namespace StatusNotifier
 {
     public class Item : FlowBoxChild
     {
-        public ObjectPath object_path
-        {private get; internal construct;}
-        public string object_name
-        {private get; internal construct;}
-        public Status status
-        {get; private set;}
-        public uint ordering_index
-        {get; private set;}
-        public Category cat
-        {get; private set;}
-        public string id
-        {get; private set;}
-        internal bool use_symbolic
-        {get; set;}
-        internal string title
-        {get; private set;}
+        public ObjectPath object_path {private get; internal construct;}
+        public string object_name {private get; internal construct;}
+        public Status status {get; private set;}
+        public uint ordering_index {get; private set;}
+        public Category cat {get; private set;}
+        public string id {get; private set;}
+        internal bool use_symbolic {get; set;}
+        internal string title {get; private set;}
         internal Icon icon
         {owned get {
             return image.gicon;
@@ -54,7 +46,9 @@ namespace StatusNotifier
             label = new Label(null);
             image = new Image();
             box.add(image);
+            image.valign = Align.CENTER;
             box.add(label);
+            label.valign = Align.CENTER;
             ebox.add(box);
             this.add(ebox);
             ebox.add_events(Gdk.EventMask.SCROLL_MASK);
@@ -107,8 +101,9 @@ namespace StatusNotifier
             this.parent_set.connect((prev)=>{
                 if (get_applet() != null)
                 {
-                    get_applet().bind_property("icon-size",image,"pixel-size",BindingFlags.SYNC_CREATE);
-                    get_applet().bind_property("symbolic-icons",this,"use-symbolic",BindingFlags.SYNC_CREATE);
+                    get_applet().bind_property(INDICATOR_SIZE,image,"pixel-size",BindingFlags.SYNC_CREATE);
+                    get_applet().bind_property(USE_SYMBOLIC,this,"use-symbolic",BindingFlags.SYNC_CREATE);
+                    get_applet().bind_property(USE_LABELS,label,"visible",BindingFlags.SYNC_CREATE);
                 }
             });
             ebox.show_all();

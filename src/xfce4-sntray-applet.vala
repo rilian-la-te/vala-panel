@@ -13,7 +13,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         add(widget);
         add_action_widget(widget);
         widget.menu_position_func = (menu,ref x,ref y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
-        widget.icon_size = (int)this.size/(int)this.nrows - 2;
+        widget.indicator_size = (int)this.size/(int)this.nrows - 2;
         widget.show_passive = true;
         widget.orientation = (this.mode != Xfce.PanelPluginMode.DESKBAR) ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
         this.width_request = -1;
@@ -28,6 +28,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
             Xfconf.Property.bind(channel,this.get_property_base()+"/"+SHOW_OTHER,typeof(bool),widget,SHOW_OTHER);
             Xfconf.Property.bind(channel,this.get_property_base()+"/"+SHOW_PASSIVE,typeof(bool),widget,SHOW_PASSIVE);
             Xfconf.Property.bind(channel,this.get_property_base()+"/"+USE_SYMBOLIC,typeof(bool),widget,USE_SYMBOLIC);
+            Xfconf.Property.bind(channel,this.get_property_base()+"/"+USE_LABELS,typeof(bool),widget,USE_LABELS);
             Xfconf.Property.bind(channel,this.get_property_base()+"/"+INDEX_OVERRIDE,typeof(string),wrapper,INDEX_OVERRIDE);
             Xfconf.Property.bind(channel,this.get_property_base()+"/"+FILTER_OVERRIDE,typeof(string),wrapper,FILTER_OVERRIDE);
             this.menu_show_configure();
@@ -38,7 +39,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
             if (pspec.name == "mode")
                  widget.orientation = (this.mode != Xfce.PanelPluginMode.DESKBAR) ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
             if (pspec.name == "size" || pspec.name == "nrows") {
-                 widget.icon_size = (int)this.size/(int)this.nrows - 8;
+                 widget.indicator_size = (int)this.size/(int)this.nrows - 8;
                  this.width_request = -1;
             }
         });

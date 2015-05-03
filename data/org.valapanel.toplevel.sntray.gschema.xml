@@ -13,6 +13,9 @@
     <key name="symbolic-icons" type="b">
       <default>true</default>
     </key>
+    <key name="show-ayatana-labels" type="b">
+      <default>true</default>
+    </key>
     <key name="show-application-status" type="b">
       <default>true</default>
     </key>

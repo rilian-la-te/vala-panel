@@ -28,6 +28,8 @@ namespace StatusNotifier
         CheckButton check_passive;
         [GtkChild (name = "check-symbolic")]
         CheckButton check_symbolic;
+        [GtkChild (name = "check-labels")]
+        CheckButton check_labels;
         [GtkChild (name = "store")]
         Gtk.ListStore store;
         [GtkChild (name = "box-indicator")]
@@ -47,7 +49,8 @@ namespace StatusNotifier
             layout.bind_property(SHOW_OTHER,check_other,"active",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
             layout.bind_property(SHOW_PASSIVE,check_passive,"active",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
             layout.bind_property(USE_SYMBOLIC,check_symbolic,"active",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
-            layout.bind_property("icon-size",scale_indicator.adjustment,"value",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
+            layout.bind_property(USE_LABELS,check_labels,"active",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
+            layout.bind_property(INDICATOR_SIZE,scale_indicator.adjustment,"value",BindingFlags.BIDIRECTIONAL|BindingFlags.SYNC_CREATE);
             layout.item_added.connect((id)=>{
                 item_to_store(layout.items.lookup(id));
             });
@@ -75,13 +78,9 @@ namespace StatusNotifier
             var id = v.id;
             var icon = v.icon;
             var over_index = layout.index_override.contains(v.id);
-            int index = (int)v.ordering_index;
-            if (over_index)
-                index = layout.index_override.lookup(v.id).get_int32();
+            var index = layout.get_index(v);
             var over_filter = layout.filter_override.contains(v.id);
-            bool filter = true;
-            if (over_filter)
-                filter = layout.filter_override.lookup(v.id).get_boolean();
+            bool filter = layout.filter_cb(v);
             TreeIter iter;
             store.append(out iter);
             store.set(iter,COLUMN_ID,id,COLUMN_NAME,name,COLUMN_OVERRIDE_INDEX,over_index,COLUMN_INDEX,index.to_string(),
@@ -97,13 +96,18 @@ namespace StatusNotifier
             string id;
             store.get(iter,COLUMN_ID,out id, COLUMN_OVERRIDE_INDEX, out over);
             over = !over;
+            var index = layout.get_index(layout.get_item_by_id(id));
             if (over)
             {
-                store.set(iter,COLUMN_INDEX,"0");
-                layout.index_override.insert(id,new Variant.int32(0));
+                store.set(iter,COLUMN_INDEX,"%d".printf(index));
+                layout.index_override.insert(id,new Variant.int32(index));
             }
             else
+            {
                 layout.index_override.remove(id);
+                var new_index = layout.get_index(layout.get_item_by_id(id));
+                store.set(iter,COLUMN_INDEX,"%d".printf(new_index));
+            }
             store.set(iter,COLUMN_OVERRIDE_INDEX,over);
             var over_dict = layout.index_override;
             layout.index_override = over_dict;
@@ -117,13 +121,18 @@ namespace StatusNotifier
             string id;
             store.get(iter,COLUMN_ID,out id, COLUMN_OVERRIDE_VISIBLE, out over);
             over = !over;
+            var filter = layout.filter_cb(layout.get_item_by_id(id));
             if (over)
             {
-                store.set(iter,COLUMN_VISIBLE,true);
-                layout.filter_override.insert(id,new Variant.boolean(true));
+                store.set(iter,COLUMN_VISIBLE,filter);
+                layout.filter_override.insert(id,new Variant.boolean(filter));
             }
             else
+            {
                 layout.filter_override.remove(id);
+                var new_filter = layout.filter_cb(layout.get_item_by_id(id));
+                store.set(iter,COLUMN_VISIBLE,new_filter);
+            }
             store.set(iter,COLUMN_OVERRIDE_VISIBLE,over);
             var over_dict = layout.filter_override;
             layout.filter_override = over_dict;

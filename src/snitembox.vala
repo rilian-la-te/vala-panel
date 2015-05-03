@@ -11,6 +11,7 @@ namespace StatusNotifier
     public static const string SHOW_PASSIVE = "show-passive";
     public static const string INDICATOR_SIZE = "indicator-size";
     public static const string USE_SYMBOLIC = "symbolic-icons";
+    public static const string USE_LABELS = "show-ayatana-labels";
     public static const string INDEX_OVERRIDE = "index-override";
     public static const string FILTER_OVERRIDE = "filter-override";
 
@@ -18,30 +19,19 @@ namespace StatusNotifier
     {
         static Host host;
         ulong watcher_registration_handler;
-        internal HashTable<string,Item> items
-        {get; private set;}
-        public HashTable<string,Variant?> index_override
-        {get; set;}
-        public HashTable<string,Variant?> filter_override
-        {get; set;}
-        public bool symbolic_icons
-        {get; set;}
-        public bool show_application_status
-        {get; set;}
-        public bool show_communications
-        {get; set;}
-        public bool show_system
-        {get; set;}
-        public bool show_hardware
-        {get; set;}
-        public bool show_other
-        {get; set;}
-        public bool show_passive
-        {get; set;}
-        public int icon_size
-        {get; set;}
-        public unowned MenuPositionFunc? menu_position_func
-        {internal get; set;}
+        internal HashTable<string,Item> items {get; private set;}
+        public HashTable<string,Variant?> index_override {get; set;}
+        public HashTable<string,Variant?> filter_override {get; set;}
+        public bool symbolic_icons {get; set;}
+        public bool show_application_status {get; set;}
+        public bool show_communications {get; set;}
+        public bool show_system {get; set;}
+        public bool show_hardware {get; set;}
+        public bool show_other {get; set;}
+        public bool show_passive {get; set;}
+        public int indicator_size {get; set;}
+        public bool show_ayatana_labels {get; set;}
+        public unowned MenuPositionFunc? menu_position_func {internal get; set;}
         internal signal void item_added(string id);
         internal signal void item_removed(string id);
         static construct
@@ -124,7 +114,7 @@ namespace StatusNotifier
                 }
             }
         }
-        private bool filter_cb(FlowBoxChild ch)
+        internal bool filter_cb(FlowBoxChild ch)
         {
             var item = ch as Item;
             if (item.id != null && filter_override.contains(item.id))
@@ -148,6 +138,26 @@ namespace StatusNotifier
             if (right.id != null && index_override.contains(right.id))
                 rpos = index_override.lookup(right.id).get_int32();
             return lpos - rpos;
+        }
+        internal int get_index(Item v)
+        {
+            var over_index = index_override.contains(v.id);
+            int index = (int)v.ordering_index;
+            if (over_index)
+                index = index_override.lookup(v.id).get_int32();
+            return index;
+        }
+        internal Item? get_item_by_id(string id)
+        {
+            Item? item = null;
+            items.foreach((k,v)=>{
+                if (v.id == id)
+                {
+                    item = v;
+                    return;
+                }
+            });
+            return item;
         }
     }
 }
