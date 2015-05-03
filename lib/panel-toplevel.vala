@@ -855,7 +855,6 @@ namespace ValaPanel
         }
         internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
         {
-            s.init_configuration(settings,applet_plugin.plugin_info.get_external_data(Data.CONFIG)!=null);
             var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);

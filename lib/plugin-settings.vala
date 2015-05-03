@@ -47,20 +47,15 @@ namespace ValaPanel
             this.number = num;
             this.ref_count = 1;
             this.path_append = name;
+            var id = "%s.%s".printf(settings.root_schema, this.path_append);
             var path = "%s%u/".printf(settings.root_path,this.number);
             this.default_settings = new GLib.Settings.with_backend_and_path(
                                                 PLUGIN_SCHEMA, settings.backend, path);
-        }
-        internal void init_configuration(ToplevelSettings settings, bool has_config)
-        {
-            default_settings.set_boolean(Key.SCHEMA,has_config);
-            if (has_config)
-            {
-                var id = "%s.%s".printf(settings.root_schema, this.path_append);
-                var path = "%s%u/".printf(settings.root_path,this.number);
+            var source = SettingsSchemaSource.get_default();
+            var schema = source.lookup(id,true);
+            if (schema != null)
                 this.config_settings = new GLib.Settings.with_backend_and_path(
                                                 id, settings.backend, path);
-            }
         }
         public unowned PluginSettings @ref ()
         {
@@ -177,9 +172,7 @@ namespace ValaPanel
                 {
                     var name = f.get_string(group,Key.NAME);
                     name = name._delimit("'",' ')._strip();
-                    var config = f.get_boolean(group,Key.SCHEMA);
                     var s = add_plugin_settings_full(name,int.parse(group));
-                    s.init_configuration(this,config);
                 }
                 catch (GLib.KeyFileError e)
                 {

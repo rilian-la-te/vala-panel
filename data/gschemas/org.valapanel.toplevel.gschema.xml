@@ -92,9 +92,6 @@
     <key name="plugin-type" type="s">
       <default>''</default>
     </key>
-    <key name="has-schema" type="b">
-      <default>false</default>
-    </key>
     <key name="can-expand" type="b">
       <default>false</default>
     </key>
