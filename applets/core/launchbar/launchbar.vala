@@ -200,7 +200,7 @@ namespace LaunchBar
             try
             {
                 var filename = Filename.from_uri(str_pretend);
-                content_type = ContentType.guess(str_pretend,null,null);
+                content_type = ContentType.guess(filename,null,null);
                 if (content_type == "application/x-desktop")
                 {
                     info = new DesktopAppInfo.from_filename(filename) as AppInfo;
@@ -217,7 +217,7 @@ namespace LaunchBar
                     }
                     else
                     {
-                        info = AppInfo.get_default_for_type(content_type,true);
+                        info = MenuMaker.get_default_for_uri(str_pretend);
                         if (info != null)
                             return ButtonType.URI;
                         return ButtonType.NONE;

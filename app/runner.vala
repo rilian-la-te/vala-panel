@@ -209,7 +209,7 @@ namespace ValaPanel
                 new Thread<void*>("Autocompletion",thread.run);
             }
         }
-        public override void response(int id)
+        protected override void response(int id)
         {
             if (id == Gtk.ResponseType.OK)
             {
@@ -222,8 +222,12 @@ namespace ValaPanel
                 try
                 {
                     var info  = AppInfo.create_from_commandline(str,null,
-                    terminal_button.active ? AppInfoCreateFlags.NEEDS_TERMINAL : 0);
-                    var launch = info.launch(null,Gdk.Display.get_default().get_app_launch_context());
+                    terminal_button.active ? AppInfoCreateFlags.NEEDS_TERMINAL : 0) as DesktopAppInfo;
+                    var data = new MenuMaker.SpawnData();
+                    var launch = info.launch_uris_as_manager(null,
+                                                             this.get_display().get_app_launch_context(),
+                                                             SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                                             data.child_spawn_func,MenuMaker.launch_callback);
                     if (!launch)
                     {
                         Signal.stop_emission_by_name(this,"response");
@@ -238,7 +242,6 @@ namespace ValaPanel
             thread.running = false;
             this.destroy();
         }
-
         public void gtk_run()
         {
             this.show_all();

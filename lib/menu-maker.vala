@@ -21,6 +21,19 @@ using Gtk;
 
 namespace MenuMaker
 {
+    [Compact]
+    public class SpawnData
+    {
+        internal Posix.pid_t pid; /* getpgid(getppid()); */
+        public SpawnData()
+        {
+            pid = Posix.getpgid(Posix.getppid());
+        }
+        public void child_spawn_func()
+        {
+            Posix.setpgid(0,this.pid);
+        }
+    }
     public static const string ATTRIBUTE_DND_SOURCE = "x-dnd-source";
     public static const string ATTRIBUTE_TOOLTIP = "x-tooltip";
     public static const TargetEntry[] menu_targets = {
@@ -40,13 +53,40 @@ namespace MenuMaker
                 menu1.append_section(label,link);
         }
     }
+    public static void launch_callback(DesktopAppInfo info, Pid pid)
+    {
 
+    }
+    public static AppInfo? get_default_for_uri(string uri)
+    {
+        /* g_file_query_default_handler() calls
+        * g_app_info_get_default_for_uri_scheme() too, but we have to do it
+        * here anyway in case GFile can't parse @uri correctly.
+        */
+        AppInfo? app_info = null;
+        var uri_scheme = Uri.parse_scheme (uri);
+        if (uri_scheme != null && uri_scheme[0] != '\0')
+            app_info = AppInfo.get_default_for_uri_scheme (uri_scheme);
+        if (app_info == null)
+        {
+            var file = File.new_for_uri (uri);
+            try
+            {
+                app_info = file.query_default_handler (null);
+            } catch (GLib.Error e){}
+        }
+        return app_info;
+    }
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param)
     {
         var id = param.get_string();
         var info = new DesktopAppInfo(id);
         try{
-        info.launch(null,Gdk.Display.get_default().get_app_launch_context());
+            var data = new SpawnData();
+            info.launch_uris_as_manager(null,
+                                         Gdk.Display.get_default().get_app_launch_context(),
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
 
@@ -54,9 +94,13 @@ namespace MenuMaker
     {
         var command = param.get_string();
         try{
-        GLib.AppInfo info = AppInfo.create_from_commandline(command,null,
-                    AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION);
-        info.launch(null,Gdk.Display.get_default().get_app_launch_context());
+            var data = new SpawnData();
+            var info = AppInfo.create_from_commandline(command,null,
+                            AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION) as DesktopAppInfo;
+            info.launch_uris_as_manager(null,
+                                         Gdk.Display.get_default().get_app_launch_context(),
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
 
@@ -64,8 +108,14 @@ namespace MenuMaker
     {
         var uri = param.get_string();
         try{
-        GLib.AppInfo.launch_default_for_uri(uri,
-                    Gdk.Display.get_default().get_app_launch_context());
+            var data = new SpawnData();
+            var info = get_default_for_uri(uri) as DesktopAppInfo;
+            List<string> uri_l = new List<string>();
+            uri_l.append(uri);
+            info.launch_uris_as_manager(uri_l,
+                                         Gdk.Display.get_default().get_app_launch_context(),
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
     private static void apply_menu_dnd(Gtk.MenuItem item, MenuModel section, int model_item)

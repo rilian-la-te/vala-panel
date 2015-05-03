@@ -118,7 +118,8 @@ set(CORE_PACKAGES
   libpeas-1.0
   libpeas-gtk-1.0
   gmodule-2.0
-  gio-addons-2.0)
+  gio-addons-2.0
+  posix)
 
 set(PACKGAGE_CFLAGS ${CORE_CFLAGS})
 set(PACKAGE_LINK_DIRS ${CORE_LIBRARY_DIRS})

@@ -128,16 +128,22 @@ namespace LaunchBar
                 return;
             }
             var context = this.get_toplevel().get_display().get_app_launch_context();
+            var desktop_info = info as DesktopAppInfo;
+            var spawn_data = new MenuMaker.SpawnData();
             try
             {
                 if (uri != null && button_type == ButtonType.URI)
                 {
                     List<string> uri_l = new List<string>();
                     uri_l.append(uri);
-                    info.launch_uris(uri_l,context);
+                    desktop_info.launch_uris_as_manager(uri_l,context,
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         spawn_data.child_spawn_func,MenuMaker.launch_callback);
                 }
                 else
-                    info.launch(null,context);
+                    desktop_info.launch_uris_as_manager(null,context,
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         spawn_data.child_spawn_func,MenuMaker.launch_callback);
             } catch (GLib.Error e) {stderr.printf("%s",e.message);}
         }
         private Bar get_launchbar()
