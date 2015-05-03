@@ -11,7 +11,7 @@ url="https://github.com/rilian-la-te/xfce4-sntray-plugin"
 arch=('i686' 'x86_64')
 license=('GPL3')
 makedepends=('cmake' 'vala' 'gtk3' 'xfce4-panel>=4.11.2' 'vala-panel-git')
-source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/releases/${pkgver}/${pkgbase}-${pkgver}.tar.gz"
+source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/releases/download/${pkgver}/${pkgbase}-${pkgver}.tar.gz"
         "git://github.com/rilian-la-te/${_cmakename}.git"
         "git://github.com/rilian-la-te/${_dbusmenuname}.git")
 sha256sums=('be44ef67ddfd8bc4d76af0faddb9856f4f9596fe9702784a37ae939b6f6b6681'
