@@ -1,8 +1,9 @@
 using GLib;
 
-public class QRichTextParser : Object
+[Compact]
+public class QRichTextParser
 {
-    private enum ListType
+    internal enum ListType
     {
         NONE,
         NUM,
@@ -15,33 +16,28 @@ public class QRichTextParser : Object
         null,
         null
     };
-    private GenericSet<string> pango_names;
-    private GenericSet<string> division_names;
-    private GenericSet<string> span_aliases;
-    private GenericSet<string> lists;
-    private GenericSet<string> newline_at_end;
-    private HashTable<string,string> translated_to_pango;
-    private HashTable<string,string> special_spans;
-    private MarkupParseContext context;
-    private string rich_markup;
-    private StringBuilder pango_markup_builder;
-    private ListType list_type;
-    private int list_order;
-    private int table_depth;
-    public string pango_markup
-    {get; private set;}
-    public Icon? icon
-    {get; private set;}
-    construct
+    internal GenericSet<string> pango_names;
+    internal GenericSet<string> division_names;
+    internal GenericSet<string> span_aliases;
+    internal GenericSet<string> lists;
+    internal GenericSet<string> newline_at_end;
+    internal HashTable<string,string> translated_to_pango;
+    internal HashTable<string,string> special_spans;
+    internal MarkupParseContext context;
+    internal string rich_markup;
+    internal StringBuilder pango_markup_builder;
+    internal ListType list_type;
+    internal int list_order;
+    internal int table_depth;
+    public string pango_markup;
+    public Icon? icon;
+    public QRichTextParser (string markup)
     {
         pango_markup_builder = new StringBuilder();
         context = new MarkupParseContext (parser, 0, this, null);
         init_sets();
         icon = null;
         table_depth = 0;
-    }
-    public QRichTextParser (string markup)
-    {
         rich_markup = markup;
     }
     private void init_sets()
