@@ -49,7 +49,7 @@ namespace LaunchBar
                 else if (button_type == ButtonType.EXECUTABLE)
                     return uri;
                 else if (button_type == ButtonType.URI)
-                    return "%s %s".printf(info.get_id(),uri);
+                    return "%s %s".printf(info.get_name(),uri);
                 return id;
             }
         }
