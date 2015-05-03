@@ -102,18 +102,18 @@ public class QRichTextParser
             debug("Found block. Pango markup not support blocks for now.\n");
         if (name in span_aliases)
         {
-            pango_markup_builder.append_printf("<span ");
+            pango_markup_builder.append_printf("<span");
             var i = 0;
             foreach (var attr in attr_names)
             {
                 if (attr == "bgcolor")
-                    pango_markup_builder.append_printf("background=\"%s\" ",attr_values[i]);
+                    pango_markup_builder.append_printf(" background=\"%s\" ",attr_values[i]);
                 if (attr == "color")
-                    pango_markup_builder.append_printf("foreground=\"%s\" ",attr_values[i]);
+                    pango_markup_builder.append_printf(" foreground=\"%s\" ",attr_values[i]);
                 if (attr == "size")
-                    pango_markup_builder.append_printf("size=\"%s\" ",parse_size(attr_values[i]));
+                    pango_markup_builder.append_printf(" size=\"%s\" ",parse_size(attr_values[i]));
                 if (attr == "face")
-                    pango_markup_builder.append_printf("face=\"%s\" ",attr_values[i]);
+                    pango_markup_builder.append_printf(" face=\"%s\" ",attr_values[i]);
                 i++;
             }
             pango_markup_builder.append_printf(">");
@@ -204,9 +204,18 @@ public class QRichTextParser
         else
             return size;
     }
-
-    public bool parse (string markup) throws MarkupError {
-        return context.parse (markup, -1);
+    private string prepare (string raw)
+    {
+        var str = raw;
+        if (str.contains("&nbsp;"))
+            str = str.replace("&nbsp;"," ");
+        if (str.contains("&"))
+            str = str.replace("&","&amp;");
+        return str;
+    }
+    public bool parse (string markup) throws MarkupError
+    {
+        return context.parse (prepare(markup), -1);
     }
 
     public void translate_markup()

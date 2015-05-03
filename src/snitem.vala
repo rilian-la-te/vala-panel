@@ -299,8 +299,6 @@ namespace StatusNotifier
                 if (tooltip.description.length > 0)
                     str += (str.length > 8) ? "<br/>" + tooltip.description : tooltip.description;
                 str += "</markup>";
-                if (str.contains("&"))
-                    str = str.replace("&","&amp;");
                 var markup_parser = new QRichTextParser(str);
                 markup_parser.translate_markup();
                 markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
