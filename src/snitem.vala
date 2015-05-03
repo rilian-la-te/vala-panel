@@ -297,16 +297,16 @@ namespace StatusNotifier
                 var markup_parser = new QRichTextParser(str);
                 markup_parser.translate_markup();
                 markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
-                var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap,48);
+                var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap,48,false);
                 icon = (markup_parser.icon != null) ? markup_parser.icon: res_icon;
             }
             else
             {
                 markup = raw_text;
-                icon = change_icon(tooltip.icon_name, tooltip.pixmap,48);
+                icon = change_icon(tooltip.icon_name, tooltip.pixmap,48,false);
             }
         }
-        private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps, int icon_size)
+        private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps, int icon_size, bool use_symbolic)
         {
             var new_name = (use_symbolic) ? icon_name+"-symbolic" : icon_name;
             if (icon_name != null && icon_name.length > 0)
@@ -388,9 +388,9 @@ namespace StatusNotifier
             try
             {
                 ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
-                var main_icon = change_icon(item.icon_name,item.icon_pixmap,image.pixel_size);
-                var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap,image.pixel_size);
-                var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4);
+                var main_icon = change_icon(item.icon_name,item.icon_pixmap,image.pixel_size, this.use_symbolic);
+                var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap,image.pixel_size,this.use_symbolic);
+                var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4,this.use_symbolic);
                 if (overlay_icon != null)
                     overlay_icon = new Emblem(overlay_icon);
                 bool build_icon = ((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ||  (main_icon != null) || (image.gicon != null));

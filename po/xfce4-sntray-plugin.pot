@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-17 00:08+0600\n"
+"POT-Creation-Date: 2015-05-04 01:39+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,47 +49,50 @@ msgstr ""
 msgid "Categories visibility"
 msgstr ""
 
-#: ../src/snconfig.ui:206
+#: ../src/snconfig.ui:206 ../src/snconfig.ui:221
 msgid "Use symbolic icons"
 msgstr ""
 
-#: ../src/snconfig.ui:228
+#: ../src/snconfig.ui:228 ../src/snconfig.ui:243
 msgid "Indicator size:"
 msgstr ""
 
-#: ../src/snconfig.ui:266
+#: ../src/snconfig.ui:266 ../src/snconfig.ui:281
 msgid "Appearance properties"
 msgstr ""
 
-#: ../src/snconfig.ui:285
+#: ../src/snconfig.ui:285 ../src/snconfig.ui:300
 msgid "Core"
 msgstr ""
 
-#: ../src/snconfig.ui:309 ../src/snconfig.ui:396
+#: ../src/snconfig.ui:309 ../src/snconfig.ui:396 ../src/snconfig.ui:324
+#: ../src/snconfig.ui:411
 msgid "Icon"
 msgstr ""
 
-#: ../src/snconfig.ui:320 ../src/snconfig.ui:407
+#: ../src/snconfig.ui:320 ../src/snconfig.ui:407 ../src/snconfig.ui:335
+#: ../src/snconfig.ui:422
 msgid "Name"
 msgstr ""
 
-#: ../src/snconfig.ui:331 ../src/snconfig.ui:418
+#: ../src/snconfig.ui:331 ../src/snconfig.ui:418 ../src/snconfig.ui:346
+#: ../src/snconfig.ui:433
 msgid "Override"
 msgstr ""
 
-#: ../src/snconfig.ui:344
+#: ../src/snconfig.ui:344 ../src/snconfig.ui:359
 msgid "Index"
 msgstr ""
 
-#: ../src/snconfig.ui:369
+#: ../src/snconfig.ui:369 ../src/snconfig.ui:384
 msgid "Order"
 msgstr ""
 
-#: ../src/snconfig.ui:431
+#: ../src/snconfig.ui:431 ../src/snconfig.ui:446
 msgid "Visible"
 msgstr ""
 
-#: ../src/snconfig.ui:454
+#: ../src/snconfig.ui:454 ../src/snconfig.ui:469
 msgid "Visibility"
 msgstr ""
 
@@ -103,4 +106,16 @@ msgstr ""
 
 #: ../data/sntray.desktop.xfce.in:7
 msgid "applications-system"
+msgstr ""
+
+#: ../src/snconfig.ui:206
+msgid "Show labels near icons (if applications provides some)"
+msgstr ""
+
+#: ../data/sntray.desktop.plugin.in:4
+msgid "StatusNotifier"
+msgstr ""
+
+#: ../data/sntray.desktop.plugin.in:5
+msgid "System tray in KDE StatusNotifierItem format"
 msgstr ""
