@@ -28,7 +28,6 @@ namespace ValaPanel
     namespace Key
     {
         internal static const string NAME = "plugin-type";
-        private static const string SCHEMA = "has-schema";
         internal static const string EXPAND = "is-expanded";
         internal static const string CAN_EXPAND = "can-expand";
         internal static const string PACK = "pack-type";
