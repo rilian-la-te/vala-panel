@@ -11,9 +11,9 @@ namespace XEmbed
         public uint32 uint_window {internal get; internal set construct;}
         public int icon_size {get; set; default = 16;}
         private string window_name;
-        public Socket(Gdk.Screen screen, X.Window window)
+        public Socket(Gdk.Screen screen, uint32 window)
         {
-            Object(uint_window: (uint32)window);
+            Object(uint_window: window);
             this.set_has_window(true);
             this.notify["icon-size"].connect(()=>{
                 this.queue_resize();
@@ -40,10 +40,10 @@ namespace XEmbed
             var moved = alloc.x != prev_alloc.x || alloc.y != prev_alloc.y;
             var resized = alloc.width != prev_alloc.width || alloc.height != prev_alloc.height;
             if ((moved || resized) && this.get_mapped())
-                this.get_window().get_parent().invalidate_rect(prev_alloc,false);
+                this.get_window().get_parent().invalidate_rect((Gdk.Rectangle)prev_alloc,false);
             base.size_allocate(alloc);
             if ((moved || resized) && this.get_mapped())
-                this.get_window().get_parent().invalidate_rect(prev_alloc,false);
+                this.get_window().get_parent().invalidate_rect((Gdk.Rectangle)prev_alloc,false);
         }
         protected override bool draw(Cairo.Context cr)
         {
