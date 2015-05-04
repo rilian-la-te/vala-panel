@@ -83,10 +83,9 @@
     <property name="can_focus">False</property>
     <property name="default-height">100</property>
     <property name="default-width">100</property>
-    <property name="destroy-with-parent">True</property>
     <property name="title" translatable="yes">Panel preferences</property>
-    <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="visible">True</property>
