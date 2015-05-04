@@ -51,18 +51,12 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     AppInfoMonitor? app_monitor;
     FileMonitor? file_monitor;
     ulong show_system_menu_idle;
-    internal string? icon
-    {get; set;}
-    internal bool system
-    {get; set;}
-    internal bool intern
-    {get; set;}
-    internal bool bar
-    {get; set;}
-    internal string? caption
-    {get; set;}
-    internal string? filename
-    {get; set;}
+    internal string? icon {get; set;}
+    internal bool system {get; set;}
+    internal bool intern {get; set;}
+    internal bool bar {get; set;}
+    internal string? caption {get; set;}
+    internal string? filename {get; set;}
     public Menu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     uint number)
@@ -114,13 +108,25 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         this.show_all();
         this.notify.connect((pspec)=>{
             if ((pspec.name == "intern")
-                || (pspec.name == "caption" && !bar)
                 || (pspec.name == "filename" && !intern)
                 || (pspec.name == "bar")
-                || (pspec.name == "icon"))
+                || (pspec.name == "icon" && bar))
             {
                 menumodel_widget_destroy();
                 button = menumodel_widget_create();
+            }
+            else if (pspec.name == "caption" && !bar)
+            {
+                var btn = button as MenuButton;
+                btn.label = caption;
+            }
+            else if (pspec.name == "icon" && !bar)
+            {
+                try
+                {
+                    var btn = button as MenuButton;
+                    (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
+                } catch (Error e){stderr.printf("%s\n",e.message);}
             }
         });
     }

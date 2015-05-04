@@ -136,6 +136,7 @@ namespace ValaPanel
         {
             thread.running = false;
             this.application = null;
+            thread.unref();
         }
         construct
         {
