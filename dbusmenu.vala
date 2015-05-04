@@ -102,15 +102,15 @@ namespace DBusMenu
         private void init_default()
         {
             if(!dict.contains("visible"))
-                dict.insert_value("visible", new Variant.boolean(true));
+                dict.insert("visible", "b",true);
             if(!dict.contains("enabled"))
-                dict.insert_value("enabled", new Variant.boolean(true));
+                dict.insert("enabled", "b", true);
             if(!dict.contains("type"))
-                dict.insert_value("type", new Variant.string("standard"));
+                dict.insert("type","s" ,"standard");
             if(!dict.contains("label"))
-                dict.insert_value("label", new Variant.string(""));
+                dict.insert("label", "s", "");
             if(!dict.contains("disposition"))
-                dict.insert_value("disposition", new Variant.string("normal"));
+                dict.insert("disposition","s", "normal");
         }
     }
 
@@ -119,8 +119,7 @@ namespace DBusMenu
         private Client client;
         private PropertyStore store;
         private List<int> children_ids;
-        public int id
-        {get; private set;}
+        public int id {get; private set;}
         internal DateTime gc_tag;
         public signal void property_changed(string name, Variant? val);
         public signal void child_added(int id, Item item);
@@ -184,9 +183,9 @@ namespace DBusMenu
             children_ids.insert(id,newpos);
             child_moved(oldpos,newpos,client.get_item(id));
         }
-        public List<Item> get_children()
+        public List<unowned Item> get_children()
         {
-            List<Item> ret = new List<Item>();
+            List<unowned Item> ret = new List<unowned Item>();
             foreach (var id in children_ids)
                 ret.append(client.get_item(id));
             return ret;
@@ -236,11 +235,11 @@ namespace DBusMenu
             iface.x_valapanel_item_value_changed.connect(request_value_cb);
             requested_props_ids = {};
         }
-        public Item? get_root_item()
+        public unowned Item? get_root_item()
         {
             return items.lookup(0);
         }
-        public Item? get_item(int id)
+        public unowned Item? get_item(int id)
         {
             return items.lookup(id);
         }
@@ -420,8 +419,7 @@ namespace DBusMenu
     }
     public interface GtkItemIface : Object
     {
-        public abstract Item item
-        {get; protected set;}
+        public abstract Item item {get; protected set;}
         public static void parse_shortcut_variant(Variant shortcut, out uint key, out Gdk.ModifierType modifier)
         {
             print("%s\n",shortcut.print(false));
@@ -451,7 +449,8 @@ namespace DBusMenu
     {
         private static const string[] allowed_properties = {"visible","enabled","label","type",
                                                 "children-display","toggle-type",
-                                                "toggle-state","icon-name","icon-data","accessible-desc","x-valapanel-icon-size"};
+                                                "toggle-state","icon-name","icon-data","accessible-desc",
+                                                "x-valapanel-icon-size"};
         public Item item
         {get; protected set;}
         private bool has_indicator;
@@ -802,8 +801,7 @@ namespace DBusMenu
         private static const string[] allowed_properties = {"visible","enabled","label","type",
                                                 "children-display", "x-valapanel-icon-size",
                                                 "icon-name","icon-data","accessible-desc"};
-        public Item item
-        {get; protected set;}
+        public Item item {get; protected set;}
         private Box box;
         private Image image;
         private new AccelLabel label;
