@@ -336,9 +336,6 @@ namespace ValaPanel
             if (runner == null || !runner.get_mapped())
             {
                 runner = new Runner(this);
-                runner.unmap.connect(()=>{
-                    runner = null;
-                });
                 runner.gtk_run();
             }
             else

@@ -21,40 +21,39 @@ using GLib;
 
 namespace ValaPanel
 {
-    [Compact]
+    [Compact, CCode (ref_function = "vala_panel_completion_thread_ref", unref_function = "vala_panel_completion_thread_unref")]
     internal class CompletionThread
     {
         public bool running;
         internal unowned Gtk.Entry entry;
         internal SList<string>? filenames;
+        internal int ref_count;
         public CompletionThread (Gtk.Entry entry)
         {
+            ref_count = 1;
             this.entry = entry;
             running = true;
         }
-        private bool check_running()
-        {
-            if (!running)
-                Thread.exit(true);
-            return true;
-        }
-        public bool run ()
+
+        public void* run ()
         {
             SList<string> list = new SList<string>();
             var dirs = GLib.Environment.get_variable("PATH").split(":",0);
             foreach(var dir in dirs)
             {
-                check_running();
+                if (!running)
+                    break;
                 try
                 {
                     Dir gdir = Dir.open(dir,0);
                     string? name = null;
-                    while(check_running() && (name = gdir.read_name())!= null)
+                    while(running && (name = gdir.read_name())!= null)
                     {
                         var filename = GLib.Path.build_filename(dir,name);
                         if (GLib.FileUtils.test(filename,FileTest.IS_EXECUTABLE))
                         {
-                            check_running();
+                            if (!running)
+                                break;
                             if (list.find_custom(name,(GLib.CompareFunc)Posix.strcmp) == null)
                                 list.append(name);
                         }
@@ -68,12 +67,16 @@ namespace ValaPanel
                 }
             }
             filenames = (owned)list;
-            setup_entry_completion();
-            return true;
+            Idle.add(() =>
+            {
+                if(running)
+                    setup_entry_completion();
+                return false;
+            });
+            return null;
         }
         private void setup_entry_completion()
         {
-            check_running();
             var comp = new EntryCompletion();
             comp.set_minimum_key_length(2);
             comp.set_inline_completion(true);
@@ -91,6 +94,17 @@ namespace ValaPanel
             entry.set_completion(comp);
             comp.complete();
         }
+        public unowned CompletionThread @ref ()
+        {
+            GLib.AtomicInt.add (ref this.ref_count, 1);
+            return this;
+        }
+        public void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
     }
     [GtkTemplate (ui = "/org/vala-panel/app/app-runner.ui")]
     [CCode (cname="Runner")]
@@ -104,7 +118,6 @@ namespace ValaPanel
         private Box main_box;
 
         private CompletionThread? thread;
-        private Thread<bool> thread_ref;
 
         private GLib.List<GLib.AppInfo> apps_list;
         private AppInfoMonitor monitor;
@@ -137,10 +150,7 @@ namespace ValaPanel
                 apps_list = AppInfo.get_all();
             });
         }
-        ~Runner()
-        {
-            thread_ref.join();
-        }
+
         private DesktopAppInfo? match_app_by_exec(string exec)
         {
             DesktopAppInfo? ret = null;
@@ -196,7 +206,7 @@ namespace ValaPanel
             else
             {
                 thread = new CompletionThread(main_entry);
-                thread_ref = new Thread<bool>("Autocompletion",thread.run);
+                new Thread<void*>("Autocompletion",thread.run);
             }
         }
         protected override void response(int id)
@@ -207,6 +217,7 @@ namespace ValaPanel
 //              var str = terminal_button.active ?
 //                          App.terminal + main_entry.get_text()
 //                          : main_entry.get_text();
+//
                 var str = main_entry.get_text();
                 try
                 {
@@ -233,6 +244,7 @@ namespace ValaPanel
         }
         public void gtk_run()
         {
+            this.show_all();
             this.setup_entry_completion();
             this.show_all();
             this.show();
@@ -240,14 +252,19 @@ namespace ValaPanel
             main_box.set_orientation(Gtk.Orientation.HORIZONTAL);
             this.present_with_time(Gtk.get_current_event_time());
         }
+
         [GtkCallback]
         private void on_entry_changed()
         {
             DesktopAppInfo? app = null;
             if (main_entry.get_text()!=null && main_entry.get_text() != "")
+            {
                 app = match_app_by_exec(main_entry.get_text());
+            }
             if (app != null)
+            {
                 main_entry.set_icon_from_gicon(Gtk.EntryIconPosition.PRIMARY,app.get_icon());
+            }
             else
                 main_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"system-run-symbolic");
         }
