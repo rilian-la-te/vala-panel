@@ -33,18 +33,16 @@ namespace ValaPanel
         internal static const string PACK = "pack-type";
         internal static const string POSITION = "position";
     }
-    [Compact, CCode (ref_function = "vala_panel_plugin_settings_ref", unref_function = "vala_panel_plugin_settings_unref")]
+    [Compact]
     internal class PluginSettings
     {
         internal string path_append;
         internal GLib.Settings default_settings;
         internal GLib.Settings config_settings;
         internal uint number;
-        internal Volatile ref_count;
         internal PluginSettings(ToplevelSettings settings, string name, uint num)
         {
             this.number = num;
-            this.ref_count = 1;
             this.path_append = name;
             var id = "%s.%s".printf(settings.root_schema, this.path_append);
             var path = "%s%u/".printf(settings.root_path,this.number);
@@ -56,36 +54,23 @@ namespace ValaPanel
                 this.config_settings = new GLib.Settings.with_backend_and_path(
                                                 id, settings.backend, path);
         }
-        public unowned PluginSettings @ref ()
-        {
-            GLib.AtomicInt.add (ref this.ref_count, 1);
-            return this;
-        }
-        public void unref ()
-        {
-            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
-                this.free ();
-        }
-        private extern void free ();
     }
-    [Compact, CCode (ref_function = "vala_panel_toplevel_settings_ref", unref_function = "vala_panel_toplevel_settings_unref")]
+    [Compact]
     internal class ToplevelSettings
     {
-        internal unowned GLib.SList<PluginSettings> plugins;
+        internal GLib.SList<PluginSettings> plugins;
         internal GLib.Settings settings;
         internal GLib.SettingsBackend backend;
         internal string filename;
         internal string root_name;
         internal string root_schema;
         internal string root_path;
-        internal Volatile ref_count;
         internal ToplevelSettings.full(string file, string schema, string path, string? root)
         {
             this.filename = file;
             this.root_name = root;
             this.root_path = path;
             this.root_schema = schema;
-            this.ref_count = 1;
             backend = new KeyfileSettingsBackend(file,path,root);
             settings = new GLib.Settings.with_backend_and_path (schema,backend,path);
         }
@@ -115,23 +100,21 @@ namespace ValaPanel
             return len+1;
         }
 
-        internal PluginSettings add_plugin_settings_full(string name, uint num)
+        internal unowned PluginSettings add_plugin_settings_full(string name, uint num)
         {
             var settings = new PluginSettings(this,name,num);
-            plugins.append(settings);
-            return settings;
+            plugins.append((owned)settings);
+            return get_settings_by_num(num);
         }
-        internal PluginSettings add_plugin_settings(string name)
+        internal unowned PluginSettings add_plugin_settings(string name)
         {
             var num = find_free_num ();
-            var settings = new PluginSettings(this,name,num);
-            plugins.append(settings);
-            return settings;
+            return add_plugin_settings_full(name,num);
         }
 
         internal void remove_plugin_settings(uint num)
         {
-            foreach (var tmp in plugins)
+            foreach (unowned PluginSettings tmp in plugins)
             {
                 if (tmp.number == num)
                 {
@@ -171,7 +154,7 @@ namespace ValaPanel
                 {
                     var name = f.get_string(group,Key.NAME);
                     name = name._delimit("'",' ')._strip();
-                    var s = add_plugin_settings_full(name,int.parse(group));
+                    add_plugin_settings_full(name,int.parse(group));
                 }
                 catch (GLib.KeyFileError e)
                 {
@@ -182,23 +165,12 @@ namespace ValaPanel
             }
             return true;
         }
-        internal PluginSettings? get_settings_by_num(uint num)
+        internal unowned PluginSettings? get_settings_by_num(uint num)
         {
-            foreach (var pl in plugins)
+            foreach (unowned PluginSettings pl in plugins)
                 if (pl.number == num)
                     return pl;
             return null;
         }
-        public unowned ToplevelSettings @ref ()
-        {
-            GLib.AtomicInt.add (ref this.ref_count, 1);
-            return this;
-        }
-        public void unref ()
-        {
-            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
-                this.free ();
-        }
-        private extern void free ();
     }
 }

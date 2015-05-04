@@ -789,7 +789,7 @@ namespace ValaPanel
  */
         internal void add_applet(string type)
         {
-            PluginSettings s = settings.add_plugin_settings(type);
+            unowned PluginSettings s = settings.add_plugin_settings(type);
             s.default_settings.set_string(Key.NAME,type);
             load_applet(s);
         }
@@ -873,7 +873,7 @@ namespace ValaPanel
         }
         internal void applet_removed(uint num)
         {
-            PluginSettings s = settings.get_settings_by_num(num);
+            unowned PluginSettings s = settings.get_settings_by_num(num);
             var name = s.default_settings.get_string(Key.NAME);
             var count = local_applets.lookup(name);
             count--;
@@ -916,7 +916,7 @@ namespace ValaPanel
             return loaded_types.lookup((settings.get_settings_by_num(pl.number)
                                         .default_settings.get_string(Key.NAME))).plugin;
         }
-        internal PluginSettings get_applet_settings(Applet pl)
+        internal unowned PluginSettings get_applet_settings(Applet pl)
         {
             return settings.get_settings_by_num(pl.number);
         }

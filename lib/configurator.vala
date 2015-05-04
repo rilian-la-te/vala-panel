@@ -259,7 +259,7 @@ namespace ValaPanel
                 {
                     expand = !expand;
                     (model as Gtk.ListStore).set(it,Column.EXPAND,expand,-1);
-                    PluginSettings s = toplevel.get_applet_settings(pl);
+                    unowned PluginSettings s = toplevel.get_applet_settings(pl);
                     s.default_settings.set_boolean(Key.EXPAND,expand);
                 }
             }
@@ -436,7 +436,7 @@ namespace ValaPanel
             {
                 var applet = w as Applet;
                 uint idx = toplevel.get_applet_position(applet);
-                PluginSettings s = toplevel.get_applet_settings(applet);
+                unowned PluginSettings s = toplevel.get_applet_settings(applet);
                 s.default_settings.set_uint(Key.POSITION,idx);
             }
         }
