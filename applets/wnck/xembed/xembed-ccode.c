@@ -426,7 +426,7 @@ static void trayclient_request_dock(TrayPlugin * tr, XClientMessageEvent * xeven
     tc->tr = tr;
 
     /* Allocate a socket.  This is the tray side of the Xembed connection. */
-    tc->socket = xembed_socket_new(gtk_widget_get_screen(GTK_WIDGET(tr->applet)),tc->window);
+    tc->socket = GTK_WIDGET(xembed_socket_new(gtk_widget_get_screen(GTK_WIDGET(tr->applet)),tc->window));
 
     /* Add the socket to the icon grid. */
     flowbox_child = gtk_flow_box_child_new();
@@ -625,14 +625,14 @@ static void
 tray_draw_child (GtkWidget *box,
                  cairo_t   *cr)
 {
-    gtk_container_foreach (GTK_CONTAINER (box), tray_draw_icon, cr);
+    gtk_container_foreach (GTK_CONTAINER (box), (GtkCallback)tray_draw_icon, cr);
 }
 
 static void
 tray_draw_box (GtkWidget *box,
                cairo_t   *cr)
 {
-    gtk_container_foreach (GTK_CONTAINER (box), tray_draw_child, cr);
+    gtk_container_foreach (GTK_CONTAINER (box), (GtkCallback)tray_draw_child, cr);
 }
 
 /* Plugin constructor. */
@@ -641,7 +641,7 @@ TrayPlugin *tray_constructor(PanelApplet* applet)
     GtkWidget *p;
     resolve_atoms();
     /* Get the screen and display. */
-	GdkScreen* screen = gtk_widget_get_screen(applet);
+    GdkScreen* screen = gtk_widget_get_screen(GTK_WIDGET(applet));
     Screen * xscreen = GDK_SCREEN_XSCREEN(screen);
     GdkDisplay * display = gdk_screen_get_display(screen);
 

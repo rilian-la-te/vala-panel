@@ -5,8 +5,8 @@
 
 G_BEGIN_DECLS
 /* Representative of a balloon message. */
-typedef struct {
-	struct _balloon_message * flink;		/* Forward link */
+typedef struct _balloon_message{
+    struct _balloon_message * flink;		/* Forward link */
 	Window window;				/* X window ID */
 	long timeout;				/* Time in milliseconds to display message; 0 if no timeout */
 	long length;				/* Message string length */
@@ -16,15 +16,15 @@ typedef struct {
 } BalloonMessage;
 
 /* Representative of a tray client. */
-typedef struct {
-	struct _tray_client * client_flink;		/* Forward link to next task in X window ID order */
-	struct _tray_plugin * tr;			/* Back pointer to tray plugin */
+typedef struct _tray_client{
+    struct _tray_client * client_flink;		/* Forward link to next task in X window ID order */
+    struct _tray_plugin * tr;			/* Back pointer to tray plugin */
 	Window window;				/* X window ID */
 	GtkWidget * socket;				/* Socket */
 } TrayClient;
 
 /* Private context for system tray plugin. */
-typedef struct {
+typedef struct _tray_plugin{
 	GtkWidget * plugin;				/* Back pointer to Plugin */
 	PanelApplet* applet;
 	TrayClient * client_list;			/* List of tray clients */

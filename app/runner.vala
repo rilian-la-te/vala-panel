@@ -27,7 +27,7 @@ namespace ValaPanel
         public bool running;
         internal unowned Gtk.Entry entry;
         internal SList<string>? filenames;
-        internal int ref_count;
+        internal Volatile ref_count;
         public CompletionThread (Gtk.Entry entry)
         {
             ref_count = 1;
@@ -96,7 +96,7 @@ namespace ValaPanel
         }
         public unowned CompletionThread @ref ()
         {
-            GLib.AtomicInt.add (ref this.ref_count, 1);
+            GLib.AtomicInt.inc (ref this.ref_count);
             return this;
         }
         public void unref ()
@@ -106,8 +106,7 @@ namespace ValaPanel
         }
         private extern void free ();
     }
-    [GtkTemplate (ui = "/org/vala-panel/app/app-runner.ui")]
-    [CCode (cname="Runner")]
+    [GtkTemplate (ui = "/org/vala-panel/app/app-runner.ui"),CCode (cname="Runner")]
     internal class Runner : Gtk.Dialog
     {
         [GtkChild (name="main-entry")]
@@ -118,6 +117,7 @@ namespace ValaPanel
         private Box main_box;
 
         private CompletionThread? thread;
+        private Thread<void*> thread_ref;
 
         private GLib.List<GLib.AppInfo> apps_list;
         private AppInfoMonitor monitor;
@@ -132,7 +132,11 @@ namespace ValaPanel
         {
             Object(application: app);
         }
-
+        ~Runner()
+        {
+            thread.running = false;
+            this.application = null;
+        }
         construct
         {
             PanelCSS.apply_from_resource(this,"/org/vala-panel/app/style.css","-panel-run-dialog");
@@ -151,13 +155,13 @@ namespace ValaPanel
             });
         }
 
-        private DesktopAppInfo? match_app_by_exec(string exec)
+        private unowned DesktopAppInfo? match_app_by_exec(string exec)
         {
-            DesktopAppInfo? ret = null;
+            unowned DesktopAppInfo? ret = null;
             string exec_path = GLib.Environment.find_program_in_path(exec);
             if (exec_path == null)
                 return null;
-            foreach(var app in apps_list)
+            foreach(unowned AppInfo app in apps_list)
             {
                 var app_exec = app.get_executable();
                 if (app_exec == null)
@@ -206,7 +210,7 @@ namespace ValaPanel
             else
             {
                 thread = new CompletionThread(main_entry);
-                new Thread<void*>("Autocompletion",thread.run);
+                thread_ref = new Thread<void*>("Autocompletion",thread.run);
             }
         }
         protected override void response(int id)
@@ -226,7 +230,7 @@ namespace ValaPanel
                     var data = new MenuMaker.SpawnData();
                     var launch = info.launch_uris_as_manager(null,
                                                              this.get_display().get_app_launch_context(),
-                                                             SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                                             SpawnFlags.SEARCH_PATH,
                                                              data.child_spawn_func,MenuMaker.launch_callback);
                     if (!launch)
                     {
@@ -244,15 +248,17 @@ namespace ValaPanel
         }
         public void gtk_run()
         {
-            this.show_all();
             this.setup_entry_completion();
             this.show_all();
-            this.show();
             main_entry.grab_focus();
             main_box.set_orientation(Gtk.Orientation.HORIZONTAL);
             this.present_with_time(Gtk.get_current_event_time());
         }
-
+        [GtkCallback]
+        private void on_close_button_clicked()
+        {
+            this.response(ResponseType.CLOSE);
+        }
         [GtkCallback]
         private void on_entry_changed()
         {

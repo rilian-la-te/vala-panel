@@ -16,20 +16,28 @@
     <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <initial-focus name="main-entry"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="main-box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="orientation">horizontal</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area1">
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkToggleButton" id="terminal-button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
+            <property name="tooltip_text" translatable="yes">Terminal toggle button</property>
             <property name="relief">none</property>
             <property name="image_position">right</property>
-            <property name="tooltip_text" translatable="yes">Terminal toggle button</property>
             <property name="always_show_image">True</property>
             <child>
               <object class="GtkImage" id="image-terminal">
@@ -51,16 +59,15 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="is_focus">True</property>
-            <property name="activates_default">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Runnable command name</property>
+            <property name="activates_default">True</property>
             <property name="primary_icon_name">system-run-symbolic</property>
             <property name="secondary_icon_name">go-next-symbolic</property>
             <property name="placeholder_text" translatable="yes">Enter application name...</property>
-            <property name="tooltip_text" translatable="yes">Runnable command name</property>
             <signal name="activate" handler="on_entry_activated" swapped="no"/>
             <signal name="changed" handler="on_entry_changed" swapped="no"/>
             <signal name="icon-press" handler="on_icon_activated" swapped="no"/>
-            <property name="is_focus">True</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -73,9 +80,10 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="relief">none</property>
             <property name="tooltip_text" translatable="yes">Cancel button</property>
+            <property name="relief">none</property>
             <property name="always_show_image">True</property>
+            <signal name="clicked" handler="on_close_button_clicked" swapped="no"/>
             <child>
               <object class="GtkImage" id="image-close">
                 <property name="visible">True</property>
@@ -93,8 +101,5 @@
         </child>
       </object>
     </child>
-    <action-widgets>
-    	<action-widget response="-6">close-button</action-widget>
-    </action-widgets>
   </template>
 </interface>

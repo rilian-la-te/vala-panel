@@ -23,12 +23,10 @@ namespace PanelCSS
 {
     public void apply_with_class(Gtk.Widget w, string css, string klass, bool add)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         w.reset_style();
         if (!add)
-        {
             context.remove_class(klass);
-        }
         else
         {
             var provider = new Gtk.CssProvider();
@@ -42,13 +40,13 @@ namespace PanelCSS
     }
     public void toggle_class(Widget w, string klass, bool apply)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         if (apply) context.add_class(klass);
         else context.remove_class(klass);
     }
     public CssProvider? add_css_to_widget(Widget w, string css)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         w.reset_style();
         var provider = new Gtk.CssProvider();
         try
@@ -61,7 +59,7 @@ namespace PanelCSS
     }
     public Gtk.CssProvider? apply_with_provider(Gtk.Widget w, string css, string klass)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         w.reset_style();
         var provider = new Gtk.CssProvider();
         try
@@ -91,7 +89,7 @@ namespace PanelCSS
 
     public void apply_from_resource(Gtk.Widget w, string file, string klass)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         w.reset_style();
         var provider = new Gtk.CssProvider();
         File ruri = File.new_for_uri("resource:/%s".printf(file));
@@ -105,7 +103,7 @@ namespace PanelCSS
 
     public Gtk.CssProvider? apply_from_resource_with_provider(Gtk.Widget w, string file, string klass)
     {
-        var context = w.get_style_context();
+        unowned StyleContext context = w.get_style_context();
         w.reset_style();
         var provider = new Gtk.CssProvider();
         File ruri = File.new_for_uri("resource:/%s".printf(file));
@@ -122,34 +120,34 @@ namespace PanelCSS
     public string generate_background(string? name, Gdk.RGBA color)
     {
         if (name != null)
-            return ".-vala-panel-background{
+            return """.-vala-panel-background{
              background-color: transparent;
              background-image: url('%s');
-            }".printf(name);
-        return ".-vala-panel-background{
+            }""".printf(name);
+        return """.-vala-panel-background{
              background-color: %s;
              background-image: none;
-            }".printf(color.to_string());
+            }""".printf(color.to_string());
     }
     public string generate_font_size(int size)
     {
-        return ".-vala-panel-font-size{
+        return """.-vala-panel-font-size{
                 font-size: %dpx;
-                }".printf(size);
+                }""".printf(size);
     }
     public string generate_font_color(Gdk.RGBA color)
     {
-        return ".-vala-panel-font-color{
+        return """.-vala-panel-font-color{
                 color: %s;
-                }".printf(color.to_string());
+                }""".printf(color.to_string());
     }
     public string generate_font_label(double size ,bool bold)
     {
         int size_factor = (int)size * 100;
-        return ".-vala-panel-font-label{
+        return """.-vala-panel-font-label{
                  font-size: %d%%;
                  font-weight: %s;
-                }".printf(size_factor,bold ? "bold" : "normal");
+                }""".printf(size_factor,bold ? "bold" : "normal");
     }
     public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e)
     {
@@ -158,7 +156,7 @@ namespace PanelCSS
         var act = w.get_style_context().get_color(flags);
         pass.alpha = 0.7;
         act.alpha = 0.9;
-        string? edge = null;
+        unowned string? edge = null;
         switch (e)
         {
             case Gtk.PositionType.TOP:
@@ -175,9 +173,9 @@ namespace PanelCSS
                 break;
         }
 #if HAVE_GTK313
-        var checked = ".-panel-flat-button:checked,";
+        unowned string checked = ".-panel-flat-button:checked,";
 #else
-        var checked = "";
+        unowned string checked = "";
 #endif
         return """.-panel-flat-button {
                padding: 0px;

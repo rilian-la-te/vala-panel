@@ -29,16 +29,16 @@ namespace MenuMaker
             var found = false;
             var action = "app.launch-id('%s')".printf(info.get_id());
             var item = new GLib.MenuItem(info.get_name(),action);
-            var icon = (info.get_icon() != null)
-                        ? info.get_icon().to_string()
-                        : "application-x-executable";
-            item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s",icon);
+            if (info.get_icon() != null)
+                item.set_icon(info.get_icon());
+            else
+                item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","application-x-executable");
             item.set_attribute(ATTRIBUTE_DND_SOURCE,"b",true);
             if(info.get_description() != null)
                 item.set_attribute(ATTRIBUTE_TOOLTIP,"s",info.get_description());
-            var cats_str = info.get_categories() ?? " ";
+            unowned string cats_str = info.get_categories() ?? " ";
             var cats = cats_str.split_set(";");
-            foreach (var cat in cats)
+            foreach (unowned string cat in cats)
             {
                 menu_link = (GLib.Menu)builder.get_object(cat.down());
                 if (menu_link != null)
@@ -60,7 +60,7 @@ namespace MenuMaker
     {
         var builder = new Gtk.Builder.from_resource("/org/vala-panel/menumodel/system-menus.ui");
         var menu = (GLib.Menu) builder.get_object("applications-menu");
-        foreach (var info in GLib.AppInfo.get_all ())
+        foreach (unowned AppInfo info in GLib.AppInfo.get_all ())
             parse_app_info((GLib.DesktopAppInfo)info,builder);
         for(int i = 0; i < menu.get_n_items(); i++)
         {
@@ -98,7 +98,7 @@ namespace MenuMaker
         var section = (GLib.Menu) builder.get_object("folders-section");
         var item = new GLib.MenuItem(_("Home"),null);
         item.set_attribute(GLib.Menu.ATTRIBUTE_ICON,"s","user-home");
-        string path=null;
+        string path = null;
         try
         {
             path = GLib.Filename.to_uri (GLib.Environment.get_home_dir ());

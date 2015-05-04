@@ -94,7 +94,7 @@ namespace LaunchBar
                 this.get_style_context().remove_class("-panel-launch-button-selected");
             });
             ebox.show();
-            drag_source_set(this,Gdk.ModifierType.BUTTON2_MASK,MenuMaker.menu_targets,Gdk.DragAction.MOVE);
+            drag_source_set(this,Gdk.ModifierType.BUTTON2_MASK,MenuMaker.MENU_TARGETS,Gdk.DragAction.MOVE);
             drag_source_set_icon_gicon(this,icon);
             this.drag_begin.connect((context)=>{
                 this.get_launchbar().request_remove_id(id);

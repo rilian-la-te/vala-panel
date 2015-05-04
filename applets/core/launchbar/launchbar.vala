@@ -60,7 +60,7 @@ namespace LaunchBar
                     layout,                     // widget that will accept a drop
                     DestDefaults.MOTION       // default actions for dest on DnD
                     | DestDefaults.HIGHLIGHT,
-                    MenuMaker.menu_targets,              // lists of target to support
+                    MenuMaker.MENU_TARGETS,              // lists of target to support
                     Gdk.DragAction.COPY|Gdk.DragAction.MOVE        // what to do with data after dropped
                 );
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;

@@ -154,11 +154,13 @@ namespace ValaPanel
             top.bind_property(Key.ICON_SIZE,img,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
         else if (size > 0)
             img.set_pixel_size(size);
+#if !GTK314
         Gtk.IconTheme.get_default().changed.connect(()=>{
             Icon i;
             img.get_gicon(out i, IconSize.INVALID);
             img.set_from_gicon(i,IconSize.INVALID);
         });
+#endif
     }
     public static void setup_icon_button(Button btn, Icon? icon = null, string? label = null, Toplevel? top = null)
     {
@@ -167,7 +169,7 @@ namespace ValaPanel
         Image? img = null;
         if (icon != null)
         {
-            img = new Image.from_gicon(icon,IconSize.INVALID);
+            img = new Image();
             setup_icon(img,icon,top);
         }
         setup_button(btn, img, label);

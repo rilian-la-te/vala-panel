@@ -84,8 +84,12 @@ ensure_vala_version ("0.24" MINIMUM)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
-add_definitions(-w) # Disable gcc warnings
-
+add_definitions(-w) #Suppress all GCC warnings
+#add_definitions(-Wall -Wno-unused # Vala loves to create variables
+#                -Wno-discarded-qualifiers #Vala loves to discard const
+#                -Wno-discarded-array-qualifiers
+#                -Wno-deprecated-declarations #Vala warns us already
+#                -Wno-incompatible-pointer-types) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 
 pkg_check_modules (CORE REQUIRED

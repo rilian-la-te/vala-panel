@@ -1128,7 +1128,6 @@ namespace ValaPanel
             str.append_printf(".-simple-panel-foreground-color {\n");
             str.append_printf(" color: %s;\n",foreground_color);
             str.append_printf("}\n");
-            str.append_printf("\0");
             var css = str.str;
             provider = PanelCSS.add_css_to_widget(this as Widget, css);
             PanelCSS.toggle_class(this as Widget,"-simple-panel-background",use_background_color || use_background_file);

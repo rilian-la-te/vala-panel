@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.valapanel" path="/org/vala-panel/">
+  <schema id="org.valapanel">
     <key name="is-dark" type="b">
       <default>false</default>
     </key>

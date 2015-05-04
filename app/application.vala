@@ -51,19 +51,11 @@ namespace ValaPanel
         private bool _dark;
         private bool _custom;
         private string _css;
-        private string _profile;
         private CssProvider provider;
-        public string profile
-                {get {return _profile;}
-                 internal set construct {_profile = value;}
-                 default = "default";
-                }
-        public string terminal_command
-                {get; internal set;}
-        public string logout_command
-                {get; internal set;}
-        public string shutdown_command
-                {get; internal set;}
+        public string profile {get; internal set construct; default = "default";}
+        public string terminal_command {get; internal set;}
+        public string logout_command {get; internal set;}
+        public string shutdown_command {get; internal set;}
         public bool is_dark
         {get {return _dark;}
                 internal set {_dark = value; apply_styling();}}
@@ -223,7 +215,7 @@ namespace ValaPanel
                 }
                 catch (Error e)
                 {
-                    cmdl.printerr("%s: invalid command. Cannot parse.", command);
+                    cmdl.printerr(_("%s: invalid command. Cannot parse."), command);
                 }
                 var action = lookup_action(name);
                 if (action != null)
@@ -244,7 +236,7 @@ namespace ValaPanel
             start_panels_from_dir((Gtk.Application)this,panel_dir);
             if (this.get_windows() != null)
                 return true;
-            var dirs = GLib.Environment.get_system_config_dirs();
+            unowned string[] dirs = GLib.Environment.get_system_config_dirs();
             if (dirs == null)
                 return false;
             foreach(var dir in dirs)
@@ -284,7 +276,7 @@ namespace ValaPanel
         }
         private void load_settings()
         {
-            var dirs = GLib.Environment.get_system_config_dirs();
+            unowned string[] dirs = GLib.Environment.get_system_config_dirs();
             var loaded = false;
             string? file = null;
             string? user_file = null;
@@ -328,14 +320,18 @@ namespace ValaPanel
             var d = builder.get_object("valapanel-about") as AboutDialog;
             d.set_version(Config.VERSION);
             d.window_position = Gtk.WindowPosition.CENTER;
-            d.run();
-            d.destroy();
+            d.present();
+            d.response.connect((id)=>{d.destroy();});
+            d.unmap.connect(()=>{d.destroy();});
         }
         internal void activate_run(SimpleAction action, Variant? param)
         {
             if (runner == null || !runner.get_mapped())
             {
                 runner = new Runner(this);
+                runner.unmap.connect(()=>{
+                    runner = null;
+                });
                 runner.gtk_run();
             }
             else

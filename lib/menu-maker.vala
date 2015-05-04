@@ -36,7 +36,7 @@ namespace MenuMaker
     }
     public static const string ATTRIBUTE_DND_SOURCE = "x-dnd-source";
     public static const string ATTRIBUTE_TOOLTIP = "x-tooltip";
-    public static const TargetEntry[] menu_targets = {
+    public static const TargetEntry[] MENU_TARGETS = {
         { "text/uri-list", 0, 0},
         { "application/x-desktop", 0, 0},
         { "text/x-commandline", 0, 0}
@@ -85,7 +85,7 @@ namespace MenuMaker
             var data = new SpawnData();
             info.launch_uris_as_manager(null,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         SpawnFlags.SEARCH_PATH,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
@@ -99,7 +99,7 @@ namespace MenuMaker
                             AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION) as DesktopAppInfo;
             info.launch_uris_as_manager(null,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         SpawnFlags.SEARCH_PATH,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
@@ -114,7 +114,7 @@ namespace MenuMaker
             uri_l.append(uri);
             info.launch_uris_as_manager(uri_l,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+                                         SpawnFlags.SEARCH_PATH,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
@@ -122,7 +122,7 @@ namespace MenuMaker
     {
         Icon? icon = null;
         string[]? uri_list = null;
-        string? str = null;
+        unowned string? str = null;
         Variant? val = null;
         MenuAttributeIter attr_iter = section.iterate_item_attributes(model_item);
         while(attr_iter.get_next(out str,out val))
@@ -147,7 +147,7 @@ namespace MenuMaker
             Gtk.drag_source_set (
                     item,                      // widget will be drag-able
                     Gdk.ModifierType.BUTTON1_MASK, // modifier that will start a drag
-                    menu_targets,               // lists of target to support
+                    MENU_TARGETS,               // lists of target to support
                     Gdk.DragAction.COPY            // what to do with data after dropped
                 );
             Gtk.drag_source_set_icon_gicon(item,icon);
@@ -164,7 +164,7 @@ namespace MenuMaker
             var jumplen = 1;
             if (l.data is SeparatorMenuItem) l = l.next;
             var shell = l.data as Gtk.MenuItem;
-            string? str = null;
+            unowned string? str = null;
             Variant? val = null;
             MenuAttributeIter attr_iter = menu.iterate_item_attributes(i);
             while(attr_iter.get_next(out str,out val))
