@@ -74,9 +74,9 @@ namespace StatusNotifier
         }
         private void item_to_store(Item v)
         {
-            var name = v.title;
-            var id = v.id;
-            var icon = v.icon;
+            unowned string name = v.title;
+            unowned string id = v.id;
+            Icon icon = v.icon;
             var over_index = layout.index_override.contains(v.id);
             var index = layout.get_index(v);
             var over_filter = layout.filter_override.contains(v.id);

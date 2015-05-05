@@ -24,7 +24,7 @@ namespace StatusNotifier
         }
         construct
         {
-            var context = this.get_style_context();
+            unowned StyleContext context = this.get_style_context();
             this.reset_style();
             var provider = new Gtk.CssProvider();
             File ruri = File.new_for_uri("resource://org/vala-panel/sntray/style.css");
@@ -42,7 +42,7 @@ namespace StatusNotifier
             this.has_tooltip = true;
             icon_theme = IconTheme.get_default();
             ebox = new EventBox();
-            box = new Box(Orientation.HORIZONTAL,0);
+            var box = new Box(Orientation.HORIZONTAL,0);
             label = new Label(null);
             image = new Image();
             box.add(image);
@@ -279,6 +279,7 @@ namespace StatusNotifier
         {
             var raw_text = tooltip.title + "\n" + tooltip.description;
             var is_pango_markup = true;
+            StringBuilder bldr;
             if (raw_text != null)
             {
                 try
@@ -288,13 +289,17 @@ namespace StatusNotifier
             }
             if (!is_pango_markup)
             {
-                var str = "<markup>";
+                bldr = new StringBuilder("<markup>");
                 if (tooltip.title.length > 0)
-                    str += tooltip.title;
+                    bldr.append(tooltip.title);
                 if (tooltip.description.length > 0)
-                    str += (str.length > 8) ? "<br/>" + tooltip.description : tooltip.description;
-                str += "</markup>";
-                var markup_parser = new QRichTextParser(str);
+                {
+                    if (bldr.len > 8)
+                        bldr.append("<br/>");
+                    bldr.append(tooltip.description);
+                }
+                bldr.append("</markup>");
+                var markup_parser = new QRichTextParser(bldr.str);
                 markup_parser.translate_markup();
                 markup = (markup_parser.pango_markup.length > 0) ? markup_parser.pango_markup: tooltip_markup;
                 var res_icon = change_icon(tooltip.icon_name, tooltip.pixmap,48,false);
@@ -426,11 +431,10 @@ namespace StatusNotifier
             } catch (Error e) {stderr.printf("%s\n",e.message);}
         }
         ItemIface iface;
-        EventBox ebox;
-        Box box;
         Label label;
         Image image;
         Icon? tooltip_icon;
+        EventBox ebox;
         string markup;
         string accessible_desc;
         string icon_theme_path;

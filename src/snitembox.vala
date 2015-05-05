@@ -147,9 +147,9 @@ namespace StatusNotifier
                 index = index_override.lookup(v.id).get_int32();
             return index;
         }
-        internal Item? get_item_by_id(string id)
+        internal unowned Item? get_item_by_id(string id)
         {
-            Item? item = null;
+            unowned Item? item = null;
             items.foreach((k,v)=>{
                 if (v.id == id)
                 {

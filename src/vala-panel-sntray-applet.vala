@@ -67,7 +67,7 @@ public class SNTray: Applet, AppletConfigurable
     private static Variant set_vardict(Value val, VariantType type,void* data)
     {
         var builder = new VariantBuilder(type);
-        var table = (HashTable<string,Variant?>)val.get_boxed();
+        unowned HashTable<string,Variant?> table = (HashTable<string,Variant?>)val.get_boxed();
         table.foreach((k,v)=>{
             builder.add("{sv}",k,v);
         });
