@@ -98,7 +98,7 @@ namespace ValaPanel
         }
         public void init_background()
         {
-            Gdk.RGBA color = Gdk.RGBA();
+            var color = Gdk.RGBA();
             color.parse ("transparent");
             PanelCSS.apply_with_class(background_widget,
                                       PanelCSS.generate_background(null,color),
@@ -110,7 +110,7 @@ namespace ValaPanel
         {
             Gtk.Allocation pa;
             Gtk.Allocation a;
-            Gdk.Screen screen;
+            unowned Gdk.Screen screen;
             popup.realize();
             popup.get_allocation(out pa);
             if (popup.is_toplevel())

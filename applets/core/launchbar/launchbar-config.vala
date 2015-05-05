@@ -80,7 +80,7 @@ namespace LaunchBar
             var info = choose_desktop.get_app_info();
             if (info != null)
             {
-                var id = info.get_id();
+                unowned string id = info.get_id();
                 if (id == null)
                     id = (info as DesktopAppInfo).get_filename();
                 if (!(id in launchbar.ids))

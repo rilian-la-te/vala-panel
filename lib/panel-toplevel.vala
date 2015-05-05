@@ -73,7 +73,7 @@ namespace ValaPanel
     }
     private struct PluginData
     {
-        AppletPlugin plugin;
+        unowned AppletPlugin plugin;
         int count;
     }
     [CCode (cname = "PanelToplevel")]
@@ -316,7 +316,7 @@ namespace ValaPanel
             settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
-            var panel_app = get_application();
+            unowned Gtk.Application panel_app = get_application();
             if (mon_handler != 0)
                 mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
                                             (GLib.Callback)(monitors_changed_cb),panel_app);
@@ -324,7 +324,7 @@ namespace ValaPanel
         construct
         {
             local_applets = new HashTable<string,int>(str_hash,str_equal);
-            Gdk.Visual visual = this.get_screen().get_rgba_visual();
+            unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
                 this.set_visual(visual);
             this.destroy.connect((a)=>{stop_ui ();});
@@ -434,7 +434,7 @@ namespace ValaPanel
 
         private void _calculate_position(ref Gtk.Allocation alloc)
         {
-            var screen = this.get_screen();
+            unowned Gdk.Screen screen = this.get_screen();
             Gdk.Rectangle marea = Gdk.Rectangle();
             if (monitor < 0)
             {
@@ -688,8 +688,8 @@ namespace ValaPanel
             if (MainContext.current_source().is_destroyed())
                 return false;
 
-            var manager = Gdk.Display.get_default().get_device_manager();
-            var dev = manager.get_client_pointer();
+            unowned Gdk.DeviceManager manager = Gdk.Display.get_default().get_device_manager();
+            unowned Gdk.Device dev = manager.get_client_pointer();
             dev.get_position(null, out x, out y);
 
             var cx = a.x;
@@ -749,7 +749,7 @@ namespace ValaPanel
         internal Gtk.Menu get_plugin_menu(Applet? pl)
         {
             var builder = new Builder.from_resource("/org/vala-panel/lib/menus.ui");
-            var gmenu = builder.get_object("panel-context-menu") as GLib.Menu;
+            unowned GLib.Menu gmenu = builder.get_object("panel-context-menu") as GLib.Menu;
             if (pl != null)
             {
                 var gmenusection = builder.get_object("plugin-section") as GLib.Menu;
@@ -780,7 +780,7 @@ namespace ValaPanel
             string name = s.default_settings.get_string(Key.NAME);
             if (loaded_types.contains(name))
             {
-                PluginData? data = loaded_types.lookup(name);
+                unowned PluginData? data = loaded_types.lookup(name);
                 if (data!=null)
                 {
                     place_applet(data.plugin,s);
@@ -795,7 +795,7 @@ namespace ValaPanel
             // Got this far we actually need to load the underlying plugin
             unowned Peas.PluginInfo? plugin = null;
 
-            foreach(var plugini in engine.get_plugin_list())
+            foreach(unowned Peas.PluginInfo plugini in engine.get_plugin_list())
             {
                 if (plugini.get_module_name() == name)
                 {
@@ -811,8 +811,8 @@ namespace ValaPanel
         }
         private void on_extension_added(Peas.PluginInfo i, Object p)
         {
-            var plugin = p as AppletPlugin;
-            var type = i.get_module_name();
+            unowned AppletPlugin plugin = p as AppletPlugin;
+            unowned string type = i.get_module_name();
             if (!loaded_types.contains(type))
             {
                 var data = PluginData();
@@ -862,13 +862,13 @@ namespace ValaPanel
                 local_applets.remove(name);
             else
                 local_applets.insert(name,count);
-            var data = loaded_types.lookup(name);
+            unowned PluginData data = loaded_types.lookup(name);
             data.count -= 1;
             if (data.count <= 0)
             {
-                var pl = loaded_types.lookup(name).plugin;
+                unowned AppletPlugin pl = loaded_types.lookup(name).plugin;
                 loaded_types.remove(name);
-                var info = pl.plugin_info;
+                unowned Peas.PluginInfo info = pl.plugin_info;
                 engine.try_unload_plugin(info);
             }
             else

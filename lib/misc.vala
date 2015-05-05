@@ -39,12 +39,12 @@ namespace ValaPanel
     }
     public void activate_panel_preferences(SimpleAction simple, Variant? param, void* data)
     {
-        Gtk.Application app = data as Gtk.Application;
-        foreach(var win in app.get_windows())
+        unowned Gtk.Application app = data as Gtk.Application;
+        foreach(unowned Window win in app.get_windows())
         {
             if (win is Toplevel)
             {
-                var p = win as Toplevel;
+                unowned Toplevel p = win as Toplevel;
                 if (p.panel_name == param.get_string())
                 {
                     p.configure("position");
@@ -56,13 +56,13 @@ namespace ValaPanel
     }
     public void activate_menu(SimpleAction simple, Variant? param, void* data)
     {
-        Gtk.Application app = data as Gtk.Application;
-        foreach(var win in app.get_windows())
+        unowned Gtk.Application app = data as Gtk.Application;
+        foreach(unowned Window win in app.get_windows())
         {
             if (win is Toplevel)
             {
-                var p = win as Toplevel;
-                foreach(var pl in p.get_applets_list())
+                unowned Toplevel p = win as Toplevel;
+                foreach(unowned Widget pl in p.get_applets_list())
                 {
                     if (pl is AppletMenu)
                         (pl as AppletMenu).show_system_menu();
@@ -111,12 +111,12 @@ namespace ValaPanel
         b.notify.connect((a,b)=>{
             if (b.name == "label" || b.name == "image")
             {
-                var B = a as Bin;
-                var w = B.get_child();
+                unowned Bin B = a as Bin;
+                unowned Widget w = B.get_child();
                 if (w is Container)
                 {
-                    Bin? bin;
-                    Widget ch;
+                    unowned Bin? bin;
+                    unowned Widget ch;
                     if (w is Bin)
                     {
                         bin = w as Bin;
@@ -126,7 +126,7 @@ namespace ValaPanel
                         ch = w;
                     if (ch is Container)
                     {
-                        var cont = ch as Container;
+                        unowned Container cont = ch as Container;
                         cont.forall((c)=>{
                             if (c is Widget){
                             c.set_halign(Gtk.Align.FILL);
@@ -186,7 +186,7 @@ namespace ValaPanel
     }
     public static void scale_button_set_range(ScaleButton b, int lower, int upper)
     {
-        var a = b.get_adjustment();
+        unowned Adjustment a = b.get_adjustment();
         a.set_lower(lower);
         a.set_upper(upper);
         a.set_step_increment(1);

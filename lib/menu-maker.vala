@@ -78,7 +78,7 @@ namespace MenuMaker
     }
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param)
     {
-        var id = param.get_string();
+        unowned string id = param.get_string();
         var info = new DesktopAppInfo(id);
         try{
             var data = new SpawnData();
@@ -91,7 +91,7 @@ namespace MenuMaker
 
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param)
     {
-        var command = param.get_string();
+        unowned string command = param.get_string();
         try{
             var data = new SpawnData();
             var info = AppInfo.create_from_commandline(command,null,
@@ -105,7 +105,7 @@ namespace MenuMaker
 
     public static void activate_menu_launch_uri(SimpleAction? action, Variant? param)
     {
-        var uri = param.get_string();
+        unowned string uri = param.get_string();
         try{
             var data = new SpawnData();
             var info = get_default_for_uri(uri) as DesktopAppInfo;
@@ -149,14 +149,14 @@ namespace MenuMaker
             data.set_uris(uri_list);
         });
     }
-    public static void apply_menu_properties(List<Widget> w, MenuModel menu)
+    public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu)
     {
-        unowned List<Widget> l = w;
+        unowned List<unowned Widget> l = w;
         for(var i = 0; i < menu.get_n_items(); i++)
         {
             var jumplen = 1;
             if (l.data is SeparatorMenuItem) l = l.next;
-            var shell = l.data as Gtk.MenuItem;
+            unowned Gtk.MenuItem shell = l.data as Gtk.MenuItem;
             unowned string? str = null;
             Variant? val = null;
             MenuAttributeIter attr_iter = menu.iterate_item_attributes(i);
@@ -172,7 +172,7 @@ namespace MenuMaker
                 if (str == ATTRIBUTE_DND_SOURCE && val.get_boolean())
                     apply_menu_dnd(l.data as Gtk.MenuItem, menu, i);
             }
-            var menuw = shell.submenu;
+            unowned MenuShell menuw = shell.submenu;
             MenuLinkIter iter = menu.iterate_item_links(i);
             MenuModel? link_menu;
             while (iter.get_next(out str, out link_menu))

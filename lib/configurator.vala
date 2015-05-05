@@ -31,8 +31,7 @@ namespace ValaPanel
     [CCode (cname="ConfigureDialog")]
     internal class ConfigureDialog : Dialog
     {
-        public Toplevel toplevel
-        {get; construct;}
+        public unowned Toplevel toplevel {get; construct;}
         [GtkChild (name="edge-button")]
         MenuButton edge_button;
         [GtkChild (name="alignment-button")]
@@ -83,8 +82,8 @@ namespace ValaPanel
         }
         construct
         {
-            Gdk.RGBA color = Gdk.RGBA();
-            SimpleActionGroup conf = new SimpleActionGroup();
+            var color = Gdk.RGBA();
+            var conf = new SimpleActionGroup();
             apply_window_icon(this as Window);
             /* edge */
             edge_button.set_relief(ReliefStyle.NONE);
@@ -154,7 +153,7 @@ namespace ValaPanel
             /* monitors */
             monitors_button.set_relief(ReliefStyle.NONE);
             int monitors;
-            var screen = toplevel.get_screen();
+            unowned Gdk.Screen screen = toplevel.get_screen();
             if(screen != null)
                 monitors = screen.get_n_monitors();
             assert(monitors >= 1);
@@ -193,8 +192,6 @@ namespace ValaPanel
             toplevel.bind_property(Key.USE_BACKGROUND_COLOR,color_background,"sensitive",BindingFlags.SYNC_CREATE);
             if (toplevel.background_file != null)
                 file_background.set_filename(toplevel.background_file);
-            else if ((info = IconTheme.get_default().lookup_icon("lxpanel-background", 0, 0)) != null)
-                file_background.set_filename(info.get_filename());
             file_background.set_sensitive(toplevel.use_background_file);
             toplevel.bind_property(Key.USE_BACKGROUND_FILE,file_background,"sensitive",BindingFlags.SYNC_CREATE);
             file_background.file_set.connect(()=>{

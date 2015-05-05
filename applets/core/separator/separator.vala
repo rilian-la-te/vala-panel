@@ -32,10 +32,8 @@ public class Sep: Applet, AppletConfigurable
     Separator widget;
     private static const string KEY_SIZE = "size";
     private static const string KEY_SHOW_SEPARATOR = "show-separator";
-    internal int size
-    {get; set;}
-    internal bool show_separator
-    {get; set;}
+    internal int size {get; set;}
+    internal bool show_separator {get; set;}
     public Sep(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     uint number)

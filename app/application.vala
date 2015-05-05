@@ -127,20 +127,18 @@ namespace ValaPanel
             var builder = new Builder.from_resource("/org/vala-panel/app/pref.ui");
             pref_dialog = builder.get_object("app-pref") as Dialog;
             this.add_window(pref_dialog);
-            var w = builder.get_object("logout") as Widget;
+            unowned Widget w = builder.get_object("logout") as Widget;
             config.bind(Key.LOGOUT,w,"text",SettingsBindFlags.DEFAULT);
             w = builder.get_object("shutdown") as Widget;
             config.bind(Key.SHUTDOWN,w,"text",SettingsBindFlags.DEFAULT);
             w = builder.get_object("css-chooser") as Widget;
             config.bind(Key.CUSTOM,w,"sensitive",SettingsBindFlags.DEFAULT);
-            var f = w as FileChooserButton;
+            unowned FileChooserButton f = w as FileChooserButton;
             f.set_filename(css);
             f.file_set.connect((a)=>{
                 var file = f.get_filename();
                 if (file != null)
-                {
                     this.activate_action(Key.CSS,file);
-                }
             });
             pref_dialog.present();
             pref_dialog.unmap.connect(()=>{pref_dialog.destroy();});
@@ -155,8 +153,7 @@ namespace ValaPanel
             GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.LOCALE_DIR);
             GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
             GLib.Intl.textdomain(Config.GETTEXT_PACKAGE);
-            var datadir = Config.DATADIR;
-            Gtk.IconTheme.get_default().append_search_path(datadir+"/images");
+            Gtk.IconTheme.get_default().append_search_path(Config.DATADIR+"/images");
             add_action_entries(app_entries,this);
             add_action_entries(menu_entries,this);
         }
@@ -239,7 +236,7 @@ namespace ValaPanel
             unowned string[] dirs = GLib.Environment.get_system_config_dirs();
             if (dirs == null)
                 return false;
-            foreach(var dir in dirs)
+            foreach(unowned string dir in dirs)
             {
                 var sys_dir = system_config_file_name(dir,null);
                 if(FileUtils.test(sys_dir,FileTest.EXISTS))
@@ -280,7 +277,7 @@ namespace ValaPanel
             var loaded = false;
             string? file = null;
             string? user_file = null;
-            foreach (var dir in dirs)
+            foreach (unowned string dir in dirs)
             {
                 file = system_config_file_name(dir,"config");
                 if (GLib.FileUtils.test(file,FileTest.EXISTS))
@@ -317,7 +314,7 @@ namespace ValaPanel
         internal void activate_about(SimpleAction action, Variant? param)
         {
             var builder = new Builder.from_resource("/org/vala-panel/app/about.ui");
-            var d = builder.get_object("valapanel-about") as AboutDialog;
+            unowned AboutDialog d = builder.get_object("valapanel-about") as AboutDialog;
             d.set_version(Config.VERSION);
             d.window_position = Gtk.WindowPosition.CENTER;
             d.present();

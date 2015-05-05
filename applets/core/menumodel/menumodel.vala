@@ -202,6 +202,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     {
         app_monitor = null;
         file_monitor = null;
+        button = null;
+        int_menu = null;
         if (this.get_child()!= null)
         {
             this.remove(this.get_child());

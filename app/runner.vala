@@ -39,7 +39,7 @@ namespace ValaPanel
         {
             SList<string> list = new SList<string>();
             var dirs = GLib.Environment.get_variable("PATH").split(":",0);
-            foreach(var dir in dirs)
+            foreach(unowned string dir in dirs)
             {
                 if (!running)
                     break;
@@ -194,9 +194,7 @@ namespace ValaPanel
                     var basename = GLib.Path.get_basename(target);
                     var locate = GLib.Environment.find_program_in_path(basename);
                     if (locate != null && locate == target)
-                    {
                         ret = match_app_by_exec(basename);
-                    }
                 }
             }
             return ret;
@@ -263,15 +261,11 @@ namespace ValaPanel
         [GtkCallback]
         private void on_entry_changed()
         {
-            DesktopAppInfo? app = null;
+            unowned DesktopAppInfo? app = null;
             if (main_entry.get_text()!=null && main_entry.get_text() != "")
-            {
                 app = match_app_by_exec(main_entry.get_text());
-            }
             if (app != null)
-            {
                 main_entry.set_icon_from_gicon(Gtk.EntryIconPosition.PRIMARY,app.get_icon());
-            }
             else
                 main_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY,"system-run-symbolic");
         }

@@ -45,7 +45,7 @@ namespace ValaPanel.Configurator
                                              _("_Close"),
                                               ResponseType.CLOSE,
                                               null );
-        Box dlg_vbox = dlg.get_content_area() as Box;
+        unowned Box dlg_vbox = dlg.get_content_area() as Box;
 
         apply_window_icon(dlg as Window);
 
@@ -57,9 +57,9 @@ namespace ValaPanel.Configurator
             if (name == null) break;
             var label = new Label(name);
             Widget? entry = null;
-            Widget? w = null;
+            unowned Widget? w = null;
             void* arg = args.arg();
-            string? key = null;
+            unowned string? key = null;
             GenericConfigType type = args.arg();
             if (type == GenericConfigType.EXTERNAL)
                 w = (Widget)arg;
