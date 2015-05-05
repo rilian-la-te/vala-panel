@@ -122,8 +122,7 @@ namespace ValaPanel
                                                 Key.USE_BACKGROUND_FILE, Key.USE_FONT,
                                                 Key.FONT_SIZE_ONLY, Key.FONT};
 
-        public string panel_name
-        {get; internal construct;}
+        public string panel_name {get; internal construct;}
 
         private string profile
         { owned get {
@@ -132,18 +131,14 @@ namespace ValaPanel
             return v.get_string();
             }
         }
-        public int height
-        { get; internal set;}
+        public int height { get; internal set;}
         public int width
         {get {return _w;}
          internal set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
         }
-        public AlignmentType alignment
-        {get; internal set;}
-        public int panel_margin
-        {get; internal set;}
-        public Gtk.PositionType edge
-        {get; internal set construct;}
+        public AlignmentType alignment {get; internal set;}
+        public int panel_margin {get; internal set;}
+        public Gtk.PositionType edge {get; internal set construct;}
         public Gtk.Orientation orientation
         {
             get {
@@ -162,32 +157,19 @@ namespace ValaPanel
             if (-1 <= value)
                 _mon = value;
          }}
-        public bool dock
-        {get; internal set;}
-        public bool strut
-        {get; internal set;}
-        public bool autohide
-        {get; internal set;}
-        public bool show_hidden
-        {get; internal set;}
-        public bool is_dynamic
-        {get; internal set;}
-        public bool use_font
-        {get; internal set;}
-        public bool use_background_color
-        {get; internal set;}
-        public bool use_foreground_color
-        {get; internal set;}
-        public bool use_background_file
-        {get; internal set;}
-        public bool font_size_only
-        {get; internal set;}
-        public uint font_size
-        {get; internal set;}
-        public uint round_corners_size
-        {get; internal set;}
-        public string font
-        {get; internal set;}
+        public bool dock {get; internal set;}
+        public bool strut {get; internal set;}
+        public bool autohide {get; internal set;}
+        public bool show_hidden {get; internal set;}
+        public bool is_dynamic {get; internal set;}
+        public bool use_font {get; internal set;}
+        public bool use_background_color {get; internal set;}
+        public bool use_foreground_color {get; internal set;}
+        public bool use_background_file {get; internal set;}
+        public bool font_size_only {get; internal set;}
+        public uint font_size {get; internal set;}
+        public uint round_corners_size {get; internal set;}
+        public string font {get; internal set;}
         public string background_color
         {owned get {return bgc.to_string();}
          internal set {bgc.parse(value);}
@@ -216,8 +198,7 @@ namespace ValaPanel
             else ihints = IconSizeHints.XXS;
           }
         }
-        public string background_file
-        {get; internal set;}
+        public string background_file {get; internal set;}
         static const GLib.ActionEntry[] panel_entries =
         {
             {"new-panel", activate_new_panel, null, null, null},
@@ -1084,7 +1065,7 @@ namespace ValaPanel
             if (font == null)
                 return;
             StringBuilder str = new StringBuilder();
-            str.append_printf(".-simple-panel-background {\n");
+            str.append_printf(".-vala-panel-background {\n");
             if (use_background_color)
                 str.append_printf(" background-color: %s;\n",background_color);
             else
@@ -1104,14 +1085,14 @@ namespace ValaPanel
 //~             str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
 //~             str.append_printf(" border-style: none;\n margin: 3px;\n");
 //~             str.append_printf("}\n");
-            str.append_printf(".-simple-panel-round-corners {\n");
+            str.append_printf(".-vala-panel-round-corners {\n");
             str.append_printf(" border-radius: %upx;\n",round_corners_size);
             str.append_printf("}\n");
             Pango.FontDescription desc = Pango.FontDescription.from_string(font);
-            str.append_printf(".-simple-panel-font-size {\n");
+            str.append_printf(".-vala-panel-font-size {\n");
             str.append_printf(" font-size: %dpx;\n",desc.get_size()/Pango.SCALE);
             str.append_printf("}\n");
-            str.append_printf(".-simple-panel-font {\n");
+            str.append_printf(".-vala-panel-font {\n");
             var family = desc.get_family();
             var weight = desc.get_weight();
             var style = desc.get_style();
@@ -1125,17 +1106,17 @@ namespace ValaPanel
 #endif
             str.append_printf(" font-family: %s;\n",family);
             str.append_printf("}\n");
-            str.append_printf(".-simple-panel-foreground-color {\n");
+            str.append_printf(".-vala-panel-foreground-color {\n");
             str.append_printf(" color: %s;\n",foreground_color);
             str.append_printf("}\n");
             var css = str.str;
             provider = PanelCSS.add_css_to_widget(this as Widget, css);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-background",use_background_color || use_background_file);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-shadow",false);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-round-corners",round_corners_size > 0);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-font-size",use_font);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-font", use_font && !font_size_only);
-            PanelCSS.toggle_class(this as Widget,"-simple-panel-foreground-color",use_foreground_color);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-background",use_background_color || use_background_file);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-shadow",false);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-round-corners",round_corners_size > 0);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-font-size",use_font);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-font", use_font && !font_size_only);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-foreground-color",use_foreground_color);
         }
 /*
  * Actions stuff
@@ -1269,6 +1250,7 @@ namespace ValaPanel
                 pref_dialog = new ConfigureDialog(this);
             pref_dialog.prefs_stack.set_visible_child_name(page);
             pref_dialog.present();
+            pref_dialog.unmap.connect(()=>{pref_dialog.destroy();});
             pref_dialog.destroy.connect(()=>{pref_dialog = null;});
         }
     }

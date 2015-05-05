@@ -4,57 +4,57 @@
     <submenu id="audiovideo">
           <attribute name="label" translatable="yes">Audio and Video</attribute>
           <attribute name="icon">applications-multimedia</attribute>
-          <attribute name="x-cat">audiovideo</attribute>
+          <attribute name="x-valapanel-cat">audiovideo</attribute>
     </submenu>
     <submenu id="education">
           <attribute name="label" translatable="yes">Education</attribute>
           <attribute name="icon">applications-science</attribute>
-          <attribute name="x-cat">education</attribute>
+          <attribute name="x-valapanel-cat">education</attribute>
     </submenu>
     <submenu id="game">
           <attribute name="label" translatable="yes">Game</attribute>
           <attribute name="icon">applications-games</attribute>
-          <attribute name="x-cat">game</attribute>
+          <attribute name="x-valapanel-cat">game</attribute>
     </submenu>
     <submenu id="graphics">
           <attribute name="label" translatable="yes">Graphics</attribute>
           <attribute name="icon">applications-graphics</attribute>
-          <attribute name="x-cat">graphics</attribute>
+          <attribute name="x-valapanel-cat">graphics</attribute>
     </submenu>
     <submenu id="network">
           <attribute name="label" translatable="yes">Network</attribute>
           <attribute name="icon">applications-internet</attribute>
-          <attribute name="x-cat">network</attribute>
+          <attribute name="x-valapanel-cat">network</attribute>
     </submenu>
     <submenu id="office">
           <attribute name="label" translatable="yes">Office</attribute>
           <attribute name="icon">applications-office</attribute>
-          <attribute name="x-cat">office</attribute>
+          <attribute name="x-valapanel-cat">office</attribute>
     </submenu>
     <submenu id="settings">
           <attribute name="label" translatable="yes">Settings</attribute>
           <attribute name="icon">preferences-system</attribute>
-          <attribute name="x-cat">settings</attribute>
+          <attribute name="x-valapanel-cat">settings</attribute>
     </submenu>
     <submenu id="system">
           <attribute name="label" translatable="yes">System</attribute>
           <attribute name="icon">applications-system</attribute>
-          <attribute name="x-cat">system</attribute>
+          <attribute name="x-valapanel-cat">system</attribute>
     </submenu>
     <submenu id="utility">
           <attribute name="label" translatable="yes">Utility</attribute>
           <attribute name="icon">applications-utilities</attribute>
-          <attribute name="x-cat">utility</attribute>
+          <attribute name="x-valapanel-cat">utility</attribute>
     </submenu>
     <submenu id="development">
           <attribute name="label" translatable="yes">Development</attribute>
           <attribute name="icon">applications-development</attribute>
-          <attribute name="x-cat">development</attribute>
+          <attribute name="x-valapanel-cat">development</attribute>
     </submenu>
     <submenu id="other">
         <attribute name="label" translatable="yes">Other</attribute>
         <attribute name="icon">applications-other</attribute>
-        <attribute name="x-cat">other</attribute>
+        <attribute name="x-valapanel-cat">other</attribute>
     </submenu>
   </menu>
   <menu id="places-menu">
@@ -66,14 +66,14 @@
           <attribute name="icon">computer</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">computer:///</attribute>
-          <attribute name="x-dnd-source" type="b">true</attribute>
+          <attribute name="x-valapanel-dnd-source" type="b">true</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Trash</attribute>
           <attribute name="icon">user-trash</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">trash:///</attribute>
-          <attribute name="x-dnd-source" type="b">true</attribute>
+          <attribute name="x-valapanel-dnd-source" type="b">true</attribute>
         </item>
     </section>
     <section id="network-mounts">
@@ -82,14 +82,14 @@
           <attribute name="icon">network-workgroup</attribute>
           <attribute name="action">app.launch-uri</attribute>
           <attribute name="target">network:///</attribute>
-          <attribute name="x-dnd-source" type="b">true</attribute>
+          <attribute name="x-valapanel-dnd-source" type="b">true</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Connect to server...</attribute>
           <attribute name="icon">network-server</attribute>
           <attribute name="action">app.launch-id</attribute>
           <attribute name="target">nautilus-connect-server.desktop</attribute>
-          <attribute name="x-dnd-source" type="b">true</attribute>
+          <attribute name="x-valapanel-dnd-source" type="b">true</attribute>
         </item>
     </section>
     <section id="recent-section">

@@ -5,7 +5,6 @@ INCLUDE(GResource)
 vala_precompile(VALA_C ${APPNAME}
     application.vala
     runner.vala
-    ${CMAKE_BINARY_DIR}/vapi/config.vala
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel

@@ -233,8 +233,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         var builder = new Builder();
         try{
             builder.add_from_file(filename);
-            var ret = builder.get_object("vala-panel-menu") as GLib.MenuModel;
-            var gotten = builder.get_object("vala-panel-internal-applications") as GLib.Menu;
+            unowned GLib.Menu ret = builder.get_object("vala-panel-menu") as GLib.Menu;
+            unowned GLib.Menu gotten = builder.get_object("vala-panel-internal-applications") as GLib.Menu;
             if (gotten != null)
                 load_internal_menus(gotten,InternalMenu.APPLICATIONS);
             gotten = builder.get_object("vala-panel-internal-settings") as GLib.Menu;

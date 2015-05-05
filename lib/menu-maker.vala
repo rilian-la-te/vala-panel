@@ -34,12 +34,11 @@ namespace MenuMaker
             Posix.setpgid(0,this.pid);
         }
     }
-    public static const string ATTRIBUTE_DND_SOURCE = "x-dnd-source";
-    public static const string ATTRIBUTE_TOOLTIP = "x-tooltip";
+    public static const string ATTRIBUTE_DND_SOURCE = "x-valapanel-dnd-source";
+    public static const string ATTRIBUTE_TOOLTIP = "x-valapanel-tooltip";
     public static const TargetEntry[] MENU_TARGETS = {
         { "text/uri-list", 0, 0},
         { "application/x-desktop", 0, 0},
-        { "text/x-commandline", 0, 0}
     };
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2)
     {
@@ -120,41 +119,35 @@ namespace MenuMaker
     }
     private static void apply_menu_dnd(Gtk.MenuItem item, MenuModel section, int model_item)
     {
-        Icon? icon = null;
-        string[]? uri_list = null;
-        unowned string? str = null;
-        Variant? val = null;
-        MenuAttributeIter attr_iter = section.iterate_item_attributes(model_item);
-        while(attr_iter.get_next(out str,out val))
-        {
-            if (str == GLib.Menu.ATTRIBUTE_ICON)
-                icon = Icon.deserialize(val);
-            if (str == GLib.Menu.ATTRIBUTE_TARGET)
-            {
-                uri_list = new string[1];
-                uri_list[0] = val.get_string();
-            }
-        }
-        if (uri_list != null)
-        {
-            if (icon == null)
-            {
-                try{
-                    icon = Icon.new_for_string("system-run-symbolic");
-                } catch (Error e){}
-            }
         // Make the this widget a DnD source.
-            Gtk.drag_source_set (
-                    item,                      // widget will be drag-able
-                    Gdk.ModifierType.BUTTON1_MASK, // modifier that will start a drag
-                    MENU_TARGETS,               // lists of target to support
-                    Gdk.DragAction.COPY            // what to do with data after dropped
-                );
-            Gtk.drag_source_set_icon_gicon(item,icon);
-            item.drag_data_get.connect((context,data,type,time)=>{
-                data.set_uris(uri_list);
-            });
-        }
+        Gtk.drag_source_set (
+                item,                      // widget will be drag-able
+                Gdk.ModifierType.BUTTON1_MASK, // modifier that will start a drag
+                MENU_TARGETS,               // lists of target to support
+                Gdk.DragAction.COPY            // what to do with data after dropped
+            );
+        Icon? icon = null;
+        var val = section.get_item_attribute_value(model_item,GLib.Menu.ATTRIBUTE_ICON,null);
+        icon = Icon.deserialize(val);
+        icon = icon ?? new ThemedIcon.with_default_fallbacks("system-run-symbolic");
+        Gtk.drag_source_set_icon_gicon(item,icon);
+        item.drag_data_get.connect((context,data,type,time)=>{
+            string[]? uri_list = null;
+            string action,target;
+            section.get_item_attribute(model_item,GLib.Menu.ATTRIBUTE_ACTION,"s",out action);
+            section.get_item_attribute(model_item,GLib.Menu.ATTRIBUTE_TARGET,"s",out target);
+            if (action == "app.launch-id")
+            {
+                try
+                {
+                    var info = new DesktopAppInfo(target);
+                    target = Filename.to_uri(info.get_filename());
+                } catch (GLib.Error e){}
+            }
+            uri_list = new string[1];
+            uri_list[0] = target;
+            data.set_uris(uri_list);
+        });
     }
     public static void apply_menu_properties(List<Widget> w, MenuModel menu)
     {
@@ -170,7 +163,10 @@ namespace MenuMaker
             while(attr_iter.get_next(out str,out val))
             {
                 if (str == GLib.Menu.ATTRIBUTE_ICON)
-                    shell.set("icon",Icon.deserialize(val));
+                {
+                    var icon = Icon.deserialize(val);
+                    shell.set("icon",icon);
+                }
                 if (str == ATTRIBUTE_TOOLTIP)
                     shell.set_tooltip_text(val.get_string());
                 if (str == ATTRIBUTE_DND_SOURCE && val.get_boolean())
