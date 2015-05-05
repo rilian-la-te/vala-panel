@@ -286,7 +286,7 @@ namespace DBusMenu
             }
             layout_update_required = false;
             layout_update_in_progress = true;
-            string[] props = {"type", "children-display"};
+            string[2] props = {"type", "children-display"};
             uint rev;
             Variant layout;
             try{
@@ -419,14 +419,14 @@ namespace DBusMenu
                 {
                     if (val.get_type_string() == "{sv}")
                     {
-                        var key = val.get_child_value(0).get_string();
+                        unowned string key = val.get_child_value(0).get_string();
                         var prop = val.get_child_value(1).get_variant();
                         if (items.lookup(req_id) != null)
                             items.lookup(req_id).set_variant_property(key,prop);
                     }
                     else if (val.get_type_string() == "s")
                     {
-                        var key = val.get_string();
+                        unowned string key = val.get_string();
                         if (items.lookup(req_id) != null)
                             items.lookup(req_id).set_variant_property(key,null);
                     }
@@ -1016,7 +1016,7 @@ namespace DBusMenu
         }
         public void attach_to_menu(Gtk.MenuShell menu)
         {
-            foreach (var path in iface.icon_theme_path)
+            foreach (unowned string path in iface.icon_theme_path)
                 IconTheme.get_default().prepend_search_path(path);
             root_menu = menu;
             root_menu.foreach((c)=>{menu.remove(c);});
@@ -1025,9 +1025,9 @@ namespace DBusMenu
             get_root_item().child_added.connect(on_child_added_cb);
             get_root_item().child_moved.connect(on_child_moved_cb);
             get_root_item().child_removed.connect(on_child_removed_cb);
-            foreach(var ch in get_root_item().get_children())
+            foreach(unowned Item ch in get_root_item().get_children())
                 on_child_added_cb(ch.id,ch);
-            foreach(var path in iface.icon_theme_path)
+            foreach(unowned string path in iface.icon_theme_path)
                 IconTheme.get_default().append_search_path(path);
             root_menu.show();
         }
