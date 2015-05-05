@@ -51,6 +51,9 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         var dlg = new ConfigDialog(widget);
         dlg.configure_icon_size = false;
         dlg.present();
+        dlg.unmap.connect(()=>{
+            dlg.destroy();
+        });
     }
     Xfconf.Channel channel;
     ItemBox widget;
