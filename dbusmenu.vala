@@ -52,12 +52,12 @@ namespace DBusMenu
         internal HashTable<string,VariantType> checker;
         public Variant? get_prop(string name)
         {
-            var type = checker.lookup(name);
+            unowned VariantType type = checker.lookup(name);
             return (type != null) ? dict.lookup_value(name,type) : null;
         }
         public void set_prop(string name, Variant? val)
         {
-            VariantType type = checker.lookup(name);
+            unowned VariantType type = checker.lookup(name);
             if (val == null)
                 dict.remove(name);
             else if (type != null && val.is_of_type(type))
@@ -97,7 +97,6 @@ namespace DBusMenu
                 while(iter.next ("{sv}", out name, out v))
                     this.set_prop(name,v);
             }
-            init_default();
         }
         private void init_default()
         {
@@ -675,40 +674,40 @@ namespace DBusMenu
                 on_prop_changed_cb(prop,item.get_variant_property(prop));
         }
     }
-    public class GtkSliderItem: Gtk.MenuItem, GtkItemIface
+    public class GtkScaleItem: Gtk.MenuItem, GtkItemIface
     {
         private static const string[] allowed_properties = {"visible","enabled","icon-name",
                                                             "x-valapanel-min-value","x-valapanel-current-value","x-valapanel-max-value",
                                                             "x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
                                                             "x-valapanel-format-value"};
-        public Item item
-        {get; protected set;}
+        public Item item {get; protected set;}
         private Box box;
         private Image primary;
-        private Scale slider;
+        private Scale scale;
         private Adjustment adj;
         private string item_format;
         private bool grabbed;
-        public GtkSliderItem(Item item)
+        public GtkScaleItem(Item item)
         {
             this.item = item;
             box = new Box(Orientation.HORIZONTAL,5);
             primary = new Image();
             adj = new Adjustment(0,0,double.MAX,0,0,0);
-            slider = new Scale(Orientation.HORIZONTAL,adj);
-            slider.hexpand = true;
+            scale = new Scale(Orientation.HORIZONTAL,adj);
+            scale.hexpand = true;
             box.add(primary);
-            box.add(slider);
+            box.add(scale);
             this.add(box);
             this.show_all();
             this.init();
             item.property_changed.connect(on_prop_changed_cb);
             adj.value_changed.connect(on_value_changed_cb);
-            slider.format_value.connect(on_value_format_cb);
-            slider.value_pos = PositionType.RIGHT;
+            scale.format_value.connect(on_value_format_cb);
+            scale.value_pos = PositionType.RIGHT;
             this.add_events (Gdk.EventMask.SCROLL_MASK
                             |Gdk.EventMask.POINTER_MOTION_MASK
-                            |Gdk.EventMask.BUTTON_MOTION_MASK);
+                            |Gdk.EventMask.BUTTON_MOTION_MASK
+                            |Gdk.EventMask.KEY_PRESS_MASK);
             this.set_size_request(200,-1);
         }
         private void on_prop_changed_cb(string name, Variant? val)
@@ -740,7 +739,7 @@ namespace DBusMenu
                     adj.page_increment = val.get_double();
                     break;
                 case "x-valapanel-draw-value":
-                    slider.draw_value = val.get_boolean();
+                    scale.draw_value = val.get_boolean();
                     break;
                 case "x-valapanel-format-value":
                     this.item_format = val.get_string();
@@ -770,30 +769,42 @@ namespace DBusMenu
         }
         protected override bool button_press_event(Gdk.EventButton event)
         {
-            slider.event(event);
+            scale.event(event);
             if (!grabbed)
                 grabbed = true;
             return true;
         }
         protected override bool button_release_event(Gdk.EventButton event)
         {
-            slider.event (event);
+            scale.event (event);
             if (grabbed)
             {
                 grabbed = false;
-                this.grab_broken_event (null);
+                this.grab_broken_event ((Gdk.EventGrabBroken)event);
             }
             return true;
         }
         protected override bool motion_notify_event(Gdk.EventMotion event)
         {
-            slider.event (event);
+            scale.event (event);
             return true;
         }
         protected override bool scroll_event(Gdk.EventScroll event)
         {
-            slider.event (event);
+            scale.event (event);
             return true;
+        }
+        protected override bool key_press_event(Gdk.EventKey event)
+        {
+            if(event.keyval == Gdk.Key.KP_Prior || event.keyval == Gdk.Key.KP_Next
+               || event.keyval == Gdk.Key.Prior || event.keyval == Gdk.Key.Next
+               || event.keyval == Gdk.Key.KP_Left || event.keyval == Gdk.Key.KP_Right
+               || event.keyval == Gdk.Key.Left || event.keyval == Gdk.Key.Right)
+            {
+                scale.event (event);
+                return true;
+            }
+            return false;
         }
     }
     public class GtkMenuBarItem : Gtk.MenuItem, GtkItemIface
@@ -970,8 +981,8 @@ namespace DBusMenu
         {
             if (item.get_string_property("type") == "separator")
                 return new GtkSeparatorItem(item);
-            else if (item.get_string_property("type") == "slider")
-                return new GtkSliderItem(item);
+            else if (item.get_string_property("type") == "slider" || item.get_string_property("type") == "scale")
+                return new GtkScaleItem(item);
             return new GtkMainItem(item);
         }
         private static Gtk.MenuItem new_menubar_item(Item item)
