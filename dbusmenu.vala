@@ -45,15 +45,17 @@ namespace DBusMenu
         public abstract signal void item_activation_requested(int id, uint timestamp);
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
-    [Compact]
+    [Compact, CCode (ref_function = "dbus_menu_property_store_ref", unref_function = "dbus_menu_property_store_unref")]
     private class PropertyStore
     {
-        internal VariantDict dict;
+        internal HashTable<string,Variant?> dict;
         internal HashTable<string,VariantType> checker;
-        public Variant? get_prop(string name)
+        internal int ref_count;
+        public unowned Variant? get_prop(string name)
         {
             unowned VariantType type = checker.lookup(name);
-            return (type != null) ? dict.lookup_value(name,type) : null;
+            unowned Variant? prop = dict.lookup(name);
+            return (type != null && prop != null && prop.is_of_type(type)) ? prop : null;
         }
         public void set_prop(string name, Variant? val)
         {
@@ -61,12 +63,13 @@ namespace DBusMenu
             if (val == null)
                 dict.remove(name);
             else if (type != null && val.is_of_type(type))
-                dict.insert_value(name,val);
+                dict.insert(name,val);
             init_default();
         }
         public PropertyStore (Variant? props)
         {
-            dict = new VariantDict();
+            ref_count = 1;
+            dict = new HashTable<string,Variant?>(str_hash,str_equal);
             checker = new HashTable<string,VariantType>(str_hash,str_equal);
             checker.insert("visible", VariantType.BOOLEAN);
             checker.insert("enabled", VariantType.BOOLEAN);
@@ -101,16 +104,27 @@ namespace DBusMenu
         private void init_default()
         {
             if(!dict.contains("visible"))
-                dict.insert("visible", "b",true);
+                dict.insert("visible", new Variant.boolean(true));
             if(!dict.contains("enabled"))
-                dict.insert("enabled", "b", true);
+                dict.insert("enabled", new Variant.boolean(true));
             if(!dict.contains("type"))
-                dict.insert("type","s" ,"standard");
+                dict.insert("type", new Variant.string("standard"));
             if(!dict.contains("label"))
-                dict.insert("label", "s", "");
+                dict.insert("label", new Variant.string(""));
             if(!dict.contains("disposition"))
-                dict.insert("disposition","s", "normal");
+                dict.insert("disposition",new Variant.string("normal"));
         }
+        public unowned PropertyStore @ref ()
+        {
+            GLib.AtomicInt.inc (ref this.ref_count);
+            return this;
+        }
+        public void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
     }
 
     public class Item : Object
@@ -130,6 +144,10 @@ namespace DBusMenu
             this.client = iface;
             this.store = new PropertyStore(props);
             this.id = id;
+        }
+        ~Item()
+        {
+            store.unref();
         }
         public Variant get_variant_property(string name)
         {
