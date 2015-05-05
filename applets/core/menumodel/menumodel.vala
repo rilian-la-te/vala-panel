@@ -48,6 +48,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 {
     GLib.Menu menu;
     Widget? button;
+    MenuShell? int_menu;
     AppInfoMonitor? app_monitor;
     FileMonitor? file_monitor;
     ulong show_system_menu_idle;
@@ -117,14 +118,14 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             }
             else if (pspec.name == "caption" && !bar)
             {
-                var btn = button as MenuButton;
+                var btn = button as Button;
                 btn.label = caption;
             }
             else if (pspec.name == "icon" && !bar)
             {
                 try
                 {
-                    var btn = button as MenuButton;
+                    var btn = button as Button;
                     (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
                 } catch (Error e){stderr.printf("%s\n",e.message);}
             }
@@ -140,6 +141,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     }
     private MenuBar create_menubar()
     {
+        int_menu = null;
         var menubar = new MenuBar.from_model(menu);
         MenuMaker.apply_menu_properties(menubar.get_children(),menu);
         this.add(menubar);
@@ -159,15 +161,24 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 #endif
         return menubar;
     }
-    private MenuButton create_menubutton()
+    private ToggleButton create_menubutton()
     {
         Image? img = null;
-        var menubutton = new MenuButton();
-        var int_menu = new Gtk.Menu.from_model(menu);
+        var menubutton = new ToggleButton();
+        int_menu = new Gtk.Menu.from_model(menu);
         MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
         int_menu.show_all();
-        menubutton.set_popup(int_menu);
-        menubutton.use_popover = false;
+        var gtkmenu = int_menu as Gtk.Menu;
+        gtkmenu.attach_to_widget(menubutton,null);
+        menubutton.toggled.connect(()=>{
+            if(menubutton.active)
+                gtkmenu.popup(null,null,this.menu_position_func,0,get_current_event_time());
+            else
+                gtkmenu.popdown();
+        });
+        gtkmenu.hide.connect(()=>{
+            menubutton.active = false;
+        });
         if(icon != null)
         {
             img = new Image();
