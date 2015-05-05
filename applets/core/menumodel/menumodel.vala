@@ -104,7 +104,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
         button = menumodel_widget_create();
         button.show();
-        var gtksettings = this.get_settings();
+        unowned Gtk.Settings gtksettings = this.get_settings();
         gtksettings.gtk_shell_shows_menubar = false;
         this.show_all();
         this.notify.connect((pspec)=>{
