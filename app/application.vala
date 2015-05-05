@@ -142,9 +142,9 @@ namespace ValaPanel
                     this.activate_action(Key.CSS,file);
                 }
             });
-            pref_dialog.run();
-            pref_dialog.destroy();
-            pref_dialog = null;
+            pref_dialog.present();
+            pref_dialog.unmap.connect(()=>{pref_dialog.destroy();});
+            pref_dialog.destroy.connect(()=>{pref_dialog = null;});
         }
 
         public override void startup()
