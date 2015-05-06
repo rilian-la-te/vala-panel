@@ -268,7 +268,12 @@ namespace ValaPanel
             {
                 if (provider!=null)
                     Gtk.StyleContext.remove_provider_for_screen(Gdk.Screen.get_default(),provider);
-                PanelCSS.apply_from_file_to_app_with_provider(css);
+                provider = PanelCSS.apply_from_file_to_app_with_provider(css);
+            }
+            else if (provider != null)
+            {
+                Gtk.StyleContext.remove_provider_for_screen(Gdk.Screen.get_default(),provider);
+                provider = null;
             }
         }
         private void load_settings()
@@ -323,10 +328,11 @@ namespace ValaPanel
         }
         internal void activate_run(SimpleAction action, Variant? param)
         {
-            if (runner == null || !runner.get_mapped())
+            if (runner == null)
             {
                 runner = new Runner(this);
                 runner.unmap.connect(()=>{
+                    runner.destroy();
                     runner = null;
                 });
                 runner.gtk_run();
