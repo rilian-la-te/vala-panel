@@ -331,7 +331,7 @@ namespace ValaPanel
             if (runner == null)
             {
                 runner = new Runner(this);
-                runner.unmap.connect(()=>{
+                runner.hide.connect(()=>{
                     runner.destroy();
                     runner = null;
                 });

@@ -242,6 +242,7 @@ namespace ValaPanel
                 }
             }
             thread.running = false;
+            thread_ref.join();
             this.destroy();
         }
         public void gtk_run()
