@@ -21,7 +21,7 @@ using Gtk;
 
 namespace MenuMaker
 {
-    [Compact]
+    [Compact,Immutable]
     public class SpawnData
     {
         internal Posix.pid_t pid; /* getpgid(getppid()); */

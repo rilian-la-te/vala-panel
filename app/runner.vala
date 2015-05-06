@@ -113,8 +113,8 @@ namespace ValaPanel
         private Entry main_entry;
         [GtkChild (name="terminal-button")]
         private ToggleButton terminal_button;
-        [GtkChild (name="main-box", internal=true)]
-        private Box main_box;
+//~         [GtkChild (name="main-box", internal=true)]
+//~         private Box main_box;
 
         private CompletionThread? thread;
         private Thread<void*> thread_ref;
@@ -136,12 +136,11 @@ namespace ValaPanel
         {
             thread.running = false;
             this.application = null;
-            thread.unref();
         }
         construct
         {
-            PanelCSS.apply_from_resource(this,"/org/vala-panel/app/style.css","-panel-run-dialog");
-            main_box.get_style_context().add_class("-panel-run-header");
+//~             PanelCSS.apply_from_resource(this,"/org/vala-panel/app/style.css","-panel-run-dialog");
+//~             main_box.get_style_context().add_class("-panel-run-header");
             //FIXME: Implement cache
             cached = false;
             this.set_visual(this.get_screen().get_rgba_visual());
@@ -250,13 +249,7 @@ namespace ValaPanel
             this.setup_entry_completion();
             this.show_all();
             main_entry.grab_focus();
-            main_box.set_orientation(Gtk.Orientation.HORIZONTAL);
             this.present_with_time(Gtk.get_current_event_time());
-        }
-        [GtkCallback]
-        private void on_close_button_clicked()
-        {
-            this.response(ResponseType.CLOSE);
         }
         [GtkCallback]
         private void on_entry_changed()

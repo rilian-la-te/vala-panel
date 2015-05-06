@@ -1250,8 +1250,10 @@ namespace ValaPanel
                 pref_dialog = new ConfigureDialog(this);
             pref_dialog.prefs_stack.set_visible_child_name(page);
             pref_dialog.present();
-            pref_dialog.unmap.connect(()=>{pref_dialog.destroy();});
-            pref_dialog.destroy.connect(()=>{pref_dialog = null;});
+            pref_dialog.hide.connect(()=>{
+                pref_dialog.destroy();
+                pref_dialog = null;
+            });
         }
     }
 }
