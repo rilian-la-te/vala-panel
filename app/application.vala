@@ -166,7 +166,7 @@ namespace ValaPanel
                 char[] cwd = new char[1024];
                 Posix.getcwd(cwd);
                 var data = new MenuMaker.SpawnData();
-                string[] argv = {"vala-panel","-p",this.profile};
+                string[] argv = {Config.GETTEXT_PACKAGE,"-p",this.profile};
                 try
                 {
                     Process.spawn_async((string)cwd,argv,

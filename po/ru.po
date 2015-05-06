@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 17:52+0600\n"
-"PO-Revision-Date: 2015-05-03 17:52+0600\n"
+"POT-Creation-Date: 2015-05-06 23:19+0600\n"
+"PO-Revision-Date: 2015-05-06 23:20+0600\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -50,6 +50,7 @@ msgstr "_ОК"
 
 #: ../lib/panel-toplevel.vala:1194 ../lib/panel-toplevel.vala:1193
 #: ../lib/panel-toplevel.vala:1212 ../lib/panel-toplevel.vala:1230
+#: ../lib/panel-toplevel.vala:1209
 msgid "There is no room for another panel. All the edges are taken."
 msgstr "Нет места для новой панели. Все стороны экрана заняты."
 
@@ -59,11 +60,13 @@ msgstr "Нет места для новой панели. Все стороны 
 #: ../applets/core/launchbar/launchbar-config.vala:190
 #: ../lib/panel-toplevel.vala:1232
 #: ../applets/core/launchbar/launchbar-config.vala:208
+#: ../lib/panel-toplevel.vala:1211
 msgid "Error"
 msgstr "Ошибка"
 
 #: ../lib/panel-toplevel.vala:1213 ../lib/panel-toplevel.vala:1212
 #: ../lib/panel-toplevel.vala:1231 ../lib/panel-toplevel.vala:1249
+#: ../lib/panel-toplevel.vala:1228
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning: This can not be recovered.</b>"
@@ -73,92 +76,112 @@ msgstr ""
 
 #: ../lib/panel-toplevel.vala:1215 ../lib/panel-toplevel.vala:1214
 #: ../lib/panel-toplevel.vala:1233 ../lib/panel-toplevel.vala:1251
+#: ../lib/panel-toplevel.vala:1230
 msgid "Confirm"
 msgstr "Подтвердить"
 
 #: ../lib/configurator.vala:76 ../lib/configurator.vala:93
 #: ../lib/configurator.vala:94 ../lib/configurator.vala:111
+#: ../lib/configurator.vala:110
 msgid "Top"
 msgstr "Сверху"
 
 #: ../lib/configurator.vala:79 ../lib/configurator.vala:96
 #: ../lib/configurator.vala:97 ../lib/configurator.vala:114
+#: ../lib/configurator.vala:113
 msgid "Bottom"
 msgstr "Снизу"
 
 #: ../lib/configurator.vala:82 ../lib/configurator.vala:99
 #: ../lib/configurator.vala:100 ../lib/configurator.vala:117
+#: ../lib/configurator.vala:116
 msgid "Left"
 msgstr "Слева"
 
 #: ../lib/configurator.vala:85 ../lib/configurator.vala:102
 #: ../lib/configurator.vala:103 ../lib/configurator.vala:120
+#: ../lib/configurator.vala:119
 msgid "Right"
 msgstr "Справа"
 
 #: ../lib/configurator.vala:111 ../lib/configurator.vala:125
 #: ../lib/configurator.vala:129 ../lib/configurator.vala:143
+#: ../lib/configurator.vala:128 ../lib/configurator.vala:142
 msgid "Start"
 msgstr "К началу"
 
 #: ../lib/configurator.vala:114 ../lib/configurator.vala:128
 #: ../lib/configurator.vala:132 ../lib/configurator.vala:146
+#: ../lib/configurator.vala:131 ../lib/configurator.vala:145
 msgid "Center"
 msgstr "По центру"
 
 #: ../lib/configurator.vala:117 ../lib/configurator.vala:131
 #: ../lib/configurator.vala:135 ../lib/configurator.vala:149
+#: ../lib/configurator.vala:134 ../lib/configurator.vala:148
 msgid "End"
 msgstr "К концу"
 
 #: ../lib/configurator.vala:144 ../lib/configurator.vala:208
 #: ../lib/configurator.vala:162 ../lib/configurator.vala:226
+#: ../lib/configurator.vala:161 ../lib/configurator.vala:223
 msgid "All"
 msgstr "Все"
 
 #: ../lib/configurator.vala:208 ../lib/configurator.vala:226
+#: ../lib/configurator.vala:223
 msgid "%d"
 msgstr "%d"
 
 #: ../lib/configurator.vala:281 ../lib/configurator.vala:299
+#: ../lib/configurator.vala:296
 msgid "Currently loaded plugins"
 msgstr "Загруженные модули"
 
 #: ../lib/configurator.vala:290 ../lib/configurator.vala:308
+#: ../lib/configurator.vala:305
 msgid "Stretch"
 msgstr "Растянуть"
 
 #: ../lib/configurator.vala:350 ../lib/configurator.vala:368
+#: ../lib/configurator.vala:365
 msgid "Available plugins"
 msgstr "Доступные модули"
 
 #: ../app/application.vala:61 ../app/application.vala:79
+#: ../app/application.vala:72
 msgid "Print version and exit"
 msgstr "Показать версию и выйти"
 
 #: ../app/application.vala:62 ../app/application.vala:80
+#: ../app/application.vala:73
 msgid "Use specified profile"
 msgstr "Использовать специфичный профиль"
 
 #: ../app/application.vala:62 ../app/application.vala:80
+#: ../app/application.vala:73
 msgid "profile"
 msgstr "профиль"
 
 #: ../app/application.vala:63 ../app/application.vala:81
+#: ../app/application.vala:74
 msgid "Run command on already opened panel"
 msgstr "Выполнить команду на открытом приложении"
 
 #: ../app/application.vala:63 ../app/application.vala:81
+#: ../app/application.vala:74
 msgid "cmd"
 msgstr "cmd"
 
 #: ../app/application.vala:180 ../app/application.vala:179
 #: ../app/application.vala:183 ../app/application.vala:203
+#: ../app/application.vala:207
 msgid "%s - Version %s\n"
 msgstr "%s - Версия %s\n"
 
 #: ../app/application.vala:211 ../app/application.vala:210
 #: ../app/application.vala:214 ../app/application.vala:234
+#: ../app/application.vala:238
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
@@ -168,26 +191,31 @@ msgstr ""
 
 #: ../applets/core/separator/separator.vala:49
 #: ../applets/core/separator/separator.vala:67
+#: ../applets/core/separator/separator.vala:65
 msgid "Separator Applet"
 msgstr "Разделитель"
 
 #: ../applets/core/separator/separator.vala:51 ../lib/pref.ui:517
 #: ../applets/core/separator/separator.vala:69
+#: ../applets/core/separator/separator.vala:67
 msgid "Size"
 msgstr "Размер"
 
 #: ../applets/core/separator/separator.vala:52
 #: ../applets/core/separator/separator.vala:70
+#: ../applets/core/separator/separator.vala:68
 msgid "Visible separator"
 msgstr "Показывать разделитель"
 
 #: ../applets/core/menumodel/menumodel.vala:56
 #: ../applets/core/menumodel/menumodel.vala:74
+#: ../applets/core/menumodel/menumodel.vala:69
 msgid "Custom Menu"
 msgstr "Меню"
 
 #: ../applets/core/menumodel/menumodel.vala:57
 #: ../applets/core/menumodel/menumodel.vala:75
+#: ../applets/core/menumodel/menumodel.vala:70
 msgid ""
 "If internal menu is enabled, menu file will not be used, predefeined menu "
 "will be used instead."
@@ -197,16 +225,19 @@ msgstr ""
 
 #: ../applets/core/menumodel/menumodel.vala:58
 #: ../applets/core/menumodel/menumodel.vala:76
+#: ../applets/core/menumodel/menumodel.vala:71
 msgid "Is internal menu"
 msgstr "Использовать встроенное меню."
 
 #: ../applets/core/menumodel/menumodel.vala:59
 #: ../applets/core/menumodel/menumodel.vala:77
+#: ../applets/core/menumodel/menumodel.vala:72
 msgid "Is system menu (can be keybound)"
 msgstr "Считать системным (привязывается к команде панели)"
 
 #: ../applets/core/menumodel/menumodel.vala:60
 #: ../applets/core/menumodel/menumodel.vala:78
+#: ../applets/core/menumodel/menumodel.vala:73
 msgid "Is Menubar"
 msgstr "Является панелью меню."
 
@@ -215,40 +246,47 @@ msgstr "Является панелью меню."
 #: ../applets/core/launchbar/config.ui:154
 #: ../applets/core/menumodel/menumodel.vala:79
 #: ../applets/core/dirmenu/dirmenu.vala:199
+#: ../applets/core/menumodel/menumodel.vala:74
 msgid "Icon"
 msgstr "Значок"
 
 #: ../applets/core/menumodel/menumodel.vala:62
 #: ../applets/core/menumodel/menumodel.vala:80
+#: ../applets/core/menumodel/menumodel.vala:75
 msgid "Caption (for button only)"
 msgstr "Название (только для кнопки)"
 
 #: ../applets/core/menumodel/menumodel.vala:63
 #: ../applets/core/menumodel/menumodel.vala:81
+#: ../applets/core/menumodel/menumodel.vala:76
 msgid "Menu file name"
 msgstr "Имя файла меню"
 
 #: ../applets/core/menumodel/menu-maker.vala:83
 #: ../applets/core/menumodel/menu-maker.vala:84
 #: ../applets/core/menumodel/menu-maker.vala:99
+#: ../applets/core/menumodel/menu-maker.vala:100
 msgid "Home"
 msgstr "Домашняя папка"
 
 #: ../applets/core/menumodel/menu-maker.vala:94
 #: ../applets/core/menumodel/menu-maker.vala:95
 #: ../applets/core/menumodel/menu-maker.vala:110
+#: ../applets/core/menumodel/menu-maker.vala:111
 msgid "Desktop"
 msgstr "Рабочий стол"
 
 #: ../applets/core/menumodel/menu-maker.vala:111
 #: ../applets/core/menumodel/menu-maker.vala:112
 #: ../applets/core/menumodel/menu-maker.vala:127
+#: ../applets/core/menumodel/menu-maker.vala:128
 msgid "Search..."
 msgstr "Поиск файла..."
 
 #: ../applets/core/menumodel/menu-maker.vala:139
 #: ../applets/core/menumodel/menu-maker.vala:140
 #: ../applets/core/menumodel/menu-maker.vala:155
+#: ../applets/core/menumodel/menu-maker.vala:156
 msgid "Control center"
 msgstr "Центр управления"
 
@@ -257,6 +295,7 @@ msgstr "Центр управления"
 #: ../applets/core/launchbar/config.ui:39
 #: ../applets/core/launchbar/config.ui:38
 #: ../applets/core/menumodel/menu-maker.vala:174
+#: ../applets/core/menumodel/menu-maker.vala:175
 msgid "Applications"
 msgstr "Приложения"
 
@@ -266,6 +305,8 @@ msgstr "Приложения"
 #: ../applets/core/menumodel/menu-maker.vala:171
 #: ../applets/core/menumodel/menu-maker.vala:178
 #: ../applets/core/menumodel/menu-maker.vala:186
+#: ../applets/core/menumodel/menu-maker.vala:179
+#: ../applets/core/menumodel/menu-maker.vala:187
 msgid "Places"
 msgstr "Переход"
 
@@ -273,12 +314,14 @@ msgstr "Переход"
 #: ../applets/core/menumodel/system-menus.ui:40
 #: ../applets/core/menumodel/menu-maker.vala:164
 #: ../applets/core/menumodel/menu-maker.vala:179
+#: ../applets/core/menumodel/menu-maker.vala:180
 msgid "System"
 msgstr "Система"
 
 #: ../applets/core/menumodel/menu-maker.vala:165
 #: ../applets/core/menumodel/menu-maker.vala:168
 #: ../applets/core/menumodel/menu-maker.vala:183
+#: ../applets/core/menumodel/menu-maker.vala:184
 msgid "Vala Panel"
 msgstr "Vala Panel"
 
@@ -638,7 +681,7 @@ msgstr "О программе..."
 msgid "Run..."
 msgstr "Выполнить..."
 
-#: ../app/app-runner.ui:32
+#: ../app/app-runner.ui:32 ../app/app-runner.ui:29
 msgid "Terminal toggle button"
 msgstr "Кнопка включения запуска в терминале"
 
@@ -646,11 +689,11 @@ msgstr "Кнопка включения запуска в терминале"
 msgid "Enter application name..."
 msgstr "Введите команду..."
 
-#: ../app/app-runner.ui:59
+#: ../app/app-runner.ui:59 ../app/app-runner.ui:54
 msgid "Runnable command name"
 msgstr "Команда для запуска"
 
-#: ../app/app-runner.ui:77
+#: ../app/app-runner.ui:77 ../app/app-runner.ui:74
 msgid "Cancel button"
 msgstr "Кнопка отмены"
 
@@ -970,6 +1013,10 @@ msgstr "Кнопки окна"
 #: ../applets/wnck/buttons/buttons.desktop.plugin.in:5
 msgid "Shows window buttons (such as minimize, maximize and close)."
 msgstr "Показывает кнопки окна (такие как свернуть, развернуть и закрыть)"
+
+#: ../app/application.vala:230
+msgid "%s: invalid command. Cannot parse."
+msgstr "Неверная команда %s. Невозможно преобразовать."
 
 #~ msgid "SimplePanel"
 #~ msgstr "SimplePanel"
