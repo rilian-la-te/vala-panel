@@ -25,7 +25,6 @@ namespace ValaPanel
     namespace Data
     {
         public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
-        public const string CONFIG = "ValaPanel-Configurable";
         public const string EXPANDABLE = "ValaPanel-Expandable";
     }
     public enum AppletPackType
@@ -193,7 +192,7 @@ namespace ValaPanel
                 popup_position_helper(dlg,out x, out y);
                 dlg.move(x,y);
                 dialog = dlg;
-                dialog.unmap.connect(()=>{dialog.destroy(); dialog = null;});
+                dialog.hide.connect(()=>{dialog.destroy(); dialog = null;});
             }
             dialog.present();
         }

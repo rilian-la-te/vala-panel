@@ -78,20 +78,16 @@ namespace ValaPanel
         private void setup_entry_completion()
         {
             var comp = new EntryCompletion();
-            comp.set_minimum_key_length(2);
-            comp.set_inline_completion(true);
-            comp.set_popup_set_width(true);
-            comp.set_popup_single_match(false);
+            comp.minimum_key_length = 2;
+            comp.inline_completion = true;
+            comp.popup_set_width = true;
+            comp.popup_single_match = false;
             var store = new Gtk.ListStore(1,typeof(string));
-            foreach(var filename in filenames)
-            {
-                var it = Gtk.TreeIter();
-                store.append(out it);
-                store.set(it,0,filename,-1);
-            }
-            comp.set_model(store);
-            comp.set_text_column(0);
-            entry.set_completion(comp);
+            foreach(unowned string filename in filenames)
+                store.insert_with_values(null,-1,0,filename,-1);
+            comp.model = store;
+            comp.text_column = 0;
+            entry.completion = comp;
             comp.complete();
         }
         public unowned CompletionThread @ref ()

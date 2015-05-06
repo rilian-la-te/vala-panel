@@ -20,6 +20,11 @@
 public struct Volatile : int {
 }
 
+namespace Posix
+{
+    [CCode (cname = "getcwd", cheader_filename = "unistd.h")]
+    public long getcwd(char[] cwd);
+}
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib
 {

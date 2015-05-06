@@ -44,6 +44,7 @@ namespace ValaPanel
         private static const string NAME = "global";
         private static const string PATH = "/org/vala-panel/";
         private bool started = false;
+        private bool restart = false;
         private SettingsBackend config_backend;
         private Dialog? pref_dialog;
         private GLib.Settings config;
@@ -52,7 +53,7 @@ namespace ValaPanel
         private bool _custom;
         private string _css;
         private CssProvider provider;
-        public string profile {get; internal set construct; default = "default";}
+        public string profile {get; internal set; default = "default";}
         public string terminal_command {get; internal set;}
         public string logout_command {get; internal set;}
         public string shutdown_command {get; internal set;}
@@ -82,6 +83,7 @@ namespace ValaPanel
             {"run", activate_run, null, null, null},
             {"logout", activate_logout, null, null, null},
             {"shutdown", activate_shutdown, null, null, null},
+            {"restart", activate_restart, null, null, null},
             {"quit", activate_exit, null, null, null},
         };
         private static const GLib.ActionEntry[] menu_entries =
@@ -93,12 +95,11 @@ namespace ValaPanel
         public App()
         {
             Object(application_id: "org.valapanel.application",
-                    flags: GLib.ApplicationFlags.HANDLES_COMMAND_LINE,
 #if VALA_0_26
-                    profile: "default",
+                    flags: GLib.ApplicationFlags.HANDLES_COMMAND_LINE,
                     resource_base_path: "/org/vala-panel/app");
 #else
-                    profile: "default");
+                    flags: GLib.ApplicationFlags.HANDLES_COMMAND_LINE);
 #endif
         }
 
@@ -145,7 +146,7 @@ namespace ValaPanel
             pref_dialog.destroy.connect(()=>{pref_dialog = null;});
         }
 
-        public override void startup()
+        protected override void startup()
         {
             base.startup();
             this.mark_busy();
@@ -157,12 +158,26 @@ namespace ValaPanel
             add_action_entries(app_entries,this);
             add_action_entries(menu_entries,this);
         }
-        public override void shutdown()
+        protected override void shutdown()
         {
             base.shutdown();
+            if (restart)
+            {
+                char[] cwd = new char[1024];
+                Posix.getcwd(cwd);
+                var data = new MenuMaker.SpawnData();
+                string[] argv = {"vala-panel","-p",this.profile};
+                try
+                {
+                    Process.spawn_async((string)cwd,argv,
+                                        Environ.get(),
+                                        SpawnFlags.SEARCH_PATH,
+                                        data.child_spawn_func,null);
+                } catch (Error e){}
+            }
         }
 
-        public override void activate()
+        protected override void activate()
         {
             if (!started)
             {
@@ -185,7 +200,7 @@ namespace ValaPanel
             }
         }
 
-        public override int handle_local_options(VariantDict opts)
+        protected override int handle_local_options(VariantDict opts)
         {
             if (opts.contains("version"))
             {
@@ -195,13 +210,13 @@ namespace ValaPanel
             }
             return -1;
         }
-        public override int command_line(ApplicationCommandLine cmdl)
+        protected override int command_line(ApplicationCommandLine cmdl)
         {
             string? profile_name;
             string? command;
             var options = cmdl.get_options_dict();
-            if (options.lookup("profile","s",out profile_name))
-                _profile = profile_name;
+            if (options.lookup("profile","s",out profile_name) && !this.started)
+                profile = profile_name;
             if (options.lookup("command","s",out command))
             {
                 string name;
@@ -352,6 +367,12 @@ namespace ValaPanel
         }
         internal void activate_exit(SimpleAction action, Variant? param)
         {
+            this.restart = false;
+            this.quit();
+        }
+        internal void activate_restart(SimpleAction action, Variant? param)
+        {
+            this.restart = true;
             this.quit();
         }
     }

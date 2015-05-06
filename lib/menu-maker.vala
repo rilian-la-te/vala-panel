@@ -131,7 +131,7 @@ namespace MenuMaker
         icon = Icon.deserialize(val);
         icon = icon ?? new ThemedIcon.with_default_fallbacks("system-run-symbolic");
         Gtk.drag_source_set_icon_gicon(item,icon);
-        item.drag_data_get.connect((context,data,type,time)=>{
+        var connector = item.drag_data_get.connect((context,data,type,time)=>{
             string[]? uri_list = null;
             string action,target;
             section.get_item_attribute(model_item,GLib.Menu.ATTRIBUTE_ACTION,"s",out action);
@@ -148,6 +148,7 @@ namespace MenuMaker
             uri_list[0] = target;
             data.set_uris(uri_list);
         });
+        item.destroy.connect(()=>{SignalHandler.disconnect((void*)item,connector);});
     }
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu)
     {
@@ -158,11 +159,28 @@ namespace MenuMaker
             if (l.data is SeparatorMenuItem) l = l.next;
             unowned Gtk.MenuItem shell = l.data as Gtk.MenuItem;
             unowned string? str = null;
+            var has_section = false;
+            var has_submenu = false;
+            unowned MenuShell menuw = shell.submenu;
+            MenuLinkIter iter = menu.iterate_item_links(i);
+            MenuModel? link_menu;
+            while (iter.get_next(out str, out link_menu))
+            {
+                has_section = has_section || (str == GLib.Menu.LINK_SECTION);
+                has_submenu = has_submenu || (str == GLib.Menu.LINK_SUBMENU);
+                if (menuw != null && has_submenu)
+                    apply_menu_properties(menuw.get_children(),link_menu);
+                else if (has_section)
+                {
+                    jumplen += (link_menu.get_n_items() - 1);
+                    apply_menu_properties(l,link_menu);
+                }
+            }
             Variant? val = null;
             MenuAttributeIter attr_iter = menu.iterate_item_attributes(i);
             while(attr_iter.get_next(out str,out val))
             {
-                if (str == GLib.Menu.ATTRIBUTE_ICON)
+                if (str == GLib.Menu.ATTRIBUTE_ICON && (has_submenu || has_section))
                 {
                     var icon = Icon.deserialize(val);
                     shell.set("icon",icon);
@@ -171,19 +189,6 @@ namespace MenuMaker
                     shell.set_tooltip_text(val.get_string());
                 if (str == ATTRIBUTE_DND_SOURCE && val.get_boolean())
                     apply_menu_dnd(l.data as Gtk.MenuItem, menu, i);
-            }
-            unowned MenuShell menuw = shell.submenu;
-            MenuLinkIter iter = menu.iterate_item_links(i);
-            MenuModel? link_menu;
-            while (iter.get_next(out str, out link_menu))
-            {
-                if (menuw != null && str == GLib.Menu.LINK_SUBMENU)
-                    apply_menu_properties(menuw.get_children(),link_menu);
-                else if (str == GLib.Menu.LINK_SECTION)
-                {
-                    jumplen += (link_menu.get_n_items() - 1);
-                    apply_menu_properties(l,link_menu);
-                }
             }
             l = l.nth(jumplen);
             if (l == null) break;
