@@ -116,7 +116,7 @@ namespace StatusNotifier
         }
         internal bool filter_cb(FlowBoxChild ch)
         {
-            var item = ch as Item;
+            unowned Item item = ch as Item;
             if (item.id != null && filter_override.contains(item.id))
                 return filter_override.lookup(item.id).get_boolean();
             if (!show_passive && item.status == Status.PASSIVE) return false;
@@ -129,8 +129,8 @@ namespace StatusNotifier
         }
         private int sort_cb(FlowBoxChild ch1, FlowBoxChild ch2)
         {
-            var left = ch1 as Item;
-            var right = ch2 as Item;
+            unowned Item left = ch1 as Item;
+            unowned Item right = ch2 as Item;
             int lpos = (int)left.ordering_index;
             int rpos = (int)right.ordering_index;
             if (left.id != null && index_override.contains(left.id))

@@ -36,7 +36,7 @@ namespace StatusNotifier
         Box box_indicator;
         [GtkChild (name = "scale-indicator")]
         Scale scale_indicator;
-        ItemBox layout;
+        unowned ItemBox layout;
         public bool configure_icon_size {get; set;}
         public ConfigDialog(ItemBox box)
         {

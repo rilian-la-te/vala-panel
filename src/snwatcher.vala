@@ -12,12 +12,9 @@ namespace StatusNotifier
         public signal void status_notifier_item_unregistered(string item);
         public signal void status_notifier_host_unregistered();
         /* Public properties */
-        public abstract string[] registered_status_notifier_items
-        {owned get;protected set;}
-        public abstract bool is_status_notifier_host_registered
-        {get;}
-        public abstract int protocol_version
-        {get;}
+        public abstract string[] registered_status_notifier_items {owned get;}
+        public abstract bool is_status_notifier_host_registered {get;}
+        public abstract int protocol_version {get;}
         /* Public methods */
         public abstract void register_status_notifier_item(string service) throws IOError;
         public abstract void register_status_notifier_host(string service) throws IOError;
@@ -34,12 +31,9 @@ namespace StatusNotifier
         private HashTable<string,uint> name_watcher;
         private HashTable<string,uint> hosts;
         /* Public properties */
-        public string[] registered_status_notifier_items
-        {owned get; protected set;}
-        public bool is_status_notifier_host_registered
-        {get; private set; default = true;}
-        public int protocol_version
-        {get {return 0;}}
+        public string[] registered_status_notifier_items {owned get {return get_registered_items();}}
+        public bool is_status_notifier_host_registered {get; private set; default = true;}
+        public int protocol_version {get {return 0;}}
         /* Public methods */
         public void register_status_notifier_item(string service, BusName sender)
         {
@@ -77,9 +71,8 @@ namespace StatusNotifier
                                                 () => {remove(get_id(name,path));}
                                                 );
             name_watcher.insert(id,name_handler);
-            registered_status_notifier_items = get_registered_items();
             status_notifier_item_registered(id);
-            /* FIXME: PropertiesChanged for RegisteredStatusNotifierItems*/
+            this.notify_property("registered-status-notifier-items");
         }
         public void register_status_notifier_host(string service) throws IOError
         {
@@ -104,7 +97,7 @@ namespace StatusNotifier
             Bus.unwatch_name(name);
             name_watcher.remove(id);
             status_notifier_item_unregistered(outer);
-            registered_status_notifier_items = get_registered_items();
+            this.notify_property("registered-status-notifier-items");
             /* FIXME PropertiesChanged for RegisteredStatusNotifierItems*/
         }
         private string get_id(string name, string path)

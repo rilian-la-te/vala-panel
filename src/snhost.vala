@@ -72,7 +72,6 @@ namespace StatusNotifier
                                                             create_nested_watcher();
                                                             }
                                                         );
-
                 outer_watcher.register_status_notifier_host(object_path);
                 outer_watcher.status_notifier_item_registered.connect((id)=>{watcher_item_added(id);});
                 outer_watcher.status_notifier_item_unregistered.connect((id)=>{watcher_item_removed(id);});

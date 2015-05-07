@@ -205,7 +205,7 @@ namespace StatusNotifier
                 this.label.hide();
             /* FIXME: Guided labels */
         }
-        private ItemBox get_applet()
+        private unowned ItemBox get_applet()
         {
             return this.get_parent() as ItemBox;
         }
