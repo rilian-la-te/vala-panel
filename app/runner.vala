@@ -22,7 +22,7 @@ using GLib;
 namespace ValaPanel
 {
     [Compact, CCode (ref_function = "vala_panel_completion_thread_ref", unref_function = "vala_panel_completion_thread_unref")]
-    internal class CompletionThread
+    private class CompletionThread
     {
         public bool running;
         internal unowned Gtk.Entry entry;
