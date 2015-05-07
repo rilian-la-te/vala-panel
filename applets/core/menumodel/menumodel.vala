@@ -47,7 +47,7 @@ internal enum InternalMenu
 public class Menu: Applet, AppletConfigurable, AppletMenu
 {
     GLib.Menu menu;
-    Widget? button;
+    Container? button;
     MenuShell? int_menu;
     AppInfoMonitor? app_monitor;
     FileMonitor? file_monitor;
@@ -83,12 +83,15 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     public bool show_menu()
     {
         if (GLib.MainContext.current_source().is_destroyed()) return false;
-        Gtk.Menu menuw = new Gtk.Menu.from_model(menu);
-        MenuMaker.apply_menu_properties(menuw.get_children(),menu);
-        menuw.attach_to_widget(this,null);
-        menuw.popup(null,null,menu_position_func,
-                    0, Gdk.CURRENT_TIME);
-        menuw.hide.connect(()=>{menuw.destroy();});
+        unowned Gtk.Menu menuw = int_menu as Gtk.Menu;
+        if (menuw != null)
+            menuw.popup(null,null,menu_position_func,
+                        0, Gdk.CURRENT_TIME);
+        else
+        {
+            unowned Gtk.MenuBar menubar = button as Gtk.MenuBar;
+            menubar.select_first(false);
+        }
         show_system_menu_idle = 0;
         return false;
     }
@@ -131,15 +134,15 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             }
         });
     }
-    private Widget menumodel_widget_create()
+    private Container menumodel_widget_create()
     {
         menu = create_menumodel() as GLib.Menu;
         if (bar)
-            return create_menubar() as Widget;
+            return create_menubar() as Container;
         else
-            return create_menubutton() as Widget;
+            return create_menubutton() as Container;
     }
-    private MenuBar create_menubar()
+    private Gtk.MenuBar create_menubar()
     {
         int_menu = null;
         var menubar = new MenuBar.from_model(menu);
