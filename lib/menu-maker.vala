@@ -34,6 +34,67 @@ namespace MenuMaker
             Posix.setpgid(0,this.pid);
         }
     }
+    [Compact,CCode (ref_function = "menu_maker_drag_data_ref", unref_function = "menu_maker_drag_data_unref")]
+    private class DragData
+    {
+        internal unowned MenuModel section;
+        internal unowned Gtk.MenuItem menuitem;
+        internal int item_pos;
+        internal Volatile ref_count;
+        internal static void destroy (Widget w, DragData data)
+        {
+            SignalHandler.disconnect_by_func(data.menuitem,(void*)data.begin,data);
+            SignalHandler.disconnect_by_func(data.menuitem,(void*)data.get,data);
+            SignalHandler.disconnect_by_func(data.menuitem,(void*)DragData.destroy,data);
+            Gtk.drag_source_unset(data.menuitem);
+            data.unref();
+        }
+        internal DragData(Gtk.MenuItem item, MenuModel section, int model_item)
+        {
+            this.section = section;
+            this.menuitem = item;
+            item_pos = model_item;
+            this.ref_count = 1;
+        }
+        internal void @get (Gdk.DragContext context, SelectionData data, uint info, uint time_)
+        {
+            string[]? uri_list = null;
+            string action,target;
+            section.get_item_attribute(item_pos,GLib.Menu.ATTRIBUTE_ACTION,"s",out action);
+            section.get_item_attribute(item_pos,GLib.Menu.ATTRIBUTE_TARGET,"s",out target);
+            if (action == "app.launch-id")
+            {
+                try
+                {
+                    var appinfo = new DesktopAppInfo(target);
+                    target = Filename.to_uri(appinfo.get_filename());
+                } catch (GLib.Error e){}
+            }
+            uri_list = new string[1];
+            uri_list[0] = target;
+            data.set_uris(uri_list);
+        }
+        internal void begin(Gdk.DragContext context)
+        {
+            var val = section.get_item_attribute_value(item_pos,GLib.Menu.ATTRIBUTE_ICON,null);
+            var icon = Icon.deserialize(val);
+            if (icon != null)
+                Gtk.drag_source_set_icon_gicon(menuitem,icon);
+            else
+                Gtk.drag_source_set_icon_name(menuitem,"system-run-symbolic");
+        }
+        internal unowned DragData @ref ()
+        {
+            GLib.AtomicInt.inc (ref this.ref_count);
+            return this;
+        }
+        internal void unref ()
+        {
+            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
+                this.free ();
+        }
+        private extern void free ();
+    }
     public static const string ATTRIBUTE_DND_SOURCE = "x-valapanel-dnd-source";
     public static const string ATTRIBUTE_TOOLTIP = "x-valapanel-tooltip";
     public static const TargetEntry[] MENU_TARGETS = {
@@ -64,7 +125,7 @@ namespace MenuMaker
         */
         AppInfo? app_info = null;
         var uri_scheme = Uri.parse_scheme (uri);
-        if (uri_scheme != null && uri_scheme[0] != '\0')
+        if (uri_scheme != null && uri_scheme.length <= 0)
             app_info = AppInfo.get_default_for_uri_scheme (uri_scheme);
         if (app_info == null)
         {
@@ -126,29 +187,11 @@ namespace MenuMaker
                 MENU_TARGETS,               // lists of target to support
                 Gdk.DragAction.COPY            // what to do with data after dropped
             );
-        Icon? icon = null;
-        var val = section.get_item_attribute_value(model_item,GLib.Menu.ATTRIBUTE_ICON,null);
-        icon = Icon.deserialize(val);
-        icon = icon ?? new ThemedIcon.with_default_fallbacks("system-run-symbolic");
-        Gtk.drag_source_set_icon_gicon(item,icon);
-        var connector = item.drag_data_get.connect((context,data,type,time)=>{
-            string[]? uri_list = null;
-            string action,target;
-            section.get_item_attribute(model_item,GLib.Menu.ATTRIBUTE_ACTION,"s",out action);
-            section.get_item_attribute(model_item,GLib.Menu.ATTRIBUTE_TARGET,"s",out target);
-            if (action == "app.launch-id")
-            {
-                try
-                {
-                    var info = new DesktopAppInfo(target);
-                    target = Filename.to_uri(info.get_filename());
-                } catch (GLib.Error e){}
-            }
-            uri_list = new string[1];
-            uri_list[0] = target;
-            data.set_uris(uri_list);
-        });
-        item.destroy.connect(()=>{SignalHandler.disconnect((void*)item,connector);});
+        var data = new DragData(item,section,model_item);
+        data.ref();
+        item.drag_begin.connect(data.begin);
+        item.drag_data_get.connect(data.get);
+        Signal.connect(item,"destroy",(GLib.Callback)DragData.destroy,data);
     }
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu)
     {

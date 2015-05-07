@@ -34,5 +34,4 @@ namespace GLib
         [CCode (cname = "g_keyfile_settings_backend_new", cheader_filename = "gio/gsettingsbackend.h")]
         public KeyfileSettingsBackend(string filename, string root_path, string? root_group);
     }
-    public void strfreev(ref string[] vector);
 }
