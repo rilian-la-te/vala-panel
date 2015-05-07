@@ -48,6 +48,7 @@ namespace DBusMenu
     [Compact, CCode (ref_function = "dbus_menu_property_store_ref", unref_function = "dbus_menu_property_store_unref")]
     private class PropertyStore
     {
+        private static const string[] persist_names = {"visible","enabled","type","label","disposition"};
         internal HashTable<string,Variant?> dict;
         internal HashTable<string,VariantType> checker;
         internal int ref_count;
@@ -60,11 +61,10 @@ namespace DBusMenu
         public void set_prop(string name, Variant? val)
         {
             unowned VariantType type = checker.lookup(name);
-            if (val == null)
+            if (val == null && !(name in persist_names))
                 dict.remove(name);
             else if (type != null && val.is_of_type(type))
                 dict.insert(name,val);
-            init_default();
         }
         public PropertyStore (Variant? props)
         {
@@ -100,6 +100,7 @@ namespace DBusMenu
                 while(iter.next ("{sv}", out name, out v))
                     this.set_prop(name,v);
             }
+            init_default();
         }
         private void init_default()
         {
@@ -129,7 +130,7 @@ namespace DBusMenu
 
     public class Item : Object
     {
-        private Client client;
+        private unowned Client client;
         private PropertyStore store;
         private List<int> children_ids;
         public int id {get; private set;}
@@ -436,7 +437,7 @@ namespace DBusMenu
     }
     public interface GtkItemIface : Object
     {
-        public abstract Item item {get; protected set;}
+        public abstract unowned Item item {get; protected set;}
         public static void parse_shortcut_variant(Variant shortcut, out uint key, out Gdk.ModifierType modifier)
         {
             print("%s\n",shortcut.print(false));
@@ -468,8 +469,7 @@ namespace DBusMenu
                                                 "children-display","toggle-type",
                                                 "toggle-state","icon-name","icon-data","accessible-desc",
                                                 "x-valapanel-icon-size"};
-        public Item item
-        {get; protected set;}
+        public unowned Item item {get; protected set;}
         private bool has_indicator;
         private Box box;
         private Image image;
@@ -665,8 +665,7 @@ namespace DBusMenu
     public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
     {
         private static const string[] allowed_properties = {"visible","enabled"};
-        public Item item
-        {get; protected set;}
+        public unowned Item item {get; protected set;}
         public GtkSeparatorItem(Item item)
         {
             this.item = item;
@@ -698,7 +697,7 @@ namespace DBusMenu
                                                             "x-valapanel-min-value","x-valapanel-current-value","x-valapanel-max-value",
                                                             "x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
                                                             "x-valapanel-format-value"};
-        public Item item {get; protected set;}
+        public unowned Item item {get; protected set;}
         private Box box;
         private Image primary;
         private Scale scale;
@@ -830,7 +829,7 @@ namespace DBusMenu
         private static const string[] allowed_properties = {"visible","enabled","label","type",
                                                 "children-display", "x-valapanel-icon-size",
                                                 "icon-name","icon-data","accessible-desc"};
-        public Item item {get; protected set;}
+        public unowned Item item {get; protected set;}
         private Box box;
         private Image image;
         private new AccelLabel label;
@@ -994,7 +993,7 @@ namespace DBusMenu
     }
     public class GtkClient : Client
     {
-        private Gtk.MenuShell root_menu;
+        private unowned Gtk.MenuShell root_menu;
         public static Gtk.MenuItem new_item(Item item)
         {
             if (item.get_string_property("type") == "separator")
