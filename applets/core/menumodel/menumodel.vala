@@ -88,7 +88,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         menuw.attach_to_widget(this,null);
         menuw.popup(null,null,menu_position_func,
                     0, Gdk.CURRENT_TIME);
-        menuw.focus_out_event.connect((event)=>{menuw.destroy();return false;});
+        menuw.hide.connect(()=>{menuw.destroy();});
         show_system_menu_idle = 0;
         return false;
     }
