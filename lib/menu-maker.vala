@@ -43,9 +43,7 @@ namespace MenuMaker
         internal Volatile ref_count;
         internal static void destroy (Widget w, DragData data)
         {
-            SignalHandler.disconnect_by_func(data.menuitem,(void*)data.begin,data);
-            SignalHandler.disconnect_by_func(data.menuitem,(void*)data.get,data);
-            SignalHandler.disconnect_by_func(data.menuitem,(void*)DragData.destroy,data);
+            SignalHandler.disconnect_by_data(data.menuitem,data);
             Gtk.drag_source_unset(data.menuitem);
             data.unref();
         }

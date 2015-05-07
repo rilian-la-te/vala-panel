@@ -28,6 +28,11 @@ namespace Posix
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib
 {
+    namespace SignalHandler
+    {
+        [CCode (cname = "g_signal_handlers_disconnect_by_data")]
+        public void disconnect_by_data(Object instance, void* data);
+    }
     [CCode (cname = "GSettingsBackend")]
     public class KeyfileSettingsBackend : GLib.SettingsBackend
     {
