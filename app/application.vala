@@ -235,7 +235,7 @@ namespace ValaPanel
                 {
                     var actions = string.joinv(" ",list_actions());
                     cmdl.printerr(_("%s: invalid command - %s. Doing nothing.\nValid commands: %s\n"),
-                                    GLib.Environment.get_application_name(),actions);
+                                    GLib.Environment.get_application_name(),command,actions);
                 }
             }
             activate();

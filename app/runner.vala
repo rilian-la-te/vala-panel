@@ -109,14 +109,11 @@ namespace ValaPanel
         private Entry main_entry;
         [GtkChild (name="terminal-button")]
         private ToggleButton terminal_button;
-//~         [GtkChild (name="main-box", internal=true)]
-//~         private Box main_box;
+        [GtkChild (name="main-box", internal=true)]
+        private Box main_box;
 
         private CompletionThread? thread;
         private Thread<void*> thread_ref;
-
-        private GLib.List<GLib.AppInfo> apps_list;
-        private AppInfoMonitor monitor;
         private bool cached;
         private App app
         {
@@ -135,29 +132,23 @@ namespace ValaPanel
         }
         construct
         {
-//~             PanelCSS.apply_from_resource(this,"/org/vala-panel/app/style.css","-panel-run-dialog");
-//~             main_box.get_style_context().add_class("-panel-run-header");
+            PanelCSS.apply_from_resource(this,"/org/vala-panel/app/style.css","-panel-run-dialog");
+            main_box.get_style_context().add_class("-panel-run-header");
             //FIXME: Implement cache
             cached = false;
             this.set_visual(this.get_screen().get_rgba_visual());
             this.set_default_response(Gtk.ResponseType.OK);
             this.set_keep_above(true);
             thread = null;
-            monitor = AppInfoMonitor.get();
-            apps_list = AppInfo.get_all();
-            monitor.changed.connect(()=>
-            {
-                apps_list = AppInfo.get_all();
-            });
         }
 
-        private unowned DesktopAppInfo? match_app_by_exec(string exec)
+        private DesktopAppInfo? match_app_by_exec(string exec)
         {
-            unowned DesktopAppInfo? ret = null;
+            DesktopAppInfo? ret = null;
             string exec_path = GLib.Environment.find_program_in_path(exec);
             if (exec_path == null)
                 return null;
-            foreach(unowned AppInfo app in apps_list)
+            foreach(unowned AppInfo app in AppInfo.get_all())
             {
                 var app_exec = app.get_executable();
                 if (app_exec == null)
@@ -251,7 +242,7 @@ namespace ValaPanel
         [GtkCallback]
         private void on_entry_changed()
         {
-            unowned DesktopAppInfo? app = null;
+            DesktopAppInfo? app = null;
             if (main_entry.get_text()!=null && main_entry.get_text() != "")
                 app = match_app_by_exec(main_entry.get_text());
             if (app != null)
