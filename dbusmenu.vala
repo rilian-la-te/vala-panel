@@ -49,13 +49,13 @@ namespace DBusMenu
     private class PropertyStore
     {
         private static const string[] persist_names = {"visible","enabled","type","label","disposition"};
-        internal HashTable<string,Variant?> dict;
+        internal VariantDict dict;
         internal HashTable<string,VariantType> checker;
         internal int ref_count;
-        public unowned Variant? get_prop(string name)
+        public Variant? get_prop(string name)
         {
             unowned VariantType type = checker.lookup(name);
-            unowned Variant? prop = dict.lookup(name);
+            Variant? prop = dict.lookup_value(name,type);
             return (type != null && prop != null && prop.is_of_type(type)) ? prop : null;
         }
         public void set_prop(string name, Variant? val)
@@ -64,12 +64,12 @@ namespace DBusMenu
             if (val == null && !(name in persist_names))
                 dict.remove(name);
             else if (type != null && val.is_of_type(type))
-                dict.insert(name,val);
+                dict.insert_value(name,val);
         }
         public PropertyStore (Variant? props)
         {
             ref_count = 1;
-            dict = new HashTable<string,Variant?>(str_hash,str_equal);
+            dict = new VariantDict(props);
             checker = new HashTable<string,VariantType>(str_hash,str_equal);
             checker.insert("visible", VariantType.BOOLEAN);
             checker.insert("enabled", VariantType.BOOLEAN);
@@ -92,28 +92,20 @@ namespace DBusMenu
             checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
             checker.insert("x-valapanel-draw-value", VariantType.BOOLEAN);
             checker.insert("x-valapanel-format-value", VariantType.STRING);
-            if (props != null)
-            {
-                VariantIter iter = props.iterator();
-                string name;
-                Variant v;
-                while(iter.next ("{sv}", out name, out v))
-                    this.set_prop(name,v);
-            }
             init_default();
         }
         private void init_default()
         {
             if(!dict.contains("visible"))
-                dict.insert("visible", new Variant.boolean(true));
+                dict.insert("visible", "b", true);
             if(!dict.contains("enabled"))
-                dict.insert("enabled", new Variant.boolean(true));
+                dict.insert("enabled", "b", true);
             if(!dict.contains("type"))
-                dict.insert("type", new Variant.string("standard"));
+                dict.insert("type", "s", "standard");
             if(!dict.contains("label"))
-                dict.insert("label", new Variant.string(""));
+                dict.insert("label","s", "");
             if(!dict.contains("disposition"))
-                dict.insert("disposition",new Variant.string("normal"));
+                dict.insert("disposition","s", "normal");
         }
         public unowned PropertyStore @ref ()
         {
@@ -252,6 +244,11 @@ namespace DBusMenu
             iface.item_activation_requested.connect(request_activation_cb);
             iface.x_valapanel_item_value_changed.connect(request_value_cb);
             requested_props_ids = {};
+        }
+        ~Client()
+        {
+            if (iface != null)
+                iface.unref();
         }
         public unowned Item? get_root_item()
         {
@@ -495,7 +492,7 @@ namespace DBusMenu
             activate_handler = this.activate.connect(on_toggled_cb);
             this.select.connect(on_select_cb);
             this.deselect.connect(on_deselect_cb);
-            this.notify["visible"].connect(()=>{this.visible=item.get_bool_property("visible");});
+            this.notify["visible"].connect(()=>{this.visible = item.get_bool_property("visible");});
         }
         private void init()
         {
@@ -781,7 +778,7 @@ namespace DBusMenu
         }
         private void init()
         {
-            foreach (var prop in allowed_properties)
+            foreach (unowned string prop in allowed_properties)
                 on_prop_changed_cb(prop,item.get_variant_property(prop));
         }
         protected override bool button_press_event(Gdk.EventButton event)
@@ -859,7 +856,7 @@ namespace DBusMenu
         }
         private void init()
         {
-            foreach (var prop in allowed_properties)
+            foreach (unowned string prop in allowed_properties)
                 on_prop_changed_cb(prop,item.get_variant_property(prop));
         }
         private void on_prop_changed_cb(string name, Variant? val)
@@ -1026,8 +1023,6 @@ namespace DBusMenu
             get_root_item().child_removed.connect(on_child_removed_cb);
             foreach(unowned Item ch in get_root_item().get_children())
                 on_child_added_cb(ch.id,ch);
-            foreach(unowned string path in iface.icon_theme_path)
-                IconTheme.get_default().append_search_path(path);
             root_menu.show();
         }
         private void open_cb()
@@ -1051,28 +1046,29 @@ namespace DBusMenu
         }
         private void on_child_moved_cb(int oldpos, int newpos, Item item)
         {
-            foreach(var ch in root_menu.get_children())
+            foreach(unowned Widget ch in root_menu.get_children())
                 if ((ch as GtkItemIface).item == item)
                 {
-                    ch.ref();
                     root_menu.remove(ch);
                     root_menu.insert(ch,newpos);
-                    ch.unref();
                 }
         }
         private void on_child_removed_cb(int id, Item item)
         {
-            foreach(var ch in root_menu.get_children())
+            foreach(unowned Widget ch in root_menu.get_children())
                 if ((ch as GtkItemIface).item == item)
                     ch.destroy();
         }
         public static bool check (string bus_name, string object_path)
         {
+            Iface? iface = null;
             try
             {
-                Iface iface = Bus.get_proxy_sync(BusType.SESSION,bus_name,object_path);
-                if (iface.version < 2) return false;
-                else return true;
+                iface = Bus.get_proxy_sync(BusType.SESSION,bus_name,object_path);
+                if (iface.version < 2)
+                    return false;
+                else
+                    return true;
             } catch (Error e){}
             return false;
         }
