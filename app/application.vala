@@ -45,7 +45,6 @@ namespace ValaPanel
         private static const string PATH = "/org/vala-panel/";
         private bool started = false;
         private bool restart = false;
-        private SettingsBackend config_backend;
         private Dialog? pref_dialog;
         private GLib.Settings config;
         private Runner? runner;
@@ -314,7 +313,7 @@ namespace ValaPanel
                 try{src.copy(dest,FileCopyFlags.BACKUP,null,null);}
                 catch(Error e){warning("Cannot init global config: %s\n",e.message);}
             }
-            config_backend = new GLib.KeyfileSettingsBackend(user_file,PATH,NAME);
+            var config_backend = new GLib.KeyfileSettingsBackend(user_file,PATH,NAME);
             config = new GLib.Settings.with_backend_and_path(SCHEMA,config_backend,PATH);
             settings_bind(this,config,Key.LOGOUT);
             settings_bind(this,config,Key.SHUTDOWN);
