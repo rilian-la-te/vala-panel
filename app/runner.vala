@@ -189,7 +189,7 @@ namespace ValaPanel
                     var data = new MenuMaker.SpawnData();
                     var launch = info.launch_uris_as_manager(null,
                                                              this.get_display().get_app_launch_context(),
-                                                             SpawnFlags.SEARCH_PATH,
+                                                             SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                                              data.child_spawn_func,MenuMaker.launch_callback);
                     if (!launch)
                     {

@@ -143,7 +143,7 @@ namespace MenuMaker
             var data = new SpawnData();
             info.launch_uris_as_manager(null,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH,
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
@@ -157,7 +157,7 @@ namespace MenuMaker
                             AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION) as DesktopAppInfo;
             info.launch_uris_as_manager(null,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH,
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
@@ -172,7 +172,7 @@ namespace MenuMaker
             uri_l.append(uri);
             info.launch_uris_as_manager(uri_l,
                                          Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH,
+                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          data.child_spawn_func,launch_callback);
         } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
