@@ -28,6 +28,8 @@ namespace Posix
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib
 {
+    [CCode (cname = "g_slist_free_full")]
+    public void slist_free_full(SList list, DestroyNotify? free_func);
     namespace SignalHandler
     {
         [CCode (cname = "g_signal_handlers_disconnect_by_data")]
@@ -38,5 +40,15 @@ namespace GLib
     {
         [CCode (cname = "g_keyfile_settings_backend_new", cheader_filename = "gio/gsettingsbackend.h")]
         public KeyfileSettingsBackend(string filename, string root_path, string? root_group);
+    }
+    [CCode (cname = "GTask",cheader_filename = "gio/gio.h", type_id = "g_task_get_type ()")]
+    public class AsyncTask : GLib.Task
+    {
+        [CCode (cname = "g_task_new")]
+        public static AsyncTask create (GLib.Object? source_object, GLib.Cancellable? cancellable = null, AsyncReadyCallback? back = null);
+        [CCode (has_target = false)]
+        public delegate void TaskThreadFunc (Task task, Object source, void* task_data, Cancellable cancellable);
+        [CCode (cname = "g_task_run_in_thread")]
+        public void run_in_thread(TaskThreadFunc func);
     }
 }

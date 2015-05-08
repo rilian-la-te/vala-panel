@@ -21,87 +21,6 @@ using GLib;
 
 namespace ValaPanel
 {
-    [Compact, CCode (ref_function = "vala_panel_completion_thread_ref", unref_function = "vala_panel_completion_thread_unref")]
-    private class CompletionThread
-    {
-        public bool running;
-        internal unowned Gtk.Entry entry;
-        internal SList<string>? filenames;
-        internal Volatile ref_count;
-        public CompletionThread (Gtk.Entry entry)
-        {
-            ref_count = 1;
-            this.entry = entry;
-            running = true;
-        }
-
-        public void* run ()
-        {
-            SList<string> list = new SList<string>();
-            var dirs = GLib.Environment.get_variable("PATH").split(":",0);
-            foreach(unowned string dir in dirs)
-            {
-                if (!running)
-                    break;
-                try
-                {
-                    Dir gdir = Dir.open(dir,0);
-                    string? name = null;
-                    while(running && (name = gdir.read_name())!= null)
-                    {
-                        var filename = GLib.Path.build_filename(dir,name);
-                        if (GLib.FileUtils.test(filename,FileTest.IS_EXECUTABLE))
-                        {
-                            if (!running)
-                                break;
-                            if (list.find_custom(name,(GLib.CompareFunc)Posix.strcmp) == null)
-                                list.append(name);
-                        }
-                    }
-
-                }
-                catch (Error e)
-                {
-                    stderr.printf("%s\n",e.message);
-                    continue;
-                }
-            }
-            filenames = (owned)list;
-            Idle.add(() =>
-            {
-                if(running)
-                    setup_entry_completion();
-                return false;
-            });
-            return null;
-        }
-        private void setup_entry_completion()
-        {
-            var comp = new EntryCompletion();
-            comp.minimum_key_length = 2;
-            comp.inline_completion = true;
-            comp.popup_set_width = true;
-            comp.popup_single_match = false;
-            var store = new Gtk.ListStore(1,typeof(string));
-            foreach(unowned string filename in filenames)
-                store.insert_with_values(null,-1,0,filename,-1);
-            comp.model = store;
-            comp.text_column = 0;
-            entry.completion = comp;
-            comp.complete();
-        }
-        public unowned CompletionThread @ref ()
-        {
-            GLib.AtomicInt.inc (ref this.ref_count);
-            return this;
-        }
-        public void unref ()
-        {
-            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
-                this.free ();
-        }
-        private extern void free ();
-    }
     [GtkTemplate (ui = "/org/vala-panel/app/app-runner.ui"),CCode (cname="Runner")]
     internal class Runner : Gtk.Dialog
     {
@@ -111,9 +30,8 @@ namespace ValaPanel
         private ToggleButton terminal_button;
         [GtkChild (name="main-box", internal=true)]
         private Box main_box;
-
-        private CompletionThread? thread;
-        private Thread<void*> thread_ref;
+        private AsyncTask task;
+        private Cancellable cancellable;
         private bool cached;
         private App app
         {
@@ -127,7 +45,7 @@ namespace ValaPanel
         }
         ~Runner()
         {
-            thread.running = false;
+            cancellable.cancel();
             this.application = null;
         }
         construct
@@ -139,9 +57,79 @@ namespace ValaPanel
             this.set_visual(this.get_screen().get_rgba_visual());
             this.set_default_response(Gtk.ResponseType.OK);
             this.set_keep_above(true);
-            thread = null;
         }
-
+        /* Async matcher API */
+        private static void create_file_list(Task task, Object source, void* data, Cancellable cancellable)
+        {
+            SList<string> list = new SList<string>();
+            var dirs = GLib.Environment.get_variable("PATH").split(":",0);
+            foreach(unowned string dir in dirs)
+            {
+                if (cancellable.is_cancelled())
+                    return;
+                try
+                {
+                    Dir gdir = Dir.open(dir,0);
+                    string? name = null;
+                    while(!cancellable.is_cancelled() && (name = gdir.read_name())!= null)
+                    {
+                        var filename = GLib.Path.build_filename(dir,name);
+                        if (GLib.FileUtils.test(filename,FileTest.IS_EXECUTABLE))
+                        {
+                            if (cancellable.is_cancelled())
+                                return;
+                            if (list.find_custom(name,(GLib.CompareFunc)Posix.strcmp) == null)
+                                list.append(name);
+                        }
+                    }
+                }
+                catch (Error e)
+                {
+                    stderr.printf("%s\n",e.message);
+                    continue;
+                }
+            }
+            task.return_pointer((owned)list,(a)=>{
+                slist_free_full((SList)a,free);
+            });
+            return;
+        }
+        private void setup_entry_completion()
+        {
+            if (cached)
+            {
+                //FIXME: Implement cache;
+            }
+            else
+            {
+                cancellable = new Cancellable();
+                task = AsyncTask.create(this,cancellable,(obj,res)=>{
+                    try
+                    {
+                        void* pointer = task.propagate_pointer();
+                        unowned SList<string> filenames = (SList)pointer;
+                        var comp = new EntryCompletion();
+                        comp.minimum_key_length = 2;
+                        comp.inline_completion = true;
+                        comp.popup_set_width = true;
+                        comp.popup_single_match = false;
+                        var store = new Gtk.ListStore(1,typeof(string));
+                        foreach(unowned string filename in filenames)
+                            store.insert_with_values(null,-1,0,filename,-1);
+                        comp.model = store;
+                        comp.text_column = 0;
+                        main_entry.completion = comp;
+                        comp.complete();
+                        slist_free_full(filenames,free);
+                    } catch (Error e)
+                    {
+                        stderr.printf("%s\n",e.message);
+                    }
+                });
+                task.run_in_thread(create_file_list);
+            }
+        }
+        /* --------------------------------------------------*/
         private DesktopAppInfo? match_app_by_exec(string exec)
         {
             DesktopAppInfo? ret = null;
@@ -167,7 +155,6 @@ namespace ValaPanel
                     break;
                 }
             }
-
             if (GLib.FileUtils.test(exec_path,GLib.FileTest.IS_SYMLINK))
             {
                 char[] arr = new char[1024];
@@ -184,19 +171,6 @@ namespace ValaPanel
                 }
             }
             return ret;
-        }
-
-        private void setup_entry_completion()
-        {
-            if (cached)
-            {
-                //FIXME: Implement cache;
-            }
-            else
-            {
-                thread = new CompletionThread(main_entry);
-                thread_ref = new Thread<void*>("Autocompletion",thread.run);
-            }
         }
         protected override void response(int id)
         {
@@ -228,8 +202,7 @@ namespace ValaPanel
                     return;
                 }
             }
-            thread.running = false;
-            thread_ref.join();
+            cancellable.cancel();
             this.destroy();
         }
         public void gtk_run()
