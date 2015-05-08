@@ -245,11 +245,6 @@ namespace DBusMenu
             iface.x_valapanel_item_value_changed.connect(request_value_cb);
             requested_props_ids = {};
         }
-        ~Client()
-        {
-            if (iface != null)
-                iface.unref();
-        }
         public unowned Item? get_root_item()
         {
             return items.lookup(0);
@@ -382,6 +377,7 @@ namespace DBusMenu
             } catch (Error e)
             {
                 stderr.printf("%s\n",e.message);
+                return;
             }
             if (need_update)
                 request_layout_update();
@@ -394,7 +390,10 @@ namespace DBusMenu
                 requested_props_ids += id;
             try{
                 iface.get_group_properties(requested_props_ids,names,out props);
-            } catch (GLib.Error e) {stderr.printf("%s\n",e.message);}
+            } catch (GLib.Error e) {
+                stderr.printf("%s\n",e.message);
+                return;
+            }
             requested_props_ids = {};
             parse_props(props);
         }
@@ -437,7 +436,6 @@ namespace DBusMenu
         public abstract unowned Item item {get; protected set;}
         public static void parse_shortcut_variant(Variant shortcut, out uint key, out Gdk.ModifierType modifier)
         {
-            print("%s\n",shortcut.print(false));
             key = 0;
             modifier = 0;
             VariantIter iter = shortcut.iterator();
