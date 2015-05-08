@@ -141,8 +141,8 @@ namespace ValaPanel
                     this.activate_action(Key.CSS,file);
             });
             pref_dialog.present();
-            pref_dialog.unmap.connect(()=>{pref_dialog.destroy();});
-            pref_dialog.destroy.connect(()=>{pref_dialog = null;});
+            pref_dialog.hide.connect(()=>{pref_dialog.destroy();pref_dialog = null;});
+            pref_dialog.response.connect_after(()=>{pref_dialog.destroy();pref_dialog = null;});
         }
 
         protected override void startup()
@@ -338,7 +338,7 @@ namespace ValaPanel
             d.window_position = Gtk.WindowPosition.CENTER;
             d.present();
             d.response.connect((id)=>{d.destroy();});
-            d.unmap.connect(()=>{d.destroy();});
+            d.hide.connect(()=>{d.destroy();});
         }
         internal void activate_run(SimpleAction action, Variant? param)
         {
@@ -349,6 +349,7 @@ namespace ValaPanel
                     runner.destroy();
                     runner = null;
                 });
+                runner.response.connect_after(()=>{runner.destroy(); runner = null;});
                 runner.gtk_run();
             }
             else
