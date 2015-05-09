@@ -108,17 +108,11 @@ namespace ValaPanel
                     {
                         void* pointer = task.propagate_pointer();
                         unowned SList<string> filenames = (SList)pointer;
-                        var comp = new EntryCompletion();
-                        comp.minimum_key_length = 2;
-                        comp.inline_completion = true;
-                        comp.popup_set_width = true;
-                        comp.popup_single_match = false;
-                        var store = new Gtk.ListStore(1,typeof(string));
+                        unowned EntryCompletion comp = main_entry.get_completion();
+                        unowned Gtk.ListStore store = comp.get_model() as Gtk.ListStore;
+                        store.clear();
                         foreach(unowned string filename in filenames)
                             store.insert_with_values(null,-1,0,filename,-1);
-                        comp.model = store;
-                        comp.text_column = 0;
-                        main_entry.completion = comp;
                         comp.complete();
                         slist_free_full(filenames,free);
                     } catch (Error e)

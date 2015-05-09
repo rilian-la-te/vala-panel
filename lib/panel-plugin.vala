@@ -193,6 +193,7 @@ namespace ValaPanel
                 dlg.move(x,y);
                 dialog = dlg;
                 dialog.hide.connect(()=>{dialog.destroy(); dialog = null;});
+                dialog.response.connect(()=>{dialog.destroy(); dialog = null;});
             }
             dialog.present();
         }
