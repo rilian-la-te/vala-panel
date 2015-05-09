@@ -346,10 +346,15 @@ namespace ValaPanel
             {
                 runner = new Runner(this);
                 runner.hide.connect(()=>{
-                    runner.destroy();
+                    if (runner != null)
+                        runner.destroy();
                     runner = null;
                 });
-                runner.response.connect_after(()=>{runner.destroy(); runner = null;});
+                runner.response.connect_after(()=>{
+                    if (runner != null)
+                        runner.destroy();
+                    runner = null;
+                });
                 runner.gtk_run();
             }
             else
