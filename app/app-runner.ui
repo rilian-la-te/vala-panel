@@ -19,8 +19,18 @@
     <child internal-child="vbox">
       <object class="GtkBox" id="main-box">
         <property name="visible">True</property>
-        <property name="orientation">horizontal</property>
         <property name="can_focus">False</property>
+        <property name="orientation">horizontal</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area1">
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkToggleButton" id="terminal-button">
             <property name="visible">True</property>
@@ -53,6 +63,7 @@
             <property name="receives_default">True</property>
             <property name="tooltip_text" translatable="yes">Runnable command name</property>
             <property name="activates_default">True</property>
+            <property name="completion">completion-files</property>
             <property name="primary_icon_name">system-run-symbolic</property>
             <property name="secondary_icon_name">go-next-symbolic</property>
             <property name="placeholder_text" translatable="yes">Enter application name...</property>
@@ -95,4 +106,25 @@
      <action-widget response="close">close-button</action-widget>
     </action-widgets>
   </template>
+  <object class="GtkListStore" id="store-files">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkEntryCompletion" id="completion-files">
+    <property name="model">store-files</property>
+    <property name="minimum_key_length">2</property>
+    <property name="text_column">0</property>
+    <property name="popup_completion">True</property>
+    <property name="popup_single_match">False</property>
+    <property name="popup_set_width">True</property>
+    <property name="inline_completion">True</property>
+    <child>
+      <object class="GtkCellRendererText"/>
+      <attributes>
+        <attribute name="text">0</attribute>
+      </attributes>
+    </child>
+  </object>
 </interface>
