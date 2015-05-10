@@ -22,6 +22,19 @@ namespace StatusNotifier
         {
             Object(object_path: p, object_name: n);
         }
+        ~Item()
+        {
+            if (menu != null)
+            {
+                menu.destroy();
+                menu == null;
+            }
+            if (client != null)
+            {
+                client.destroy();
+                client = null;
+            }
+        }
         construct
         {
             unowned StyleContext context = this.get_style_context();
@@ -443,6 +456,6 @@ namespace StatusNotifier
         MenuModel remote_menu_model;
         GLib.ActionGroup remote_action_group;
         Gtk.Menu menu;
-        IconTheme icon_theme;
+        unowned IconTheme icon_theme;
     }
 }
