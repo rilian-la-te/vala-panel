@@ -131,6 +131,7 @@ namespace DBusMenu
         public signal void child_added(int id, Item item);
         public signal void child_removed(int id, Item item);
         public signal void child_moved(int oldpos, int newpos, Item item);
+        public signal void removing();
         public Item (int id, Client iface, Variant props, List<int> children_ids)
         {
             this.children_ids = children_ids.copy();
@@ -141,6 +142,7 @@ namespace DBusMenu
         ~Item()
         {
             store.unref();
+            removing();
         }
         public Variant get_variant_property(string name)
         {
@@ -430,6 +432,16 @@ namespace DBusMenu
                 }
             }
         }
+        private static extern void unref(void* instance);
+        public virtual void destroy()
+        {
+            items.remove_all();
+            unref(this);
+        }
+        ~Client()
+        {
+            destroy();
+        }
     }
     public interface GtkItemIface : Object
     {
@@ -468,7 +480,7 @@ namespace DBusMenu
         private bool has_indicator;
         private Box box;
         private Image image;
-        private new AccelLabel label;
+        private AccelLabel accel_label;
         private ulong activate_handler;
         private bool is_themed_icon;
         public GtkMainItem(Item item)
@@ -477,9 +489,9 @@ namespace DBusMenu
             this.item = item;
             box = new Box(Orientation.HORIZONTAL, 5);
             image = new Image();
-            label = new AccelLabel("");
+            accel_label = new AccelLabel("");
             box.add(image);
-            box.add(label);
+            box.add(accel_label);
             this.add(box);
             this.show_all();
             this.init();
@@ -487,6 +499,7 @@ namespace DBusMenu
             item.child_added.connect(on_child_added_cb);
             item.child_removed.connect(on_child_removed_cb);
             item.child_moved.connect(on_child_moved_cb);
+            item.removing.connect(()=>{this.destroy();});
             activate_handler = this.activate.connect(on_toggled_cb);
             this.select.connect(on_select_cb);
             this.deselect.connect(on_deselect_cb);
@@ -510,7 +523,7 @@ namespace DBusMenu
                     this.sensitive = val.get_boolean();
                     break;
                 case "label":
-                    label.set_text_with_mnemonic(val.get_string());
+                    accel_label.set_text_with_mnemonic(val.get_string());
                     break;
                 case "children-display":
                     if (val != null && val.get_string() == "submenu")
@@ -520,8 +533,11 @@ namespace DBusMenu
                         foreach(var item in this.item.get_children())
                             submenu.add(GtkClient.new_item(item));
                     }
-                    else
+                    else if (this.submenu != null)
+                    {
+                        this.submenu.destroy();
                         this.submenu = null;
+                    }
                     break;
                 case "toggle-type":
                     if (val == null)
@@ -597,7 +613,7 @@ namespace DBusMenu
             uint key;
             Gdk.ModifierType mod;
             parse_shortcut_variant(val, out key, out mod);
-            this.label.set_accel(key,mod);
+            this.accel_label.set_accel(key,mod);
         }
         private void on_child_added_cb(int id,Item item)
         {
@@ -613,7 +629,7 @@ namespace DBusMenu
         private void on_child_removed_cb(int id, Item item)
         {
             if (this.submenu != null)
-                foreach(var ch in this.submenu.get_children())
+                foreach(unowned Widget ch in this.submenu.get_children())
                     if ((ch as GtkItemIface).item == item)
                         ch.destroy();
             else
@@ -622,7 +638,7 @@ namespace DBusMenu
         private void on_child_moved_cb(int oldpos, int newpos, Item item)
         {
             if (this.submenu != null)
-                foreach(var ch in this.submenu.get_children())
+                foreach(unowned Widget ch in this.submenu.get_children())
                     if ((ch as GtkItemIface).item == item)
                         this.submenu.reorder_child(ch,newpos);
             else
@@ -656,6 +672,14 @@ namespace DBusMenu
             if (has_indicator)
                 base.draw_indicator(cr);
         }
+        ~GtkMainItem()
+        {
+            if (this.submenu != null)
+            {
+                this.submenu.destroy();
+                this.submenu = null;
+            }
+        }
     }
     public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
     {
@@ -667,6 +691,7 @@ namespace DBusMenu
             this.show_all();
             this.init();
             item.property_changed.connect(on_prop_changed_cb);
+            item.removing.connect(()=>{this.destroy();});
         }
         private void on_prop_changed_cb(string name, Variant? val)
         {
@@ -713,6 +738,7 @@ namespace DBusMenu
             this.show_all();
             this.init();
             item.property_changed.connect(on_prop_changed_cb);
+            item.removing.connect(()=>{this.destroy();});
             adj.value_changed.connect(on_value_changed_cb);
             scale.format_value.connect(on_value_format_cb);
             scale.value_pos = PositionType.RIGHT;
@@ -846,6 +872,7 @@ namespace DBusMenu
             item.child_added.connect(on_child_added_cb);
             item.child_removed.connect(on_child_removed_cb);
             item.child_moved.connect(on_child_moved_cb);
+            item.removing.connect(()=>{this.destroy();});
             activate_handler = this.activate.connect(on_toggled_cb);
             this.select.connect(on_select_cb);
             this.deselect.connect(on_deselect_cb);
@@ -880,8 +907,11 @@ namespace DBusMenu
                         foreach(var item in this.item.get_children())
                             submenu.add(GtkClient.new_item(item));
                     }
-                    else
+                    else if (this.submenu != null)
+                    {
+                        this.submenu.destroy();
                         this.submenu = null;
+                    }
                     break;
                 case "accessible-desc":
                     this.set_tooltip_text(val != null ? val.get_string() : null);
@@ -947,7 +977,7 @@ namespace DBusMenu
         private void on_child_removed_cb(int id, Item item)
         {
             if (this.submenu != null)
-                foreach(var ch in this.submenu.get_children())
+                foreach(unowned Widget ch in this.submenu.get_children())
                     if ((ch as GtkItemIface).item == item)
                         ch.destroy();
             else
@@ -956,7 +986,7 @@ namespace DBusMenu
         private void on_child_moved_cb(int oldpos, int newpos, Item item)
         {
             if (this.submenu != null)
-                foreach(var ch in this.submenu.get_children())
+                foreach(unowned Widget ch in this.submenu.get_children())
                     if ((ch as GtkItemIface).item == item)
                         this.submenu.reorder_child(ch,newpos);
             else
@@ -984,6 +1014,14 @@ namespace DBusMenu
             var ch = w as GtkItemIface;
             this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
             this.submenu.queue_resize();
+        }
+        ~GtkMenuBarItem()
+        {
+            if (this.submenu != null)
+            {
+                this.submenu.destroy();
+                this.submenu = null;
+            }
         }
     }
     public class GtkClient : Client
@@ -1013,7 +1051,7 @@ namespace DBusMenu
             foreach (unowned string path in iface.icon_theme_path)
                 IconTheme.get_default().prepend_search_path(path);
             root_menu = menu;
-            root_menu.foreach((c)=>{menu.remove(c);});
+            root_menu.foreach((c)=>{menu.remove(c); c.destroy();});
             root_menu.realize.connect(open_cb);
             root_menu.unrealize.connect(close_cb);
             get_root_item().child_added.connect(on_child_added_cb);
@@ -1022,6 +1060,16 @@ namespace DBusMenu
             foreach(unowned Item ch in get_root_item().get_children())
                 on_child_added_cb(ch.id,ch);
             root_menu.show();
+        }
+        public void detach()
+        {
+            SignalHandler.disconnect_by_data(get_root_item(),this);
+            root_menu.foreach((c)=>{root_menu.remove(c); c.destroy();});
+        }
+        public override void destroy()
+        {
+            detach();
+            base.destroy();
         }
         private void open_cb()
         {
