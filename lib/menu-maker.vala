@@ -45,6 +45,7 @@ namespace MenuMaker
         {
             SignalHandler.disconnect_by_data(data.menuitem,data);
             Gtk.drag_source_unset(data.menuitem);
+            data.ref_count = 1;
             data.unref();
         }
         internal DragData(Gtk.MenuItem item, MenuModel section, int model_item)

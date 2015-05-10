@@ -209,6 +209,9 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     }
     private void menumodel_widget_destroy()
     {
+        if (int_menu != null)
+            int_menu.destroy();
+        int_menu = null;
         if (button!= null)
         {
             button.destroy();
@@ -225,9 +228,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             SignalHandler.disconnect_by_data(file_monitor,this);
             file_monitor = null;
         }
-        if (int_menu != null)
-            int_menu.destroy();
-        int_menu = null;
     }
     private GLib.MenuModel? create_menumodel()
     {
