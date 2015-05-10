@@ -9,6 +9,7 @@ PACKAGES
     gio-2.0
     glib-2.0
     gobject-2.0
+    gio-addons-2.0
 OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
     --target-glib=2.40

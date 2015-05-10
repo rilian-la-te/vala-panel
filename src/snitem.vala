@@ -27,7 +27,7 @@ namespace StatusNotifier
             if (menu != null)
             {
                 menu.destroy();
-                menu == null;
+                menu = null;
             }
             if (client != null)
             {
