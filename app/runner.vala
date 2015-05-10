@@ -135,7 +135,6 @@ namespace ValaPanel
                 var app_exec = app.get_executable();
                 if (app_exec == null)
                     continue;
-
                 var len = exec.length;
                 var pexec = exec;
                 if (GLib.Path.is_absolute(app_exec))

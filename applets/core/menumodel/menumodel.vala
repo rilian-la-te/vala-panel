@@ -48,7 +48,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
 {
     GLib.Menu menu;
     Container? button;
-    MenuShell? int_menu;
+    Gtk.Menu? int_menu;
     AppInfoMonitor? app_monitor;
     FileMonitor? file_monitor;
     ulong show_system_menu_idle;
@@ -63,6 +63,10 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
                                     uint number)
     {
         base(toplevel,settings,number);
+    }
+    ~Menu()
+    {
+        menumodel_widget_destroy();
     }
     public Dialog get_config_dialog()
     {
@@ -106,7 +110,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
         settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
         button = menumodel_widget_create();
-        button.show();
+        this.add(button);
         unowned Gtk.Settings gtksettings = this.get_settings();
         gtksettings.gtk_shell_shows_menubar = false;
         this.show_all();
@@ -116,8 +120,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
                 || (pspec.name == "bar")
                 || (pspec.name == "icon" && bar))
             {
-                menumodel_widget_destroy();
-                button = menumodel_widget_create();
+                menumodel_widget_rebuild();
             }
             else if (pspec.name == "caption" && !bar)
             {
@@ -134,6 +137,12 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             }
         });
     }
+    private void menumodel_widget_rebuild()
+    {
+        menumodel_widget_destroy();
+        button = menumodel_widget_create();
+        this.add(button);
+    }
     private Container menumodel_widget_create()
     {
         menu = create_menumodel() as GLib.Menu;
@@ -147,7 +156,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         int_menu = null;
         var menubar = new MenuBar.from_model(menu);
         MenuMaker.apply_menu_properties(menubar.get_children(),menu);
-        this.add(menubar);
         this.background_widget = menubar;
         init_background();
         menubar.show();
@@ -171,15 +179,14 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         int_menu = new Gtk.Menu.from_model(menu);
         MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
         int_menu.show_all();
-        var gtkmenu = int_menu as Gtk.Menu;
-        gtkmenu.attach_to_widget(menubutton,null);
+        int_menu.attach_to_widget(menubutton,null);
         menubutton.toggled.connect(()=>{
             if(menubutton.active)
-                gtkmenu.popup(null,null,this.menu_position_func,0,get_current_event_time());
+                int_menu.popup(null,null,this.menu_position_func,0,get_current_event_time());
             else
-                gtkmenu.popdown();
+                int_menu.popdown();
         });
-        gtkmenu.hide.connect(()=>{
+        int_menu.hide.connect(()=>{
             menubutton.active = false;
         });
         if(icon != null)
@@ -192,7 +199,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             img.show();
         }
         ValaPanel.setup_button(menubutton as Button,img,caption);
-        this.add(menubutton);
         menubutton.show();
 #if !GTK314
         Gtk.IconTheme.get_default().changed.connect(()=>{
@@ -203,16 +209,25 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     }
     private void menumodel_widget_destroy()
     {
-        app_monitor = null;
-        file_monitor = null;
-        button = null;
-        int_menu = null;
-        if (this.get_child()!= null)
+        if (button!= null)
         {
-            this.remove(this.get_child());
+            button.destroy();
             button = null;
             this.background_widget = this;
         }
+        if (app_monitor != null)
+        {
+            SignalHandler.disconnect_by_data(app_monitor,this);
+            app_monitor = null;
+        }
+        if (file_monitor != null)
+        {
+            SignalHandler.disconnect_by_data(file_monitor,this);
+            file_monitor = null;
+        }
+        if (int_menu != null)
+            int_menu.destroy();
+        int_menu = null;
     }
     private GLib.MenuModel? create_menumodel()
     {
@@ -221,10 +236,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         {
             ret = MenuMaker.create_main_menu(bar,icon);
             app_monitor = AppInfoMonitor.get();
-            app_monitor.changed.connect(()=>{
-                menumodel_widget_destroy();
-                button = menumodel_widget_create();
-            });
+            app_monitor.changed.connect(menumodel_widget_rebuild);
             file_monitor = null;
         }
         else
@@ -237,10 +249,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             try {
                 file_monitor = f.monitor_file(FileMonitorFlags.SEND_MOVED|FileMonitorFlags.WATCH_HARD_LINKS);
             } catch (Error e) {stderr.printf("%s\n",e.message);}
-            file_monitor.changed.connect(()=>{
-                menumodel_widget_destroy();
-                button = menumodel_widget_create();
-            });
+            file_monitor.changed.connect(menumodel_widget_rebuild);
         }
         return ret;
     }
