@@ -146,7 +146,7 @@ namespace LaunchBar
                                          spawn_data.child_spawn_func,MenuMaker.launch_callback);
             } catch (GLib.Error e) {stderr.printf("%s",e.message);}
         }
-        private Bar get_launchbar()
+        private unowned Bar get_launchbar()
         {
             return this.get_parent().get_parent() as Bar;
         }

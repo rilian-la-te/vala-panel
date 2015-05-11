@@ -261,7 +261,7 @@ namespace LaunchBar
         }
         internal string get_display_name_from_id(string id)
         {
-            foreach(var ch in layout.get_children())
+            foreach(unowned Widget ch in layout.get_children())
             {
                 var bt = ch as LaunchBar.Button;
                 if (bt.id == id)
