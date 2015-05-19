@@ -45,31 +45,12 @@ namespace DBusMenu
         public abstract signal void item_activation_requested(int id, uint timestamp);
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
-    [Compact, CCode (ref_function = "dbus_menu_property_store_ref", unref_function = "dbus_menu_property_store_unref")]
-    private class PropertyStore
+    private class PropertyStore : Object
     {
         private static const string[] persist_names = {"visible","enabled","type","label","disposition"};
-        internal VariantDict dict;
-        internal HashTable<string,VariantType> checker;
-        internal int ref_count;
-        public Variant? get_prop(string name)
+        private static HashTable<string,VariantType> checker;
+        static construct
         {
-            unowned VariantType type = checker.lookup(name);
-            Variant? prop = dict.lookup_value(name,type);
-            return (type != null && prop != null && prop.is_of_type(type)) ? prop : null;
-        }
-        public void set_prop(string name, Variant? val)
-        {
-            unowned VariantType type = checker.lookup(name);
-            if (val == null && !(name in persist_names))
-                dict.remove(name);
-            else if (type != null && val.is_of_type(type))
-                dict.insert_value(name,val);
-        }
-        public PropertyStore (Variant? props)
-        {
-            ref_count = 1;
-            dict = new VariantDict(props);
             checker = new HashTable<string,VariantType>(str_hash,str_equal);
             checker.insert("visible", VariantType.BOOLEAN);
             checker.insert("enabled", VariantType.BOOLEAN);
@@ -92,6 +73,25 @@ namespace DBusMenu
             checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
             checker.insert("x-valapanel-draw-value", VariantType.BOOLEAN);
             checker.insert("x-valapanel-format-value", VariantType.STRING);
+        }
+        private VariantDict dict;
+        public Variant? get_prop(string name)
+        {
+            unowned VariantType type = checker.lookup(name);
+            Variant? prop = dict.lookup_value(name,type);
+            return (type != null && prop != null && prop.is_of_type(type)) ? prop : null;
+        }
+        public void set_prop(string name, Variant? val)
+        {
+            unowned VariantType type = checker.lookup(name);
+            if (val == null && !(name in persist_names))
+                dict.remove(name);
+            else if (type != null && val.is_of_type(type))
+                dict.insert_value(name,val);
+        }
+        public PropertyStore (Variant? props)
+        {
+            dict = new VariantDict(props);
             init_default();
         }
         private void init_default()
@@ -107,19 +107,7 @@ namespace DBusMenu
             if(!dict.contains("disposition"))
                 dict.insert("disposition","s", "normal");
         }
-        public unowned PropertyStore @ref ()
-        {
-            GLib.AtomicInt.inc (ref this.ref_count);
-            return this;
-        }
-        public void unref ()
-        {
-            if (GLib.AtomicInt.dec_and_test (ref this.ref_count))
-                this.free ();
-        }
-        private extern void free ();
     }
-
     public class Item : Object
     {
         private unowned Client client;
@@ -478,7 +466,6 @@ namespace DBusMenu
                                                 "x-valapanel-icon-size"};
         public unowned Item item {get; protected set;}
         private bool has_indicator;
-        private Box box;
         private Image image;
         private AccelLabel accel_label;
         private ulong activate_handler;
@@ -487,7 +474,7 @@ namespace DBusMenu
         {
             is_themed_icon = false;
             this.item = item;
-            box = new Box(Orientation.HORIZONTAL, 5);
+            var box = new Box(Orientation.HORIZONTAL, 5);
             image = new Image();
             accel_label = new AccelLabel("");
             box.add(image);
