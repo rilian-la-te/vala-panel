@@ -646,7 +646,7 @@ namespace DBusMenu
         }
         private void on_child_insert_cb(Widget w, int pos)
         {
-            var ch = w as GtkItemIface;
+            unowned GtkItemIface ch = w as GtkItemIface;
             this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
             this.submenu.queue_resize();
         }
@@ -701,7 +701,6 @@ namespace DBusMenu
                                                             "x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
                                                             "x-valapanel-format-value"};
         public unowned Item item {get; protected set;}
-        private Box box;
         private unowned Image primary;
         private unowned Scale scale;
         private string item_format;
@@ -709,7 +708,7 @@ namespace DBusMenu
         public GtkScaleItem(Item item)
         {
             this.item = item;
-            box = new Box(Orientation.HORIZONTAL,5);
+            var box = new Box(Orientation.HORIZONTAL,5);
             var img = new Image();
             primary = img;
             var adj = new Adjustment(0,0,double.MAX,0,0,0);
@@ -837,7 +836,6 @@ namespace DBusMenu
                                                 "children-display", "x-valapanel-icon-size",
                                                 "icon-name","icon-data","accessible-desc"};
         public unowned Item item {get; protected set;}
-        private Box box;
         private unowned Image image;
         private unowned AccelLabel accel_label;
         private ulong activate_handler;
@@ -846,7 +844,7 @@ namespace DBusMenu
         {
             is_themed_icon = false;
             this.item = item;
-            box = new Box(Orientation.HORIZONTAL, 5);
+            var box = new Box(Orientation.HORIZONTAL, 5);
             var img = new Image();
             image = img;
             var label = new AccelLabel("");
@@ -999,7 +997,7 @@ namespace DBusMenu
         }
         private void on_child_insert_cb(Widget w, int pos)
         {
-            var ch = w as GtkItemIface;
+            unowned GtkItemIface ch = w as GtkItemIface;
             this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
             this.submenu.queue_resize();
         }
