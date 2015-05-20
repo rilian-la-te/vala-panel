@@ -84,12 +84,8 @@ namespace DBusMenu
         public void set_prop(string name, Variant? val)
         {
             unowned VariantType type = checker.lookup(name);
-            if (val == null)
-            {
+            if (val == null && !(name in persist_names))
                 dict.remove(name);
-                if (name in persist_names)
-                    init_default();
-            }
             else if (type != null && val.is_of_type(type))
                 dict.insert_value(name,val);
         }
@@ -718,7 +714,7 @@ namespace DBusMenu
             primary = img;
             var adj = new Adjustment(0,0,double.MAX,0,0,0);
             var new_scale = new Scale(Orientation.HORIZONTAL,adj);
-            new_scale = scale;
+            scale = new_scale;
             scale.hexpand = true;
             box.add(primary);
             box.add(scale);
