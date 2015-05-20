@@ -224,7 +224,7 @@ namespace DBusMenu
             try{
                 this.iface = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
             } catch (Error e) {stderr.printf("Cannot get menu! Error: %s",e.message);}
-            VariantDict props = new VariantDict();
+            var props = new VariantDict();
             props.insert("children-display","s","submenu");
             var item = new Item(0,this,props.end(),new List<int>());
             items.insert(0,item);
@@ -420,15 +420,9 @@ namespace DBusMenu
                 }
             }
         }
-        private static extern void unref(void* instance);
-        public virtual void destroy()
-        {
-            items.remove_all();
-            unref(this);
-        }
         ~Client()
         {
-            destroy();
+            items.remove_all();
         }
     }
     public interface GtkItemIface : Object
@@ -466,8 +460,8 @@ namespace DBusMenu
                                                 "x-valapanel-icon-size"};
         public unowned Item item {get; protected set;}
         private bool has_indicator;
-        private Image image;
-        private AccelLabel accel_label;
+        private unowned Image image;
+        private unowned AccelLabel accel_label;
         private ulong activate_handler;
         private bool is_themed_icon;
         public GtkMainItem(Item item)
@@ -475,8 +469,10 @@ namespace DBusMenu
             is_themed_icon = false;
             this.item = item;
             var box = new Box(Orientation.HORIZONTAL, 5);
-            image = new Image();
-            accel_label = new AccelLabel("");
+            var img = new Image();
+            image = img;
+            var label = new AccelLabel("");
+            accel_label = label;
             box.add(image);
             box.add(accel_label);
             this.add(box);
@@ -706,18 +702,19 @@ namespace DBusMenu
                                                             "x-valapanel-format-value"};
         public unowned Item item {get; protected set;}
         private Box box;
-        private Image primary;
-        private Scale scale;
-        private Adjustment adj;
+        private unowned Image primary;
+        private unowned Scale scale;
         private string item_format;
         private bool grabbed;
         public GtkScaleItem(Item item)
         {
             this.item = item;
             box = new Box(Orientation.HORIZONTAL,5);
-            primary = new Image();
-            adj = new Adjustment(0,0,double.MAX,0,0,0);
-            scale = new Scale(Orientation.HORIZONTAL,adj);
+            var img = new Image();
+            primary = img;
+            var adj = new Adjustment(0,0,double.MAX,0,0,0);
+            var new_scale = new Scale(Orientation.HORIZONTAL,adj);
+            new_scale = scale;
             scale.hexpand = true;
             box.add(primary);
             box.add(scale);
@@ -737,6 +734,7 @@ namespace DBusMenu
         }
         private void on_prop_changed_cb(string name, Variant? val)
         {
+            unowned Adjustment adj = scale.adjustment;
             switch (name)
             {
                 case "visible":
@@ -781,6 +779,7 @@ namespace DBusMenu
         }
         private void on_value_changed_cb()
         {
+            var adj = scale.adjustment;
             item.handle_event("value-changed",new Variant.double(adj.value),get_current_event_time());
         }
         private string on_value_format_cb(double val)
@@ -839,8 +838,8 @@ namespace DBusMenu
                                                 "icon-name","icon-data","accessible-desc"};
         public unowned Item item {get; protected set;}
         private Box box;
-        private Image image;
-        private new AccelLabel label;
+        private unowned Image image;
+        private unowned AccelLabel accel_label;
         private ulong activate_handler;
         private bool is_themed_icon;
         public GtkMenuBarItem(Item item)
@@ -848,8 +847,10 @@ namespace DBusMenu
             is_themed_icon = false;
             this.item = item;
             box = new Box(Orientation.HORIZONTAL, 5);
-            image = new Image();
-            label = new AccelLabel("");
+            var img = new Image();
+            image = img;
+            var label = new AccelLabel("");
+            accel_label = label;
             box.add(image);
             box.add(label);
             this.add(box);
@@ -884,7 +885,7 @@ namespace DBusMenu
                     this.sensitive = val.get_boolean();
                     break;
                 case "label":
-                    label.set_text_with_mnemonic(val.get_string());
+                    accel_label.set_text_with_mnemonic(val.get_string());
                     break;
                 case "children-display":
                     if (val != null && val.get_string() == "submenu")
@@ -948,7 +949,7 @@ namespace DBusMenu
             uint key;
             Gdk.ModifierType mod;
             parse_shortcut_variant(val, out key, out mod);
-            this.label.set_accel(key,mod);
+            this.accel_label.set_accel(key,mod);
         }
         private void on_child_added_cb(int id,Item item)
         {
@@ -1053,11 +1054,6 @@ namespace DBusMenu
             SignalHandler.disconnect_by_data(get_root_item(),this);
             root_menu.foreach((c)=>{root_menu.remove(c); c.destroy();});
         }
-        public override void destroy()
-        {
-            detach();
-            base.destroy();
-        }
         private void open_cb()
         {
             get_root_item().handle_event("opened",null,0);
@@ -1104,6 +1100,10 @@ namespace DBusMenu
                     return true;
             } catch (Error e){}
             return false;
+        }
+        ~GtkClient()
+        {
+            detach();
         }
     }
 }
