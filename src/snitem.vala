@@ -31,7 +31,6 @@ namespace StatusNotifier
             }
             if (client != null)
             {
-                client.destroy();
                 client = null;
             }
         }
