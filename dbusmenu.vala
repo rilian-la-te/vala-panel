@@ -79,33 +79,31 @@ namespace DBusMenu
         {
             unowned VariantType type = checker.lookup(name);
             Variant? prop = dict.lookup_value(name,type);
-            return (type != null && prop != null && prop.is_of_type(type)) ? prop : null;
+            return (type != null && prop != null && prop.is_of_type(type)) ? prop : return_default(name);
         }
         public void set_prop(string name, Variant? val)
         {
             unowned VariantType type = checker.lookup(name);
-            if (val == null && !(name in persist_names))
+            if (val == null)
                 dict.remove(name);
-            else if (type != null && val.is_of_type(type))
+            else if (val != null && type != null && val.is_of_type(type))
                 dict.insert_value(name,val);
         }
         public PropertyStore (Variant? props)
         {
             dict = new VariantDict(props);
-            init_default();
         }
-        private void init_default()
+        private Variant? return_default(string name)
         {
-            if(!dict.contains("visible"))
-                dict.insert("visible", "b", true);
-            if(!dict.contains("enabled"))
-                dict.insert("enabled", "b", true);
-            if(!dict.contains("type"))
-                dict.insert("type", "s", "standard");
-            if(!dict.contains("label"))
-                dict.insert("label","s", "");
-            if(!dict.contains("disposition"))
-                dict.insert("disposition","s", "normal");
+            if (name == "visible" || name == "enabled")
+                return new Variant.boolean(true);
+            if (name == "type")
+                return new Variant.string("standard");
+            if (name == "label")
+                return new Variant.string("");
+            if (name == "disposition")
+                return new Variant.string("normal");
+            return null;
         }
     }
     public class Item : Object
@@ -129,7 +127,6 @@ namespace DBusMenu
         }
         ~Item()
         {
-            store.unref();
             removing();
         }
         public Variant get_variant_property(string name)
@@ -509,17 +506,17 @@ namespace DBusMenu
                     accel_label.set_text_with_mnemonic(val.get_string());
                     break;
                 case "children-display":
+                    if (this.submenu != null)
+                    {
+                        this.submenu.destroy();
+                        this.submenu = null;
+                    }
                     if (val != null && val.get_string() == "submenu")
                     {
                         this.submenu = new Gtk.Menu();
                         this.submenu.insert.connect(on_child_insert_cb);
-                        foreach(var item in this.item.get_children())
+                        foreach(unowned Item item in this.item.get_children())
                             submenu.add(GtkClient.new_item(item));
-                    }
-                    else if (this.submenu != null)
-                    {
-                        this.submenu.destroy();
-                        this.submenu = null;
                     }
                     break;
                 case "toggle-type":
@@ -655,13 +652,14 @@ namespace DBusMenu
             if (has_indicator)
                 base.draw_indicator(cr);
         }
-        ~GtkMainItem()
+        protected override void destroy()
         {
             if (this.submenu != null)
             {
                 this.submenu.destroy();
                 this.submenu = null;
             }
+            base.destroy();
         }
     }
     public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
@@ -863,7 +861,7 @@ namespace DBusMenu
             this.select.connect(on_select_cb);
             this.deselect.connect(on_deselect_cb);
             this.set_accessible_role(Atk.Role.MENU_ITEM);
-            this.notify["visible"].connect(()=>{this.visible=item.get_bool_property("visible");});
+            this.notify["visible"].connect(()=>{this.visible = item.get_bool_property("visible");});
         }
         private void init()
         {
@@ -886,17 +884,17 @@ namespace DBusMenu
                     accel_label.set_text_with_mnemonic(val.get_string());
                     break;
                 case "children-display":
+                    if (this.submenu != null)
+                    {
+                        this.submenu.destroy();
+                        this.submenu = null;
+                    }
                     if (val != null && val.get_string() == "submenu")
                     {
                         this.submenu = new Gtk.Menu();
                         this.submenu.insert.connect(on_child_insert_cb);
-                        foreach(var item in this.item.get_children())
+                        foreach(unowned Item item in this.item.get_children())
                             submenu.add(GtkClient.new_item(item));
-                    }
-                    else if (this.submenu != null)
-                    {
-                        this.submenu.destroy();
-                        this.submenu = null;
                     }
                     break;
                 case "accessible-desc":
@@ -1001,13 +999,14 @@ namespace DBusMenu
             this.submenu.reorder_child(w,item.get_child_position(ch.item.id));
             this.submenu.queue_resize();
         }
-        ~GtkMenuBarItem()
+        protected override void destroy()
         {
             if (this.submenu != null)
             {
                 this.submenu.destroy();
                 this.submenu = null;
             }
+            base.destroy();
         }
     }
     public class GtkClient : Client
@@ -1050,7 +1049,8 @@ namespace DBusMenu
         public void detach()
         {
             SignalHandler.disconnect_by_data(get_root_item(),this);
-            root_menu.foreach((c)=>{root_menu.remove(c); c.destroy();});
+            if (root_menu != null)
+                root_menu.foreach((c)=>{root_menu.remove(c); c.destroy();});
         }
         private void open_cb()
         {
@@ -1098,10 +1098,6 @@ namespace DBusMenu
                     return true;
             } catch (Error e){}
             return false;
-        }
-        ~GtkClient()
-        {
-            detach();
         }
     }
 }
