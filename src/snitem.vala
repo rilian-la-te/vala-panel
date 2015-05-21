@@ -22,17 +22,13 @@ namespace StatusNotifier
         {
             Object(object_path: p, object_name: n);
         }
-        ~Item()
+        public override void destroy()
         {
             if (menu != null)
-            {
                 menu.destroy();
-                menu = null;
-            }
             if (client != null)
-            {
                 client = null;
-            }
+            base.destroy();
         }
         construct
         {
