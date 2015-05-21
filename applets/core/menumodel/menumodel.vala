@@ -114,20 +114,20 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         unowned Gtk.Settings gtksettings = this.get_settings();
         gtksettings.gtk_shell_shows_menubar = false;
         this.show_all();
-        this.notify.connect((pspec)=>{
-            if ((pspec.name == "intern")
-                || (pspec.name == "filename" && !intern)
-                || (pspec.name == "bar")
-                || (pspec.name == "icon" && bar))
+        settings.changed.connect((key)=>{
+            if ((key == "intern")
+                || (key == "filename" && !intern)
+                || (key == "bar")
+                || (key == "icon" && bar))
             {
                 menumodel_widget_rebuild();
             }
-            else if (pspec.name == "caption" && !bar)
+            else if (key == "caption" && !bar)
             {
                 var btn = button as Button;
                 btn.label = caption;
             }
-            else if (pspec.name == "icon" && !bar)
+            else if (key == "icon" && !bar)
             {
                 try
                 {
@@ -210,8 +210,10 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     private void menumodel_widget_destroy()
     {
         if (int_menu != null)
+        {
             int_menu.destroy();
-        int_menu = null;
+            int_menu = null;
+        }
         if (button!= null)
         {
             button.destroy();
@@ -245,11 +247,11 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
                 return null;
             var f = File.new_for_path(filename);
             ret = read_menumodel();
-            app_monitor = null;
             try {
                 file_monitor = f.monitor_file(FileMonitorFlags.SEND_MOVED|FileMonitorFlags.WATCH_HARD_LINKS);
             } catch (Error e) {stderr.printf("%s\n",e.message);}
             file_monitor.changed.connect(menumodel_widget_rebuild);
+            app_monitor = null;
         }
         return ret;
     }
