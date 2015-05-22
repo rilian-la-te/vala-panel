@@ -64,9 +64,10 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     {
         base(toplevel,settings,number);
     }
-    ~Menu()
+    public override void destroy()
     {
         menumodel_widget_destroy();
+        base.destroy();
     }
     public Dialog get_config_dialog()
     {
@@ -209,16 +210,16 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     }
     private void menumodel_widget_destroy()
     {
+        this.background_widget = this;
         if (int_menu != null)
         {
             int_menu.destroy();
             int_menu = null;
         }
-        if (button!= null)
+        if (button != null)
         {
             button.destroy();
             button = null;
-            this.background_widget = this;
         }
         if (app_monitor != null)
         {
