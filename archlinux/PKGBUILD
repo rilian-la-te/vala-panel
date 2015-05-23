@@ -12,7 +12,7 @@ arch=('i686' 'x86_64')
 license=('GPL3')
 makedepends=('cmake' 'vala' 'gtk3' 'xfce4-panel>=4.11.2' 'vala-panel-git')
 source=("https://github.com/rilian-la-te/xfce4-sntray-plugin/releases/download/${pkgver}/${pkgbase}-${pkgver}.tar.gz")
-sha256sums=('ec8dbad0dce8ff7a4a112726a33609e841a624ac91cb257252a38ed8fb3d6967')
+sha256sums=('e8d592f606ebeecbac784e2471db4a1fedf922c1a3ebb511af74c29bf76eecdd')
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
