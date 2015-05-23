@@ -14,7 +14,6 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class SNTray: Applet, AppletConfigurable
 {
-    ItemBox layout;
     public SNTray (Toplevel top, GLib.Settings? settings, uint number)
     {
         base(top,settings,number);
@@ -27,7 +26,7 @@ public class SNTray: Applet, AppletConfigurable
     }
     public override void create()
     {
-        layout = new ItemBox();
+        var layout = new ItemBox();
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.DEFAULT);

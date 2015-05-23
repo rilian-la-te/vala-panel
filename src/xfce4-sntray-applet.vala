@@ -9,7 +9,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.LOCALE_DIR);
         GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
         GLib.Intl.textdomain(Config.GETTEXT_PACKAGE);
-        widget = new ItemBox();
+        var widget = new ItemBox();
         add(widget);
         add_action_widget(widget);
         widget.menu_position_func = (menu,ref x,ref y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
@@ -56,7 +56,6 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         });
     }
     Xfconf.Channel channel;
-    ItemBox widget;
     ItemBoxWrapper wrapper;
 }
 
@@ -90,7 +89,7 @@ internal class ItemBoxWrapper: Object
                 this.notify_property(FILTER_OVERRIDE);
         });
     }
-    ItemBox layout;
+    unowned ItemBox layout;
     private string hashtable_to_string(HashTable<string,Variant?> table)
     {
         var builder = new VariantBuilder(VariantType.VARDICT);
