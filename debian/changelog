@@ -1,3 +1,9 @@
+xfce4-sntray-plugin (0.3.14-1) vivid; urgency=low
+
+  * New upstream version
+
+ -- Konstantin <ria.freelander@gmail.com>  Mon, 04 May 2015 00:57:09 +0600
+
 xfce4-sntray-plugin (0.3.13-1) vivid; urgency=low
 
   * New upstream version
