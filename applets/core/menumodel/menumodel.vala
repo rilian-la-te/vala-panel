@@ -125,14 +125,14 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             }
             else if (key == "caption" && !bar)
             {
-                var btn = button as Button;
+                unowned Button btn = button as Button;
                 btn.label = caption;
             }
             else if (key == "icon" && !bar)
             {
                 try
                 {
-                    var btn = button as Button;
+                    unowned Button btn = button as Button;
                     (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
                 } catch (Error e){stderr.printf("%s\n",e.message);}
             }
