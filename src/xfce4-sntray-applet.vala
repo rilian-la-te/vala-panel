@@ -10,6 +10,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
         GLib.Intl.textdomain(Config.GETTEXT_PACKAGE);
         var widget = new ItemBox();
+        layout = widget;
         add(widget);
         add_action_widget(widget);
         widget.menu_position_func = (menu,ref x,ref y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
@@ -48,13 +49,14 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
     }
     public override void configure_plugin()
     {
-        var dlg = new ConfigDialog(widget);
+        var dlg = new ConfigDialog(layout);
         dlg.configure_icon_size = false;
         dlg.present();
         dlg.unmap.connect(()=>{
             dlg.destroy();
         });
     }
+    unowned ItemBox layout;
     Xfconf.Channel channel;
     ItemBoxWrapper wrapper;
 }

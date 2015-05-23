@@ -14,19 +14,21 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class SNTray: Applet, AppletConfigurable
 {
+    unowned ItemBox widget;
     public SNTray (Toplevel top, GLib.Settings? settings, uint number)
     {
         base(top,settings,number);
     }
     public Dialog get_config_dialog()
     {
-        var dlg = new ConfigDialog(layout);
+        var dlg = new ConfigDialog(widget);
         dlg.configure_icon_size = true;
         return dlg;
     }
     public override void create()
     {
         var layout = new ItemBox();
+        widget = layout;
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.DEFAULT);
