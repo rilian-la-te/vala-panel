@@ -403,7 +403,7 @@ namespace StatusNotifier
                 ItemIface item = Bus.get_proxy_sync(BusType.SESSION, object_name, object_path);
                 var main_icon = change_icon(item.icon_name,item.icon_pixmap,image.pixel_size, this.use_symbolic);
                 var attention_icon = change_icon(item.attention_icon_name,item.attention_icon_pixmap,image.pixel_size,this.use_symbolic);
-                var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4,this.use_symbolic);
+                var overlay_icon = change_icon(item.overlay_icon_name,item.overlay_icon_pixmap,image.pixel_size/4,false);
                 if (overlay_icon != null)
                     overlay_icon = new Emblem(overlay_icon);
                 bool build_icon = ((attention_icon != null && item.status == Status.NEEDS_ATTENTION) ||  (main_icon != null) || (image.gicon != null));
