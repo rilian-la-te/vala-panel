@@ -19,7 +19,7 @@ namespace StatusNotifier
     {
         static Host host;
         ulong watcher_registration_handler;
-        internal HashTable<string,Item> items {get; private set;}
+        internal HashTable<string,unowned Item> items {get; private set;}
         public HashTable<string,Variant?> index_override {get; set;}
         public HashTable<string,Variant?> filter_override {get; set;}
         public bool symbolic_icons {get; set;}
@@ -40,7 +40,7 @@ namespace StatusNotifier
         }
         construct
         {
-            items = new HashTable<string,Item>(str_hash, str_equal);
+            items = new HashTable<string,unowned Item>(str_hash, str_equal);
             index_override = new HashTable<string,int>(str_hash,str_equal);
             filter_override = new HashTable<string,bool>(str_hash,str_equal);
             show_application_status = true;
@@ -71,14 +71,12 @@ namespace StatusNotifier
                 }
             });
             host.watcher_item_removed.connect((item)=>{
-                var child = items.lookup(item);
+                unowned Item child = items.lookup(item);
                 if (child != null)
                 {
-                    var snitem = items.lookup(item);
-                    item_removed(snitem.id);
-                    items.remove(item);
-                    this.remove(child);
+                    item_removed(child.id);
                     child.destroy();
+                    items.remove(item);
                 }
             });
             watcher_registration_handler = host.notify["watcher-registered"].connect(()=>{
