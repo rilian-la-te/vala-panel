@@ -152,8 +152,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             ret = create_menubar() as Container;
         else
             ret = create_menubutton() as Container;
-        /*FIXME: Hack to workaround Vala bug */
-        this.unref();
         return ret;
     }
     private Gtk.MenuBar create_menubar()
