@@ -45,7 +45,7 @@ internal enum InternalMenu
 }
 public class Menu: Applet, AppletConfigurable, AppletMenu
 {
-    GLib.Menu menu;
+    GLib.Menu? menu;
     unowned Container? button;
     unowned Gtk.Menu? int_menu;
     AppInfoMonitor? app_monitor;

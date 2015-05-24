@@ -85,7 +85,7 @@ namespace ValaPanel
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
         private ToplevelSettings settings;
-        private Gtk.Box box;
+        private unowned Gtk.Box box;
         private Gtk.Menu context_menu;
         private int _mon;
         private int _w;
@@ -327,7 +327,6 @@ namespace ValaPanel
             unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
                 this.set_visual(visual);
-            this.destroy.connect((a)=>{stop_ui ();});
             a = Gtk.Allocation();
             c = Gdk.Rectangle();
             this.notify.connect((s,p)=> {
@@ -354,6 +353,11 @@ namespace ValaPanel
 /*
  * Common UI functions
  */
+        protected override void destroy()
+        {
+            stop_ui();
+            base.destroy();
+        }
         private void stop_ui()
         {
             if (autohide)
@@ -365,7 +369,7 @@ namespace ValaPanel
                 Gdk.flush();
                 initialized = false;
             }
-            if (this.get_child()!=null)
+            if (this.get_child() != null)
             {
                 box.destroy();
                 box = null;
@@ -379,7 +383,8 @@ namespace ValaPanel
             this.get_application().add_window(this);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
             this.realize();
-            box = new Box(this.orientation,0);
+            var mbox = new Box(this.orientation,0);
+            box = mbox;
             box.set_baseline_position(Gtk.BaselinePosition.CENTER);
             box.set_border_width(0);
             box.set_hexpand(true);
