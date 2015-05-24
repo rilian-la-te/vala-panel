@@ -836,7 +836,8 @@ namespace ValaPanel
         }
         internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
         {
-            var applet = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
+            var aw = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
+            unowned Applet applet = aw;
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
             box.reorder_child(applet,(int)position);
@@ -849,7 +850,6 @@ namespace ValaPanel
         }
         internal void remove_applet(Applet applet)
         {
-            box.remove(applet);
             applet.destroy();
         }
         internal void applet_removed(uint num)
@@ -1081,7 +1081,7 @@ namespace ValaPanel
                 str.append_printf(" background-image: none;\n");
             str.append_printf("}\n");
 /* Feature proposed: Panel Layout and Shadow */
-//~             str.append_printf(".-simple-panel-shadow {\n");
+//~             str.append_printf(".-vala-panel-shadow {\n");
 //~             str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
 //~             str.append_printf(" border-style: none;\n margin: 3px;\n");
 //~             str.append_printf("}\n");

@@ -35,7 +35,6 @@ namespace Key
     internal static const string IS_SYSTEM_MENU = "is-system-menu";
     internal static const string IS_INTERNAL_MENU = "is-internal-menu";
     internal static const string MODEL_FILE = "model-file";
-    internal static const string[] rebuild_keys = {IS_MENU_BAR,IS_INTERNAL_MENU,MODEL_FILE,ICON};
 }
 internal enum InternalMenu
 {
@@ -47,8 +46,8 @@ internal enum InternalMenu
 public class Menu: Applet, AppletConfigurable, AppletMenu
 {
     GLib.Menu menu;
-    Container? button;
-    Gtk.Menu? int_menu;
+    unowned Container? button;
+    unowned Gtk.Menu? int_menu;
     AppInfoMonitor? app_monitor;
     FileMonitor? file_monitor;
     ulong show_system_menu_idle;
@@ -88,9 +87,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     public bool show_menu()
     {
         if (GLib.MainContext.current_source().is_destroyed()) return false;
-        unowned Gtk.Menu menuw = int_menu as Gtk.Menu;
-        if (menuw != null)
-            menuw.popup(null,null,menu_position_func,
+        if (int_menu != null)
+            int_menu.popup(null,null,menu_position_func,
                         0, Gdk.CURRENT_TIME);
         else
         {
@@ -110,25 +108,26 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         settings.bind(Key.MODEL_FILE,this,"filename",SettingsBindFlags.GET);
         settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
         settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
-        button = menumodel_widget_create();
+        var w = menumodel_widget_create();
+        button = w;
         this.add(button);
         unowned Gtk.Settings gtksettings = this.get_settings();
         gtksettings.gtk_shell_shows_menubar = false;
         this.show_all();
         settings.changed.connect((key)=>{
-            if ((key == "intern")
-                || (key == "filename" && !intern)
-                || (key == "bar")
-                || (key == "icon" && bar))
+            if ((key == Key.IS_INTERNAL_MENU)
+                || (key == Key.MODEL_FILE && !intern)
+                || (key == Key.IS_MENU_BAR)
+                || (key == Key.ICON && bar))
             {
                 menumodel_widget_rebuild();
             }
-            else if (key == "caption" && !bar)
+            else if (key == Key.CAPTION && !bar)
             {
                 unowned Button btn = button as Button;
                 btn.label = caption;
             }
-            else if (key == "icon" && !bar)
+            else if (key == Key.ICON && !bar)
             {
                 try
                 {
@@ -141,16 +140,21 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     private void menumodel_widget_rebuild()
     {
         menumodel_widget_destroy();
-        button = menumodel_widget_create();
+        var btn = menumodel_widget_create();
+        button = btn;
         this.add(button);
     }
     private Container menumodel_widget_create()
     {
         menu = create_menumodel() as GLib.Menu;
+        Container? ret;
         if (bar)
-            return create_menubar() as Container;
+            ret = create_menubar() as Container;
         else
-            return create_menubutton() as Container;
+            ret = create_menubutton() as Container;
+        /*FIXME: Hack to workaround Vala bug */
+        this.unref();
+        return ret;
     }
     private Gtk.MenuBar create_menubar()
     {
@@ -177,7 +181,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     {
         Image? img = null;
         var menubutton = new ToggleButton();
-        int_menu = new Gtk.Menu.from_model(menu);
+        var menuw = new Gtk.Menu.from_model(menu);
+        int_menu = menuw;
         MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
         int_menu.show_all();
         int_menu.attach_to_widget(menubutton,null);

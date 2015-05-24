@@ -45,12 +45,9 @@ public class Clock: Applet, AppletConfigurable
     private string? prev_clock_val;
     private uint timer;
     private Window calendar;
-    internal string clock_format
-    {get; set;}
-    internal string tooltip_format
-    {get; set;}
-    internal bool bold_font
-    {get; set;}
+    internal string clock_format {get; set;}
+    internal string tooltip_format {get; set;}
+    internal bool bold_font {get; set;}
 
     public Clock(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
