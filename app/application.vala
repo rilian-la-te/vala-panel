@@ -347,12 +347,20 @@ namespace ValaPanel
                 runner = new Runner(this);
                 runner.hide.connect(()=>{
                     if (runner != null)
+                    {
+                        while (runner.ref_count > 1)
+                            runner.unref();
                         runner.destroy();
+                    }
                     runner = null;
                 });
                 runner.response.connect_after(()=>{
                     if (runner != null)
+                    {
+                        while (runner.ref_count > 1)
+                            runner.unref();
                         runner.destroy();
+                    }
                     runner = null;
                 });
                 runner.gtk_run();
