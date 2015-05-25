@@ -159,6 +159,14 @@ namespace ValaPanel
         }
         protected override void shutdown()
         {
+            var list = new SList<Window>();
+            foreach (var w in this.get_windows())
+                list.append(w);
+            foreach (var w in list)
+            {
+                w.application = null;
+                w.destroy();
+            }
             base.shutdown();
             if (restart)
             {
@@ -347,20 +355,12 @@ namespace ValaPanel
                 runner = new Runner(this);
                 runner.hide.connect(()=>{
                     if (runner != null)
-                    {
-                        while (runner.ref_count > 1)
-                            runner.unref();
                         runner.destroy();
-                    }
                     runner = null;
                 });
                 runner.response.connect_after(()=>{
                     if (runner != null)
-                    {
-                        while (runner.ref_count > 1)
-                            runner.unref();
                         runner.destroy();
-                    }
                     runner = null;
                 });
                 runner.gtk_run();

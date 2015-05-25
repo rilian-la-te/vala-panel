@@ -859,6 +859,8 @@ namespace ValaPanel
         }
         internal void applet_removed(uint num)
         {
+            if (this.in_destruction())
+                return;
             unowned PluginSettings s = settings.get_settings_by_num(num);
             var name = s.default_settings.get_string(Key.NAME);
             var count = local_applets.lookup(name);
