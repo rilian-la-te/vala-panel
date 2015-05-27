@@ -284,11 +284,12 @@ namespace ValaPanel
 
         private void apply_styling()
         {
-            if (Gtk.Settings.get_default()!=null)
-                Gtk.Settings.get_default().set("gtk-application-prefer-dark-theme",is_dark,null);
+            unowned Gtk.Settings gtksettings = Gtk.Settings.get_default();
+            if (gtksettings != null && gtksettings.gtk_application_prefer_dark_theme != is_dark)
+                gtksettings.gtk_application_prefer_dark_theme = is_dark;
             if (is_custom)
             {
-                if (provider!=null)
+                if (provider != null)
                     Gtk.StyleContext.remove_provider_for_screen(Gdk.Screen.get_default(),provider);
                 provider = PanelCSS.apply_from_file_to_app_with_provider(css);
             }
