@@ -5,17 +5,20 @@ if(GTK314_FOUND)
     set(GTK314_DEFINE -D GTK314)
 endif()
 INCLUDE(GResource)
+set(VALA_FILES
+	misc.vala
+	configurator.vala
+	generic-config-dialog.vala
+	css.vala
+	dbusmenu/dbusmenu.vala
+	icon-grid.vala
+	menu-maker.vala
+	panel-plugin.vala
+	panel-toplevel.vala
+	plugin-settings.vala
+	)
 vala_precompile(VALA_C ${LIBNAME}
-    misc.vala
-    configurator.vala
-    generic-config-dialog.vala
-    css.vala
-    dbusmenu/dbusmenu.vala
-    icon-grid.vala
-    menu-maker.vala
-    panel-plugin.vala
-    panel-toplevel.vala
-    plugin-settings.vala
+    ${VALA_FILES}
     ${SIDEBAR_SOURCES}
     ${CMAKE_BINARY_DIR}/vapi/config.vala
 PACKAGES
@@ -49,7 +52,7 @@ set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
 
 set (LIB_FILES ${VALA_C})
-
+add_custom_target(vala-ide-lib SOURCES ${VALA_FILES})
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${GLIB_RESOURCES_LIB}

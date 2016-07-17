@@ -2,9 +2,9 @@ if(GLIB242_FOUND)
     set(GLIB242_DEFINE -D GLIB242)
 endif()
 INCLUDE(GResource)
+set(VALA_FILES  application.vala runner.vala)
 vala_precompile(VALA_C ${APPNAME}
-    application.vala
-    runner.vala
+    ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
@@ -28,7 +28,7 @@ glib_compile_resources(GLIB_RESOURCES_APP
 #####
 # Executable
 #####
-
+add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
 add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
 target_link_libraries (${APPNAME} ${LIBNAME})
 
