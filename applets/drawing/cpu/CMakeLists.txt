@@ -21,6 +21,7 @@ OPTIONS
 # Build library for plugin
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
+set (LIB_CFLAGS ${CORE_CFLAGS})
 link_directories (${LIB_PATHS})
 
 add_library (${PLUGIN_NAME} MODULE
@@ -29,6 +30,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

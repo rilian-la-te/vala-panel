@@ -15,6 +15,7 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
+    ${GTK314_DEFINE}
 )
 #####
 # Plugin Library
@@ -24,6 +25,11 @@ OPTIONS
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
+INCLUDE(GResource)
+glib_compile_resources(RESOURCES
+    source
+	${PLUGIN_NAME}.gresource.xml
+)
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}

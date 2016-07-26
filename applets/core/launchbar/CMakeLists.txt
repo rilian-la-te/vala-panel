@@ -19,6 +19,11 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     #####
     # Plugin Library
     #####
+    INCLUDE(GResource)
+    glib_compile_resources(RESOURCES
+	source
+	    ${PLUGIN_NAME}.gresource.xml
+    )
 
     # Build library for plugin
     set (LIBS ${CORE_LIBRARIES} -lm)
