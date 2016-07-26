@@ -2,8 +2,9 @@ set(PLUGIN_NAME kbled)
 if(GTK314_FOUND)
     set(GTK314_DEFINE -D GTK314)
 endif()
+set(VALA_FILES ${PLUGIN_NAME}.vala)
 vala_precompile(VALA_C ${PLUGIN_NAME}
-    ${PLUGIN_NAME}.vala
+    ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
@@ -14,16 +15,10 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
-    ${GTK314_DEFINE}
 )
 #####
 # Plugin Library
 #####
-INCLUDE(GResource)
-glib_compile_resources(RESOURCES
-    source
-        ${PLUGIN_NAME}.gresource.xml
-)
 
 # Build library for plugin
 set (LIBS ${CORE_LIBRARIES} -lm)
@@ -36,6 +31,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)

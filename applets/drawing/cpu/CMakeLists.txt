@@ -1,6 +1,7 @@
 set(PLUGIN_NAME cpu)
+set(VALA_FILES ${PLUGIN_NAME}.vala)
 vala_precompile(VALA_C ${PLUGIN_NAME}
-    ${PLUGIN_NAME}.vala
+    ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
@@ -10,6 +11,7 @@ OPTIONS
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --target-glib=2.40
+    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
 )
 #####
@@ -19,16 +21,15 @@ OPTIONS
 # Build library for plugin
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
-set (LIB_CFLAGS ${CORE_CFLAGS})
+link_directories (${LIB_PATHS})
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
     ${RESOURCES}
 )
 
-add_definitions (${LIB_CFLAGS})
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
+add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)

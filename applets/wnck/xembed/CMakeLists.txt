@@ -1,6 +1,7 @@
 set(PLUGIN_NAME xembed)
+set(VALA_FILES_SOCKET ${PLUGIN_NAME}-socket.vala)
 vala_precompile(VALA_C_SOCKET ${PLUGIN_NAME}-internal
-    ${PLUGIN_NAME}-socket.vala
+    ${VALA_FILES_SOCKET}
 PACKAGES
     ${CORE_PACKAGES}
     x11
@@ -14,6 +15,8 @@ OPTIONS
     --target-glib=2.40
     --thread
 )
+set(VALA_FILES ${PLUGIN_NAME}.vala)
+
 vala_precompile(VALA_C ${PLUGIN_NAME}
     ${PLUGIN_NAME}.vala
 PACKAGES
@@ -49,6 +52,7 @@ add_library (${PLUGIN_NAME} MODULE
 add_definitions (${LIB_CFLAGS})
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
+add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES} ${VALA_FILES_SOCKET})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)

@@ -1,6 +1,7 @@
 set(PLUGIN_NAME clock)
+set(VALA_FILES ${PLUGIN_NAME}.vala)
 vala_precompile(VALA_C ${PLUGIN_NAME}
-    ${PLUGIN_NAME}.vala
+    ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
@@ -27,6 +28,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
