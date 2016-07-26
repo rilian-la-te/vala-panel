@@ -1,9 +1,10 @@
 #####
 # DBusMenu
 #####
+set(VALA_FILES_DBUSMENU  dbusmenu/dbusmenu.vala)
 macro(precompile_dbusmenu)
 vala_precompile(VALA_C_DBUSMENU vala-dbusmenu
-    dbusmenu/dbusmenu.vala
+    ${VALA_FILES_DBUSMENU}
 PACKAGES
     gtk+-3.0
     gio-2.0
@@ -28,15 +29,18 @@ add_custom_target(vala-dbusmenu DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/vala-dbusmen
 #####
 # Core Parts (GResource, definitions)
 #####
+set(VALA_FILES_CORE
+	snwatcher.vala
+	snitem.vala
+	snhost.vala
+	snitembox.vala
+	snconfig.vala
+	snitemproxy.vala
+	qrichtextparser.vala
+	)
 macro(precompile_core)
     vala_precompile(VALA_C_CORE sntray-core
-        snwatcher.vala
-        snitem.vala
-        snhost.vala
-        snitembox.vala
-        snconfig.vala
-        snitemproxy.vala
-        qrichtextparser.vala
+	${VALA_FILES_CORE}
     PACKAGES
         gtk+-3.0
         vala-dbusmenu
@@ -60,14 +64,16 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/vala-panel-sntray.vapi
    precompile_core()
 endif()
 add_custom_target(sntray-core DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/sntray.gresource.c ${CMAKE_CURRENT_BINARY_DIR}/sntray-core_valac.stamp)
+add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
 add_dependencies(sntray-core vala-dbusmenu)
 #################
 # Xfce Panel part
 #################
+set(VALA_FILES_XFCE xfce4-sntray-applet.vala)
 if (ENABLE_XFCE)
     vala_precompile(VALA_C_XFCE sntray-xfce
         ${CMAKE_CURRENT_BINARY_DIR}/config.vala
-        xfce4-sntray-applet.vala
+	${VALA_FILES_XFCE}
     PACKAGES
         gtk+-3.0
         vala-panel-sntray
@@ -93,6 +99,7 @@ if (ENABLE_XFCE)
     add_dependencies(sntray-xfce sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${XFCE_INCLUDE_DIRS})
     target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES} -lm)
+    add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
     # Install plugin stuffs
     install(TARGETS sntray-xfce DESTINATION ${CMAKE_INSTALL_LIBDIR}/xfce4/panel/plugins)
@@ -100,9 +107,10 @@ endif()
 #################
 # Vala Panel part
 #################
+set(VALA_FILES_VALAPANEL vala-panel-sntray-applet.vala)
 if (ENABLE_VALAPANEL)
     vala_precompile(VALA_C_VALAPANEL sntray-valapanel
-        vala-panel-sntray-applet.vala
+	    ${VALA_FILES_VALAPANEL}
     PACKAGES
         gtk+-3.0
         vala-panel-sntray
@@ -125,6 +133,7 @@ if (ENABLE_VALAPANEL)
     add_dependencies(sntray-valapanel sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${VALAPANEL_INCLUDE_DIRS})
     target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES} -lm)
+    add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
 
     # Install plugin stuffs
     install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)

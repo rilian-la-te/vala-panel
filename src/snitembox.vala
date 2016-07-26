@@ -14,7 +14,6 @@ namespace StatusNotifier
     public static const string USE_LABELS = "show-ayatana-labels";
     public static const string INDEX_OVERRIDE = "index-override";
     public static const string FILTER_OVERRIDE = "filter-override";
-
     public class ItemBox : FlowBox
     {
         static Host host;

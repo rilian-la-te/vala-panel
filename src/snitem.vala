@@ -450,7 +450,7 @@ namespace StatusNotifier
         DBusMenu.GtkClient? client;
         MenuModel remote_menu_model;
         GLib.ActionGroup remote_action_group;
-        Gtk.Menu menu;
+        unowned Gtk.Menu menu;
         unowned IconTheme icon_theme;
     }
 }
