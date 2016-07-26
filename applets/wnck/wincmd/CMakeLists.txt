@@ -22,7 +22,9 @@ OPTIONS
 # Build library for plugin
 set (LIBS ${CORE_LIBRARIES} ${WNCK_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS} ${WNCK_LIBRARY_DIRS})
-set (LIB_CFLAGS ${CORE_CFLAGS} ${WNCK_CFLAGS} -DWNCK_I_KNOW_THIS_IS_UNSTABLE)
+set (LIB_CFLAGS ${CORE_CFLAGS} ${WNCK_CFLAGS})
+link_directories (${LIB_PATHS})
+add_definitions(-DWNCK_I_KNOW_THIS_IS_UNSTABLE)
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
@@ -30,8 +32,8 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
-target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
 
 # Install plugin stuffs
 install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)

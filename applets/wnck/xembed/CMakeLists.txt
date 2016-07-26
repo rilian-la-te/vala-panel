@@ -42,6 +42,7 @@ set (LIBS ${CORE_LIBRARIES} ${X11_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS} ${X11_LIBRARY_DIRS})
 set (LIB_CFLAGS ${CORE_CFLAGS} ${X11_CFLAGS})
 include_directories(${CORE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR}/lib)
+link_directories (${LIB_PATHS})
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
@@ -52,7 +53,6 @@ add_library (${PLUGIN_NAME} MODULE
 
 add_definitions (${LIB_CFLAGS})
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${LIB_PATHS})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES} ${VALA_FILES_SOCKET})
 
 # Install plugin stuffs
