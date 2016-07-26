@@ -4,6 +4,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
+    vala-panel
     libwnck-3.0
     gdk-x11-3.0
 OPTIONS

@@ -4,6 +4,7 @@ vala_precompile(VALA_C_SOCKET ${PLUGIN_NAME}-internal
     ${VALA_FILES_SOCKET}
 PACKAGES
     ${CORE_PACKAGES}
+    vala-panel
     x11
     gdk-x11-3.0
 GENERATE_HEADER
