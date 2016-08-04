@@ -1,9 +1,3 @@
-if (NOT(GTK316_FOUND))
-    set (SIDEBAR_SOURCES "sidebar.vala")
-endif()
-if(GTK314_FOUND)
-    set(GTK314_DEFINE -D GTK314)
-endif()
 INCLUDE(GResource)
 set(VALA_FILES
 	misc.vala
@@ -29,7 +23,6 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
     --thread
-    ${GTK314_DEFINE}
 GENERATE_VAPI
     ${APPNAME}
 GENERATE_HEADER

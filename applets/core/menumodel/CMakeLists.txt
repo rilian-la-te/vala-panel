@@ -1,7 +1,4 @@
 set(PLUGIN_NAME menumodel)
-if(GTK314_FOUND)
-    set(GTK314_DEFINE -D GTK314)
-endif()
 set(VALA_FILES ${PLUGIN_NAME}.vala
 	menu-maker.vala)
 vala_precompile(VALA_C ${PLUGIN_NAME}
@@ -16,7 +13,6 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
-    ${GTK314_DEFINE}
 )
 #####
 # Plugin Library

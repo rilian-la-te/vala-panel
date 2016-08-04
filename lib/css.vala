@@ -172,11 +172,7 @@ namespace PanelCSS
                 edge = "0px 2px 0px 0px";
                 break;
         }
-#if HAVE_GTK313
         unowned string checked = ".-panel-flat-button:checked,";
-#else
-        unowned string checked = "";
-#endif
         return """.-panel-flat-button {
                padding: 0px;
                 -GtkWidget-focus-line-width: 0px;

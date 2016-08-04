@@ -53,18 +53,7 @@ public class Kbled: Applet, AppletConfigurable
     }
     public override void create()
     {
-#if GTK314
         IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
-#else
-        Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_resource("/org/vala-panel/kbled/images/capslock-on.png");
-        IconTheme.get_default().add_builtin_icon("capslock-on",24,pixbuf);
-        pixbuf = new Gdk.Pixbuf.from_resource("/org/vala-panel/kbled/images/capslock-off.png");
-        IconTheme.get_default().add_builtin_icon("capslock-off",24,pixbuf);
-        pixbuf = new Gdk.Pixbuf.from_resource("/org/vala-panel/kbled/images/numlock-on.png");
-        IconTheme.get_default().add_builtin_icon("numlock-on",24,pixbuf);
-        pixbuf = new Gdk.Pixbuf.from_resource("/org/vala-panel/kbled/images/numlock-off.png");
-        IconTheme.get_default().add_builtin_icon("numlock-off",24,pixbuf);
-#endif
         widget = new FlowBox();
         widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         widget.selection_mode = SelectionMode.NONE;

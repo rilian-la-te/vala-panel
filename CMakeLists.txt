@@ -93,26 +93,14 @@ add_definitions(-w) #Suppress all GCC warnings
 find_package (PkgConfig)
 
 pkg_check_modules (CORE REQUIRED
-  gtk+-3.0>=3.12
-  glib-2.0>=2.40
-  gio-2.0>=2.40
-  gio-unix-2.0>=2.40
-  gthread-2.0>=2.40
+  gtk+-3.0>=3.16
+  glib-2.0>=2.44
+  gio-2.0>=2.44
+  gio-unix-2.0>=2.44
+  gthread-2.0>=2.44
   libpeas-1.0>=1.2
   libpeas-gtk-1.0>=1.2
-  gmodule-2.0>=2.40)
-
-pkg_check_modules (GTK316 QUIET
-  gtk+-3.0>=3.15
-)
-
-pkg_check_modules (GTK314 QUIET
-  gtk+-3.0>=3.13
-)
-
-pkg_check_modules (GLIB242 QUIET
-    gio-2.0>=2.41.0
-)
+  gmodule-2.0>=2.44)
 
 set(CORE_PACKAGES
   gtk+-3.0

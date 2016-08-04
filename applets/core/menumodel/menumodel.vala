@@ -168,11 +168,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
             orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
             menubar.set_pack_direction(orient);
         });
-#if !GTK314
-        Gtk.IconTheme.get_default().changed.connect(()=>{
-            MenuMaker.apply_menu_properties(menubar.get_children(),menu);
-        });
-#endif
         return menubar;
     }
     private ToggleButton create_menubutton()
@@ -204,11 +199,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         }
         ValaPanel.setup_button(menubutton as Button,img,caption);
         menubutton.show();
-#if !GTK314
-        Gtk.IconTheme.get_default().changed.connect(()=>{
-            MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
-        });
-#endif
         return menubutton;
     }
     private void menumodel_widget_destroy()

@@ -1106,11 +1106,7 @@ namespace ValaPanel
             var variant = desc.get_variant();
             str.append_printf(" font-style: %s;\n",(style == Pango.Style.ITALIC) ? "italic" : ((style == Pango.Style.OBLIQUE) ? "oblique" : "normal"));
             str.append_printf(" font-variant: %s;\n",(variant == Pango.Variant.SMALL_CAPS) ? "small-caps" : "normal");
-#if GTK314
             str.append_printf(" font-weight: %s;\n",(weight <= Pango.Weight.SEMILIGHT) ? "light" : (weight >= Pango.Weight.SEMIBOLD ? "bold" : "normal"));
-#else
-            str.append_printf(" font-weight: %s;\n",((int)weight <= 350) ? "light" : (weight >= Pango.Weight.SEMIBOLD ? "bold" : "normal"));
-#endif
             str.append_printf(" font-family: %s;\n",family);
             str.append_printf("}\n");
             str.append_printf(".-vala-panel-foreground-color {\n");
