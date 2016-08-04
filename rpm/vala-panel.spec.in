@@ -13,8 +13,8 @@ Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPane
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: cmake >= 2.8.0
 BuildRequires: gettext
-BuildRequires: vala >= 0.24.0
-BuildRequires: pkgconfig(gtk+-3.0) >= 3.12.0
+BuildRequires: vala >= 0.28.0
+BuildRequires: pkgconfig(gtk+-3.0) >= 3.16.0
 BuildRequires: pkgconfig(libpeas-1.0) >= 1.2.0
 BuildRequires: pkgconfig(libwnck-3.0) >= 3.4.0
 
