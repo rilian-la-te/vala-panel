@@ -141,7 +141,7 @@ namespace LaunchBar
                                          spawn_data.child_spawn_func,MenuMaker.launch_callback);
                 }
                 else
-                    desktop_info.launch_uris_as_manager(null,context,
+                    desktop_info.launch_uris_as_manager(new List<string>(),context,
                                          SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          spawn_data.child_spawn_func,MenuMaker.launch_callback);
             } catch (GLib.Error e) {stderr.printf("%s",e.message);}

@@ -5,7 +5,6 @@ set(VALA_FILES
 	generic-config-dialog.vala
 	css.vala
 	dbusmenu/dbusmenu.vala
-	icon-grid.vala
 	menu-maker.vala
 	panel-plugin.vala
 	panel-toplevel.vala

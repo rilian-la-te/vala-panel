@@ -48,6 +48,8 @@ add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
     ${VALA_C_SOCKET}
     xembed-ccode.c
+    xembed-ccode.h
+    xembed-internal.h
     ${RESOURCES}
 )
 

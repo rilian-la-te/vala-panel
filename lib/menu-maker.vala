@@ -142,7 +142,7 @@ namespace MenuMaker
         var info = new DesktopAppInfo(id);
         try{
             var data = new SpawnData();
-            info.launch_uris_as_manager(null,
+            info.launch_uris_as_manager(new List<string>(),
                                          Gdk.Display.get_default().get_app_launch_context(),
                                          SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          data.child_spawn_func,launch_callback);
@@ -156,7 +156,7 @@ namespace MenuMaker
             var data = new SpawnData();
             var info = AppInfo.create_from_commandline(command,null,
                             AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION) as DesktopAppInfo;
-            info.launch_uris_as_manager(null,
+            info.launch_uris_as_manager(new List<string>(),
                                          Gdk.Display.get_default().get_app_launch_context(),
                                          SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
                                          data.child_spawn_func,launch_callback);
