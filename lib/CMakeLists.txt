@@ -1,3 +1,5 @@
+add_subdirectory(applets-new)
+add_subdirectory(c-lib)
 INCLUDE(GResource)
 set(VALA_FILES
 	misc.vala
