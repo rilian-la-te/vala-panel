@@ -80,7 +80,7 @@ add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 # Vala
 find_package (Vala REQUIRED)
 include (ValaVersion)
-ensure_vala_version ("0.24" MINIMUM)
+ensure_vala_version ("0.28" MINIMUM)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
