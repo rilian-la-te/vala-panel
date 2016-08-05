@@ -100,7 +100,8 @@ pkg_check_modules (CORE REQUIRED
   gthread-2.0>=2.44
   libpeas-1.0>=1.2
   libpeas-gtk-1.0>=1.2
-  gmodule-2.0>=2.44)
+  gmodule-2.0>=2.44
+  libuuid)
 
 set(CORE_PACKAGES
   gtk+-3.0
@@ -111,7 +112,8 @@ set(CORE_PACKAGES
   libpeas-gtk-1.0
   gmodule-2.0
   gio-addons-2.0
-  posix)
+  posix
+  libuuid)
 
 set(PACKGAGE_CFLAGS ${CORE_CFLAGS})
 set(PACKAGE_LINK_DIRS ${CORE_LIBRARY_DIRS})
