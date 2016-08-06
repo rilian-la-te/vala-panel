@@ -160,15 +160,16 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                                                 G_PARAM_WRITABLE));
         g_object_class_install_property(G_OBJECT_CLASS(klass),
                                         VALA_PANEL_APPLET_WIDGET_ACTIONS,
-                                        g_param_spec_boxed("actions",
-                                                           "actions",
-                                                           "actions",
-                                                           G_TYPE_STRV,
-                                                           G_PARAM_STATIC_NAME |
-                                                               G_PARAM_STATIC_NICK |
-                                                               G_PARAM_STATIC_BLURB |
-                                                               G_PARAM_READABLE |
-                                                               G_PARAM_WRITABLE));
+                                        g_param_spec_variant("actions",
+                                                             "actions",
+                                                             "actions",
+                                                             G_TYPE_STRV,
+                                                             G_PARAM_STATIC_NAME |
+                                                                 G_PARAM_STATIC_NICK |
+                                                                 G_PARAM_STATIC_BLURB |
+                                                                 G_PARAM_CONSTRUCT_ONLY |
+                                                                 G_PARAM_READABLE |
+                                                                 G_PARAM_WRITABLE));
         g_signal_new("panel_size_changed",
                      vala_panel_applet_widget_get_type(),
                      G_SIGNAL_RUN_LAST,
