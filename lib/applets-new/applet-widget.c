@@ -7,7 +7,7 @@ typedef struct {
         char *filename;
         char *scheme;
         char *panel;
-        GVariant *options;
+        GVariant *actions;
 } ValaPanelAppletWidgetPrivate;
 
 enum { VALA_PANEL_APPLET_WIDGET_DUMMY_PROPERTY,
@@ -23,13 +23,76 @@ G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelAppletWidget, vala_panel_applet_widget, G_TY
 static void vala_panel_applet_widget_get_property(GObject *object, guint property_id, GValue *value,
                                                   GParamSpec *pspec)
 {
+        ValaPanelAppletWidget *self = VALA_PANEL_APPLET_WIDGET(object);
+        self = G_TYPE_CHECK_INSTANCE_CAST(object,
+                                          vala_panel_applet_widget_get_type(),
+                                          ValaPanelAppletWidget);
+        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+        switch (property_id) {
+        case VALA_PANEL_APPLET_WIDGET_UUID:
+                g_value_set_string(value, priv->uuid);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_PATH:
+                g_value_set_string(value, priv->path);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_FILENAME:
+                g_value_set_string(value, priv->filename);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_SCHEME:
+                g_value_set_string(value, priv->scheme);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_PANEL:
+                g_value_set_string(value, priv->panel);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_ACTIONS:
+                g_value_set_variant(value, priv->actions);
+                break;
+        default:
+                G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+                break;
+        }
 }
 static void vala_panel_applet_widget_set_property(GObject *object, guint property_id,
                                                   const GValue *value, GParamSpec *pspec)
 {
+        ValaPanelAppletWidget *self = VALA_PANEL_APPLET_WIDGET(object);
+        self = G_TYPE_CHECK_INSTANCE_CAST(object,
+                                          vala_panel_applet_widget_get_type(),
+                                          ValaPanelAppletWidget);
+        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+        switch (property_id) {
+        case VALA_PANEL_APPLET_WIDGET_UUID:
+                priv->uuid = g_value_get_string(value);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_PATH:
+                priv->path = g_value_get_string(value);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_FILENAME:
+                priv->filename = g_value_get_string(value);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_SCHEME:
+                priv->scheme = g_value_get_string(value);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_PANEL:
+                priv->panel = g_value_get_string(value);
+                break;
+        case VALA_PANEL_APPLET_WIDGET_ACTIONS:
+                priv->actions = g_value_get_variant(value);
+                break;
+        default:
+                G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+                break;
+        }
 }
 static void vala_panel_applet_widget_finalize(GObject *obj)
 {
+        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(obj);
+        g_free(priv->uuid);
+        g_free(priv->path);
+        g_free(priv->filename);
+        g_free(priv->scheme);
+        g_free(priv->panel);
+        g_variant_unref(priv->actions);
         G_OBJECT_CLASS(vala_panel_applet_widget_parent_class)->finalize(obj);
 }
 

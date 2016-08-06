@@ -7,7 +7,7 @@
 
 G_BEGIN_DECLS
 G_DECLARE_INTERFACE(ValaPanelPopupManager, vala_panel_popup_manager, VALA_PANEL,
-                    POPUP_MANAGER, GObject);
+                    POPUP_MANAGER, GObject)
 
 struct _ValaPanelPopupManager
 {
