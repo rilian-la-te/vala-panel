@@ -1,5 +1,8 @@
-#include "applet-widget.h"
+#define G_SETTINGS_ENABLE_BACKEND 1
+#include <gio/gsettingsbackend.h>
+
 #include "applet-api.h"
+#include "applet-widget.h"
 
 typedef struct {
         char *uuid;
@@ -145,6 +148,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                                             G_PARAM_STATIC_NAME |
                                                                 G_PARAM_STATIC_NICK |
                                                                 G_PARAM_STATIC_BLURB |
+                                                                G_PARAM_CONSTRUCT_ONLY |
                                                                 G_PARAM_READABLE |
                                                                 G_PARAM_WRITABLE));
         g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -163,7 +167,8 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                         g_param_spec_variant("actions",
                                                              "actions",
                                                              "actions",
-                                                             G_TYPE_STRV,
+                                                             "as",
+                                                             NULL,
                                                              G_PARAM_STATIC_NAME |
                                                                  G_PARAM_STATIC_NICK |
                                                                  G_PARAM_STATIC_BLURB |
@@ -186,4 +191,12 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
 
 static void vala_panel_applet_widget_init()
 {
+}
+
+GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
+{
+        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+        g_autoptr(GSettingsBackend) bck =
+            g_keyfile_settings_backend_new(priv->filename, priv->path, priv->scheme);
+        return g_settings_new_with_backend(priv->scheme, bck);
 }

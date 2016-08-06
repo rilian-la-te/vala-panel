@@ -15,9 +15,10 @@ struct _ValaPanelAppletWidgetClass
     void (*update_popup) (ValaPanelAppletWidget* self, ValaPanelPopupManager* mgr);
     void (*invoke_applet_action) (ValaPanelAppletWidget* self, const gchar* action, GVariantDict* params);
     GtkWidget* (*get_settings_ui) (ValaPanelAppletWidget* self);
-    GSettings* (*get_applet_settings) (ValaPanelAppletWidget* self);
     gpointer padding[12];
 };
+
+GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget* self);
 
 G_END_DECLS
 
