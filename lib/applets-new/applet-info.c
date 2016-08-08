@@ -132,6 +132,15 @@ vala_panel_applet_info_set_property(GObject* object, guint property_id,
 static void
 vala_panel_applet_info_finalize(GObject* obj)
 {
+    ValaPanelAppletInfo * self;
+    self = G_TYPE_CHECK_INSTANCE_CAST (obj, vala_panel_applet_info_get_type(), ValaPanelAppletInfo);
+    g_object_unref (self->settings);
+    g_free0 (self->icon);
+    g_free0 (self->applet_type);
+    g_free0 (self->name);
+    g_free0 (self->description);
+    g_free0 (self->uuid);
+    G_OBJECT_CLASS (vala_panel_applet_info_parent_class)->finalize (obj);
 }
 
 void
