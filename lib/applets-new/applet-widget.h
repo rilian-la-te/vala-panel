@@ -7,7 +7,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_DERIVABLE_TYPE(ValaPanelAppletWidget,vala_panel_applet_widget,VALA_PANEL,APPLET_WIDGET,GObject)
+G_DECLARE_DERIVABLE_TYPE(ValaPanelAppletWidget,vala_panel_applet_widget,VALA_PANEL,APPLET_WIDGET,GtkBin)
 
 struct _ValaPanelAppletWidgetClass
 {

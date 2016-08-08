@@ -54,6 +54,7 @@ add_custom_target(vala-ide-lib SOURCES ${VALA_FILES})
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${GLIB_RESOURCES_LIB}
+    definitions.h
 )
 
 target_link_libraries (${LIBNAME} ${LIBS})

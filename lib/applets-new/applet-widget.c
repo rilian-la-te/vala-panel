@@ -3,13 +3,14 @@
 
 #include "applet-api.h"
 #include "applet-widget.h"
+#include "lib/definitions.h"
 
 typedef struct {
-        char *uuid;
-        char *path;
-        char *filename;
-        char *scheme;
-        char *panel;
+        const char *uuid;
+        const char *path;
+        const char *filename;
+        const char *scheme;
+        const char *panel;
         GVariant *actions;
 } ValaPanelAppletWidgetPrivate;
 
@@ -21,7 +22,7 @@ enum { VALA_PANEL_APPLET_WIDGET_DUMMY_PROPERTY,
        VALA_PANEL_APPLET_WIDGET_PANEL,
        VALA_PANEL_APPLET_WIDGET_ACTIONS };
 
-G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelAppletWidget, vala_panel_applet_widget, G_TYPE_OBJECT)
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(ValaPanelAppletWidget, vala_panel_applet_widget, GTK_TYPE_BIN)
 
 static void vala_panel_applet_widget_get_property(GObject *object, guint property_id, GValue *value,
                                                   GParamSpec *pspec)
@@ -90,11 +91,6 @@ static void vala_panel_applet_widget_set_property(GObject *object, guint propert
 static void vala_panel_applet_widget_finalize(GObject *obj)
 {
         ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(obj);
-        g_free(priv->uuid);
-        g_free(priv->path);
-        g_free(priv->filename);
-        g_free(priv->scheme);
-        g_free(priv->panel);
         g_variant_unref(priv->actions);
         G_OBJECT_CLASS(vala_panel_applet_widget_parent_class)->finalize(obj);
 }
@@ -189,8 +185,10 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                      G_TYPE_INT);
 }
 
-static void vala_panel_applet_widget_init()
+static void vala_panel_applet_widget_init(ValaPanelAppletWidget* self)
 {
+    ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+    gtk_widget_set_can_focus(GTK_WIDGET(self), FALSE);
 }
 
 GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
@@ -202,3 +200,4 @@ GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
         g_free(pth);
         return g_settings_new_with_backend(priv->scheme, bck);
 }
+

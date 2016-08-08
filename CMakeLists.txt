@@ -86,7 +86,7 @@ include (ValaPrecompile)
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 #add_definitions(-w) #Suppress all GCC warnings
 add_definitions(-Wall -Wno-unused # Vala loves to create variables
-		-pedantic
+#		-pedantic
 		-Wno-ignored-qualifiers
 		-Wno-deprecated-declarations #Vala warns us already
 		-Wno-incompatible-pointer-types
