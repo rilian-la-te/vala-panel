@@ -279,6 +279,10 @@ static void on_icon_activated(GtkEntry* entry, GtkEntryIconPosition pos, GdkEven
     }
 }
 
+static void vala_panel_runner_init(ValaPanelRunner* self)
+{
+
+}
 //static void on_terminal_toggled (GtkToggleButton* btn, gpointer user_data)
 //{
 //    terminal = gtk_toggle_button_get_active(btn) ? G_APP_INFO_CREATE_NEEDS_TERMINAL : 0;
@@ -296,9 +300,9 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", FALSE,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "terminal-button", FALSE, G_STRUCT_OFFSET (ValaPanelRunner, terminal_button));
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-box", TRUE, G_STRUCT_OFFSET (ValaPanelRunner, main_box));
-//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_changed", G_CALLBACK(_vala_panel_runner_on_entry_changed_gtk_editable_changed));
-//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_activated", G_CALLBACK(_vala_panel_runner_on_entry_activated_gtk_entry_activate));
-//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_icon_activated", G_CALLBACK(_vala_panel_runner_on_icon_activated_gtk_entry_icon_press));
+    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_changed", G_CALLBACK(on_entry_changed));
+    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_activated", G_CALLBACK(on_entry_activated));
+    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_icon_activated", G_CALLBACK(on_icon_activated));
 }
 
 //void gtk_run(GtkApplication * app)

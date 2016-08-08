@@ -47,7 +47,7 @@ namespace ValaPanel
         private bool restart = false;
         private Dialog? pref_dialog;
         private GLib.Settings config;
-        private Runner? runner;
+        private RunDialog? runner;
         private bool _dark;
         private bool _custom;
         private string _css;
@@ -353,7 +353,7 @@ namespace ValaPanel
         {
             if (runner == null)
             {
-                runner = new Runner(this);
+                runner = new RunDialog(this);
                 runner.hide.connect(()=>{
                     if (runner != null)
                         runner.destroy();

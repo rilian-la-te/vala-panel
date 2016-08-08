@@ -22,7 +22,7 @@ using GLib;
 namespace ValaPanel
 {
     [GtkTemplate (ui = "/org/vala-panel/app/app-runner.ui"),CCode (cname="Runner")]
-    internal class Runner : Gtk.Dialog
+    internal class RunDialog : Gtk.Dialog
     {
         [GtkChild (name="main-entry")]
         private Entry main_entry;
@@ -39,11 +39,11 @@ namespace ValaPanel
             set{set_application(value as Gtk.Application);}
         }
 
-        public Runner(App app)
+        public RunDialog(App app)
         {
             Object(application: app);
         }
-        ~Runner()
+        ~RunDialog()
         {
             cancellable.cancel();
             this.application = null;
