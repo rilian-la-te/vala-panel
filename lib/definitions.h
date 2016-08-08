@@ -12,11 +12,10 @@
   }
 
 #define g_value_replace_string(string, value)                                  \
-  \                                                                            \
+                                                                               \
   {                                                                            \
-    \ g_free0(string);                                                         \
-    \ string = g_value_dup_string(value);                                      \
-    \                                                                          \
+    g_free0(string);                                                           \
+    string = g_value_dup_string(value);                                        \
   }
 
 #define _user_config_file_name(name1, cprofile, name2)                         \
