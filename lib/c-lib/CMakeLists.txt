@@ -2,6 +2,8 @@ include(GResource)
 add_library(cvalapanel SHARED
 	misc.c
 	misc.h
+	css.c
+	css.h
 	)
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
