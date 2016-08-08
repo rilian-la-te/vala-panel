@@ -152,7 +152,7 @@ inline gchar* css_generate_font_label(gfloat size, gboolean is_bold)
 //    return returnie;
 //}
 
-gchar *css_apply_from_resource(GtkWidget *widget, gchar *file)
+gchar *css_apply_from_resource(GtkWidget *widget,const char *file, const char* klass)
 {
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
     gtk_widget_reset_style(widget);
@@ -161,5 +161,6 @@ gchar *css_apply_from_resource(GtkWidget *widget, gchar *file)
     gtk_style_context_add_provider (context,
                                     GTK_STYLE_PROVIDER (provider),
                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    gtk_style_context_add_class(context,klass);
     return NULL;
 }

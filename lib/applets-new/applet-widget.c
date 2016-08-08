@@ -194,10 +194,9 @@ static void vala_panel_applet_widget_init(ValaPanelAppletWidget* self)
 GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
 {
         ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
-        char* pth = g_strdup_printf("%s/%s",priv->path,priv->uuid);
+        g_autofree char* pth = g_strdup_printf("%s/%s",priv->path,priv->uuid);
         g_autoptr(GSettingsBackend) bck =
             g_keyfile_settings_backend_new(priv->filename, pth, priv->scheme);
-        g_free(pth);
         return g_settings_new_with_backend(priv->scheme, bck);
 }
 

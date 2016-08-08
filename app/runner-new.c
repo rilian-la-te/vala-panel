@@ -100,153 +100,109 @@ static GDesktopAppInfo* match_app_by_exec(const char* exec)
     return ret;
 }
 
-//static void setup_auto_complete_with_data(ThreadData* data)
-//{
-//    GSList *l;
-//    g_autoptr(GtkEntryCompletion) comp = gtk_entry_completion_new();
-//    gtk_entry_completion_set_minimum_key_length( comp, 2 );
-//    gtk_entry_completion_set_inline_completion( comp, TRUE );
-//    gtk_entry_completion_set_popup_set_width( comp, TRUE );
-//    gtk_entry_completion_set_popup_single_match( comp, FALSE );
-//    g_autoptr(GtkListStore) store = gtk_list_store_new( 1, G_TYPE_STRING );
+static void setup_auto_complete_with_data(GObject *source_object,
+                                          GAsyncResult *res,
+                                          gpointer user_data)
+{
+    ValaPanelRunner* self = VALA_PANEL_RUNNER(user_data);
+    GSList *l;
+    g_autoptr(GSList) files = (GSList*)g_task_propagate_pointer(self->task,NULL);
+    GtkEntryCompletion* comp = gtk_entry_get_completion(self->main_entry);
+    GtkListStore* store = GTK_LIST_STORE(gtk_entry_completion_get_model(comp));
 
-//    for( l = data->files; l; l = l->next )
-//    {
-//        const char *name = (const char*)l->data;
-//        GtkTreeIter it;
-//        gtk_list_store_append( store, &it );
-//        gtk_list_store_set( store, &it, 0, name, -1 );
-//    }
+    for( l = files; l; l = l->next )
+    {
+        const char *name = (const char*)l->data;
+        gtk_list_store_insert_with_values(store,NULL,-1,0,name,-1);
+    }
+    /* trigger entry completion */
+    gtk_entry_completion_complete(comp);
+    g_slist_free_full(files,g_free);
+}
 
-//    gtk_entry_completion_set_model( comp, (GtkTreeModel*)store );
-//    gtk_entry_completion_set_text_column( comp, 0 );
-//    gtk_entry_set_completion( (GtkEntry*)data->entry, comp );
+static void slist_destroy_notify(void* a)
+{
+    GSList* lst = (GSList*)a;
+    g_slist_free_full(lst,g_free);
+}
 
-//    /* trigger entry completion */
-//    gtk_entry_completion_complete(comp);
-//}
+static void vala_panel_runner_create_file_list(GTask* task, void* source, void* task_data, GCancellable* cancellable)
+{
+    g_autoptr(GSList) list = g_slist_alloc();
+    const char* var = g_getenv("PATH");
+    g_auto(GStrv) dirs = g_strsplit(var,":",0);
+    for(int i =0 ; dirs[i]!= NULL; i++)
+    {
+        if (g_cancellable_is_cancelled(cancellable))
+            return;
 
-//static void thread_data_free(ThreadData* data)
-//{
-//    g_slist_foreach(data->files, (GFunc)g_free, NULL);
-//    g_slist_free(data->files);
-//    g_slice_free(ThreadData, data);
-//}
+            g_autoptr(GDir) gdir = g_dir_open(dirs[i],0,NULL);
+            const char* name = NULL;
+            while(!g_cancellable_is_cancelled(cancellable) && (name = g_dir_read_name(gdir))!= NULL)
+            {
+                g_autofree char* filename = g_build_filename(dirs[i],name, NULL);
+                if (g_file_test(filename,G_FILE_TEST_IS_EXECUTABLE))
+                {
+                    if (g_cancellable_is_cancelled(cancellable))
+                        return;
+                    if (g_slist_find_custom(list,name,(GCompareFunc)strcmp) == NULL)
+                        list = g_slist_append(list,g_strdup(name));
+                }
+            }
+    }
+    g_task_return_pointer(task,list,slist_destroy_notify);
+    return;
+}
 
-//static gboolean on_thread_finished(ThreadData* data)
-//{
-//    /* don't setup entry completion if the thread is already cancelled. */
-//    if( !data->cancel )
-//        setup_auto_complete_with_data(thread_data);
-//    thread_data_free(data);
-//    thread_data = NULL; /* global thread_data pointer */
-//    return FALSE;
-//}
+static void setup_entry_completion(ValaPanelRunner* self)
+{
+    /* FIXME: consider saving the list of commands as on-disk cache. */
+    if( self->cached )
+    {
+        /* load cached program list */
+    }
+    else
+    {
+        self->cancellable = g_cancellable_new();
+        self->task = g_task_new(self,self->cancellable,setup_auto_complete_with_data,self);
+        /* load in another working thread */
+        g_task_run_in_thread(self->task,vala_panel_runner_create_file_list);
+    }
+}
 
-//static gpointer thread_func(ThreadData* data)
-//{
-//    GSList *list = NULL;
-//    gchar **dirname;
-//    gchar **dirnames = g_strsplit( g_getenv("PATH"), ":", 0 );
-
-//    for( dirname = dirnames; !thread_data->cancel && *dirname; ++dirname )
-//    {
-//        GDir *dir = g_dir_open( *dirname, 0, NULL );
-//        const char *name;
-//        if( ! dir )
-//            continue;
-//        while( !thread_data->cancel && (name = g_dir_read_name(dir)) )
-//        {
-//            char* filename = g_build_filename( *dirname, name, NULL );
-//            if( g_file_test( filename, G_FILE_TEST_IS_EXECUTABLE ) )
-//            {
-//                if(thread_data->cancel)
-//                    break;
-//                if( !g_slist_find_custom( list, name, (GCompareFunc)strcmp ) )
-//                    list = g_slist_prepend( list, g_strdup( name ) );
-//            }
-//            g_free( filename );
-//        }
-//        g_dir_close( dir );
-//    }
-//    g_strfreev( dirnames );
-
-//    data->files = list;
-//    /* install an idle handler to free associated data */
-//    g_idle_add((GSourceFunc)on_thread_finished, data);
-
-//    return NULL;
-//}
-
-//static void setup_entry_completion( GtkEntry* entry )
-//{
-//    gboolean cache_is_available = FALSE;
-//    /* FIXME: consider saving the list of commands as on-disk cache. */
-//    if( cache_is_available )
-//    {
-//        /* load cached program list */
-//    }
-//    else
-//    {
-//        /* load in another working thread */
-//        thread_data = g_slice_new0(ThreadData); /* the data will be freed in idle handler later. */
-//        thread_data->entry = entry;
-//        g_thread_new("Autocompletion",(GThreadFunc)thread_func, thread_data);
-//    }
-//}
-
-//static void reload_apps(GAppInfoMonitor* cache, gpointer user_data)
-//{
-//    g_debug("reload apps!");
-//    if(app_list)
-//        g_list_free_full(app_list,(GDestroyNotify)g_object_unref);
-//    app_list = g_app_info_get_all();
-//}
-
-//static void on_response( GtkDialog* dlg, gint response, gpointer user_data )
-//{
-//    GtkEntry* entry = (GtkEntry*)user_data;
-//    if( G_LIKELY(response == GTK_RESPONSE_OK) )
-//    {
-//        g_autoptr(GError) err = NULL;
-//        g_autoptr(GAppInfo) app_info = g_app_info_create_from_commandline(gtk_entry_get_text(entry),NULL,terminal,&err);
-//        if (err)
-//        {
-//            g_signal_stop_emission_by_name( dlg, "response" );
-//            g_clear_error(&err);
-//            return;
-//        }
-//        SpawnData data;
-//        data.pid = getpgid(getppid());
-//        gboolean launch = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),NULL,
-//                                            G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),
-//                                                                    G_SPAWN_SEARCH_PATH,
-//                                                                    child_spawn_func,
-//                                                                    &data,NULL,NULL,
-//                                                                    &err);
-//        if (!launch || err)
-//        {
-//            g_signal_stop_emission_by_name( dlg, "response" );
-//            return;
-//        }
-//    }
-
-//    /* cancel running thread if needed */
-//    if( thread_data ) /* the thread is still running */
-//        thread_data->cancel = TRUE; /* cancel the thread */
-
-//    gtk_widget_destroy( (GtkWidget*)dlg );
-//    win = NULL;
-
-//    /* free app list */
-//    g_list_free_full(app_list,(GDestroyNotify)g_object_unref);
-//    app_list = NULL;
-
-//    /* free menu cache */
-//    g_signal_handlers_disconnect_matched(monitor,G_SIGNAL_MATCH_FUNC,0,0,NULL,reload_apps,NULL);
-//    g_object_unref(monitor);
-//    monitor = NULL;
-//}
+static void vala_panel_runner_response( GtkDialog* dlg, gint response, gpointer user_data )
+{
+    ValaPanelRunner* self = VALA_PANEL_RUNNER(dlg);
+    if( G_LIKELY(response == GTK_RESPONSE_OK) )
+    {
+        g_autoptr(GError) err = NULL;
+        g_autoptr(GAppInfo) app_info = g_app_info_create_from_commandline(gtk_entry_get_text(self->main_entry),
+                                                                          NULL,
+                                                                          gtk_toggle_button_get_active(self->terminal_button)
+                                                                          ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+                                                                          : G_APP_INFO_CREATE_NONE,&err);
+        if (err)
+        {
+            g_signal_stop_emission_by_name( dlg, "response" );
+            return;
+        }
+        SpawnData data;
+        data.pid = getpgid(getppid());
+        gboolean launch = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),NULL,
+                                            G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),
+                                                                    G_SPAWN_SEARCH_PATH,
+                                                                    child_spawn_func,
+                                                                    &data,NULL,NULL,
+                                                                    &err);
+        if (!launch || err)
+        {
+            g_signal_stop_emission_by_name( dlg, "response" );
+            return;
+        }
+    }
+    g_cancellable_cancel(self->cancellable);
+    gtk_widget_destroy( (GtkWidget*)dlg );
+}
 
 static void on_entry_changed( GtkEntry* entry, gpointer user_data)
 {
@@ -281,21 +237,28 @@ static void on_icon_activated(GtkEntry* entry, GtkEntryIconPosition pos, GdkEven
 
 static void vala_panel_runner_init(ValaPanelRunner* self)
 {
-
+    css_apply_from_resource(GTK_WIDGET(self),"/org/vala-panel/app/style.css","-panel-run-dialog");
+    g_autoptr(GtkStyleContext) ctx = gtk_widget_get_style_context(GTK_WIDGET(self->main_box));
+    gtk_style_context_add_class(ctx,"-panel-run-header");
+    //FIXME: Implement cache
+    self->cached = FALSE;
+    gtk_widget_set_visual(GTK_WIDGET(self),gdk_screen_get_rgba_visual(gtk_widget_get_screen(GTK_WIDGET(self))));
+    gtk_dialog_set_default_response(GTK_DIALOG(self),GTK_RESPONSE_OK);
+    gtk_window_set_keep_above(GTK_WINDOW(self),TRUE);
 }
-//static void on_terminal_toggled (GtkToggleButton* btn, gpointer user_data)
-//{
-//    terminal = gtk_toggle_button_get_active(btn) ? G_APP_INFO_CREATE_NEEDS_TERMINAL : 0;
-//}
+
+static void vala_panel_runner_finalize(GObject *obj)
+{
+        G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
+}
 
 static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
 {
     vala_panel_runner_parent_class = g_type_class_peek_parent (klass);
-//    ((GtkDialogClass *) klass)->response = vala_panel_runner_real_response;
+    ((GtkDialogClass *) klass)->response = vala_panel_runner_response;
 //    G_OBJECT_CLASS (klass)->get_property = _vala_vala_panel_runner_get_property;
 //    G_OBJECT_CLASS (klass)->set_property = _vala_vala_panel_runner_set_property;
-//    G_OBJECT_CLASS (klass)->constructor = vala_panel_runner_constructor;
-//    G_OBJECT_CLASS (klass)->finalize = vala_panel_runner_finalize;
+    G_OBJECT_CLASS (klass)->finalize = vala_panel_runner_finalize;
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/vala-panel/app/app-runner.ui");
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", FALSE,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "terminal-button", FALSE, G_STRUCT_OFFSET (ValaPanelRunner, terminal_button));
@@ -305,50 +268,13 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
     gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_icon_activated", G_CALLBACK(on_icon_activated));
 }
 
-//void gtk_run(GtkApplication * app)
-//{
-//    GtkWidget *entry ,*h;
-//    g_autoptr(GtkBuilder) builder;
-//    g_autoptr (GError) err = NULL;
-
-//    if(!win)
-//    {
-//        builder = gtk_builder_new();
-//        gtk_builder_add_from_resource(builder,"/org/simple/panel/app/run.ui",NULL);
-//        win = GTK_WIDGET(gtk_builder_get_object(builder,"app-run"));
-//        GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(win));
-//        GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
-//        gtk_widget_set_visual(GTK_WIDGET(win), visual);
-//        gtk_dialog_set_default_response( (GtkDialog*)win, GTK_RESPONSE_OK );
-//        gtk_window_set_keep_above(GTK_WINDOW(win),TRUE);
-//        css_apply_with_class(win,css,"-panel-run-dialog",FALSE);
-//        entry = GTK_WIDGET(gtk_builder_get_object(builder,"main-entry"));
-
-//        g_signal_connect( win, "response", G_CALLBACK(on_response), entry );
-//        h = GTK_WIDGET(gtk_builder_get_object(builder,"main-box"));
-//        css_apply_with_class(h,css,"-panel-run-dialog",FALSE);
-//        css_apply_with_class(h,css,"-panel-run-header",FALSE);
-//        gtk_widget_show_all( win );
-
-//        setup_auto_complete( (GtkEntry*)entry );
-//        gtk_widget_show(win);
-
-//        g_signal_connect(entry ,"changed", G_CALLBACK(on_entry_changed), NULL);
-//        g_signal_connect(entry, "activate", G_CALLBACK(on_entry_activated), GTK_DIALOG(win));
-//        g_signal_connect(entry, "icon-press", G_CALLBACK(on_icon_activated), GTK_DIALOG(win));
-//        h = GTK_WIDGET(gtk_builder_get_object(builder,"terminal-button"));
-//        g_signal_connect(h ,"toggled", G_CALLBACK(on_terminal_toggled), NULL);
-
-//        application = app;
-//        on_terminal_toggled(GTK_TOGGLE_BUTTON(h),NULL);
-
-//        /* get all apps */
-//        monitor = g_app_info_monitor_get();
-//        app_list = g_app_info_get_all();
-//    }
-
-//    gtk_window_present(GTK_WINDOW(win));
-//}
+void gtk_run(ValaPanelRunner* self)
+{
+    setup_entry_completion(self);
+    gtk_widget_show_all(GTK_WIDGET(self));
+    gtk_widget_grab_focus(GTK_WIDGET(self->main_entry));
+    gtk_window_present_with_time(GTK_WINDOW(self),gtk_get_current_event_time());
+}
 
 
 /* vim: set sw=4 et sts=4 ts=4 : */
