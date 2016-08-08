@@ -292,7 +292,6 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
 //    G_OBJECT_CLASS (klass)->set_property = _vala_vala_panel_runner_set_property;
 //    G_OBJECT_CLASS (klass)->constructor = vala_panel_runner_constructor;
 //    G_OBJECT_CLASS (klass)->finalize = vala_panel_runner_finalize;
-//    Runner_private_offset = g_type_class_get_instance_private_offset (klass);
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/vala-panel/app/app-runner.ui");
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", FALSE,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "terminal-button", FALSE, G_STRUCT_OFFSET (ValaPanelRunner, terminal_button));
