@@ -10,7 +10,6 @@ void css_apply_with_class (GtkWidget* widget,const gchar* css, gchar* klass ,gbo
 {
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
     gtk_widget_reset_style(widget);
-
     if (remove) {
         gtk_style_context_remove_class (context, klass);
     }
@@ -28,8 +27,7 @@ void css_apply_with_class (GtkWidget* widget,const gchar* css, gchar* klass ,gbo
 
 gchar* css_apply_from_file (GtkWidget* widget, gchar* file)
 {
-    GError* error = NULL;
-
+    g_autoptr(GError) error = NULL;
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
     gtk_widget_reset_style(widget);
     g_autoptr(GtkCssProvider) provider = gtk_css_provider_new ();
@@ -37,7 +35,6 @@ gchar* css_apply_from_file (GtkWidget* widget, gchar* file)
     if (error)
     {
         gchar* returnie=g_strdup(error->message);
-        g_clear_error(&error);
         return returnie;
     }
     gtk_style_context_add_provider (context,
@@ -48,38 +45,35 @@ gchar* css_apply_from_file (GtkWidget* widget, gchar* file)
 
 gchar* css_apply_from_file_to_app (gchar* file)
 {
-    GError* error = NULL;
-
-        g_autoptr(GtkCssProvider) provider = gtk_css_provider_new ();
+    g_autoptr(GError) error = NULL;
+    g_autoptr(GtkCssProvider) provider = gtk_css_provider_new ();
     gtk_css_provider_load_from_path (provider, file, &error);
     if (error)
     {
         gchar* returnie=g_strdup(error->message);
-        g_clear_error(&error);
         return returnie;
     }
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
                                     GTK_STYLE_PROVIDER (provider),
                                     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    g_object_unref(provider);
     return NULL;
 }
 
 
 inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboolean no_image)
 {
-	gchar* returnie;
+    gchar* returnie;
     gchar* str = gdk_rgba_to_string(&color);
-	if (no_image) returnie = g_strdup_printf(".-simple-panel-background{\n"
-					" background-color: %s;\n"
-					" background-image: none;\n"
+    if (no_image) returnie = g_strdup_printf(".-simple-panel-background{\n"
+                    " background-color: %s;\n"
+                    " background-image: none;\n"
                     "}",str);
-	else returnie = g_strdup_printf(".-simple-panel-background{\n"
+    else returnie = g_strdup_printf(".-simple-panel-background{\n"
                          " background-color: transparent;\n"
                          " background-image: url('%s');\n"
                          "}",filename);
     g_free(str);
-	return returnie;
+    return returnie;
 }
 
 inline gchar* css_generate_font_color(GdkRGBA color){

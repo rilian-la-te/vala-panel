@@ -27,8 +27,16 @@ typedef struct _ThreadData
     GtkEntry* entry;
 }ThreadData;
 
-static ThreadData* thread_data = NULL; /* thread data used to load availble programs in PATH */
+typedef struct {
+    pid_t pid;
+} SpawnData;
 
+static ThreadData* thread_data = NULL; /* thread data used to load availble programs in PATH */
+static void child_spawn_func(void* data)
+{
+    SpawnData* d = (SpawnData*)data;
+    setpgid(0,d->pid);
+}
 
 static GDesktopAppInfo* match_app_by_exec(const char* exec)
 {
@@ -50,22 +58,6 @@ static GDesktopAppInfo* match_app_by_exec(const char* exec)
         const char* app_exec = g_app_info_get_executable(app);
         if ( ! app_exec)
             continue;
-#if 0   /* This is useless and incorrect. */
-        /* Dirty hacks to skip sudo programs. This can be a little bit buggy */
-        if( g_str_has_prefix(app_exec, "gksu") )
-        {
-            app_exec += 4;
-            if( app_exec[0] == '\0' ) /* "gksu" itself */
-                app_exec -= 4;
-            else if( app_exec[0] == ' ' ) /* "gksu something..." */
-                ++app_exec;
-            else if( g_str_has_prefix(app_exec, "do ") ) /* "gksudo something" */
-                app_exec += 3;
-        }
-        else if( g_str_has_prefix(app_exec, "kdesu ") ) /* kdesu */
-            app_exec += 6;
-#endif
-
         if( g_path_is_absolute(app_exec) )
         {
             pexec = exec_path;
@@ -118,14 +110,13 @@ static GDesktopAppInfo* match_app_by_exec(const char* exec)
 
 static void setup_auto_complete_with_data(ThreadData* data)
 {
-    GtkListStore* store;
     GSList *l;
-    GtkEntryCompletion* comp = gtk_entry_completion_new();
+    g_autoptr(GtkEntryCompletion) comp = gtk_entry_completion_new();
     gtk_entry_completion_set_minimum_key_length( comp, 2 );
     gtk_entry_completion_set_inline_completion( comp, TRUE );
     gtk_entry_completion_set_popup_set_width( comp, TRUE );
     gtk_entry_completion_set_popup_single_match( comp, FALSE );
-    store = gtk_list_store_new( 1, G_TYPE_STRING );
+    g_autoptr(GtkListStore) store = gtk_list_store_new( 1, G_TYPE_STRING );
 
     for( l = data->files; l; l = l->next )
     {
@@ -136,13 +127,11 @@ static void setup_auto_complete_with_data(ThreadData* data)
     }
 
     gtk_entry_completion_set_model( comp, (GtkTreeModel*)store );
-    g_object_unref( store );
     gtk_entry_completion_set_text_column( comp, 0 );
     gtk_entry_set_completion( (GtkEntry*)data->entry, comp );
 
     /* trigger entry completion */
     gtk_entry_completion_complete(comp);
-    g_object_unref( comp );
 }
 
 static void thread_data_free(ThreadData* data)
@@ -227,24 +216,25 @@ static void on_response( GtkDialog* dlg, gint response, gpointer user_data )
     GtkEntry* entry = (GtkEntry*)user_data;
     if( G_LIKELY(response == GTK_RESPONSE_OK) )
     {
-        GAppInfo* app_info;
-        GError* err = NULL;
-        app_info = g_app_info_create_from_commandline(gtk_entry_get_text(entry),NULL,terminal,&err);
+        g_autoptr(GError) err = NULL;
+        g_autoptr(GAppInfo) app_info = g_app_info_create_from_commandline(gtk_entry_get_text(entry),NULL,terminal,&err);
         if (err)
         {
             g_signal_stop_emission_by_name( dlg, "response" );
-            g_object_unref(app_info);
             g_clear_error(&err);
             return;
         }
-        gboolean launch = g_app_info_launch(app_info,NULL,
-                                            G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),&err);
-        g_object_unref(app_info);
+        SpawnData data;
+        data.pid = getpgid(getppid());
+        gboolean launch = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),NULL,
+                                            G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),
+                                                                    G_SPAWN_SEARCH_PATH,
+                                                                    child_spawn_func,
+                                                                    &data,NULL,NULL,
+                                                                    &err);
         if (!launch || err)
         {
             g_signal_stop_emission_by_name( dlg, "response" );
-            if (err)
-                g_clear_error(&err);
             return;
         }
     }
@@ -305,8 +295,8 @@ static void on_terminal_toggled (GtkToggleButton* btn, gpointer user_data)
 void gtk_run(GtkApplication * app)
 {
     GtkWidget *entry ,*h;
-    GtkBuilder* builder;
-    GError* err = NULL;
+    g_autoptr(GtkBuilder) builder;
+    g_autoptr (GError) err = NULL;
 
     if(!win)
     {
