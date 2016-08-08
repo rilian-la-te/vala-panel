@@ -64,11 +64,11 @@ inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboole
 {
     gchar* returnie;
     gchar* str = gdk_rgba_to_string(&color);
-    if (no_image) returnie = g_strdup_printf(".-simple-panel-background{\n"
+    if (no_image) returnie = g_strdup_printf(".-vala-panel-background{\n"
                     " background-color: %s;\n"
                     " background-image: none;\n"
                     "}",str);
-    else returnie = g_strdup_printf(".-simple-panel-background{\n"
+    else returnie = g_strdup_printf(".-vala-panel-background{\n"
                          " background-color: transparent;\n"
                          " background-image: url('%s');\n"
                          "}",filename);
@@ -79,21 +79,21 @@ inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboole
 inline gchar* css_generate_font_color(GdkRGBA color){
     gchar* color_str = gdk_rgba_to_string(&color);
     gchar* ret;
-    ret = g_strdup_printf(".-simple-panel-font-color{\n"
+    ret = g_strdup_printf(".-vala-panel-font-color{\n"
                     "color: %s;\n"
                     "}",color_str);
     g_free(color_str);
     return ret;
 }
 inline gchar* css_generate_font_size(gint size){
-    return g_strdup_printf(".-simple-panel-font-size{\n"
+    return g_strdup_printf(".-vala-panel-font-size{\n"
                     " font-size: %dpx;\n"
                     "}",size);
 }
 inline gchar* css_generate_font_label(gfloat size, gboolean is_bold)
 {
     gint size_factor = (gint)round(size*100);
-    return g_strdup_printf(".-simple-panel-font-label{\n"
+    return g_strdup_printf(".-vala-panel-font-label{\n"
                     " font-size: %d%%;\n"
                     " font-weight: %s;\n"
                     "}",size_factor,is_bold ? "bold" : "normal");
