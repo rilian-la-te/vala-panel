@@ -19,7 +19,6 @@
 using Gtk;
 using Peas;
 using Config;
-using LibUUID;
 
 namespace ValaPanel
 {
