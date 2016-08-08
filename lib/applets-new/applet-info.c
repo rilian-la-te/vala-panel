@@ -89,6 +89,9 @@ vala_panel_applet_info_constructed(ValaPanelAppletInfo* self)
     g_keyfile_settings_backend_new(self->filename, path, DEFAULT_PLUGIN_GROUP);
   g_free0(path);
   self->settings = g_settings_new_with_backend(DEFAULT_PLUGIN_SETTINGS_ID, bck);
+  gchar* str = g_strdup(g_strstrip(g_strdelimit(self->name," '",'_')));
+  g_ascii_inplace_tolower(str);
+  self->applet_type = str;
   G_OBJECT_CLASS(vala_panel_applet_info_parent_class)->constructed(self);
 }
 
