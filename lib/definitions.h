@@ -28,4 +28,7 @@
         g_ascii_tolower(string[i]); \
 }
 
+#define vala_panel_bind_gsettings(obj,settings,prop)\
+    g_settings_bind(settings,prop,G_OBJECT(obj),prop,G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET | G_SETTINGS_BIND_DEFAULT);
+
 #endif // DEFINITIONS_H
