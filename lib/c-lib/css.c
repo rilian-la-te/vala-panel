@@ -6,7 +6,7 @@
 
 #include "css.h"
 
-void css_apply_with_class (GtkWidget* widget,const gchar* css, gchar* klass ,gboolean remove)
+void css_apply_with_class (GtkWidget* widget,const gchar* css,const  gchar* klass ,gboolean remove)
 {
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
     gtk_widget_reset_style(widget);
@@ -25,7 +25,7 @@ void css_apply_with_class (GtkWidget* widget,const gchar* css, gchar* klass ,gbo
     }
 }
 
-gchar* css_apply_from_file (GtkWidget* widget, gchar* file)
+gchar* css_apply_from_file (GtkWidget* widget,const gchar* file)
 {
     g_autoptr(GError) error = NULL;
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
@@ -43,7 +43,7 @@ gchar* css_apply_from_file (GtkWidget* widget, gchar* file)
     return NULL;
 }
 
-gchar* css_apply_from_file_to_app (gchar* file)
+gchar* css_apply_from_file_to_app (const gchar* file)
 {
     g_autoptr(GError) error = NULL;
     g_autoptr(GtkCssProvider) provider = gtk_css_provider_new ();
@@ -63,7 +63,7 @@ gchar* css_apply_from_file_to_app (gchar* file)
 inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboolean no_image)
 {
     gchar* returnie;
-    gchar* str = gdk_rgba_to_string(&color);
+    g_autofree gchar* str = gdk_rgba_to_string(&color);
     if (no_image) returnie = g_strdup_printf(".-vala-panel-background{\n"
                     " background-color: %s;\n"
                     " background-image: none;\n"
@@ -72,17 +72,15 @@ inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboole
                          " background-color: transparent;\n"
                          " background-image: url('%s');\n"
                          "}",filename);
-    g_free(str);
     return returnie;
 }
 
 inline gchar* css_generate_font_color(GdkRGBA color){
-    gchar* color_str = gdk_rgba_to_string(&color);
+    g_autofree gchar* color_str = gdk_rgba_to_string(&color);
     gchar* ret;
     ret = g_strdup_printf(".-vala-panel-font-color{\n"
                     "color: %s;\n"
                     "}",color_str);
-    g_free(color_str);
     return ret;
 }
 inline gchar* css_generate_font_size(gint size){

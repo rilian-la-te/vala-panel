@@ -1,12 +1,10 @@
 #include "applet-info.h"
-#include "applet-widget.h"
 #include "lib/definitions.h"
 
 #define G_SETTINGS_ENABLE_BACKEND
 #include <gio/gsettingsbackend.h>
 
 #include <gtk/gtk.h>
-#include <libpeas/peas.h>
 
 struct _ValaPanelAppletInfo
 {

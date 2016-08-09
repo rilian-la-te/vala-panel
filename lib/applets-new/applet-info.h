@@ -3,6 +3,10 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <libpeas/peas.h>
+
+#include "applet-widget.h"
+
 
 G_BEGIN_DECLS
 
@@ -18,7 +22,9 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(ValaPanelAppletInfo, vala_panel_applet_info,VALA_PANEL,APPLET_INFO,GObject)
 
-
+ValaPanelAppletInfo*
+vala_panel_applet_info_new(PeasPluginInfo* plugin_info, const char* uuid,
+                           const char* filename, ValaPanelAppletWidget* applet);
 
 G_END_DECLS
 
