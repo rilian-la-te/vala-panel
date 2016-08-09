@@ -1,14 +1,13 @@
 #ifndef APPLETWIDGET_H
 #define APPLETWIDGET_H
 
-#include "applet-widget.h"
 #include <glib-object.h>
 #include <glib.h>
-#include <libpeas/peas.h>
+#include "applet-widget.h"
 
 G_BEGIN_DECLS
 G_DECLARE_INTERFACE(ValaPanelPluginInterface, vala_panel_plugin_interface,
-                    VALA_PANEL, PUGIN_INTERFACE, PeasExtensionBase);
+                    VALA_PANEL, PUGIN_INTERFACE, GObject);
 
 struct _ValaPanelPluginInterface
 {
