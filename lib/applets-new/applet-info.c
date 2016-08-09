@@ -41,16 +41,16 @@ enum
 
 G_DEFINE_TYPE(ValaPanelAppletInfo, vala_panel_applet_info, G_TYPE_OBJECT)
 
-ValaPanelAppletInfo*
-vala_panel_applet_info_new_libpeas(PeasPluginInfo* plugin_info, const char* uuid,
-                           const char* filename, ValaPanelAppletWidget* applet)
-{
-  return g_object_new(vala_panel_applet_info_get_type(), "icon",
-                      peas_plugin_info_get_icon_name(plugin_info), "name",
-                      peas_plugin_info_get_name(plugin_info), "description",
-                      peas_plugin_info_get_description(plugin_info), "uuid",
-                      uuid, "applet", applet, "filename", filename, NULL);
-}
+//static ValaPanelAppletInfo*
+//vala_panel_applet_info_new_libpeas(PeasPluginInfo* plugin_info, const char* uuid,
+//                           const char* filename, ValaPanelAppletWidget* applet)
+//{
+//  return g_object_new(vala_panel_applet_info_get_type(), "icon",
+//                      peas_plugin_info_get_icon_name(plugin_info), "name",
+//                      peas_plugin_info_get_name(plugin_info), "description",
+//                      peas_plugin_info_get_description(plugin_info), "uuid",
+//                      uuid, "applet", applet, "filename", filename, NULL);
+//}
 
 void
 vala_panel_applet_info_init(ValaPanelAppletInfo* self)

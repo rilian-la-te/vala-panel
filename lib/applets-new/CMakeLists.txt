@@ -3,9 +3,8 @@ include(GLibHelpers)
 add_glib_marshal(MARSHALS MARSHALH "applet-api" g_cclosure_user_marshal)
 add_library(applet-api-new SHARED
 	applet-widget.c
-	plugin-interface.h
 	applet-info.c
-	popup-manager.h
+        popup-manager.c
         applet-engine.c
 	${MARSHALS}
 	${MARSHALH}
