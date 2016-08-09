@@ -6,6 +6,7 @@
 
 G_BEGIN_DECLS
 
+void vala_panel_setup_button(GtkButton* b, GtkImage* img, char* label);
 void vala_panel_scale_button_set_range (GtkScaleButton* b, gint lower, gint upper);
 void vala_panel_scale_button_set_value_labeled (GtkScaleButton* b, gint value);
 void vala_panel_add_prop_as_action(GActionMap* map,const char* prop);

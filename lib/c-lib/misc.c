@@ -1,5 +1,53 @@
-#include "misc.h"
+#include <string.h>
 
+#include "misc.h"
+#include "css.h"
+
+
+static void set_widget_align(GtkWidget* user_data, gpointer data)
+{
+    if(GTK_IS_WIDGET(user_data))
+    {
+        gtk_widget_set_halign(GTK_WIDGET(user_data),GTK_ALIGN_FILL);
+        gtk_widget_set_valign(GTK_WIDGET(user_data),GTK_ALIGN_FILL);
+    }
+}
+
+/* Children hierarhy: button => alignment => box => (label,image) */
+static void setup_button_notify_connect(GObject* _sender, GParamSpec* b, gpointer self)
+{
+    GtkButton* a = GTK_BUTTON(_sender);
+    if (!strcmp(b->name,"label") ||!strcmp(b->name, "image"))
+    {
+        GtkWidget* w = gtk_bin_get_child(GTK_BIN(a));
+        if (GTK_IS_CONTAINER(w))
+        {
+            GtkWidget* ch;
+            if (GTK_IS_BIN(w))
+                ch = gtk_bin_get_child(GTK_BIN(w));
+            else
+                ch = w;
+            if (GTK_IS_CONTAINER(ch))
+                gtk_container_forall(GTK_CONTAINER(ch),set_widget_align,NULL);
+            gtk_widget_set_halign(ch,GTK_ALIGN_FILL);
+            gtk_widget_set_valign(ch,GTK_ALIGN_FILL);
+        }
+    }
+}
+
+void vala_panel_setup_button(GtkButton* b, GtkImage* img, char* label)
+{
+    css_apply_from_resource(GTK_WIDGET(b),"/org/vala-panel/lib/style.css","-panel-button");
+    g_signal_connect(b,"notify",setup_button_notify_connect,NULL);
+    if (img != NULL)
+    {
+        gtk_button_set_image(b,GTK_WIDGET(img));
+        gtk_button_set_always_show_image(b,TRUE);
+    }
+    if (label != NULL)
+        gtk_button_set_label(b,label);
+    gtk_button_set_relief(b,GTK_RELIEF_NONE);
+}
 
 void vala_panel_apply_window_icon(GtkWindow *win)
 {
