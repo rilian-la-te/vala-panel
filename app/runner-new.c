@@ -34,7 +34,7 @@ static GDesktopAppInfo* match_app_by_exec(const char* exec)
     GList* l;
     g_autoptr(GList) app_list = g_app_info_get_all();
     GDesktopAppInfo* ret = NULL;
-    char* exec_path = g_find_program_in_path(exec);
+    g_autofree char* exec_path = g_find_program_in_path(exec);
     const char* pexec;
     int path_len, exec_len, len;
 
@@ -85,18 +85,13 @@ static GDesktopAppInfo* match_app_by_exec(const char* exec)
             {
                 /* FIXME: Actually, target could be relative paths.
                  *        So, actually path resolution is needed here. */
-                char* basename = g_path_get_basename(target);
-                char* locate = g_find_program_in_path(basename);
+                g_autofree char* basename = g_path_get_basename(target);
+                g_autofree char* locate = g_find_program_in_path(basename);
                 if( locate && strcmp(locate, target) == 0 )
-                {
                     ret = match_app_by_exec(basename);
-                    g_free(locate);
-                }
-                g_free(basename);
             }
         }
     }
-    g_free(exec_path);
     return ret;
 }
 
@@ -170,7 +165,7 @@ static void setup_entry_completion(ValaPanelRunner* self)
     }
 }
 
-static void vala_panel_runner_response( GtkDialog* dlg, gint response, gpointer user_data )
+static void vala_panel_runner_response( GtkDialog* dlg, gint response)
 {
     ValaPanelRunner* self = VALA_PANEL_RUNNER(dlg);
     if( G_LIKELY(response == GTK_RESPONSE_OK) )
@@ -237,6 +232,7 @@ static void on_icon_activated(GtkEntry* entry, GtkEntryIconPosition pos, GdkEven
 
 static void vala_panel_runner_init(ValaPanelRunner* self)
 {
+    gtk_widget_init_template (GTK_WIDGET (self));
     css_apply_from_resource(GTK_WIDGET(self),"/org/vala-panel/app/style.css","-panel-run-dialog");
     g_autoptr(GtkStyleContext) ctx = gtk_widget_get_style_context(GTK_WIDGET(self->main_box));
     gtk_style_context_add_class(ctx,"-panel-run-header");
@@ -249,15 +245,21 @@ static void vala_panel_runner_init(ValaPanelRunner* self)
 
 static void vala_panel_runner_finalize(GObject *obj)
 {
-        G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
+    ValaPanelRunner* self = G_TYPE_CHECK_INSTANCE_CAST (obj, vala_panel_runner_get_type(), ValaPanelRunner);
+    g_cancellable_cancel (self->cancellable);
+    gtk_window_set_application ((GtkWindow*) self, NULL);
+    g_object_unref (self->main_entry);
+    g_object_unref (self->terminal_button);
+    g_object_unref (self->main_box);
+    g_object_unref (self->task);
+    g_object_unref (self->cancellable);
+    G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
 }
 
 static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
 {
     vala_panel_runner_parent_class = g_type_class_peek_parent (klass);
     ((GtkDialogClass *) klass)->response = vala_panel_runner_response;
-//    G_OBJECT_CLASS (klass)->get_property = _vala_vala_panel_runner_get_property;
-//    G_OBJECT_CLASS (klass)->set_property = _vala_vala_panel_runner_set_property;
     G_OBJECT_CLASS (klass)->finalize = vala_panel_runner_finalize;
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/vala-panel/app/app-runner.ui");
     gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", FALSE,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
