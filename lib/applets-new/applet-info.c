@@ -42,7 +42,7 @@ enum
 G_DEFINE_TYPE(ValaPanelAppletInfo, vala_panel_applet_info, G_TYPE_OBJECT)
 
 ValaPanelAppletInfo*
-vala_panel_applet_info_new(PeasPluginInfo* plugin_info, const char* uuid,
+vala_panel_applet_info_new_libpeas(PeasPluginInfo* plugin_info, const char* uuid,
                            const char* filename, ValaPanelAppletWidget* applet)
 {
   return g_object_new(vala_panel_applet_info_get_type(), "icon",

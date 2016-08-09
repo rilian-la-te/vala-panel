@@ -63,7 +63,7 @@ static void vala_panel_applet_widget_set_property(GObject *object, guint propert
         self = G_TYPE_CHECK_INSTANCE_CAST(object,
                                           vala_panel_applet_widget_get_type(),
                                           ValaPanelAppletWidget);
-        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+        ValaPanelAppletWidgetPrivate *priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private(self);
         switch (property_id) {
         case VALA_PANEL_APPLET_WIDGET_UUID:
                 priv->uuid = g_value_get_string(value);
@@ -90,7 +90,7 @@ static void vala_panel_applet_widget_set_property(GObject *object, guint propert
 }
 static void vala_panel_applet_widget_finalize(GObject *obj)
 {
-        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(obj);
+        ValaPanelAppletWidgetPrivate *priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private((ValaPanelAppletWidget*)obj);
         g_variant_unref(priv->actions);
         G_OBJECT_CLASS(vala_panel_applet_widget_parent_class)->finalize(obj);
 }
@@ -102,6 +102,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
         G_OBJECT_CLASS(klass)->get_property = vala_panel_applet_widget_get_property;
         G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_widget_set_property;
         G_OBJECT_CLASS(klass)->finalize = vala_panel_applet_widget_finalize;
+        klass->update_popup = NULL;
         g_object_class_install_property(G_OBJECT_CLASS(klass),
                                         VALA_PANEL_APPLET_WIDGET_UUID,
                                         g_param_spec_string("uuid",
@@ -187,16 +188,48 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
 
 static void vala_panel_applet_widget_init(ValaPanelAppletWidget* self)
 {
-    ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+    ValaPanelAppletWidgetPrivate *priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private(self);
     gtk_widget_set_can_focus(GTK_WIDGET(self), FALSE);
 }
 
 GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
 {
-        ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+        ValaPanelAppletWidgetPrivate *priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private(self);
         g_autofree char* pth = g_strdup_printf("%s/%s",priv->path,priv->uuid);
         g_autoptr(GSettingsBackend) bck =
             g_keyfile_settings_backend_new(priv->filename, pth, priv->scheme);
         return g_settings_new_with_backend(priv->scheme, bck);
 }
 
+void vala_panel_applet_widget_update_popup(ValaPanelAppletWidget* self, ValaPanelPopupManager* mgr)
+{
+    if(self)
+    {
+        ValaPanelAppletWidgetClass* klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
+        if(klass->update_popup)
+            return klass->update_popup(self,mgr);
+    }
+}
+
+void vala_panel_applet_widget_invoke_applet_action(ValaPanelAppletWidget* self, const char* action, GVariantDict* param)
+{
+    if(self)
+    {
+        ValaPanelAppletWidgetClass* klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
+        ValaPanelAppletWidgetPrivate* priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private(self);
+        g_autofree const char** actions = g_variant_get_strv(priv->actions,NULL);
+        if(klass->invoke_applet_action && g_strv_contains(actions,action))
+            return klass->invoke_applet_action(self,action,param);
+    }
+}
+
+GtkWidget* vala_panel_applet_widget_get_settings_ui(ValaPanelAppletWidget* self)
+{
+    if(self)
+    {
+        ValaPanelAppletWidgetClass* klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
+        if(klass->get_settings_ui)
+            return klass->get_settings_ui(self);
+    }
+    return NULL;
+}

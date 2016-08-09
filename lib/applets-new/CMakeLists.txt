@@ -6,6 +6,7 @@ add_library(applet-api-new SHARED
 	plugin-interface.h
 	applet-info.c
 	popup-manager.h
+        applet-engine.c
 	${MARSHALS}
 	${MARSHALH}
 	)
