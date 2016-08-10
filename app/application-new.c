@@ -105,10 +105,36 @@ static void vala_panel_application_startup (GApplication* base) {
     g_action_map_add_action_entries ((GActionMap*) self, vala_panel_application_menu_entries, G_N_ELEMENTS (vala_panel_application_menu_entries), self);
 }
 
+static void vala_panel_application_shutdown(GApplication* base)
+{
+    g_autoptr(GSList) list = NULL;
+    GList* lst = gtk_application_get_windows(GTK_APPLICATION(base));
+    for(GList* il = lst; il!= NULL; il=il->next)
+        list = g_slist_append(list,il->data);
+    for(GSList* il = list; il != NULL; il=il->next)
+    {
+        GtkWindow* w = GTK_WINDOW(il->data);
+        gtk_window_set_application(w,NULL);
+        gtk_widget_destroy(GTK_WIDGET(w));
+    }
+    G_APPLICATION_CLASS (vala_panel_application_parent_class)->shutdown ((GApplication*) G_TYPE_CHECK_INSTANCE_CAST (base, gtk_application_get_type (), GtkApplication));
+    if (VALA_PANEL_APPLICATION(base)->restart)
+    {
+        char cwd[1024];
+        getcwd(cwd,1024);
+        const char* argv[] = {CONFIG_GETTEXT_PACKAGE,"-p",VALA_PANEL_APPLICATION(base)->profile};
+        g_auto(GStrv) envp = g_get_environ();
+        g_spawn_async(cwd,(GStrv)argv,
+                                envp,
+                                G_SPAWN_SEARCH_PATH,
+                                child_spawn_func,NULL,NULL,NULL);
+    }
+}
+
 static void vala_panel_application_class_init (ValaPanelApplicationClass * klass) {
     vala_panel_application_parent_class = g_type_class_peek_parent (klass);
     ((GApplicationClass *) klass)->startup = vala_panel_application_startup;
-//    ((GApplicationClass *) klass)->shutdown = vala_panel_app_real_shutdown;
+    ((GApplicationClass *) klass)->shutdown = vala_panel_application_shutdown;
 //    ((GApplicationClass *) klass)->activate = vala_panel_app_real_activate;
 //    ((GApplicationClass *) klass)->handle_local_options = vala_panel_app_real_handle_local_options;
 //    ((GApplicationClass *) klass)->command_line = vala_panel_app_real_command_line;
