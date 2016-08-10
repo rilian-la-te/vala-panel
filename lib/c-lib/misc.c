@@ -18,7 +18,7 @@ static void set_widget_align(GtkWidget* user_data, gpointer data)
 static void setup_button_notify_connect(GObject* _sender, GParamSpec* b, gpointer self)
 {
     GtkButton* a = GTK_BUTTON(_sender);
-    if (!strcmp(b->name,"label") ||!strcmp(b->name, "image"))
+    if (!strcmp(b->name,"label") || !strcmp(b->name, "image"))
     {
         GtkWidget* w = gtk_bin_get_child(GTK_BIN(a));
         if (GTK_IS_CONTAINER(w))

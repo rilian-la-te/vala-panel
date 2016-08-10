@@ -2,9 +2,9 @@
 #include <gio/gdesktopappinfo.h>
 #include <glib/gi18n.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "css.h"
+#include "launcher.h"
 #include "runner-new.h"
 
 struct _ValaPanelRunner
@@ -18,16 +18,6 @@ struct _ValaPanelRunner
 };
 
 G_DEFINE_TYPE(ValaPanelRunner,vala_panel_runner,GTK_TYPE_DIALOG)
-
-typedef struct {
-    pid_t pid;
-} SpawnData;
-
-static void child_spawn_func(void* data)
-{
-    SpawnData* d = (SpawnData*)data;
-    setpgid(0,d->pid);
-}
 
 static GDesktopAppInfo* match_app_by_exec(const char* exec)
 {
@@ -181,14 +171,7 @@ static void vala_panel_runner_response( GtkDialog* dlg, gint response)
             g_signal_stop_emission_by_name( dlg, "response" );
             return;
         }
-        SpawnData data;
-        data.pid = getpgid(getppid());
-        gboolean launch = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),NULL,
-                                            G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),
-                                                                    G_SPAWN_SEARCH_PATH,
-                                                                    child_spawn_func,
-                                                                    &data,NULL,NULL,
-                                                                    &err);
+        gboolean launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),NULL);
         if (!launch || err)
         {
             g_signal_stop_emission_by_name( dlg, "response" );

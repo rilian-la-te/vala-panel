@@ -58,6 +58,7 @@ add_library (${LIBNAME} SHARED
 )
 
 target_link_libraries (${LIBNAME} ${LIBS})
+target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

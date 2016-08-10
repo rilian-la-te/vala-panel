@@ -19,7 +19,7 @@
   }
 
 #define _user_config_file_name(name1, cprofile, name2)                         \
-  g_build_filename(g_get_user_config_dir(), "simple-panel", cprofile, name1,   \
+  g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, name1,   \
                    name2, NULL)
 
 #define g_ascii_inplace_tolower(string) \

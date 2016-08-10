@@ -29,8 +29,11 @@ glib_compile_resources(GLIB_RESOURCES_APP
 # Executable
 #####
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
-add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP} runner-new.c runner-new.h)
+add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
+add_executable(${APPNAME}-new  runner-new.c runner-new.h application-new.c application-new.h)
 target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES} cvalapanel)
+target_link_libraries (${APPNAME}-new ${LIBNAME} ${CORE_LIBRARIES} cvalapanel ${LIBNAME})
 target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib)
+target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/lib)
 
 install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
