@@ -55,13 +55,13 @@ static const GActionEntry vala_panel_application_app_entries[9] = {
 static const GActionEntry vala_panel_application_menu_entries[3] = {
   { "launch-id",
     activate_menu_launch_id, "s",
-    NULL, NULL },
+    NULL, NULL, {0} },
   { "launch-uri",
     activate_menu_launch_uri, "s",
-    NULL, NULL },
+    NULL, NULL, {0} },
   { "launch-command",
     activate_menu_launch_command,
-    "s", NULL, NULL }
+    "s", NULL, NULL, {0} }
 };
 
 enum
@@ -78,7 +78,7 @@ enum
 #define system_config_file_name(profile,dir,filename) \
     g_build_filename(dir,GETTEXT_PACKAGE,profile,filename,NULL)
 
-inline ValaPanelApplication* vala_panel_application_new()
+ValaPanelApplication* vala_panel_application_new()
 {
     return (ValaPanelApplication*)g_object_new(vala_panel_application_get_type(),
                                                "application-id", "org.valapanel.application",
@@ -184,4 +184,10 @@ static void vala_panel_application_class_init (ValaPanelApplicationClass * klass
                               G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
                                 G_PARAM_WRITABLE));
+}
+
+int main(int argc, char* argv[])
+{
+    g_autoptr(ValaPanelApplication) app = vala_panel_application_new();
+    return g_application_run(G_APPLICATION(app),argc,argv);
 }
