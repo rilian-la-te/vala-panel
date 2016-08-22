@@ -1,12 +1,17 @@
 include(GResource)
 include(GLibHelpers)
 add_glib_marshal(MARSHALS MARSHALH "applet-api" g_cclosure_user_marshal)
+set(ENUM_FILES
+        applet-engine.h)
+add_glib_enumtypes(ENUMSC ENUMSH ${ENUM_FILES} vala-applet-enums)
 add_library(applet-api-new SHARED
 	applet-widget.c
 	applet-info.c
         popup-manager.c
         applet-engine.c
 	${MARSHALS}
+        ${ENUMSC}
+        ${ENUMSH}
 	${MARSHALH}
 	)
 set (LIBS ${CORE_LIBRARIES} -lm)
