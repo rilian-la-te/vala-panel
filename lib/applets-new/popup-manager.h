@@ -22,6 +22,7 @@ struct _ValaPanelPopupManagerInterface
   void (*show_menu)(ValaPanelPopupManager* self, GtkWidget* widget);
   gboolean (*is_registered)(ValaPanelPopupManager* self,
                                     GtkWidget* widget);
+  gpointer padding [12];
 };
 
 void vala_panel_popup_manager_register_popover(ValaPanelPopupManager* self, GtkWidget* widget,

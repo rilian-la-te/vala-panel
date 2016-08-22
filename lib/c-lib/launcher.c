@@ -57,7 +57,7 @@ void activate_menu_launch_uri (GSimpleAction* action,GVariant* param, gpointer u
     g_autoptr(GError) err = NULL;
     const char* uri = g_variant_get_string(param,NULL);
     g_autoptr(GList) uris = g_list_append(NULL,(gpointer)uri);
-    g_autoptr(GDesktopAppInfo) info = G_APP_INFO(vala_panel_get_default_for_uri(uri));
+    g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(vala_panel_get_default_for_uri(uri));
     vala_panel_launch(info, uris);
 }
 

@@ -50,7 +50,7 @@ void vala_panel_setup_button(GtkButton* b, GtkImage* img, char* label)
     gtk_button_set_relief(b,GTK_RELIEF_NONE);
 }
 
-void vala_panel_apply_window_icon(GtkWindow *win)
+inline void vala_panel_apply_window_icon(GtkWindow *win)
 {
     g_autoptr(GdkPixbuf) icon;
     icon = gdk_pixbuf_new_from_resource("/org/vala-panel/lib/panel.png",NULL);

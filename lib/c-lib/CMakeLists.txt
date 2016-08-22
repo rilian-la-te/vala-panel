@@ -17,7 +17,7 @@ add_library(cvalapanel SHARED
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
-target_link_libraries (cvalapanel ${LIBS})
+target_link_libraries (cvalapanel ${LIBS} applet-api-new)
 target_include_directories(cvalapanel PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties (cvalapanel PROPERTIES
     VERSION ${VERSION}

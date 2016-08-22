@@ -1,6 +1,3 @@
-if(GLIB242_FOUND)
-    set(GLIB242_DEFINE -D GLIB242)
-endif()
 INCLUDE(GResource)
 set(VALA_FILES  application.vala runner.vala)
 vala_precompile(VALA_C ${APPNAME}
@@ -13,10 +10,10 @@ OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
-    --target-glib=2.40
+    --target-glib=2.44
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.gresource.xml
     --thread
-    ${GLIB242_DEFINE}
+    -D GLIB242
 )
 
 add_definitions(-DG_SETTINGS_ENABLE_BACKEND)
@@ -31,9 +28,9 @@ glib_compile_resources(GLIB_RESOURCES_APP
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
 add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
 add_executable(${APPNAME}-new  runner-new.c runner-new.h application-new.c application-new.h)
-target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES} cvalapanel)
-target_link_libraries (${APPNAME}-new ${LIBNAME} ${CORE_LIBRARIES} cvalapanel ${LIBNAME})
-target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib)
+target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES})
+target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} cvalapanel applet-api-new)
+target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS})
 target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/lib)
 
 install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
