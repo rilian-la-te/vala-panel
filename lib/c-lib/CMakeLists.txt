@@ -1,6 +1,6 @@
 include(GResource)
 set(ENUM_FILES
-        panel-position-iface.h
+        panel-manager.h
         generic-config-dialog.h
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
@@ -13,8 +13,8 @@ add_library(cvalapanel SHARED
         launcher.h
 	generic-config-dialog.c
 	generic-config-dialog.h
-        panel-position-iface.c
-        panel-position-iface.h
+        panel-manager.c
+        panel-manager.h
         toplevel.c
         toplevel.h
 	${ENUMSC}
