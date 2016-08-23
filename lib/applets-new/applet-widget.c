@@ -189,7 +189,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
 static void vala_panel_applet_widget_init(ValaPanelAppletWidget* self)
 {
     ValaPanelAppletWidgetPrivate *priv = (ValaPanelAppletWidgetPrivate*)vala_panel_applet_widget_get_instance_private(self);
-    gtk_widget_set_can_focus(GTK_WIDGET(self), FALSE);
+    gtk_widget_set_can_focus(GTK_WIDGET(self), false);
 }
 
 GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)

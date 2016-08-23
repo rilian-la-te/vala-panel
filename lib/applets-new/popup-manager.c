@@ -38,11 +38,11 @@ void vala_panel_popup_manager_show_menu(ValaPanelPopupManager *self, GtkWidget *
         VALA_PANEL_POPUP_MANAGER_GET_IFACE(self)->show_menu(self,widget);
 }
 
-gboolean vala_panel_popup_manager_is_registered(ValaPanelPopupManager *self, GtkWidget *widget)
+bool vala_panel_popup_manager_is_registered(ValaPanelPopupManager *self, GtkWidget *widget)
 {
     if(self)
         return VALA_PANEL_POPUP_MANAGER_GET_IFACE(self)->is_registered(self,widget);
-    return FALSE;
+    return false;
 }
 
 void vala_panel_popup_manager_default_init(ValaPanelPopupManagerInterface* iface)

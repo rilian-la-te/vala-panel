@@ -6,7 +6,7 @@
 
 #include "css.h"
 
-void css_apply_with_class (GtkWidget* widget,const gchar* css,const  gchar* klass ,gboolean remove)
+void css_apply_with_class (GtkWidget* widget,const gchar* css,const  gchar* klass ,bool remove)
 {
     g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context (widget);
     gtk_widget_reset_style(widget);
@@ -60,7 +60,7 @@ gchar* css_apply_from_file_to_app (const gchar* file)
 }
 
 
-inline gchar* css_generate_background(const char *filename, GdkRGBA color,gboolean no_image)
+inline gchar* css_generate_background(const char *filename, GdkRGBA color,bool no_image)
 {
     gchar* returnie;
     g_autofree gchar* str = gdk_rgba_to_string(&color);
@@ -88,7 +88,7 @@ inline gchar* css_generate_font_size(gint size){
                     " font-size: %dpx;\n"
                     "}",size);
 }
-inline gchar* css_generate_font_label(gfloat size, gboolean is_bold)
+inline gchar* css_generate_font_label(gfloat size, bool is_bold)
 {
     gint size_factor = (gint)round(size*100);
     return g_strdup_printf(".-vala-panel-font-label{\n"

@@ -19,7 +19,7 @@ struct _ValaPanelAppletInfo
   GtkAlign alignment;
   GtkOrientation orientation;
   gint position;
-  gboolean expand;
+  bool expand;
 };
 
 enum
@@ -277,7 +277,7 @@ vala_panel_applet_info_class_init(ValaPanelAppletInfoClass* klass)
                        G_PARAM_WRITABLE));
   g_object_class_install_property(
     G_OBJECT_CLASS(klass), VALA_PANEL_APPLET_INFO_EXPAND,
-    g_param_spec_boolean("expand", "expand", "expand", FALSE,
+    g_param_spec_boolean("expand", "expand", "expand", false,
                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
                            G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
                            G_PARAM_WRITABLE));

@@ -4,6 +4,7 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <stdbool.h>
 
 G_BEGIN_DECLS
 G_DECLARE_INTERFACE(ValaPanelPopupManager, vala_panel_popup_manager, VALA_PANEL,
@@ -20,7 +21,7 @@ struct _ValaPanelPopupManagerInterface
   void (*unregister_menu)(ValaPanelPopupManager* self, GtkWidget* widget);
   void (*show_popover)(ValaPanelPopupManager* self, GtkWidget* widget);
   void (*show_menu)(ValaPanelPopupManager* self, GtkWidget* widget);
-  gboolean (*is_registered)(ValaPanelPopupManager* self,
+  bool (*is_registered)(ValaPanelPopupManager* self,
                                     GtkWidget* widget);
   gpointer padding [12];
 };
@@ -33,7 +34,7 @@ void vala_panel_popup_manager_unregister_popover(ValaPanelPopupManager* self, Gt
 void vala_panel_popup_manager_unregister_menu(ValaPanelPopupManager* self, GtkWidget* widget);
 void vala_panel_popup_manager_show_popover(ValaPanelPopupManager* self, GtkWidget* widget);
 void vala_panel_popup_manager_show_menu(ValaPanelPopupManager* self, GtkWidget* widget);
-gboolean vala_panel_popup_manager_is_registered(ValaPanelPopupManager* self,
+bool vala_panel_popup_manager_is_registered(ValaPanelPopupManager* self,
                                GtkWidget* widget);
 G_END_DECLS
 

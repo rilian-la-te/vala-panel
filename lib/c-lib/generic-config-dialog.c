@@ -32,7 +32,7 @@ GtkDialog* generic_config_dlg(const char* title, GtkWindow* parent,
     g_autoptr(GSettings) settings = vala_panel_applet_widget_get_settings(applet);
     vala_panel_apply_window_icon(GTK_WINDOW(dlg));
     gtk_box_set_spacing(dlg_vbox,4);
-    while( TRUE )
+    while( true )
     {
         const char* name = va_arg(l,const char*);
         if (!name)
@@ -86,7 +86,7 @@ GtkDialog* generic_config_dlg(const char* title, GtkWindow* parent,
             }
             case CONF_EXTERNAL:
                 if (GTK_IS_WIDGET(entry))
-                    gtk_box_pack_start(dlg_vbox,entry, FALSE, FALSE, 2);
+                    gtk_box_pack_start(dlg_vbox,entry, false, false, 2);
                 else
                     g_critical("value for CONF_EXTERNAL is not a GtkWidget");
                 break;
@@ -94,13 +94,13 @@ GtkDialog* generic_config_dlg(const char* title, GtkWindow* parent,
         if(entry)
         {
             if(( type == CONF_BOOL ) || ( type == CONF_TRIM ))
-                gtk_box_pack_start(dlg_vbox,entry, FALSE, FALSE, 2);
+                gtk_box_pack_start(dlg_vbox,entry, false, false, 2);
             else
             {
                 GtkBox* hbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2 ));
-                gtk_box_pack_start(hbox,GTK_WIDGET(label), FALSE, FALSE, 2 );
-                gtk_box_pack_start(hbox,entry, TRUE, TRUE, 2 );
-                gtk_box_pack_start(dlg_vbox,GTK_WIDGET(hbox), FALSE, FALSE, 2 );
+                gtk_box_pack_start(hbox,GTK_WIDGET(label), false, false, 2 );
+                gtk_box_pack_start(hbox,entry, true, true, 2 );
+                gtk_box_pack_start(dlg_vbox,GTK_WIDGET(hbox), false, false, 2 );
                 }
             }
         }

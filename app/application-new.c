@@ -7,22 +7,23 @@
 
 #include <locale.h>
 #include <glib/gi18n-lib.h>
+#include <stdbool.h>
 
 struct _ValaPanelApplication
 {
-    gboolean started;
-    gboolean restart;
+    bool started;
+    bool restart;
     GtkDialog* pref_dialog;
     GSettings* config;
     ValaPanelRunner* runner;
-    gboolean dark;
-    gboolean custom;
-    gchar* css;
+    bool dark;
+    bool custom;
+    char* css;
     GtkCssProvider* provider;
-    gchar* profile;
-    gchar* terminal_command;
-    gchar* logout_command;
-    gchar* shutdown_command;
+    char* profile;
+    char* terminal_command;
+    char* logout_command;
+    char* shutdown_command;
 };
 
 G_DEFINE_TYPE(ValaPanelApplication,vala_panel_application,GTK_TYPE_APPLICATION)
@@ -87,8 +88,8 @@ ValaPanelApplication* vala_panel_application_new()
 }
 
 static void vala_panel_application_init(ValaPanelApplication* self){
-    self->started = FALSE;
-    self->restart = FALSE;
+    self->started = false;
+    self->restart = false;
     self->profile = g_strdup("default");
 }
 
@@ -168,13 +169,13 @@ static void vala_panel_application_class_init (ValaPanelApplicationClass * klass
               G_PARAM_READABLE | G_PARAM_WRITABLE));
         g_object_class_install_property(
           G_OBJECT_CLASS(klass), VALA_PANEL_APP_IS_DARK,
-          g_param_spec_boolean("is-dark", "is-dark", "is-dark", FALSE,
+          g_param_spec_boolean("is-dark", "is-dark", "is-dark", false,
                                G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
                                  G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
                                  G_PARAM_WRITABLE));
         g_object_class_install_property(
           G_OBJECT_CLASS(klass), VALA_PANEL_APP_IS_CUSTOM,
-          g_param_spec_boolean("is-custom", "is-custom", "is-custom", FALSE,
+          g_param_spec_boolean("is-custom", "is-custom", "is-custom", false,
                                G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
                                  G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
                                  G_PARAM_WRITABLE));

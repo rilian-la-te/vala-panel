@@ -12,10 +12,10 @@ void child_spawn_func(void* data)
     setpgid(0,getpgid(getppid()));
 }
 
-gboolean vala_panel_launch(GDesktopAppInfo* app_info, GList* uris)
+bool vala_panel_launch(GDesktopAppInfo* app_info, GList* uris)
 {
     g_autoptr(GError) err = NULL;
-    gboolean ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),uris,
+    bool ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),uris,
                                         G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default())),
                                                                 G_SPAWN_SEARCH_PATH,
                                                                 child_spawn_func,

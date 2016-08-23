@@ -2,6 +2,7 @@
 #include <gio/gdesktopappinfo.h>
 #include <glib/gi18n.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "css.h"
 #include "launcher.h"
@@ -14,7 +15,7 @@ struct _ValaPanelRunner
     GtkBox* main_box;
     GTask* task;
     GCancellable* cancellable;
-    gboolean cached;
+    bool cached;
 };
 
 G_DEFINE_TYPE(ValaPanelRunner,vala_panel_runner,GTK_TYPE_DIALOG)
@@ -171,7 +172,7 @@ static void vala_panel_runner_response( GtkDialog* dlg, gint response)
             g_signal_stop_emission_by_name( dlg, "response" );
             return;
         }
-        gboolean launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),NULL);
+        bool launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),NULL);
         if (!launch || err)
         {
             g_signal_stop_emission_by_name( dlg, "response" );
@@ -220,10 +221,10 @@ static void vala_panel_runner_init(ValaPanelRunner* self)
     g_autoptr(GtkStyleContext) ctx = gtk_widget_get_style_context(GTK_WIDGET(self->main_box));
     gtk_style_context_add_class(ctx,"-panel-run-header");
     //FIXME: Implement cache
-    self->cached = FALSE;
+    self->cached = false;
     gtk_widget_set_visual(GTK_WIDGET(self),gdk_screen_get_rgba_visual(gtk_widget_get_screen(GTK_WIDGET(self))));
     gtk_dialog_set_default_response(GTK_DIALOG(self),GTK_RESPONSE_OK);
-    gtk_window_set_keep_above(GTK_WINDOW(self),TRUE);
+    gtk_window_set_keep_above(GTK_WINDOW(self),true);
 }
 
 static void vala_panel_runner_finalize(GObject *obj)
@@ -245,9 +246,9 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
     ((GtkDialogClass *) klass)->response = vala_panel_runner_response;
     G_OBJECT_CLASS (klass)->finalize = vala_panel_runner_finalize;
     gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/vala-panel/app/app-runner.ui");
-    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", FALSE,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
-    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "terminal-button", FALSE, G_STRUCT_OFFSET (ValaPanelRunner, terminal_button));
-    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-box", TRUE, G_STRUCT_OFFSET (ValaPanelRunner, main_box));
+    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-entry", false,  G_STRUCT_OFFSET (ValaPanelRunner, main_entry));
+    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "terminal-button", false, G_STRUCT_OFFSET (ValaPanelRunner, terminal_button));
+    gtk_widget_class_bind_template_child_full (GTK_WIDGET_CLASS (klass), "main-box", true, G_STRUCT_OFFSET (ValaPanelRunner, main_box));
     gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_changed", G_CALLBACK(on_entry_changed));
     gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_entry_activated", G_CALLBACK(on_entry_activated));
     gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass), "on_icon_activated", G_CALLBACK(on_icon_activated));

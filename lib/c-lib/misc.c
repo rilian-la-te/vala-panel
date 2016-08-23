@@ -43,7 +43,7 @@ void vala_panel_setup_button(GtkButton* b, GtkImage* img, char* label)
     if (img != NULL)
     {
         gtk_button_set_image(b,GTK_WIDGET(img));
-        gtk_button_set_always_show_image(b,TRUE);
+        gtk_button_set_always_show_image(b,true);
     }
     if (label != NULL)
         gtk_button_set_label(b,label);
