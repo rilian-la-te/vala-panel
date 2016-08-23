@@ -26,6 +26,7 @@ struct _ValaPanelPositionInterface
     void (*ah_start)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
     void (*ah_stop)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
     void (*ah_state_set)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
+    /*positioning requests*/
     void (*move_to_alloc)(ValaPanelPosition* f, ValaPanelToplevelUnit* top, GtkAllocation* alloc);
     gpointer padding [12];
 };
