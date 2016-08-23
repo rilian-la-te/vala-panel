@@ -7,7 +7,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_INTERFACE(ValaPanelPositionIface,vala_panel_position_iface,VALA_PANEL,POSITION_IFACE,GObject)
+G_DECLARE_INTERFACE(ValaPanelPosition,vala_panel_position,VALA_PANEL,POSITION,GObject)
 
 typedef enum
 {
@@ -16,18 +16,20 @@ typedef enum
     AH_VISIBLE
 } AutohideState;
 
-struct _ValaPanelPositionIfaceInterface
+struct _ValaPanelPositionInterface
 {
     GTypeInterface g_iface;
     /*struts*/
-    bool (*can_strut) (ValaPanelPositionIface* f, ValaPanelToplevelUnit* top);
-    void (*update_strut) (ValaPanelPositionIface* f, ValaPanelToplevelUnit* top);
+    bool (*can_strut) (ValaPanelPosition* f, ValaPanelToplevelUnit* top);
+    void (*update_strut) (ValaPanelPosition* f, ValaPanelToplevelUnit* top);
     /*autohide*/
-    bool (*ah_start)(ValaPanelPositionIface* f,ValaPanelToplevelUnit* top);
-    bool (*ah_stop)(ValaPanelPositionIface* f,ValaPanelToplevelUnit* top);
-    bool (*ah_state_set)(ValaPanelPositionIface* f,ValaPanelToplevelUnit* top);
+    bool (*ah_start)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
+    bool (*ah_stop)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
+    bool (*ah_state_set)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
     gpointer padding [12];
 };
+
+
 
 G_END_DECLS
 
