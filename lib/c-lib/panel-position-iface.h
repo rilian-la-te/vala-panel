@@ -28,6 +28,7 @@ struct _ValaPanelPositionInterface
     void (*ah_state_set)(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
     /*positioning requests*/
     void (*move_to_alloc)(ValaPanelPosition* f, ValaPanelToplevelUnit* top, GtkAllocation* alloc);
+    void (*move_to_side)(ValaPanelPosition* f, ValaPanelToplevelUnit* top, GtkPositionType alloc);
     gpointer padding [12];
 };
 
@@ -37,6 +38,7 @@ void panel_position_ah_start(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
 void panel_position_ah_stop (ValaPanelPosition* f,ValaPanelToplevelUnit* top);
 void panel_position_ah_state_set(ValaPanelPosition* f,ValaPanelToplevelUnit* top);
 void panel_position_move_to_alloc(ValaPanelPosition* f, ValaPanelToplevelUnit* top, GtkAllocation* alloc);
+void panel_position_move_to_side(ValaPanelPosition* f, ValaPanelToplevelUnit* top, GtkPositionType alloc);
 
 G_END_DECLS
 

@@ -43,3 +43,9 @@ void panel_position_move_to_alloc(ValaPanelPosition *self, ValaPanelToplevelUnit
     if(self)
         VALA_PANEL_POSITION_GET_IFACE(self)->move_to_alloc(self,top,alloc);
 }
+
+void panel_position_move_to_side(ValaPanelPosition *self, ValaPanelToplevelUnit *top, GtkPositionType alloc)
+{
+    if(self)
+        VALA_PANEL_POSITION_GET_IFACE(self)->move_to_side(self,top,alloc);
+}
