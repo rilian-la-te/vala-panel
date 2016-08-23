@@ -82,7 +82,7 @@ vala_panel_applet_info_unbind_settings(ValaPanelAppletInfo* self)
 static void
 vala_panel_applet_info_constructed(ValaPanelAppletInfo* self)
 {
-  gchar* path = g_strdup_printf("%s/%s", DEFAULT_PLUGIN_PATH, self->uuid);
+  gchar* path = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid,NULL);
   g_autoptr(GSettingsBackend) bck =
     g_keyfile_settings_backend_new(self->filename, path, DEFAULT_PLUGIN_GROUP);
   g_free0(path);
