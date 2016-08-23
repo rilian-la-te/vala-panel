@@ -11,6 +11,10 @@ add_library(cvalapanel SHARED
         launcher.h
 	generic-config-dialog.c
 	generic-config-dialog.h
+        panel-position-iface.c
+        panel-position-iface.h
+        toplevel.c
+        toplevel.h
 	${ENUMSC}
 	${ENUMSH}
 	)
