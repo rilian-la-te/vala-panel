@@ -9,10 +9,6 @@ set(VALA_FILES
 	dbusmenu/dbusmenu.vala
 	menu-maker.vala
 	panel-plugin.vala
-        panel-plugin-new.vala
-        panel-positioner.vala
-        panel-manager.vala
-        panel-layout.vala
 	panel-toplevel.vala
 	plugin-settings.vala
 	)
