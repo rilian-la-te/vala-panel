@@ -15,7 +15,7 @@ struct _ValaPanelAppletInfo
   gchar* name;
   gchar* description;
   gchar* uuid;
-  gchar* filename;
+  gchar* profile;
   GtkAlign alignment;
   GtkOrientation orientation;
   gint position;
@@ -82,10 +82,10 @@ vala_panel_applet_info_unbind_settings(ValaPanelAppletInfo* self)
 static void
 vala_panel_applet_info_constructed(ValaPanelAppletInfo* self)
 {
-  gchar* path = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid,NULL);
+  g_autofree gchar* path = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid,NULL);
+  g_autofree char* filename = _user_config_file_name(path,self->profile,self->uuid);
   g_autoptr(GSettingsBackend) bck =
-    g_keyfile_settings_backend_new(self->filename, path, DEFAULT_PLUGIN_GROUP);
-  g_free0(path);
+    g_keyfile_settings_backend_new(filename, path, DEFAULT_PLUGIN_GROUP);
   self->settings = g_settings_new_with_backend(DEFAULT_PLUGIN_SETTINGS_ID, bck);
   gchar* str = g_strdup(g_strstrip(g_strdelimit(self->name," '",'_')));
   g_ascii_inplace_tolower(str);
@@ -123,7 +123,7 @@ vala_panel_applet_info_get_property(GObject* object, guint property_id,
       g_value_set_string(value, self->uuid);
       break;
     case VALA_PANEL_APPLET_INFO_FILENAME:
-      g_value_set_string(value, self->filename);
+      g_value_set_string(value, self->profile);
       break;
     case VALA_PANEL_APPLET_INFO_ALIGNMENT:
       g_value_set_enum(value, self->alignment);
@@ -170,7 +170,7 @@ vala_panel_applet_info_set_property(GObject* object, guint property_id,
       g_value_replace_string(self->uuid, value);
       break;
     case VALA_PANEL_APPLET_INFO_FILENAME:
-      g_value_replace_string(self->filename, value);
+      g_value_replace_string(self->profile, value);
       break;
     case VALA_PANEL_APPLET_INFO_ALIGNMENT:
       self->alignment = g_value_get_enum(value);
@@ -202,7 +202,7 @@ vala_panel_applet_info_finalize(GObject* obj)
   g_free0(self->name);
   g_free0(self->description);
   g_free0(self->uuid);
-  g_free0(self->filename);
+  g_free0(self->profile);
   G_OBJECT_CLASS(vala_panel_applet_info_parent_class)->finalize(obj);
 }
 
