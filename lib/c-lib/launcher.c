@@ -15,7 +15,7 @@ void child_spawn_func(void *data)
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris)
 {
         g_autoptr(GError) err = NULL;
-        g_autptr(GAppLaunchContext) cxt =
+        g_autoptr(GAppLaunchContext) cxt =
             G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default()));
         bool ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),
                                                              uris,

@@ -33,4 +33,4 @@ target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} cvalapanel applet-api-ne
 target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS})
 target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/lib)
 
-install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
+install (TARGETS ${APPNAME} ${APPNAME}-new RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
