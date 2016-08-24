@@ -25,6 +25,7 @@ glib_compile_resources(GLIB_RESOURCES_APP
 #####
 # Executable
 #####
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
 add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
 add_executable(${APPNAME}-new  runner-new.c runner-new.h application-new.c application-new.h)
