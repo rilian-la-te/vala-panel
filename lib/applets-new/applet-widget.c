@@ -7,18 +7,14 @@
 
 typedef struct {
         const char *uuid;
-        const char *path;
-        const char *profile;
-        const char *scheme;
+        GSettings* settings;
         const char *panel;
         GVariant *actions;
 } ValaPanelAppletWidgetPrivate;
 
 enum { VALA_PANEL_APPLET_WIDGET_DUMMY_PROPERTY,
        VALA_PANEL_APPLET_WIDGET_UUID,
-       VALA_PANEL_APPLET_WIDGET_PATH,
-       VALA_PANEL_APPLET_WIDGET_PROFILE,
-       VALA_PANEL_APPLET_WIDGET_SCHEME,
+       VALA_PANEL_APPLET_WIDGET_SETTINGS,
        VALA_PANEL_APPLET_WIDGET_PANEL,
        VALA_PANEL_APPLET_WIDGET_ACTIONS };
 
@@ -36,14 +32,8 @@ static void vala_panel_applet_widget_get_property(GObject *object, guint propert
         case VALA_PANEL_APPLET_WIDGET_UUID:
                 g_value_set_string(value, priv->uuid);
                 break;
-        case VALA_PANEL_APPLET_WIDGET_PATH:
-                g_value_set_string(value, priv->path);
-                break;
-        case VALA_PANEL_APPLET_WIDGET_PROFILE:
-                g_value_set_string(value, priv->profile);
-                break;
-        case VALA_PANEL_APPLET_WIDGET_SCHEME:
-                g_value_set_string(value, priv->scheme);
+        case VALA_PANEL_APPLET_WIDGET_SETTINGS:
+                g_value_set_object(value, priv->settings);
                 break;
         case VALA_PANEL_APPLET_WIDGET_PANEL:
                 g_value_set_string(value, priv->panel);
@@ -69,14 +59,8 @@ static void vala_panel_applet_widget_set_property(GObject *object, guint propert
         case VALA_PANEL_APPLET_WIDGET_UUID:
                 priv->uuid = g_value_get_string(value);
                 break;
-        case VALA_PANEL_APPLET_WIDGET_PATH:
-                priv->path = g_value_get_string(value);
-                break;
-        case VALA_PANEL_APPLET_WIDGET_PROFILE:
-                priv->profile = g_value_get_string(value);
-                break;
-        case VALA_PANEL_APPLET_WIDGET_SCHEME:
-                priv->scheme = g_value_get_string(value);
+        case VALA_PANEL_APPLET_WIDGET_SETTINGS:
+                priv->settings = G_SETTINGS(g_value_get_object(value));
                 break;
         case VALA_PANEL_APPLET_WIDGET_PANEL:
                 priv->panel = g_value_get_string(value);
@@ -118,37 +102,14 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                                                 G_PARAM_READABLE |
                                                                 G_PARAM_WRITABLE));
         g_object_class_install_property(G_OBJECT_CLASS(klass),
-                                        VALA_PANEL_APPLET_WIDGET_PATH,
-                                        g_param_spec_string("path",
-                                                            "path",
-                                                            "path",
+                                        VALA_PANEL_APPLET_WIDGET_SETTINGS,
+                                        g_param_spec_object("settings",
+                                                            "settings",
+                                                            "settings",
                                                             NULL,
                                                             G_PARAM_STATIC_NAME |
                                                                 G_PARAM_STATIC_NICK |
                                                                 G_PARAM_STATIC_BLURB |
-                                                                G_PARAM_READABLE |
-                                                                G_PARAM_WRITABLE));
-        g_object_class_install_property(G_OBJECT_CLASS(klass),
-                                        VALA_PANEL_APPLET_WIDGET_PROFILE,
-                                        g_param_spec_string("profile",
-                                                            "profile",
-                                                            "profile",
-                                                            NULL,
-                                                            G_PARAM_STATIC_NAME |
-                                                                G_PARAM_STATIC_NICK |
-                                                                G_PARAM_STATIC_BLURB |
-                                                                G_PARAM_READABLE |
-                                                                G_PARAM_WRITABLE));
-        g_object_class_install_property(G_OBJECT_CLASS(klass),
-                                        VALA_PANEL_APPLET_WIDGET_SCHEME,
-                                        g_param_spec_string("scheme",
-                                                            "scheme",
-                                                            "scheme",
-                                                            NULL,
-                                                            G_PARAM_STATIC_NAME |
-                                                                G_PARAM_STATIC_NICK |
-                                                                G_PARAM_STATIC_BLURB |
-                                                                G_PARAM_CONSTRUCT_ONLY |
                                                                 G_PARAM_READABLE |
                                                                 G_PARAM_WRITABLE));
         g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -194,17 +155,6 @@ static void vala_panel_applet_widget_init(ValaPanelAppletWidget *self)
         ValaPanelAppletWidgetPrivate *priv =
             (ValaPanelAppletWidgetPrivate *)vala_panel_applet_widget_get_instance_private(self);
         gtk_widget_set_can_focus(GTK_WIDGET(self), false);
-}
-
-GSettings *vala_panel_applet_widget_get_settings(ValaPanelAppletWidget *self)
-{
-        ValaPanelAppletWidgetPrivate *priv =
-            (ValaPanelAppletWidgetPrivate *)vala_panel_applet_widget_get_instance_private(self);
-        g_autofree char *pth = g_build_path("/", priv->path, priv->uuid, NULL);
-        g_autofree char *filename = _user_config_file_name(priv->path, priv->profile, priv->uuid);
-        g_autoptr(GSettingsBackend) bck =
-            g_keyfile_settings_backend_new(filename, pth, priv->scheme);
-        return g_settings_new_with_backend(priv->scheme, bck);
 }
 
 void vala_panel_applet_widget_update_popup(ValaPanelAppletWidget *self, ValaPanelPopupManager *mgr)

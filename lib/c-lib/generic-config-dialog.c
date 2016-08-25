@@ -16,11 +16,11 @@ static void set_file_response(GtkFileChooserButton *widget, gpointer user_data)
         g_settings_set_string(data->settings, data->key, fname);
 }
 
-GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, ValaPanelAppletWidget *applet,
+GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings* settings,
                               ...)
 {
         va_list l;
-        va_start(l, applet);
+        va_start(l, settings);
         GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
                                                                 parent,
                                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -28,7 +28,6 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, ValaPanelApp
                                                                 GTK_RESPONSE_CLOSE,
                                                                 NULL));
         GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
-        g_autoptr(GSettings) settings = vala_panel_applet_widget_get_settings(applet);
         vala_panel_apply_window_icon(GTK_WINDOW(dlg));
         gtk_box_set_spacing(dlg_vbox, 4);
         while (true) {

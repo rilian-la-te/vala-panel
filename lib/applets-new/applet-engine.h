@@ -17,9 +17,7 @@ struct _ValaPanelAppletEngineInterface {
                                                          const char *applet_type);
         ValaPanelAppletWidget *(*get_applet_widget_for_type)(ValaPanelAppletEngine *self,
                                                              const char *applet_type,
-                                                             const char *uuid, const char *scheme,
-                                                             const char *path,
-                                                             const char *filename);
+                                                             const char *uuid);
         gpointer padding[12];
 };
 
@@ -27,8 +25,7 @@ const char *const *vala_panel_applet_engine_get_available_types(ValaPanelAppletE
 ValaPanelAppletInfo *vala_panel_applet_engine_get_applet_info_for_type(ValaPanelAppletEngine *self,
                                                                        const char *applet_type);
 ValaPanelAppletWidget *vala_panel_applet_engine_get_applet_widget_for_type(
-    ValaPanelAppletEngine *self, const char *applet_type, const char *uuid, const char *scheme,
-    const char *path, const char *filename);
+    ValaPanelAppletEngine *self, const char *applet_type, const char *uuid);
 
 G_END_DECLS
 

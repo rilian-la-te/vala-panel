@@ -19,7 +19,7 @@ typedef enum {
         CONF_EXTERNAL
 } GenericConfigType;
 
-GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, ValaPanelAppletWidget *applet,
+GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *settings,
                               ...);
 
 G_END_DECLS
