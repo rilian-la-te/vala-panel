@@ -60,3 +60,12 @@ bool vala_panel_manager_start_panels_from_profile(ValaPanelManager *self, GtkApp
                                                                                      profile);
         return false;
 }
+
+GSettings *vala_panel_manager_get_settings_for_scheme(ValaPanelManager *self, const char *scheme, const char *path)
+{
+    if (self)
+            return VALA_PANEL_MANAGER_GET_IFACE(self)->get_settings_for_scheme(self,
+                                                                                 scheme,
+                                                                                 path);
+    return NULL;
+}

@@ -78,6 +78,7 @@ static void vala_panel_applet_widget_finalize(GObject *obj)
         ValaPanelAppletWidgetPrivate *priv =
             (ValaPanelAppletWidgetPrivate *)vala_panel_applet_widget_get_instance_private(
                 (ValaPanelAppletWidget *)obj);
+        g_object_unref(priv->settings);
         g_variant_unref(priv->actions);
         G_OBJECT_CLASS(vala_panel_applet_widget_parent_class)->finalize(obj);
 }
@@ -111,7 +112,8 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                                                 G_PARAM_STATIC_NICK |
                                                                 G_PARAM_STATIC_BLURB |
                                                                 G_PARAM_READABLE |
-                                                                G_PARAM_WRITABLE));
+                                                                G_PARAM_WRITABLE |
+                                                                G_PARAM_CONSTRUCT_ONLY));
         g_object_class_install_property(G_OBJECT_CLASS(klass),
                                         VALA_PANEL_APPLET_WIDGET_PANEL,
                                         g_param_spec_string("panel",

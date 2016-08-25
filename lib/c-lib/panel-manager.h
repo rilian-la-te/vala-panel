@@ -28,6 +28,8 @@ struct _ValaPanelManagerInterface {
                               GtkAllocation *alloc);
         void (*move_to_side)(ValaPanelManager *f, ValaPanelToplevelUnit *top,
                              GtkPositionType alloc);
+        /*GSettings management*/
+        GSettings* (*get_settings_for_scheme)(ValaPanelManager* self, const char* scheme, const char* path);
         gpointer padding[12];
 };
 
@@ -42,6 +44,7 @@ void vala_panel_manager_move_to_alloc(ValaPanelManager *f, ValaPanelToplevelUnit
                                       GtkAllocation *alloc);
 void vala_panel_manager_move_to_side(ValaPanelManager *f, ValaPanelToplevelUnit *top,
                                      GtkPositionType alloc);
+GSettings* vala_panel_manager_get_settings_for_scheme(ValaPanelManager* self, const char* scheme, const char* path);
 
 G_END_DECLS
 
