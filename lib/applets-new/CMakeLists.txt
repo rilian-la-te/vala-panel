@@ -9,6 +9,7 @@ add_library(applet-api-new SHARED
 	applet-info.c
         popup-manager.c
         applet-engine.c
+        applet-manager.c
 	${MARSHALS}
         ${ENUMSC}
         ${ENUMSH}
