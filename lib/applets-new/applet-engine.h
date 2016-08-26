@@ -21,12 +21,6 @@ struct _ValaPanelAppletEngineInterface {
         gpointer padding[12];
 };
 
-const char *const *vala_panel_applet_engine_get_available_types(ValaPanelAppletEngine *self);
-ValaPanelAppletInfo *vala_panel_applet_engine_get_applet_info_for_type(ValaPanelAppletEngine *self,
-                                                                       const char *applet_type);
-ValaPanelAppletWidget *vala_panel_applet_engine_get_applet_widget_for_type(
-    ValaPanelAppletEngine *self, const char *applet_type, const char *uuid);
-
 G_END_DECLS
 
 #endif // APPLETENGINE_H
