@@ -107,7 +107,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
                                         g_param_spec_object("settings",
                                                             "settings",
                                                             "settings",
-                                                            NULL,
+                                                            G_TYPE_SETTINGS,
                                                             G_PARAM_STATIC_NAME |
                                                                 G_PARAM_STATIC_NICK |
                                                                 G_PARAM_STATIC_BLURB |
