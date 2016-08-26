@@ -2,8 +2,8 @@
 #define APPLETMANAGER_C
 
 #include <glib-object.h>
-#include "applet-info.h"
-#
+#include "applet-engine-module.h"
+#include "lib/applets-new/applet-api.h"
 
 G_BEGIN_DECLS
 

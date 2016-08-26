@@ -1,6 +1,6 @@
 #include "applet-manager.h"
-#include "applet-engine.h"
-#include "applet-info.h"
+#include "lib/applets-new/applet-engine.h"
+#include "lib/applets-new/applet-info.h"
 
 struct _ValaPanelAppletManager
 {
