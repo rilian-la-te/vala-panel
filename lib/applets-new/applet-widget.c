@@ -4,6 +4,7 @@
 #include "applet-api.h"
 #include "applet-widget.h"
 #include "lib/definitions.h"
+#include "applet-api-marshal.h"
 
 typedef struct {
         const char *uuid;
