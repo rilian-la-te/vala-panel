@@ -1,6 +1,6 @@
 include(GResource)
 include(GLibHelpers)
-add_glib_marshal(MARSHALS MARSHALH "applet-api" g_cclosure_user_marshal)
+add_glib_marshal(MARSHALS MARSHALH "applet-api-marshal" g_cclosure_user_marshal)
 set(ENUM_FILES
         applet-widget.h)
 add_glib_enumtypes(ENUMSC ENUMSH vala-applet-enums ${ENUM_FILES})

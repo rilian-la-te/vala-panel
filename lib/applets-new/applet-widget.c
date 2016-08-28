@@ -2,6 +2,7 @@
 #include <gio/gsettingsbackend.h>
 
 #include "applet-api.h"
+#include "applet-api-marshal.h"
 #include "applet-widget.h"
 #include "lib/definitions.h"
 
