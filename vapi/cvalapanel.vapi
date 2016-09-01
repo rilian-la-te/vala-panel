@@ -26,39 +26,8 @@ namespace PanelCSS
     public void toggle_class(Widget w, string klass, bool apply);
     public CssProvider? add_css_to_widget(Widget w, string css);
     public Gtk.CssProvider? apply_from_file_to_app_with_provider(string file);
-/*    public Gtk.CssProvider? apply_with_provider(Gtk.Widget w, string css, string klass)
-    {
-        unowned StyleContext context = w.get_style_context();
-        w.reset_style();
-        var provider = new Gtk.CssProvider();
-        try
-        {
-            provider.load_from_data(css,css.length);
-            context.add_provider(provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-            context.add_class(klass);
-            return provider;
-        } catch (GLib.Error e) {}
-        return null;
-    } */
-
     public string apply_from_file_to_app(string file);
     public void apply_from_resource(Gtk.Widget w, string file, string klass);
-/*    public Gtk.CssProvider? apply_from_resource_with_provider(Gtk.Widget w, string file, string klass)
-    {
-        unowned StyleContext context = w.get_style_context();
-        w.reset_style();
-        var provider = new Gtk.CssProvider();
-        File ruri = File.new_for_uri("resource:/%s".printf(file));
-        try
-        {
-            provider.load_from_file(ruri);
-            context.add_provider(provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-            context.add_class(klass);
-            return provider;
-        } catch (GLib.Error e) {}
-        return null;
-    }*/
-
     public string generate_background(string? name, Gdk.RGBA color);
     public string generate_font_size(int size);
     public string generate_font_color(Gdk.RGBA color);
