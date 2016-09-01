@@ -1,7 +1,7 @@
 ---
 AccessModifierOffset: 0
 AlignAfterOpenBracket: true
-AlignConsecutiveAssignments: false
+AlignConsecutiveAssignments: true
 #uncomment for clang 3.9
 #AlignConsecutiveDeclarations: false
 AlignEscapedNewlinesLeft: false
@@ -24,7 +24,7 @@ BinPackParameters: true
 BreakBeforeBinaryOperators: None
 # BreakAfterJavaFieldAnnotations: (not java)
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Linux
+BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 #uncomment for clang 3.9
@@ -38,7 +38,6 @@ Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
 ExperimentalAutoDetectBinPacking: false
-ForEachMacros: [ NC_LIST_FOREACH ]
 #Uncomment for clang 3.9
 #IncludeCategories:
 #  - Regex: '^"'
@@ -80,5 +79,5 @@ SpacesInParentheses: false
 SpacesInSquareBrackets: false
 Standard:        Cpp11
 TabWidth:        8
-UseTab:          Never
+UseTab:          Always
 ...

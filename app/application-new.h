@@ -6,7 +6,8 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelApplication,vala_panel_application,VALA_PANEL,APPLICATION,GtkApplication)
+G_DECLARE_FINAL_TYPE(ValaPanelApplication, vala_panel_application, VALA_PANEL, APPLICATION,
+		     GtkApplication)
 
 G_END_DECLS
 
