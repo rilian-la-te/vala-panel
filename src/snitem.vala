@@ -414,14 +414,14 @@ namespace StatusNotifier
                 if ((attention_icon ?? main_icon ?? overlay_icon) != null && icon != null)
                 {
                     image.set_from_gicon(icon,IconSize.INVALID);
-                    var icon_info = icon_theme.lookup_by_gicon(icon,image.pixel_size,IconLookupFlags.GENERIC_FALLBACK);
+                    var icon_info = icon_theme.lookup_by_gicon(icon,image.pixel_size,0);
                     if (icon_info != null)
                     {
                         var icon_pixbuf = icon_info.load_icon();
                         var aspect_ratio = (double) icon_pixbuf.width / (double) icon_pixbuf.height;
                         if (aspect_ratio != 1)
                         {
-                            icon_info = icon_theme.lookup_by_gicon(icon,(int)Math.round(aspect_ratio*image.pixel_size),IconLookupFlags.GENERIC_FALLBACK);
+                            icon_info = icon_theme.lookup_by_gicon(icon,(int)Math.round(aspect_ratio*image.pixel_size),0);
                             icon_pixbuf = icon_info.load_icon();
                             icon_pixbuf = icon_pixbuf.scale_simple((int)Math.round(aspect_ratio*image.pixel_size),image.pixel_size,Gdk.InterpType.BILINEAR);
                             image.set_from_pixbuf(icon_pixbuf);
@@ -450,7 +450,7 @@ namespace StatusNotifier
         DBusMenu.GtkClient? client;
         MenuModel remote_menu_model;
         GLib.ActionGroup remote_action_group;
-        unowned Gtk.Menu menu;
+        Gtk.Menu menu;
         unowned IconTheme icon_theme;
     }
 }

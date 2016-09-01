@@ -13,7 +13,7 @@ PACKAGES
     gio-addons-2.0
 OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
-    --target-glib=2.40
+    --target-glib=2.44
     --thread
 GENERATE_VAPI
     vala-dbusmenu
@@ -47,7 +47,7 @@ macro(precompile_core)
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
-        --target-glib=2.40
+	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/sntray.gresource.xml
         --thread
     GENERATE_VAPI
@@ -83,7 +83,7 @@ if (ENABLE_XFCE)
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
-        --target-glib=2.40
+	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
         --thread
     )
@@ -118,7 +118,7 @@ if (ENABLE_VALAPANEL)
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
-        --target-glib=2.40
+	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
         --thread
     )
