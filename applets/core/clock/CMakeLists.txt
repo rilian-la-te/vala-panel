@@ -5,6 +5,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
+    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
@@ -21,6 +22,7 @@ OPTIONS
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
+include_directories(${CMAKE_SOURCE_DIR})
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}

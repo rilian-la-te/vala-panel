@@ -5,7 +5,6 @@ set(VALA_FILES
 	misc.vala
 	configurator.vala
 	generic-config-dialog.vala
-	css.vala
 	dbusmenu/dbusmenu.vala
 	menu-maker.vala
 	panel-plugin.vala
@@ -18,6 +17,7 @@ vala_precompile(VALA_C ${LIBNAME}
     ${CMAKE_BINARY_DIR}/vapi/config.vala
 PACKAGES
     ${CORE_PACKAGES}
+    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/vapi
@@ -53,8 +53,8 @@ add_library (${LIBNAME} SHARED
     definitions.h
 )
 
-target_link_libraries (${LIBNAME} ${LIBS})
-target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
+target_link_libraries (${LIBNAME} ${LIBS} cvalapanel)
+target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR})
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

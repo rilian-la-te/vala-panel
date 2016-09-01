@@ -34,6 +34,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 	${VALA_C}
 	${RESOURCES}
     )
+    include_directories(${CMAKE_SOURCE_DIR})
 
     target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
     add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
