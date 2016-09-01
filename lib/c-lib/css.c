@@ -60,11 +60,11 @@ gchar *css_apply_from_file_to_app(const gchar *file)
 	return NULL;
 }
 
-inline gchar *css_generate_background(const char *filename, GdkRGBA* color)
+inline gchar *css_generate_background(const char *filename, GdkRGBA *color)
 {
 	gchar *returnie;
-    g_autofree gchar *str = gdk_rgba_to_string(color);
-    if (!filename)
+	g_autofree gchar *str = gdk_rgba_to_string(color);
+	if (!filename)
 		returnie = g_strdup_printf(
 		    ".-vala-panel-background{\n"
 		    " background-color: %s;\n"
@@ -188,23 +188,25 @@ void css_toggle_class(GtkWidget *widget, const char *klass, bool apply)
 
 GtkCssProvider *css_add_css_to_widget(GtkWidget *widget, const char *css)
 {
-    g_autoptr(GError) err = NULL;
-    g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
-    gtk_widget_reset_style(widget);
-    GtkCssProvider* provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
-    gtk_style_context_add_provider(context,
-                                   GTK_STYLE_PROVIDER(provider),
-                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    return err ? NULL : provider;
+	g_autoptr(GError) err              = NULL;
+	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	gtk_widget_reset_style(widget);
+	GtkCssProvider *provider = gtk_css_provider_new();
+	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
+	gtk_style_context_add_provider(context,
+	                               GTK_STYLE_PROVIDER(provider),
+	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	return err ? NULL : provider;
 }
 
 GtkCssProvider *css_apply_from_file_to_app_with_provider(const char *file)
 {
-    GtkCssProvider* provider = gtk_css_provider_new();
-    g_autoptr(GError) err = NULL;
-    gtk_css_provider_load_from_path(provider,file,&err);
-    g_autoptr(GdkScreen) scr = gdk_screen_get_default();
-    gtk_style_context_add_provider_for_screen(scr,GTK_STYLE_PROVIDER(provider),GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    return err ? NULL : provider;
+	GtkCssProvider *provider = gtk_css_provider_new();
+	g_autoptr(GError) err    = NULL;
+	gtk_css_provider_load_from_path(provider, file, &err);
+	g_autoptr(GdkScreen) scr = gdk_screen_get_default();
+	gtk_style_context_add_provider_for_screen(scr,
+	                                          GTK_STYLE_PROVIDER(provider),
+	                                          GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	return err ? NULL : provider;
 }
