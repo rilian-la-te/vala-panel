@@ -111,58 +111,58 @@ inline gchar *css_generate_font_label(gfloat size, bool is_bold)
 	    is_bold ? "bold" : "normal");
 }
 
-// inline gchar* css_generate_flat_button(GtkWidget* widget,SimplePanel* panel){
-//    gchar* returnie;
-//    GdkRGBA color, active_color;
-//    gchar* c_str;
-//    gchar* act_str;
-//    gtk_style_context_get_color(
-//                gtk_widget_get_style_context(GTK_WIDGET(panel)),
-//                gtk_widget_get_state_flags(GTK_WIDGET(panel)),
-//                &color);
-//    color.alpha = 0.8;
-//    active_color.red=color.red;
-//    active_color.green=color.green;
-//    active_color.blue=color.blue;
-//    active_color.alpha =0.5;
-//    c_str = gdk_rgba_to_string(&color);
-//    act_str = gdk_rgba_to_string(&active_color);
-//    const gchar* edge;
-//    GtkPositionType direction;
-//    g_object_get(panel,PANEL_PROP_EDGE,&direction,NULL);
-//    if (direction==GTK_POS_BOTTOM)
-//        edge="0px 0px 2px 0px";
-//    if (direction==GTK_POS_TOP)
-//        edge="2px 0px 0px 0px";
-//    if (direction==GTK_POS_RIGHT)
-//        edge="0px 2px 0px 0px";
-//    if (direction==GTK_POS_LEFT)
-//        edge="0px 0px 0px 2px";
-//    returnie = g_strdup_printf(".-panel-flat-button {\n"
-//                               "padding: 0px;\n"
-//                               " -GtkWidget-focus-line-width: 0px;\n"
-//                               " -GtkWidget-focus-padding: 0px;\n"
-//                               "border-style: solid;"
-//                               "border-color: transparent;"
-//                               "border-width: %s;"
-//                               "}\n"
-//                               ".-panel-flat-button:checked,"
-//                               ".-panel-flat-button:active {\n"
-//                               "border-style: solid;"
-//                               "border-width: %s;"
-//                               "border-color: %s;"
-//                               "}\n"
-//                               ".-panel-flat-button:hover,"
-//                               ".-panel-flat-button.highlight,"
-//                               ".-panel-flat-button:active:hover {\n"
-//                               "border-style: solid;"
-//                               "border-width: %s;"
-//                               "border-color: %s;"
-//                               "}\n",edge,edge,act_str,edge,c_str);
-//    g_free(act_str);
-//    g_free(c_str);
-//    return returnie;
-//}
+inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
+{
+	gchar *returnie;
+	GdkRGBA color, active_color;
+	gtk_style_context_get_color(gtk_widget_get_style_context(widget),
+	                            gtk_widget_get_state_flags(widget),
+	                            &color);
+	color.alpha              = 0.8;
+	active_color.red         = color.red;
+	active_color.green       = color.green;
+	active_color.blue        = color.blue;
+	active_color.alpha       = 0.5;
+	g_autofree char *c_str   = gdk_rgba_to_string(&color);
+	g_autofree char *act_str = gdk_rgba_to_string(&active_color);
+	const char *edge;
+	if (direction == GTK_POS_BOTTOM)
+		edge = "0px 0px 2px 0px";
+	if (direction == GTK_POS_TOP)
+		edge = "2px 0px 0px 0px";
+	if (direction == GTK_POS_RIGHT)
+		edge = "0px 2px 0px 0px";
+	if (direction == GTK_POS_LEFT)
+		edge = "0px 0px 0px 2px";
+	returnie     = g_strdup_printf(
+	    ".-panel-flat-button {\n"
+	    "padding: 0px;\n"
+	    " -GtkWidget-focus-line-width: 0px;\n"
+	    " -GtkWidget-focus-padding: 0px;\n"
+	    "border-style: solid;"
+	    "border-color: transparent;"
+	    "border-width: %s;"
+	    "}\n"
+	    ".-panel-flat-button:checked,"
+	    ".-panel-flat-button:active {\n"
+	    "border-style: solid;"
+	    "border-width: %s;"
+	    "border-color: %s;"
+	    "}\n"
+	    ".-panel-flat-button:hover,"
+	    ".-panel-flat-button.highlight,"
+	    ".-panel-flat-button:active:hover {\n"
+	    "border-style: solid;"
+	    "border-width: %s;"
+	    "border-color: %s;"
+	    "}\n",
+	    edge,
+	    edge,
+	    act_str,
+	    edge,
+	    c_str);
+	return returnie;
+}
 
 gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass)
 {
@@ -175,4 +175,16 @@ gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_style_context_add_class(context, klass);
 	return NULL;
+}
+void toggle_class(GtkWidget *widget, const char *klass, bool apply)
+{
+	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	if (apply)
+		gtk_style_context_add_class(context, klass);
+	else
+		gtk_style_context_remove_class(context, klass);
+}
+
+GtkCssProvider *add_css_to_widget(GtkWidget *w, const char *css)
+{
 }

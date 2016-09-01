@@ -95,6 +95,33 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				                 data);
 				break;
 			}
+			case CONF_FILE_ENTRY:
+			case CONF_DIRECTORY_ENTRY:
+			{
+				entry          = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+				GtkWidget *btn = gtk_file_chooser_button_new(
+				    _("Select a file"),
+				    CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
+				              : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+				GtkWidget *str_elem = gtk_entry_new();
+				gtk_entry_set_width_chars(GTK_ENTRY(str_elem), 40);
+				g_settings_bind(settings,
+				                key,
+				                str_elem,
+				                "text",
+				                G_SETTINGS_BIND_DEFAULT);
+				g_autofree char *str = g_settings_get_string(settings, key);
+				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(btn), str);
+				g_autofree SignalData *data =
+				    (SignalData *)g_malloc(sizeof(SignalData));
+				g_signal_connect(btn,
+				                 "file-set",
+				                 G_CALLBACK(set_file_response),
+				                 data);
+				break;
+				gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
+				gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
+			}
 			case CONF_TRIM:
 			{
 				entry = gtk_label_new(NULL);
