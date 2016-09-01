@@ -9,7 +9,7 @@
 
 void css_apply_with_class(GtkWidget *widget, const gchar *css, const gchar *klass, bool remove)
 {
-	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	if (remove)
 	{
@@ -28,8 +28,8 @@ void css_apply_with_class(GtkWidget *widget, const gchar *css, const gchar *klas
 
 gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
 {
-	g_autoptr(GError) error            = NULL;
-	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	g_autoptr(GError) error  = NULL;
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_path(provider, file, &error);
@@ -167,7 +167,7 @@ inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direct
 
 gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass)
 {
-	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_resource(provider, file);
@@ -179,7 +179,7 @@ gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *
 }
 void css_toggle_class(GtkWidget *widget, const char *klass, bool apply)
 {
-	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	if (apply)
 		gtk_style_context_add_class(context, klass);
 	else
@@ -188,8 +188,8 @@ void css_toggle_class(GtkWidget *widget, const char *klass, bool apply)
 
 GtkCssProvider *css_add_css_to_widget(GtkWidget *widget, const char *css)
 {
-	g_autoptr(GError) err              = NULL;
-	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
+	g_autoptr(GError) err    = NULL;
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	GtkCssProvider *provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
