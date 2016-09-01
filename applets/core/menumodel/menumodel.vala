@@ -70,7 +70,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     }
     public Dialog get_config_dialog()
     {
-        return Configurator.generic_config_dlg(_("Custom Menu"), toplevel, this,
+        return Configurator.generic_config_dlg(_("Custom Menu"), toplevel, this.settings,
                                       _("If internal menu is enabled, menu file will not be used, predefeined menu will be used instead."),null, GenericConfigType.TRIM,
                                       _("Is internal menu"), Key.IS_INTERNAL_MENU, GenericConfigType.BOOL,
                                       _("Is system menu (can be keybound)"), Key.IS_SYSTEM_MENU, GenericConfigType.BOOL,

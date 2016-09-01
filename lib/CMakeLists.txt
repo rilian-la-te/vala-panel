@@ -4,7 +4,6 @@ INCLUDE(GResource)
 set(VALA_FILES
 	misc.vala
 	configurator.vala
-	generic-config-dialog.vala
 	dbusmenu/dbusmenu.vala
 	menu-maker.vala
 	panel-plugin.vala

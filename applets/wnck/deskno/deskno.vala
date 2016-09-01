@@ -47,7 +47,7 @@ public class Deskno: Applet, AppletConfigurable
     {
 
        return Configurator.generic_config_dlg(_("Desktop Number / Workspace Name"),
-            toplevel, this,
+            toplevel, this.settings,
             _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
             _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
     }

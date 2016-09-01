@@ -45,7 +45,7 @@ public class Kbled: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
-                            toplevel, this,
+                            toplevel, this.settings,
                             _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
                             _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
         dlg.set_size_request(200, -1);  /* Improve geometry */

@@ -87,7 +87,7 @@ public class Tasklist: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         return Configurator.generic_config_dlg(_("Tasklist Applet"),
-                            toplevel, this,
+                            toplevel, this.settings,
                             _("Show windows from all desktops"), KEY_ALL_DESKTOPS, GenericConfigType.BOOL,
                             _("Show window`s workspace on unminimize"), KEY_SWITCH_UNMIN, GenericConfigType.BOOL,
                             _("Close windows on middle click"), KEY_MIDDLE_CLICK_CLOSE, GenericConfigType.BOOL,

@@ -34,3 +34,25 @@ namespace PanelCSS
     public string generate_font_label(double size ,bool bold);
     public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e);
 }
+namespace ValaPanel
+{
+    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/c-lib/generic-config-dialog.h")]
+    public enum GenericConfigType
+    {
+        STR,
+        INT,
+        BOOL,
+        FILE,
+        FILE_ENTRY,
+        DIRECTORY_ENTRY,
+        TRIM,
+        EXTERNAL
+    }
+}
+
+[CCode (cheader_filename = "lib/c-lib/generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
+namespace ValaPanel.Configurator
+{
+    public static Dialog generic_config_dlg(string title, Gtk.Window parent,
+                                    GLib.Settings settings, ...);
+}

@@ -99,7 +99,7 @@ public class Clock: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         return Configurator.generic_config_dlg(_("Digital Clock"),
-        toplevel, this,
+        toplevel, this.settings,
         _("Clock Format"), LABEL_FORMAT, GenericConfigType.STR,
         _("Tooltip Format"), TIP_FORMAT, GenericConfigType.STR,
         _("Format codes: man 3 strftime; %n for line break"), null, GenericConfigType.TRIM,

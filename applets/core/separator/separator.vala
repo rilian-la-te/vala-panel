@@ -63,7 +63,7 @@ public class Sep: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         return Configurator.generic_config_dlg(_("Separator Applet"),
-                            toplevel, this,
+                            toplevel, this.settings,
                             _("Size"), KEY_SIZE, GenericConfigType.INT,
                             _("Visible separator"), KEY_SHOW_SEPARATOR, GenericConfigType.BOOL);
     }

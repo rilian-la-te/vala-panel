@@ -27,6 +27,7 @@ glib_compile_resources(RESOURCES
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
+include_directories(${CMAKE_SOURCE_DIR})
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}

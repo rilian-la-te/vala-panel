@@ -60,7 +60,7 @@ public class Wincmd: Applet, AppletConfigurable
     {
 
        return Configurator.generic_config_dlg(_("Minimize All Windows"),
-        toplevel, this,
+        toplevel, this.settings,
         _("Alternately iconify/shade and raise"), KEY_TOGGLE, GenericConfigType.BOOL
         /* FIXME: configure buttons 1 and 2 */);
     }

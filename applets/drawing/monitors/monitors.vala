@@ -365,7 +365,7 @@ public class Monitors: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         return Configurator.generic_config_dlg(_("Resource monitors"),
-            toplevel, this,
+            toplevel, this.settings,
             _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
             _("CPU color"), CPU_CL, GenericConfigType.STR,
             _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,

@@ -193,7 +193,7 @@ public class Dirmenu: Applet, AppletConfigurable
     public Dialog get_config_dialog()
     {
         return Configurator.generic_config_dlg(_("Directory Menu"),
-                            toplevel, this,
+                            toplevel, this.settings,
                             _("Directory"), DIR, GenericConfigType.DIRECTORY_ENTRY,
                             _("Label"), LABEL, GenericConfigType.STR,
                             _("Icon"), ICON, GenericConfigType.FILE_ENTRY);
