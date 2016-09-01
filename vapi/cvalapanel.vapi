@@ -44,6 +44,7 @@ namespace ValaPanel
         BOOL,
         FILE,
         FILE_ENTRY,
+        DIRECTORY,
         DIRECTORY_ENTRY,
         TRIM,
         EXTERNAL

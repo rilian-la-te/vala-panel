@@ -83,26 +83,29 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 			{
 				entry = gtk_file_chooser_button_new(
 				    _("Select a file"),
-				    CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
-				              : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+				    type == CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
+				                      : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
-				g_autofree SignalData *data =
-				    (SignalData *)g_malloc(sizeof(SignalData));
+				SignalData *data = (SignalData *)g_malloc(sizeof(SignalData));
+				data->key        = key;
+				data->settings   = settings;
 				g_signal_connect(entry,
 				                 "file-set",
 				                 G_CALLBACK(set_file_response),
 				                 data);
+				g_signal_connect_swapped(dlg, "destroy", G_CALLBACK(g_free), data);
 				break;
 			}
 			case CONF_FILE_ENTRY:
 			case CONF_DIRECTORY_ENTRY:
 			{
-				entry          = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+				entry          = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 				GtkWidget *btn = gtk_file_chooser_button_new(
 				    _("Select a file"),
-				    CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
-				              : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+				    type == CONF_FILE_ENTRY
+				        ? GTK_FILE_CHOOSER_ACTION_OPEN
+				        : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 				GtkWidget *str_elem = gtk_entry_new();
 				gtk_entry_set_width_chars(GTK_ENTRY(str_elem), 40);
 				g_settings_bind(settings,
@@ -112,15 +115,17 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				                G_SETTINGS_BIND_DEFAULT);
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(btn), str);
-				g_autofree SignalData *data =
-				    (SignalData *)g_malloc(sizeof(SignalData));
+				SignalData *data = (SignalData *)g_malloc(sizeof(SignalData));
+				data->key        = key;
+				data->settings   = settings;
 				g_signal_connect(btn,
 				                 "file-set",
 				                 G_CALLBACK(set_file_response),
-				                 data);
-				break;
+				                 &data);
+				g_signal_connect_swapped(dlg, "destroy", G_CALLBACK(g_free), data);
 				gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
 				gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
+				break;
 			}
 			case CONF_TRIM:
 			{
