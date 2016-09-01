@@ -69,37 +69,37 @@ enum
 
 static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg);
 static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, gboolean all_ids,
-					      long id);
+                                              long id);
 static void balloon_message_remove(TrayPlugin *tr, Window window, gboolean all_ids, long id);
 static void tray_unmanage_selection(TrayPlugin *tr);
 static void resolve_atoms()
 {
 	static const char *atom_names[N_ATOMS];
 
-	atom_names[I_UTF8_STRING]			= "UTF8_STRING";
-	atom_names[I_XROOTPMAP_ID]			= "_XROOTPMAP_ID";
+	atom_names[I_UTF8_STRING]                       = "UTF8_STRING";
+	atom_names[I_XROOTPMAP_ID]                      = "_XROOTPMAP_ID";
 	atom_names[I_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR] = "_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR";
-	atom_names[I_NET_SYSTEM_TRAY_OPCODE]		= "_NET_SYSTEM_TRAY_OPCODE";
+	atom_names[I_NET_SYSTEM_TRAY_OPCODE]            = "_NET_SYSTEM_TRAY_OPCODE";
 	atom_names[I_NET_SYSTEM_TRAY_MESSAGE_DATA]      = "_NET_SYSTEM_TRAY_MESSAGE_DATA";
 	atom_names[I_NET_SYSTEM_TRAY_ORIENTATION]       = "_NET_SYSTEM_TRAY_ORIENTATION";
-	atom_names[I_MANAGER]				= "MANAGER";
+	atom_names[I_MANAGER]                           = "MANAGER";
 	Atom atoms[N_ATOMS];
 	if (!XInternAtoms(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()),
-			  (char **)atom_names,
-			  N_ATOMS,
-			  False,
-			  atoms))
+	                  (char **)atom_names,
+	                  N_ATOMS,
+	                  False,
+	                  atoms))
 	{
 		g_warning("Error: unable to return Atoms");
 		return;
 	}
-	a_UTF8_STRING			    = atoms[I_UTF8_STRING];
-	a_XROOTPMAP_ID			    = atoms[I_XROOTPMAP_ID];
+	a_UTF8_STRING                       = atoms[I_UTF8_STRING];
+	a_XROOTPMAP_ID                      = atoms[I_XROOTPMAP_ID];
 	a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR = atoms[I_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR];
-	a_NET_SYSTEM_TRAY_OPCODE	    = atoms[I_NET_SYSTEM_TRAY_OPCODE];
+	a_NET_SYSTEM_TRAY_OPCODE            = atoms[I_NET_SYSTEM_TRAY_OPCODE];
 	a_NET_SYSTEM_TRAY_MESSAGE_DATA      = atoms[I_NET_SYSTEM_TRAY_MESSAGE_DATA];
 	a_NET_SYSTEM_TRAY_ORIENTATION       = atoms[I_NET_SYSTEM_TRAY_ORIENTATION];
-	a_MANAGER			    = atoms[I_MANAGER];
+	a_MANAGER                           = atoms[I_MANAGER];
 	return;
 }
 
@@ -175,7 +175,7 @@ static void balloon_message_advance(TrayPlugin *tr, gboolean destroy_timer, gboo
 {
 	/* Remove the message from the queue. */
 	BalloonMessage *msg = tr->messages;
-	tr->messages	= msg->flink;
+	tr->messages        = msg->flink;
 
 	/* Cancel the timer, if set.  This is not done when the timer has expired. */
 	if ((destroy_timer) && (tr->balloon_message_timer != 0))
@@ -198,7 +198,7 @@ static void balloon_message_advance(TrayPlugin *tr, gboolean destroy_timer, gboo
 
 /* Handler for "button-press-event" from balloon message popup menu item. */
 static gboolean balloon_message_activate_event(GtkWidget *widget, GdkEventButton *event,
-					       TrayPlugin *tr)
+                                               TrayPlugin *tr)
 {
 	balloon_message_advance(tr, TRUE, TRUE);
 	return TRUE;
@@ -227,9 +227,9 @@ static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg)
 	 */
 	gtk_widget_add_events(tr->balloon_message_popup, GDK_BUTTON_PRESS_MASK);
 	g_signal_connect(tr->balloon_message_popup,
-			 "button-press-event",
-			 G_CALLBACK(balloon_message_activate_event),
-			 (gpointer)tr);
+	                 "button-press-event",
+	                 G_CALLBACK(balloon_message_activate_event),
+	                 (gpointer)tr);
 
 	/* Compute the desired position in screen coordinates near the tray plugin. */
 	int x, y;
@@ -269,7 +269,7 @@ static void balloon_message_queue(TrayPlugin *tr, BalloonMessage *msg)
  * Used in two scenarios: client issues CANCEL (ID significant), client plug removed (ID don't
  * care). */
 static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, gboolean all_ids,
-					      long id)
+                                              long id)
 {
 	BalloonMessage *msg_pred = NULL;
 	BalloonMessage *msg      = tr->incomplete_messages;
@@ -358,12 +358,12 @@ static void balloon_message_begin_event(TrayPlugin *tr, XClientMessageEvent *xev
 
 		/* Allocate a BalloonMessage structure describing the message. */
 		BalloonMessage *msg   = g_new0(BalloonMessage, 1);
-		msg->window	   = xevent->window;
-		msg->timeout	  = xevent->data.l[2];
-		msg->length	   = xevent->data.l[3];
-		msg->id		      = xevent->data.l[4];
+		msg->window           = xevent->window;
+		msg->timeout          = xevent->data.l[2];
+		msg->length           = xevent->data.l[3];
+		msg->id               = xevent->data.l[4];
 		msg->remaining_length = msg->length;
-		msg->string	   = g_new0(char, msg->length + 1);
+		msg->string           = g_new0(char, msg->length + 1);
 
 		/* Message length of 0 indicates that no follow-on messages will be sent. */
 		if (msg->length == 0)
@@ -371,7 +371,7 @@ static void balloon_message_begin_event(TrayPlugin *tr, XClientMessageEvent *xev
 		else
 		{
 			/* Add the new message to the queue to await its message text. */
-			msg->flink		= tr->incomplete_messages;
+			msg->flink              = tr->incomplete_messages;
 			tr->incomplete_messages = msg;
 		}
 	}
@@ -448,7 +448,7 @@ static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
 	/* Allocate and initialize new client structure. */
 	TrayClient *tc = g_new0(TrayClient, 1);
 	tc->window     = xevent->data.l[2];
-	tc->tr	 = tr;
+	tc->tr         = tr;
 
 	/* Allocate a socket.  This is the tray side of the Xembed connection. */
 	tc->socket = GTK_WIDGET(
@@ -476,10 +476,10 @@ static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
 		return;
 	}
 	g_object_bind_property(vala_panel_applet_get_toplevel(tr->applet),
-			       "icon-size",
-			       tc->socket,
-			       "icon-size",
-			       G_BINDING_SYNC_CREATE);
+	                       "icon-size",
+	                       tc->socket,
+	                       "icon-size",
+	                       G_BINDING_SYNC_CREATE);
 	/* Link the client structure into the client list. */
 	if (tc_pred == NULL)
 	{
@@ -503,7 +503,7 @@ static GdkFilterReturn tray_event_filter(XEvent *xev, GdkEvent *event, TrayPlugi
 		 * of plug_removed events is observed to be unreliable if the client
 		 * disconnects within less than 10 ms. */
 		XDestroyWindowEvent *xev_destroy = (XDestroyWindowEvent *)xev;
-		TrayClient *tc			 = client_lookup(tr, xev_destroy->window);
+		TrayClient *tc                   = client_lookup(tr, xev_destroy->window);
 		if (tc != NULL)
 			client_delete(tr, tc, TRUE, TRUE);
 	}
@@ -573,14 +573,14 @@ static void tray_unmanage_selection(TrayPlugin *tr)
 			guint32 timestamp =
 			    gdk_x11_get_server_time(gtk_widget_get_window(invisible));
 			gdk_selection_owner_set_for_display(display,
-							    NULL,
-							    tr->selection_atom,
-							    timestamp,
-							    TRUE);
+			                                    NULL,
+			                                    tr->selection_atom,
+			                                    timestamp,
+			                                    TRUE);
 		}
 
 		/* Destroy the invisible window. */
-		tr->invisible	= NULL;
+		tr->invisible        = NULL;
 		tr->invisible_window = None;
 		gtk_widget_destroy(invisible);
 		g_object_unref(G_OBJECT(invisible));
@@ -628,13 +628,13 @@ static void tray_set_visual_property(GtkWidget *invisible, GdkScreen *screen)
 	data[0] = XVisualIDFromVisual(xvisual);
 
 	XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
-			GDK_WINDOW_XID(window),
-			visual_atom,
-			XA_VISUALID,
-			32,
-			PropModeReplace,
-			(guchar *)&data,
-			1);
+	                GDK_WINDOW_XID(window),
+	                visual_atom,
+	                XA_VISUALID,
+	                32,
+	                PropModeReplace,
+	                (guchar *)&data,
+	                1);
 }
 
 static void tray_draw_icon(GtkWidget *widget, gpointer data)
@@ -694,14 +694,14 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 	/* Try to claim the _NET_SYSTEM_TRAY_Sn selection. */
 	guint32 timestamp = gdk_x11_get_server_time(gtk_widget_get_window(invisible));
 	if (gdk_selection_owner_set_for_display(display,
-						gtk_widget_get_window(invisible),
-						gdk_selection_atom,
-						timestamp,
-						TRUE))
+	                                        gtk_widget_get_window(invisible),
+	                                        gdk_selection_atom,
+	                                        timestamp,
+	                                        TRUE))
 	{
 		/* Send MANAGER client event (ICCCM). */
 		XClientMessageEvent xev;
-		xev.type	 = ClientMessage;
+		xev.type         = ClientMessage;
 		xev.window       = RootWindowOfScreen(xscreen);
 		xev.message_type = a_MANAGER;
 		xev.format       = 32;
@@ -711,23 +711,23 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 		xev.data.l[3]    = 0; /* manager specific data */
 		xev.data.l[4]    = 0; /* manager specific data */
 		XSendEvent(GDK_DISPLAY_XDISPLAY(display),
-			   RootWindowOfScreen(xscreen),
-			   False,
-			   StructureNotifyMask,
-			   (XEvent *)&xev);
+		           RootWindowOfScreen(xscreen),
+		           False,
+		           StructureNotifyMask,
+		           (XEvent *)&xev);
 
 		/* Set the orientation property.
 		 * We always set "horizontal" since even vertical panels are designed to use a lot
 		 * of width. */
 		gulong data = SYSTEM_TRAY_ORIENTATION_HORZ;
 		XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
-				GDK_WINDOW_XID(gtk_widget_get_window(invisible)),
-				a_NET_SYSTEM_TRAY_ORIENTATION,
-				XA_CARDINAL,
-				32,
-				PropModeReplace,
-				(guchar *)&data,
-				1);
+		                GDK_WINDOW_XID(gtk_widget_get_window(invisible)),
+		                a_NET_SYSTEM_TRAY_ORIENTATION,
+		                XA_CARDINAL,
+		                32,
+		                PropModeReplace,
+		                (guchar *)&data,
+		                1);
 	}
 	else
 	{
@@ -738,12 +738,12 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 
 	/* Allocate plugin context and set into Plugin private data pointer and static variable. */
 	TrayPlugin *tr     = g_new0(TrayPlugin, 1);
-	tr->applet	 = applet;
+	tr->applet         = applet;
 	tr->selection_atom = gdk_selection_atom;
 	/* Add GDK event filter. */
 	gdk_window_add_filter(NULL, (GdkFilterFunc)tray_event_filter, tr);
 	/* Reference the window since it is never added to a container. */
-	tr->invisible	= g_object_ref_sink(G_OBJECT(invisible));
+	tr->invisible        = g_object_ref_sink(G_OBJECT(invisible));
 	tr->invisible_window = GDK_WINDOW_XID(gtk_widget_get_window(invisible));
 
 	/* Allocate top level widget and set into Plugin widget pointer. */

@@ -16,7 +16,7 @@ struct _ValaPanelManagerInterface
 	GTypeInterface g_iface;
 	/*loading*/
 	bool (*start_panels_from_profile)(ValaPanelManager *self, GtkApplication *app,
-					  const char *profile);
+	                                  const char *profile);
 	/*struts*/
 	long (*can_strut)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 	void (*update_strut)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
@@ -26,28 +26,28 @@ struct _ValaPanelManagerInterface
 	void (*ah_state_set)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 	/*positioning requests*/
 	void (*move_to_alloc)(ValaPanelManager *f, ValaPanelToplevelUnit *top,
-			      GtkAllocation *alloc);
+	                      GtkAllocation *alloc);
 	void (*move_to_side)(ValaPanelManager *f, ValaPanelToplevelUnit *top,
-			     GtkPositionType alloc);
+	                     GtkPositionType alloc);
 	/*GSettings management*/
 	GSettings *(*get_settings_for_scheme)(ValaPanelManager *self, const char *scheme,
-					      const char *path);
+	                                      const char *path);
 	gpointer padding[12];
 };
 
 bool vala_panel_manager_start_panels_from_profile(ValaPanelManager *self, GtkApplication *app,
-						  const char *profile);
+                                                  const char *profile);
 long vala_panel_manager_can_strut(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_update_strut(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_ah_start(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_ah_stop(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_ah_state_set(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_move_to_alloc(ValaPanelManager *f, ValaPanelToplevelUnit *top,
-				      GtkAllocation *alloc);
+                                      GtkAllocation *alloc);
 void vala_panel_manager_move_to_side(ValaPanelManager *f, ValaPanelToplevelUnit *top,
-				     GtkPositionType alloc);
+                                     GtkPositionType alloc);
 GSettings *vala_panel_manager_get_settings_for_scheme(ValaPanelManager *self, const char *scheme,
-						      const char *path);
+                                                      const char *path);
 
 G_END_DECLS
 

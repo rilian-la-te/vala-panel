@@ -20,14 +20,14 @@ void css_apply_with_class(GtkWidget *widget, const gchar *css, const gchar *klas
 		gtk_css_provider_load_from_data(provider, css, -1, NULL);
 		gtk_style_context_add_class(context, klass);
 		gtk_style_context_add_provider(context,
-					       GTK_STYLE_PROVIDER(provider),
-					       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		                               GTK_STYLE_PROVIDER(provider),
+		                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 }
 
 gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
 {
-	g_autoptr(GError) error		   = NULL;
+	g_autoptr(GError) error            = NULL;
 	g_autoptr(GtkStyleContext) context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
@@ -38,14 +38,14 @@ gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
 		return returnie;
 	}
 	gtk_style_context_add_provider(context,
-				       GTK_STYLE_PROVIDER(provider),
-				       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	                               GTK_STYLE_PROVIDER(provider),
+	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	return NULL;
 }
 
 gchar *css_apply_from_file_to_app(const gchar *file)
 {
-	g_autoptr(GError) error		   = NULL;
+	g_autoptr(GError) error            = NULL;
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_path(provider, file, &error);
 	if (error)
@@ -54,8 +54,8 @@ gchar *css_apply_from_file_to_app(const gchar *file)
 		return returnie;
 	}
 	gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-						  GTK_STYLE_PROVIDER(provider),
-						  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	                                          GTK_STYLE_PROVIDER(provider),
+	                                          GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	return NULL;
 }
 
@@ -171,8 +171,8 @@ gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_resource(provider, file);
 	gtk_style_context_add_provider(context,
-				       GTK_STYLE_PROVIDER(provider),
-				       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	                               GTK_STYLE_PROVIDER(provider),
+	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_style_context_add_class(context, klass);
 	return NULL;
 }

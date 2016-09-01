@@ -8,17 +8,17 @@
 G_BEGIN_DECLS
 
 G_DECLARE_INTERFACE(ValaPanelAppletEngine, vala_panel_applet_engine, VALA_PANEL, APPLET_ENGINE,
-		    GObject)
+                    GObject)
 
 struct _ValaPanelAppletEngineInterface
 {
 	GTypeInterface g_iface;
 	const char *const *(*get_available_types)(ValaPanelAppletEngine *self);
 	ValaPanelAppletInfo *(*get_applet_info_for_type)(ValaPanelAppletEngine *self,
-							 const char *applet_type);
+	                                                 const char *applet_type);
 	ValaPanelAppletWidget *(*get_applet_widget_for_type)(ValaPanelAppletEngine *self,
-							     const char *applet_type,
-							     const char *uuid);
+	                                                     const char *applet_type,
+	                                                     const char *uuid);
 	gpointer padding[12];
 };
 

@@ -3,14 +3,14 @@
 G_DEFINE_INTERFACE(ValaPanelPopupManager, vala_panel_popup_manager, G_TYPE_OBJECT)
 
 void vala_panel_popup_manager_register_popover(ValaPanelPopupManager *self, GtkWidget *widget,
-					       GtkPopover *popover)
+                                               GtkPopover *popover)
 {
 	if (self)
 		VALA_PANEL_POPUP_MANAGER_GET_IFACE(self)->register_popover(self, widget, popover);
 }
 
 void vala_panel_popup_manager_register_menu(ValaPanelPopupManager *self, GtkWidget *widget,
-					    GMenuModel *menu)
+                                            GMenuModel *menu)
 {
 	if (self)
 		VALA_PANEL_POPUP_MANAGER_GET_IFACE(self)->register_menu(self, widget, menu);

@@ -75,13 +75,13 @@ enum
 ValaPanelApplication *vala_panel_application_new()
 {
 	return (ValaPanelApplication *)g_object_new(vala_panel_application_get_type(),
-						    "application-id",
-						    "org.valapanel.application",
-						    "flags",
-						    G_APPLICATION_HANDLES_COMMAND_LINE,
-						    "resource-base-path",
-						    "/org/vala-panel/app",
-						    NULL);
+	                                            "application-id",
+	                                            "org.valapanel.application",
+	                                            "flags",
+	                                            G_APPLICATION_HANDLES_COMMAND_LINE,
+	                                            "resource-base-path",
+	                                            "/org/vala-panel/app",
+	                                            NULL);
 }
 
 static void vala_panel_application_init(ValaPanelApplication *self)
@@ -96,8 +96,8 @@ static void vala_panel_application_startup(GApplication *base)
 	ValaPanelApplication *self = (ValaPanelApplication *)base;
 	G_APPLICATION_CLASS(vala_panel_application_parent_class)
 	    ->startup((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(self,
-								 gtk_application_get_type(),
-								 GtkApplication));
+	                                                         gtk_application_get_type(),
+	                                                         GtkApplication));
 	g_application_mark_busy((GApplication *)self);
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(CONFIG_GETTEXT_PACKAGE, CONFIG_LOCALE_DIR);
@@ -105,19 +105,19 @@ static void vala_panel_application_startup(GApplication *base)
 	textdomain(CONFIG_GETTEXT_PACKAGE);
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), CONFIG_DATADIR "/images");
 	g_action_map_add_action_entries((GActionMap *)self,
-					vala_panel_application_app_entries,
-					G_N_ELEMENTS(vala_panel_application_app_entries),
-					self);
+	                                vala_panel_application_app_entries,
+	                                G_N_ELEMENTS(vala_panel_application_app_entries),
+	                                self);
 	g_action_map_add_action_entries((GActionMap *)self,
-					vala_panel_application_menu_entries,
-					G_N_ELEMENTS(vala_panel_application_menu_entries),
-					self);
+	                                vala_panel_application_menu_entries,
+	                                G_N_ELEMENTS(vala_panel_application_menu_entries),
+	                                self);
 }
 
 static void vala_panel_application_shutdown(GApplication *base)
 {
 	g_autoptr(GSList) list = NULL;
-	GList *lst	     = gtk_application_get_windows(GTK_APPLICATION(base));
+	GList *lst             = gtk_application_get_windows(GTK_APPLICATION(base));
 	for (GList *il = lst; il != NULL; il = il->next)
 		list = g_slist_append(list, il->data);
 	for (GSList *il = list; il != NULL; il = il->next)
@@ -128,24 +128,24 @@ static void vala_panel_application_shutdown(GApplication *base)
 	}
 	G_APPLICATION_CLASS(vala_panel_application_parent_class)
 	    ->shutdown((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(base,
-								  gtk_application_get_type(),
-								  GtkApplication));
+	                                                          gtk_application_get_type(),
+	                                                          GtkApplication));
 	if (VALA_PANEL_APPLICATION(base)->restart)
 	{
 		char cwd[1024];
 		getcwd(cwd, 1024);
 		const char *argv[] = { CONFIG_GETTEXT_PACKAGE,
-				       "-p",
-				       VALA_PANEL_APPLICATION(base)->profile };
+			               "-p",
+			               VALA_PANEL_APPLICATION(base)->profile };
 		g_auto(GStrv) envp = g_get_environ();
 		g_spawn_async(cwd,
-			      (GStrv)argv,
-			      envp,
-			      G_SPAWN_SEARCH_PATH,
-			      child_spawn_func,
-			      NULL,
-			      NULL,
-			      NULL);
+		              (GStrv)argv,
+		              envp,
+		              G_SPAWN_SEARCH_PATH,
+		              child_spawn_func,
+		              NULL,
+		              NULL,
+		              NULL);
 	}
 }
 
@@ -163,82 +163,82 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	//    G_OBJECT_CLASS (klass)->constructor = vala_panel_app_constructor;
 	//    G_OBJECT_CLASS (klass)->finalize = vala_panel_app_finalize;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_PROFILE,
-					g_param_spec_string("profile",
-							    "profile",
-							    "profile",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_PROFILE,
+	                                g_param_spec_string("profile",
+	                                                    "profile",
+	                                                    "profile",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_TERMINAL_COMMAND,
-					g_param_spec_string("terminal-command",
-							    "terminal-command",
-							    "terminal-command",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_TERMINAL_COMMAND,
+	                                g_param_spec_string("terminal-command",
+	                                                    "terminal-command",
+	                                                    "terminal-command",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_LOGOUT_COMMAND,
-					g_param_spec_string("logout-command",
-							    "logout-command",
-							    "logout-command",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_LOGOUT_COMMAND,
+	                                g_param_spec_string("logout-command",
+	                                                    "logout-command",
+	                                                    "logout-command",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_SHUTDOWN_COMMAND,
-					g_param_spec_string("shutdown-command",
-							    "shutdown-command",
-							    "shutdown-command",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_SHUTDOWN_COMMAND,
+	                                g_param_spec_string("shutdown-command",
+	                                                    "shutdown-command",
+	                                                    "shutdown-command",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_IS_DARK,
-					g_param_spec_boolean("is-dark",
-							     "is-dark",
-							     "is-dark",
-							     false,
-							     G_PARAM_STATIC_NAME |
-								 G_PARAM_STATIC_NICK |
-								 G_PARAM_STATIC_BLURB |
-								 G_PARAM_READABLE |
-								 G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_IS_DARK,
+	                                g_param_spec_boolean("is-dark",
+	                                                     "is-dark",
+	                                                     "is-dark",
+	                                                     false,
+	                                                     G_PARAM_STATIC_NAME |
+	                                                         G_PARAM_STATIC_NICK |
+	                                                         G_PARAM_STATIC_BLURB |
+	                                                         G_PARAM_READABLE |
+	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_IS_CUSTOM,
-					g_param_spec_boolean("is-custom",
-							     "is-custom",
-							     "is-custom",
-							     false,
-							     G_PARAM_STATIC_NAME |
-								 G_PARAM_STATIC_NICK |
-								 G_PARAM_STATIC_BLURB |
-								 G_PARAM_READABLE |
-								 G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_IS_CUSTOM,
+	                                g_param_spec_boolean("is-custom",
+	                                                     "is-custom",
+	                                                     "is-custom",
+	                                                     false,
+	                                                     G_PARAM_STATIC_NAME |
+	                                                         G_PARAM_STATIC_NICK |
+	                                                         G_PARAM_STATIC_BLURB |
+	                                                         G_PARAM_READABLE |
+	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APP_CSS,
-					g_param_spec_string("css",
-							    "css",
-							    "css",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APP_CSS,
+	                                g_param_spec_string("css",
+	                                                    "css",
+	                                                    "css",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 }
 
 int main(int argc, char *argv[])

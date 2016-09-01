@@ -59,20 +59,20 @@ void vala_panel_applet_info_init(ValaPanelAppletInfo *self)
 static void vala_panel_applet_info_bind_settings(ValaPanelAppletInfo *self)
 {
 	g_settings_bind(self->settings,
-			"position",
-			(GObject *)self,
-			"position",
-			(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
+	                "position",
+	                (GObject *)self,
+	                "position",
+	                (G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(self->settings,
-			"alignment",
-			(GObject *)self,
-			"alignment",
-			(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
+	                "alignment",
+	                (GObject *)self,
+	                "alignment",
+	                (G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
 	g_settings_bind(self->settings,
-			"expand",
-			(GObject *)self,
-			"expand",
-			(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
+	                "expand",
+	                (GObject *)self,
+	                "expand",
+	                (G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET) | G_SETTINGS_BIND_DEFAULT);
 }
 
 static void vala_panel_applet_info_unbind_settings(ValaPanelAppletInfo *self)
@@ -96,12 +96,12 @@ static void vala_panel_applet_info_constructed(ValaPanelAppletInfo *self)
 }
 
 static void vala_panel_applet_info_get_property(GObject *object, guint property_id, GValue *value,
-						GParamSpec *pspec)
+                                                GParamSpec *pspec)
 {
 	ValaPanelAppletInfo *self;
 	self = G_TYPE_CHECK_INSTANCE_CAST(object,
-					  vala_panel_applet_info_get_type(),
-					  ValaPanelAppletInfo);
+	                                  vala_panel_applet_info_get_type(),
+	                                  ValaPanelAppletInfo);
 	switch (property_id)
 	{
 	case VALA_PANEL_APPLET_INFO_APPLET:
@@ -147,12 +147,12 @@ static void vala_panel_applet_info_get_property(GObject *object, guint property_
 }
 
 static void vala_panel_applet_info_set_property(GObject *object, guint property_id,
-						const GValue *value, GParamSpec *pspec)
+                                                const GValue *value, GParamSpec *pspec)
 {
 	ValaPanelAppletInfo *self;
 	self = G_TYPE_CHECK_INSTANCE_CAST(object,
-					  vala_panel_applet_info_get_type(),
-					  ValaPanelAppletInfo);
+	                                  vala_panel_applet_info_get_type(),
+	                                  ValaPanelAppletInfo);
 	switch (property_id)
 	{
 	case VALA_PANEL_APPLET_INFO_APPLET:
@@ -217,132 +217,132 @@ void vala_panel_applet_info_class_init(ValaPanelAppletInfoClass *klass)
 	G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_info_set_property;
 	G_OBJECT_CLASS(klass)->finalize     = vala_panel_applet_info_finalize;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_APPLET,
-					g_param_spec_object("applet",
-							    "applet",
-							    "applet",
-							    vala_panel_applet_widget_get_type(),
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE));
+	                                VALA_PANEL_APPLET_INFO_APPLET,
+	                                g_param_spec_object("applet",
+	                                                    "applet",
+	                                                    "applet",
+	                                                    vala_panel_applet_widget_get_type(),
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_SETTINGS,
-					g_param_spec_object("settings",
-							    "settings",
-							    "settings",
-							    G_TYPE_SETTINGS,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE));
+	                                VALA_PANEL_APPLET_INFO_SETTINGS,
+	                                g_param_spec_object("settings",
+	                                                    "settings",
+	                                                    "settings",
+	                                                    G_TYPE_SETTINGS,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_ICON,
-					g_param_spec_string("icon",
-							    "icon",
-							    "icon",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE));
+	                                VALA_PANEL_APPLET_INFO_ICON,
+	                                g_param_spec_string("icon",
+	                                                    "icon",
+	                                                    "icon",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_APPLET_TYPE,
-					g_param_spec_string("applet-type",
-							    "applet-type",
-							    "applet-type",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE));
+	                                VALA_PANEL_APPLET_INFO_APPLET_TYPE,
+	                                g_param_spec_string("applet-type",
+	                                                    "applet-type",
+	                                                    "applet-type",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_NAME,
-					g_param_spec_string("name",
-							    "name",
-							    "name",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE));
+	                                VALA_PANEL_APPLET_INFO_NAME,
+	                                g_param_spec_string("name",
+	                                                    "name",
+	                                                    "name",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_DESCRIPTION,
-					g_param_spec_string("description",
-							    "description",
-							    "description",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE));
+	                                VALA_PANEL_APPLET_INFO_DESCRIPTION,
+	                                g_param_spec_string("description",
+	                                                    "description",
+	                                                    "description",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_UUID,
-					g_param_spec_string("uuid",
-							    "uuid",
-							    "uuid",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE |
-								G_PARAM_CONSTRUCT_ONLY));
+	                                VALA_PANEL_APPLET_INFO_UUID,
+	                                g_param_spec_string("uuid",
+	                                                    "uuid",
+	                                                    "uuid",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE |
+	                                                        G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_FILENAME,
-					g_param_spec_string("filename",
-							    "filename",
-							    "filename",
-							    NULL,
-							    G_PARAM_STATIC_NAME |
-								G_PARAM_STATIC_NICK |
-								G_PARAM_STATIC_BLURB |
-								G_PARAM_READABLE |
-								G_PARAM_WRITABLE |
-								G_PARAM_CONSTRUCT_ONLY));
+	                                VALA_PANEL_APPLET_INFO_FILENAME,
+	                                g_param_spec_string("filename",
+	                                                    "filename",
+	                                                    "filename",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE |
+	                                                        G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_ALIGNMENT,
-					g_param_spec_enum("alignment",
-							  "alignment",
-							  "alignment",
-							  GTK_TYPE_ALIGN,
-							  0,
-							  G_PARAM_STATIC_NAME |
-							      G_PARAM_STATIC_NICK |
-							      G_PARAM_STATIC_BLURB |
-							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+	                                VALA_PANEL_APPLET_INFO_ALIGNMENT,
+	                                g_param_spec_enum("alignment",
+	                                                  "alignment",
+	                                                  "alignment",
+	                                                  GTK_TYPE_ALIGN,
+	                                                  0,
+	                                                  G_PARAM_STATIC_NAME |
+	                                                      G_PARAM_STATIC_NICK |
+	                                                      G_PARAM_STATIC_BLURB |
+	                                                      G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_ORIENTATION,
-					g_param_spec_enum("orientation",
-							  "orientation",
-							  "orientation",
-							  GTK_TYPE_ORIENTATION,
-							  0,
-							  G_PARAM_STATIC_NAME |
-							      G_PARAM_STATIC_NICK |
-							      G_PARAM_STATIC_BLURB |
-							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+	                                VALA_PANEL_APPLET_INFO_ORIENTATION,
+	                                g_param_spec_enum("orientation",
+	                                                  "orientation",
+	                                                  "orientation",
+	                                                  GTK_TYPE_ORIENTATION,
+	                                                  0,
+	                                                  G_PARAM_STATIC_NAME |
+	                                                      G_PARAM_STATIC_NICK |
+	                                                      G_PARAM_STATIC_BLURB |
+	                                                      G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_POSITION,
-					g_param_spec_int("position",
-							 "position",
-							 "position",
-							 G_MININT,
-							 G_MAXINT,
-							 0,
-							 G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-							     G_PARAM_STATIC_BLURB |
-							     G_PARAM_READABLE | G_PARAM_WRITABLE));
+	                                VALA_PANEL_APPLET_INFO_POSITION,
+	                                g_param_spec_int("position",
+	                                                 "position",
+	                                                 "position",
+	                                                 G_MININT,
+	                                                 G_MAXINT,
+	                                                 0,
+	                                                 G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                                     G_PARAM_STATIC_BLURB |
+	                                                     G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
-					VALA_PANEL_APPLET_INFO_EXPAND,
-					g_param_spec_boolean("expand",
-							     "expand",
-							     "expand",
-							     false,
-							     G_PARAM_STATIC_NAME |
-								 G_PARAM_STATIC_NICK |
-								 G_PARAM_STATIC_BLURB |
-								 G_PARAM_READABLE |
-								 G_PARAM_WRITABLE));
+	                                VALA_PANEL_APPLET_INFO_EXPAND,
+	                                g_param_spec_boolean("expand",
+	                                                     "expand",
+	                                                     "expand",
+	                                                     false,
+	                                                     G_PARAM_STATIC_NAME |
+	                                                         G_PARAM_STATIC_NICK |
+	                                                         G_PARAM_STATIC_BLURB |
+	                                                         G_PARAM_READABLE |
+	                                                         G_PARAM_WRITABLE));
 }

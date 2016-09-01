@@ -10,7 +10,7 @@ const char *const *vala_panel_applet_engine_get_available_types(ValaPanelAppletE
 }
 
 ValaPanelAppletInfo *vala_panel_applet_engine_get_applet_info_for_type(ValaPanelAppletEngine *self,
-								       const char *applet_type)
+                                                                       const char *applet_type)
 {
 	if (self &&
 	    g_strv_contains(vala_panel_applet_engine_get_available_types(self), applet_type))

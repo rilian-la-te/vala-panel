@@ -22,11 +22,11 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 	va_list l;
 	va_start(l, settings);
 	GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
-								parent,
-								GTK_DIALOG_DESTROY_WITH_PARENT,
-								_("_Close"),
-								GTK_RESPONSE_CLOSE,
-								NULL));
+	                                                        parent,
+	                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                                        _("_Close"),
+	                                                        GTK_RESPONSE_CLOSE,
+	                                                        NULL));
 	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_box_set_spacing(dlg_vbox, 4);
@@ -35,10 +35,10 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 		const char *name = va_arg(l, const char *);
 		if (!name)
 			break;
-		GtkLabel *label	= GTK_LABEL(gtk_label_new(name));
+		GtkLabel *label        = GTK_LABEL(gtk_label_new(name));
 		GtkWidget *entry       = NULL;
-		void *arg	      = va_arg(l, void *);
-		const char *key	= NULL;
+		void *arg              = va_arg(l, void *);
+		const char *key        = NULL;
 		GenericConfigType type = (GenericConfigType)va_arg(l, int);
 		if (type == CONF_EXTERNAL)
 			entry = GTK_WIDGET(arg);
@@ -53,30 +53,30 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				entry = gtk_entry_new();
 				gtk_entry_set_width_chars(GTK_ENTRY(entry), 40);
 				g_settings_bind(settings,
-						key,
-						entry,
-						"text",
-						G_SETTINGS_BIND_DEFAULT);
+				                key,
+				                entry,
+				                "text",
+				                G_SETTINGS_BIND_DEFAULT);
 				break;
 			case CONF_INT:
 			{
 				/* FIXME: the range shouldn't be hardcoded */
 				entry = gtk_spin_button_new_with_range(0, 1000, 1);
 				g_settings_bind(settings,
-						key,
-						entry,
-						"value",
-						G_SETTINGS_BIND_DEFAULT);
+				                key,
+				                entry,
+				                "value",
+				                G_SETTINGS_BIND_DEFAULT);
 				break;
 			}
 			case CONF_BOOL:
 				entry = gtk_check_button_new();
 				gtk_container_add(GTK_CONTAINER(entry), GTK_WIDGET(label));
 				g_settings_bind(settings,
-						key,
-						entry,
-						"active",
-						G_SETTINGS_BIND_DEFAULT);
+				                key,
+				                entry,
+				                "active",
+				                G_SETTINGS_BIND_DEFAULT);
 				break;
 			case CONF_FILE:
 			case CONF_DIRECTORY:
@@ -84,15 +84,15 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				entry = gtk_file_chooser_button_new(
 				    _("Select a file"),
 				    CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
-					      : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+				              : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
 				g_autofree SignalData *data =
 				    (SignalData *)g_malloc(sizeof(SignalData));
 				g_signal_connect(entry,
-						 "file-set",
-						 G_CALLBACK(set_file_response),
-						 data);
+				                 "file-set",
+				                 G_CALLBACK(set_file_response),
+				                 data);
 				break;
 			}
 			case CONF_TRIM:
@@ -100,7 +100,7 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				entry = gtk_label_new(NULL);
 				g_autofree char *markup =
 				    g_markup_printf_escaped("<span style=\"italic\">%s</span>",
-							    name);
+				                            name);
 				gtk_label_set_markup(GTK_LABEL(entry), markup);
 				break;
 			}

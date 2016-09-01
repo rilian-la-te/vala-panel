@@ -37,7 +37,7 @@ static GDesktopAppInfo *match_app_by_exec(const char *exec)
 
 	for (l = app_list; l; l = l->next)
 	{
-		GAppInfo *app	= G_APP_INFO(l->data);
+		GAppInfo *app        = G_APP_INFO(l->data);
 		const char *app_exec = g_app_info_get_executable(app);
 		if (!app_exec)
 			continue;
@@ -71,7 +71,7 @@ static GDesktopAppInfo *match_app_by_exec(const char *exec)
 		if (len > 0)
 		{
 			target[len] = '\0';
-			ret	 = match_app_by_exec(target);
+			ret         = match_app_by_exec(target);
 			if (!ret)
 			{
 				/* FIXME: Actually, target could be relative paths.
@@ -87,7 +87,7 @@ static GDesktopAppInfo *match_app_by_exec(const char *exec)
 }
 
 static void setup_auto_complete_with_data(GObject *source_object, GAsyncResult *res,
-					  gpointer user_data)
+                                          gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
 	GSList *l;
@@ -112,10 +112,10 @@ static void slist_destroy_notify(void *a)
 }
 
 static void vala_panel_runner_create_file_list(GTask *task, void *source, void *task_data,
-					       GCancellable *cancellable)
+                                               GCancellable *cancellable)
 {
 	g_autoptr(GSList) list = g_slist_alloc();
-	const char *var	= g_getenv("PATH");
+	const char *var        = g_getenv("PATH");
 	g_auto(GStrv) dirs     = g_strsplit(var, ":", 0);
 	for (int i = 0; dirs[i] != NULL; i++)
 	{
@@ -166,12 +166,12 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 		g_autoptr(GError) err = NULL;
 		g_autoptr(GAppInfo) app_info =
 		    g_app_info_create_from_commandline(gtk_entry_get_text(self->main_entry),
-						       NULL,
-						       gtk_toggle_button_get_active(
-							   self->terminal_button)
-							   ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-							   : G_APP_INFO_CREATE_NONE,
-						       &err);
+		                                       NULL,
+		                                       gtk_toggle_button_get_active(
+		                                           self->terminal_button)
+		                                           ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+		                                           : G_APP_INFO_CREATE_NONE,
+		                                       &err);
 		if (err)
 		{
 			g_signal_stop_emission_by_name(dlg, "response");
@@ -198,14 +198,14 @@ static void on_entry_changed(GtkEntry *entry, gpointer user_data)
 	if (app)
 	{
 		gtk_entry_set_icon_from_gicon(entry,
-					      GTK_ENTRY_ICON_PRIMARY,
-					      g_app_info_get_icon(G_APP_INFO(app)));
+		                              GTK_ENTRY_ICON_PRIMARY,
+		                              g_app_info_get_icon(G_APP_INFO(app)));
 	}
 	else
 	{
 		gtk_entry_set_icon_from_icon_name(entry,
-						  GTK_ENTRY_ICON_PRIMARY,
-						  "application-x-executable");
+		                                  GTK_ENTRY_ICON_PRIMARY,
+		                                  "application-x-executable");
 	}
 }
 
@@ -215,7 +215,7 @@ static void on_entry_activated(GtkEntry *entry, GtkDialog *dlg)
 }
 
 static void on_icon_activated(GtkEntry *entry, GtkEntryIconPosition pos, GdkEventButton *event,
-			      GtkDialog *dlg)
+                              GtkDialog *dlg)
 {
 	if (pos == GTK_ENTRY_ICON_SECONDARY)
 	{
@@ -228,14 +228,14 @@ static void vala_panel_runner_init(ValaPanelRunner *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
 	css_apply_from_resource(GTK_WIDGET(self),
-				"/org/vala-panel/app/style.css",
-				"-panel-run-dialog");
+	                        "/org/vala-panel/app/style.css",
+	                        "-panel-run-dialog");
 	g_autoptr(GtkStyleContext) ctx = gtk_widget_get_style_context(GTK_WIDGET(self->main_box));
 	gtk_style_context_add_class(ctx, "-panel-run-header");
 	// FIXME: Implement cache
 	self->cached = false;
 	gtk_widget_set_visual(GTK_WIDGET(self),
-			      gdk_screen_get_rgba_visual(gtk_widget_get_screen(GTK_WIDGET(self))));
+	                      gdk_screen_get_rgba_visual(gtk_widget_get_screen(GTK_WIDGET(self))));
 	gtk_dialog_set_default_response(GTK_DIALOG(self), GTK_RESPONSE_OK);
 	gtk_window_set_keep_above(GTK_WINDOW(self), true);
 }
@@ -260,29 +260,29 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 	((GtkDialogClass *)klass)->response = vala_panel_runner_response;
 	G_OBJECT_CLASS(klass)->finalize     = vala_panel_runner_finalize;
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
-						    "/org/vala-panel/app/app-runner.ui");
+	                                            "/org/vala-panel/app/app-runner.ui");
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
-						  "main-entry",
-						  false,
-						  G_STRUCT_OFFSET(ValaPanelRunner, main_entry));
+	                                          "main-entry",
+	                                          false,
+	                                          G_STRUCT_OFFSET(ValaPanelRunner, main_entry));
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
-						  "terminal-button",
-						  false,
-						  G_STRUCT_OFFSET(ValaPanelRunner,
-								  terminal_button));
+	                                          "terminal-button",
+	                                          false,
+	                                          G_STRUCT_OFFSET(ValaPanelRunner,
+	                                                          terminal_button));
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
-						  "main-box",
-						  true,
-						  G_STRUCT_OFFSET(ValaPanelRunner, main_box));
+	                                          "main-box",
+	                                          true,
+	                                          G_STRUCT_OFFSET(ValaPanelRunner, main_box));
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
-						     "on_entry_changed",
-						     G_CALLBACK(on_entry_changed));
+	                                             "on_entry_changed",
+	                                             G_CALLBACK(on_entry_changed));
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
-						     "on_entry_activated",
-						     G_CALLBACK(on_entry_activated));
+	                                             "on_entry_activated",
+	                                             G_CALLBACK(on_entry_activated));
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
-						     "on_icon_activated",
-						     G_CALLBACK(on_icon_activated));
+	                                             "on_icon_activated",
+	                                             G_CALLBACK(on_icon_activated));
 }
 
 void gtk_run(ValaPanelRunner *self)

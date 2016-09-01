@@ -38,35 +38,35 @@ void vala_panel_manager_ah_state_set(ValaPanelManager *self, ValaPanelToplevelUn
 }
 
 void vala_panel_manager_move_to_alloc(ValaPanelManager *self, ValaPanelToplevelUnit *top,
-				      GtkAllocation *alloc)
+                                      GtkAllocation *alloc)
 {
 	if (self)
 		VALA_PANEL_MANAGER_GET_IFACE(self)->move_to_alloc(self, top, alloc);
 }
 
 void vala_panel_manager_move_to_side(ValaPanelManager *self, ValaPanelToplevelUnit *top,
-				     GtkPositionType alloc)
+                                     GtkPositionType alloc)
 {
 	if (self)
 		VALA_PANEL_MANAGER_GET_IFACE(self)->move_to_side(self, top, alloc);
 }
 
 bool vala_panel_manager_start_panels_from_profile(ValaPanelManager *self, GtkApplication *app,
-						  const char *profile)
+                                                  const char *profile)
 {
 	if (self)
 		return VALA_PANEL_MANAGER_GET_IFACE(self)->start_panels_from_profile(self,
-										     app,
-										     profile);
+		                                                                     app,
+		                                                                     profile);
 	return false;
 }
 
 GSettings *vala_panel_manager_get_settings_for_scheme(ValaPanelManager *self, const char *scheme,
-						      const char *path)
+                                                      const char *path)
 {
 	if (self)
 		return VALA_PANEL_MANAGER_GET_IFACE(self)->get_settings_for_scheme(self,
-										   scheme,
-										   path);
+		                                                                   scheme,
+		                                                                   path);
 	return NULL;
 }
