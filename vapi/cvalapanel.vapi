@@ -17,7 +17,7 @@
  */
 
 using Gtk;
-using Gdk;
+using GLib;
 
 [CCode (cheader_filename = "lib/c-lib/css.h", cprefix = "",lower_case_cprefix="css_")]
 namespace PanelCSS
@@ -49,6 +49,22 @@ namespace ValaPanel
         TRIM,
         EXTERNAL
     }
+    [CCode(cname = "_user_config_file_name",cheader_filename="lib/definitions.h")]
+    public string user_config_file_name(string name1, string profile, string? name2);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+    public static void apply_window_icon(Window w);
+    [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="lib/c-lib/misc.h")]
+    public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
+    [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="lib/definitions.h")]
+    public static void settings_bind(Object map, GLib.Settings settings, string prop);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+    public static void setup_button(Button b, Image? img = null, string? label = null);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+    public static void setup_label(Label label, string text, bool bold, double factor);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+    public static void scale_button_set_range(ScaleButton b, int lower, int upper);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+    public static void scale_button_set_value_labeled(ScaleButton b, int val);
 }
 
 [CCode (cheader_filename = "lib/c-lib/generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]

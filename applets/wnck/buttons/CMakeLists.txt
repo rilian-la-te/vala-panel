@@ -25,6 +25,8 @@ set (LIB_PATHS ${CORE_LIBRARY_DIRS} ${WNCK_LIBRARY_DIRS})
 set (LIB_CFLAGS ${CORE_CFLAGS} ${WNCK_CFLAGS})
 add_definitions(-DWNCK_I_KNOW_THIS_IS_UNSTABLE)
 link_directories (${LIB_PATHS})
+include_directories(${CMAKE_SOURCE_DIR})
+
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}

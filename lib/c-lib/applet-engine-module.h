@@ -2,10 +2,11 @@
 #define APPLETENGINEMODULE_H
 
 #include <glib-object.h>
+#include "lib/definitions.h"
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module, VALA_PANEL,
+VALA_PANEL_DECLARE_MODULE_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module, VALA_PANEL,
                      APPLET_ENGINE_MODULE, GTypeModule)
 
 G_END_DECLS

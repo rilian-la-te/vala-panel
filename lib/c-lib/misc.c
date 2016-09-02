@@ -35,7 +35,7 @@ static void setup_button_notify_connect(GObject *_sender, GParamSpec *b, gpointe
 	}
 }
 
-void vala_panel_setup_button(GtkButton *b, GtkImage *img, char *label)
+void vala_panel_setup_button(GtkButton *b, GtkImage *img,const char *label)
 {
 	css_apply_from_resource(GTK_WIDGET(b), "/org/vala-panel/lib/style.css", "-panel-button");
 	g_signal_connect(b, "notify", setup_button_notify_connect, NULL);
