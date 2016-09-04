@@ -1,0 +1,10 @@
+[Applet Factory]
+Id=SNTrayAppletFactory
+Location=@CMAKE_INSTALL_FULL_LIBDIR@/mate-panel/libsntray-mate.so
+Name=SNTray applet factory
+InProcess=true
+
+[SNTrayApplet]
+Name=SNI Notification area
+Description=Area where StatusNotifierItem's appear
+Icon=applications-system

@@ -37,6 +37,7 @@ set(VALA_FILES_CORE
 	snconfig.vala
 	snitemproxy.vala
 	qrichtextparser.vala
+	${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
 macro(precompile_core)
     vala_precompile(VALA_C_CORE sntray-core
@@ -72,7 +73,6 @@ add_dependencies(sntray-core vala-dbusmenu)
 set(VALA_FILES_XFCE xfce4-sntray-applet.vala)
 if (ENABLE_XFCE)
     vala_precompile(VALA_C_XFCE sntray-xfce
-        ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	${VALA_FILES_XFCE}
     PACKAGES
         gtk+-3.0
@@ -104,6 +104,8 @@ if (ENABLE_XFCE)
     # Install plugin stuffs
     install(TARGETS sntray-xfce DESTINATION ${CMAKE_INSTALL_LIBDIR}/xfce4/panel/plugins)
 endif()
+
+
 #################
 # Vala Panel part
 #################
@@ -137,4 +139,41 @@ if (ENABLE_VALAPANEL)
 
     # Install plugin stuffs
     install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)
+endif()
+#################
+# MATE Panel part
+#################
+set(VALA_FILES_MATE mate-sntray-applet.vala)
+if (ENABLE_MATE)
+    vala_precompile(VALA_C_MATE sntray-mate
+	${VALA_FILES_MATE}
+    PACKAGES
+	gdk-3.0
+	gtk+-3.0
+	vala-panel-sntray
+    CUSTOM_VAPIS
+	vapi/libmatepanelapplet-4.0.vapi
+    OPTIONS
+	--vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
+	--vapidir=${CMAKE_CURRENT_BINARY_DIR}
+	--target-glib=2.44
+	--gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
+	--thread
+    )
+    #####
+    # Plugin Library
+    #####
+    add_library (sntray-mate SHARED
+	${VALA_C_DBUSMENU}
+	${VALA_C_CORE}
+	${VALA_C_MATE}
+	${RESOURCES}
+    )
+    add_dependencies(sntray-mate sntray-core)
+    include_directories(${GTK+_INCLUDE_DIRS} ${MATE_INCLUDE_DIRS})
+    target_link_libraries(sntray-mate ${GTK+_LIBRARIES} ${MATE_LIBRARIES} -lm)
+    add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
+
+    # Install plugin stuffs
+    install(TARGETS sntray-mate DESTINATION ${CMAKE_INSTALL_LIBDIR}/mate-panel)
 endif()
