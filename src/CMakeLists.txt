@@ -37,7 +37,6 @@ set(VALA_FILES_CORE
 	snconfig.vala
 	snitemproxy.vala
 	qrichtextparser.vala
-	${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
 macro(precompile_core)
     vala_precompile(VALA_C_CORE sntray-core
@@ -74,6 +73,7 @@ set(VALA_FILES_XFCE xfce4-sntray-applet.vala)
 if (ENABLE_XFCE)
     vala_precompile(VALA_C_XFCE sntray-xfce
 	${VALA_FILES_XFCE}
+	${CMAKE_CURRENT_BINARY_DIR}/config.vala
     PACKAGES
         gtk+-3.0
         vala-panel-sntray
@@ -147,6 +147,7 @@ set(VALA_FILES_MATE mate-sntray-applet.vala)
 if (ENABLE_MATE)
     vala_precompile(VALA_C_MATE sntray-mate
 	${VALA_FILES_MATE}
+	${CMAKE_CURRENT_BINARY_DIR}/config.vala
     PACKAGES
 	gdk-3.0
 	gtk+-3.0
