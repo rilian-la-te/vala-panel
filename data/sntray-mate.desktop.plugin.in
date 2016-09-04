@@ -1,6 +1,6 @@
 [Applet Factory]
 Id=SNTrayAppletFactory
-Location=/usr/lib64/mate-panel/libsntray-mate.so
+Location=@CMAKE_INSTALL_FULL_LIBDIR@/mate-panel/libsntray-mate.so
 Name=SNTray applet factory
 InProcess=true
 
