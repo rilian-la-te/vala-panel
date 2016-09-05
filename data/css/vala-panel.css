@@ -24,27 +24,23 @@
 	margin: 0px;
 }
 .-panel-launch-button:hover,
-.-panel-launch-button:prelight,
 .-panel-launch-button.highlight,
 .-panel-launch-button:active:hover,
 .-panel-launch-button:selected,
 .-panel-launch-button-selected
 {
-	-gtk-image-effect: highlight;
+	-gtk-icon-effect: highlight;
 }
 .-panel-icon-button
 {
 	padding: 0px;
 	margin: 0px;
-	-GtkWidget-focus-line-width: 0px;
-	-GtkWidget-focus-padding: 0px;
 }
 .-panel-icon-button:hover,
-.-panel-icon-button:prelight,
 .-panel-icon-button.highlight,
 .-panel-icon-button:active:hover
 {
-	-gtk-image-effect: highlight;
+	-gtk-icon-effect: highlight;
 }
 .-panel-button
 {
