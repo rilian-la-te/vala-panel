@@ -179,11 +179,7 @@ namespace ValaPanel
                 {
                     var info  = AppInfo.create_from_commandline(str,null,
                     terminal_button.active ? AppInfoCreateFlags.NEEDS_TERMINAL : 0) as DesktopAppInfo;
-                    var data = new MenuMaker.SpawnData();
-                    var launch = info.launch_uris_as_manager(new List<string>(),
-                                                             this.get_display().get_app_launch_context(),
-                                                             SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                                             data.child_spawn_func,MenuMaker.launch_callback);
+                    var launch = MenuMaker.launch(info,null,this);
                     if (!launch)
                     {
                         Signal.stop_emission_by_name(this,"response");

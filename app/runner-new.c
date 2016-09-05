@@ -177,7 +177,8 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			g_signal_stop_emission_by_name(dlg, "response");
 			return;
 		}
-		bool launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL);
+		bool launch =
+		    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
 		if (!launch || err)
 		{
 			g_signal_stop_emission_by_name(dlg, "response");

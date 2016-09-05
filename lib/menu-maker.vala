@@ -112,10 +112,6 @@ namespace MenuMaker
                 menu1.append_section(label,link);
         }
     }
-    public static void launch_callback(DesktopAppInfo info, Pid pid)
-    {
-
-    }
     public static AppInfo? get_default_for_uri(string uri)
     {
         /* g_file_query_default_handler() calls
@@ -135,47 +131,6 @@ namespace MenuMaker
             } catch (GLib.Error e){}
         }
         return app_info;
-    }
-    public static void activate_menu_launch_id(SimpleAction? action, Variant? param)
-    {
-        unowned string id = param.get_string();
-        var info = new DesktopAppInfo(id);
-        try{
-            var data = new SpawnData();
-            info.launch_uris_as_manager(new List<string>(),
-                                         Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                         data.child_spawn_func,launch_callback);
-        } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
-    }
-
-    public static void activate_menu_launch_command(SimpleAction? action, Variant? param)
-    {
-        unowned string command = param.get_string();
-        try{
-            var data = new SpawnData();
-            var info = AppInfo.create_from_commandline(command,null,
-                            AppInfoCreateFlags.SUPPORTS_STARTUP_NOTIFICATION) as DesktopAppInfo;
-            info.launch_uris_as_manager(new List<string>(),
-                                         Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                         data.child_spawn_func,launch_callback);
-        } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
-    }
-
-    public static void activate_menu_launch_uri(SimpleAction? action, Variant? param)
-    {
-        unowned string uri = param.get_string();
-        try{
-            var data = new SpawnData();
-            var info = get_default_for_uri(uri) as DesktopAppInfo;
-            List<string> uri_l = new List<string>();
-            uri_l.append(uri);
-            info.launch_uris_as_manager(uri_l,
-                                         Gdk.Display.get_default().get_app_launch_context(),
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                         data.child_spawn_func,launch_callback);
-        } catch (GLib.Error e){stderr.printf("%s\n",e.message);}
     }
     private static void apply_menu_dnd(Gtk.MenuItem item, MenuModel section, int model_item)
     {

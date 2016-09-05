@@ -66,6 +66,18 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/c-lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
 }
+[CCode (cprefix="")]
+namespace MenuMaker
+{
+    [CCode (cheader_filename="lib/c-lib/launcher.h",cname="activate_menu_launch_id")]
+    public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="lib/c-lib/launcher.h",cname="activate_menu_launch_uri")]
+    public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="lib/c-lib/launcher.h",cname="activate_menu_launch_command")]
+    public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="lib/c-lib/launcher.h",cname="vala_panel_launch")]
+    public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
+}
 
 [CCode (cheader_filename = "lib/c-lib/generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
 namespace ValaPanel.Configurator

@@ -87,9 +87,9 @@ namespace ValaPanel
         };
         private static const GLib.ActionEntry[] menu_entries =
         {
-            {"launch-id", MenuMaker.activate_menu_launch_id, "s", null, null},
-            {"launch-uri", MenuMaker.activate_menu_launch_uri, "s", null, null},
-            {"launch-command", MenuMaker.activate_menu_launch_command, "s", null, null},
+            {"launch-id",null , "s", null, null,MenuMaker.activate_menu_launch_id},
+            {"launch-uri",null, "s", null, null,MenuMaker.activate_menu_launch_uri},
+            {"launch-command",null , "s", null, null,MenuMaker.activate_menu_launch_command},
         };
         public App()
         {
@@ -372,12 +372,12 @@ namespace ValaPanel
         internal void activate_logout(SimpleAction action, Variant? param)
         {
             Variant variant = new Variant.string(logout_command);
-            MenuMaker.activate_menu_launch_command(null,variant);
+            MenuMaker.activate_menu_launch_command(null,variant,this.get_windows().data);
         }
         internal void activate_shutdown(SimpleAction action, Variant? param)
         {
             Variant variant = new Variant.string(shutdown_command);
-            MenuMaker.activate_menu_launch_command(null,variant);
+            MenuMaker.activate_menu_launch_command(null,variant,this.get_windows().data);
         }
         internal void activate_exit(SimpleAction action, Variant? param)
         {

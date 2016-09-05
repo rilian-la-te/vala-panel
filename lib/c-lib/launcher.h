@@ -3,9 +3,10 @@
 
 #include <gdk/gdk.h>
 #include <gio/gdesktopappinfo.h>
+#include <gtk/gtk.h>
 #include <stdbool.h>
 
-bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris);
+bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent);
 void child_spawn_func(void *data);
 void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data);
 void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data);

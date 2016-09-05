@@ -127,24 +127,15 @@ namespace LaunchBar
                 this.get_launchbar().show_config_dialog();
                 return;
             }
-            var context = this.get_toplevel().get_display().get_app_launch_context();
             var desktop_info = info as DesktopAppInfo;
-            var spawn_data = new MenuMaker.SpawnData();
-            try
+            if (uri != null && button_type == ButtonType.URI)
             {
-                if (uri != null && button_type == ButtonType.URI)
-                {
-                    List<string> uri_l = new List<string>();
-                    uri_l.append(uri);
-                    desktop_info.launch_uris_as_manager(uri_l,context,
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                         spawn_data.child_spawn_func,MenuMaker.launch_callback);
-                }
-                else
-                    desktop_info.launch_uris_as_manager(new List<string>(),context,
-                                         SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-                                         spawn_data.child_spawn_func,MenuMaker.launch_callback);
-            } catch (GLib.Error e) {stderr.printf("%s",e.message);}
+                List<string> uri_l = new List<string>();
+                uri_l.append(uri);
+                MenuMaker.launch(desktop_info,uri_l,this);
+            }
+            else
+                MenuMaker.launch(desktop_info,null,this);
         }
         private unowned Bar get_launchbar()
         {

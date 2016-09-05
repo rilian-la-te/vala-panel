@@ -13,11 +13,11 @@ void child_spawn_func(void *data)
 	setpgid(0, getpgid(getppid()));
 }
 
-bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris)
+bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
 {
-	g_autoptr(GError) err = NULL;
-	g_autoptr(GAppLaunchContext) cxt =
-	    G_APP_LAUNCH_CONTEXT(gdk_display_get_app_launch_context(gdk_display_get_default()));
+	g_autoptr(GError) err            = NULL;
+	g_autoptr(GAppLaunchContext) cxt = G_APP_LAUNCH_CONTEXT(
+	    gdk_display_get_app_launch_context(gtk_widget_get_display(parent)));
 	bool ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),
 	                                                     uris,
 	                                                     cxt,
@@ -54,7 +54,9 @@ void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer us
 {
 	const gchar *id                 = g_variant_get_string(param, NULL);
 	g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new(id);
-	vala_panel_launch(info, NULL);
+	GtkApplication *app             = GTK_APPLICATION(user_data);
+	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
+	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }
 
 void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data)
@@ -62,7 +64,9 @@ void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer u
 	const char *uri                 = g_variant_get_string(param, NULL);
 	g_autoptr(GList) uris           = g_list_append(NULL, (gpointer)uri);
 	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(vala_panel_get_default_for_uri(uri));
-	vala_panel_launch(info, uris);
+	GtkApplication *app             = GTK_APPLICATION(user_data);
+	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
+	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }
 
 void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpointer user_data)
@@ -76,5 +80,7 @@ void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpoint
 	                                       &err));
 	if (err)
 		g_warning("%s\n", err->message);
-	vala_panel_launch(info, NULL);
+	GtkApplication *app = GTK_APPLICATION(user_data);
+	GtkWidget *window   = GTK_WIDGET(gtk_application_get_windows(app)->data);
+	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }
