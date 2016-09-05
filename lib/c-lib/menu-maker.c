@@ -134,14 +134,14 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 	{
 		uint jumplen = 1;
 		if (GTK_IS_SEPARATOR_MENU_ITEM(l->data))
-			l                       = l->next;
-		GtkMenuItem *shell              = GTK_MENU_ITEM(l->data);
-		const char *str                 = NULL;
-		bool has_section                = false;
-		bool has_submenu                = false;
-		GtkMenuShell *menuw             = GTK_MENU_SHELL(gtk_menu_item_get_submenu(shell));
-		g_autoptr(GMenuLinkIter) iter   = g_menu_model_iterate_item_links(menu, i);
-		g_autoptr(GMenuModel) link_menu = NULL;
+			l                     = l->next;
+		GtkMenuItem *shell            = GTK_MENU_ITEM(l->data);
+		const char *str               = NULL;
+		bool has_section              = false;
+		bool has_submenu              = false;
+		GtkMenuShell *menuw           = GTK_MENU_SHELL(gtk_menu_item_get_submenu(shell));
+		g_autoptr(GMenuLinkIter) iter = g_menu_model_iterate_item_links(menu, i);
+		GMenuModel *link_menu         = NULL;
 		while (g_menu_link_iter_get_next(iter, &str, &link_menu))
 		{
 			has_section = has_section || !(strcmp(str, G_MENU_LINK_SECTION));
@@ -157,7 +157,7 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 			}
 			g_object_unref(link_menu);
 		}
-		g_autoptr(GVariant) val = NULL;
+		GVariant *val = NULL;
 		g_autoptr(GMenuAttributeIter) attr_iter =
 		    g_menu_model_iterate_item_attributes(menu, i);
 		while (g_menu_attribute_iter_get_next(attr_iter, &str, &val))
