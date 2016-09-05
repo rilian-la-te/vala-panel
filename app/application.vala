@@ -408,12 +408,12 @@ namespace ValaPanel
         internal void activate_logout(SimpleAction action, Variant? param)
         {
             Variant variant = new Variant.string(logout_command);
-            MenuMaker.activate_menu_launch_command(null,variant,this.get_windows().data);
+            MenuMaker.activate_menu_launch_command(null,variant,this);
         }
         internal void activate_shutdown(SimpleAction action, Variant? param)
         {
             Variant variant = new Variant.string(shutdown_command);
-            MenuMaker.activate_menu_launch_command(null,variant,this.get_windows().data);
+            MenuMaker.activate_menu_launch_command(null,variant,this);
         }
         internal void activate_exit(SimpleAction action, Variant? param)
         {
