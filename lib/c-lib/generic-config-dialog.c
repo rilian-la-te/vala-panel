@@ -35,19 +35,9 @@ static void set_file_response(GtkFileChooserButton *widget, gpointer user_data)
 	g_settings_set_string(data->settings, data->key, fname);
 }
 
-GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *settings, ...)
+static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 {
-	va_list l;
-	va_start(l, settings);
-	GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
-	                                                        parent,
-	                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
-	                                                        _("_Close"),
-	                                                        GTK_RESPONSE_CLOSE,
-	                                                        NULL));
-	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
-	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
-	gtk_box_set_spacing(dlg_vbox, 4);
+	GtkBox *dlg_vbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 4));
 	while (true)
 	{
 		const char *name = va_arg(l, const char *);
@@ -112,7 +102,10 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				                 "file-set",
 				                 G_CALLBACK(set_file_response),
 				                 data);
-				g_signal_connect_swapped(dlg, "destroy", G_CALLBACK(g_free), data);
+				g_signal_connect_swapped(dlg_vbox,
+				                         "destroy",
+				                         G_CALLBACK(g_free),
+				                         data);
 				break;
 			}
 			case CONF_FILE_ENTRY:
@@ -140,7 +133,10 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 				                 "file-set",
 				                 G_CALLBACK(set_file_response),
 				                 &data);
-				g_signal_connect_swapped(dlg, "destroy", G_CALLBACK(g_free), data);
+				g_signal_connect_swapped(dlg_vbox,
+				                         "destroy",
+				                         G_CALLBACK(g_free),
+				                         data);
 				gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
 				gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
 				break;
@@ -174,8 +170,36 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 			}
 		}
 	}
+	return GTK_WIDGET(dlg_vbox);
+}
+
+GtkWidget *generic_config_widget(GSettings *settings, ...)
+{
+	va_list l;
+	va_start(l, settings);
+	GtkWidget *w = generic_config_widget_internal(settings, l);
+	va_end(l);
+	return w;
+}
+
+GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *settings, ...)
+{
+	va_list l;
+	va_start(l, settings);
+	GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
+	                                                        parent,
+	                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                                        _("_Close"),
+	                                                        GTK_RESPONSE_CLOSE,
+	                                                        NULL));
+	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
+	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
+	GtkWidget *settings_widget = generic_config_widget_internal(settings, l);
+	gtk_container_add(GTK_CONTAINER(dlg_vbox), settings_widget);
+	gtk_box_set_spacing(dlg_vbox, 4);
 	g_signal_connect(dlg, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 	gtk_container_set_border_width(GTK_CONTAINER(dlg), 8);
 	gtk_widget_show_all(GTK_WIDGET(dlg_vbox));
+	va_end(l);
 	return dlg;
 }
