@@ -99,9 +99,9 @@ namespace ValaPanel
         };
         private static const GLib.ActionEntry[] menu_entries =
         {
-            {"launch-id",null , "s", null, null,MenuMaker.activate_menu_launch_id},
-            {"launch-uri",null, "s", null, null,MenuMaker.activate_menu_launch_uri},
-            {"launch-command",null , "s", null, null,MenuMaker.activate_menu_launch_command},
+            {"launch-id",activate_menu_id , "s", null, null},
+            {"launch-uri",activate_menu_uri, "s", null, null},
+            {"launch-command",activate_menu_command , "s", null, null,},
         };
         public App()
         {
@@ -119,7 +119,6 @@ namespace ValaPanel
             add_main_option_entries(options);
             started = false;
         }
-
         private string system_config_file_name(string name1, string? name2)
         {
             return GLib.Path.build_filename(name1,GETTEXT_PACKAGE,_profile,name2);
@@ -424,6 +423,18 @@ namespace ValaPanel
         {
             this.restart = true;
             this.quit();
+        }
+        internal void activate_menu_id(SimpleAction action, Variant? param)
+        {
+            MenuMaker.activate_menu_launch_id(action,param,this);
+        }
+        internal void activate_menu_uri(SimpleAction action, Variant? param)
+        {
+            MenuMaker.activate_menu_launch_uri(action,param,this);
+        }
+        internal void activate_menu_command(SimpleAction action, Variant? param)
+        {
+            MenuMaker.activate_menu_launch_command(action,param,this);
         }
     }
 }
