@@ -21,39 +21,6 @@ using Gtk;
 
 namespace ValaPanel
 {
-    public void activate_panel_preferences(SimpleAction simple, Variant? param, void* data)
-    {
-        unowned Gtk.Application app = data as Gtk.Application;
-        foreach(unowned Window win in app.get_windows())
-        {
-            if (win is Toplevel)
-            {
-                unowned Toplevel p = win as Toplevel;
-                if (p.panel_name == param.get_string())
-                {
-                    p.configure("position");
-                    break;
-                }
-            }
-            stderr.printf("No panel with this name found.\n");
-        }
-    }
-    public void activate_menu(SimpleAction simple, Variant? param, void* data)
-    {
-        unowned Gtk.Application app = data as Gtk.Application;
-        foreach(unowned Window win in app.get_windows())
-        {
-            if (win is Toplevel)
-            {
-                unowned Toplevel p = win as Toplevel;
-                foreach(unowned Widget pl in p.get_applets_list())
-                {
-                    if (pl is AppletMenu)
-                        (pl as AppletMenu).show_system_menu();
-                }
-            }
-        }
-    }
     public static void start_panels_from_dir(Gtk.Application app, string dirname)
     {
         Dir dir;

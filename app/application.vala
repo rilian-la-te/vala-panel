@@ -37,7 +37,19 @@ namespace ValaPanel
         var app = new App();
         return app.run(args);
     }
-
+    [Compact,Immutable]
+    public class SpawnData
+    {
+        internal Posix.pid_t pid; /* getpgid(getppid()); */
+        public SpawnData()
+        {
+            pid = Posix.getpgid(Posix.getppid());
+        }
+        public void child_spawn_func()
+        {
+            Posix.setpgid(0,this.pid);
+        }
+    }
     public class App: Gtk.Application
     {
         private static const string SCHEMA = "org.valapanel";
@@ -76,9 +88,9 @@ namespace ValaPanel
         private static const GLib.ActionEntry[] app_entries =
         {
             {"preferences", activate_preferences, null, null, null},
-            {"panel-preferences", activate_panel_preferences_callback, "s", null, null},
+            {"panel-preferences", activate_panel_preferences, "s", null, null},
             {"about", activate_about, null, null, null},
-            {"menu", activate_menu_callback, null, null, null},
+            {"menu", activate_menu, null, null, null},
             {"run", activate_run, null, null, null},
             {"logout", activate_logout, null, null, null},
             {"shutdown", activate_shutdown, null, null, null},
@@ -144,7 +156,39 @@ namespace ValaPanel
             pref_dialog.hide.connect(()=>{pref_dialog.destroy();pref_dialog = null;});
             pref_dialog.response.connect_after(()=>{pref_dialog.destroy();pref_dialog = null;});
         }
-
+        public void activate_panel_preferences(SimpleAction simple, Variant? param)
+        {
+            unowned Gtk.Application app = this;
+            foreach(unowned Window win in app.get_windows())
+            {
+                if (win is Toplevel)
+                {
+                    unowned Toplevel p = win as Toplevel;
+                    if (p.panel_name == param.get_string())
+                    {
+                        p.configure("position");
+                        break;
+                    }
+                }
+                stderr.printf("No panel with this name found.\n");
+            }
+        }
+        public void activate_menu(SimpleAction simple, Variant? param)
+        {
+            unowned Gtk.Application app = this;
+            foreach(unowned Window win in app.get_windows())
+            {
+                if (win is Toplevel)
+                {
+                    unowned Toplevel p = win as Toplevel;
+                    foreach(unowned Widget pl in p.get_applets_list())
+                    {
+                        if (pl is AppletMenu)
+                            (pl as AppletMenu).show_system_menu();
+                    }
+                }
+            }
+        }
         protected override void startup()
         {
             base.startup();
@@ -172,7 +216,7 @@ namespace ValaPanel
             {
                 char[] cwd = new char[1024];
                 Posix.getcwd(cwd);
-                var data = new MenuMaker.SpawnData();
+                var data = new SpawnData();
                 string[] argv = {Config.GETTEXT_PACKAGE,"-p",this.profile};
                 try
                 {
@@ -330,14 +374,6 @@ namespace ValaPanel
             settings_as_action(this,config,Key.DARK);
             settings_as_action(this,config,Key.CUSTOM);
             settings_as_action(this,config,Key.CSS);
-        }
-        private void activate_menu_callback(SimpleAction action, Variant? param)
-        {
-            activate_menu(action,param,this);
-        }
-        private void activate_panel_preferences_callback(SimpleAction action, Variant? param)
-        {
-            activate_panel_preferences(action,param,this);
         }
         internal void activate_about(SimpleAction action, Variant? param)
         {

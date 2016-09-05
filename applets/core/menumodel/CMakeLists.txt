@@ -6,6 +6,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
+    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
@@ -34,7 +35,7 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel cvalapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

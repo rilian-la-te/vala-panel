@@ -20,6 +20,11 @@ using ValaPanel;
 using Gtk;
 using GLib;
 
+public static const TargetEntry[] MENU_TARGETS = {
+    { "text/uri-list", 0, 0},
+    { "application/x-desktop", 0, 0},
+};
+
 namespace LaunchBar
 {
     public class AppletImpl : AppletPlugin, Peas.ExtensionBase
@@ -60,7 +65,7 @@ namespace LaunchBar
                     layout,                     // widget that will accept a drop
                     DestDefaults.MOTION       // default actions for dest on DnD
                     | DestDefaults.HIGHLIGHT,
-                    MenuMaker.MENU_TARGETS,              // lists of target to support
+                    MENU_TARGETS,              // lists of target to support
                     Gdk.DragAction.COPY|Gdk.DragAction.MOVE        // what to do with data after dropped
                 );
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;

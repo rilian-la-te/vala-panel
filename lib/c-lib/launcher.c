@@ -50,7 +50,7 @@ bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent
 	return ret;
 }
 
-static GAppInfo *vala_panel_get_default_for_uri(const char *uri)
+GAppInfo *vala_panel_get_default_for_uri(const char *uri)
 {
 	/* g_file_query_default_handler() calls
 	* g_app_info_get_default_for_uri_scheme() too, but we have to do it

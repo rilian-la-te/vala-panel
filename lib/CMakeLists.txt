@@ -5,7 +5,6 @@ set(VALA_FILES
 	misc.vala
 	configurator.vala
 	dbusmenu/dbusmenu.vala
-	menu-maker.vala
 	panel-plugin.vala
 	panel-toplevel.vala
 	plugin-settings.vala

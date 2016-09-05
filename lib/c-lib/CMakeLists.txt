@@ -7,6 +7,8 @@ add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 add_library(cvalapanel SHARED
 	misc.c
 	misc.h
+        menu-maker.h
+        menu-maker.c
 	css.c
 	css.h
         launcher.c

@@ -16,19 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LAUNCHER_H
-#define LAUNCHER_H
-
-#include <gdk/gdk.h>
-#include <gio/gdesktopappinfo.h>
+#ifndef MENUMAKER_H
+#define MENUMAKER_H
+#include <gio/gio.h>
+#include <glib.h>
 #include <gtk/gtk.h>
-#include <stdbool.h>
 
-bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent);
-GAppInfo *vala_panel_get_default_for_uri(const char *uri);
-void child_spawn_func(void *data);
-void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data);
-void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data);
-void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpointer user_data);
+#define ATTRIBUTE_DND_SOURCE "x-valapanel-dnd-source"
+#define ATTRIBUTE_TOOLTIP "x-valapanel-tooltip"
 
-#endif // LAUNCHER_H
+void apply_menu_properties(GList *w, GMenuModel *menu);
+void append_all_sections(GMenu *menu1, GMenuModel *menu2);
+
+#endif // MENUMAKER_H
