@@ -83,9 +83,9 @@ namespace MenuMaker
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
     [CCode (cheader_filename="lib/c-lib/launcher.h",cname="vala_panel_get_default_for_uri")]
     public static AppInfo get_default_for_uri(string uri);
-    [CCode (cheader_filename="lib/c-lib/menu-maker.h"cname="append_all_sections")]
+    [CCode (cheader_filename="lib/c-lib/menu-maker.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
-    [CCode (cheader_filename="lib/c-lib/menu-maker.h"cname="apply_menu_properties")]
+    [CCode (cheader_filename="lib/c-lib/menu-maker.h",cname="apply_menu_properties")]
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu);
 }
 
