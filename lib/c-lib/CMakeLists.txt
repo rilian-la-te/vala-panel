@@ -20,7 +20,7 @@ add_library(cvalapanel SHARED
         toplevel.c
         toplevel.h
         applet-manager.c
-        applet-engine-module.c
+#        applet-engine-module.c
         private.h
 	${ENUMSC}
 	${ENUMSH}
