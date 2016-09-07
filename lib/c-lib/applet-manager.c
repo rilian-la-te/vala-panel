@@ -1,31 +1,91 @@
 #include "applet-manager.h"
-#include "lib/applets-new/applet-engine.h"
-#include "lib/applets-new/applet-info.h"
+#include "applet-engine-module.h"
+#include "lib/applets-new/applet-api.h"
+#include "lib/definitions.h"
+#include "panel-manager.h"
+#include "private.h"
+
+#define PLUGIN_SETTINGS_SCHEMA_BASE "org.valapanel.toplevel.%s"
+#define PLUGIN_SETTINGS_PATH_BASE "/org/vala-panel/applets/%s/%s"
 
 struct _ValaPanelAppletManager
 {
+	ValaPanelManager *mgr;
+	char *profile;
+	GHashTable *available_engines;
 };
 
 G_DEFINE_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, G_TYPE_OBJECT)
 
 void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 {
+	g_autoptr(GError) err = NULL;
+	g_autoptr(GDir) dir   = g_dir_open(CONFIG_PLUGINS_DATA, 0, &err);
+	for (const char *file = g_dir_read_name(dir); file != NULL; file = g_dir_read_name(dir))
+	{
+		ValaPanelAppletEngineModule *module =
+		    vala_panel_applet_engine_module_new_from_ini(file);
+		g_hash_table_add(self->available_engines, module);
+	}
 }
 
 void vala_panel_applet_manager_class_init(ValaPanelAppletManagerClass *klass)
 {
 }
 
-char **vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *self)
+GSList *vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *self)
 {
+	GSList *available_types = NULL;
+	GHashTableIter iter;
+	gpointer key, value;
+	g_hash_table_iter_init(&iter, self->available_engines);
+	while (g_hash_table_iter_next(&iter, &key, &value))
+	{
+		GSList *engine_types =
+		    vala_panel_applet_engine_get_available_types((ValaPanelAppletEngine *)key);
+		available_types = g_slist_concat(available_types, engine_types);
+	}
+	return available_types;
 }
 
 ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
     ValaPanelAppletManager *self, const char *applet_type)
 {
+	GHashTableIter iter;
+	gpointer key, value;
+	g_hash_table_iter_init(&iter, self->available_engines);
+	while (g_hash_table_iter_next(&iter, &key, &value))
+	{
+		ValaPanelAppletInfo *info =
+		    vala_panel_applet_engine_get_applet_info_for_type((ValaPanelAppletEngine *)key,
+		                                                      applet_type);
+		if (info)
+			return info;
+	}
+	return NULL;
 }
 
 ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
     ValaPanelAppletManager *self, const char *applet_type, const char *uuid)
 {
+	GHashTableIter iter;
+	gpointer key, value;
+	g_hash_table_iter_init(&iter, self->available_engines);
+	while (g_hash_table_iter_next(&iter, &key, &value))
+	{
+		g_autofree char *scheme = g_strdup_printf(PLUGIN_SETTINGS_SCHEMA_BASE, applet_type);
+		g_autofree char *path =
+		    g_strdup_printf(PLUGIN_SETTINGS_PATH_BASE, self->profile, uuid);
+		GSettings *settings =
+		    vala_panel_manager_get_settings_for_scheme(self->mgr, scheme, path);
+		ValaPanelAppletWidget *widget =
+		    vala_panel_applet_engine_get_applet_widget_for_type((ValaPanelAppletEngine *)
+		                                                            key,
+		                                                        applet_type,
+		                                                        settings,
+		                                                        uuid);
+		if (widget)
+			return widget;
+	}
+	return NULL;
 }

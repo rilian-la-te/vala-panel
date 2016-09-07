@@ -20,6 +20,8 @@
 #define DEFINITIONS_H
 
 #include <glib.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define g_free0(x)                                                                                 \
 	{                                                                                          \
@@ -74,5 +76,12 @@
 		return G_TYPE_CHECK_INSTANCE_TYPE(ptr, module_obj_name##_get_type());              \
 	}                                                                                          \
 	G_GNUC_END_IGNORE_DEPRECATIONS
+
+#define vala_panel_dup_array(DST, SRC, LEN)                                                        \
+	{                                                                                          \
+		size_t TMPSZ = sizeof(*(SRC)) * (LEN);                                             \
+		if (((DST) = malloc(TMPSZ)) != NULL)                                               \
+			memcpy((DST), (SRC), TMPSZ);                                               \
+	}
 
 #endif // DEFINITIONS_H
