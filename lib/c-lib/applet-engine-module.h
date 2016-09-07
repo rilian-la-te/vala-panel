@@ -10,6 +10,8 @@ G_BEGIN_DECLS
 VALA_PANEL_DECLARE_MODULE_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module,
                                VALA_PANEL, APPLET_ENGINE_MODULE, GTypeModule)
 
+typedef GType (*ValaPanelAppletEngineInitFunc)(GTypeModule *module, bool *make_resident);
+
 G_END_DECLS
 
 #endif // APPLETENGINEMODULE_H
