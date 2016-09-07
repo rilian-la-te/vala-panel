@@ -12,6 +12,50 @@ struct _ValaPanelAppletEngineModule
 
 G_DEFINE_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module, G_TYPE_TYPE_MODULE)
 
+ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const char *filename)
+{
+	ValaPanelAppletEngineModule *module;
+	g_autoptr(GKeyFile) rc = g_key_file_new();
+	g_autoptr(GError) err  = NULL;
+	g_key_file_load_from_file(rc, filename, G_KEY_FILE_KEEP_COMMENTS, &err);
+	if (G_UNLIKELY(rc == NULL))
+	{
+		g_critical("Unable to read plugin engine from desktop file \"%s\"", filename);
+		return NULL;
+	}
+
+	if (!g_key_file_has_group(rc, MODULE_GROUP_NAME))
+	{
+		g_critical(
+		    "Desktop file \"%s\" has no "
+		    "\"" MODULE_GROUP_NAME "\" group",
+		    filename);
+		return NULL;
+	}
+
+	/* read module location from the desktop file */
+	g_autofree char *module_name =
+	    g_key_file_get_string(rc, MODULE_GROUP_NAME, MODULE_NAME_STRING, NULL);
+	if (G_LIKELY(module_name != NULL))
+	{
+		g_autofree char *path = g_module_build_path(CONFIG_PLUGINS_DIRECTORY, module_name);
+		bool found            = g_file_test(path, G_FILE_TEST_EXISTS);
+
+		if (G_LIKELY(found))
+		{
+			/* create new module */
+			module = g_object_new(vala_panel_applet_engine_module_get_type(), NULL);
+			module->filename = path;
+		}
+		else
+			g_critical("There was no module found at \"%s\"", path);
+	}
+	if (G_LIKELY(module != NULL))
+		g_type_module_set_name(G_TYPE_MODULE(module), module_name);
+
+	return module;
+}
+
 static void vala_panel_applet_engine_module_unload(GTypeModule *type_module)
 {
 	ValaPanelAppletEngineModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
