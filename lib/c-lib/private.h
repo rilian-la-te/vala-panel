@@ -6,6 +6,6 @@ G_GNUC_INTERNAL char **vala_panel_applet_engine_get_available_types(ValaPanelApp
 G_GNUC_INTERNAL ValaPanelAppletInfo *vala_panel_applet_engine_get_applet_info_for_type(
     ValaPanelAppletEngine *self, const char *applet_type);
 G_GNUC_INTERNAL ValaPanelAppletWidget *vala_panel_applet_engine_get_applet_widget_for_type(
-    ValaPanelAppletEngine *self, const char *applet_type, const char *uuid);
+    ValaPanelAppletEngine *self, const char *applet_type, GSettings *settings, const char *uuid);
 
 #endif // APPLETSPRIVATE_H
