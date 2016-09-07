@@ -145,7 +145,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
 	                                                         G_PARAM_CONSTRUCT_ONLY |
 	                                                         G_PARAM_READABLE |
 	                                                         G_PARAM_WRITABLE));
-	g_signal_new("panel_size_changed",
+	g_signal_new("panel-size-changed",
 	             vala_panel_applet_widget_get_type(),
 	             G_SIGNAL_RUN_LAST,
 	             0,

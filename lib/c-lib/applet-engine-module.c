@@ -5,7 +5,7 @@ struct _ValaPanelAppletEngineModule
 {
 	GTypeModule __parent__;
 	char *filename;
-	uint use_count;
+	ValaPanelAppletEngine *engine;
 	GModule *library;
 	GType plugin_type;
 };
@@ -56,9 +56,33 @@ ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const 
 	return module;
 }
 
+ValaPanelAppletEngine *vala_panel_applet_engine_module_get_engine(ValaPanelAppletEngineModule *self)
+{
+	if (g_type_module_use(G_TYPE_MODULE(self)))
+	{
+		if (self->plugin_type != G_TYPE_NONE && !self->engine)
+		{
+			/* plugin is build as an object, to use its gtype */
+			self->engine = g_object_new(self->plugin_type, NULL);
+		}
+	}
+	else
+		g_type_module_unuse(G_TYPE_MODULE(self));
+
+	return self->engine;
+}
+
+void vala_panel_applet_engine_module_free_engine(ValaPanelAppletEngineModule *self)
+{
+	g_object_unref(self->engine);
+	self->engine = NULL;
+	g_type_module_unuse(G_TYPE_MODULE(self));
+}
+
 static void vala_panel_applet_engine_module_unload(GTypeModule *type_module)
 {
 	ValaPanelAppletEngineModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
+	vala_panel_applet_engine_module_free_engine(module);
 	g_module_close(module->library);
 
 	/* reset plugin state */
@@ -121,7 +145,7 @@ static void vala_panel_applet_engine_module_finalize(GTypeModule *type_module)
 static void vala_panel_applet_engine_module_init(ValaPanelAppletEngineModule *self)
 {
 	self->filename    = NULL;
-	self->use_count   = 0;
+	self->engine      = NULL;
 	self->library     = NULL;
 	self->plugin_type = G_TYPE_NONE;
 }
