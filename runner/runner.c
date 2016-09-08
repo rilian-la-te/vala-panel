@@ -362,8 +362,6 @@ GtkWidget *create_widget_func(GAppInfo *info, const char *command, bool is_boots
 	                  "button-id",
 	                  is_bootstrap ? (gpointer) "bootstrap"
 	                               : (gpointer)g_app_info_get_id(info));
-	if (is_bootstrap)
-		g_object_set_data(G_OBJECT(box), "command", (gpointer)command);
 
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
 	                            "launcher-button");
