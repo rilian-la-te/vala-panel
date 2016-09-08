@@ -21,9 +21,11 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <stdbool.h>
 
 G_BEGIN_DECLS
 
+void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor);
 void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label);
 void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
 void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value);

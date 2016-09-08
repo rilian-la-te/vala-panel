@@ -31,6 +31,14 @@ static void set_widget_align(GtkWidget *user_data, gpointer data)
 	}
 }
 
+/* Draw text into a label, with the user preference color and optionally bold. */
+void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor)
+{
+	gtk_label_set_text(label, text);
+	g_autofree char *css = css_generate_font_label(factor, bold);
+	css_apply_with_class(GTK_WIDGET(label), css, "-vala-panel-font-label", true);
+}
+
 /* Children hierarhy: button => alignment => box => (label,image) */
 static void setup_button_notify_connect(GObject *_sender, GParamSpec *b, gpointer self)
 {
