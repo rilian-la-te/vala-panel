@@ -29,8 +29,19 @@ void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 	}
 }
 
+void vala_panel_applet_manager_finalize(GObject *obj)
+{
+	ValaPanelAppletManager *module = VALA_PANEL_APPLET_MANAGER(obj);
+
+	g_free(module->profile);
+
+	(*G_OBJECT_CLASS(vala_panel_applet_manager_parent_class)->finalize)(obj);
+}
+
 void vala_panel_applet_manager_class_init(ValaPanelAppletManagerClass *klass)
 {
+	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
+	gobject_class->finalize     = vala_panel_applet_manager_finalize;
 }
 
 GSList *vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *self)
