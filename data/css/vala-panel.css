@@ -1,8 +1,12 @@
 .-panel-run-dialog
 {
-	border-radius: 15px;
-	border: none;
-	margin: 10px;
+	padding: 0;
+	outline-color: rgba(255, 255, 255, 0.3);
+	outline-style: dashed;
+	outline-offset: -3px;
+	outline-width: 1px;
+	-gtk-outline-radius: 2px;
+	margin: 0;
 }
 .-panel-run-header
 {

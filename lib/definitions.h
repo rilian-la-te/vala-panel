@@ -20,8 +20,18 @@
 #define DEFINITIONS_H
 
 #include <glib.h>
+#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define gtk_widget_destroy0(x)                                                                     \
+	{                                                                                          \
+		if (x)                                                                             \
+		{                                                                                  \
+			gtk_widget_destroy(x);                                                     \
+			x = NULL;                                                                  \
+		}                                                                                  \
+	}
 
 #define g_free0(x)                                                                                 \
 	{                                                                                          \
