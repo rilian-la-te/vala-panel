@@ -1,51 +1,8 @@
 #include "runner.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include <string.h>
 
 // namespace Budgie {
-
-///**
-// * Simple launcher button
-// */
-// public class AppLauncherButton : Gtk.Box
-//{
-//    public AppInfo? app_info = null;
-
-//    public AppLauncherButton(AppInfo? info)
-//    {
-//        Object(orientation: Gtk.Orientation.HORIZONTAL);
-//        this.app_info = info;
-
-//        get_style_context().add_class("launcher-button");
-//        var image = new Gtk.Image.from_gicon(info.get_icon(), Gtk.IconSize.DIALOG);
-//        image.pixel_size = 48;
-//        image.set_margin_start(8);
-//        pack_start(image, false, false, 0);
-
-//        var nom = Markup.escape_text(info.get_name());
-//        var sdesc = info.get_description();
-//        if (sdesc == null) {
-//            sdesc = "";
-//        }
-//        var desc = Markup.escape_text(sdesc);
-//        var label = new Gtk.Label("<big>%s</big>\n<small>%s</small>".printf(nom, desc));
-//        label.get_style_context().add_class("dim-label");
-//        label.set_line_wrap(true);
-//        label.set_property("xalign", 0.0);
-//        label.use_markup = true;
-//        label.set_margin_start(12);
-//        label.set_max_width_chars(60);
-//        label.set_halign(Gtk.Align.START);
-//        pack_start(label, false, false, 0);
-
-//        set_hexpand(false);
-//        set_vexpand(false);
-//        set_halign(Gtk.Align.START);
-//        set_valign(Gtk.Align.START);
-//        set_tooltip_text(info.get_name());
-//        set_margin_top(3);
-//        set_margin_bottom(3);
-//    }
-//}
 ///**
 // * The meat of the operation
 // */
@@ -365,34 +322,34 @@ GtkWidget *create_widget_func(GAppInfo *info, const char *command, bool is_boots
 
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
 	                            "launcher-button");
-	//            var image = new Gtk.Image.from_gicon(info.get_icon(), Gtk.IconSize.DIALOG);
-	//            image.pixel_size = 48;
-	//            image.set_margin_start(8);
-	//            pack_start(image, false, false, 0);
+	GtkImage *image =
+	    GTK_IMAGE(gtk_image_new_from_gicon(g_app_info_get_icon(info), GTK_ICON_SIZE_DIALOG));
+	gtk_image_set_pixel_size(image, 48);
+	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
+	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
 
-	//            var nom = Markup.escape_text(info.get_name());
-	//            var sdesc = info.get_description();
-	//            if (sdesc == null) {
-	//                sdesc = "";
-	//            }
-	//            var desc = Markup.escape_text(sdesc);
-	//            var label = new Gtk.Label("<big>%s</big>\n<small>%s</small>".printf(nom,
-	//            desc));
-	//            label.get_style_context().add_class("dim-label");
-	//            label.set_line_wrap(true);
-	//            label.set_property("xalign", 0.0);
-	//            label.use_markup = true;
-	//            label.set_margin_start(12);
-	//            label.set_max_width_chars(60);
-	//            label.set_halign(Gtk.Align.START);
-	//            pack_start(label, false, false, 0);
+	g_autofree char *nom =
+	    g_markup_escape_text(g_app_info_get_name(info), strlen(g_app_info_get_name(info)));
+	const char *sdesc =
+	    g_app_info_get_description(info) ? g_app_info_get_description(info) : "";
+	g_autofree char *desc   = g_markup_escape_text(sdesc, strlen(sdesc));
+	g_autofree char *markup = g_strdup_printf("<big>%s</big>\n<small>%s</small>", nom, desc);
+	GtkLabel *label         = GTK_LABEL(gtk_label_new(markup));
+	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(label)), "dim-label");
+	gtk_label_set_line_wrap(label, true);
+	g_object_set(label, "xalign", 0.0, NULL);
+	gtk_label_set_use_markup(label, true);
+	gtk_widget_set_margin_start(GTK_WIDGET(label), 12);
+	gtk_label_set_max_width_chars(label, 60);
+	gtk_widget_set_halign(GTK_WIDGET(label), GTK_ALIGN_START);
+	gtk_box_pack_start(box, GTK_WIDGET(label), false, false, 0);
 
-	//            set_hexpand(false);
-	//            set_vexpand(false);
-	//            set_halign(Gtk.Align.START);
-	//            set_valign(Gtk.Align.START);
-	//            set_tooltip_text(info.get_name());
-	//            set_margin_top(3);
-	//            set_margin_bottom(3);
+	gtk_widget_set_hexpand(GTK_WIDGET(box), false);
+	gtk_widget_set_vexpand(GTK_WIDGET(box), false);
+	gtk_widget_set_halign(GTK_WIDGET(box), GTK_ALIGN_START);
+	gtk_widget_set_valign(GTK_WIDGET(box), GTK_ALIGN_START);
+	gtk_widget_set_tooltip_text(GTK_WIDGET(box), g_app_info_get_name(info));
+	gtk_widget_set_margin_top(GTK_WIDGET(box), 3);
+	gtk_widget_set_margin_bottom(GTK_WIDGET(box), 3);
 	return GTK_WIDGET(box);
 }
