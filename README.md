@@ -9,7 +9,7 @@ This is Vala rewrite of SimplePanel, GTK3 LXPanel fork.
  * [x] Write Vala Panel Plugin wrapper for LXTray from simple-panel (it is less buggy) (0.2) (done in XEmbed plugin)
  * [x] Make global menus from Unity Appindicator (rewrite it on Vala but without Ubuntu deps) (0.3) (see https://github.com/rilian-la-te/vala-panel-appmenu)
  * [x] Write a window buttons applet (0.3)
- * [ ] Write Notification Center Applet (0.4)
+ * [ ] Write Notification Center Applet (0.6)
  * [ ] Going to C again (0.4)
  * [ ] Wayland support, make compositor and complete Wayland support(1.0)
  * [ ] Taskbar DBus library for compositor (1.0)
