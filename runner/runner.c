@@ -2,6 +2,23 @@
 #include <stdbool.h>
 #include <string.h>
 
+struct _ValaPanelRunner
+{
+
+};
+
+G_DEFINE_TYPE(ValaPanelRunner,vala_panel_runner,GTK_TYPE_DIALOG);
+
+void vala_panel_runner_init(ValaPanelRunner* self)
+{
+
+}
+
+void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
+{
+
+}
+
 // namespace Budgie {
 ///**
 // * The meat of the operation
