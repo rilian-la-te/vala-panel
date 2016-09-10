@@ -28,7 +28,7 @@
 	{                                                                                          \
 		if (x)                                                                             \
 		{                                                                                  \
-			gtk_widget_destroy(x);                                                     \
+			gtk_widget_destroy(GTK_WIDGET(x));                                         \
 			x = NULL;                                                                  \
 		}                                                                                  \
 	}

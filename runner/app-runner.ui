@@ -7,7 +7,6 @@
     <property name="height_request">-1</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
-    <property name="title" translatable="yes">Run...</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
     <property name="icon_name">vala-panel</property>
@@ -17,44 +16,35 @@
     <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
+    <signal name="response" handler="vala_panel_runner_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="main-box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="dialog-action_area1">
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkBox" id="titlebar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkButton" id="close-button">
+              <object class="GtkToggleButton" id="terminal-button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Cancel button</property>
+                <property name="receives_default">True</property>
                 <property name="relief">none</property>
-                <property name="always_show_image">True</property>
                 <child>
-                  <object class="GtkImage" id="image-close">
+                  <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="icon_name">window-close-symbolic</property>
+                    <property name="icon_name">utilities-terminal-symbolic</property>
                     <property name="use_fallback">True</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -68,67 +58,35 @@
                 <property name="primary_icon_name">system-run-symbolic</property>
                 <property name="secondary_icon_name">go-next-symbolic</property>
                 <property name="placeholder_text" translatable="yes">Enter application name...</property>
-                <signal name="activate" handler="on_entry_activated" swapped="no"/>
+                <signal name="activate" handler="on_search_activated" swapped="no"/>
                 <signal name="changed" handler="on_entry_changed" swapped="no"/>
-                <signal name="icon-press" handler="on_icon_activated" swapped="no"/>
+                <signal name="search-changed" handler="on_search_changed" object="ValaPanelRunner" swapped="no"/>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkToggleButton" id="terminal-button">
+              <object class="GtkButton" id="button1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">Terminal toggle button</property>
+                <property name="receives_default">True</property>
                 <property name="relief">none</property>
-                <property name="image_position">right</property>
-                <property name="always_show_image">True</property>
                 <child>
-                  <object class="GtkImage" id="image-terminal">
+                  <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="icon_name">utilities-terminal</property>
+                    <property name="icon_name">window-close-symbolic</property>
+                    <property name="use_fallback">True</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRevealer">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="transition_type">none</property>
-                <property name="reveal_child">True</property>
-                <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="shadow_type">in</property>
-                    <child>
-                      <object class="GtkViewport">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkListBox" id="search-box">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-                <property name="width">3</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -138,26 +96,43 @@
             <property name="position">0</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkRevealer" id="revealer">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="transition_type">none</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="height_request">300</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkViewport">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkListBox" id="search-box">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <signal name="row-activated" handler="on_row_activated" object="ValaPanelRunner" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
       </object>
     </child>
+    <action-widgets>
+      <action-widget response="-6">button1</action-widget>
+    </action-widgets>
   </template>
-  <object class="GtkListStore" id="store-files">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkEntryCompletion" id="completion-files">
-    <property name="model">store-files</property>
-    <property name="minimum_key_length">2</property>
-    <property name="text_column">0</property>
-    <property name="inline_completion">True</property>
-    <property name="popup_single_match">False</property>
-    <child>
-      <object class="GtkCellRendererText"/>
-      <attributes>
-        <attribute name="text">0</attribute>
-      </attributes>
-    </child>
-  </object>
 </interface>

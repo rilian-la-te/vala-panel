@@ -223,7 +223,7 @@ static void on_entry_changed(GtkEntry *entry, gpointer user_data)
 	{
 		gtk_entry_set_icon_from_icon_name(entry,
 		                                  GTK_ENTRY_ICON_PRIMARY,
-		                                  "application-x-executable");
+		                                  "system-run-symbolic");
 	}
 }
 
@@ -266,9 +266,9 @@ static void vala_panel_runner_finalize(GObject *obj)
 	    G_TYPE_CHECK_INSTANCE_CAST(obj, vala_panel_runner_get_type(), ValaPanelRunner);
 	g_cancellable_cancel(self->cancellable);
 	gtk_window_set_application((GtkWindow *)self, NULL);
-	g_object_unref0(self->main_entry);
-	g_object_unref0(self->terminal_button);
-	g_object_unref0(self->main_box);
+	gtk_widget_destroy0(self->main_entry);
+	gtk_widget_destroy0(self->terminal_button);
+	gtk_widget_destroy0(self->main_box);
 	g_object_unref0(self->task);
 	g_object_unref0(self->cancellable);
 	G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);

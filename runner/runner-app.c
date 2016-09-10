@@ -1,8 +1,10 @@
 #include "runner-app.h"
 #include "lib/definitions.h"
+#include "runner.h"
 
 struct _ValaPanelRunApplication
 {
+	GtkApplication __parent__;
 	GtkWindow *run_dialog;
 };
 
@@ -18,12 +20,12 @@ static ValaPanelRunApplication *vala_panel_run_application_new()
 	                                               NULL));
 }
 
-static void vala_panel_run_application_activate(GApplication *app)
+static void vala_panel_run_application_activate(GApplication *application)
 {
-	//            if (rd == null) {
-	//                rd = new RunDialog(this);
-	//            }
-	//            rd.present();
+	ValaPanelRunApplication *app = VALA_PANEL_RUN_APPLICATION(application);
+	if (app->run_dialog == NULL)
+		app->run_dialog = vala_panel_runner_new(GTK_APPLICATION(app));
+	gtk_run(app->run_dialog);
 }
 
 static void vala_panel_run_application_finalize(GObject *app)
