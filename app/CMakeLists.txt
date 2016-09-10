@@ -1,5 +1,5 @@
 INCLUDE(GResource)
-set(VALA_FILES  application.vala runner.vala)
+set(VALA_FILES  application.vala)
 vala_precompile(VALA_C ${APPNAME}
     ${VALA_FILES}
 PACKAGES
@@ -28,7 +28,7 @@ glib_compile_resources(GLIB_RESOURCES_APP
 #####
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
-add_executable (${APPNAME} ${VALA_C} ${GLIB_RESOURCES_APP})
+add_executable (${APPNAME} ${VALA_C} runner-new.c runner-new.h ${GLIB_RESOURCES_APP})
 add_executable(${APPNAME}-new  runner-new.c runner-new.h application-new.c application-new.h)
 target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES} cvalapanel)
 target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} cvalapanel applet-api-new)

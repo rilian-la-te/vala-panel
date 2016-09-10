@@ -14,9 +14,9 @@ G_DEFINE_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module, G_TY
 
 ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const char *filename)
 {
-	ValaPanelAppletEngineModule *module;
-	g_autoptr(GKeyFile) rc = g_key_file_new();
-	g_autoptr(GError) err  = NULL;
+	ValaPanelAppletEngineModule *module = NULL;
+	g_autoptr(GKeyFile) rc              = g_key_file_new();
+	g_autoptr(GError) err               = NULL;
 	g_key_file_load_from_file(rc, filename, G_KEY_FILE_KEEP_COMMENTS, &err);
 	if (G_UNLIKELY(rc == NULL))
 	{

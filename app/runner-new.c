@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "css.h"
-#include "launcher.h"
+#include "lib/c-lib/css.h"
+#include "lib/c-lib/launcher.h"
 #include "runner-new.h"
 
 struct _ValaPanelRunner
@@ -294,4 +294,8 @@ void gtk_run(ValaPanelRunner *self)
 	gtk_window_present_with_time(GTK_WINDOW(self), gtk_get_current_event_time());
 }
 
-/* vim: set sw=4 et sts=4 ts=4 : */
+ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
+{
+	return VALA_PANEL_RUNNER(
+	    g_object_new(vala_panel_runner_get_type(), "application", app, NULL));
+}

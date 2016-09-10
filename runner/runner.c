@@ -4,19 +4,22 @@
 
 struct _ValaPanelRunner
 {
-
+	GtkSettings *settings;
+	GtkCssProvider *css_provider;
+	char *current_theme_uri;
+	GtkRevealer *bottom_revealer;
+	GtkListBox *app_box;
+	GtkSearchEntry *entry;
 };
 
-G_DEFINE_TYPE(ValaPanelRunner,vala_panel_runner,GTK_TYPE_DIALOG);
+G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 
-void vala_panel_runner_init(ValaPanelRunner* self)
+void vala_panel_runner_init(ValaPanelRunner *self)
 {
-
 }
 
-void vala_panel_runner_class_init(ValaPanelRunnerClass* klass)
+void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 {
-
 }
 
 // namespace Budgie {
