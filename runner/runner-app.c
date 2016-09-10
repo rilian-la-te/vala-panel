@@ -20,6 +20,10 @@ static ValaPanelRunApplication *vala_panel_run_application_new()
 
 static void vala_panel_run_application_activate(GApplication *app)
 {
+	//            if (rd == null) {
+	//                rd = new RunDialog(this);
+	//            }
+	//            rd.present();
 }
 
 static void vala_panel_run_application_finalize(GObject *app)

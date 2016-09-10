@@ -33,6 +33,15 @@
 		}                                                                                  \
 	}
 
+#define g_object_unref0(x)                                                                         \
+	{                                                                                          \
+		if (x)                                                                             \
+		{                                                                                  \
+			g_object_unref(x);                                                         \
+			x = NULL;                                                                  \
+		}                                                                                  \
+	}
+
 #define g_free0(x)                                                                                 \
 	{                                                                                          \
 		if (x)                                                                             \

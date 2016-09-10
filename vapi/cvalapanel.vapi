@@ -66,10 +66,10 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/c-lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cname = "ValaPanelRunner",cheader_filename = "app/runner-new.h")]
-    public class RunDialog : Gtk.Dialog
+    public class Runner : Gtk.Dialog
     {
         [CCode (cname = "vala_panel_runner_new",cheader_filename = "app/runner-new.h")]
-        public inline RunDialog(Gtk.Application app)
+        public inline Runner(Gtk.Application app)
         {
             Object(application: app);
         }

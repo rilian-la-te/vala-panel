@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.20.0 -->
 <interface>
-  <requires lib="gtk+" version="3.12"/>
+  <requires lib="gtk+" version="3.16"/>
+  <object class="GtkListStore" id="store-files">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkEntryCompletion" id="completion-files">
+    <property name="model">store-files</property>
+    <property name="minimum_key_length">2</property>
+    <property name="text_column">0</property>
+    <property name="inline_completion">True</property>
+    <property name="popup_single_match">False</property>
+    <child>
+      <object class="GtkCellRendererText"/>
+      <attributes>
+        <attribute name="text">0</attribute>
+      </attributes>
+    </child>
+  </object>
   <template class="ValaPanelRunner" parent="GtkDialog">
     <property name="width_request">450</property>
     <property name="height_request">-1</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
-    <property name="icon_name">vala-panel</property>
-    <property name="title" translatable="yes">Run...</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
+    <property name="icon_name">vala-panel</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
+    <signal name="response" handler="vala_panel_runner_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="main-box">
         <property name="visible">True</property>
@@ -64,10 +83,10 @@
             <property name="receives_default">True</property>
             <property name="tooltip_text" translatable="yes">Runnable command name</property>
             <property name="activates_default">True</property>
-            <property name="completion">completion-files</property>
             <property name="primary_icon_name">system-run-symbolic</property>
             <property name="secondary_icon_name">go-next-symbolic</property>
             <property name="placeholder_text" translatable="yes">Enter application name...</property>
+            <property name="completion">completion-files</property>
             <signal name="activate" handler="on_entry_activated" swapped="no"/>
             <signal name="changed" handler="on_entry_changed" swapped="no"/>
             <signal name="icon-press" handler="on_icon_activated" swapped="no"/>
@@ -107,25 +126,4 @@
      <action-widget response="close">close-button</action-widget>
     </action-widgets>
   </template>
-  <object class="GtkListStore" id="store-files">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkEntryCompletion" id="completion-files">
-    <property name="model">store-files</property>
-    <property name="minimum_key_length">2</property>
-    <property name="text_column">0</property>
-    <property name="popup_completion">True</property>
-    <property name="popup_single_match">False</property>
-    <property name="popup_set_width">True</property>
-    <property name="inline_completion">True</property>
-    <child>
-      <object class="GtkCellRendererText"/>
-      <attributes>
-        <attribute name="text">0</attribute>
-      </attributes>
-    </child>
-  </object>
 </interface>
