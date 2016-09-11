@@ -18,6 +18,9 @@ struct _ValaPanelRunner
 	GtkWidget *bootstrap_row;
 	GtkLabel *bootstrap_label;
 	GtkToggleButton *terminal_button;
+    GTask* task;
+    GCancellable* cancellable;
+    bool cached;
 };
 
 G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
@@ -54,7 +57,7 @@ static GDesktopAppInfo *match_app_by_exec(const char *exec)
 			len   = path_len;
 		}
 		else
-		{
+        {
 			pexec = exec;
 			len   = exec_len;
 		}
@@ -127,6 +130,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			return;
 		}
 	}
+    g_cancellable_cancel(self->cancellable);
 	gtk_widget_destroy((GtkWidget *)dlg);
 }
 
@@ -138,15 +142,15 @@ bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 	GAppInfo *info = g_app_launcher_button_get_app_info(gtk_bin_get_child(GTK_BIN(row)));
 	//        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
 	const char *search_text = gtk_entry_get_text(GTK_ENTRY(self->main_entry));
-	GAppInfo *match         = G_APP_INFO(match_app_by_exec(search_text));
+    const char* match         = g_app_info_get_executable(info);
 	if (!strcmp(search_text, ""))
 		return false;
 	else if (!(match) && (gtk_bin_get_child(GTK_BIN(row)) == self->bootstrap_row))
 		return true;
 	else if (!(match))
 		return false;
-	else if (g_app_info_equal(info, match))
-		return true;
+    else if (g_strstr_len(match,-1,search_text))
+        return true;
 	return false;
 }
 
@@ -180,23 +184,85 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 	}
 }
 
-void build_app_box(ValaPanelRunner *self)
-{
-	create_bootstrap(self);
-	gtk_container_add(GTK_CONTAINER(self->app_box), self->bootstrap_row);
-	g_autoptr(GList) apps = g_app_info_get_all();
-	g_list_foreach(apps, G_CALLBACK(add_application), self);
-	gtk_widget_show_all(GTK_WIDGET(self->app_box));
-}
-
 void add_application(GAppInfo *app_info, ValaPanelRunner *self)
 {
-	GDesktopAppInfo *dinfo = G_DESKTOP_APP_INFO(app_info);
-	if (g_desktop_app_info_get_nodisplay(dinfo))
-		return;
-	GtkWidget *button = create_widget_func(g_app_info_dup(app_info));
-	gtk_container_add(GTK_CONTAINER(self->app_box), button);
-	gtk_widget_show_all(button);
+    GDesktopAppInfo *dinfo = G_DESKTOP_APP_INFO(app_info);
+    if (g_desktop_app_info_get_nodisplay(dinfo))
+        return;
+    GtkWidget *button = create_widget_func(g_app_info_dup(app_info));
+    gtk_container_add(GTK_CONTAINER(self->app_box), button);
+    gtk_widget_show_all(button);
+}
+
+static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res,
+                                          gpointer user_data)
+{
+    ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
+    GSList *l;
+    g_autoptr(GSList) files  = (GSList *)g_task_propagate_pointer(self->task, NULL);
+
+    for (l = files; l; l = l->next)
+    {
+        char *name = (char *)l->data;
+        g_autoptr(GAppInfo) info = G_APP_INFO(match_app_by_exec(name));
+        if (!info)
+            info = g_app_info_create_from_commandline(name,NULL,G_APP_INFO_CREATE_NONE,NULL);
+        add_application(info,self);
+    }
+    gtk_list_box_set_filter_func(self->app_box, (GtkListBoxFilterFunc)on_filter, self, NULL);
+}
+
+static void slist_destroy_notify(void *a)
+{
+    GSList *lst = (GSList *)a;
+    g_slist_free_full(lst, g_free);
+}
+
+static void vala_panel_runner_create_file_list(GTask *task, void *source, void *task_data,
+                                               GCancellable *cancellable)
+{
+    GSList *list       = NULL;
+    const char *var    = g_getenv("PATH");
+    g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
+    for (int i = 0; dirs[i] != NULL; i++)
+    {
+        if (g_cancellable_is_cancelled(cancellable))
+            return;
+
+        g_autoptr(GDir) gdir = g_dir_open(dirs[i], 0, NULL);
+        const char *name     = NULL;
+        while (!g_cancellable_is_cancelled(cancellable) &&
+               (name = g_dir_read_name(gdir)) != NULL)
+        {
+            g_autofree char *filename = g_build_filename(dirs[i], name, NULL);
+            if (g_file_test(filename, G_FILE_TEST_IS_EXECUTABLE))
+            {
+                if (g_cancellable_is_cancelled(cancellable))
+                    return;
+                if (g_slist_find_custom(list, name, (GCompareFunc)strcmp) == NULL)
+                    list = g_slist_append(list, g_strdup(name));
+            }
+        }
+    }
+    g_task_return_pointer(task, list, slist_destroy_notify);
+    return;
+}
+
+static void build_app_box(ValaPanelRunner *self)
+{
+    /* FIXME: consider saving the list of commands as on-disk cache. */
+    if (self->cached)
+    {
+        /* load cached program list */
+    }
+    else
+    {
+        self->cancellable = g_cancellable_new();
+        self->task =
+            g_task_new(self, self->cancellable, setup_list_box_with_data, self);
+        /* load in another working thread */
+        g_task_run_in_thread(self->task, vala_panel_runner_create_file_list);
+    }
 }
 
 /**
@@ -220,6 +286,9 @@ static void vala_panel_runner_finalize(GObject *obj)
 	ValaPanelRunner *self =
 	    G_TYPE_CHECK_INSTANCE_CAST(obj, vala_panel_runner_get_type(), ValaPanelRunner);
 	gtk_window_set_application((GtkWindow *)self, NULL);
+    g_cancellable_cancel(self->cancellable);
+    g_object_unref0(self->cancellable);
+    g_object_unref0(self->task);
 	g_object_unref0(self->bootstrap_row);
 	g_object_unref0(self->bootstrap_label);
 	g_object_unref0(self->main_entry);
@@ -236,7 +305,6 @@ void vala_panel_runner_init(ValaPanelRunner *self)
 	                        "/org/vala-panel/runner/style.css",
 	                        "-panel-run-dialog");
 	build_app_box(self);
-	gtk_list_box_set_filter_func(self->app_box, (GtkListBoxFilterFunc)on_filter, self, NULL);
 }
 
 void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
