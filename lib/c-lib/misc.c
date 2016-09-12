@@ -36,7 +36,7 @@ void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double
 {
 	gtk_label_set_text(label, text);
 	g_autofree char *css = css_generate_font_label(factor, bold);
-	css_apply_with_class(GTK_WIDGET(label), css, "-vala-panel-font-label", true);
+	css_apply_with_class(GTK_WIDGET(label), css, "-vala-panel-font-label", false);
 }
 
 /* Children hierarhy: button => alignment => box => (label,image) */

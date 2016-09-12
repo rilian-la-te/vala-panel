@@ -102,7 +102,7 @@ namespace ValaPanel
             PanelCSS.apply_with_class(background_widget,
                                       PanelCSS.generate_background(null,color),
                                       "-vala-panel-background",
-                                      true);
+                                      false);
         }
         public void popup_position_helper(Gtk.Widget popup,
                                           out int x, out int y)
