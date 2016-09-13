@@ -55,10 +55,16 @@ typedef struct info_data
 
 static InfoData *info_data_new_from_info(GAppInfo *info)
 {
-	InfoData *data  = (InfoData *)g_malloc0(sizeof(InfoData));
-	data->icon      = g_app_info_get_icon(info);
-	data->free_icon = false;
-	data->disp_name = g_strdup(g_app_info_get_display_name(info));
+	InfoData *data = (InfoData *)g_malloc0(sizeof(InfoData));
+	data->icon     = g_app_info_get_icon(info);
+	if (!data->icon)
+	{
+		data->icon      = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
+		data->free_icon = true;
+	}
+	else
+		data->free_icon = false;
+	data->disp_name         = g_strdup(g_app_info_get_display_name(info));
 	const char *name =
 	    g_app_info_get_name(info) ? g_app_info_get_name(info) : g_app_info_get_executable(info);
 	const char *sdesc =
