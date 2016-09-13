@@ -32,7 +32,7 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 	                        BUTTON_QUARK,                                                      \
 	                        (gpointer)info,                                                    \
 	                        (GDestroyNotify)info_data_free)
-void create_bootstrap(ValaPanelRunner *self);
+static void create_bootstrap(ValaPanelRunner *self);
 /*
  * InfoData struct
  */
@@ -97,7 +97,7 @@ static void info_data_free(InfoData *data)
 	g_free(data);
 }
 
-void add_application(InfoData *data, ValaPanelRunner *self);
+static void add_application(InfoData *data, ValaPanelRunner *self);
 
 GtkWidget *create_widget_func(const InfoData *data)
 {
@@ -183,7 +183,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 /**
  * Filter the list
  */
-bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
+static bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 {
 	InfoData *info = g_app_launcher_button_get_info_data(gtk_bin_get_child(GTK_BIN(row)));
 	//        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
@@ -193,7 +193,7 @@ bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 		return false;
 	else if (!(match) && (gtk_bin_get_child(GTK_BIN(row)) == self->bootstrap_row))
 		return true;
-	else if (g_strstr_len(match, -1, search_text))
+	else if (g_str_has_prefix(match, search_text))
 		return true;
 	return false;
 }
@@ -323,7 +323,7 @@ static void build_app_box(ValaPanelRunner *self)
 /**
  * Handle click/<enter> activation on the main list
  */
-void on_row_activated(GtkListBoxRow *row, ValaPanelRunner *self)
+static void on_row_activated(GtkListBox *box, GtkListBoxRow *row, ValaPanelRunner *self)
 {
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 }
@@ -331,7 +331,7 @@ void on_row_activated(GtkListBoxRow *row, ValaPanelRunner *self)
 /**
  * Handle click/<enter> activation on the entry
  */
-void on_entry_activated(GtkEntry *row, ValaPanelRunner *self)
+static void on_entry_activated(GtkEntry *row, ValaPanelRunner *self)
 {
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 }
@@ -353,7 +353,7 @@ static void vala_panel_runner_finalize(GObject *obj)
 	G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
 }
 
-void vala_panel_runner_init(ValaPanelRunner *self)
+static void vala_panel_runner_init(ValaPanelRunner *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
 	css_apply_from_resource(GTK_WIDGET(self),
@@ -362,7 +362,7 @@ void vala_panel_runner_init(ValaPanelRunner *self)
 	build_app_box(self);
 }
 
-void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
+static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 {
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/runner/app-runner.ui");
@@ -405,7 +405,7 @@ ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
 	return VALA_PANEL_RUNNER(
 	    g_object_new(vala_panel_runner_get_type(), "application", app, NULL));
 }
-void create_bootstrap(ValaPanelRunner *self)
+static void create_bootstrap(ValaPanelRunner *self)
 {
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),

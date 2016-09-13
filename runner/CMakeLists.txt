@@ -6,9 +6,9 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 )
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_LIB}
-	runner.c
-	runner.h
-	runner-app.c
+        runner.c
+        runner.h
+        runner-app.c
 	runner-app.h
 	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
 	${CMAKE_SOURCE_DIR}/lib/c-lib/launcher.c)
