@@ -1,4 +1,5 @@
 #include "runner-app.h"
+#include "lib/config.h"
 #include "lib/definitions.h"
 #include "runner.h"
 
@@ -25,7 +26,7 @@ static void vala_panel_run_application_activate(GApplication *application)
 	ValaPanelRunApplication *app = VALA_PANEL_RUN_APPLICATION(application);
 	if (app->run_dialog == NULL)
 		app->run_dialog = vala_panel_runner_new(GTK_APPLICATION(app));
-	gtk_run(app->run_dialog);
+	gtk_run(VALA_PANEL_RUNNER(app->run_dialog));
 }
 
 static void vala_panel_run_application_finalize(GObject *app)
@@ -35,6 +36,10 @@ static void vala_panel_run_application_finalize(GObject *app)
 }
 static void vala_panel_run_application_init(ValaPanelRunApplication *self)
 {
+	setlocale(LC_CTYPE, "");
+	bindtextdomain(CONFIG_GETTEXT_PACKAGE, CONFIG_LOCALE_DIR);
+	bind_textdomain_codeset(CONFIG_GETTEXT_PACKAGE, "UTF-8");
+	textdomain(CONFIG_GETTEXT_PACKAGE);
 }
 
 static void vala_panel_run_application_class_init(ValaPanelRunApplicationClass *klass)

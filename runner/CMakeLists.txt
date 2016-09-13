@@ -13,5 +13,5 @@ add_executable(${APPNAME}-runner
 	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
 	${CMAKE_SOURCE_DIR}/lib/c-lib/launcher.c)
 target_link_libraries (${APPNAME}-runner ${CORE_LIBRARIES} m)
-target_include_directories(${APPNAME}-runner PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
+target_include_directories(${APPNAME}-runner PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 install (TARGETS ${APPNAME}-runner RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)

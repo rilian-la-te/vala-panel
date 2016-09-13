@@ -2,6 +2,7 @@
 #define RUNNER_H
 
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
