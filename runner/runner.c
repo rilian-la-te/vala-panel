@@ -147,8 +147,6 @@ bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 		return false;
 	else if (!(match) && (gtk_bin_get_child(GTK_BIN(row)) == self->bootstrap_row))
 		return true;
-	else if (!(match))
-		return false;
 	else if (g_strstr_len(match, -1, search_text))
 		return true;
 	return false;
@@ -187,9 +185,7 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 void add_application(GAppInfo *app_info, ValaPanelRunner *self)
 {
 	GDesktopAppInfo *dinfo = G_DESKTOP_APP_INFO(app_info);
-	if (g_desktop_app_info_get_nodisplay(dinfo))
-		return;
-	GtkWidget *button = create_widget_func(g_app_info_dup(app_info));
+	GtkWidget *button      = create_widget_func(g_app_info_dup(app_info));
 	gtk_container_add(GTK_CONTAINER(self->app_box), button);
 	gtk_widget_show_all(button);
 }
@@ -201,16 +197,7 @@ static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, 
 	g_autoptr(GSList) files = (GSList *)g_task_propagate_pointer(self->task, NULL);
 
 	for (l = files; l; l = l->next)
-	{
-		char *name               = (char *)l->data;
-		g_autoptr(GAppInfo) info = G_APP_INFO(match_app_by_exec(name));
-		if (!info)
-			info = g_app_info_create_from_commandline(name,
-			                                          NULL,
-			                                          G_APP_INFO_CREATE_NONE,
-			                                          NULL);
-		add_application(info, self);
-	}
+		add_application(G_APP_INFO(l->data), self);
 	gtk_list_box_set_filter_func(self->app_box, (GtkListBoxFilterFunc)on_filter, self, NULL);
 }
 
@@ -220,10 +207,17 @@ static void slist_destroy_notify(void *a)
 	g_slist_free_full(lst, g_free);
 }
 
+static int slist_find_func(gconstpointer slist, gconstpointer data)
+{
+	const char *str = (const char *)data;
+	GAppInfo *info  = G_APP_INFO(slist);
+	return strcmp(g_app_info_get_executable(info), str);
+}
+
 static void vala_panel_runner_create_file_list(GTask *task, void *source, void *task_data,
                                                GCancellable *cancellable)
 {
-	GSList *list       = NULL;
+	GSList *obj_list   = NULL;
 	const char *var    = g_getenv("PATH");
 	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
 	for (int i = 0; dirs[i] != NULL; i++)
@@ -241,12 +235,19 @@ static void vala_panel_runner_create_file_list(GTask *task, void *source, void *
 			{
 				if (g_cancellable_is_cancelled(cancellable))
 					return;
-				if (g_slist_find_custom(list, name, (GCompareFunc)strcmp) == NULL)
-					list = g_slist_append(list, g_strdup(name));
+				if (g_slist_find_custom(obj_list, name, slist_find_func) == NULL)
+				{
+					GAppInfo *info = G_APP_INFO(match_app_by_exec(name));
+					if (!info)
+						info = g_app_info_create_from_commandline(
+						    name, NULL, G_APP_INFO_CREATE_NONE, NULL);
+					obj_list = g_slist_append(obj_list, info);
+					g_print("match_app_by_exec: %s\n", name);
+				}
 			}
 		}
 	}
-	g_task_return_pointer(task, list, slist_destroy_notify);
+	g_task_return_pointer(task, obj_list, slist_destroy_notify);
 	return;
 }
 
@@ -382,14 +383,16 @@ GtkWidget *create_widget_func(GAppInfo *info)
 	gtk_image_set_pixel_size(image, 48);
 	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
 	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
-
+	const char *name =
+	    g_app_info_get_name(info) ? g_app_info_get_name(info) : g_app_info_get_executable(info);
 	g_autofree char *nom =
 	    g_markup_escape_text(g_app_info_get_name(info), strlen(g_app_info_get_name(info)));
 	const char *sdesc =
 	    g_app_info_get_description(info) ? g_app_info_get_description(info) : "";
 	g_autofree char *desc   = g_markup_escape_text(sdesc, strlen(sdesc));
 	g_autofree char *markup = g_strdup_printf("<big>%s</big>\n<small>%s</small>", nom, desc);
-	GtkLabel *label         = GTK_LABEL(gtk_label_new(markup));
+	g_print("create_widget_func: %s\n", markup);
+	GtkLabel *label = GTK_LABEL(gtk_label_new(markup));
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(label)), "dim-label");
 	gtk_label_set_line_wrap(label, true);
 	g_object_set(label, "xalign", 0.0, NULL);
