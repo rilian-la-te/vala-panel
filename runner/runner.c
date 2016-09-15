@@ -55,6 +55,8 @@ typedef struct info_data
 
 static InfoData *info_data_new_from_info(GAppInfo *info)
 {
+	if (g_app_info_get_executable(info) == NULL)
+		return NULL;
 	InfoData *data = (InfoData *)g_malloc0(sizeof(InfoData));
 	data->icon     = g_app_info_get_icon(info);
 	if (!data->icon)
@@ -257,7 +259,9 @@ static int slist_find_func(gconstpointer slist, gconstpointer data)
 {
 	const char *str = (const char *)data;
 	InfoData *info  = (InfoData *)slist;
-	return strcmp(info->command, str);
+	if (data && info)
+		return strcmp(info->command, str);
+	return false;
 }
 
 static void vala_panel_runner_create_data_list(GTask *task, void *source, void *task_data,
@@ -269,7 +273,9 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 	{
 		if (g_cancellable_is_cancelled(cancellable))
 			return;
-		obj_list = g_slist_append(obj_list, info_data_new_from_info(G_APP_INFO(l->data)));
+		InfoData *data = info_data_new_from_info(G_APP_INFO(l->data));
+		if (data)
+			obj_list = g_slist_append(obj_list, data);
 	}
 	const char *var    = g_getenv("PATH");
 	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
@@ -290,8 +296,6 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 					return;
 				if (g_slist_find_custom(obj_list, name, slist_find_func) == NULL)
 				{
-					if (g_cancellable_is_cancelled(cancellable))
-						return;
 					InfoData *info = info_data_new_from_command(name);
 					obj_list       = g_slist_append(obj_list, info);
 				}
