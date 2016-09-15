@@ -8,6 +8,8 @@ add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_LIB}
         runner.c
         runner.h
+        glistmodel-filter.c
+        glistmodel-filter.h
         runner-app.c
 	runner-app.h
 	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
