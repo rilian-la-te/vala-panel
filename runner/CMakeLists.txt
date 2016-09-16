@@ -6,12 +6,14 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 )
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_LIB}
-        runner.c
-        runner.h
-        glistmodel-filter.c
-        glistmodel-filter.h
-        runner-app.c
+	runner.c
+	runner.h
+	glistmodel-filter.c
+	glistmodel-filter.h
+	runner-app.c
 	runner-app.h
+	info-data.c
+	info-data.h
 	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
 	${CMAKE_SOURCE_DIR}/lib/c-lib/launcher.c)
 target_link_libraries (${APPNAME}-runner ${CORE_LIBRARIES} m)
