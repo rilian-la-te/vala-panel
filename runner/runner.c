@@ -1,5 +1,5 @@
-#include "info-data.h"
 #include "runner.h"
+#include "info-data.h"
 #include "lib/c-lib/css.h"
 #include "lib/c-lib/launcher.h"
 #include "lib/definitions.h"
@@ -27,12 +27,12 @@ struct _ValaPanelRunner
 G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 #define BUTTON_QUARK g_quark_from_static_string("button-id")
 #define g_app_launcher_button_get_info_data(btn)                                                   \
-    (InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
+	(InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
 #define g_app_launcher_button_set_info_data(btn, info)                                             \
 	g_object_set_qdata_full(G_OBJECT(btn),                                                     \
 	                        BUTTON_QUARK,                                                      \
 	                        (gpointer)info,                                                    \
-                            (GDestroyNotify)info_data_free)
+	                        (GDestroyNotify)info_data_free)
 static void create_bootstrap(ValaPanelRunner *self);
 
 static void add_application(InfoData *data, ValaPanelRunner *self);
@@ -42,12 +42,12 @@ GtkWidget *create_widget_func(const InfoData *data)
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
-                                "launcher-button");
-    GtkImage *image = GTK_IMAGE(gtk_image_new_from_gicon(data->icon, GTK_ICON_SIZE_DIALOG));
+	                            "launcher-button");
+	GtkImage *image = GTK_IMAGE(gtk_image_new_from_gicon(data->icon, GTK_ICON_SIZE_DIALOG));
 	gtk_image_set_pixel_size(image, 48);
 	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
 	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
-    GtkLabel *label = GTK_LABEL(gtk_label_new(data->name_markup));
+	GtkLabel *label = GTK_LABEL(gtk_label_new(data->name_markup));
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(label)), "dim-label");
 	gtk_label_set_line_wrap(label, true);
 	g_object_set(label, "xalign", 0.0, NULL);
@@ -57,10 +57,10 @@ GtkWidget *create_widget_func(const InfoData *data)
 	gtk_widget_set_halign(GTK_WIDGET(label), GTK_ALIGN_START);
 	gtk_box_pack_start(box, GTK_WIDGET(label), false, false, 0);
 	gtk_widget_set_hexpand(GTK_WIDGET(box), false);
-    gtk_widget_set_vexpand(GTK_WIDGET(box), false);
+	gtk_widget_set_vexpand(GTK_WIDGET(box), false);
 	gtk_widget_set_halign(GTK_WIDGET(box), GTK_ALIGN_START);
 	gtk_widget_set_valign(GTK_WIDGET(box), GTK_ALIGN_START);
-    gtk_widget_set_tooltip_text(GTK_WIDGET(box), data->disp_name);
+	gtk_widget_set_tooltip_text(GTK_WIDGET(box), data->disp_name);
 	gtk_widget_set_margin_top(GTK_WIDGET(box), 3);
 	gtk_widget_set_margin_bottom(GTK_WIDGET(box), 3);
 	return GTK_WIDGET(box);
@@ -96,10 +96,10 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			}
 		}
 		else
-        {
-            InfoData *data = g_app_launcher_button_get_info_data(active_row);
+		{
+			InfoData *data = g_app_launcher_button_get_info_data(active_row);
 			app_info       = g_app_info_create_from_commandline(
-                data->command,
+			    data->command,
 			    NULL,
 			    gtk_toggle_button_get_active(self->terminal_button)
 			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
@@ -124,9 +124,9 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 static bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 {
 	InfoData *info = g_app_launcher_button_get_info_data(gtk_bin_get_child(GTK_BIN(row)));
-    //        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
+	//        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
 	const char *search_text = gtk_entry_get_text(GTK_ENTRY(self->main_entry));
-    const char *match       = info ? info->command : NULL;
+	const char *match       = info ? info->command : NULL;
 	if (!strcmp(search_text, ""))
 		return false;
 	else if (!(match) && (gtk_bin_get_child(GTK_BIN(row)) == self->bootstrap_row))
@@ -188,15 +188,17 @@ static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, 
 static void slist_destroy_notify(void *a)
 {
 	GSList *lst = (GSList *)a;
-    g_slist_free_full(lst, (GDestroyNotify)info_data_free);
+	g_slist_free_full(lst, (GDestroyNotify)info_data_free);
 }
 
 static int slist_find_func(gconstpointer slist, gconstpointer data)
 {
 	const char *str = (const char *)data;
 	InfoData *info  = (InfoData *)slist;
-    if (data && info)
-        return strcmp(info->command, str);
+	if (data && info)
+	{
+		return strcmp(info->command, str);
+	}
 	return false;
 }
 
@@ -210,8 +212,8 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 		if (g_cancellable_is_cancelled(cancellable))
 			return;
 		InfoData *data = info_data_new_from_info(G_APP_INFO(l->data));
-        if (data)
-            obj_list = g_slist_append(obj_list, data);
+		if (data)
+			obj_list = g_slist_append(obj_list, data);
 	}
 	const char *var    = g_getenv("PATH");
 	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
