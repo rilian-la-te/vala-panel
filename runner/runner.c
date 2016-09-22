@@ -32,10 +32,7 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 #define g_app_launcher_button_get_info_data(btn)                                                   \
 	(InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
 #define g_app_launcher_button_set_info_data(btn, info)                                             \
-	g_object_set_qdata_full(G_OBJECT(btn),                                                     \
-	                        BUTTON_QUARK,                                                      \
-	                        (gpointer)info,                                                    \
-	                        (GDestroyNotify)info_data_free)
+	g_object_set_qdata(G_OBJECT(btn), BUTTON_QUARK, (gpointer)info)
 static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self);
 
 GtkWidget *create_widget_func(const InfoData *data, gpointer user_data)
