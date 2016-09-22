@@ -2,6 +2,7 @@
 
 struct _ValaPanelListModelFilter
 {
+	GObject __parent__;
 	GListModel *base_model;
 	ValaPanelListModelFilterFunc filter_func;
 	gpointer user_data;
@@ -11,7 +12,8 @@ struct _ValaPanelListModelFilter
 
 enum
 {
-	PROP_BASE_MODEL = 1,
+	PROP_DUMMY,
+	PROP_BASE_MODEL,
 	N_PROPERTIES
 };
 
@@ -38,15 +40,12 @@ static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 	gpointer item                  = NULL;
 	if (pos > self->max_results && pos != (uint)-1)
 		return NULL;
-	for (int i = 0, counter = 0;
-	     (i < (int)g_list_model_get_n_items(self->base_model)) && (counter < (int)pos);
-	     i++)
+	int n_items_base = (int)g_list_model_get_n_items(self->base_model);
+	for (int i = 0, counter = 0; (i < n_items_base) && (counter <= (int)pos); i++)
 	{
-		item = g_list_model_get_item(self->base_model, i);
+		item = g_list_model_get_item(self->base_model, (uint)i);
 		if (self->filter_func(item, self->user_data))
 			counter++;
-		else
-			item = NULL;
 	}
 	return item;
 }
@@ -86,7 +85,7 @@ static void vala_panel_list_model_filter_set_property(GObject *object, guint pro
 		self->base_model = mdl;
 		g_signal_connect(mdl,
 		                 "items-changed",
-		                 (GCallback *)vala_panel_filter_base_changed,
+		                 (GCallback)vala_panel_filter_base_changed,
 		                 self);
 		break;
 	}
@@ -142,7 +141,7 @@ void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self)
 	uint old_matches     = self->filter_matches;
 	self->filter_matches = 0;
 	for (int i = 0; ((i < (int)g_list_model_get_n_items(self->base_model)) &&
-	                 (self->filter_matches <= self->max_results));
+	                 (self->filter_matches < self->max_results));
 	     i++)
 	{
 		gpointer item = g_list_model_get_item(self->base_model, i);
@@ -150,4 +149,10 @@ void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self)
 			self->filter_matches++;
 	}
 	g_list_model_items_changed(G_LIST_MODEL(self), 0, old_matches, self->filter_matches);
+}
+
+ValaPanelListModelFilter *vala_panel_list_model_filter_new(GListModel *base_model)
+{
+	return VALA_PANEL_LIST_MODEL_FILTER(
+	    g_object_new(vala_panel_list_model_filter_get_type(), "base-model", base_model, NULL));
 }

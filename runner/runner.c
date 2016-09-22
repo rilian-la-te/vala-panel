@@ -1,4 +1,5 @@
 #include "runner.h"
+#include "glistmodel-filter.h"
 #include "info-data.h"
 #include "lib/c-lib/css.h"
 #include "lib/c-lib/launcher.h"
@@ -6,6 +7,8 @@
 #include <gio/gdesktopappinfo.h>
 #include <stdbool.h>
 #include <string.h>
+
+#define MAX_SEARCH_RESULTS 30
 
 struct _ValaPanelRunner
 {
@@ -16,11 +19,11 @@ struct _ValaPanelRunner
 	GtkRevealer *bottom_revealer;
 	GtkListBox *app_box;
 	GtkSearchEntry *main_entry;
-	GtkWidget *bootstrap_row;
-	GtkLabel *bootstrap_label;
 	GtkToggleButton *terminal_button;
 	GTask *task;
 	GCancellable *cancellable;
+	InfoDataModel *model;
+	ValaPanelListModelFilter *filter;
 	bool cached;
 };
 
@@ -33,12 +36,15 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 	                        BUTTON_QUARK,                                                      \
 	                        (gpointer)info,                                                    \
 	                        (GDestroyNotify)info_data_free)
-static void create_bootstrap(ValaPanelRunner *self);
+static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self);
 
-static void add_application(InfoData *data, ValaPanelRunner *self);
-
-GtkWidget *create_widget_func(const InfoData *data)
+GtkWidget *create_widget_func(const InfoData *data, gpointer user_data)
 {
+	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
+	if (data->is_bootstrap)
+	{
+		return create_bootstrap(data, self);
+	}
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
@@ -63,6 +69,7 @@ GtkWidget *create_widget_func(const InfoData *data)
 	gtk_widget_set_tooltip_text(GTK_WIDGET(box), data->disp_name);
 	gtk_widget_set_margin_top(GTK_WIDGET(box), 3);
 	gtk_widget_set_margin_bottom(GTK_WIDGET(box), 3);
+	gtk_widget_show_all(GTK_WIDGET(box));
 	return GTK_WIDGET(box);
 }
 
@@ -78,7 +85,8 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 		GtkWidget *active_row =
 		    gtk_bin_get_child(GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
 		g_autoptr(GAppInfo) app_info = NULL;
-		if (active_row == self->bootstrap_row)
+		InfoData *data               = g_app_launcher_button_get_info_data(active_row);
+		if (data->is_bootstrap)
 		{
 			GError *err = NULL;
 			app_info    = g_app_info_create_from_commandline(
@@ -97,8 +105,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 		}
 		else
 		{
-			InfoData *data = g_app_launcher_button_get_info_data(active_row);
-			app_info       = g_app_info_create_from_commandline(
+			app_info = g_app_info_create_from_commandline(
 			    data->command,
 			    NULL,
 			    gtk_toggle_button_get_active(self->terminal_button)
@@ -121,15 +128,14 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 /**
  * Filter the list
  */
-static bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
+static bool on_filter(InfoData *info, ValaPanelRunner *self)
 {
-	InfoData *info = g_app_launcher_button_get_info_data(gtk_bin_get_child(GTK_BIN(row)));
 	//        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
 	const char *search_text = gtk_entry_get_text(GTK_ENTRY(self->main_entry));
 	const char *match       = info ? info->command : NULL;
 	if (!strcmp(search_text, ""))
 		return false;
-	else if (!(match) && (gtk_bin_get_child(GTK_BIN(row)) == self->bootstrap_row))
+	else if (!(match) && (info->is_bootstrap))
 		return true;
 	else if (g_str_has_prefix(match, search_text))
 		return true;
@@ -138,7 +144,7 @@ static bool on_filter(GtkListBoxRow *row, ValaPanelRunner *self)
 
 void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
-	gtk_list_box_invalidate_filter(self->app_box);
+	vala_panel_list_model_filter_invalidate(self->filter);
 	GtkWidget *active_row = NULL;
 	GList *chl            = gtk_container_get_children(GTK_CONTAINER(self->app_box));
 	for (GList *l = chl; l != NULL; l = g_list_next(l))
@@ -166,54 +172,69 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 	}
 }
 
-void add_application(InfoData *data, ValaPanelRunner *self)
-{
-	GtkWidget *button = create_widget_func(data);
-	gtk_container_add(GTK_CONTAINER(self->app_box), button);
-	gtk_widget_show_all(button);
-}
-
 static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
 	GSList *l;
-	GSList *files = (GSList *)g_task_propagate_pointer(self->task, NULL);
-
-	for (l = files; l; l = l->next)
-		add_application((InfoData *)l->data, self);
-	gtk_list_box_set_filter_func(self->app_box, (GtkListBoxFilterFunc)on_filter, self, NULL);
-	g_slist_free(files);
+	self->model  = (InfoDataModel *)g_task_propagate_pointer(self->task, NULL);
+	self->filter = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
+	vala_panel_list_model_filter_set_filter_func(self->filter,
+	                                             (ValaPanelListModelFilterFunc)on_filter,
+	                                             self);
+	vala_panel_list_model_filter_set_max_results(self->filter, MAX_SEARCH_RESULTS);
+	gtk_list_box_bind_model(self->app_box,
+	                        G_LIST_MODEL(self->filter),
+	                        (GtkListBoxCreateWidgetFunc)create_widget_func,
+	                        self,
+	                        NULL);
 }
 
-static void slist_destroy_notify(void *a)
+static int slist_find_func(gconstpointer slist, G_GNUC_UNUSED gconstpointer data, gpointer ud)
 {
-	GSList *lst = (GSList *)a;
-	g_slist_free_full(lst, (GDestroyNotify)info_data_free);
-}
-
-static int slist_find_func(gconstpointer slist, gconstpointer data)
-{
-	const char *str = (const char *)data;
+	const char *str = (const char *)ud;
 	InfoData *info  = (InfoData *)slist;
-	if (data && info)
+	if (ud && info)
 	{
-		return strcmp(info->command, str);
+		return g_strcmp0(info->command, str);
 	}
-	return false;
+	return 1;
+}
+
+static int info_data_compare_func(gconstpointer a, gconstpointer b,
+                                  G_GNUC_UNUSED gpointer user_data)
+{
+	InfoData *i1 = (InfoData *)a;
+	InfoData *i2 = (InfoData *)b;
+	if (i1 && i2)
+	{
+		if (i1->is_bootstrap)
+			return -1;
+		if (i2->is_bootstrap)
+			return 1;
+		return g_strcmp0(i1->command, i2->command);
+	}
+	return 1;
 }
 
 static void vala_panel_runner_create_data_list(GTask *task, void *source, void *task_data,
                                                GCancellable *cancellable)
 {
-	GSList *obj_list          = NULL;
+	InfoDataModel *obj_list   = info_data_model_new();
 	g_autoptr(GList) app_list = g_app_info_get_all();
+	g_sequence_insert_sorted(info_data_model_get_sequence(obj_list),
+	                         info_data_new_bootstrap(),
+	                         info_data_compare_func,
+	                         NULL);
 	for (GList *l = app_list; l; l = g_list_next(l))
 	{
 		if (g_cancellable_is_cancelled(cancellable))
 			return;
 		InfoData *data = info_data_new_from_info(G_APP_INFO(l->data));
 		if (data)
-			obj_list = g_slist_append(obj_list, data);
+			g_sequence_insert_sorted(info_data_model_get_sequence(obj_list),
+			                         data,
+			                         info_data_compare_func,
+			                         NULL);
 	}
 	const char *var    = g_getenv("PATH");
 	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
@@ -232,22 +253,29 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 			{
 				if (g_cancellable_is_cancelled(cancellable))
 					return;
-				if (g_slist_find_custom(obj_list, name, slist_find_func) == NULL)
+				if (g_sequence_lookup(info_data_model_get_sequence(obj_list),
+				                      NULL,
+				                      slist_find_func,
+				                      (void *)name) == NULL)
 				{
 					InfoData *info = info_data_new_from_command(name);
-					obj_list       = g_slist_append(obj_list, info);
+					g_sequence_insert_sorted(info_data_model_get_sequence(
+					                             obj_list),
+					                         info,
+					                         info_data_compare_func,
+					                         NULL);
 				}
 			}
 		}
 	}
-	g_task_return_pointer(task, obj_list, slist_destroy_notify);
+	g_task_return_pointer(task, obj_list, NULL);
 	return;
 }
 
 static void build_app_box(ValaPanelRunner *self)
 {
-	create_bootstrap(self);
-	gtk_container_add(GTK_CONTAINER(self->app_box), self->bootstrap_row);
+	self->model  = NULL;
+	self->filter = NULL;
 	/* FIXME: consider saving the list of commands as on-disk cache. */
 	if (self->cached)
 	{
@@ -286,12 +314,12 @@ static void vala_panel_runner_finalize(GObject *obj)
 	g_cancellable_cancel(self->cancellable);
 	g_object_unref0(self->cancellable);
 	g_object_unref0(self->task);
-	g_object_unref0(self->bootstrap_row);
-	g_object_unref0(self->bootstrap_label);
 	g_object_unref0(self->main_entry);
 	g_object_unref0(self->bottom_revealer);
 	g_object_unref0(self->app_box);
 	g_object_unref0(self->terminal_button);
+	g_object_unref0(self->model);
+	g_object_unref0(self->filter);
 	G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
 }
 
@@ -347,9 +375,10 @@ ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
 	return VALA_PANEL_RUNNER(
 	    g_object_new(vala_panel_runner_get_type(), "application", app, NULL));
 }
-static void create_bootstrap(ValaPanelRunner *self)
+static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self)
 {
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
+	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
 	                            "launcher-button");
 	GtkImage *image =
@@ -357,14 +386,11 @@ static void create_bootstrap(ValaPanelRunner *self)
 	gtk_image_set_pixel_size(image, 48);
 	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
 	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
-	self->bootstrap_row   = GTK_WIDGET(box);
-	self->bootstrap_label = GTK_LABEL(gtk_label_new(""));
-	gtk_box_pack_start(box, GTK_WIDGET(self->bootstrap_label), false, false, 0);
-	g_object_bind_property(self->main_entry,
-	                       "text",
-	                       self->bootstrap_label,
-	                       "label",
-	                       G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
+	GtkLabel *bootstrap_label =
+	    GTK_LABEL(gtk_label_new(gtk_entry_get_text(GTK_ENTRY(self->main_entry))));
+	gtk_box_pack_start(box, GTK_WIDGET(bootstrap_label), false, false, 0);
+	gtk_widget_show_all(GTK_WIDGET(box));
+	return GTK_WIDGET(box);
 }
 
 void gtk_run(ValaPanelRunner *self)

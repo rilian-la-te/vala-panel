@@ -49,6 +49,15 @@ InfoData *info_data_new_from_command(const char *command)
 	return data;
 }
 
+InfoData *info_data_new_bootstrap()
+{
+	InfoData *data     = (InfoData *)g_malloc0(sizeof(InfoData));
+	data->icon         = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
+	data->free_icon    = true;
+	data->is_bootstrap = true;
+	return data;
+}
+
 static InfoData *info_data_dup(InfoData *base)
 {
 	InfoData *new_data        = (InfoData *)g_malloc0(sizeof(InfoData));
@@ -101,8 +110,8 @@ static uint info_data_model_get_n_items(GListModel *lst)
 
 static gpointer info_data_model_get_item(GListModel *lst, uint pos)
 {
-	InfoDataModel *self            = VALA_PANEL_INFO_DATA_MODEL(lst);
-	g_autofree GSequenceIter *iter = g_sequence_get_iter_at_pos(self->seq, pos);
+	InfoDataModel *self = VALA_PANEL_INFO_DATA_MODEL(lst);
+	GSequenceIter *iter = g_sequence_get_iter_at_pos(self->seq, pos);
 	return (InfoData *)g_sequence_get(iter);
 }
 
