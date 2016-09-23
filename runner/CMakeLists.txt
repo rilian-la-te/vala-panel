@@ -14,6 +14,8 @@ add_executable(${APPNAME}-runner
 	runner-app.h
 	info-data.c
 	info-data.h
+	boxed-wrapper.c
+	boxed-wrapper.h
 	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
 	${CMAKE_SOURCE_DIR}/lib/c-lib/launcher.c)
 target_link_libraries (${APPNAME}-runner ${CORE_LIBRARIES} m)

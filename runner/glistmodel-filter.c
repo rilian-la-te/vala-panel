@@ -1,4 +1,6 @@
 #include "glistmodel-filter.h"
+#include "boxed-wrapper.h"
+#include "info-data.h"
 
 struct _ValaPanelListModelFilter
 {
@@ -47,7 +49,9 @@ static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 		if (self->filter_func(item, self->user_data))
 			counter++;
 	}
-	return item;
+	BoxedWrapper *wr = boxed_wrapper_new(g_list_model_get_item_type(self->base_model));
+	boxed_wrapper_set_boxed(wr, item);
+	return wr;
 }
 
 static void vala_panel_list_model_filter_get_property(GObject *object, guint property_id,

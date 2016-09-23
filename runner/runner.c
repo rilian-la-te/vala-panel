@@ -1,4 +1,5 @@
 #include "runner.h"
+#include "boxed-wrapper.h"
 #include "glistmodel-filter.h"
 #include "info-data.h"
 #include "lib/c-lib/css.h"
@@ -32,12 +33,16 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 #define g_app_launcher_button_get_info_data(btn)                                                   \
 	(InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
 #define g_app_launcher_button_set_info_data(btn, info)                                             \
-	g_object_set_qdata(G_OBJECT(btn), BUTTON_QUARK, (gpointer)info)
+	g_object_set_qdata_full(G_OBJECT(btn),                                                     \
+	                        BUTTON_QUARK,                                                      \
+	                        (gpointer)info,                                                    \
+	                        (GDestroyNotify)info_data_free)
 static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self);
 
-GtkWidget *create_widget_func(const InfoData *data, gpointer user_data)
+GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
+	InfoData *data        = (InfoData *)boxed_wrapper_dup_boxed(wr);
 	if (data->is_bootstrap)
 	{
 		return create_bootstrap(data, self);
@@ -125,7 +130,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 /**
  * Filter the list
  */
-static bool on_filter(InfoData *info, ValaPanelRunner *self)
+static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 {
 	//        g_autofree char* disp_name = g_utf8_strdown(g_app_info_get_display_name(info),-1);
 	const char *search_text = gtk_entry_get_text(GTK_ENTRY(self->main_entry));
