@@ -14,7 +14,6 @@ typedef struct info_data
 	char *disp_name;
 	char *command;
 	bool free_icon;
-	bool is_bootstrap;
 } InfoData;
 
 InfoData *info_data_new_from_info(GAppInfo *info);

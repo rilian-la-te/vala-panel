@@ -37,17 +37,12 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
 	                        BUTTON_QUARK,                                                      \
 	                        (gpointer)info,                                                    \
 	                        (GDestroyNotify)info_data_free)
-static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self);
 
 GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
 	InfoData *data        = (InfoData *)boxed_wrapper_dup_boxed(wr);
-	if (data->is_bootstrap)
-	{
-		return create_bootstrap(data, self);
-	}
-	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
+	GtkBox *box           = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
 	                            "launcher-button");
@@ -84,43 +79,45 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(dlg);
 	if (G_LIKELY(response == GTK_RESPONSE_ACCEPT))
 	{
-		GtkWidget *active_row =
-		    gtk_bin_get_child(GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
 		g_autoptr(GAppInfo) app_info = NULL;
-		InfoData *data               = g_app_launcher_button_get_info_data(active_row);
-		if (data->is_bootstrap)
+
+		g_autoptr(GError) err = NULL;
+		app_info              = g_app_info_create_from_commandline(gtk_entry_get_text(
+		                                                  GTK_ENTRY(self->main_entry)),
+		                                              NULL,
+		                                              gtk_toggle_button_get_active(
+		                                                  self->terminal_button)
+		                                                  ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+		                                                  : G_APP_INFO_CREATE_NONE,
+		                                              &err);
+		if (err)
 		{
-			GError *err = NULL;
-			app_info    = g_app_info_create_from_commandline(
-			    gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
-			    NULL,
-			    gtk_toggle_button_get_active(self->terminal_button)
-			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-			        : G_APP_INFO_CREATE_NONE,
-			    &err);
-			if (err)
-			{
-				g_error_free(err);
-				g_signal_stop_emission_by_name(dlg, "response");
-				return;
-			}
+			g_error_free(err);
+			g_signal_stop_emission_by_name(dlg, "response");
+			return;
 		}
-		else
+		bool launch =
+		    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
+		if (!launch)
 		{
-			app_info = g_app_info_create_from_commandline(
+			g_object_unref0(app_info);
+			GtkWidget *active_row = gtk_bin_get_child(
+			    GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
+			InfoData *data = g_app_launcher_button_get_info_data(active_row);
+			app_info       = g_app_info_create_from_commandline(
 			    data->command,
 			    NULL,
 			    gtk_toggle_button_get_active(self->terminal_button)
 			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
 			        : G_APP_INFO_CREATE_NONE,
 			    NULL);
-		}
-		bool launch =
-		    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
-		if (!launch)
-		{
-			g_signal_stop_emission_by_name(dlg, "response");
-			return;
+			launch =
+			    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
+			if (!launch)
+			{
+				g_signal_stop_emission_by_name(dlg, "response");
+				return;
+			}
 		}
 	}
 	g_cancellable_cancel(self->cancellable);
@@ -137,8 +134,6 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 	const char *match       = info ? info->command : NULL;
 	if (!strcmp(search_text, ""))
 		return false;
-	else if (!(match) && (info->is_bootstrap))
-		return true;
 	else if (g_str_has_prefix(match, search_text))
 		return true;
 	return false;
@@ -209,10 +204,6 @@ static int info_data_compare_func(gconstpointer a, gconstpointer b,
 	InfoData *i2 = (InfoData *)b;
 	if (i1 && i2)
 	{
-		if (i1->is_bootstrap)
-			return -1;
-		if (i2->is_bootstrap)
-			return 1;
 		return g_strcmp0(i1->command, i2->command);
 	}
 	return 1;
@@ -387,23 +378,6 @@ ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
 {
 	return VALA_PANEL_RUNNER(
 	    g_object_new(vala_panel_runner_get_type(), "application", app, NULL));
-}
-static GtkWidget *create_bootstrap(const InfoData *data, ValaPanelRunner *self)
-{
-	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
-	g_app_launcher_button_set_info_data(box, data);
-	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
-	                            "launcher-button");
-	GtkImage *image =
-	    GTK_IMAGE(gtk_image_new_from_icon_name("system-run-symbolic", GTK_ICON_SIZE_DIALOG));
-	gtk_image_set_pixel_size(image, 48);
-	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
-	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
-	GtkLabel *bootstrap_label =
-	    GTK_LABEL(gtk_label_new(gtk_entry_get_text(GTK_ENTRY(self->main_entry))));
-	gtk_box_pack_start(box, GTK_WIDGET(bootstrap_label), false, false, 0);
-	gtk_widget_show_all(GTK_WIDGET(box));
-	return GTK_WIDGET(box);
 }
 
 void gtk_run(ValaPanelRunner *self)

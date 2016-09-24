@@ -52,10 +52,9 @@ InfoData *info_data_new_from_command(const char *command)
 
 InfoData *info_data_new_bootstrap()
 {
-	InfoData *data     = (InfoData *)g_malloc0(sizeof(InfoData));
-	data->icon         = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
-	data->free_icon    = true;
-	data->is_bootstrap = true;
+	InfoData *data  = (InfoData *)g_malloc0(sizeof(InfoData));
+	data->icon      = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
+	data->free_icon = true;
 	return data;
 }
 
@@ -65,7 +64,6 @@ static InfoData *info_data_dup(InfoData *base)
 	g_autofree char *icon_str = g_icon_to_string(base->icon);
 	new_data->icon            = g_icon_new_for_string(icon_str, NULL);
 	new_data->free_icon       = true;
-	new_data->is_bootstrap    = base->is_bootstrap;
 	new_data->disp_name       = g_strdup(base->disp_name);
 	new_data->name_markup     = g_strdup(base->name_markup);
 	new_data->command         = g_strdup(base->command);
