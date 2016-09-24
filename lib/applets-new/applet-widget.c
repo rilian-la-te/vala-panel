@@ -172,7 +172,7 @@ void vala_panel_applet_widget_update_popup(ValaPanelAppletWidget *self, ValaPane
 	{
 		ValaPanelAppletWidgetClass *klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
 		if (klass->update_popup)
-			return klass->update_popup(self, mgr);
+			klass->update_popup(self, mgr);
 	}
 }
 
@@ -187,7 +187,7 @@ void vala_panel_applet_widget_invoke_applet_action(ValaPanelAppletWidget *self, 
 		        self);
 		g_autofree const char **actions = g_variant_get_strv(priv->actions, NULL);
 		if (klass->invoke_applet_action && g_strv_contains(actions, action))
-			return klass->invoke_applet_action(self, action, param);
+			klass->invoke_applet_action(self, action, param);
 	}
 }
 
@@ -197,7 +197,7 @@ GtkWidget *vala_panel_applet_widget_get_settings_ui(ValaPanelAppletWidget *self)
 	{
 		ValaPanelAppletWidgetClass *klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
 		if (klass->get_settings_ui)
-			return klass->get_settings_ui(self);
+			klass->get_settings_ui(self);
 	}
 	return NULL;
 }
