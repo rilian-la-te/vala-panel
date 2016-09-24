@@ -3,9 +3,11 @@
 #include "application-new.h"
 #include "launcher.h"
 #include "lib/definitions.h"
-#include "runner-new.h"
+#ifndef RUNNER_AS_APPLICATION
+#include "runner.h"
+#endif
 
-#include <glib/gi18n-lib.h>
+#include <glib/gi18n.h>
 #include <locale.h>
 #include <stdbool.h>
 
@@ -15,7 +17,9 @@ struct _ValaPanelApplication
 	bool restart;
 	GtkDialog *pref_dialog;
 	GSettings *config;
+#ifndef RUNNER_AS_APPLICATION
 	ValaPanelRunner *runner;
+#endif
 	bool dark;
 	bool custom;
 	char *css;

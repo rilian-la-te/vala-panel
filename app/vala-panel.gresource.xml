@@ -2,7 +2,6 @@
 <gresources>
   <gresource prefix="/org/vala-panel/app">
     <file compressed="true" alias="pref.ui" preprocess="xml-stripblanks">app-pref.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">app-runner.ui</file>
     <file compressed="true" alias="about.ui" preprocess="xml-stripblanks">app-about.ui</file>
     <file compressed="true" alias="style.css">../data/css/vala-panel.css</file>
     <file compressed="true" alias="panel.svg">../data/images/panel.svg</file>
