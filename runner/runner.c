@@ -308,6 +308,14 @@ static void on_entry_activated(GtkEntry *row, ValaPanelRunner *self)
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 }
 
+/**
+ * Handle click/<enter> activation on the entry
+ */
+static void on_entry_cancelled(GtkSearchEntry *row, ValaPanelRunner *self)
+{
+	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_CANCEL);
+}
+
 static void vala_panel_runner_finalize(GObject *obj)
 {
 	ValaPanelRunner *self =
@@ -364,6 +372,9 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "on_search_activated",
 	                                             G_CALLBACK(on_entry_activated));
+	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	                                             "on_search_cancelled",
+	                                             G_CALLBACK(on_entry_cancelled));
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "vala_panel_runner_response",
 	                                             G_CALLBACK(vala_panel_runner_response));
