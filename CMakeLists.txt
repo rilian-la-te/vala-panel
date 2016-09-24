@@ -95,7 +95,32 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 
-pkg_check_modules (CORE REQUIRED
+pkg_check_modules (A
+	gtk+-3.0>=3.16)
+
+pkg_check_modules (B
+  glib-2.0>=2.44)
+
+pkg_check_modules (C
+  gio-2.0>=2.44
+)
+
+pkg_check_modules (D
+  gio-unix-2.0>=2.44)
+
+pkg_check_modules (E
+  gthread-2.0>=2.44)
+
+pkg_check_modules (F
+  libpeas-1.0>=1.2)
+
+pkg_check_modules (G
+  libpeas-gtk-1.0>=1.2)
+
+pkg_check_modules (H
+  gmodule-2.0>=2.44)
+
+pkg_check_modules (CORE REQUIRED QUIET
   gtk+-3.0>=3.16
   glib-2.0>=2.44
   gio-2.0>=2.44
