@@ -23,54 +23,6 @@ using Config;
 
 namespace ValaPanel
 {
-    namespace Key
-    {
-        public static const string EDGE = "edge";
-        public static const string ALIGNMENT = "alignment";
-        public static const string HEIGHT = "height";
-        public static const string WIDTH = "width";
-        public static const string DYNAMIC = "is-dynamic";
-        public static const string AUTOHIDE = "autohide";
-        public static const string SHOW_HIDDEN = "show-hidden";
-        public static const string STRUT = "strut";
-        public static const string DOCK = "dock";
-        public static const string MONITOR = "monitor";
-        public static const string MARGIN = "panel-margin";
-        public static const string ICON_SIZE = "icon-size";
-        public static const string BACKGROUND_COLOR = "background-color";
-        public static const string FOREGROUND_COLOR = "foreground-color";
-        public static const string BACKGROUND_FILE = "background-file";
-        public static const string FONT = "font";
-        public static const string CORNERS_SIZE = "round-corners-size";
-        public static const string USE_BACKGROUND_COLOR = "use-background-color";
-        public static const string USE_FOREGROUND_COLOR = "use-foreground-color";
-        public static const string USE_FONT = "use-font";
-        public static const string FONT_SIZE_ONLY = "font-size-only";
-        public static const string USE_BACKGROUND_FILE = "use-background-file";
-    }
-    public enum AlignmentType
-    {
-        START = 0,
-        CENTER = 1,
-        END = 2
-    }
-    internal enum IconSizeHints
-    {
-        XXS = 16,
-        XS = 22,
-        S = 24,
-        M = 32,
-        L = 48,
-        XL = 96,
-        XXL = 128,
-        XXXL = 256;
-    }
-    internal enum AutohideState
-    {
-        VISIBLE,
-        HIDDEN,
-        WAITING
-    }
     private struct PluginData
     {
         unowned AppletPlugin plugin;

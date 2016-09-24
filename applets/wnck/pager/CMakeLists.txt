@@ -7,6 +7,7 @@ PACKAGES
     vala-panel
     libwnck-3.0
     gdk-x11-3.0
+    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
@@ -31,8 +32,8 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS})
+target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel cvalapanel)
+target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

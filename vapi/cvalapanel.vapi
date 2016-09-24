@@ -49,6 +49,32 @@ namespace ValaPanel
         TRIM,
         EXTERNAL
     }
+    [CCode(cname="AutohideState", has_type_id = false, cprefix="AH_", cheader_filename = "lib/c-lib/panel-manager.h")]
+    internal enum AutohideState
+    {
+        VISIBLE,
+        HIDDEN,
+        WAITING
+    }
+    [CCode(cname="AlignmentType", has_type_id = false, cprefix="", cheader_filename = "lib/c-lib/toplevel.h")]
+    public enum AlignmentType
+    {
+        START = 0,
+        CENTER = 1,
+        END = 2
+    }
+    [CCode(cname="IconSizeHints", has_type_id = false, cprefix="", cheader_filename = "lib/c-lib/toplevel.h")]
+    internal enum IconSizeHints
+    {
+        XXS = 16,
+        XS = 22,
+        S = 24,
+        M = 32,
+        L = 48,
+        XL = 96,
+        XXL = 128,
+        XXXL = 256;
+    }
     [CCode(cname = "_user_config_file_name",cheader_filename="lib/definitions.h")]
     public string user_config_file_name(string name1, string profile, string? name2);
     [CCode (cheader_filename="lib/c-lib/misc.h")]
@@ -105,4 +131,31 @@ namespace ValaPanel.Configurator
 {
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
+}
+
+[CCode (cheader_filename = "lib/c-lib/toplevel.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+namespace ValaPanel.Key
+{
+    public static const string EDGE;
+    public static const string ALIGNMENT;
+    public static const string HEIGHT;
+    public static const string WIDTH;
+    public static const string DYNAMIC;
+    public static const string AUTOHIDE;
+    public static const string SHOW_HIDDEN;
+    public static const string STRUT;
+    public static const string DOCK;
+    public static const string MONITOR;
+    public static const string MARGIN;
+    public static const string ICON_SIZE;
+    public static const string BACKGROUND_COLOR;
+    public static const string FOREGROUND_COLOR;
+    public static const string BACKGROUND_FILE;
+    public static const string FONT;
+    public static const string CORNERS_SIZE;
+    public static const string USE_BACKGROUND_COLOR;
+    public static const string USE_FOREGROUND_COLOR;
+    public static const string USE_FONT;
+    public static const string FONT_SIZE_ONLY;
+    public static const string USE_BACKGROUND_FILE;
 }
