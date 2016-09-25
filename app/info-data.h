@@ -13,12 +13,10 @@ typedef struct info_data
 	char *name_markup;
 	char *disp_name;
 	char *command;
-	bool free_icon;
 } InfoData;
 
 InfoData *info_data_new_from_info(GAppInfo *info);
 InfoData *info_data_new_from_command(const char *command);
-InfoData *info_data_new_bootstrap();
 void info_data_free(InfoData *data);
 
 G_DECLARE_FINAL_TYPE(InfoDataModel, info_data_model, VALA_PANEL, INFO_DATA_MODEL, GObject)

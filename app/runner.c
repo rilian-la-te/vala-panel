@@ -214,10 +214,6 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 {
 	InfoDataModel *obj_list = info_data_model_new();
 	GList *app_list         = g_app_info_get_all();
-	g_sequence_insert_sorted(info_data_model_get_sequence(obj_list),
-	                         info_data_new_bootstrap(),
-	                         info_data_compare_func,
-	                         NULL);
 	for (GList *l = app_list; l; l = g_list_next(l))
 	{
 		if (g_cancellable_is_cancelled(cancellable))
