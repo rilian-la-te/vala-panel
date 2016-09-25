@@ -212,8 +212,8 @@ static int info_data_compare_func(gconstpointer a, gconstpointer b,
 static void vala_panel_runner_create_data_list(GTask *task, void *source, void *task_data,
                                                GCancellable *cancellable)
 {
-	InfoDataModel *obj_list   = info_data_model_new();
-	g_autoptr(GList) app_list = g_app_info_get_all();
+	InfoDataModel *obj_list = info_data_model_new();
+	GList *app_list         = g_app_info_get_all();
 	g_sequence_insert_sorted(info_data_model_get_sequence(obj_list),
 	                         info_data_new_bootstrap(),
 	                         info_data_compare_func,
