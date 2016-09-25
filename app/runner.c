@@ -229,6 +229,7 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 			                         info_data_compare_func,
 			                         NULL);
 	}
+	g_list_free_full(app_list, (GDestroyNotify)g_object_unref);
 	const char *var    = g_getenv("PATH");
 	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
 	for (int i = 0; dirs[i] != NULL; i++)

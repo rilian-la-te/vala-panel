@@ -13,6 +13,7 @@ static void boxed_wrapper_finalize(BoxedWrapper *self)
 {
 	if (self->boxed_type && self->boxed)
 		g_boxed_free(self->boxed_type, self->boxed);
+	G_OBJECT_CLASS(boxed_wrapper_parent_class)->finalize(self);
 }
 
 static void boxed_wrapper_init(BoxedWrapper *self)
