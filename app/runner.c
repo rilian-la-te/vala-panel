@@ -312,10 +312,10 @@ static void vala_panel_runner_finalize(GObject *obj)
 	g_cancellable_cancel(self->cancellable);
 	g_object_unref0(self->cancellable);
 	g_object_unref0(self->task);
-	g_object_unref0(self->main_entry);
-	g_object_unref0(self->bottom_revealer);
-	g_object_unref0(self->app_box);
-	g_object_unref0(self->terminal_button);
+	gtk_widget_destroy0(self->main_entry);
+	gtk_widget_destroy0(self->bottom_revealer);
+	gtk_widget_destroy0(self->app_box);
+	gtk_widget_destroy0(self->terminal_button);
 	g_object_unref0(self->model);
 	g_object_unref0(self->filter);
 	G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
