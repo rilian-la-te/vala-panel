@@ -117,6 +117,7 @@ static void info_data_model_finalize(GObject *obj)
 {
 	InfoDataModel *self = VALA_PANEL_INFO_DATA_MODEL(obj);
 	g_sequence_free(self->seq);
+	G_OBJECT_CLASS(info_data_model_parent_class)->finalize(obj);
 }
 
 static void info_data_model_class_init(InfoDataModelClass *klass)
