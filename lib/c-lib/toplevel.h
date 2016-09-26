@@ -6,6 +6,10 @@
 
 G_BEGIN_DECLS
 
+#define VALA_PANEL_SETTINGS_SCHEMA "org.valapanel.toplevel"
+#define VALA_PANEL_SETTINGS_PATH "/org/vala-panel/toplevel/"
+#define VALA_PANEL_TOPLEVEL_PATH_BASE "/org/vala-panel/toplevels/%s/"
+
 #define VALA_PANEL_KEY_EDGE "edge"
 #define VALA_PANEL_KEY_ALIGNMENT "alignment"
 #define VALA_PANEL_KEY_HEIGHT "height"

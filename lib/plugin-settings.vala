@@ -20,19 +20,7 @@ using GLib;
 
 namespace ValaPanel
 {
-    private const string PLUGIN_SCHEMA = "org.valapanel.toplevel.plugin";
-    private const string PANEL_SCHEMA = "org.valapanel.toplevel";
-    private const string PANEL_PATH = "/org/vala-panel/toplevel/";
     private const string ROOT_NAME = "toplevel-settings";
-
-    namespace Key
-    {
-        internal const string NAME = "plugin-type";
-        internal const string EXPAND = "is-expanded";
-        internal const string CAN_EXPAND = "can-expand";
-        internal const string PACK = "pack-type";
-        internal const string POSITION = "position";
-    }
     [Compact]
     internal class PluginSettings
     {
@@ -77,7 +65,7 @@ namespace ValaPanel
 
         internal ToplevelSettings (string file)
         {
-            ToplevelSettings.full(file,PANEL_SCHEMA,PANEL_PATH,ROOT_NAME);
+            ToplevelSettings.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
         }
 
         internal uint find_free_num()

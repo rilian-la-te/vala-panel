@@ -18,6 +18,8 @@ add_library(cvalapanel SHARED
 	generic-config-dialog.h
         panel-manager.c
         panel-manager.h
+        panel-layout.h
+        panel-layout.c
         toplevel.c
         toplevel.h
         applet-manager.c

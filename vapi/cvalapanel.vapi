@@ -36,6 +36,12 @@ namespace PanelCSS
 }
 namespace ValaPanel
 {
+    [CCode(cheader_filename="lib/c-lib/panel-layout.h")]
+    public const string PLUGIN_SCHEMA;
+    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
+    public const string SETTINGS_SCHEMA;
+    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
+    public const string SETTINGS_PATH;
     [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/c-lib/generic-config-dialog.h")]
     public enum GenericConfigType
     {
@@ -133,7 +139,7 @@ namespace ValaPanel.Configurator
                                     GLib.Settings settings, ...);
 }
 
-[CCode (cheader_filename = "lib/c-lib/toplevel.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string EDGE;
@@ -158,4 +164,9 @@ namespace ValaPanel.Key
     public const string USE_FONT;
     public const string FONT_SIZE_ONLY;
     public const string USE_BACKGROUND_FILE;
+    internal const string NAME;
+    internal const string EXPAND;
+    internal const string CAN_EXPAND;
+    internal const string PACK;
+    internal const string POSITION;
 }
