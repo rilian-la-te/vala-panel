@@ -172,9 +172,8 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(source_object);
-	GSList *l;
-	self->model  = (InfoDataModel *)g_task_propagate_pointer(self->task, NULL);
-	self->filter = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
+	self->model           = (InfoDataModel *)g_task_propagate_pointer(G_TASK(res), NULL);
+	self->filter          = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
 	vala_panel_list_model_filter_set_filter_func(self->filter,
 	                                             (ValaPanelListModelFilterFunc)on_filter,
 	                                             self);
@@ -304,7 +303,7 @@ static void on_entry_cancelled(GtkSearchEntry *row, ValaPanelRunner *self)
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_CANCEL);
 }
 
-static void vala_panel_runner_finalize(GObject *obj)
+static void vala_panel_runner_destroy(GtkWidget *obj)
 {
 	ValaPanelRunner *self =
 	    G_TYPE_CHECK_INSTANCE_CAST(obj, vala_panel_runner_get_type(), ValaPanelRunner);
@@ -318,7 +317,7 @@ static void vala_panel_runner_finalize(GObject *obj)
 	gtk_widget_destroy0(self->terminal_button);
 	g_object_unref0(self->model);
 	g_object_unref0(self->filter);
-	G_OBJECT_CLASS(vala_panel_runner_parent_class)->finalize(obj);
+	GTK_WIDGET_CLASS(vala_panel_runner_parent_class)->destroy(obj);
 }
 
 static void vala_panel_runner_init(ValaPanelRunner *self)
@@ -334,8 +333,8 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 {
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/runner/app-runner.ui");
-	vala_panel_runner_parent_class  = g_type_class_peek_parent(klass);
-	G_OBJECT_CLASS(klass)->finalize = vala_panel_runner_finalize;
+	vala_panel_runner_parent_class   = g_type_class_peek_parent(klass);
+	GTK_WIDGET_CLASS(klass)->destroy = vala_panel_runner_destroy;
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
 	                                          "main-entry",
 	                                          false,
