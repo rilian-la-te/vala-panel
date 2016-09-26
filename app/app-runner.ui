@@ -127,6 +127,7 @@
                       <object class="GtkListBox" id="search-box">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="selection_mode">browse</property>
                         <signal name="row-activated" handler="on_row_activated" object="ValaPanelRunner" swapped="no"/>
                       </object>
                     </child>

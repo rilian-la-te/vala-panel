@@ -142,7 +142,6 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
 	vala_panel_list_model_filter_invalidate(self->filter);
-	GtkWidget *active_row = NULL;
 	if (g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
 	{
 		gtk_revealer_set_transition_type(self->bottom_revealer,
@@ -154,7 +153,8 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 		gtk_revealer_set_transition_type(self->bottom_revealer,
 		                                 GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN);
 		gtk_revealer_set_reveal_child(self->bottom_revealer, true);
-		gtk_list_box_select_row(self->app_box, GTK_LIST_BOX_ROW(active_row));
+		GtkListBoxRow *active = gtk_list_box_get_row_at_index(self->app_box, 0);
+		gtk_list_box_select_row(self->app_box, active);
 	}
 }
 
