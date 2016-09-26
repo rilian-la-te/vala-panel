@@ -29,7 +29,12 @@ G_BEGIN_DECLS
 #define VALA_PANEL_KEY_FONT_SIZE_ONLY "font-size-only"
 #define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
 
-typedef enum { START = 0, CENTER = 1, END = 2 } AlignmentType;
+typedef enum {
+	START  = 0,
+	CENTER = 1,
+	END    = 2,
+} AlignmentType;
+
 typedef enum {
 	XXS  = 16,
 	XS   = 22,

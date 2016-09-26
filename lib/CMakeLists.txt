@@ -52,7 +52,7 @@ add_library (${LIBNAME} SHARED
 )
 
 target_link_libraries (${LIBNAME} ${LIBS} cvalapanel)
-target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR})
+target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

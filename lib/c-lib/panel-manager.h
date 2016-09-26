@@ -9,7 +9,11 @@ G_BEGIN_DECLS
 
 G_DECLARE_INTERFACE(ValaPanelManager, vala_panel_manager, VALA_PANEL, MANAGER, GObject)
 
-typedef enum { AH_HIDDEN, AH_WAITING, AH_VISIBLE } AutohideState;
+typedef enum {
+	AH_HIDDEN,
+	AH_WAITING,
+	AH_VISIBLE,
+} AutohideState;
 
 struct _ValaPanelManagerInterface
 {

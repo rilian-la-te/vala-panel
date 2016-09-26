@@ -95,7 +95,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				                      : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
-				SignalData *data = (SignalData *)g_malloc(sizeof(SignalData));
+				SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
 				data->key        = key;
 				data->settings   = settings;
 				g_signal_connect(entry,
@@ -126,7 +126,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				                G_SETTINGS_BIND_DEFAULT);
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(btn), str);
-				SignalData *data = (SignalData *)g_malloc(sizeof(SignalData));
+				SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
 				data->key        = key;
 				data->settings   = settings;
 				g_signal_connect(btn,

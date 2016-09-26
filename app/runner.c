@@ -143,7 +143,7 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
 	vala_panel_list_model_filter_invalidate(self->filter);
 	GtkWidget *active_row = NULL;
-	GList *chl            = gtk_container_get_children(GTK_CONTAINER(self->app_box));
+	g_autoptr(GList) chl  = gtk_container_get_children(GTK_CONTAINER(self->app_box));
 	for (GList *l = chl; l != NULL; l = g_list_next(l))
 	{
 		GtkWidget *row = GTK_WIDGET(l->data);
@@ -258,7 +258,7 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 			}
 		}
 	}
-	g_task_return_pointer(task, obj_list, NULL);
+	g_task_return_pointer(task, obj_list, g_object_unref);
 	return;
 }
 

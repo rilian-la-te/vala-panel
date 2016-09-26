@@ -18,14 +18,16 @@ InfoData *info_data_new_from_info(GAppInfo *info)
 {
 	if (g_app_info_get_executable(info) == NULL)
 		return NULL;
-	InfoData *data            = (InfoData *)g_malloc0(sizeof(InfoData));
-	g_autofree char *icon_str = g_icon_to_string(g_app_info_get_icon(info));
-	data->icon                = g_app_info_get_icon(info);
-	if (!icon_str)
+	InfoData *data = (InfoData *)g_slice_alloc0(sizeof(InfoData));
+	data->icon     = g_app_info_get_icon(info);
+	if (!data->icon)
 		data->icon = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
 	else
-		data->icon = g_icon_new_for_string(icon_str, NULL);
-	data->disp_name    = g_strdup(g_app_info_get_display_name(info));
+	{
+		g_autofree char *icon_str = g_icon_to_string(data->icon);
+		data->icon                = g_icon_new_for_string(icon_str, NULL);
+	}
+	data->disp_name = g_strdup(g_app_info_get_display_name(info));
 	const char *name =
 	    g_app_info_get_name(info) ? g_app_info_get_name(info) : g_app_info_get_executable(info);
 	const char *sdesc =
@@ -37,7 +39,7 @@ InfoData *info_data_new_from_info(GAppInfo *info)
 
 InfoData *info_data_new_from_command(const char *command)
 {
-	InfoData *data        = (InfoData *)g_malloc0(sizeof(InfoData));
+	InfoData *data        = (InfoData *)g_slice_alloc0(sizeof(InfoData));
 	data->icon            = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
 	data->disp_name       = g_strdup_printf(_("Run %s"), command);
 	g_autofree char *name = g_strdup_printf(_("Run %s"), command);
@@ -49,7 +51,7 @@ InfoData *info_data_new_from_command(const char *command)
 
 static InfoData *info_data_dup(InfoData *base)
 {
-	InfoData *new_data        = (InfoData *)g_malloc0(sizeof(InfoData));
+	InfoData *new_data        = (InfoData *)g_slice_alloc0(sizeof(InfoData));
 	g_autofree char *icon_str = g_icon_to_string(base->icon);
 	new_data->icon            = g_icon_new_for_string(icon_str, NULL);
 	new_data->disp_name       = g_strdup(base->disp_name);
@@ -64,7 +66,7 @@ void info_data_free(InfoData *data)
 	g_free(data->disp_name);
 	g_free(data->name_markup);
 	g_free(data->command);
-	g_free(data);
+	g_slice_free(InfoData, data);
 }
 
 G_DEFINE_BOXED_TYPE(InfoData, info_data, info_data_dup, info_data_free)
@@ -111,6 +113,7 @@ static void info_data_model_iface_init(GListModelInterface *iface)
 
 static void info_data_model_init(InfoDataModel *self)
 {
+	self->seq = g_sequence_new((GDestroyNotify)info_data_free);
 }
 
 static void info_data_model_finalize(GObject *obj)
@@ -129,7 +132,6 @@ InfoDataModel *info_data_model_new()
 {
 	InfoDataModel *new_data =
 	    VALA_PANEL_INFO_DATA_MODEL(g_object_new(info_data_model_get_type(), NULL));
-	new_data->seq = g_sequence_new((GDestroyNotify)info_data_free);
 	return new_data;
 }
 

@@ -36,7 +36,7 @@ namespace PanelCSS
 }
 namespace ValaPanel
 {
-    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/c-lib/generic-config-dialog.h")]
+    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/c-lib/generic-config-dialog.h;lib/c-lib/vala-panel-enums.h")]
     public enum GenericConfigType
     {
         STR,
@@ -56,14 +56,14 @@ namespace ValaPanel
         HIDDEN,
         WAITING
     }
-    [CCode(cname="AlignmentType", has_type_id = false, cprefix="", cheader_filename = "lib/c-lib/toplevel.h")]
+    [CCode(cname="AlignmentType", cprefix="", cheader_filename = "lib/c-lib/toplevel.h;lib/c-lib/vala-panel-enums.h")]
     public enum AlignmentType
     {
         START = 0,
         CENTER = 1,
         END = 2
     }
-    [CCode(cname="IconSizeHints", has_type_id = false, cprefix="", cheader_filename = "lib/c-lib/toplevel.h")]
+    [CCode(cname="IconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h;lib/c-lib/vala-panel-enums.h")]
     internal enum IconSizeHints
     {
         XXS = 16,

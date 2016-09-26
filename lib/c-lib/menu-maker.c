@@ -42,7 +42,7 @@ static DragData *drag_data_ref(DragData *data)
 static void drag_data_unref(DragData *data)
 {
 	if (g_atomic_int_dec_and_test(&(data->ref_count)))
-		g_free(data);
+		g_slice_free(DragData, data);
 }
 static void drag_data_destroy(GtkWidget *w, DragData *data)
 {
@@ -53,7 +53,7 @@ static void drag_data_destroy(GtkWidget *w, DragData *data)
 }
 static DragData *drag_data_new(GtkMenuItem *item, GMenuModel *section, int model_item)
 {
-	DragData *data  = (DragData *)g_malloc0(sizeof(DragData));
+	DragData *data  = (DragData *)g_slice_alloc0(sizeof(DragData));
 	data->section   = section;
 	data->menuitem  = item;
 	data->item_pos  = model_item;
