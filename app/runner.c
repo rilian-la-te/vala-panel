@@ -143,18 +143,7 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
 	vala_panel_list_model_filter_invalidate(self->filter);
 	GtkWidget *active_row = NULL;
-	g_autoptr(GList) chl  = gtk_container_get_children(GTK_CONTAINER(self->app_box));
-	for (GList *l = chl; l != NULL; l = g_list_next(l))
-	{
-		GtkWidget *row = GTK_WIDGET(l->data);
-		if (gtk_widget_get_visible(row) && gtk_widget_get_child_visible(row))
-		{
-			active_row = row;
-			break;
-		}
-	}
-
-	if (active_row == NULL)
+	if (g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
 	{
 		gtk_revealer_set_transition_type(self->bottom_revealer,
 		                                 GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP);
