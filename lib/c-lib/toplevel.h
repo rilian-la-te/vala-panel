@@ -33,7 +33,7 @@ typedef enum {
 	START  = 0,
 	CENTER = 1,
 	END    = 2,
-} AlignmentType;
+} PanelAlignmentType;
 
 typedef enum {
 	XXS  = 16,
@@ -44,7 +44,7 @@ typedef enum {
 	XL   = 96,
 	XXL  = 128,
 	XXXL = 256
-} IconSizeHints;
+} PanelIconSizeHints;
 
 G_DECLARE_FINAL_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, VALA_PANEL, TOPLEVEL_UNIT,
                      GtkApplicationWindow)

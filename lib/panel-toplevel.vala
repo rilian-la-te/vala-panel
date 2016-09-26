@@ -64,11 +64,11 @@ namespace ValaPanel
 
         private bool initialized;
 
-        public static const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
+        public const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
                                                 Key.MONITOR,Key.AUTOHIDE,Key.SHOW_HIDDEN,
                                                 Key.MARGIN,Key.DOCK,Key.STRUT,
                                                 Key.DYNAMIC};
-        public static const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
+        public const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
                                                 Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
                                                 Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
                                                 Key.USE_BACKGROUND_FILE, Key.USE_FONT,
@@ -151,7 +151,7 @@ namespace ValaPanel
           }
         }
         public string background_file {get; internal set;}
-        static const GLib.ActionEntry[] panel_entries =
+        const GLib.ActionEntry[] panel_entries =
         {
             {"new-panel", activate_new_panel, null, null, null},
             {"remove-panel", activate_remove_panel, null, null, null},
@@ -510,8 +510,8 @@ namespace ValaPanel
  * If mouse is less then GAP pixels to panel it's considered to be close,
  * otherwise it's far
  */
-        private static const int PERIOD = 200;
-        private static const int GAP = 2;
+        private const int PERIOD = 200;
+        private const int GAP = 2;
         protected override bool configure_event(Gdk.EventConfigure e)
         {
             c.width = e.width;

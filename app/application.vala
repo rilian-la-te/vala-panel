@@ -25,12 +25,12 @@ namespace ValaPanel
 {
     namespace Key
     {
-        public static const string LOGOUT = "logout-command";
-        public static const string SHUTDOWN = "shutdown-command";
-        public static const string TERMINAL = "terminal-command";
-        public static const string DARK = "is-dark";
-        public static const string CUSTOM = "is-custom";
-        public static const string CSS = "css";
+        public const string LOGOUT = "logout-command";
+        public const string SHUTDOWN = "shutdown-command";
+        public const string TERMINAL = "terminal-command";
+        public const string DARK = "is-dark";
+        public const string CUSTOM = "is-custom";
+        public const string CSS = "css";
     }
     public static int main(string[] args)
     {
@@ -52,9 +52,9 @@ namespace ValaPanel
     }
     public class App: Gtk.Application
     {
-        private static const string SCHEMA = "org.valapanel";
-        private static const string NAME = "global";
-        private static const string PATH = "/org/vala-panel/";
+        private const string SCHEMA = "org.valapanel";
+        private const string NAME = "global";
+        private const string PATH = "/org/vala-panel/";
         private bool started = false;
         private bool restart = false;
         private Dialog? pref_dialog;
@@ -78,14 +78,14 @@ namespace ValaPanel
         {get {return _css;}
                 internal set {_css = value; apply_styling();}}
 
-        private static const OptionEntry[] options =
+        private const OptionEntry[] options =
         {
             { "version", 'v', 0, OptionArg.NONE, null, N_("Print version and exit"), null },
             { "profile", 'p', 0, OptionArg.STRING, null, N_("Use specified profile"), N_("profile") },
             { "command", 'c', 0, OptionArg.STRING, null, N_("Run command on already opened panel"), N_("cmd") },
             { null }
         };
-        private static const GLib.ActionEntry[] app_entries =
+        private const GLib.ActionEntry[] app_entries =
         {
             {"preferences", activate_preferences, null, null, null},
             {"panel-preferences", activate_panel_preferences, "s", null, null},
@@ -97,7 +97,7 @@ namespace ValaPanel
             {"restart", activate_restart, null, null, null},
             {"quit", activate_exit, null, null, null},
         };
-        private static const GLib.ActionEntry[] menu_entries =
+        private const GLib.ActionEntry[] menu_entries =
         {
             {"launch-id",activate_menu_id , "s", null, null},
             {"launch-uri",activate_menu_uri, "s", null, null},

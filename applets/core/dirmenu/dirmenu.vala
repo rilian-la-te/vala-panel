@@ -35,9 +35,9 @@ public class Dirmenu: Applet, AppletConfigurable
         string dirname;
         string collate_key;
     }
-    private static const string DIR = "dir-path";
-    private static const string ICON = "icon-name";
-    private static const string LABEL = "caption";
+    private const string DIR = "dir-path";
+    private const string ICON = "icon-name";
+    private const string LABEL = "caption";
     internal string dir_path
     {get; set;}
     internal string caption

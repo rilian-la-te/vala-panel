@@ -28,7 +28,7 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 

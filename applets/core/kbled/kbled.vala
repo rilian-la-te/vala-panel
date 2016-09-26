@@ -29,8 +29,8 @@ public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class Kbled: Applet, AppletConfigurable
 {
-    private static const string CAPS_ON = "capslock-on";
-    private static const string NUM_ON = "numlock-on";
+    private const string CAPS_ON = "capslock-on";
+    private const string NUM_ON = "numlock-on";
     FlowBox widget;
     Gtk.Image caps;
     Gtk.Image num;

@@ -29,10 +29,10 @@ public class WincmdApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class Wincmd: Applet, AppletConfigurable
 {
-    private static const string KEY_LEFT = "left-button-command";
-    private static const string KEY_MIDDLE = "middle-button-command";
-    private static const string KEY_TOGGLE = "toggle-iconify-and-shade";
-    private static const string KEY_ICON = "icon";
+    private const string KEY_LEFT = "left-button-command";
+    private const string KEY_MIDDLE = "middle-button-command";
+    private const string KEY_TOGGLE = "toggle-iconify-and-shade";
+    private const string KEY_ICON = "icon";
     internal enum Command
     {
         NONE = 0,

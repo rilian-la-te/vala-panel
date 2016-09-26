@@ -30,12 +30,12 @@ public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
 public class Tasklist: Applet, AppletConfigurable
 {
     Wnck.Tasklist widget;
-    private static const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
-    private static const string KEY_ALL_DESKTOPS = "all-desktops";
-    private static const string KEY_GROUPING = "grouped-tasks";
-    private static const string KEY_GROUPING_LIMIT = "grouping-limit";
-    private static const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
-    private static const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
+    private const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
+    private const string KEY_ALL_DESKTOPS = "all-desktops";
+    private const string KEY_GROUPING = "grouped-tasks";
+    private const string KEY_GROUPING_LIMIT = "grouping-limit";
+    private const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
+    private const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
     internal int unexpanded_limit
     {get; set;}
     public Tasklist(ValaPanel.Toplevel toplevel,

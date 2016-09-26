@@ -43,8 +43,8 @@ internal class Monitor
     internal delegate bool UpdateMonitorFunc(Monitor m);
     [CCode (has_target = false)]
     internal delegate void UpdateTooltipFunc(Monitor m);
-    private static const int DEFAULT_WIDTH = 40;                 /* Pixels               */
-    private static const int BORDER_SIZE = 2;                  /* Pixels               */
+    private const int DEFAULT_WIDTH = 40;                 /* Pixels               */
+    private const int BORDER_SIZE = 2;                  /* Pixels               */
     internal Gdk.RGBA foreground_color;  /* Foreground color for drawing area      */
     internal Gtk.DrawingArea da;               /* Drawing area                           */
     internal Cairo.Surface pixmap;     /* Pixmap to be drawn on drawing area     */
@@ -345,13 +345,13 @@ internal class MemMonitor : Monitor
 
 public class Monitors: Applet, AppletConfigurable
 {
-    private static const uint UPDATE_PERIOD = 1; /* Seconds              */
-    private static const uint N_MONITORS = 2;
-    private static const string DISPLAY_CPU = "display-cpu-monitor";
-    private static const string DISPLAY_RAM = "display-ram-monitor";
-    internal static const string ACTION = "click-action";
-    private static const string CPU_CL = "cpu-color";
-    private static const string RAM_CL = "ram-color";
+    private const uint UPDATE_PERIOD = 1; /* Seconds              */
+    private const uint N_MONITORS = 2;
+    private const string DISPLAY_CPU = "display-cpu-monitor";
+    private const string DISPLAY_RAM = "display-ram-monitor";
+    internal const string ACTION = "click-action";
+    private const string CPU_CL = "cpu-color";
+    private const string RAM_CL = "ram-color";
     private Monitor[] monitors;
     private bool[] displayed_mons = {true, true};
     private Gtk.Box box;

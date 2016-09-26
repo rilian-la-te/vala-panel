@@ -29,12 +29,12 @@ public class MenuApplet : AppletPlugin, Peas.ExtensionBase
 }
 namespace Key
 {
-    internal static const string ICON = "icon-name";
-    internal static const string CAPTION = "menu-caption";
-    internal static const string IS_MENU_BAR = "is-menu-bar";
-    internal static const string IS_SYSTEM_MENU = "is-system-menu";
-    internal static const string IS_INTERNAL_MENU = "is-internal-menu";
-    internal static const string MODEL_FILE = "model-file";
+    internal const string ICON = "icon-name";
+    internal const string CAPTION = "menu-caption";
+    internal const string IS_MENU_BAR = "is-menu-bar";
+    internal const string IS_SYSTEM_MENU = "is-system-menu";
+    internal const string IS_INTERNAL_MENU = "is-internal-menu";
+    internal const string MODEL_FILE = "model-file";
 }
 internal enum InternalMenu
 {

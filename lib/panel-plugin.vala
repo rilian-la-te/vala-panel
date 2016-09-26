@@ -52,11 +52,11 @@ namespace ValaPanel
     public abstract class Applet : Gtk.EventBox
     {
         private Dialog? dialog;
-        static const GLib.ActionEntry[] config_entry =
+        const GLib.ActionEntry[] config_entry =
         {
             {"configure",activate_configure,null,null,null}
         };
-        static const GLib.ActionEntry[] remove_entry =
+        const GLib.ActionEntry[] remove_entry =
         {
             {"remove",activate_remove,null,null,null}
         };

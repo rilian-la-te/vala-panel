@@ -29,8 +29,8 @@ public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class Deskno: Applet, AppletConfigurable
 {
-    private static const string KEY_LABELS = "wm-labels";
-    private static const string KEY_BOLD = "bold-font";
+    private const string KEY_LABELS = "wm-labels";
+    private const string KEY_BOLD = "bold-font";
     internal bool wm_labels
     {get; set;}
     internal bool bold_font

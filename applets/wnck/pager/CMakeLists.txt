@@ -33,7 +33,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel cvalapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR})
+target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

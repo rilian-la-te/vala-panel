@@ -13,7 +13,7 @@ typedef enum {
 	AH_HIDDEN,
 	AH_WAITING,
 	AH_VISIBLE,
-} AutohideState;
+} PanelAutohideState;
 
 struct _ValaPanelManagerInterface
 {

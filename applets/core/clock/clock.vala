@@ -29,9 +29,9 @@ public class ClockApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class Clock: Applet, AppletConfigurable
 {
-    private static const string TIP_FORMAT = "tooltip-format";
-    private static const string LABEL_FORMAT = "clock-format";
-    private static const string BOLD = "bold-font";
+    private const string TIP_FORMAT = "tooltip-format";
+    private const string LABEL_FORMAT = "clock-format";
+    private const string BOLD = "bold-font";
     private ToggleButton clock;
     private enum Interval
     {

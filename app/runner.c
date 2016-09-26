@@ -171,7 +171,7 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 
 static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
+	ValaPanelRunner *self = VALA_PANEL_RUNNER(source_object);
 	GSList *l;
 	self->model  = (InfoDataModel *)g_task_propagate_pointer(self->task, NULL);
 	self->filter = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
@@ -274,7 +274,7 @@ static void build_app_box(ValaPanelRunner *self)
 	else
 	{
 		self->cancellable = g_cancellable_new();
-		self->task = g_task_new(self, self->cancellable, setup_list_box_with_data, self);
+		self->task = g_task_new(self, self->cancellable, setup_list_box_with_data, NULL);
 		/* load in another working thread */
 		g_task_run_in_thread(self->task, vala_panel_runner_create_data_list);
 	}

@@ -25,7 +25,7 @@ OPTIONS
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 INCLUDE(GResource)
 glib_compile_resources(RESOURCES
     source

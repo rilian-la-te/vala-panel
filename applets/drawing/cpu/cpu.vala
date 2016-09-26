@@ -31,7 +31,7 @@ public class CpuApplet : AppletPlugin, Peas.ExtensionBase
 //TODO:Colors
 public class Cpu: Applet
 {
-    private static const uint BORDER_SIZE = 2;
+    private const uint BORDER_SIZE = 2;
     /* User, nice, system, idle */
     private struct cpu_stat
     {

@@ -20,7 +20,7 @@ using ValaPanel;
 using Gtk;
 using GLib;
 
-public static const TargetEntry[] MENU_TARGETS = {
+public const TargetEntry[] MENU_TARGETS = {
     { "text/uri-list", 0, 0},
     { "application/x-desktop", 0, 0},
 };
@@ -36,7 +36,7 @@ namespace LaunchBar
             return new Bar(toplevel,settings,number);
         }
     }
-    private static const string BUTTONS = "launch-buttons";
+    private const string BUTTONS = "launch-buttons";
     public class Bar: Applet, AppletConfigurable
     {
         internal string[]? ids;
