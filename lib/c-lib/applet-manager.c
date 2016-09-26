@@ -2,7 +2,6 @@
 #include "applet-engine-module.h"
 #include "lib/applets-new/applet-api.h"
 #include "lib/definitions.h"
-#include "panel-manager.h"
 #include "private.h"
 
 #define PLUGIN_SETTINGS_SCHEMA_BASE "org.valapanel.toplevel.%s"
@@ -99,4 +98,12 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 			return widget;
 	}
 	return NULL;
+}
+
+ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelManager *mgr)
+{
+	ValaPanelAppletManager *ret =
+	    VALA_PANEL_APPLET_MANAGER(g_object_new(vala_panel_applet_manager_get_type(), NULL));
+	ret->mgr = mgr;
+	return ret;
 }

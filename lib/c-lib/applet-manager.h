@@ -5,6 +5,7 @@
 
 #include "applet-engine-module.h"
 #include "lib/applets-new/applet-api.h"
+#include "panel-manager.h"
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -12,6 +13,7 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, VALA_PANEL, APPLET_MANAGER,
                      GObject)
 
+ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelManager *mgr);
 GSList *vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *self);
 ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
     ValaPanelAppletManager *self, const char *applet_type);
