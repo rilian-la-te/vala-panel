@@ -9,9 +9,12 @@
 
 static char *generate_markup(const char *name, const char *sdesc)
 {
-	g_autofree char *nom  = g_markup_escape_text(name, strlen(name));
-	g_autofree char *desc = g_markup_escape_text(sdesc, strlen(sdesc));
-	return g_strdup_printf("<big>%s</big>\n<small>%s</small>", nom, desc);
+	char *nom  = g_markup_escape_text(name, strlen(name));
+	char *desc = g_markup_escape_text(sdesc, strlen(sdesc));
+	char *ret  = g_strdup_printf("<big>%s</big>\n<small>%s</small>", nom, desc);
+	g_free(nom);
+	g_free(desc);
+	return ret;
 }
 
 InfoData *info_data_new_from_info(GAppInfo *info)
@@ -24,8 +27,9 @@ InfoData *info_data_new_from_info(GAppInfo *info)
 		data->icon = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
 	else
 	{
-		g_autofree char *icon_str = g_icon_to_string(data->icon);
-		data->icon                = g_icon_new_for_string(icon_str, NULL);
+		char *icon_str = g_icon_to_string(data->icon);
+		data->icon     = g_icon_new_for_string(icon_str, NULL);
+		g_free(icon_str);
 	}
 	data->disp_name = g_strdup(g_app_info_get_display_name(info));
 	const char *name =
@@ -39,24 +43,26 @@ InfoData *info_data_new_from_info(GAppInfo *info)
 
 InfoData *info_data_new_from_command(const char *command)
 {
-	InfoData *data        = (InfoData *)g_slice_alloc0(sizeof(InfoData));
-	data->icon            = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
-	data->disp_name       = g_strdup_printf(_("Run %s"), command);
-	g_autofree char *name = g_strdup_printf(_("Run %s"), command);
-	const char *sdesc     = _("Run system command");
-	data->name_markup     = generate_markup(name, sdesc);
-	data->command         = g_strdup(command);
+	InfoData *data    = (InfoData *)g_slice_alloc0(sizeof(InfoData));
+	data->icon        = g_themed_icon_new_with_default_fallbacks("system-run-symbolic");
+	data->disp_name   = g_strdup_printf(_("Run %s"), command);
+	char *name        = g_strdup_printf(_("Run %s"), command);
+	const char *sdesc = _("Run system command");
+	data->name_markup = generate_markup(name, sdesc);
+	g_free(name);
+	data->command = g_strdup(command);
 	return data;
 }
 
 static InfoData *info_data_dup(InfoData *base)
 {
-	InfoData *new_data        = (InfoData *)g_slice_alloc0(sizeof(InfoData));
-	g_autofree char *icon_str = g_icon_to_string(base->icon);
-	new_data->icon            = g_icon_new_for_string(icon_str, NULL);
-	new_data->disp_name       = g_strdup(base->disp_name);
-	new_data->name_markup     = g_strdup(base->name_markup);
-	new_data->command         = g_strdup(base->command);
+	InfoData *new_data = (InfoData *)g_slice_alloc0(sizeof(InfoData));
+	char *icon_str     = g_icon_to_string(base->icon);
+	new_data->icon     = g_icon_new_for_string(icon_str, NULL);
+	g_free(icon_str);
+	new_data->disp_name   = g_strdup(base->disp_name);
+	new_data->name_markup = g_strdup(base->name_markup);
+	new_data->command     = g_strdup(base->command);
 	return new_data;
 }
 

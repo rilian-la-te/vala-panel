@@ -200,12 +200,16 @@ static int info_data_compare_func(gconstpointer a, gconstpointer b,
 static void vala_panel_runner_create_data_list(GTask *task, void *source, void *task_data,
                                                GCancellable *cancellable)
 {
-	InfoDataModel *obj_list = info_data_model_new();
-	GList *app_list         = g_app_info_get_all();
+	g_autoptr(InfoDataModel) obj_list = info_data_model_new();
+	g_task_set_return_on_cancel(task, false);
+	GList *app_list = g_app_info_get_all();
 	for (GList *l = app_list; l; l = g_list_next(l))
 	{
 		if (g_cancellable_is_cancelled(cancellable))
+		{
+			g_list_free_full(app_list, (GDestroyNotify)g_object_unref);
 			return;
+		}
 		InfoData *data = info_data_new_from_info(G_APP_INFO(l->data));
 		if (data)
 			g_sequence_insert_sorted(info_data_model_get_sequence(obj_list),
@@ -214,23 +218,20 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 			                         NULL);
 	}
 	g_list_free_full(app_list, (GDestroyNotify)g_object_unref);
-	const char *var    = g_getenv("PATH");
-	g_auto(GStrv) dirs = g_strsplit(var, ":", 0);
-	for (int i = 0; dirs[i] != NULL; i++)
+	g_task_set_return_on_cancel(task, true);
+	const char *var = g_getenv("PATH");
+	g_task_set_return_on_cancel(task, false);
+	GStrv dirs = g_strsplit(var, ":", 0);
+	for (int i = 0; dirs[i] != NULL && (!g_cancellable_is_cancelled(cancellable)); i++)
 	{
-		if (g_cancellable_is_cancelled(cancellable))
-			return;
-
-		g_autoptr(GDir) gdir = g_dir_open(dirs[i], 0, NULL);
-		const char *name     = NULL;
+		GDir *gdir       = g_dir_open(dirs[i], 0, NULL);
+		const char *name = NULL;
 		while (!g_cancellable_is_cancelled(cancellable) &&
 		       (name = g_dir_read_name(gdir)) != NULL)
 		{
-			g_autofree char *filename = g_build_filename(dirs[i], name, NULL);
+			char *filename = g_build_filename(dirs[i], name, NULL);
 			if (g_file_test(filename, G_FILE_TEST_IS_EXECUTABLE))
 			{
-				if (g_cancellable_is_cancelled(cancellable))
-					return;
 				if (g_sequence_lookup(info_data_model_get_sequence(obj_list),
 				                      NULL,
 				                      slist_find_func,
@@ -244,9 +245,13 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 					                         NULL);
 				}
 			}
+			g_free(filename);
 		}
+		g_dir_close(gdir);
 	}
-	g_task_return_pointer(task, obj_list, g_object_unref);
+	g_strfreev(dirs);
+	g_task_set_return_on_cancel(task, true);
+	g_task_return_pointer(task, g_object_ref_sink(obj_list), g_object_unref);
 	return;
 }
 
@@ -263,6 +268,7 @@ static void build_app_box(ValaPanelRunner *self)
 	{
 		self->cancellable = g_cancellable_new();
 		self->task = g_task_new(self, self->cancellable, setup_list_box_with_data, NULL);
+		g_task_set_return_on_cancel(self->task, true);
 		/* load in another working thread */
 		g_task_run_in_thread(self->task, vala_panel_runner_create_data_list);
 	}
