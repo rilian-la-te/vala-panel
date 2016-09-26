@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <inttypes.h>
 #include <string.h>
 
 #include "css.h"
@@ -108,4 +109,15 @@ void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, co
 	vala_panel_bind_gsettings(map, settings, prop);
 	g_autoptr(GAction) action = G_ACTION(g_settings_create_action(settings, prop));
 	g_action_map_add_action(map, action);
+}
+
+char *vala_panel_generate_new_hash()
+{
+	g_autoptr(GDateTime) time = g_date_time_new_now_utc();
+	g_autofree char *time_str = g_date_time_format(time, "%X %R:%S");
+	g_autofree char *pointer_string =
+	    g_strdup_printf("%d,%s,%" PRIu64 "", g_random_int(), time_str, g_get_real_time());
+	return g_compute_checksum_for_string(G_CHECKSUM_SHA512,
+	                                     pointer_string,
+	                                     strlen(pointer_string));
 }

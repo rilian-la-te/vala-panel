@@ -72,7 +72,8 @@
 	                prop,                                                                      \
 	                G_OBJECT(obj),                                                             \
 	                prop,                                                                      \
-	                G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET | G_SETTINGS_BIND_DEFAULT);
+	                (GBindingFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |                \
+	                                G_SETTINGS_BIND_DEFAULT));
 
 #define VALA_PANEL_DECLARE_MODULE_TYPE(                                                            \
     ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)                                  \
