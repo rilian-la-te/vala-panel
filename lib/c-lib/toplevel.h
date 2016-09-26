@@ -34,9 +34,9 @@ G_BEGIN_DECLS
 #define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
 
 typedef enum {
-	START  = 0,
-	CENTER = 1,
-	END    = 2,
+	ALIGN_START  = 0,
+	ALIGN_CENTER = 1,
+	ALIGN_END    = 2,
 } PanelAlignmentType;
 
 typedef enum {

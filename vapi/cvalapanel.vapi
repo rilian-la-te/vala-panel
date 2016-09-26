@@ -36,6 +36,13 @@ namespace PanelCSS
 }
 namespace ValaPanel
 {
+    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "lib/c-lib/panel-layout.h")]
+    public enum AppletPackType
+    {
+        START,
+        CENTER,
+        END
+    }
     [CCode(cheader_filename="lib/c-lib/panel-layout.h")]
     public const string PLUGIN_SCHEMA;
     [CCode(cheader_filename="lib/c-lib/toplevel.h")]
@@ -62,7 +69,7 @@ namespace ValaPanel
         HIDDEN,
         WAITING
     }
-    [CCode(cname="PanelAlignmentType", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
+    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
     public enum AlignmentType
     {
         START,

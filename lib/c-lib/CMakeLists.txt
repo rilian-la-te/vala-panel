@@ -3,6 +3,7 @@ set(ENUM_FILES
         panel-manager.h
         generic-config-dialog.h
         toplevel.h
+        panel-layout.h
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 add_library(cvalapanel SHARED
