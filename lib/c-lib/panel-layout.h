@@ -5,6 +5,9 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+#include "applet-manager.h"
+#include "misc.h"
+
 G_BEGIN_DECLS
 #define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
 
@@ -31,6 +34,15 @@ typedef enum {
 
 G_DECLARE_FINAL_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, VALA_PANEL, APPLET_LAYOUT,
                      GtkBox)
+
+ValaPanelAppletLayout *vala_panel_applet_layout_new();
+void vala_panel_applet_layout_update_views(ValaPanelAppletLayout *self);
+void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelManager *gmgr,
+                                           GSettings *toplevel_settings,
+                                           ValaPanelAppletManager *mgr, const char *applet_type,
+                                           PanelAppletPackType pack, int pos);
+void vala_panel_applet_layout_load_applets(ValaPanelAppletLayout *self, ValaPanelAppletManager *mgr,
+                                           GSettings *settings);
 
 G_END_DECLS
 

@@ -86,7 +86,7 @@ static void vala_panel_applet_info_constructed(ValaPanelAppletInfo *self)
 {
 	// GSettings must not be accessed directly!!! Need a Manager-based access.
 	//	g_autofree gchar *path    = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid,
-	//NULL);
+	// NULL);
 	//	g_autofree char *filename = _user_config_file_name(path, self->profile, self->uuid);
 	//	g_autoptr(GSettingsBackend) bck =
 	//	    g_keyfile_settings_backend_new(filename, path, DEFAULT_PLUGIN_GROUP);

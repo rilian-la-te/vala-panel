@@ -1,7 +1,5 @@
 #include "panel-layout.h"
-#include "applet-manager.h"
 #include "lib/applets-new/applet-api.h"
-#include "misc.h"
 
 struct _ValaPanelAppletLayout
 {
@@ -51,6 +49,15 @@ static void update_applet_positions(ValaPanelAppletLayout *self)
 	}
 }
 
+void vala_panel_applet_layout_update_views(ValaPanelAppletLayout *self)
+{
+	g_autoptr(GList) ch = gtk_container_get_children(GTK_CONTAINER(self->center));
+	if (g_list_length(ch) <= 0)
+		gtk_widget_hide(GTK_WIDGET(self->center));
+	else
+		gtk_widget_show(GTK_WIDGET(self->center));
+}
+
 void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelManager *gmgr,
                                            GSettings *toplevel_settings,
                                            ValaPanelAppletManager *mgr, const char *applet_type,
@@ -69,6 +76,7 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPane
 	g_settings_set_enum(csettings, VALA_PANEL_KEY_PACK, pack);
 	vala_panel_applet_set_position_metadata(applet, pos);
 	vala_panel_applet_layout_place_applet_widget(self, applet, pack, pos);
+	vala_panel_applet_layout_update_views(self);
 }
 
 void vala_panel_applet_layout_load_applets(ValaPanelAppletLayout *self, ValaPanelAppletManager *mgr,
@@ -94,4 +102,10 @@ void vala_panel_applet_layout_load_applets(ValaPanelAppletLayout *self, ValaPane
 		vala_panel_applet_layout_place_applet_widget(self, applet, pack, pos);
 	}
 	update_applet_positions(self);
+	vala_panel_applet_layout_update_views(self);
+}
+
+ValaPanelAppletLayout *vala_panel_applet_layout_new()
+{
+	return VALA_PANEL_APPLET_LAYOUT(g_object_new(vala_panel_applet_layout_get_type(), NULL));
 }
