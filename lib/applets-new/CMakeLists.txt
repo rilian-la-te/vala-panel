@@ -5,15 +5,14 @@ set(ENUM_FILES
         applet-widget.h)
 add_glib_enumtypes(ENUMSC ENUMSH vala-applet-enums ${ENUM_FILES})
 add_library(applet-api-new SHARED
-	applet-widget.c
-	applet-info.c
-        popup-manager.c
+        applet-widget.c
+        applet-info.c
         applet-engine.c
         applet-api.h
         ${MARSHALS}
         ${ENUMSC}
         ${ENUMSH}
-	${MARSHALH}
+        ${MARSHALH}
 	)
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})

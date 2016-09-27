@@ -98,7 +98,7 @@ static void vala_panel_applet_widget_class_init(ValaPanelAppletWidgetClass *klas
 	G_OBJECT_CLASS(klass)->get_property = vala_panel_applet_widget_get_property;
 	G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_widget_set_property;
 	G_OBJECT_CLASS(klass)->finalize     = vala_panel_applet_widget_finalize;
-	klass->update_popup                 = NULL;
+	//	klass->update_popup                 = NULL;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_WIDGET_UUID,
 	                                g_param_spec_string("uuid",
@@ -167,15 +167,16 @@ static void vala_panel_applet_widget_init(ValaPanelAppletWidget *self)
 	gtk_widget_set_can_focus(GTK_WIDGET(self), false);
 }
 
-void vala_panel_applet_widget_update_popup(ValaPanelAppletWidget *self, ValaPanelPopupManager *mgr)
-{
-	if (self)
-	{
-		ValaPanelAppletWidgetClass *klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
-		if (klass->update_popup)
-			klass->update_popup(self, mgr);
-	}
-}
+// void vala_panel_applet_widget_update_popup(ValaPanelAppletWidget *self, ValaPanelPopupManager
+// *mgr)
+//{
+//	if (self)
+//	{
+//		ValaPanelAppletWidgetClass *klass = VALA_PANEL_APPLET_WIDGET_GET_CLASS(self);
+//		if (klass->update_popup)
+//			klass->update_popup(self, mgr);
+//	}
+//}
 
 void vala_panel_applet_widget_invoke_applet_action(ValaPanelAppletWidget *self, const char *action,
                                                    GVariantDict *param)

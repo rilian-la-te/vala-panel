@@ -115,6 +115,8 @@ public class Clock: Applet, AppletConfigurable
     {
         /* Create a new window. */
         var win = new Window(WindowType.POPUP);
+        win.set_transient_for(this.toplevel);
+        win.set_attached_to(this);
         win.set_default_size(180, 180);
         win.set_border_width(5);
         /* Create a standard calendar widget as a child of the window. */

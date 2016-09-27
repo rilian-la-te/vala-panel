@@ -89,9 +89,11 @@ namespace LaunchBar
             this.bind_property("icon-size",img,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
             ebox.enter_notify_event.connect((e)=>{
                 this.get_style_context().add_class("-panel-launch-button-selected");
+                return Gdk.EVENT_PROPAGATE;
             });
             ebox.leave_notify_event.connect((e)=>{
                 this.get_style_context().remove_class("-panel-launch-button-selected");
+                return Gdk.EVENT_PROPAGATE;
             });
             ebox.show();
             drag_source_set(this,Gdk.ModifierType.BUTTON2_MASK,MENU_TARGETS,Gdk.DragAction.MOVE);
@@ -109,7 +111,11 @@ namespace LaunchBar
             });
             this.drag_failed.connect((context,result)=>{
                 if (!(result == Gtk.DragResult.USER_CANCELLED))
+                {
                     commit = true;
+                    return true;
+                }
+                return false;
             });
             this.drag_end.connect((context)=>{
                 if (commit)
