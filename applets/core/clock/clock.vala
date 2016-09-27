@@ -115,8 +115,6 @@ public class Clock: Applet, AppletConfigurable
     {
         /* Create a new window. */
         var win = new Window(WindowType.POPUP);
-        win.set_transient_for(this.toplevel);
-        win.set_attached_to(this);
         win.set_default_size(180, 180);
         win.set_border_width(5);
         /* Create a standard calendar widget as a child of the window. */
@@ -128,6 +126,9 @@ public class Clock: Applet, AppletConfigurable
         calendar.mark_day(now.get_day_of_month());
         win.add(calendar);
         /* Preset the widget position right now to not move it across the screen */
+        win.set_type_hint(Gdk.WindowTypeHint.UTILITY);
+        win.set_transient_for(this.toplevel);
+        win.set_attached_to(this);
         calendar.show_all();
         set_popup_position(win);
         /* Return the widget. */

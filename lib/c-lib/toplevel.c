@@ -12,7 +12,7 @@ struct _ValaPanelToplevelUnit
 	int height;
 	int widgth;
 	GtkOrientation orientation;
-	GdkGravity gravity;
+	GtkPositionType edge;
 };
 
 G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICATION_WINDOW)
