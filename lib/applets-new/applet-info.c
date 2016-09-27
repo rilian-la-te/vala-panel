@@ -84,15 +84,17 @@ static void vala_panel_applet_info_unbind_settings(ValaPanelAppletInfo *self)
 
 static void vala_panel_applet_info_constructed(ValaPanelAppletInfo *self)
 {
-	g_autofree gchar *path    = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid, NULL);
-	g_autofree char *filename = _user_config_file_name(path, self->profile, self->uuid);
-	g_autoptr(GSettingsBackend) bck =
-	    g_keyfile_settings_backend_new(filename, path, DEFAULT_PLUGIN_GROUP);
-	self->settings = g_settings_new_with_backend(DEFAULT_PLUGIN_SETTINGS_ID, bck);
-	gchar *str     = g_strdup(g_strstrip(g_strdelimit(self->name, " '", '_')));
-	g_ascii_inplace_tolower(str);
-	self->applet_type = str;
-	G_OBJECT_CLASS(vala_panel_applet_info_parent_class)->constructed(self);
+	// GSettings must not be accessed directly!!! Need a Manager-based access.
+	//	g_autofree gchar *path    = g_build_path("/", DEFAULT_PLUGIN_PATH, self->uuid,
+	//NULL);
+	//	g_autofree char *filename = _user_config_file_name(path, self->profile, self->uuid);
+	//	g_autoptr(GSettingsBackend) bck =
+	//	    g_keyfile_settings_backend_new(filename, path, DEFAULT_PLUGIN_GROUP);
+	//	self->settings = g_settings_new_with_backend(DEFAULT_PLUGIN_SETTINGS_ID, bck);
+	//	gchar *str     = g_strdup(g_strstrip(g_strdelimit(self->name, " '", '_')));
+	//	g_ascii_inplace_tolower(str);
+	//	self->applet_type = str;
+	G_OBJECT_CLASS(vala_panel_applet_info_parent_class)->constructed(G_OBJECT(self));
 }
 
 static void vala_panel_applet_info_get_property(GObject *object, guint property_id, GValue *value,

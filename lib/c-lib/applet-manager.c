@@ -5,7 +5,6 @@
 #include "private.h"
 
 #define PLUGIN_SETTINGS_SCHEMA_BASE "org.valapanel.toplevel.%s"
-#define PLUGIN_SETTINGS_PATH_BASE "/org/vala-panel/applets/%s/%s"
 
 struct _ValaPanelAppletManager
 {
@@ -76,7 +75,7 @@ ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
 }
 
 ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
-    ValaPanelAppletManager *self, const char *applet_type, const char *uuid)
+    ValaPanelAppletManager *self, const char *path, const char *applet_type, const char *uuid)
 {
 	GHashTableIter iter;
 	gpointer key, value;
@@ -84,10 +83,9 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 	while (g_hash_table_iter_next(&iter, &key, &value))
 	{
 		g_autofree char *scheme = g_strdup_printf(PLUGIN_SETTINGS_SCHEMA_BASE, applet_type);
-		g_autofree char *path =
-		    g_strdup_printf(PLUGIN_SETTINGS_PATH_BASE, self->profile, uuid);
+		g_autofree char *cpath  = g_strconcat(path, uuid, "/", NULL);
 		GSettings *settings =
-		    vala_panel_manager_get_settings_for_scheme(self->mgr, scheme, path);
+		    vala_panel_manager_get_settings_for_scheme(self->mgr, scheme, cpath);
 		ValaPanelAppletWidget *widget =
 		    vala_panel_applet_engine_get_applet_widget_for_type((ValaPanelAppletEngine *)
 		                                                            key,

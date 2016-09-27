@@ -32,7 +32,8 @@ static void vala_panel_applet_widget_get_property(GObject *object, guint propert
 	self                        = G_TYPE_CHECK_INSTANCE_CAST(object,
 	                                  vala_panel_applet_widget_get_type(),
 	                                  ValaPanelAppletWidget);
-	ValaPanelAppletWidgetPrivate *priv = vala_panel_applet_widget_get_instance_private(self);
+	ValaPanelAppletWidgetPrivate *priv =
+	    (ValaPanelAppletWidgetPrivate *)vala_panel_applet_widget_get_instance_private(self);
 	switch (property_id)
 	{
 	case VALA_PANEL_APPLET_WIDGET_UUID:

@@ -18,7 +18,7 @@ GSList *vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *se
 ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
     ValaPanelAppletManager *self, const char *applet_type);
 ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
-    ValaPanelAppletManager *self, const char *applet_type, const char *uuid);
+    ValaPanelAppletManager *self, const char *path, const char *applet_type, const char *uuid);
 
 G_END_DECLS
 
