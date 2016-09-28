@@ -214,7 +214,7 @@ internal class CpuMonitor : Monitor
             Posix.FILE stat = Posix.FILE.open("/proc/stat", "r");
             if (stat == null)
                 return true;
-            int fscanf_result = stat.scanf("cpu %llu %llu %llu %llu",
+            int fscanf_result = stat.scanf("cpu %li %li %li %li",
                                         out cpu.u, out cpu.n, out cpu.s, out cpu.i);
             /* Ensure that fscanf succeeded. */
             if (fscanf_result == 4)
