@@ -17,7 +17,7 @@ struct _ValaPanelToplevelUnit
 	GtkApplicationWindow __parent__;
 	ValaPanelAppletManager *manager;
 	ValaPanelAppletLayout *layout;
-	GSettings *toplevel_setings;
+	GSettings *toplevel_settings;
 	GtkCssProvider *provider;
 	bool initialized;
 	bool dock;
@@ -34,6 +34,7 @@ struct _ValaPanelToplevelUnit
 	char *uid;
 	int height;
 	int widgth;
+	int mon;
 	GtkOrientation orientation;
 	GtkPositionType edge;
 	GtkDialog *pref_dialog;
@@ -76,10 +77,89 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
 	gtk_widget_show(GTK_WIDGET(self));
 	gtk_window_stick(GTK_WINDOW(self));
-	vala_panel_applet_layout_load_applets(self->layout, self->manager, self->toplevel_setings);
+	vala_panel_applet_layout_load_applets(self->layout, self->manager, self->toplevel_settings);
 	gtk_window_present(GTK_WINDOW(self));
-	self->autohide    = g_settings_get_boolean(self->toplevel_setings, VALA_PANEL_KEY_AUTOHIDE);
+	self->autohide = g_settings_get_boolean(self->toplevel_settings, VALA_PANEL_KEY_AUTOHIDE);
 	self->initialized = true;
+}
+
+static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
+{
+	if (use_internal_values)
+	{
+		g_settings_set_int(self->toplevel_settings, VALA_PANEL_KEY_MONITOR, self->mon);
+		g_settings_set_enum(self->toplevel_settings, VALA_PANEL_KEY_EDGE, self->edge);
+	}
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_EDGE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_ALIGNMENT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_HEIGHT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_WIDTH);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_DYNAMIC);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_AUTOHIDE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_STRUT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_DOCK);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_MARGIN);
+	vala_panel_bind_gsettings(self, self->toplevel_settings, VALA_PANEL_KEY_MONITOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_SHOW_HIDDEN);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_ICON_SIZE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_BACKGROUND_COLOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_FOREGROUND_COLOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_BACKGROUND_FILE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_FONT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_CORNERS_SIZE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_FONT_SIZE_ONLY);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_USE_BACKGROUND_COLOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_USE_FOREGROUND_COLOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_USE_FONT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->toplevel_settings,
+	                                   VALA_PANEL_KEY_USE_BACKGROUND_FILE);
+	//    if (monitor < Gdk.Screen.get_default().get_n_monitors())
+	//        start_ui();
+	//    unowned Gtk.Application panel_app = get_application();
+	//    if (mon_handler != 0)
+	//        mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
+	//                                    (GLib.Callback)(monitors_changed_cb),panel_app);
 }
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
