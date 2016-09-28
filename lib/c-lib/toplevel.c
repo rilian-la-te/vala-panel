@@ -154,12 +154,8 @@ static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->toplevel_settings,
 	                                   VALA_PANEL_KEY_USE_BACKGROUND_FILE);
-	//    if (monitor < Gdk.Screen.get_default().get_n_monitors())
-	//        start_ui();
-	//    unowned Gtk.Application panel_app = get_application();
-	//    if (mon_handler != 0)
-	//        mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
-	//                                    (GLib.Callback)(monitors_changed_cb),panel_app);
+	if (self->mon < gdk_screen_get_n_monitors(gtk_widget_get_screen(GTK_WIDGET(self))))
+		start_ui(self);
 }
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
@@ -228,25 +224,29 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 }
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data)
 {
-	//    var dlg = new MessageDialog.with_markup(this,
-	//                                            DialogFlags.MODAL,
-	//                                            MessageType.QUESTION,
-	//                                            ButtonsType.OK_CANCEL,
-	//                                            N_("Really delete this panel?\n<b>Warning:
-	//                                            This can not be recovered.</b>"));
-	//    apply_window_icon(dlg as Gtk.Window);
-	//    dlg.set_title(_("Confirm"));
-	//    var ok = (dlg.run() == ResponseType.OK );
-	//    dlg.destroy();
-	//    if( ok )
-	//    {
-	//        string pr = this.profile;
-	//        this.stop_ui();
-	//        this.destroy();
-	//        /* delete the config file of this panel */
-	//        var fname = user_config_file_name("panels",pr,panel_name);
-	//        FileUtils.unlink( fname );
-	//    }
+	ValaPanelToplevelUnit *self     = VALA_PANEL_TOPLEVEL_UNIT(data);
+	g_autoptr(GtkMessageDialog) dlg = GTK_MESSAGE_DIALOG(
+	    gtk_message_dialog_new_with_markup(GTK_WINDOW(self),
+	                                       GTK_DIALOG_MODAL,
+	                                       GTK_MESSAGE_QUESTION,
+	                                       GTK_BUTTONS_OK_CANCEL,
+	                                       N_("Really delete this panel?\n<b>Warning:"
+	                                          "This can not be recovered.</b>")));
+	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
+	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
+	bool ok = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
+	gtk_widget_destroy(GTK_WIDGET(dlg));
+	if (ok)
+	{
+		g_autofree char *uid  = g_strdup(self->uid);
+		g_autofree char *path = NULL;
+		g_object_get(self->toplevel_settings, "path", &path, NULL);
+		ValaPanelManager *mgr = vala_panel_applet_manager_get_manager(self->manager);
+		stop_ui(self);
+		gtk_widget_destroy(GTK_WIDGET(self));
+		/* delete the config file of this panel */
+		vala_panel_manager_remove_settings_path(mgr, path, uid);
+	}
 }
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data)
 {
@@ -335,6 +335,73 @@ G_GNUC_INTERNAL void update_appearance(ValaPanelToplevelUnit *self)
 	css_toggle_class(GTK_WIDGET(self),
 	                 "-vala-panel-foreground-color",
 	                 self->use_foreground_color);
+}
+
+ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_position(GtkApplication *app,
+                                                                  const char *uid, int mon,
+                                                                  GtkPositionType edge)
+{
+	ValaPanelToplevelUnit *ret =
+	    VALA_PANEL_TOPLEVEL_UNIT(g_object_new(vala_panel_toplevel_unit_get_type(),
+	                                          "border-width",
+	                                          0,
+	                                          "decorated",
+	                                          false,
+	                                          "name",
+	                                          "ValaPanel",
+	                                          "resizable",
+	                                          false,
+	                                          "title",
+	                                          "ValaPanel",
+	                                          "type-hint",
+	                                          GDK_WINDOW_TYPE_HINT_DOCK,
+	                                          "window-position",
+	                                          GTK_WIN_POS_NONE,
+	                                          "skip-taskbar-hint",
+	                                          true,
+	                                          "skip-pager-hint",
+	                                          true,
+	                                          "accept-focus",
+	                                          false,
+	                                          "application",
+	                                          app,
+	                                          "uuid",
+	                                          uid));
+	ret->mon  = mon;
+	ret->edge = edge;
+	setup(ret, true);
+	return ret;
+}
+ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app, char *uid)
+{
+	ValaPanelToplevelUnit *ret =
+	    VALA_PANEL_TOPLEVEL_UNIT(g_object_new(vala_panel_toplevel_unit_get_type(),
+	                                          "border-width",
+	                                          0,
+	                                          "decorated",
+	                                          false,
+	                                          "name",
+	                                          "ValaPanel",
+	                                          "resizable",
+	                                          false,
+	                                          "title",
+	                                          "ValaPanel",
+	                                          "type-hint",
+	                                          GDK_WINDOW_TYPE_HINT_DOCK,
+	                                          "window-position",
+	                                          GTK_WIN_POS_NONE,
+	                                          "skip-taskbar-hint",
+	                                          true,
+	                                          "skip-pager-hint",
+	                                          true,
+	                                          "accept-focus",
+	                                          false,
+	                                          "application",
+	                                          app,
+	                                          "uuid",
+	                                          uid));
+	setup(ret, false);
+	return ret;
 }
 
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
