@@ -35,7 +35,7 @@ typedef enum {
 G_DECLARE_FINAL_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, VALA_PANEL, APPLET_LAYOUT,
                      GtkBox)
 
-ValaPanelAppletLayout *vala_panel_applet_layout_new();
+ValaPanelAppletLayout *vala_panel_applet_layout_new(GtkOrientation orient, int spacing);
 void vala_panel_applet_layout_update_views(ValaPanelAppletLayout *self);
 void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelManager *gmgr,
                                            GSettings *toplevel_settings,

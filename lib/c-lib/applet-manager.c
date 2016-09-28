@@ -105,3 +105,8 @@ ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelManager *mgr)
 	ret->mgr = mgr;
 	return ret;
 }
+
+ValaPanelManager *vala_panel_applet_manager_get_manager(ValaPanelAppletManager *self)
+{
+	return self->mgr;
+}

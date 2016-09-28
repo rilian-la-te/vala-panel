@@ -105,7 +105,20 @@ void vala_panel_applet_layout_load_applets(ValaPanelAppletLayout *self, ValaPane
 	vala_panel_applet_layout_update_views(self);
 }
 
-ValaPanelAppletLayout *vala_panel_applet_layout_new()
+ValaPanelAppletLayout *vala_panel_applet_layout_new(GtkOrientation orient, int spacing)
 {
-	return VALA_PANEL_APPLET_LAYOUT(g_object_new(vala_panel_applet_layout_get_type(), NULL));
+	return VALA_PANEL_APPLET_LAYOUT(g_object_new(vala_panel_applet_layout_get_type(),
+	                                             "orientation",
+	                                             orient,
+	                                             "spacing",
+	                                             spacing,
+	                                             "baseline-position",
+	                                             GTK_BASELINE_POSITION_CENTER,
+	                                             "border-width",
+	                                             0,
+	                                             "hexpand",
+	                                             true,
+	                                             "vexpand",
+	                                             true,
+	                                             NULL));
 }
