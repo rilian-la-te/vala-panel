@@ -36,6 +36,7 @@ struct _ValaPanelManagerInterface
 	/*GSettings management*/
 	GSettings *(*get_settings_for_scheme)(ValaPanelManager *self, const char *scheme,
 	                                      const char *path);
+	void (*remove_settings_path)(ValaPanelManager *self, GSettings *scheme, const char *path);
 	gpointer padding[12];
 };
 
@@ -52,6 +53,8 @@ void vala_panel_manager_move_to_side(ValaPanelManager *f, ValaPanelToplevelUnit 
                                      GtkPositionType alloc);
 GSettings *vala_panel_manager_get_settings_for_scheme(ValaPanelManager *self, const char *scheme,
                                                       const char *path);
+void vala_panel_manager_remove_settings_path(ValaPanelManager *self, GSettings *settings,
+                                             const char *child_name);
 
 G_END_DECLS
 

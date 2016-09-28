@@ -70,3 +70,12 @@ GSettings *vala_panel_manager_get_settings_for_scheme(ValaPanelManager *self, co
 		                                                                   path);
 	return NULL;
 }
+
+void vala_panel_manager_remove_settings_path(ValaPanelManager *self, GSettings *settings,
+                                             const char *child_name)
+{
+	if (self)
+		VALA_PANEL_MANAGER_GET_IFACE(self)
+		    ->remove_settings_path(self, settings, child_name);
+	return;
+}
