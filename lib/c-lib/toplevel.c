@@ -2,6 +2,7 @@
 #include "css.h"
 #include "panel-layout.h"
 #include "panel-manager.h"
+#include "misc.h"
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -158,69 +159,90 @@ static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
 		start_ui(self);
 }
 
+G_GNUC_INTERNAL bool panel_edge_available(ValaPanelToplevelUnit* self,uint edge, int monitor, bool include_this)
+{
+    g_autoptr(GtkApplication) app;
+    g_object_get(self,"application",&app,NULL);
+    for (g_autoptr(GList) w = gtk_application_get_windows(app);w != NULL;w=w->next)
+        if (VALA_PANEL_IS_TOPLEVEL_UNIT(w))
+        {
+            ValaPanelToplevelUnit* pl = VALA_PANEL_TOPLEVEL_UNIT(w->data);
+            if (((pl != self)|| include_this) && (self->edge == edge) && ((monitor == self->mon)||self->mon<0))
+                return false;
+        }
+    return true;
+}
+
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 {
-	//    int new_mon = -2;
-	//    PositionType new_edge = PositionType.TOP;
-	//    var found = false;
-	//    /* Allocate the edge. */
-	//    assert(Gdk.Screen.get_default()!=null);
-	//    var monitors = Gdk.Screen.get_default().get_n_monitors();
-	//    /* try to allocate edge on current monitor first */
-	//    var m = _mon;
-	//    if (m < 0)
-	//    {
-	//        /* panel is spanned over the screen, guess from pointer now */
-	//        int x, y;
-	//        var manager = Gdk.Screen.get_default().get_display().get_device_manager();
-	//        var device = manager.get_client_pointer ();
-	//        Gdk.Screen scr;
-	//        device.get_position(out scr, out x, out y);
-	//        m = scr.get_monitor_at_point(x, y);
-	//    }
-	//    for (int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
-	//    {
-	//        if (panel_edge_available((PositionType)e, m, true))
-	//        {
-	//            new_edge = (PositionType)e;
-	//            new_mon = m;
-	//            found = true;
-	//        }
-	//    }
-	//    /* try all monitors */
-	//    if (!found)
-	//        for(m=0; m<monitors; ++m)
-	//        {
-	//            /* try each of the four edges */
-	//            for(int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
-	//            {
-	//                if(panel_edge_available((PositionType)e,m,true)) {
-	//                    new_edge = (PositionType)e;
-	//                    new_mon = m;
-	//                    found = true;
-	//                }
-	//            }
-	//        }
-	//    if (!found)
-	//    {
-	//        warning("Error adding panel: There is no room for another panel. All the edges are
-	//        taken.");
-	//        var msg = new MessageDialog
-	//                (this,
-	//                 DialogFlags.DESTROY_WITH_PARENT,
-	//                 MessageType.ERROR,ButtonsType.CLOSE,
-	//                 N_("There is no room for another panel. All the edges are taken."));
-	//        apply_window_icon(msg as Gtk.Window);
-	//        msg.set_title(_("Error"));
-	//        msg.run();
-	//        msg.destroy();
-	//        return;
-	//    }
-	//    var new_name = gen_panel_name(profile,new_edge,new_mon);
-	//    var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
-	//    new_toplevel.configure("position");
-	//    new_toplevel.show_all();
-	//    new_toplevel.queue_draw();
+        ValaPanelToplevelUnit* self = VALA_PANEL_TOPLEVEL_UNIT(data);
+        int new_mon = -2;
+        GtkPositionType new_edge = GTK_POS_TOP;
+        bool found = false;
+        /* Allocate the edge. */
+        g_assert(gtk_widget_get_screen(GTK_WIDGET(self))!=NULL);
+        int monitors = gdk_screen_get_n_monitors(gtk_widget_get_screen(GTK_WIDGET(self)));
+        /* try to allocate edge on current monitor first */
+        int m = self->mon;
+        if (m < 0)
+        {
+            /* panel is spanned over the screen, guess from pointer now */
+            int x, y;
+            GdkScreen* scr;
+            GdkDevice* dev;
+#if GTK_CHECK_VERSION(3,20,0)
+            GdkSeat* seat = gdk_display_get_default_seat(gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
+            dev = gdk_seat_get_pointer(seat);
+#else
+            GdkDeviceManager* manager = gdk_display_get_device_manager(gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
+            dev = gdk_device_manager_get_client_pointer(manager);
+#endif
+            gdk_device_get_position(dev, &scr,&x, &y);
+            m = gdk_screen_get_monitor_at_point(scr,x, y);
+        }
+        for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
+        {
+            if (panel_edge_available(self,(GtkPositionType)e, m, true))
+            {
+                new_edge = (GtkPositionType)e;
+                new_mon = m;
+                found = true;
+            }
+        }
+        /* try all monitors */
+        if (!found)
+            for(m=0; m<monitors; ++m)
+            {
+                /* try each of the four edges */
+                for(int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
+                {
+                    if(panel_edge_available(self,(GtkPositionType)e,m,true)) {
+                        new_edge = (GtkPositionType)e;
+                        new_mon = m;
+                        found = true;
+                    }
+                }
+            }
+        if (!found)
+        {
+            g_warning("Error adding panel: There is no room for another panel. All the edges are taken.");
+            g_autoptr(GtkMessageDialog) msg = gtk_message_dialog_new
+                    (GTK_WINDOW(self),
+                     GTK_DIALOG_DESTROY_WITH_PARENT,
+                     GTK_MESSAGE_ERROR,GTK_RESPONSE_CLOSE,
+                     N_("There is no room for another panel. All the edges are taken."));
+            vala_panel_apply_window_icon(GTK_WINDOW(msg));
+            gtk_window_set_title(GTK_WINDOW(msg),_("Error"));
+            gtk_dialog_run(GTK_DIALOG(msg));
+            gtk_widget_destroy(GTK_WIDGET(msg));
+            return;
+        }
+        g_autofree char* new_name = vala_panel_generate_new_hash();
+        //FIXME: Translate after adding constructors
+//        ValaPanelToplevelUnit* new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
+//        new_toplevel.configure("position");
+//        new_toplevel.show_all();
+//        new_toplevel.queue_draw();
 }
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data)
 {
