@@ -88,7 +88,7 @@ namespace ValaPanel
         {get {return _w;}
          internal set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
         }
-        public AlignmentType alignment {get; internal set;}
+        internal AlignmentType alignment {get; internal set;}
         public int panel_margin {get; internal set;}
         public Gtk.PositionType edge {get; internal set construct;}
         public Gtk.Orientation orientation
