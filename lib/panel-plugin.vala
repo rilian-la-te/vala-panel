@@ -73,7 +73,7 @@ namespace ValaPanel
                 background_widget = this;
             init_background();
             this.border_width = 0;
-            this.button_press_event.connect((b)=>
+            this.button_release_event.connect((b)=>
             {
                 if (b.button == 3 &&
                     ((b.state & Gtk.accelerator_get_default_mod_mask ()) == 0))

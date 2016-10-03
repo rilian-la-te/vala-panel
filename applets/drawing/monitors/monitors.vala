@@ -142,7 +142,7 @@ internal class Monitor
             }
             return false;
         });
-        da.button_press_event.connect((e)=>{
+        da.button_release_event.connect((e)=>{
             if (e.button == 1)
             {
                 MenuMaker.activate_menu_launch_command(null,plugin.settings.get_value(Monitors.ACTION),plugin.toplevel.application);

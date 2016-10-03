@@ -184,7 +184,7 @@ public class Dirmenu: Applet, AppletConfigurable
         }
         catch (GLib.Error e){stderr.printf("Cannot launch terminal: %s\n",e.message);}
     }
-    public override bool button_press_event(Gdk.EventButton e)
+    public override bool button_release_event(Gdk.EventButton e)
     {
         if (e.button == 2)
             launch_terminal(dir_path);

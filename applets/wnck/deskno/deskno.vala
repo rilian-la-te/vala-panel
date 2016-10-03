@@ -82,7 +82,7 @@ public class Deskno: Applet, AppletConfigurable
             name = "%d".printf(workspace.get_number()+1);
         setup_label(label, name, bold_font, 1);
     }
-    protected override bool button_press_event(Gdk.EventButton e)
+    protected override bool button_release_event(Gdk.EventButton e)
     {
         if (e.button == 1)
         {

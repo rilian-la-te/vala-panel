@@ -683,7 +683,7 @@ namespace ValaPanel
  * Menus stuff
  */
 
-        protected override bool button_press_event(Gdk.EventButton e)
+        protected override bool button_release_event(Gdk.EventButton e)
         {
             if (e.button == 3)
             {
