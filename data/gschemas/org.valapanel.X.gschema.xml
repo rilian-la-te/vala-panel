@@ -46,4 +46,9 @@
       <default>600</default>
     </key>
   </schema>
+  <schema id="org.valapanel.toplevel.icontasks">
+    <key type="as" name="pinned-launchers">
+      <default>[]</default>
+    </key>
+  </schema>
 </schemalist>

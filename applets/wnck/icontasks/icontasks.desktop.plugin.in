@@ -1,0 +1,10 @@
+[Plugin]
+Module=icontasks
+Name=Icon Task List
+Description=Icon Task List
+Authors=Ikey Doherty
+Copyright=Copyright © 2015 Ikey Doherty
+Website=https://solus-project.com
+Icon=tab-new-symbolic
+X-ValaPanel-Configurable=true
+X-ValaPanel-Expandable=true

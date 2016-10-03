@@ -2,4 +2,4 @@
 Module=deskno
 Name=Desktop Number
 Description=Shows desktop name or number. Switch on click.
-X-ValaPanel-Configurable=true;
+X-ValaPanel-Configurable=true

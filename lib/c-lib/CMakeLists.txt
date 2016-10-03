@@ -38,4 +38,3 @@ set_target_properties (cvalapanel PROPERTIES
     VERSION ${VERSION}
     SOVERSION ${SOVERSION})
 install (TARGETS cvalapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/ COMPONENT bin)
-
