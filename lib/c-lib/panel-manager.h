@@ -27,7 +27,8 @@ struct _ValaPanelManagerInterface
 	/*autohide*/
 	void (*ah_start)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 	void (*ah_stop)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
-	void (*ah_state_set)(ValaPanelManager *f, ValaPanelToplevelUnit *top);
+	void (*ah_state_set)(ValaPanelManager *f, ValaPanelToplevelUnit *top,
+	                     PanelAutohideState state);
 	/*positioning requests*/
 	void (*move_to_alloc)(ValaPanelManager *f, ValaPanelToplevelUnit *top,
 	                      GtkAllocation *alloc);
@@ -46,7 +47,8 @@ long vala_panel_manager_can_strut(ValaPanelManager *f, ValaPanelToplevelUnit *to
 void vala_panel_manager_update_strut(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_ah_start(ValaPanelManager *f, ValaPanelToplevelUnit *top);
 void vala_panel_manager_ah_stop(ValaPanelManager *f, ValaPanelToplevelUnit *top);
-void vala_panel_manager_ah_state_set(ValaPanelManager *f, ValaPanelToplevelUnit *top);
+void vala_panel_manager_ah_state_set(ValaPanelManager *f, ValaPanelToplevelUnit *top,
+                                     PanelAutohideState st);
 void vala_panel_manager_move_to_alloc(ValaPanelManager *f, ValaPanelToplevelUnit *top,
                                       GtkAllocation *alloc);
 void vala_panel_manager_move_to_side(ValaPanelManager *f, ValaPanelToplevelUnit *top,

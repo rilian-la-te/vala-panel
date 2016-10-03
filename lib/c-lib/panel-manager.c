@@ -31,10 +31,11 @@ void vala_panel_manager_ah_stop(ValaPanelManager *self, ValaPanelToplevelUnit *t
 		VALA_PANEL_MANAGER_GET_IFACE(self)->ah_stop(self, top);
 }
 
-void vala_panel_manager_ah_state_set(ValaPanelManager *self, ValaPanelToplevelUnit *top)
+void vala_panel_manager_ah_state_set(ValaPanelManager *self, ValaPanelToplevelUnit *top,
+                                     PanelAutohideState st)
 {
 	if (self)
-		VALA_PANEL_MANAGER_GET_IFACE(self)->ah_state_set(self, top);
+		VALA_PANEL_MANAGER_GET_IFACE(self)->ah_state_set(self, top, st);
 }
 
 void vala_panel_manager_move_to_alloc(ValaPanelManager *self, ValaPanelToplevelUnit *top,

@@ -1,8 +1,8 @@
 #include "toplevel.h"
 #include "css.h"
+#include "misc.h"
 #include "panel-layout.h"
 #include "panel-manager.h"
-#include "misc.h"
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -23,6 +23,7 @@ struct _ValaPanelToplevelUnit
 	bool initialized;
 	bool dock;
 	bool autohide;
+	bool is_dynamic;
 	bool use_background_color;
 	bool use_foreground_color;
 	bool use_background_file;
@@ -34,7 +35,7 @@ struct _ValaPanelToplevelUnit
 	char *background_file;
 	char *uid;
 	int height;
-	int widgth;
+	int width;
 	int mon;
 	GtkOrientation orientation;
 	GtkPositionType edge;
@@ -69,8 +70,6 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	gtk_application_add_window(gtk_window_get_application(GTK_WINDOW(self)), GTK_WINDOW(self));
 	gtk_widget_add_events(GTK_WIDGET(self), GDK_BUTTON_PRESS_MASK);
 	gtk_widget_realize(GTK_WIDGET(self));
-	// Move this to init, layout must not be reinit in start/stop UI
-	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->layout));
 	gtk_widget_show(GTK_WIDGET(self->layout));
 	gtk_window_set_type_hint(GTK_WINDOW(self),
@@ -159,90 +158,99 @@ static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
 		start_ui(self);
 }
 
-G_GNUC_INTERNAL bool panel_edge_available(ValaPanelToplevelUnit* self,uint edge, int monitor, bool include_this)
+G_GNUC_INTERNAL bool panel_edge_available(ValaPanelToplevelUnit *self, uint edge, int monitor,
+                                          bool include_this)
 {
-    g_autoptr(GtkApplication) app;
-    g_object_get(self,"application",&app,NULL);
-    for (g_autoptr(GList) w = gtk_application_get_windows(app);w != NULL;w=w->next)
-        if (VALA_PANEL_IS_TOPLEVEL_UNIT(w))
-        {
-            ValaPanelToplevelUnit* pl = VALA_PANEL_TOPLEVEL_UNIT(w->data);
-            if (((pl != self)|| include_this) && (self->edge == edge) && ((monitor == self->mon)||self->mon<0))
-                return false;
-        }
-    return true;
+	g_autoptr(GtkApplication) app;
+	g_object_get(self, "application", &app, NULL);
+	for (g_autoptr(GList) w = gtk_application_get_windows(app); w != NULL; w = w->next)
+		if (VALA_PANEL_IS_TOPLEVEL_UNIT(w))
+		{
+			ValaPanelToplevelUnit *pl = VALA_PANEL_TOPLEVEL_UNIT(w->data);
+			if (((pl != self) || include_this) && (self->edge == edge) &&
+			    ((monitor == self->mon) || self->mon < 0))
+				return false;
+		}
+	return true;
 }
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 {
-        ValaPanelToplevelUnit* self = VALA_PANEL_TOPLEVEL_UNIT(data);
-        int new_mon = -2;
-        GtkPositionType new_edge = GTK_POS_TOP;
-        bool found = false;
-        /* Allocate the edge. */
-        g_assert(gtk_widget_get_screen(GTK_WIDGET(self))!=NULL);
-        int monitors = gdk_screen_get_n_monitors(gtk_widget_get_screen(GTK_WIDGET(self)));
-        /* try to allocate edge on current monitor first */
-        int m = self->mon;
-        if (m < 0)
-        {
-            /* panel is spanned over the screen, guess from pointer now */
-            int x, y;
-            GdkScreen* scr;
-            GdkDevice* dev;
-#if GTK_CHECK_VERSION(3,20,0)
-            GdkSeat* seat = gdk_display_get_default_seat(gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
-            dev = gdk_seat_get_pointer(seat);
+	ValaPanelToplevelUnit *self = VALA_PANEL_TOPLEVEL_UNIT(data);
+	int new_mon                 = -2;
+	GtkPositionType new_edge    = GTK_POS_TOP;
+	bool found                  = false;
+	/* Allocate the edge. */
+	g_assert(gtk_widget_get_screen(GTK_WIDGET(self)) != NULL);
+	int monitors = gdk_screen_get_n_monitors(gtk_widget_get_screen(GTK_WIDGET(self)));
+	/* try to allocate edge on current monitor first */
+	int m = self->mon;
+	if (m < 0)
+	{
+		/* panel is spanned over the screen, guess from pointer now */
+		int x, y;
+		GdkScreen *scr;
+		GdkDevice *dev;
+#if GTK_CHECK_VERSION(3, 20, 0)
+		GdkSeat *seat = gdk_display_get_default_seat(
+		    gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
+		dev = gdk_seat_get_pointer(seat);
 #else
-            GdkDeviceManager* manager = gdk_display_get_device_manager(gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
-            dev = gdk_device_manager_get_client_pointer(manager);
+		GdkDeviceManager *manager = gdk_display_get_device_manager(
+		    gdk_screen_get_display(gtk_widget_get_screen(GTK_WIDGET(self))));
+		dev = gdk_device_manager_get_client_pointer(manager);
 #endif
-            gdk_device_get_position(dev, &scr,&x, &y);
-            m = gdk_screen_get_monitor_at_point(scr,x, y);
-        }
-        for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
-        {
-            if (panel_edge_available(self,(GtkPositionType)e, m, true))
-            {
-                new_edge = (GtkPositionType)e;
-                new_mon = m;
-                found = true;
-            }
-        }
-        /* try all monitors */
-        if (!found)
-            for(m=0; m<monitors; ++m)
-            {
-                /* try each of the four edges */
-                for(int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
-                {
-                    if(panel_edge_available(self,(GtkPositionType)e,m,true)) {
-                        new_edge = (GtkPositionType)e;
-                        new_mon = m;
-                        found = true;
-                    }
-                }
-            }
-        if (!found)
-        {
-            g_warning("Error adding panel: There is no room for another panel. All the edges are taken.");
-            g_autoptr(GtkMessageDialog) msg = gtk_message_dialog_new
-                    (GTK_WINDOW(self),
-                     GTK_DIALOG_DESTROY_WITH_PARENT,
-                     GTK_MESSAGE_ERROR,GTK_RESPONSE_CLOSE,
-                     N_("There is no room for another panel. All the edges are taken."));
-            vala_panel_apply_window_icon(GTK_WINDOW(msg));
-            gtk_window_set_title(GTK_WINDOW(msg),_("Error"));
-            gtk_dialog_run(GTK_DIALOG(msg));
-            gtk_widget_destroy(GTK_WIDGET(msg));
-            return;
-        }
-        g_autofree char* new_name = vala_panel_generate_new_hash();
-        //FIXME: Translate after adding constructors
-//        ValaPanelToplevelUnit* new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
-//        new_toplevel.configure("position");
-//        new_toplevel.show_all();
-//        new_toplevel.queue_draw();
+		gdk_device_get_position(dev, &scr, &x, &y);
+		m = gdk_screen_get_monitor_at_point(scr, x, y);
+	}
+	for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
+	{
+		if (panel_edge_available(self, (GtkPositionType)e, m, true))
+		{
+			new_edge = (GtkPositionType)e;
+			new_mon  = m;
+			found    = true;
+		}
+	}
+	/* try all monitors */
+	if (!found)
+		for (m = 0; m < monitors; ++m)
+		{
+			/* try each of the four edges */
+			for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
+			{
+				if (panel_edge_available(self, (GtkPositionType)e, m, true))
+				{
+					new_edge = (GtkPositionType)e;
+					new_mon  = m;
+					found    = true;
+				}
+			}
+		}
+	if (!found)
+	{
+		g_warning(
+		    "Error adding panel: There is no room for another panel. All the edges are "
+		    "taken.");
+		g_autoptr(GtkMessageDialog) msg = gtk_message_dialog_new(
+		    GTK_WINDOW(self),
+		    GTK_DIALOG_DESTROY_WITH_PARENT,
+		    GTK_MESSAGE_ERROR,
+		    GTK_RESPONSE_CLOSE,
+		    N_("There is no room for another panel. All the edges are taken."));
+		vala_panel_apply_window_icon(GTK_WINDOW(msg));
+		gtk_window_set_title(GTK_WINDOW(msg), _("Error"));
+		gtk_dialog_run(GTK_DIALOG(msg));
+		gtk_widget_destroy(GTK_WIDGET(msg));
+		return;
+	}
+	g_autofree char *new_name = vala_panel_generate_new_hash();
+	// FIXME: Translate after adding constructors
+	//        ValaPanelToplevelUnit* new_toplevel =
+	//        Toplevel.create(application,new_name,new_mon,new_edge);
+	//        new_toplevel.configure("position");
+	//        new_toplevel.show_all();
+	//        new_toplevel.queue_draw();
 }
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data)
 {
@@ -426,8 +434,159 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app
 	return ret;
 }
 
+static void establish_autohide(ValaPanelToplevelUnit *self)
+{
+	ValaPanelManager *mgr = vala_panel_applet_manager_get_manager(self->manager);
+	if (self->autohide)
+		vala_panel_manager_ah_start(mgr, self);
+	else
+	{
+		vala_panel_manager_ah_stop(mgr, self);
+		vala_panel_manager_ah_state_set(mgr, self, AH_VISIBLE);
+	}
+}
+
+static void size_allocate(GtkWidget *base, GtkAllocation *alloc)
+{
+	int x, y, w;
+	GTK_WIDGET_CLASS(vala_panel_toplevel_unit_parent_class)->size_allocate(base, alloc);
+	ValaPanelToplevelUnit *self = VALA_PANEL_TOPLEVEL_UNIT(base);
+	if (self->is_dynamic && self->layout != NULL)
+	{
+		if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+			gtk_widget_get_preferred_width(GTK_WIDGET(self->layout), NULL, &w);
+		else
+			gtk_widget_get_preferred_height(GTK_WIDGET(self->layout), NULL, &w);
+		if (w != self->width)
+			g_settings_set_int(self->toplevel_settings, VALA_PANEL_KEY_WIDTH, w);
+	}
+	if (!gtk_widget_get_realized(GTK_WIDGET(self)))
+		return;
+	gdk_window_get_origin(gtk_widget_get_window(GTK_WIDGET(self)), &x, &y);
+	//    _calculate_position (&alloc);
+	//    this.a.x = alloc.x;
+	//    this.a.y = alloc.y;
+	//    if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x ||
+	//    this.a.y != y)
+	//    {
+	//        this.a.width = alloc.width;
+	//        this.a.height = alloc.height;
+	//        this.set_size_request(this.a.width, this.a.height);
+	//        this.move(this.a.x, this.a.y);
+	//        this.update_strut();
+	//    }
+	if (gtk_widget_get_mapped(GTK_WIDGET(self)))
+		establish_autohide(self);
+}
+
+// void _calculate_position(ref Gtk.Allocation alloc)
+//{
+//    unowned Gdk.Screen screen = this.get_screen();
+//    Gdk.Rectangle marea = Gdk.Rectangle();
+//    if (monitor < 0)
+//    {
+//        marea.x = 0;
+//        marea.y = 0;
+//        marea.width = screen.get_width();
+//        marea.height = screen.get_height();
+//    }
+//    else if (monitor < screen.get_n_monitors())
+//    {
+//        screen.get_monitor_geometry(monitor,&marea);
+////~                 marea = screen.get_monitor_workarea(monitor);
+////~                 var hmod = (autohide && show_hidden) ? 1 : height;
+////~                 switch (edge)
+////~                 {
+////~                     case PositionType.TOP:
+////~                         marea.x -= hmod;
+////~                         marea.height += hmod;
+////~                         break;
+////~                     case PositionType.BOTTOM:
+////~                         marea.height += hmod;
+////~                         break;
+////~                     case PositionType.LEFT:
+////~                         marea.y -= hmod;
+////~                         marea.width += hmod;
+////~                         break;
+////~                     case PositionType.RIGHT:
+////~                         marea.width += hmod;
+////~                         break;
+////~                 }
+//    }
+//    if (orientation == GTK_ORIENTATION_HORIZONTAL)
+//    {
+//        alloc.width = width;
+//        alloc.x = marea.x;
+//        calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref
+//        alloc.x);
+//        alloc.height = (!autohide || ah_visible) ? height :
+//                                show_hidden ? 1 : 0;
+//        alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
+//    }
+//    else
+//    {
+//        alloc.height = width;
+//        alloc.y = marea.y;
+//        calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref
+//        alloc.y);
+//        alloc.width = (!autohide || ah_visible) ? height :
+//                                show_hidden ? 1 : 0;
+//        alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
+//    }
+//}
+
+// static void calculate_width(int scrw, bool dyn, AlignmentType align,
+//                                    int margin, ref int panw, ref int x)
+//{
+//    if (!dyn)
+//    {
+//        panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
+//        panw = (int)(((double)scrw * (double) panw)/100.0);
+//    }
+//    margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
+//    panw = int.min(scrw - margin, panw);
+//    if (align == AlignmentType.START)
+//        x+=margin;
+//    else if (align == AlignmentType.END)
+//    {
+//        x += scrw - panw - margin;
+//        x = (x < 0) ? 0 : x;
+//    }
+//    else if (align == AlignmentType.CENTER)
+//        x += (scrw - panw)/2;
+//}
+
+// static void get_preferred_width(&int min, &int nat)
+//{
+//    base.get_preferred_width_internal(&min, &nat);
+//    Gtk.Requisition req = Gtk.Requisition();
+//    this.get_panel_preferred_size(ref req);
+//    min = nat = req.width;
+//}
+// static void get_preferred_height(&int min, &int nat)
+//{
+//    base.get_preferred_height_internal(&min, &nat);
+//    Gtk.Requisition req = Gtk.Requisition();
+//    this.get_panel_preferred_size(ref req);
+//    min = nat = req.height;
+//}
+// static void get_panel_preferred_size (ref Gtk.Requisition min)
+//{
+//    if (!ah_visible && box != NULL)
+//        box.get_preferred_size(&min, NULL);
+//    var rect = Gtk.Allocation();
+//    rect.width = min.width;
+//    rect.height = min.height;
+//    _calculate_position(ref rect);
+//    min.width = rect.width;
+//    min.height = rect.height;
+//}
+
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
+	// Move this to init, lay&must not be reinit in start/stop UI
+	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
+	g_object_bind_property(self, "orientation", self->layout, "orentation", (GBindingFlags)0);
 }
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
