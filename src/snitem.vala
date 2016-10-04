@@ -90,7 +90,7 @@ namespace StatusNotifier
                 }
                 return false;
             });
-            ebox.button_press_event.connect(button_press_event_cb);
+            ebox.button_release_event.connect(button_press_event_cb);
             ebox.enter_notify_event.connect((e)=>{
                 this.get_style_context().add_class("-panel-launch-button-selected");
             });
