@@ -479,7 +479,7 @@ public class PinnedIconButton : IconButton
                 context.set_timestamp(event.time);
                 var id = context.get_startup_notify_id(app_info, new GLib.List<GLib.File>());
                 this.id = id;
-]                MenuMaker.launch(app_info,null,this);
+                MenuMaker.launch(app_info,null,this);
             } catch (Error e) {
                 /* Animate a UFAILED image? */
                 message(e.message);
