@@ -5,6 +5,10 @@ struct _ValaPanelAppletLayout
 {
 	GtkBox __parent__;
 	GtkWidget *center;
+	int width;
+	int height;
+	bool is_dynamic_height;
+	bool is_dynamic_width;
 };
 
 G_DEFINE_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, GTK_TYPE_BOX)
@@ -28,6 +32,32 @@ G_DEFINE_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, GTK_TYPE_BOX)
 		}                                                                                  \
 	}
 
+static void vala_panel_applet_layout_get_preferred_height(GtkWidget *widget, gint *minimum_height,
+                                                          gint *natural_height)
+{
+	ValaPanelAppletLayout *self = VALA_PANEL_APPLET_LAYOUT(widget);
+	GtkOrientation orient       = gtk_orientable_get_orientation(GTK_ORIENTABLE(self));
+	if (self->is_dynamic_height)
+		GTK_WIDGET_CLASS(vala_panel_applet_layout_parent_class)
+		    ->get_preferred_height(widget, minimum_height, natural_height);
+	else
+		*minimum_height = *natural_height =
+		    (orient == GTK_ORIENTATION_VERTICAL) ? self->width : self->height;
+}
+
+static void vala_panel_applet_layout_get_preferred_width(GtkWidget *widget, gint *minimum_height,
+                                                         gint *natural_height)
+{
+	ValaPanelAppletLayout *self = VALA_PANEL_APPLET_LAYOUT(widget);
+	GtkOrientation orient       = gtk_orientable_get_orientation(GTK_ORIENTABLE(self));
+	if (self->is_dynamic_width)
+		GTK_WIDGET_CLASS(vala_panel_applet_layout_parent_class)
+		    ->get_preferred_width(widget, minimum_height, natural_height);
+	else
+		*minimum_height = *natural_height =
+		    (orient == GTK_ORIENTATION_HORIZONTAL) ? self->width : self->height;
+}
+
 static void vala_panel_applet_layout_init(ValaPanelAppletLayout *self)
 {
 	self->center = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -37,6 +67,9 @@ static void vala_panel_applet_layout_init(ValaPanelAppletLayout *self)
 
 static void vala_panel_applet_layout_class_init(ValaPanelAppletLayoutClass *klass)
 {
+	GTK_WIDGET_CLASS(klass)
+	    ->get_preferred_height = vala_panel_applet_layout_get_preferred_height;
+	GTK_WIDGET_CLASS(klass)->get_preferred_width = vala_panel_applet_layout_get_preferred_width;
 }
 
 static void update_applet_positions(ValaPanelAppletLayout *self)
