@@ -18,6 +18,7 @@ struct _ValaPanelToplevelUnit
 	GtkApplicationWindow __parent__;
 	ValaPanelAppletManager *manager;
 	ValaPanelAppletLayout *layout;
+	GtkRevealer *revealer;
 	GSettings *toplevel_settings;
 	GtkCssProvider *provider;
 	bool initialized;
@@ -582,7 +583,11 @@ static void establish_autohide(ValaPanelToplevelUnit *self)
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
 	// Move this to init, lay&must not be reinit in start/stop UI
-	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
+	self->layout   = vala_panel_applet_layout_new(self->orientation, 0);
+	self->revealer = GTK_REVEALER(gtk_revealer_new());
+	gtk_revealer_set_reveal_child(self->revealer, true);
+	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->revealer));
+	gtk_container_add(GTK_CONTAINER(self->revealer), GTK_WIDGET(self->layout));
 	g_object_bind_property(self, "orientation", self->layout, "orentation", (GBindingFlags)0);
 }
 
