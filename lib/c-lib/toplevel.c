@@ -23,7 +23,6 @@ struct _ValaPanelToplevelUnit
 	bool initialized;
 	bool dock;
 	bool autohide;
-	bool is_dynamic;
 	bool use_background_color;
 	bool use_foreground_color;
 	bool use_background_file;
@@ -34,8 +33,6 @@ struct _ValaPanelToplevelUnit
 	GdkRGBA foreground_color;
 	char *background_file;
 	char *uid;
-	int height;
-	int width;
 	int mon;
 	GtkOrientation orientation;
 	GtkPositionType edge;
@@ -446,38 +443,38 @@ static void establish_autohide(ValaPanelToplevelUnit *self)
 	}
 }
 
-static void size_allocate(GtkWidget *base, GtkAllocation *alloc)
-{
-	int x, y, w;
-	GTK_WIDGET_CLASS(vala_panel_toplevel_unit_parent_class)->size_allocate(base, alloc);
-	ValaPanelToplevelUnit *self = VALA_PANEL_TOPLEVEL_UNIT(base);
-	if (self->is_dynamic && self->layout != NULL)
-	{
-		if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-			gtk_widget_get_preferred_width(GTK_WIDGET(self->layout), NULL, &w);
-		else
-			gtk_widget_get_preferred_height(GTK_WIDGET(self->layout), NULL, &w);
-		if (w != self->width)
-			g_settings_set_int(self->toplevel_settings, VALA_PANEL_KEY_WIDTH, w);
-	}
-	if (!gtk_widget_get_realized(GTK_WIDGET(self)))
-		return;
-	gdk_window_get_origin(gtk_widget_get_window(GTK_WIDGET(self)), &x, &y);
-	//    _calculate_position (&alloc);
-	//    this.a.x = alloc.x;
-	//    this.a.y = alloc.y;
-	//    if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x ||
-	//    this.a.y != y)
-	//    {
-	//        this.a.width = alloc.width;
-	//        this.a.height = alloc.height;
-	//        this.set_size_request(this.a.width, this.a.height);
-	//        this.move(this.a.x, this.a.y);
-	//        this.update_strut();
-	//    }
-	if (gtk_widget_get_mapped(GTK_WIDGET(self)))
-		establish_autohide(self);
-}
+// static void size_allocate(GtkWidget *base, GtkAllocation *alloc)
+//{
+//	int x, y, w;
+//	GTK_WIDGET_CLASS(vala_panel_toplevel_unit_parent_class)->size_allocate(base, alloc);
+//	ValaPanelToplevelUnit *self = VALA_PANEL_TOPLEVEL_UNIT(base);
+//	if (self->is_dynamic && self->layout != NULL)
+//	{
+//		if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+//			gtk_widget_get_preferred_width(GTK_WIDGET(self->layout), NULL, &w);
+//		else
+//			gtk_widget_get_preferred_height(GTK_WIDGET(self->layout), NULL, &w);
+//		if (w != self->width)
+//			g_settings_set_int(self->toplevel_settings, VALA_PANEL_KEY_WIDTH, w);
+//	}
+//	if (!gtk_widget_get_realized(GTK_WIDGET(self)))
+//		return;
+//	gdk_window_get_origin(gtk_widget_get_window(GTK_WIDGET(self)), &x, &y);
+//	//    _calculate_position (&alloc);
+//	//    this.a.x = alloc.x;
+//	//    this.a.y = alloc.y;
+//	//    if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x ||
+//	//    this.a.y != y)
+//	//    {
+//	//        this.a.width = alloc.width;
+//	//        this.a.height = alloc.height;
+//	//        this.set_size_request(this.a.width, this.a.height);
+//	//        this.move(this.a.x, this.a.y);
+//	//        this.update_strut();
+//	//    }
+//	if (gtk_widget_get_mapped(GTK_WIDGET(self)))
+//		establish_autohide(self);
+//}
 
 // void _calculate_position(ref Gtk.Allocation alloc)
 //{
