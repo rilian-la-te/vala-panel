@@ -43,6 +43,15 @@ namespace ValaPanel
         CENTER,
         END
     }
+    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    public void applet_set_position_metadata(Gtk.Widget applet, int metadata);
+    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    public int applet_get_position_metadata(Gtk.Widget applet);
+    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    public class AppletLayout : Gtk.Box
+    {
+	public AppletLayout(Gtk.Orientation orient, int spacing);
+    }
     [CCode(cheader_filename="lib/c-lib/panel-layout.h")]
     public const string PLUGIN_SCHEMA;
     [CCode(cheader_filename="lib/c-lib/toplevel.h")]

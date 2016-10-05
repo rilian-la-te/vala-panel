@@ -37,7 +37,7 @@ G_DECLARE_FINAL_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, VALA_PANEL
 
 ValaPanelAppletLayout *vala_panel_applet_layout_new(GtkOrientation orient, int spacing);
 void vala_panel_applet_layout_update_views(ValaPanelAppletLayout *self);
-void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelManager *gmgr,
+void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelPlatform *gmgr,
                                            GSettings *toplevel_settings,
                                            ValaPanelAppletManager *mgr, const char *applet_type,
                                            PanelAppletPackType pack, int pos);

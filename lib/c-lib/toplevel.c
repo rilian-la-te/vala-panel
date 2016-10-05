@@ -48,8 +48,8 @@ G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICAT
 static void stop_ui(ValaPanelToplevelUnit *self)
 {
 	if (self->autohide)
-		vala_panel_manager_ah_stop(vala_panel_applet_manager_get_manager(self->manager),
-		                           self);
+		vala_panel_platform_ah_stop(vala_panel_applet_manager_get_manager(self->manager),
+		                            self);
 	if (self->pref_dialog != NULL)
 		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
 	if (self->initialized)
@@ -271,11 +271,11 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 		g_autofree char *uid  = g_strdup(self->uid);
 		g_autofree char *path = NULL;
 		g_object_get(self->toplevel_settings, "path", &path, NULL);
-		ValaPanelManager *mgr = vala_panel_applet_manager_get_manager(self->manager);
+		ValaPanelPlatform *mgr = vala_panel_applet_manager_get_manager(self->manager);
 		stop_ui(self);
 		gtk_widget_destroy(GTK_WIDGET(self));
 		/* delete the config file of this panel */
-		vala_panel_manager_remove_settings_path(mgr, path, uid);
+		vala_panel_platform_remove_settings_path(mgr, path, uid);
 	}
 }
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data)
@@ -436,13 +436,13 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app
 
 static void establish_autohide(ValaPanelToplevelUnit *self)
 {
-	ValaPanelManager *mgr = vala_panel_applet_manager_get_manager(self->manager);
+	ValaPanelPlatform *mgr = vala_panel_applet_manager_get_manager(self->manager);
 	if (self->autohide)
-		vala_panel_manager_ah_start(mgr, self);
+		vala_panel_platform_ah_start(mgr, self);
 	else
 	{
-		vala_panel_manager_ah_stop(mgr, self);
-		vala_panel_manager_ah_state_set(mgr, self, AH_VISIBLE);
+		vala_panel_platform_ah_stop(mgr, self);
+		vala_panel_platform_ah_state_set(mgr, self, AH_VISIBLE);
 	}
 }
 
