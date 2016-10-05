@@ -434,14 +434,15 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app
 
 static void establish_autohide(ValaPanelToplevelUnit *self)
 {
+	// FIXME: Implement autohide in toplevel.
 	ValaPanelPlatform *mgr = vala_panel_applet_manager_get_manager(self->manager);
-	if (self->autohide)
-		vala_panel_platform_ah_start(mgr, self);
-	else
-	{
-		vala_panel_platform_ah_stop(mgr, self);
-		vala_panel_platform_ah_state_set(mgr, self, AH_VISIBLE);
-	}
+	//	if (self->autohide)
+	//		vala_panel_platform_ah_start(mgr, self);
+	//	else
+	//	{
+	//		vala_panel_platform_ah_stop(mgr, self);
+	//		vala_panel_platform_ah_state_set(mgr, self, AH_VISIBLE);
+	//	}
 }
 
 // static void size_allocate(GtkWidget *base, GtkAllocation *alloc)

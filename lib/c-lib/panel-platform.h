@@ -25,13 +25,9 @@ struct _ValaPanelPlatformInterface
 	long (*can_strut)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 	void (*update_strut)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 	/*autohide*/
-	void (*ah_start)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-	void (*ah_stop)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-	void (*ah_state_set)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-	                     PanelAutohideState state);
+	bool (*ah_mouse_watch)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 	/*positioning requests*/
-	void (*move_to_alloc)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-	                      GtkAllocation *alloc);
+	void (*move_to_coords)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top, int x, int y);
 	void (*move_to_side)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
 	                     GtkPositionType alloc);
 	/*GSettings management*/
@@ -45,12 +41,9 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
                                                    const char *profile);
 long vala_panel_platform_can_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-void vala_panel_platform_ah_start(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-void vala_panel_platform_ah_stop(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-void vala_panel_platform_ah_state_set(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-                                      PanelAutohideState st);
-void vala_panel_platform_move_to_alloc(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-                                       GtkAllocation *alloc);
+bool vala_panel_platform_ah_mouse_watch(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
+void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, ValaPanelToplevelUnit *top, int x,
+                                        int y);
 void vala_panel_platform_move_to_side(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
                                       GtkPositionType alloc);
 GSettings *vala_panel_platform_get_settings_for_scheme(ValaPanelPlatform *self, const char *scheme,

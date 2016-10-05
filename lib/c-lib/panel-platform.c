@@ -19,30 +19,18 @@ void vala_panel_platform_update_strut(ValaPanelPlatform *self, ValaPanelToplevel
 		VALA_PANEL_PLATFORM_GET_IFACE(self)->update_strut(self, top);
 }
 
-void vala_panel_platform_ah_start(ValaPanelPlatform *self, ValaPanelToplevelUnit *top)
+bool vala_panel_platform_ah_mouse_watch(ValaPanelPlatform *self, ValaPanelToplevelUnit *top)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->ah_start(self, top);
+		return VALA_PANEL_PLATFORM_GET_IFACE(self)->ah_mouse_watch(self, top);
+	return false;
 }
 
-void vala_panel_platform_ah_stop(ValaPanelPlatform *self, ValaPanelToplevelUnit *top)
+void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, ValaPanelToplevelUnit *top, int x,
+                                        int y)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->ah_stop(self, top);
-}
-
-void vala_panel_platform_ah_state_set(ValaPanelPlatform *self, ValaPanelToplevelUnit *top,
-                                      PanelAutohideState st)
-{
-	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->ah_state_set(self, top, st);
-}
-
-void vala_panel_platform_move_to_alloc(ValaPanelPlatform *self, ValaPanelToplevelUnit *top,
-                                       GtkAllocation *alloc)
-{
-	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->move_to_alloc(self, top, alloc);
+		VALA_PANEL_PLATFORM_GET_IFACE(self)->move_to_coords(self, top, x, y);
 }
 
 void vala_panel_platform_move_to_side(ValaPanelPlatform *self, ValaPanelToplevelUnit *top,
