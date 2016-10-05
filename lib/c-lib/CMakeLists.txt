@@ -1,6 +1,6 @@
 include(GResource)
 set(ENUM_FILES
-        panel-manager.h
+	panel-platform.h
         generic-config-dialog.h
         toplevel.h
         panel-layout.h
@@ -17,8 +17,8 @@ add_library(cvalapanel SHARED
         launcher.h
 	generic-config-dialog.c
 	generic-config-dialog.h
-        panel-manager.c
-        panel-manager.h
+	panel-platform.c
+	panel-platform.h
         panel-layout.h
         panel-layout.c
         toplevel.c

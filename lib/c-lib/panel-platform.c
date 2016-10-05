@@ -1,4 +1,4 @@
-#include "panel-manager.h"
+#include "panel-platform.h"
 
 G_DEFINE_INTERFACE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
 

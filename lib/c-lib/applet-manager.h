@@ -5,7 +5,7 @@
 
 #include "applet-engine-module.h"
 #include "lib/applets-new/applet-api.h"
-#include "panel-manager.h"
+#include "panel-platform.h"
 #include <glib-object.h>
 
 G_BEGIN_DECLS

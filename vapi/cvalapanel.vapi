@@ -71,7 +71,7 @@ namespace ValaPanel
         TRIM,
         EXTERNAL
     }
-    [CCode(cname="PanelAutohideState", cprefix="AH_", cheader_filename = "lib/c-lib/panel-manager.h")]
+    [CCode(cname="PanelAutohideState", cprefix="AH_", cheader_filename = "lib/c-lib/panel-platform.h")]
     internal enum AutohideState
     {
         VISIBLE,

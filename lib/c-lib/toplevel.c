@@ -2,7 +2,7 @@
 #include "css.h"
 #include "misc.h"
 #include "panel-layout.h"
-#include "panel-manager.h"
+#include "panel-platform.h"
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);

@@ -42,13 +42,18 @@ endif()
 #####
 # Executable
 #####
+set(APP_SOURCES
+	${RUNNER_SOURCES_APP}
+	${GLIB_RESOURCES_APP}
+	vala-panel-platform-standalone-x11.c
+	vala-panel-platform-standalone-x11.h)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
-add_executable (${APPNAME} ${VALA_C} ${RUNNER_SOURCES_APP} ${GLIB_RESOURCES_APP})
-add_executable(${APPNAME}-new  ${RUNNER_SOURCES_APP} application-new.c application-new.h ${GLIB_RESOURCES_APP})
+add_executable (${APPNAME} ${VALA_C} ${APP_SOURCES})
+add_executable(${APPNAME}-new  ${APP_SOURCES} application-new.c application-new.h)
 target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES} cvalapanel)
 target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} cvalapanel applet-api-new)
-target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
 target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
 
 install (TARGETS ${APPNAME} ${APPNAME}-new RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
