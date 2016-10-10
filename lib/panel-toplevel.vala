@@ -36,6 +36,7 @@ namespace ValaPanel
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
         private ToplevelSettings settings;
+        private unowned Gtk.Revealer ah_rev;
         private unowned Gtk.Box box;
         private Gtk.Menu context_menu;
         private int _mon;
