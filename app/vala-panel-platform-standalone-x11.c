@@ -16,6 +16,11 @@ struct _ValaPanelPlatformX11
 	                          G_KEY_FILE_KEEP_COMMENTS,                                        \
 	                          NULL)
 
+#define gravity_from_edge(e)                                                                       \
+	e == GTK_POS_TOP ? GDK_GRAVITY_NORTH                                                       \
+	                 : (GTK_POS_BOTTOM ? GDK_GRAVITY_SOUTH                                     \
+	                                   : (GTK_POS_LEFT ? GDK_GRAVITY_WEST : GDK_GRAVITY_EAST))
+
 static void vala_panel_platform_x11_default_init(ValaPanelPlatformInterface *iface);
 G_DEFINE_TYPE_WITH_CODE(ValaPanelPlatformX11, vala_panel_platform_x11, G_TYPE_OBJECT,
                         G_IMPLEMENT_INTERFACE(vala_panel_platform_get_type(),
@@ -87,8 +92,23 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	return true;
 }
 
+static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x,
+                                                   int y)
+{
+	gtk_window_move(top, x, y);
+}
+
+static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
+                                                 GtkPositionType alloc)
+{
+	gtk_window_set_gravity(top, gravity_from_edge(alloc));
+	gtk_window_move(top, 0, 0);
+}
+
 static void vala_panel_platform_x11_default_init(ValaPanelPlatformInterface *iface)
 {
+	iface->move_to_coords            = vala_panel_platform_x11_move_to_coords;
+	iface->move_to_side              = vala_panel_platform_x11_move_to_side;
 	iface->get_settings_for_scheme   = vala_panel_platform_x11_get_settings_for_scheme;
 	iface->remove_settings_path      = vala_panel_platform_x11_remove_settings_path;
 	iface->start_panels_from_profile = vala_panel_platform_x11_start_panels_from_profile;

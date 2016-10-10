@@ -27,9 +27,8 @@ struct _ValaPanelPlatformInterface
 	/*autohide*/
 	bool (*ah_mouse_watch)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 	/*positioning requests*/
-	void (*move_to_coords)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top, int x, int y);
-	void (*move_to_side)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-	                     GtkPositionType alloc);
+	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
+	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
 	/*GSettings management*/
 	GSettings *(*get_settings_for_scheme)(ValaPanelPlatform *self, const char *scheme,
 	                                      const char *path);
@@ -42,10 +41,8 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
 long vala_panel_platform_can_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
 bool vala_panel_platform_ah_mouse_watch(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, ValaPanelToplevelUnit *top, int x,
-                                        int y);
-void vala_panel_platform_move_to_side(ValaPanelPlatform *f, ValaPanelToplevelUnit *top,
-                                      GtkPositionType alloc);
+void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
+void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
 GSettings *vala_panel_platform_get_settings_for_scheme(ValaPanelPlatform *self, const char *scheme,
                                                        const char *path);
 void vala_panel_platform_remove_settings_path(ValaPanelPlatform *self, const char *path,

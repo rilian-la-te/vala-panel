@@ -26,14 +26,13 @@ bool vala_panel_platform_ah_mouse_watch(ValaPanelPlatform *self, ValaPanelToplev
 	return false;
 }
 
-void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, ValaPanelToplevelUnit *top, int x,
-                                        int y)
+void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, GtkWindow *top, int x, int y)
 {
 	if (self)
 		VALA_PANEL_PLATFORM_GET_IFACE(self)->move_to_coords(self, top, x, y);
 }
 
-void vala_panel_platform_move_to_side(ValaPanelPlatform *self, ValaPanelToplevelUnit *top,
+void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top,
                                       GtkPositionType alloc)
 {
 	if (self)
