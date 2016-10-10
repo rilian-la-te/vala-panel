@@ -20,6 +20,7 @@
 #include <stdarg.h>
 
 #include "generic-config-dialog.h"
+#include "lib/applets-new/applet-api.h"
 #include "lib/c-lib/misc.h"
 
 typedef struct

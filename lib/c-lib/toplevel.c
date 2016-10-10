@@ -46,10 +46,10 @@ G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICAT
 static void stop_ui(ValaPanelToplevelUnit *self)
 {
 	if (self->autohide)
-		vala_panel_platform_ah_stop(vala_panel_applet_manager_get_manager(self->manager),
-		                            self);
-	if (self->pref_dialog != NULL)
-		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
+		//		vala_panel_platform_ah_stop(vala_panel_applet_manager_get_manager(self->manager),
+		//		                            self);
+		if (self->pref_dialog != NULL)
+			gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
 	if (self->initialized)
 	{
 		gdk_flush();
@@ -230,11 +230,11 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 		g_warning(
 		    "Error adding panel: There is no room for another panel. All the edges are "
 		    "taken.");
-		g_autoptr(GtkMessageDialog) msg = gtk_message_dialog_new(
+		g_autoptr(GtkWidget) msg = gtk_message_dialog_new(
 		    GTK_WINDOW(self),
 		    GTK_DIALOG_DESTROY_WITH_PARENT,
 		    GTK_MESSAGE_ERROR,
-		    GTK_RESPONSE_CLOSE,
+		    GTK_BUTTONS_CLOSE,
 		    N_("There is no room for another panel. All the edges are taken."));
 		vala_panel_apply_window_icon(GTK_WINDOW(msg));
 		gtk_window_set_title(GTK_WINDOW(msg), _("Error"));

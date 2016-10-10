@@ -23,8 +23,6 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include "lib/applets-new/applet-widget.h"
-
 G_BEGIN_DECLS
 
 typedef enum {
