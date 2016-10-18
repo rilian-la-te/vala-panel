@@ -37,6 +37,7 @@ namespace ValaPanel
         private HashTable<string,int> local_applets;
         private ToplevelSettings settings;
         private unowned Gtk.Box box;
+		private unowned Gtk.Revealer revealer;
         private Gtk.Menu context_menu;
         private int _mon;
         private int _w;
@@ -265,6 +266,8 @@ namespace ValaPanel
             settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
             settings_as_action(this,settings.settings,Key.USE_FONT);
             settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
+			this.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK |
+							Gdk.EventMask.LEAVE_NOTIFY_MASK)
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
@@ -334,14 +337,19 @@ namespace ValaPanel
             this.get_application().add_window(this);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
             this.realize();
+			var r = new Gtk.Revealer();
             var mbox = new Box(this.orientation,0);
             box = mbox;
+			this.revealer = r;
+			r.add(box);
             box.set_baseline_position(Gtk.BaselinePosition.CENTER);
             box.set_border_width(0);
             box.set_hexpand(true);
             box.set_vexpand(true);
-            this.add(box);
-            box.show();
+            this.add(r);
+            r.show();
+			box.show();
+			this.revealer.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
             settings.init_plugin_list();
             this.show();
@@ -487,7 +495,40 @@ namespace ValaPanel
             _calculate_position(ref rect);
             min.width = rect.width;
             min.height = rect.height;
+			if (autohide)
+			{
+				if (orientation == Gtk.Orientation.HORIZONTAL)
+					min.height = ValaPanel.GAP;
+				else
+					min.width = ValaPanel.GAP;
+			}
         }
+/****************************************************
+ *         autohide : new version                   *
+ ****************************************************/
+		private override bool enter_notify_event(EventCrossing event)
+		{
+			this.revealer.set_reveal_child(true);
+			this.ah_state = AutohideState.VISIBLE;
+			PanelCSS.toggle_class(this,"panel-transparent",false);
+		}
+
+		private override void leave_notify_event(EventCrossing event)
+		{
+			if(this.autohide)
+			{
+				ah_state = AutohideState.WAITING;
+				Timeout.add(ValaPanel.PERIOD,()=>{
+					if(autohide && ah_state == AutohideState.WAITING)
+					{
+						this.revealer.set_reveal_child(false);
+						this.ah_state = AutohideState.FAR;
+						PanelCSS.toggle_class(this,"panel-transparent",true);
+					}
+					});
+			}
+		}
+
 /****************************************************
  *         autohide : borrowed from fbpanel         *
  ****************************************************/
