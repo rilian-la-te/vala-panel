@@ -8,7 +8,7 @@
 	-gtk-outline-radius: 2px;
 	margin: 0;
 }
-.-panel-transparent
+.-panel-run-header
 {
 	background-image: none;
 	background-color: transparent;
