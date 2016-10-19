@@ -41,6 +41,14 @@ if (ENABLE_VALAPANEL)
     endif()
 endif()
 
+option(ENABLE_BUDGIE "Enable budgie-desktop plugin" ON)
+if (ENABLE_BUDGIE)
+    pkg_check_modules(BUDGIE budgie-1.0 libpeas-1.0)
+    if (NOT BUDGIE_FOUND)
+        set(ENABLE_BUDGIE OFF)
+    endif()
+endif()
+
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
 

@@ -28,8 +28,8 @@ namespace StatusNotifier
         public signal void status_notifier_item_unregistered(string item);
         public signal void status_notifier_host_unregistered();
         /* Hashes */
-        private HashTable<string,uint> name_watcher;
-        private HashTable<string,uint> hosts;
+        private HashTable<string,uint> name_watcher = new HashTable<string,uint>(str_hash, str_equal);
+        private HashTable<string,uint> hosts = new HashTable<string,uint>(str_hash, str_equal);
         /* Public properties */
         public string[] registered_status_notifier_items {owned get {return get_registered_items();}}
         public bool is_status_notifier_host_registered {get; private set; default = true;}
@@ -111,11 +111,6 @@ namespace StatusNotifier
             foreach(var item in items_list)
                 ret += item;
             return ret;
-        }
-        construct
-        {
-            name_watcher = new HashTable<string,uint>(str_hash, str_equal);
-            hosts = new HashTable<string,uint>(str_hash, str_equal);
         }
         ~Watcher()
         {
