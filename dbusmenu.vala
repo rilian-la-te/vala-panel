@@ -46,11 +46,11 @@ namespace DBusMenu
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
     [Compact]
-    private class PropertyStore : Object
+    private class PropertyStore
     {
-        private static const string[] persist_names = {"visible","enabled","type","label","disposition"};
-        private VariantDict dict;
-        private unowned HashTable <string,VariantType> checker;
+        internal const string[] persist_names = {"visible","enabled","type","label","disposition"};
+        internal VariantDict dict;
+        internal unowned HashTable <string,VariantType> checker;
         public Variant? get_prop(string name)
         {
             unowned VariantType type = checker.lookup(name);
@@ -454,7 +454,7 @@ namespace DBusMenu
     }
     public class GtkMainItem : CheckMenuItem, GtkItemIface
     {
-        private static const string[] allowed_properties = {"visible","enabled","label","type",
+        private const string[] allowed_properties = {"visible","enabled","label","type",
                                                 "children-display","toggle-type",
                                                 "toggle-state","icon-name","icon-data","accessible-desc",
                                                 "x-valapanel-icon-size"};
@@ -667,7 +667,7 @@ namespace DBusMenu
     }
     public class GtkSeparatorItem: SeparatorMenuItem, GtkItemIface
     {
-        private static const string[] allowed_properties = {"visible","enabled"};
+        private const string[] allowed_properties = {"visible","enabled"};
         public unowned Item item {get; protected set;}
         public GtkSeparatorItem(Item item)
         {
@@ -697,7 +697,7 @@ namespace DBusMenu
     }
     public class GtkScaleItem: Gtk.MenuItem, GtkItemIface
     {
-        private static const string[] allowed_properties = {"visible","enabled","icon-name",
+        private const string[] allowed_properties = {"visible","enabled","icon-name",
                                                             "x-valapanel-min-value","x-valapanel-current-value","x-valapanel-max-value",
                                                             "x-valapanel-step-increment","x-valapanel-page-increment","x-valapanel-draw-value",
                                                             "x-valapanel-format-value"};
@@ -833,7 +833,7 @@ namespace DBusMenu
     }
     public class GtkMenuBarItem : Gtk.MenuItem, GtkItemIface
     {
-        private static const string[] allowed_properties = {"visible","enabled","label","type",
+        private const string[] allowed_properties = {"visible","enabled","label","type",
                                                 "children-display", "x-valapanel-icon-size",
                                                 "icon-name","icon-data","accessible-desc"};
         public unowned Item item {get; protected set;}
