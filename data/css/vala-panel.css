@@ -10,8 +10,8 @@
 }
 .-panel-transparent
 {
-	background-image: none;
 	background-color: transparent;
+	background-image: none;
 }
 .-panel-run-dialog:backdrop
 {

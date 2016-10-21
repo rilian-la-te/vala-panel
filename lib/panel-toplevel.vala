@@ -50,12 +50,7 @@ namespace ValaPanel
         private Gtk.CssProvider provider;
 
         internal ConfigureDialog pref_dialog;
-
-        private bool ah_visible;
-        private bool ah_far;
         private AutohideState ah_state;
-        private uint mouse_timeout;
-        private uint hide_timeout;
 
         private ulong strut_size;
         private ulong strut_lower;
@@ -180,7 +175,6 @@ namespace ValaPanel
                     panel.stop_ui();
                 else
                 {
-                    panel.ah_state_set(AutohideState.VISIBLE);
                     panel.queue_resize();
                 }
             }
@@ -287,7 +281,7 @@ namespace ValaPanel
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE)
-                    ah_visible = (autohide)? false : true;
+                    this.ah_rev.set_reveal_child ((autohide)? false : true);
                 if (p.name in gnames)
                 {
                     this.queue_resize();
@@ -296,6 +290,10 @@ namespace ValaPanel
                 if (p.name in anames)
                     this.update_appearance();
             });
+			this.ah_rev.notify.connect((s,p)=>{
+					if (p.name == "child-revealed")
+						this.queue_resize();
+				});
             this.add_action_entries(panel_entries,this);
             extset.extension_added.connect(on_extension_added);
             engine.load_plugin.connect_after((i)=>
@@ -314,8 +312,6 @@ namespace ValaPanel
         }
         private void stop_ui()
         {
-            if (autohide)
-                ah_stop();
             if (pref_dialog != null)
                 pref_dialog.response(Gtk.ResponseType.CLOSE);
             if (initialized)
@@ -392,8 +388,6 @@ namespace ValaPanel
                 this.move(this.a.x, this.a.y);
                 this.update_strut();
             }
-            if (this.get_mapped())
-                establish_autohide();
         }
 
         private void _calculate_position(ref Gtk.Allocation alloc)
@@ -435,8 +429,8 @@ namespace ValaPanel
                 alloc.width = width;
                 alloc.x = marea.x;
                 calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref alloc.x);
-                alloc.height = (!autohide || ah_visible) ? height :
-                                        show_hidden ? 1 : 0;
+                alloc.height = (!autohide || ah_rev.reveal_child) ? height :
+                                        GAP;
                 alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
             }
             else
@@ -444,8 +438,8 @@ namespace ValaPanel
                 alloc.height = width;
                 alloc.y = marea.y;
                 calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref alloc.y);
-                alloc.width = (!autohide || ah_visible) ? height :
-                                        show_hidden ? 1 : 0;
+                alloc.width = (!autohide || ah_rev.reveal_child) ? height :
+                                         GAP;
                 alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
             }
         }
@@ -487,8 +481,6 @@ namespace ValaPanel
         }
         private void get_panel_preferred_size (ref Gtk.Requisition min)
         {
-            if (!ah_visible && box != null)
-                box.get_preferred_size(out min, null);
             var rect = Gtk.Allocation();
             rect.width = min.width;
             rect.height = min.height;
@@ -508,23 +500,23 @@ namespace ValaPanel
  ****************************************************/
         protected override bool enter_notify_event(EventCrossing event)
 		{
+			PanelCSS.toggle_class(this,"-panel-transparent",false);
             this.ah_rev.set_reveal_child(true);
 			this.ah_state = AutohideState.VISIBLE;
-			PanelCSS.toggle_class(this,"panel-transparent",false);
             return true;
 		}
 
         protected override bool leave_notify_event(EventCrossing event)
 		{
-			if(this.autohide)
+			if(this.autohide && (event.detail != Gdk.NotifyType.INFERIOR && event.detail != Gdk.NotifyType.VIRTUAL))
 			{
 				ah_state = AutohideState.WAITING;
                 Timeout.add(PERIOD,()=>{
 					if(autohide && ah_state == AutohideState.WAITING)
 					{
+						PanelCSS.toggle_class(this,"-panel-transparent",true);
                         this.ah_rev.set_reveal_child(false);
                         this.ah_state = AutohideState.HIDDEN;
-						PanelCSS.toggle_class(this,"panel-transparent",true);
 					}
                     return false;
 					});
@@ -555,171 +547,6 @@ namespace ValaPanel
  */
         private const int PERIOD = 200;
         private const int GAP = 2;
-        protected override bool configure_event(Gdk.EventConfigure e)
-        {
-            c.width = e.width;
-            c.height = e.height;
-            c.x = e.x;
-            c.y = e.y;
-            return base.configure_event (e);
-        }
-
-        protected override bool map_event(Gdk.EventAny e)
-        {
-            if (autohide)
-                ah_start();
-            return base.map_event(e);
-        }
-
-        private void establish_autohide()
-        {
-            if (autohide)
-                ah_start();
-            else
-            {
-                ah_stop();
-                ah_state_set(AutohideState.VISIBLE);
-            }
-        }
-        private void ah_start()
-        {
-            if (mouse_timeout == 0)
-                Timeout.add(PERIOD,mouse_watch);
-        }
-        private void ah_stop()
-        {
-            if (mouse_timeout != 0)
-            {
-                Source.remove(mouse_timeout);
-                mouse_timeout = 0;
-            }
-            if (hide_timeout != 0)
-            {
-                Source.remove(hide_timeout);
-                hide_timeout = 0;
-            }
-        }
-        private void ah_state_set(AutohideState new_state)
-        {
-            var rect = Gtk.Allocation();
-            if (this.ah_state != new_state)
-            {
-                ah_state = new_state;
-                switch (new_state)
-                {
-                    case AutohideState.VISIBLE:
-                        this.ah_visible = true;
-                        _calculate_position(ref rect);
-                        this.move(rect.x,rect.y);
-                        this.show();
-                        box.show();
-                        this.stick();
-                        this.queue_resize();
-                        break;
-                    case AutohideState.WAITING:
-                        if (hide_timeout > 0) Source.remove(hide_timeout);
-                        hide_timeout = Timeout.add(2*PERIOD, ah_state_hide_timeout);
-                        break;
-                    case AutohideState.HIDDEN:
-                        if (show_hidden)
-                        {
-                            box.hide();
-                            this.queue_resize();
-                        }
-                        else
-                            this.hide();
-                        this.ah_visible = false;
-                        break;
-                }
-            }
-            else if (autohide && ah_far)
-            {
-                switch(new_state)
-                {
-                    case AutohideState.VISIBLE:
-                        ah_state_set(AutohideState.WAITING);
-                        break;
-                    case AutohideState.WAITING:
-                        break;
-                    case AutohideState.HIDDEN:
-                        if (show_hidden && box.get_visible())
-                        {
-                            box.hide();
-                            this.show();
-                        }
-                        else if (this.get_visible()&& !show_hidden)
-                        {
-                            this.hide();
-                            box.show();
-                        }
-                        this.ah_visible = false;
-                        break;
-                }
-            }
-            else
-            {
-                switch (new_state)
-                {
-                    case AutohideState.VISIBLE:
-                        break;
-                    case AutohideState.WAITING:
-                        if (hide_timeout > 0) Source.remove(hide_timeout);
-                        hide_timeout = 0;
-                        ah_state_set(AutohideState.VISIBLE);
-                        break;
-                    case AutohideState.HIDDEN:
-                        ah_state_set(AutohideState.VISIBLE);
-                        break;
-                }
-            }
-        }
-        private bool ah_state_hide_timeout()
-        {
-            if (!MainContext.current_source().is_destroyed())
-            {
-                ah_state_set(AutohideState.HIDDEN);
-                hide_timeout = 0;
-            }
-            return false;
-        }
-        private bool mouse_watch()
-        {
-            int x, y;
-            if (MainContext.current_source().is_destroyed())
-                return false;
-
-            unowned Gdk.DeviceManager manager = Gdk.Display.get_default().get_device_manager();
-            unowned Gdk.Device dev = manager.get_client_pointer();
-            dev.get_position(null, out x, out y);
-
-            var cx = a.x;
-            var cy = a.y;
-            var cw = (c.width != 1) ? c.width : 0;
-            var ch = (c.height != 1) ? c.height : 0;
-            if (ah_state == AutohideState.HIDDEN)
-            {
-                switch (edge)
-                {
-                    case Gtk.PositionType.LEFT:
-                        cw = GAP;
-                        break;
-                    case Gtk.PositionType.RIGHT:
-                        cx += (cw-GAP);
-                        cw = GAP;
-                        break;
-                    case Gtk.PositionType.TOP:
-                        ch = GAP;
-                        break;
-                    case Gtk.PositionType.BOTTOM:
-                        cy += (ch-GAP);
-                        ch = GAP;
-                        break;
-                }
-            }
-            ah_far = ((x<cx)||(x>cx+cw)||(y<cy)||(y>cy+ch));
-            ah_state_set(this.ah_state);
-            return true;
-        }
 /* end of the autohide code
  * ------------------------------------------------------------- */
 /*
