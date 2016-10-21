@@ -532,13 +532,13 @@ namespace ValaPanel
             return true;
 		}
 
-		protected override void grab_notify(bool was_grabbed)
-		{
-			if(!was_grabbed)
-				this.ah_state = AutohideState.GRAB;
-			else
-				this.ah_hide();
-		}
+        protected override void grab_notify(bool was_grabbed)
+        {
+            if(!was_grabbed)
+                this.ah_state = AutohideState.GRAB;
+            else
+                this.ah_hide();
+        }
 
 /****************************************************
  *         autohide : borrowed from fbpanel         *

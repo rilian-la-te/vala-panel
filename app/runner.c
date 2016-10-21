@@ -141,8 +141,9 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 
 void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
-	vala_panel_list_model_filter_invalidate(self->filter);
-	if (g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
+	if (self->filter)
+		vala_panel_list_model_filter_invalidate(self->filter);
+	if (self->filter && g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
 	{
 		gtk_revealer_set_transition_type(self->bottom_revealer,
 		                                 GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP);
