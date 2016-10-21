@@ -36,7 +36,7 @@ namespace ValaPanel
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
         private ToplevelSettings settings;
-        private unowned Gtk.Revealer ah_rev;
+        private unowned Gtk.Revealer ah_rev = null;
         private unowned Gtk.Box box;
         private Gtk.Menu context_menu;
         private int _mon;
@@ -280,7 +280,7 @@ namespace ValaPanel
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
-                if (p.name == Key.AUTOHIDE)
+                if (p.name == Key.AUTOHIDE && this.ah_rev != null)
                     this.ah_rev.set_reveal_child ((autohide)? false : true);
                 if (p.name in gnames)
                 {
@@ -290,10 +290,6 @@ namespace ValaPanel
                 if (p.name in anames)
                     this.update_appearance();
             });
-			this.ah_rev.notify.connect((s,p)=>{
-					if (p.name == "child-revealed")
-						this.queue_resize();
-				});
             this.add_action_entries(panel_entries,this);
             extset.extension_added.connect(on_extension_added);
             engine.load_plugin.connect_after((i)=>
@@ -337,6 +333,10 @@ namespace ValaPanel
             var mbox = new Box(this.orientation,0);
             box = mbox;
             this.ah_rev = r;
+			this.ah_rev.notify.connect((s,p)=>{
+					if (p.name == "child-revealed")
+						this.queue_resize();
+				});
 			r.add(box);
             box.set_baseline_position(Gtk.BaselinePosition.CENTER);
             box.set_border_width(0);
@@ -429,7 +429,7 @@ namespace ValaPanel
                 alloc.width = width;
                 alloc.x = marea.x;
                 calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref alloc.x);
-                alloc.height = (!autohide || ah_rev.reveal_child) ? height :
+                alloc.height = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
                                         GAP;
                 alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
             }
@@ -438,7 +438,7 @@ namespace ValaPanel
                 alloc.height = width;
                 alloc.y = marea.y;
                 calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref alloc.y);
-                alloc.width = (!autohide || ah_rev.reveal_child) ? height :
+                alloc.width = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
                                          GAP;
                 alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
             }
