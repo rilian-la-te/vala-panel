@@ -12,6 +12,7 @@ G_DECLARE_INTERFACE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM
 typedef enum {
 	AH_HIDDEN,
 	AH_WAITING,
+	AH_GRAB,
 	AH_VISIBLE,
 } PanelAutohideState;
 

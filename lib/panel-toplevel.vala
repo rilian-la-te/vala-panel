@@ -498,30 +498,46 @@ namespace ValaPanel
 /****************************************************
  *         autohide : new version                   *
  ****************************************************/
+		private void ah_show()
+		{
+				PanelCSS.toggle_class(this,"-panel-transparent",false);
+				this.ah_rev.set_reveal_child(true);
+				this.ah_state = AutohideState.VISIBLE;
+		}
+
+		private void ah_hide()
+		{
+			ah_state = AutohideState.WAITING;
+			Timeout.add(PERIOD,()=>{
+				if(autohide && ah_state == AutohideState.WAITING)
+				{
+					PanelCSS.toggle_class(this,"-panel-transparent",true);
+					this.ah_rev.set_reveal_child(false);
+					this.ah_state = AutohideState.HIDDEN;
+				}
+				return false;
+				});
+		}
+
         protected override bool enter_notify_event(EventCrossing event)
 		{
-			PanelCSS.toggle_class(this,"-panel-transparent",false);
-            this.ah_rev.set_reveal_child(true);
-			this.ah_state = AutohideState.VISIBLE;
-            return true;
+			ah_show();
+			return true;
 		}
 
         protected override bool leave_notify_event(EventCrossing event)
 		{
 			if(this.autohide && (event.detail != Gdk.NotifyType.INFERIOR && event.detail != Gdk.NotifyType.VIRTUAL))
-			{
-				ah_state = AutohideState.WAITING;
-                Timeout.add(PERIOD,()=>{
-					if(autohide && ah_state == AutohideState.WAITING)
-					{
-						PanelCSS.toggle_class(this,"-panel-transparent",true);
-                        this.ah_rev.set_reveal_child(false);
-                        this.ah_state = AutohideState.HIDDEN;
-					}
-                    return false;
-					});
-			}
+				ah_hide();
             return true;
+		}
+
+		protected override void grab_notify(bool was_grabbed)
+		{
+			if(!was_grabbed)
+				this.ah_state = AutohideState.GRAB;
+			else
+				this.ah_hide();
 		}
 
 /****************************************************

@@ -76,6 +76,7 @@ namespace ValaPanel
     {
         VISIBLE,
         HIDDEN,
+		GRAB,
         WAITING
     }
     [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
