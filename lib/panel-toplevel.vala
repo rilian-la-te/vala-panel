@@ -42,7 +42,6 @@ namespace ValaPanel
         private int _mon;
         private int _w;
         private Gtk.Allocation a;
-        private Gdk.Rectangle c;
 
         private IconSizeHints ihints;
         private Gdk.RGBA bgc;
@@ -260,8 +259,6 @@ namespace ValaPanel
             settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
             settings_as_action(this,settings.settings,Key.USE_FONT);
             settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
-			this.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK |
-                            Gdk.EventMask.LEAVE_NOTIFY_MASK);
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
@@ -276,7 +273,6 @@ namespace ValaPanel
             if (visual != null)
                 this.set_visual(visual);
             a = Gtk.Allocation();
-            c = Gdk.Rectangle();
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
@@ -329,17 +325,15 @@ namespace ValaPanel
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
             PanelCSS.toggle_class(this,"-panel-transparent",false);
             this.get_application().add_window(this);
-            this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
+            this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
+                            Gdk.EventMask.ENTER_NOTIFY_MASK |
+                            Gdk.EventMask.LEAVE_NOTIFY_MASK);
             this.realize();
 			var r = new Gtk.Revealer();
             var mbox = new Box(this.orientation,0);
             box = mbox;
             this.ah_rev = r;
-			this.ah_rev.notify.connect((s,p)=>{
-					if (p.name == "child-revealed")
-						this.queue_resize();
-				});
-			r.add(box);
+            r.add(box);
             box.set_baseline_position(Gtk.BaselinePosition.CENTER);
             box.set_border_width(0);
             box.set_hexpand(true);
@@ -515,17 +509,17 @@ namespace ValaPanel
 		}
 
         protected override bool enter_notify_event(EventCrossing event)
-		{
-			ah_show();
-			return true;
-		}
+        {
+            ah_show();
+            return false;
+        }
 
         protected override bool leave_notify_event(EventCrossing event)
-		{
-			if(this.autohide && (event.detail != Gdk.NotifyType.INFERIOR && event.detail != Gdk.NotifyType.VIRTUAL))
-				ah_hide();
-            return true;
-		}
+        {
+            if(this.autohide && (event.detail != Gdk.NotifyType.INFERIOR && event.detail != Gdk.NotifyType.VIRTUAL))
+                ah_hide();
+            return false;
+        }
 
         protected override void grab_notify(bool was_grabbed)
         {

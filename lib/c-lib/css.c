@@ -222,7 +222,7 @@ GtkCssProvider *css_apply_from_file_to_app_with_provider(const char *file)
 	GtkCssProvider *provider = gtk_css_provider_new();
 	g_autoptr(GError) err    = NULL;
 	gtk_css_provider_load_from_path(provider, file, &err);
-	g_autoptr(GdkScreen) scr = gdk_screen_get_default();
+	GdkScreen *scr = gdk_screen_get_default();
 	gtk_style_context_add_provider_for_screen(scr,
 	                                          GTK_STYLE_PROVIDER(provider),
 	                                          GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
