@@ -281,7 +281,7 @@ namespace ValaPanel
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
-                    this.ah_rev.set_reveal_child ((autohide)? false : true);
+                    if (autohide) ah_hide(); else ah_show();
                 if (p.name in gnames)
                 {
                     this.queue_resize();
@@ -326,6 +326,8 @@ namespace ValaPanel
         {
             a.x = a.y = a.width = a.height = 0;
             set_wmclass("panel","vala-panel");
+            PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
+            PanelCSS.toggle_class(this,"-panel-transparent",false);
             this.get_application().add_window(this);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
             this.realize();
@@ -487,13 +489,6 @@ namespace ValaPanel
             _calculate_position(ref rect);
             min.width = rect.width;
             min.height = rect.height;
-			if (autohide)
-			{
-				if (orientation == Gtk.Orientation.HORIZONTAL)
-                    min.height = GAP;
-				else
-                    min.width = GAP;
-			}
         }
 /****************************************************
  *         autohide : new version                   *
@@ -536,7 +531,7 @@ namespace ValaPanel
         {
             if(!was_grabbed)
                 this.ah_state = AutohideState.GRAB;
-            else
+            else if (autohide)
                 this.ah_hide();
         }
 
