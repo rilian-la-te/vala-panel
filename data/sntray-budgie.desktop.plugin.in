@@ -1,0 +1,8 @@
+[Plugin]
+Module=sntray-budgie.so
+Name=StatusNotifier
+Description=System tray in KDE StatusNotifierItem format
+Authors=Konstantin Pugin
+Copyright=Copyright © 2016 Konstantin Pugin
+Website=https://github.com/rilian-la-te/xfce4-sntray-plugin
+Icon=view-grid-symbolic

@@ -140,6 +140,43 @@ if (ENABLE_VALAPANEL)
     # Install plugin stuffs
     install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)
 endif()
+
+#################
+# Budgie Panel part
+#################
+set(VALA_FILES_BUDGIE sntray-applet-budgie.vala)
+if (ENABLE_BUDGIE)
+    vala_precompile(VALA_C_BUDGIE sntray-budgie
+	    ${VALA_FILES_BUDGIE}
+    PACKAGES
+        gtk+-3.0
+        vala-panel-sntray
+        budgie-1.0
+    OPTIONS
+        --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
+        --vapidir=${CMAKE_CURRENT_BINARY_DIR}
+	--target-glib=2.44
+        --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
+        --thread
+    )
+    #####
+    # Plugin Library
+    #####
+    add_library (sntray-budgie SHARED
+        ${VALA_C_CORE}
+		${VALA_C_DBUSMENU}
+        ${VALA_C_BUDGIE}
+        ${RESOURCES}
+    )
+    add_dependencies(sntray-budgie sntray-core)
+    include_directories(${GTK+_INCLUDE_DIRS} ${BUDGIE_INCLUDE_DIRS})
+    target_link_libraries(sntray-budgie ${GTK+_LIBRARIES} ${BUDGIE_LIBRARIES} -lm)
+    add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
+
+    # Install plugin stuffs
+    install(TARGETS sntray-budgie DESTINATION ${CMAKE_INSTALL_LIBDIR}/budgie-desktop/plugins)
+endif()
+
 #################
 # MATE Panel part
 #################
