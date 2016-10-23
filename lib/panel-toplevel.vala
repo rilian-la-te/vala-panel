@@ -106,7 +106,6 @@ namespace ValaPanel
         public bool dock {get; internal set;}
         public bool strut {get; internal set;}
         public bool autohide {get; internal set;}
-        public bool show_hidden {get; internal set;}
         public bool is_dynamic {get; internal set;}
         public bool use_font {get; internal set;}
         public bool use_background_color {get; internal set;}
@@ -247,7 +246,6 @@ namespace ValaPanel
             settings_as_action(this,settings.settings,Key.DOCK);
             settings_as_action(this,settings.settings,Key.MARGIN);
             settings_bind(this,settings.settings,Key.MONITOR);
-            settings_as_action(this,settings.settings,Key.SHOW_HIDDEN);
             settings_as_action(this,settings.settings,Key.ICON_SIZE);
             settings_as_action(this,settings.settings,Key.BACKGROUND_COLOR);
             settings_as_action(this,settings.settings,Key.FOREGROUND_COLOR);
@@ -401,7 +399,7 @@ namespace ValaPanel
             {
                 screen.get_monitor_geometry(monitor,out marea);
 //~                 marea = screen.get_monitor_workarea(monitor);
-//~                 var hmod = (autohide && show_hidden) ? 1 : height;
+//~                 var hmod = (autohide) ? GAP : height;
 //~                 switch (edge)
 //~                 {
 //~                     case PositionType.TOP:
@@ -755,7 +753,7 @@ namespace ValaPanel
             if (!get_mapped())
                 return false;
             if (autohide)
-                s =(show_hidden)? 1 : 0;
+                s = GAP;
             else switch (orientation)
             {
                 case Gtk.Orientation.VERTICAL:
@@ -826,7 +824,7 @@ namespace ValaPanel
                 return;
             /* most wm's tend to ignore struts of unmapped windows, and that's how
              * panel hides itself. so no reason to set it. If it was be, it must be removed */
-            if (autohide && !show_hidden && this.strut_size == 0)
+            if (autohide && this.strut_size == 0)
                 return;
 
             /* Dispatch on edge to set up strut parameters. */
