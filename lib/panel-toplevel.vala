@@ -331,6 +331,11 @@ namespace ValaPanel
             var mbox = new Box(this.orientation,0);
             box = mbox;
             this.ah_rev = r;
+            r.set_transition_type(RevealerTransitionType.CROSSFADE);
+            r.notify.connect((s,p)=>{
+                if (p.name == "child-revealed")
+                    box.queue_draw();
+            });
             r.add(box);
             box.set_baseline_position(Gtk.BaselinePosition.CENTER);
             box.set_border_width(0);
