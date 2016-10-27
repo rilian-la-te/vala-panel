@@ -4,6 +4,9 @@
 #include "panel-layout.h"
 #include "panel-platform.h"
 
+static const int PERIOD = 200;
+static const int GAP    = 2;
+
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
@@ -18,7 +21,9 @@ struct _ValaPanelToplevelUnit
 	GtkApplicationWindow __parent__;
 	ValaPanelAppletManager *manager;
 	ValaPanelAppletLayout *layout;
-	GtkRevealer *revealer;
+	GtkRevealer *ah_rev;
+	GtkSeparator *ah_sep;
+	PanelAutohideState ah_state;
 	GSettings *toplevel_settings;
 	GtkCssProvider *provider;
 	bool initialized;
@@ -45,11 +50,8 @@ G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICAT
 
 static void stop_ui(ValaPanelToplevelUnit *self)
 {
-	if (self->autohide)
-		//		vala_panel_platform_ah_stop(vala_panel_applet_manager_get_manager(self->manager),
-		//		                            self);
-		if (self->pref_dialog != NULL)
-			gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
+	if (self->pref_dialog != NULL)
+		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
 	if (self->initialized)
 	{
 		gdk_flush();
@@ -70,8 +72,6 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
 	                          GDK_LEAVE_NOTIFY_MASK);
 	gtk_widget_realize(GTK_WIDGET(self));
-	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->layout));
-	gtk_widget_show(GTK_WIDGET(self->layout));
 	gtk_window_set_type_hint(GTK_WINDOW(self),
 	                         (self->dock) ? GDK_WINDOW_TYPE_HINT_DOCK
 	                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
@@ -434,19 +434,6 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app
 	return ret;
 }
 
-static void establish_autohide(ValaPanelToplevelUnit *self)
-{
-	// FIXME: Implement autohide in toplevel.
-	ValaPanelPlatform *mgr = vala_panel_applet_manager_get_manager(self->manager);
-	//	if (self->autohide)
-	//		vala_panel_platform_ah_start(mgr, self);
-	//	else
-	//	{
-	//		vala_panel_platform_ah_stop(mgr, self);
-	//		vala_panel_platform_ah_state_set(mgr, self, AH_VISIBLE);
-	//	}
-}
-
 // static void size_allocate(GtkWidget *base, GtkAllocation *alloc)
 //{
 //	int x, y, w;
@@ -583,15 +570,70 @@ static void establish_autohide(ValaPanelToplevelUnit *self)
 //    min.height = rect.height;
 //}
 
+/****************************************************
+ *         autohide : new version                   *
+ ****************************************************/
+static bool timeout_func(ValaPanelToplevelUnit *self)
+{
+	if (self->autohide && self->ah_state == AH_WAITING)
+	{
+		css_toggle_class(self, "-panel-transparent", true);
+		gtk_revealer_set_reveal_child(self->ah_rev, false);
+		self->ah_state = AH_HIDDEN;
+	}
+	return false;
+}
+
+static void ah_show(ValaPanelToplevelUnit *self)
+{
+	css_toggle_class(self, "-panel-transparent", false);
+	gtk_revealer_set_reveal_child(self->ah_rev, true);
+	self->ah_state = AH_VISIBLE;
+}
+
+static void ah_hide(ValaPanelToplevelUnit *self)
+{
+	self->ah_state = AH_WAITING;
+	g_timeout_add(PERIOD, timeout_func, self);
+}
+
+static bool enter_notify_event(ValaPanelToplevelUnit *self, GdkEventCrossing *event, gpointer data)
+{
+	ah_show(self);
+	return false;
+}
+
+static bool leave_notify_event(ValaPanelToplevelUnit *self, GdkEventCrossing *event, gpointer data)
+{
+	if (self->autohide &&
+	    (event->detail != GDK_NOTIFY_INFERIOR && event->detail != GDK_NOTIFY_VIRTUAL))
+		ah_hide(self);
+	return false;
+}
+
+static void grab_notify(ValaPanelToplevelUnit *self, bool was_grabbed, gpointer data)
+{
+	if (!was_grabbed)
+		self->ah_state = AH_GRAB;
+	else if (self->autohide)
+		ah_hide(self);
+}
+
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
 	// Move this to init, lay&must not be reinit in start/stop UI
-	self->layout   = vala_panel_applet_layout_new(self->orientation, 0);
-	self->revealer = GTK_REVEALER(gtk_revealer_new());
-	gtk_revealer_set_reveal_child(self->revealer, true);
-	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->revealer));
-	gtk_container_add(GTK_CONTAINER(self->revealer), GTK_WIDGET(self->layout));
+	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
+	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
+	self->ah_sep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+	gtk_revealer_set_reveal_child(self->ah_rev, true);
+	GtkBox *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
+	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_rev));
+	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_sep));
+	gtk_container_add(GTK_CONTAINER(self->ah_rev), GTK_WIDGET(self->layout));
 	g_object_bind_property(self, "orientation", self->layout, "orentation", (GBindingFlags)0);
+	g_object_bind_property(self, "orientation", box, "orentation", (GBindingFlags)0);
+	g_object_bind_property(self, "orientation", self->ah_sep, "orentation", (GBindingFlags)0);
 }
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
