@@ -46,11 +46,11 @@ namespace DBusMenu
         public abstract signal void x_valapanel_item_value_changed(int id, uint timestamp);
     }
     [Compact]
-    private class PropertyStore : Object
+    private class PropertyStore
     {
-        private const string[] persist_names = {"visible","enabled","type","label","disposition"};
-        private VariantDict dict;
-        private unowned HashTable <string,VariantType> checker;
+        internal const string[] persist_names = {"visible","enabled","type","label","disposition"};
+        internal VariantDict dict;
+        internal unowned HashTable <string,VariantType> checker;
         public Variant? get_prop(string name)
         {
             unowned VariantType type = checker.lookup(name);
@@ -1076,7 +1076,7 @@ namespace DBusMenu
         }
         private void on_child_moved_cb(int oldpos, int newpos, Item item)
         {
-            foreach(unowned Widget ch in root_menu.get_children())
+            foreach(Widget ch in root_menu.get_children())
                 if ((ch as GtkItemIface).item == item)
                 {
                     root_menu.remove(ch);
