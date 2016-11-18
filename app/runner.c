@@ -104,15 +104,19 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			GtkWidget *active_row = gtk_bin_get_child(
 			    GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
 			InfoData *data = g_app_launcher_button_get_info_data(active_row);
-			app_info       = g_app_info_create_from_commandline(
-			    data->command,
-			    NULL,
-			    gtk_toggle_button_get_active(self->terminal_button)
-			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-			        : G_APP_INFO_CREATE_NONE,
-			    NULL);
-			launch =
-			    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
+			if (data)
+			{
+				app_info = g_app_info_create_from_commandline(
+				    data->command,
+				    NULL,
+				    gtk_toggle_button_get_active(self->terminal_button)
+				        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+				        : G_APP_INFO_CREATE_NONE,
+				    NULL);
+				launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),
+				                           NULL,
+				                           GTK_WIDGET(dlg));
+			}
 			if (!launch)
 			{
 				g_signal_stop_emission_by_name(dlg, "response");
