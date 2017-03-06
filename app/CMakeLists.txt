@@ -17,7 +17,7 @@ OPTIONS
     -D GLIB242
 )
 
-option(RUNNER_AS_APPLICATION "Enables building runner as standalone application instead of panel" OFF)
+option(RUNNER_AS_APPLICATION "Enables building runner as standalone application instead of panel" ON)
 set(RUNNER_SOURCES
 	runner.c
 	runner.h

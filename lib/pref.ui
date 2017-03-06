@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.1 -->
+<!-- Generated with glade 3.20.0 -->
 <interface>
-  <requires lib="gtk+" version="3.12"/>
-   <menu id="edge-menu">
+  <requires lib="gtk+" version="3.20"/>
+    <menu id="edge-menu">
     <section>
         <item>
           <attribute name="label" translatable="yes">_Top</attribute>
@@ -81,10 +81,10 @@
   <template class="ConfigureDialog" parent="GtkDialog">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="default-height">100</property>
-    <property name="default-width">100</property>
-    <property name="destroy-with-parent">True</property>
     <property name="title" translatable="yes">Panel preferences</property>
+    <property name="default_width">100</property>
+    <property name="default_height">100</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
     <child internal-child="vbox">
@@ -94,7 +94,6 @@
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area1">
-            <property name="visible">False</property>
             <property name="can_focus">False</property>
           </object>
           <packing>
@@ -168,8 +167,8 @@
                       <object class="GtkMenuButton" id="edge-button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
                         <property name="menu-model">edge-menu</property>
+                        <property name="receives_default">True</property>
                         <property name="halign">start</property>
                         <property name="relief">none</property>
                         <child>
@@ -566,7 +565,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="action_name">win.use-font</property>
-                        <property name="xalign">0</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
@@ -580,7 +578,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="action_name">win.use-background-color</property>
-                        <property name="xalign">0</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
@@ -594,7 +591,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="action_name">win.use-foreground-color</property>
-                        <property name="xalign">0</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
@@ -608,7 +604,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="action_name">win.use-background-file</property>
-                        <property name="xalign">0</property>
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
@@ -685,7 +680,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="action_name">win.font-size-only</property>
-                            <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
