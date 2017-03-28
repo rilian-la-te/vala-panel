@@ -419,7 +419,11 @@ namespace ValaPanel
                 model.get(it, Column.DATA, out pl, -1);
                 if( tree_path.get_indices()[0] >= model.iter_n_children(null))
                     tree_path.prev();
+#if VALA_0_36
+                (model as Gtk.ListStore).remove(ref it);
+#else
                 (model as Gtk.ListStore).remove(it);
+#endif
                 tree_sel.select_path(tree_path );
                 toplevel.remove_applet(pl);
             }
