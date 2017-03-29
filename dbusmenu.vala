@@ -12,7 +12,7 @@ namespace DBusMenu
         NOTICE
     }
     [DBus (name = "com.canonical.dbusmenu")]
-    public interface Iface : Object
+    public interface Iface : DBusProxy
     {
         public abstract uint version {get;}
         public abstract string text_direction {owned get;}
@@ -229,6 +229,7 @@ namespace DBusMenu
             var item = new Item(0,this,props.end(),new List<int>());
             items.insert(0,item);
             request_layout_update();
+            iface.set_default_timeout(600);
             iface.layout_updated.connect((rev,parent)=>{request_layout_update();});
             iface.items_properties_updated.connect(props_updated_cb);
             iface.item_activation_requested.connect(request_activation_cb);
