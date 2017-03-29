@@ -67,8 +67,8 @@ static void vala_panel_applet_layout_init(ValaPanelAppletLayout *self)
 
 static void vala_panel_applet_layout_class_init(ValaPanelAppletLayoutClass *klass)
 {
-	GTK_WIDGET_CLASS(klass)
-	    ->get_preferred_height = vala_panel_applet_layout_get_preferred_height;
+	GTK_WIDGET_CLASS(klass)->get_preferred_height =
+	    vala_panel_applet_layout_get_preferred_height;
 	GTK_WIDGET_CLASS(klass)->get_preferred_width = vala_panel_applet_layout_get_preferred_width;
 }
 

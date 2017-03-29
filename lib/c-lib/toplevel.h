@@ -34,6 +34,8 @@ G_BEGIN_DECLS
 #define VALA_PANEL_KEY_FONT_SIZE_ONLY "font-size-only"
 #define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
 
+#define GAP 2
+
 typedef enum {
 	ALIGN_START  = 0,
 	ALIGN_CENTER = 1,

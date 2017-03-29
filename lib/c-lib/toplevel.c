@@ -5,7 +5,6 @@
 #include "panel-platform.h"
 
 static const int PERIOD = 200;
-static const int GAP    = 2;
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -577,7 +576,7 @@ static bool timeout_func(ValaPanelToplevelUnit *self)
 {
 	if (self->autohide && self->ah_state == AH_WAITING)
 	{
-		css_toggle_class(self, "-panel-transparent", true);
+		css_toggle_class(GTK_WIDGET(self), "-panel-transparent", true);
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
 		self->ah_state = AH_HIDDEN;
 	}
@@ -586,7 +585,7 @@ static bool timeout_func(ValaPanelToplevelUnit *self)
 
 static void ah_show(ValaPanelToplevelUnit *self)
 {
-	css_toggle_class(self, "-panel-transparent", false);
+	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	self->ah_state = AH_VISIBLE;
 }
@@ -594,7 +593,7 @@ static void ah_show(ValaPanelToplevelUnit *self)
 static void ah_hide(ValaPanelToplevelUnit *self)
 {
 	self->ah_state = AH_WAITING;
-	g_timeout_add(PERIOD, timeout_func, self);
+	g_timeout_add(PERIOD, (GSourceFunc)timeout_func, self);
 }
 
 static bool enter_notify_event(ValaPanelToplevelUnit *self, GdkEventCrossing *event, gpointer data)
@@ -624,9 +623,9 @@ void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 	// Move this to init, lay&must not be reinit in start/stop UI
 	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
 	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
-	self->ah_sep = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
+	self->ah_sep = GTK_SEPARATOR(gtk_separator_new(GTK_ORIENTATION_HORIZONTAL));
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
-	GtkBox *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
 	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_rev));
 	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_sep));
