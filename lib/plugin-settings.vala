@@ -66,7 +66,7 @@ namespace ValaPanel
         internal ToplevelSettings (string file)
         {
 #if VALA_0_36
-            new ToplevelSettings.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
+            this.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
 #else
             ToplevelSettings.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
 #endif
