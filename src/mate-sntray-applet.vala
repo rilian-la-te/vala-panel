@@ -15,7 +15,7 @@ namespace StatusNotifier
             return false;
         }
 
-        applet.flags = MatePanel.AppletFlags.HAS_HANDLE & MatePanel.AppletFlags.EXPAND_MINOR;
+        applet.flags = MatePanel.AppletFlags.HAS_HANDLE | MatePanel.AppletFlags.EXPAND_MINOR;
 
         var layout = new ItemBox();
         var widget = layout;
