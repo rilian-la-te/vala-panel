@@ -230,7 +230,7 @@ namespace DBusMenu
             items.insert(0,item);
             request_layout_update();
             iface.set_default_timeout(200);
-            iface.layout_updated.connect((rev,parent)=>{request_layout_update();});
+            iface.layout_updated.connect((rev,parent)=>{Idle.add(request_layout_update);});
             iface.items_properties_updated.connect(props_updated_cb);
             iface.item_activation_requested.connect(request_activation_cb);
             iface.x_valapanel_item_value_changed.connect(request_value_cb);
@@ -252,11 +252,12 @@ namespace DBusMenu
         {
             get_item(id).handle_event("value-changed",new Variant.double(get_item(id).get_variant_property("x-valapanel-current-value").get_double()),timestamp);
         }
-        private void request_layout_update()
+        private bool request_layout_update()
         {
             if(layout_update_in_progress)
                 layout_update_required = true;
             else layout_update.begin();
+            return false;
         }
         /* the original implementation will only request partial layouts if somehow possible
         / we try to save us from multiple kinds of race conditions by always requesting a full layout */
@@ -371,7 +372,7 @@ namespace DBusMenu
                 return;
             }
             if (need_update)
-                request_layout_update();
+                Idle.add(request_layout_update);
         }
         private async void request_properties(int id)
         {
