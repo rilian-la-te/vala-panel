@@ -102,6 +102,10 @@ namespace ValaPanel
     public string user_config_file_name(string name1, string profile, string? name2);
     [CCode (cheader_filename="lib/c-lib/misc.h")]
     public static void apply_window_icon(Window w);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+	public static void reset_schema(GLib.Settings settings);
+    [CCode (cheader_filename="lib/c-lib/misc.h")]
+	public static void reset_schema_with_children(GLib.Settings settings);
     [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="lib/c-lib/misc.h")]
     public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
     [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="lib/definitions.h")]
@@ -114,17 +118,6 @@ namespace ValaPanel
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
     [CCode (cheader_filename="lib/c-lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
-    [CCode (cname = "ValaPanelRunner",cheader_filename = "app/runner.h")]
-    public class Runner : Gtk.Dialog
-    {
-        [CCode (cname = "vala_panel_runner_new",cheader_filename = "app/runner.h")]
-        public inline Runner(Gtk.Application app)
-        {
-            Object(application: app);
-        }
-        [CCode (cname = "gtk_run",cheader_filename = "app/runner.h")]
-        public void gtk_run();
-    }
 }
 [CCode (cprefix="")]
 namespace MenuMaker

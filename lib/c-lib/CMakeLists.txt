@@ -26,8 +26,8 @@ add_library(cvalapanel SHARED
     applet-manager.c
     applet-engine-module.c
     private.h
-    conf-gsettings.c
-    conf-gsettings.h
+#    conf-gsettings.c
+#    conf-gsettings.h
 	${ENUMSC}
 	${ENUMSH}
 	)
