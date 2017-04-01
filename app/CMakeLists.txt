@@ -17,7 +17,6 @@ OPTIONS
     -D GLIB242
 )
 
-option(RUNNER_AS_APPLICATION "Enables building runner as standalone application instead of panel" ON)
 set(RUNNER_SOURCES
 	runner.c
 	runner.h
@@ -35,15 +34,10 @@ glib_compile_resources(GLIB_RESOURCES_APP
         runner.gresource.xml
 )
 
-if(NOT RUNNER_AS_APPLICATION)
-	set(RUNNER_SOURCES_APP ${RUNNER_SOURCES})
-endif()
-
 #####
 # Executable
 #####
 set(APP_SOURCES
-	${RUNNER_SOURCES_APP}
 	${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
 	vala-panel-platform-standalone-x11.h)
@@ -58,7 +52,6 @@ target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_S
 
 install (TARGETS ${APPNAME} ${APPNAME}-new RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
 
-if(RUNNER_AS_APPLICATION)
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_APP}
 	${RUNNER_SOURCES}
@@ -69,4 +62,3 @@ add_executable(${APPNAME}-runner
 target_link_libraries (${APPNAME}-runner ${CORE_LIBRARIES} m)
 target_include_directories(${APPNAME}-runner PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 install (TARGETS ${APPNAME}-runner RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
-endif()

@@ -9,23 +9,25 @@ add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 add_library(cvalapanel SHARED
 	misc.c
 	misc.h
-        menu-maker.h
-        menu-maker.c
+    menu-maker.h
+    menu-maker.c
 	css.c
 	css.h
-        launcher.c
-        launcher.h
+    launcher.c
+    launcher.h
 	generic-config-dialog.c
 	generic-config-dialog.h
 	panel-platform.c
 	panel-platform.h
-        panel-layout.h
-        panel-layout.c
-        toplevel.c
-        toplevel.h
-        applet-manager.c
-        applet-engine-module.c
-        private.h
+    panel-layout.h
+    panel-layout.c
+    toplevel.c
+    toplevel.h
+    applet-manager.c
+    applet-engine-module.c
+    private.h
+    conf-gsettings.c
+    conf-gsettings.h
 	${ENUMSC}
 	${ENUMSH}
 	)

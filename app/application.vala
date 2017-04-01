@@ -25,6 +25,7 @@ namespace ValaPanel
 {
     namespace Key
     {
+        public const string RUN = "run-command";
         public const string LOGOUT = "logout-command";
         public const string SHUTDOWN = "shutdown-command";
         public const string TERMINAL = "terminal-command";
@@ -59,12 +60,12 @@ namespace ValaPanel
         private bool restart = false;
         private Dialog? pref_dialog;
         private GLib.Settings config;
-        private Runner? runner;
         private bool _dark;
         private bool _custom;
         private string _css;
         private CssProvider provider;
         public string profile {get; internal set; default = "default";}
+        public string run_command {get; internal set;}
         public string terminal_command {get; internal set;}
         public string logout_command {get; internal set;}
         public string shutdown_command {get; internal set;}
@@ -367,6 +368,7 @@ namespace ValaPanel
             }
             var config_backend = new GLib.KeyfileSettingsBackend(user_file,PATH,NAME);
             config = new GLib.Settings.with_backend_and_path(SCHEMA,config_backend,PATH);
+            settings_bind(this,config,Key.RUN);
             settings_bind(this,config,Key.LOGOUT);
             settings_bind(this,config,Key.SHUTDOWN);
             settings_bind(this,config,Key.TERMINAL);
@@ -386,23 +388,8 @@ namespace ValaPanel
         }
         internal void activate_run(SimpleAction action, Variant? param)
         {
-            if (runner == null)
-            {
-                runner = new Runner(this);
-                runner.hide.connect(()=>{
-                    if (runner != null)
-                        runner.destroy();
-                    runner = null;
-                });
-                runner.response.connect_after(()=>{
-                    if (runner != null)
-                        runner.destroy();
-                    runner = null;
-                });
-                runner.gtk_run();
-            }
-            else
-                runner.present();
+            Variant variant = new Variant.string(run_command);
+            MenuMaker.activate_menu_launch_command(null,variant,this);
         }
         internal void activate_logout(SimpleAction action, Variant? param)
         {
