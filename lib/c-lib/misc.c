@@ -124,7 +124,7 @@ char *vala_panel_generate_new_hash()
 
 void vala_panel_reset_schema(GSettings *settings)
 {
-	g_autoptr(GSettingsSchema) schema;
+	g_autoptr(GSettingsSchema) schema = NULL;
 	g_object_get(settings, "settings-schema", &schema, NULL);
 	g_auto(GStrv) keys = g_settings_schema_list_keys(schema);
 	for (int i = 0; keys[i]; i++)
@@ -142,7 +142,6 @@ void vala_panel_reset_schema_with_children(GSettings *settings)
 		child = g_settings_get_child(settings, children[i]);
 		vala_panel_reset_schema(child);
 	}
-	g_strfreev(children);
 	g_settings_apply(settings);
 	g_settings_sync();
 }

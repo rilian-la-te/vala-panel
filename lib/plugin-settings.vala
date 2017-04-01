@@ -111,8 +111,9 @@ namespace ValaPanel
                 if (tmp.number == num)
                 {
                     plugins.remove(tmp);
-                    reset_schema(tmp.config_settings);
-                    reset_schema(tmp.default_settings);
+                    if (tmp.config_settings!= null)
+                        reset_schema_with_children(tmp.config_settings);
+                    reset_schema_with_children(tmp.default_settings);
                     return;
                 }
             }
