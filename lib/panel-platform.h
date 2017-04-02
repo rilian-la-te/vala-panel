@@ -1,13 +1,30 @@
 #ifndef PANELPOSITIONIFACE_H
 #define PANELPOSITIONIFACE_H
 
-#include "toplevel.h"
 #include <glib-object.h>
+#include <gtk/gtk.h>
 #include <stdbool.h>
 
 G_BEGIN_DECLS
 
 G_DECLARE_INTERFACE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
+
+typedef enum {
+	ALIGN_START  = 0,
+	ALIGN_CENTER = 1,
+	ALIGN_END    = 2,
+} PanelAlignmentType;
+
+typedef enum {
+	XXS  = 16,
+	XS   = 22,
+	S    = 24,
+	M    = 32,
+	L    = 48,
+	XL   = 96,
+	XXL  = 128,
+	XXXL = 256
+} PanelIconSizeHints;
 
 typedef enum {
 	AH_HIDDEN,
@@ -23,8 +40,8 @@ struct _ValaPanelPlatformInterface
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);
 	/*struts*/
-	long (*can_strut)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-	void (*update_strut)(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
+	long (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
+	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
 	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
 	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
@@ -37,8 +54,8 @@ struct _ValaPanelPlatformInterface
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile);
-long vala_panel_platform_can_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
-void vala_panel_platform_update_strut(ValaPanelPlatform *f, ValaPanelToplevelUnit *top);
+long vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
+void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
 void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
 GSettings *vala_panel_platform_get_settings_for_scheme(ValaPanelPlatform *self, const char *scheme,

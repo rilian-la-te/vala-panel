@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "applet-manager.h"
-#include "misc.h"
+#include "lib/misc.h"
 
 G_BEGIN_DECLS
 #define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"

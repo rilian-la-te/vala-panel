@@ -54,8 +54,8 @@ static const GActionEntry vala_panel_application_app_entries[9] = {
 	//  { "restart",
 	//    activate_restart, NULL,
 	//    NULL, NULL },
-	//  { "quit", activate_exit,
-	//    NULL, NULL, NULL }
+	//      { "quit", activate_exit,
+	//        NULL, NULL, NULL }
 };
 static const GActionEntry vala_panel_application_menu_entries[3] =
     { { "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
@@ -66,6 +66,7 @@ enum
 {
 	VALA_PANEL_APP_DUMMY_PROPERTY,
 	VALA_PANEL_APP_PROFILE,
+	VALA_PANEL_APP_RUN_COMMAND,
 	VALA_PANEL_APP_TERMINAL_COMMAND,
 	VALA_PANEL_APP_LOGOUT_COMMAND,
 	VALA_PANEL_APP_SHUTDOWN_COMMAND,
@@ -171,6 +172,17 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                g_param_spec_string("profile",
 	                                                    "profile",
 	                                                    "profile",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APP_RUN_COMMAND,
+	                                g_param_spec_string("run-command",
+	                                                    "run-command",
+	                                                    "run-command",
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |

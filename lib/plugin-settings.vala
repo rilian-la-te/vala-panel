@@ -65,11 +65,7 @@ namespace ValaPanel
 
         internal ToplevelSettings (string file)
         {
-#if VALA_0_36
             this.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
-#else
-            ToplevelSettings.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
-#endif
         }
 
         internal uint find_free_num()

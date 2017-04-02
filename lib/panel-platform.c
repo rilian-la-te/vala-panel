@@ -6,14 +6,14 @@ void vala_panel_platform_default_init(ValaPanelPlatformInterface *self)
 {
 }
 
-long vala_panel_platform_can_strut(ValaPanelPlatform *self, ValaPanelToplevelUnit *top)
+long vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_IFACE(self)->can_strut(self, top);
 	return -1;
 }
 
-void vala_panel_platform_update_strut(ValaPanelPlatform *self, ValaPanelToplevelUnit *top)
+void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		VALA_PANEL_PLATFORM_GET_IFACE(self)->update_strut(self, top);

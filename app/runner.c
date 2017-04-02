@@ -2,9 +2,9 @@
 #include "boxed-wrapper.h"
 #include "glistmodel-filter.h"
 #include "info-data.h"
-#include "lib/c-lib/css.h"
-#include "lib/c-lib/launcher.h"
+#include "lib/css.h"
 #include "lib/definitions.h"
+#include "lib/launcher.h"
 #include <gio/gdesktopappinfo.h>
 #include <stdbool.h>
 #include <string.h>

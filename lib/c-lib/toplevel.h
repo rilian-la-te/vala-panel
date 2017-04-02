@@ -36,23 +36,6 @@ G_BEGIN_DECLS
 
 #define GAP 2
 
-typedef enum {
-	ALIGN_START  = 0,
-	ALIGN_CENTER = 1,
-	ALIGN_END    = 2,
-} PanelAlignmentType;
-
-typedef enum {
-	XXS  = 16,
-	XS   = 22,
-	S    = 24,
-	M    = 32,
-	L    = 48,
-	XL   = 96,
-	XXL  = 128,
-	XXXL = 256
-} PanelIconSizeHints;
-
 G_DECLARE_FINAL_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, VALA_PANEL, TOPLEVEL_UNIT,
                      GtkApplicationWindow)
 

@@ -1,0 +1,1 @@
+#include "settings-manager.h"
