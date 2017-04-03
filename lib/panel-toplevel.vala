@@ -28,6 +28,7 @@ namespace ValaPanel
         unowned AppletPlugin plugin;
         int count;
     }
+    [CCode (cname = "PanelToplevel")]
     public class Toplevel : Gtk.ApplicationWindow
     {
         private static Peas.Engine engine;
