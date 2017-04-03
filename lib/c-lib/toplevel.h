@@ -9,7 +9,7 @@ G_BEGIN_DECLS
 
 #define VALA_PANEL_SETTINGS_SCHEMA "org.valapanel.toplevel"
 #define VALA_PANEL_SETTINGS_PATH "/org/vala-panel/toplevel/"
-#define VALA_PANEL_TOPLEVEL_PATH_BASE "/org/vala-panel/toplevels/%s/%s/"
+#define VALA_PANEL_TOPLEVEL_PATH_BASE "/org/vala-panel/objects/%s/%s/"
 
 #define VALA_PANEL_KEY_EDGE "edge"
 #define VALA_PANEL_KEY_ALIGNMENT "alignment"
@@ -34,22 +34,7 @@ G_BEGIN_DECLS
 #define VALA_PANEL_KEY_FONT_SIZE_ONLY "font-size-only"
 #define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
 
-typedef enum {
-	ALIGN_START  = 0,
-	ALIGN_CENTER = 1,
-	ALIGN_END    = 2,
-} PanelAlignmentType;
-
-typedef enum {
-	XXS  = 16,
-	XS   = 22,
-	S    = 24,
-	M    = 32,
-	L    = 48,
-	XL   = 96,
-	XXL  = 128,
-	XXXL = 256
-} PanelIconSizeHints;
+#define GAP 2
 
 G_DECLARE_FINAL_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, VALA_PANEL, TOPLEVEL_UNIT,
                      GtkApplicationWindow)

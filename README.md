@@ -30,8 +30,8 @@ even broken.
 *Dependencies:*
 
 *Core:*
- * GLib (>= 2.44.0)
- * GTK3 (>= 3.16.0)
+ * GLib (>= 2.50.0)
+ * GTK3 (>= 3.22.0)
  * libpeas-1.0
  * valac
  

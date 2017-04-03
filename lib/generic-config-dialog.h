@@ -1,6 +1,6 @@
 /*
  * vala-panel
- * Copyright (C) 2015-2017 Konstantin Pugin <ria.freelander@gmail.com>
+ * Copyright (C) 2015-2016 Konstantin Pugin <ria.freelander@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,17 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RUNNERAPP_H
-#define RUNNERAPP_H
+#ifndef GENERICCONFIGDIALOG_H
+#define GENERICCONFIGDIALOG_H
 
 #include <glib-object.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelRunApplication, vala_panel_run_application, VALA_PANEL,
-                     RUN_APPLICATION, GtkApplication)
+typedef enum {
+	CONF_STR,
+	CONF_INT,
+	CONF_BOOL,
+	CONF_FILE,
+	CONF_FILE_ENTRY,
+	CONF_DIRECTORY,
+	CONF_DIRECTORY_ENTRY,
+	CONF_TRIM,
+	CONF_EXTERNAL
+} GenericConfigType;
+
+GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *settings, ...);
+GtkWidget *generic_config_widget(GSettings *settings, ...);
 
 G_END_DECLS
 
-#endif // RUNNERAPP_H
+#endif // GENERICCONFIGDIALOG_H

@@ -11,13 +11,12 @@ OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
-    --target-glib=2.44
+    --target-glib=2.50
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.gresource.xml
     --thread
     -D GLIB242
 )
 
-option(RUNNER_AS_APPLICATION "Enables building runner as standalone application instead of panel" OFF)
 set(RUNNER_SOURCES
 	runner.c
 	runner.h
@@ -35,33 +34,31 @@ glib_compile_resources(GLIB_RESOURCES_APP
         runner.gresource.xml
 )
 
-if(NOT RUNNER_AS_APPLICATION)
-	set(RUNNER_SOURCES_APP ${RUNNER_SOURCES})
-endif()
-
 #####
 # Executable
 #####
+set(APP_SOURCES
+	${GLIB_RESOURCES_APP}
+	vala-panel-platform-standalone-x11.c
+	vala-panel-platform-standalone-x11.h)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
-add_executable (${APPNAME} ${VALA_C} ${RUNNER_SOURCES_APP} ${GLIB_RESOURCES_APP})
-add_executable(${APPNAME}-new  ${RUNNER_SOURCES_APP} application-new.c application-new.h ${GLIB_RESOURCES_APP})
-target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES} cvalapanel)
-target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} cvalapanel applet-api-new)
-target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+add_executable (${APPNAME} ${VALA_C} ${APP_SOURCES})
+add_executable(${APPNAME}-new  ${APP_SOURCES} application-new.c application-new.h)
+target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES})
+target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} ${LIBNAME})
+target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
 target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
 
 install (TARGETS ${APPNAME} ${APPNAME}-new RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
 
-if(RUNNER_AS_APPLICATION)
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_APP}
 	${RUNNER_SOURCES}
 	runner-app.c
 	runner-app.h
-	${CMAKE_SOURCE_DIR}/lib/c-lib/css.c
-	${CMAKE_SOURCE_DIR}/lib/c-lib/launcher.c)
+        ${CMAKE_SOURCE_DIR}/lib/css.c
+        ${CMAKE_SOURCE_DIR}/lib/launcher.c)
 target_link_libraries (${APPNAME}-runner ${CORE_LIBRARIES} m)
 target_include_directories(${APPNAME}-runner PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 install (TARGETS ${APPNAME}-runner RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
-endif()

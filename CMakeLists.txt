@@ -82,7 +82,7 @@ add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 # Vala
 find_package (Vala REQUIRED)
 include (ValaVersion)
-ensure_vala_version ("0.28" MINIMUM)
+ensure_vala_version ("0.34" MINIMUM)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
@@ -96,20 +96,24 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 find_package (PkgConfig)
 
 pkg_check_modules (A
-	gtk+-3.0>=3.16)
+        gtk+-3.0>=3.22)
 
 pkg_check_modules (B
-  glib-2.0>=2.44)
+  glib-2.0>=2.50)
 
 pkg_check_modules (C
-  gio-2.0>=2.44
+  gio-2.0>=2.50
+)
+
+pkg_check_modules (GLIB_OLD QUIET
+  gio-2.0<=2.52
 )
 
 pkg_check_modules (D
-  gio-unix-2.0>=2.44)
+  gio-unix-2.0>=2.50)
 
 pkg_check_modules (E
-  gthread-2.0>=2.44)
+  gthread-2.0>=2.50)
 
 pkg_check_modules (F
   libpeas-1.0>=1.2)
@@ -118,17 +122,17 @@ pkg_check_modules (G
   libpeas-gtk-1.0>=1.2)
 
 pkg_check_modules (H
-  gmodule-2.0>=2.44)
+  gmodule-2.0>=2.50)
 
 pkg_check_modules (CORE REQUIRED QUIET
-  gtk+-3.0>=3.16
-  glib-2.0>=2.44
-  gio-2.0>=2.44
-  gio-unix-2.0>=2.44
-  gthread-2.0>=2.44
+  gtk+-3.0>=3.22
+  glib-2.0>=2.50
+  gio-2.0>=2.50
+  gio-unix-2.0>=2.50
+  gthread-2.0>=2.50
   libpeas-1.0>=1.2
   libpeas-gtk-1.0>=1.2
-  gmodule-2.0>=2.44)
+  gmodule-2.0>=2.50)
 
 set(CORE_PACKAGES
   gtk+-3.0

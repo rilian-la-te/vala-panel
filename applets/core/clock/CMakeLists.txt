@@ -28,7 +28,6 @@ add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
     ${RESOURCES}
 )
-
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 

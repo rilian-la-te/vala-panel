@@ -184,7 +184,11 @@ namespace LaunchBar
             else if (rows_num > len)
             {
                 current_items.iter_nth_child(out iter, null, len);
+#if VALA_0_36
+                while(current_items.remove(ref iter));
+#else
                 while(current_items.remove(iter));
+#endif
             }
             for (int i = 0; i < len; i++)
             {

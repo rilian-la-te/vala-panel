@@ -60,10 +60,10 @@ static DragData *drag_data_new(GtkMenuItem *item, GMenuModel *section, int model
 	data->ref_count = 1;
 	return data;
 }
-void drag_data_get(DragData *data, GdkDragContext *context, GtkSelectionData *sdata, uint info,
-                   uint time_)
+void drag_data_get(GtkWidget *item, GdkDragContext *context, GtkSelectionData *sdata, uint info,
+                   uint time_, DragData *data)
 {
-	g_auto(GStrv) uri_list      = NULL;
+	GStrv uri_list              = NULL;
 	g_autofree char *action     = NULL;
 	g_autofree char *target     = NULL;
 	g_autofree char *launch_str = NULL;
@@ -86,7 +86,7 @@ void drag_data_get(DragData *data, GdkDragContext *context, GtkSelectionData *sd
 	uri_list[0] = launch_str;
 	gtk_selection_data_set_uris(sdata, uri_list);
 }
-static void drag_data_begin(DragData *data, GdkDragContext *context)
+static void drag_data_begin(GtkWidget *item, GdkDragContext *context, DragData *data)
 {
 	g_autoptr(GVariant) val = g_menu_model_get_item_attribute_value(data->section,
 	                                                                data->item_pos,
@@ -94,9 +94,9 @@ static void drag_data_begin(DragData *data, GdkDragContext *context)
 	                                                                NULL);
 	g_autoptr(GIcon) icon = g_icon_deserialize(val);
 	if (icon)
-		gtk_drag_source_set_icon_gicon(GTK_WIDGET(data->menuitem), icon);
+		gtk_drag_source_set_icon_gicon(GTK_WIDGET(item), icon);
 	else
-		gtk_drag_source_set_icon_name(GTK_WIDGET(data->menuitem), "system-run-symbolic");
+		gtk_drag_source_set_icon_name(GTK_WIDGET(item), "system-run-symbolic");
 }
 
 void append_all_sections(GMenu *menu1, GMenuModel *menu2)
@@ -122,7 +122,6 @@ static void apply_menu_dnd(GtkMenuItem *item, GMenuModel *section, int model_ite
 	                    GDK_ACTION_COPY // what to do with data after dropped
 	                    );
 	DragData *data = drag_data_new(item, section, model_item);
-	drag_data_ref(data);
 	g_signal_connect(item, "drag-begin", G_CALLBACK(drag_data_begin), data);
 	g_signal_connect(item, "drag-data-get", G_CALLBACK(drag_data_get), data);
 	g_signal_connect(item, "destroy", G_CALLBACK(drag_data_destroy), data);
