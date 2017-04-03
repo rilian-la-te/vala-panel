@@ -30,9 +30,9 @@ ValaPanelUnitSettings* vala_panel_unit_settings_new(ValaPanelCoreSettings* setti
 void vala_panel_unit_settings_free(ValaPanelUnitSettings* settings);
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelUnitSettingsPointer,vala_panel_unit_settings_free,NULL);
 
-ValaPanelCoreSettings* vala_panel_core_settings_new(const char* schema, GSettingsBackend* backend, const char* path);
+ValaPanelCoreSettings *vala_panel_core_settings_new(const char* schema, GSettingsBackend* backend, const char* path);
 void vala_panel_core_settings_free(ValaPanelCoreSettings* settings);
-ValaPanelUnitSettings* vala_panel_core_settings_add_unit_settings(const char* name);
+ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(const char* name);
 void vala_panel_core_settings_remove_unit_settings(const char* uuid);
 ValaPanelUnitSettings* vala_panel_core_settings_get_by_uuid(const char* uuid);
 bool init_plugin_list();
