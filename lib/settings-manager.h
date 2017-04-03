@@ -34,50 +34,6 @@
 #define VALA_PANEL_KEY_POSITION "position"
 #define VALA_PANEL_KEY_APPLETS "applets"
 
-typedef enum {
-    PACK_START  = 0,
-    PACK_CENTER = 2,
-    PACK_END    = 1,
-} PanelAppletPackType;
-
-#define vala_panel_applet_set_position_metadata(applet, pos)                                       \
-    g_object_set_qdata(G_OBJECT(applet),                                                       \
-                       g_quark_from_static_string("position"),                                 \
-                       GINT_TO_POINTER(pos));
-
-#define vala_panel_applet_get_position_metadata(applet)                                            \
-    GPOINTER_TO_INT(                                                                           \
-        g_object_get_qdata(G_OBJECT(applet), g_quark_from_static_string("position")));
-
-#define VALA_PANEL_SETTINGS_SCHEMA "org.valapanel.toplevel"
-#define VALA_PANEL_SETTINGS_PATH "/org/vala-panel/toplevel/"
-#define VALA_PANEL_TOPLEVEL_PATH_BASE "/org/vala-panel/objects/%s/%s/"
-
-#define VALA_PANEL_KEY_EDGE "edge"
-#define VALA_PANEL_KEY_ALIGNMENT "alignment"
-#define VALA_PANEL_KEY_HEIGHT "height"
-#define VALA_PANEL_KEY_WIDTH "width"
-#define VALA_PANEL_KEY_DYNAMIC "is-dynamic"
-#define VALA_PANEL_KEY_AUTOHIDE "autohide"
-#define VALA_PANEL_KEY_SHOW_HIDDEN "show-hidden"
-#define VALA_PANEL_KEY_STRUT "strut"
-#define VALA_PANEL_KEY_DOCK "dock"
-#define VALA_PANEL_KEY_MONITOR "monitor"
-#define VALA_PANEL_KEY_MARGIN "panel-margin"
-#define VALA_PANEL_KEY_ICON_SIZE "icon-size"
-#define VALA_PANEL_KEY_BACKGROUND_COLOR "background-color"
-#define VALA_PANEL_KEY_FOREGROUND_COLOR "foreground-color"
-#define VALA_PANEL_KEY_BACKGROUND_FILE "background-file"
-#define VALA_PANEL_KEY_FONT "font"
-#define VALA_PANEL_KEY_CORNERS_SIZE "round-corners-size"
-#define VALA_PANEL_KEY_USE_BACKGROUND_COLOR "use-background-color"
-#define VALA_PANEL_KEY_USE_FOREGROUND_COLOR "use-foreground-color"
-#define VALA_PANEL_KEY_USE_FONT "use-font"
-#define VALA_PANEL_KEY_FONT_SIZE_ONLY "font-size-only"
-#define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
-
-#define GAP 2
-
 G_BEGIN_DECLS
 
 typedef struct

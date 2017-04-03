@@ -18,7 +18,8 @@
 
 #include "vala-panel-platform-standalone-x11.h"
 #include "gio/gsettingsbackend.h"
-#include "lib/settings-manager.h"
+#include "lib/applets-new/applet-api.h"
+#include "lib/c-lib/toplevel.h"
 #include "lib/definitions.h"
 
 struct _ValaPanelPlatformX11
@@ -55,14 +56,14 @@ static GSettings *vala_panel_platform_x11_get_settings_for_scheme(ValaPanelPlatf
                                                                   const char *scheme,
                                                                   const char *path)
 {
-//    ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
-//    g_autoptr(GSettingsBackend) backend =
-//        g_keyfile_settings_backend_new(_user_config_file_name(GETTEXT_PACKAGE,
-//                                                              self->profile,
-//                                                              NULL),
-//                                       DEFAULT_PLUGIN_PATH,
-//                                       "main-settings");
-//    return g_settings_new_with_backend_and_path(scheme, backend, path);
+	ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
+	g_autoptr(GSettingsBackend) backend =
+	    g_keyfile_settings_backend_new(_user_config_file_name(GETTEXT_PACKAGE,
+	                                                          self->profile,
+	                                                          NULL),
+	                                   DEFAULT_PLUGIN_PATH,
+	                                   "main-settings");
+	return g_settings_new_with_backend_and_path(scheme, backend, path);
 }
 
 static void vala_panel_platform_x11_remove_settings_path(ValaPanelPlatform *obj, const char *path,
@@ -86,27 +87,27 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
                                                               GtkApplication *app,
                                                               const char *profile)
 {
-//	ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
-//	g_autoptr(GKeyFile) f      = g_key_file_new();
-//	g_key_file_load_from_config(f, self->profile);
-//	g_autoptr(GSettingsBackend) backend =
-//	    g_keyfile_settings_backend_new(_user_config_file_name(GETTEXT_PACKAGE,
-//	                                                          self->profile,
-//	                                                          NULL),
-//	                                   DEFAULT_PLUGIN_PATH,
-//	                                   "main-settings");
-//	g_autoptr(GSettings) s =
-//	    g_settings_new_with_backend_and_path(VALA_PANEL_APPLICATION_SETTINGS,
-//	                                         backend,
-//	                                         DEFAULT_PLUGIN_PATH);
-//	g_autoptr(GSettings) settings = g_settings_get_child(s, profile);
-//	g_auto(GStrv) panels = g_settings_get_strv(settings, VALA_PANEL_APPLICATION_PANELS);
-//	for (int i = 0; panels[i] != NULL; i++)
-//	{
+	ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
+	g_autoptr(GKeyFile) f      = g_key_file_new();
+	g_key_file_load_from_config(f, self->profile);
+	g_autoptr(GSettingsBackend) backend =
+	    g_keyfile_settings_backend_new(_user_config_file_name(GETTEXT_PACKAGE,
+	                                                          self->profile,
+	                                                          NULL),
+	                                   DEFAULT_PLUGIN_PATH,
+	                                   "main-settings");
+	g_autoptr(GSettings) s =
+	    g_settings_new_with_backend_and_path(VALA_PANEL_APPLICATION_SETTINGS,
+	                                         backend,
+	                                         DEFAULT_PLUGIN_PATH);
+	g_autoptr(GSettings) settings = g_settings_get_child(s, profile);
+	g_auto(GStrv) panels = g_settings_get_strv(settings, VALA_PANEL_APPLICATION_PANELS);
+	for (int i = 0; panels[i] != NULL; i++)
+	{
 		//		ValaPanelToplevelUnit *unit =
 		// vala_panel_toplevel_unit_new_from_uid(app, panels[i]);
 		//		gtk_application_add_window(app, GTK_WINDOW(unit));
-//	}
+	}
 	return true;
 }
 
