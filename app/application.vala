@@ -293,6 +293,29 @@ namespace ValaPanel
             activate();
             return 0;
         }
+        private static void start_panels_from_dir(Gtk.Application app, string dirname)
+        {
+            Dir dir;
+            try
+            {
+                dir = Dir.open(dirname,0);
+            } catch (FileError e)
+            {
+                stdout.printf("Cannot load directory: %s\n",e.message);
+                return;
+            }
+            string? name;
+            while ((name = dir.read_name()) != null)
+            {
+                string cfg = GLib.Path.build_filename(dirname,name);
+                if (!(cfg.contains("~") && cfg[0] !='.'))
+                {
+                    var panel = Toplevel.load(app,cfg,name);
+                    if (panel != null)
+                        app.add_window(panel);
+                }
+            }
+        }
         private bool start_all_panels()
         {
             var panel_dir = user_config_file_name("panels",null);
