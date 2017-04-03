@@ -50,7 +50,7 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
     public class AppletLayout : Gtk.Box
     {
-	public AppletLayout(Gtk.Orientation orient, int spacing);
+		public AppletLayout(Gtk.Orientation orient, int spacing);
     }
     [CCode(cheader_filename="lib/settings-manager.h")]
     public const string PLUGIN_SCHEMA;
@@ -119,7 +119,7 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
 	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_core_settings_free"]
+	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_core_settings_free")]
 	internal class CoreSettings
 	{
 		internal HashTable<string,UnitSettings> all_units;
@@ -128,22 +128,22 @@ namespace ValaPanel
 		internal string root_schema;
 		internal string root_path;
 		internal static string get_uuid();
-		internal CoreSettings(const string schema, const string path, const string root, GLib.SettingsBackend backend);
-		internal UnitSettings add_unit_settings(const string name);
-		internal UnitSettings add_unit_settings_full(const string name, const string uuid);
-		internal void remove_unit_settings(const string name);
-		internal UnitSettings get_by_uuid(const string uuid);
+		internal CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
+		internal UnitSettings add_unit_settings(string name);
+		internal UnitSettings add_unit_settings_full(string name, string uuid);
+		internal void remove_unit_settings(string name);
+		internal UnitSettings get_by_uuid(string uuid);
 		internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
 	}
 	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_unit_settings_free"]
+	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_unit_settings_free")]
 	internal class UnitSettings
 	{
 		internal GLib.Settings default_settings;
 		internal GLib.Settings custom_settings;
 		internal string uuid;
 		internal string path_elem;
-		internal UnitSettings(CoreSettings settings, const string? name, const string uuid);
+		internal UnitSettings(CoreSettings settings, string? name, string uuid);
 	}
 	
 }
