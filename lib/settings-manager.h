@@ -14,6 +14,7 @@
 #define VALA_PANEL_KEY_CAN_EXPAND "can-expand"
 #define VALA_PANEL_KEY_PACK "pack-type"
 #define VALA_PANEL_KEY_POSITION "position"
+#define VALA_PANEL_KEY_APPLETS "applets"
 
 G_BEGIN_DECLS
 
@@ -47,12 +48,15 @@ ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const ch
 void vala_panel_core_settings_free(ValaPanelCoreSettings *settings);
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreSettings *settings,
                                                                   const char *name);
+ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
+    ValaPanelCoreSettings *settings, const char *name, const char *uuid);
 void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
                                                    const char *name);
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
                                                             const char *uuid);
 char *vala_panel_core_settings_get_uuid();
-bool vala_panel_core_settings_init_plugin_list(ValaPanelCoreSettings *settings);
+bool vala_panel_core_settings_init_toplevel_plugin_list(ValaPanelCoreSettings *settings,
+                                                        ValaPanelUnitSettings *toplevel_settings);
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelCoreSettingsPointer, vala_panel_core_settings_free, NULL);
 
 G_END_DECLS

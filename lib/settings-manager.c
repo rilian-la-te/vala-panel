@@ -12,13 +12,21 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 {
 	ValaPanelUnitSettings *created_settings = g_new(ValaPanelUnitSettings, 1);
 	created_settings->uuid                  = g_strdup(uuid);
-	created_settings->path_elem             = g_strdup(name);
-	g_autofree gchar *id =
-	    g_strdup_printf("%s.%s", settings->root_schema, created_settings->path_elem);
 	g_autofree gchar *path =
 	    g_strdup_printf("%s%s/", settings->root_path, created_settings->uuid);
 	created_settings->default_settings =
 	    g_settings_new_with_backend_and_path(VALA_PANEL_PLUGIN_SCHEMA, settings->backend, path);
+	g_autofree char *tname = g_strdup(name);
+	if (tname == NULL)
+		g_settings_get(created_settings->default_settings,
+		               VALA_PANEL_KEY_NAME,
+		               "s",
+		               &tname,
+		               NULL);
+	created_settings->path_elem = g_strdup(tname);
+	g_autofree gchar *id =
+	    g_strdup_printf("%s.%s", settings->root_schema, created_settings->path_elem);
+
 	GSettingsSchemaSource *source     = g_settings_schema_source_get_default();
 	g_autoptr(GSettingsSchema) schema = g_settings_schema_source_lookup(source, id, true);
 	if (schema != NULL)
@@ -73,13 +81,19 @@ void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 	g_free0(settings);
 }
 
+ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
+    ValaPanelCoreSettings *settings, const char *name, const char *uuid)
+{
+	ValaPanelUnitSettings *usettings = vala_panel_unit_settings_new(settings, name, uuid);
+	g_hash_table_insert(settings->all_units, g_strdup(uuid), usettings);
+	return usettings;
+}
+
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreSettings *settings,
                                                                   const char *name)
 {
-	g_autofree char *uuid            = vala_panel_core_settings_get_uuid();
-	ValaPanelUnitSettings *usettings = vala_panel_unit_settings_new(settings, name, uuid);
-	g_hash_table_insert(settings->all_units, uuid, usettings);
-	return usettings;
+	g_autofree char *uuid = vala_panel_core_settings_get_uuid();
+	return vala_panel_core_settings_add_unit_settings_full(settings, name, uuid);
 }
 
 void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
@@ -99,8 +113,18 @@ ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSetting
 	return (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, uuid);
 }
 
-bool vala_panel_core_settings_init_plugin_list(ValaPanelCoreSettings *settings)
+bool vala_panel_core_settings_init_toplevel_plugin_list(ValaPanelCoreSettings *settings,
+                                                        ValaPanelUnitSettings *toplevel_settings)
 {
+	g_auto(GStrv) applets_list = NULL;
+	GSettings *tsettings       = toplevel_settings->default_settings;
+	g_settings_get(tsettings, "applets", "as", &applets_list, NULL);
+	for (int i = 0; applets_list[i] != NULL; i++)
+	{
+		g_autofree char *applet_uuid = g_strdup(applets_list[i]);
+		vala_panel_core_settings_add_unit_settings_full(settings, NULL, applet_uuid);
+	}
+	return true;
 }
 
 char *vala_panel_core_settings_get_uuid()

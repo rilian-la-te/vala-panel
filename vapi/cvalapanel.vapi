@@ -118,6 +118,34 @@ namespace ValaPanel
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
     [CCode (cheader_filename="lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
+	[Compact]
+	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_core_settings_free"]
+	internal class CoreSettings
+	{
+		internal HashTable<string,UnitSettings> all_units;
+		internal GLib.SettingsBackend backend;
+		internal string root_name;
+		internal string root_schema;
+		internal string root_path;
+		internal static string get_uuid();
+		internal CoreSettings(const string schema, const string path, const string root, GLib.SettingsBackend backend);
+		internal UnitSettings add_unit_settings(const string name);
+		internal UnitSettings add_unit_settings_full(const string name, const string uuid);
+		internal void remove_unit_settings(const string name);
+		internal UnitSettings get_by_uuid(const string uuid);
+		internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
+	}
+	[Compact]
+	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_unit_settings_free"]
+	internal class UnitSettings
+	{
+		internal GLib.Settings default_settings;
+		internal GLib.Settings custom_settings;
+		internal string uuid;
+		internal string path_elem;
+		internal UnitSettings(CoreSettings settings, const string? name, const string uuid);
+	}
+	
 }
 [CCode (cprefix="")]
 namespace MenuMaker
@@ -174,6 +202,7 @@ namespace ValaPanel.Key
     public const string USE_FONT;
     public const string FONT_SIZE_ONLY;
     public const string USE_BACKGROUND_FILE;
+    internal const string APPLETS;
     internal const string NAME;
     internal const string EXPAND;
     internal const string CAN_EXPAND;
