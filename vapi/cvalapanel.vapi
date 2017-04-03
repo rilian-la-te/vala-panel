@@ -36,27 +36,22 @@ namespace PanelCSS
 }
 namespace ValaPanel
 {
-    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "lib/c-lib/panel-layout.h")]
+    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "lib/settings-manager.h")]
     public enum AppletPackType
     {
         START,
         CENTER,
         END
     }
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode (cheader_filename="lib/settings-manager.h")]
     public void applet_set_position_metadata(Gtk.Widget applet, int metadata);
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode (cheader_filename="lib/settings-manager.h")]
     public int applet_get_position_metadata(Gtk.Widget applet);
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
-    public class AppletLayout : Gtk.Box
-    {
-		public AppletLayout(Gtk.Orientation orient, int spacing);
-    }
     [CCode(cheader_filename="lib/settings-manager.h")]
     public const string PLUGIN_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
+    [CCode(cheader_filename="lib/settings-manager.h")]
     public const string SETTINGS_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
+    [CCode(cheader_filename="lib/settings-manager.h")]
     public const string SETTINGS_PATH;
     [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/generic-config-dialog.h")]
     public enum GenericConfigType
@@ -79,14 +74,14 @@ namespace ValaPanel
 		GRAB,
         WAITING
     }
-    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
+    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/panel-platform.h,lib/vala-panel-enums.h")]
     public enum AlignmentType
     {
         START,
         CENTER,
         END
     }
-    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
+    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/panel-platform.h,lib/vala-panel-enums.h")]
     internal enum IconSizeHints
     {
         XXS,
@@ -183,7 +178,7 @@ namespace ValaPanel.Application
 	public const string SETTINGS;
 }
 
-[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h,lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string EDGE;

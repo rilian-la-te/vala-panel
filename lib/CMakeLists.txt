@@ -1,5 +1,3 @@
-add_subdirectory(applets-new)
-add_subdirectory(c-lib)
 include(GLibHelpers)
 set(ENUM_FILES
         panel-platform.h
