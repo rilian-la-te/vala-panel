@@ -33,6 +33,7 @@ void vala_panel_add_prop_as_action(GActionMap *map, const char *prop);
 void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop);
 void vala_panel_apply_window_icon(GtkWindow *win);
 void vala_panel_reset_schema(GSettings *settings);
+void vala_panel_reset_schema_with_children(GSettings *settings);
 void vala_panel_reset_path(GSettings *settings);
 char *vala_panel_generate_new_hash();
 G_END_DECLS

@@ -52,7 +52,7 @@ namespace ValaPanel
     {
 	public AppletLayout(Gtk.Orientation orient, int spacing);
     }
-    [CCode(cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode(cheader_filename="lib/settings-manager.h")]
     public const string PLUGIN_SCHEMA;
     [CCode(cheader_filename="lib/c-lib/toplevel.h")]
     public const string SETTINGS_SCHEMA;
@@ -149,7 +149,7 @@ namespace ValaPanel.Configurator
                                     GLib.Settings settings, ...);
 }
 
-[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h,lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string EDGE;

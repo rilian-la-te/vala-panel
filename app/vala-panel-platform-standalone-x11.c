@@ -87,7 +87,7 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	for (int i = 0; panels[i] != NULL; i++)
 	{
 		//		ValaPanelToplevelUnit *unit =
-		//vala_panel_toplevel_unit_new_from_uid(app, panels[i]);
+		// vala_panel_toplevel_unit_new_from_uid(app, panels[i]);
 		//		gtk_application_add_window(app, GTK_WINDOW(unit));
 	}
 	return true;
