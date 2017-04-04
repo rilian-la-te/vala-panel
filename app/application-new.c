@@ -27,6 +27,8 @@
 #include <locale.h>
 #include <stdbool.h>
 
+#define COMMAND_DES_TR N_("Run command on already opened panel")
+
 struct _ValaPanelApplication
 {
 	bool started;
@@ -52,13 +54,7 @@ static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data)
 static const GOptionEntry entries[] =
     { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
       { "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, N_("Use specified profile"), N_("profile") },
-      { "command",
-	'c',
-	0,
-	G_OPTION_ARG_STRING,
-	NULL,
-	N_("Run command on already opened panel"),
-	N_("cmd") },
+      { "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
       { NULL } };
 
 static const GActionEntry vala_panel_application_app_entries[6] = {
@@ -68,8 +64,7 @@ static const GActionEntry vala_panel_application_app_entries[6] = {
 	//      { "panel-preferences",
 	//        activate_panel_preferences,
 	//        "s", NULL, NULL, { 0 } },
-	//      { "about", activate_about,
-	//        NULL, NULL, NULL, { 0 } },
+	//	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
 	//      { "menu",
 	//        activate_menu,
 	//        NULL, NULL, NULL, { 0 } },
@@ -249,13 +244,14 @@ void apply_styling(ValaPanelApplication *app)
 	{
 		if (app->provider)
 			gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
-			                                             app->provider);
+			                                             GTK_STYLE_PROVIDER(
+			                                                 app->provider));
 		app->provider = css_apply_from_file_to_app_with_provider(app->css);
 	}
 	else if (app->provider)
 	{
 		gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
-		                                             app->provider);
+		                                             GTK_STYLE_PROVIDER(app->provider));
 		app->provider = NULL;
 	}
 }
