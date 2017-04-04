@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "settings-manager.h"
-#include "config.h"
+#include <glib-object.h>
+
 #include "definitions.h"
 #include "misc.h"
+#include "settings-manager.h"
 
 #ifndef G252
 #include "guuid.h"
@@ -53,6 +54,18 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 	return created_settings;
 }
 
+static ValaPanelUnitSettings *vala_panel_unit_settings_copy(ValaPanelUnitSettings *source)
+{
+	ValaPanelUnitSettings *created_settings = g_new(ValaPanelUnitSettings, 1);
+	created_settings->uuid                  = g_strdup(source->uuid);
+	created_settings->path_elem             = g_strdup(source->path_elem);
+	created_settings->default_settings = G_SETTINGS(g_object_ref(source->default_settings));
+	if (source->custom_settings)
+		created_settings->custom_settings =
+		    G_SETTINGS(g_object_ref(source->custom_settings));
+	return created_settings;
+}
+
 void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
@@ -73,6 +86,18 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 	settings = NULL;
 }
 
+GType vala_panel_unit_settings_get_type(void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY(!type))
+		type = g_boxed_type_register_static("ValaPanelUnitSettings",
+		                                    vala_panel_unit_settings_copy,
+		                                    vala_panel_unit_settings_free);
+
+	return type;
+}
+
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
                                                     const char *root, GSettingsBackend *backend)
 {
@@ -89,6 +114,17 @@ ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const ch
 	return new_settings;
 }
 
+ValaPanelCoreSettings *vala_panel_core_settings_copy(ValaPanelCoreSettings *settings)
+{
+	ValaPanelCoreSettings *new_settings = g_new0(ValaPanelCoreSettings, 1);
+	new_settings->root_name             = g_strdup(settings->root_name);
+	new_settings->root_path             = g_strdup(settings->root_path);
+	new_settings->root_schema           = g_strdup(settings->root_schema);
+	new_settings->backend               = g_object_ref(settings->backend);
+	new_settings->all_units             = g_hash_table_ref(settings->all_units);
+    return new_settings;
+}
+
 void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 {
 	g_free0(settings->root_name);
@@ -97,6 +133,18 @@ void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 	g_object_unref0(settings->backend);
 	g_hash_table_unref(settings->all_units);
 	g_free0(settings);
+}
+
+GType vala_panel_core_settings_get_type(void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY(!type))
+		type = g_boxed_type_register_static("ValaPanelCoreSettings",
+		                                    vala_panel_core_settings_copy,
+		                                    vala_panel_core_settings_free);
+
+	return type;
 }
 
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(

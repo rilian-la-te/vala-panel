@@ -19,6 +19,8 @@
 #ifndef SETTINGSMANAGER_H
 #define SETTINGSMANAGER_H
 
+#include "config.h"
+
 #include <gio/gio.h>
 #include <glib.h>
 #include <stdbool.h>
