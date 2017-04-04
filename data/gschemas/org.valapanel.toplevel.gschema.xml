@@ -19,6 +19,9 @@
     <key name="name" type="s">
       <default>''</default>
     </key>
+    <key name="applets" type="as">
+      <default>[]</default>
+    </key>
     <key name="monitor" type="i">
       <default>-1</default>
     </key>

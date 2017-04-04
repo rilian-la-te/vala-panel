@@ -6,16 +6,9 @@
 #include <stdbool.h>
 
 #include "applet-manager.h"
-#include "misc.h"
+#include "lib/misc.h"
 
 G_BEGIN_DECLS
-#define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
-
-#define VALA_PANEL_KEY_NAME "plugin-type"
-#define VALA_PANEL_KEY_EXPAND "is-expanded"
-#define VALA_PANEL_KEY_CAN_EXPAND "can-expand"
-#define VALA_PANEL_KEY_PACK "pack-type"
-#define VALA_PANEL_KEY_POSITION "position"
 
 typedef enum {
 	PACK_START  = 0,
@@ -37,7 +30,7 @@ G_DECLARE_FINAL_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, VALA_PANEL
 
 ValaPanelAppletLayout *vala_panel_applet_layout_new(GtkOrientation orient, int spacing);
 void vala_panel_applet_layout_update_views(ValaPanelAppletLayout *self);
-void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelManager *gmgr,
+void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPanelPlatform *gmgr,
                                            GSettings *toplevel_settings,
                                            ValaPanelAppletManager *mgr, const char *applet_type,
                                            PanelAppletPackType pack, int pos);

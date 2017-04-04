@@ -1,7 +1,7 @@
 Vala Panel
 ---
 
-This is Vala rewrite of SimplePanel, GTK3 LXPanel fork.
+This is Vala rewrite of [SimplePanel](https://github.com/rilian-la-te/simple-panel), GTK3 LXPanel fork.
 
 *TODO:*
  * [x] Rewrite core panel in Vala (0.2)
@@ -30,8 +30,8 @@ even broken.
 *Dependencies:*
 
 *Core:*
- * GLib (>= 2.44.0)
- * GTK3 (>= 3.16.0)
+ * GLib (>= 2.50.0)
+ * GTK3 (>= 3.22.0)
  * libpeas-1.0
  * valac
  

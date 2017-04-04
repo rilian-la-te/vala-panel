@@ -21,29 +21,6 @@ using Gtk;
 
 namespace ValaPanel
 {
-    public static void start_panels_from_dir(Gtk.Application app, string dirname)
-    {
-        Dir dir;
-        try
-        {
-            dir = Dir.open(dirname,0);
-        } catch (FileError e)
-        {
-            stdout.printf("Cannot load directory: %s\n",e.message);
-            return;
-        }
-        string? name;
-        while ((name = dir.read_name()) != null)
-        {
-            string cfg = GLib.Path.build_filename(dirname,name);
-            if (!(cfg.contains("~") && cfg[0] !='.'))
-            {
-                var panel = Toplevel.load(app,cfg,name);
-                if (panel != null)
-                    app.add_window(panel);
-            }
-        }
-    }
     public static void setup_icon(Image img, Icon icon, Toplevel? top = null, int size = -1)
     {
         img.set_from_gicon(icon,IconSize.INVALID);

@@ -1,7 +1,7 @@
 #include <X11/X.h>
 #include <gtk/gtk.h>
 
-#include "vala-panel.h"
+#include "vala-panel-compat.h"
 
 G_BEGIN_DECLS
 /* Representative of a balloon message. */

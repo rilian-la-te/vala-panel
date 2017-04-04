@@ -1,5 +1,8 @@
 <schemalist>
   <schema id="org.valapanel">
+    <key name="toplevels" type="as">
+      <default>[]</default>
+    </key>
     <key name="is-dark" type="b">
       <default>false</default>
     </key>
@@ -8,6 +11,9 @@
     </key>
     <key name="css" type="s">
       <default>""</default>
+    </key>
+    <key name="run-command" type="s">
+      <default>"vala-panel-runner"</default>
     </key>
     <key name="logout-command" type="s">
       <default>"gnome-logout"</default>

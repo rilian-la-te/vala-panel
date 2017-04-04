@@ -35,7 +35,7 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel cvalapanel)
+target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

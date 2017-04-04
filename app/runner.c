@@ -1,10 +1,28 @@
+/*
+ * vala-panel
+ * Copyright (C) 2015-2017 Konstantin Pugin <ria.freelander@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "runner.h"
 #include "boxed-wrapper.h"
 #include "glistmodel-filter.h"
 #include "info-data.h"
-#include "lib/c-lib/css.h"
-#include "lib/c-lib/launcher.h"
+#include "lib/css.h"
 #include "lib/definitions.h"
+#include "lib/launcher.h"
 #include <gio/gdesktopappinfo.h>
 #include <stdbool.h>
 #include <string.h>
@@ -104,15 +122,19 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			GtkWidget *active_row = gtk_bin_get_child(
 			    GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
 			InfoData *data = g_app_launcher_button_get_info_data(active_row);
-			app_info       = g_app_info_create_from_commandline(
-			    data->command,
-			    NULL,
-			    gtk_toggle_button_get_active(self->terminal_button)
-			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-			        : G_APP_INFO_CREATE_NONE,
-			    NULL);
-			launch =
-			    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
+			if (data)
+			{
+				app_info = g_app_info_create_from_commandline(
+				    data->command,
+				    NULL,
+				    gtk_toggle_button_get_active(self->terminal_button)
+				        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+				        : G_APP_INFO_CREATE_NONE,
+				    NULL);
+				launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),
+				                           NULL,
+				                           GTK_WIDGET(dlg));
+			}
 			if (!launch)
 			{
 				g_signal_stop_emission_by_name(dlg, "response");
@@ -141,8 +163,9 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 
 void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 {
-	vala_panel_list_model_filter_invalidate(self->filter);
-	if (g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
+	if (self->filter)
+		vala_panel_list_model_filter_invalidate(self->filter);
+	if (self->filter && g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
 	{
 		gtk_revealer_set_transition_type(self->bottom_revealer,
 		                                 GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP);

@@ -8,7 +8,7 @@
 
 struct _ValaPanelAppletManager
 {
-	ValaPanelManager *mgr;
+	ValaPanelPlatform *mgr;
 	char *profile;
 	GHashTable *available_engines;
 };
@@ -85,7 +85,7 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 		g_autofree char *scheme = g_strdup_printf(PLUGIN_SETTINGS_SCHEMA_BASE, applet_type);
 		g_autofree char *cpath  = g_strconcat(path, uuid, "/", NULL);
 		GSettings *settings =
-		    vala_panel_manager_get_settings_for_scheme(self->mgr, scheme, cpath);
+		    vala_panel_platform_get_settings_for_scheme(self->mgr, scheme, cpath);
 		ValaPanelAppletWidget *widget =
 		    vala_panel_applet_engine_get_applet_widget_for_type((ValaPanelAppletEngine *)
 		                                                            key,
@@ -98,7 +98,7 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 	return NULL;
 }
 
-ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelManager *mgr)
+ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelPlatform *mgr)
 {
 	ValaPanelAppletManager *ret =
 	    VALA_PANEL_APPLET_MANAGER(g_object_new(vala_panel_applet_manager_get_type(), NULL));
@@ -106,7 +106,7 @@ ValaPanelAppletManager *vala_panel_applet_manager_new(ValaPanelManager *mgr)
 	return ret;
 }
 
-ValaPanelManager *vala_panel_applet_manager_get_manager(ValaPanelAppletManager *self)
+ValaPanelPlatform *vala_panel_applet_manager_get_manager(ValaPanelAppletManager *self)
 {
 	return self->mgr;
 }

@@ -38,8 +38,6 @@ namespace ValaPanel
         MenuButton alignment_button;
         [GtkChild (name="monitors-button")]
         MenuButton monitors_button;
-        [GtkChild (name="box-show-hidden")]
-        Box sw_show_hidden;
         [GtkChild (name="spin-margin")]
         SpinButton spin_margin;
         [GtkChild (name="spin-iconsize")]
@@ -178,7 +176,6 @@ namespace ValaPanel
             toplevel.bind_property(Key.WIDTH,spin_width,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             toplevel.bind_property(Key.DYNAMIC,spin_width,"sensitive",BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN);
             toplevel.bind_property(Key.HEIGHT,spin_height,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
-            toplevel.bind_property(Key.AUTOHIDE,sw_show_hidden,"sensitive",BindingFlags.SYNC_CREATE);
             toplevel.bind_property(Key.ICON_SIZE,spin_iconsize,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             toplevel.bind_property(Key.CORNERS_SIZE,spin_corners,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             /* background */
@@ -422,7 +419,11 @@ namespace ValaPanel
                 model.get(it, Column.DATA, out pl, -1);
                 if( tree_path.get_indices()[0] >= model.iter_n_children(null))
                     tree_path.prev();
+#if VALA_0_36
+                (model as Gtk.ListStore).remove(ref it);
+#else
                 (model as Gtk.ListStore).remove(it);
+#endif
                 tree_sel.select_path(tree_path );
                 toplevel.remove_applet(pl);
             }

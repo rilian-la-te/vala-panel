@@ -65,7 +65,7 @@ namespace ValaPanel
 
         internal ToplevelSettings (string file)
         {
-            ToplevelSettings.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
+            this.full(file,SETTINGS_SCHEMA,SETTINGS_PATH,ROOT_NAME);
         }
 
         internal uint find_free_num()
@@ -107,17 +107,9 @@ namespace ValaPanel
                 if (tmp.number == num)
                 {
                     plugins.remove(tmp);
-                    var f = new GLib.KeyFile();
-                    try
-                    {
-                        f.load_from_file(this.filename,GLib.KeyFileFlags.KEEP_COMMENTS);
-                        if (f.has_group(num.to_string()))
-                        {
-                            f.remove_group(num.to_string());
-                            f.save_to_file(this.filename);
-                        }
-                    }
-                    catch (GLib.KeyFileError e) {} catch (GLib.FileError e) {}
+                    if (tmp.config_settings!= null)
+                        reset_schema_with_children(tmp.config_settings);
+                    reset_schema_with_children(tmp.default_settings);
                     return;
                 }
             }
