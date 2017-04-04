@@ -41,7 +41,6 @@ set(APP_SOURCES
 	${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
 	vala-panel-platform-standalone-x11.h)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
 add_executable (${APPNAME} ${VALA_C} ${APP_SOURCES})
 add_executable(${APPNAME}-new  ${APP_SOURCES} application-new.c application-new.h)
