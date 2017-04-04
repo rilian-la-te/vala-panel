@@ -79,14 +79,14 @@ namespace ValaPanel
 		GRAB,
         WAITING
     }
-    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
+    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
     public enum AlignmentType
     {
         START,
         CENTER,
         END
     }
-    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/vala-panel-enums.h")]
+    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
     internal enum IconSizeHints
     {
         XXS,
