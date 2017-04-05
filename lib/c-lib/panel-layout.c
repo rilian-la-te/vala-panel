@@ -97,17 +97,18 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPane
                                            ValaPanelAppletManager *mgr, const char *applet_type,
                                            PanelAppletPackType pack, int pos)
 {
-	g_autofree char *uid  = vala_panel_generate_new_hash();
+    g_autofree char *uid  = vala_panel_core_settings_get_uuid();
 	g_autofree char *path = NULL;
 	g_object_get(toplevel_settings, "path", &path, NULL);
 	g_autofree char *cpath = g_strconcat(path, uid, "/", NULL);
 	GtkWidget *applet      = GTK_WIDGET(
 	    vala_panel_applet_manager_get_applet_widget_for_type(mgr, path, applet_type, uid));
-	GSettings *csettings =
-	    vala_panel_platform_get_settings_for_scheme(gmgr, DEFAULT_PLUGIN_SETTINGS_ID, cpath);
-	g_settings_set_int(csettings, VALA_PANEL_KEY_POSITION, pos);
-	g_settings_set_string(csettings, VALA_PANEL_KEY_NAME, applet_type);
-	g_settings_set_enum(csettings, VALA_PANEL_KEY_PACK, pack);
+    ValaPanelCoreSettings *settings =
+        vala_panel_platform_get_settings(gmgr);
+    ValaPanelUnitSettings* csettings = vala_panel_unit_settings_new(settings,applet_type,uid,false);
+    g_settings_set_int(csettings->default_settings, VALA_PANEL_KEY_POSITION, pos);
+    g_settings_set_string(csettings->default_settings, VALA_PANEL_KEY_NAME, applet_type);
+    g_settings_set_enum(csettings->default_settings, VALA_PANEL_KEY_PACK, pack);
 	vala_panel_applet_set_position_metadata(applet, pos);
 	vala_panel_applet_layout_place_applet_widget(self, applet, pack, pos);
 	vala_panel_applet_layout_update_views(self);
