@@ -176,11 +176,13 @@ namespace ValaPanel.Configurator
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
 }
-[CCode (cheader_filename = "app/vala-panel-platform-standalone-x11.h", cprefix = "VALA_PANEL_APPLICATION_",lower_case_cprefix="VALA_PANEL_APPLICATION_")]
-namespace ValaPanel.Application
+[CCode (cheader_filename = "lib/panel-platform.h", cprefix = "VALA_PANEL_",lower_case_cprefix="VALA_PANEL_")]
+namespace ValaPanel.Setttings
 {
-	public const string PANELS;
-	public const string SETTINGS;
+	public const string CORE_SCHEMA;
+	public const string CORE_PATH;
+	public const string OBJECT_PATH;
+	public const string OBJECT_PATH_TEMPLATE;
 }
 
 [CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h,lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]

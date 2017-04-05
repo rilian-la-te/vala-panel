@@ -193,7 +193,7 @@ namespace ValaPanel
 /*
  * Big constructor
  */
-        private Toplevel (Gtk.Application app, string name)
+        public Toplevel (Gtk.Application app, string name)
         {
             Object(border_width: 0,
                 decorated: false,

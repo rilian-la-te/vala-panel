@@ -9,7 +9,6 @@
 G_BEGIN_DECLS
 
 #define DEFAULT_PLUGIN_SETTINGS_ID "org.valapanel.toplevel.applet"
-#define DEFAULT_PLUGIN_PATH "/org/vala-panel/objects/"
 #define DEFAULT_PLUGIN_GROUP "position"
 
 #define DEFAULT_PLUGIN_NAME_KEY "plugin-type"

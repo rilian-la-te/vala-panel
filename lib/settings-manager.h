@@ -41,7 +41,6 @@ G_BEGIN_DECLS
 typedef struct
 {
 	GSettingsBackend *backend;
-	char *root_name;
 	char *root_schema;
 	char *root_path;
 	GHashTable *all_units;
@@ -51,7 +50,7 @@ typedef struct
 {
 	GSettings *default_settings;
 	GSettings *custom_settings;
-	char *path_elem;
+	char *schema_elem;
 	char *uuid;
 } ValaPanelUnitSettings;
 
@@ -59,17 +58,19 @@ typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
 typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;
 
 ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *settings,
-                                                    const char *name, const char *uuid);
+                                                    const char *name, const char *uuid,
+                                                    bool is_toplevel);
 void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelUnitSettingsPointer, vala_panel_unit_settings_free, NULL);
 
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
-                                                    const char *root, GSettingsBackend *backend);
+                                                    GSettingsBackend *backend);
 void vala_panel_core_settings_free(ValaPanelCoreSettings *settings);
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreSettings *settings,
-                                                                  const char *name);
+                                                                  const char *name,
+                                                                  bool is_toplevel);
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
-    ValaPanelCoreSettings *settings, const char *name, const char *uuid);
+    ValaPanelCoreSettings *settings, const char *name, const char *uuid, bool is_toplevel);
 void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
                                                    const char *name);
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
