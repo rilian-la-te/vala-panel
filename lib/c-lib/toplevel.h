@@ -13,6 +13,7 @@ G_BEGIN_DECLS
 
 #define VALA_PANEL_KEY_EDGE "edge"
 #define VALA_PANEL_KEY_ALIGNMENT "alignment"
+#define VALA_PANEL_KEY_ORIENTATION "orientation"
 #define VALA_PANEL_KEY_HEIGHT "height"
 #define VALA_PANEL_KEY_WIDTH "width"
 #define VALA_PANEL_KEY_DYNAMIC "is-dynamic"
