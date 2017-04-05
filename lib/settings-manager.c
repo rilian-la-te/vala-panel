@@ -86,17 +86,7 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 	settings = NULL;
 }
 
-GType vala_panel_unit_settings_get_type(void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY(!type))
-		type = g_boxed_type_register_static("ValaPanelUnitSettings",
-		                                    vala_panel_unit_settings_copy,
-		                                    vala_panel_unit_settings_free);
-
-	return type;
-}
+G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings,vala_panel_unit_settings,vala_panel_unit_settings_copy,vala_panel_unit_settings_free)
 
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
                                                     const char *root, GSettingsBackend *backend)
@@ -135,17 +125,8 @@ void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 	g_free0(settings);
 }
 
-GType vala_panel_core_settings_get_type(void)
-{
-	static GType type = 0;
+G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings,vala_panel_core_settings,vala_panel_core_settings_copy,vala_panel_core_settings_free)
 
-	if (G_UNLIKELY(!type))
-		type = g_boxed_type_register_static("ValaPanelCoreSettings",
-		                                    vala_panel_core_settings_copy,
-		                                    vala_panel_core_settings_free);
-
-	return type;
-}
 
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
     ValaPanelCoreSettings *settings, const char *name, const char *uuid)

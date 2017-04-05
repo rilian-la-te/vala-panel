@@ -1,7 +1,5 @@
 include(GResource)
 set(ENUM_FILES
-	panel-platform.h
-        generic-config-dialog.h
         toplevel.h
         panel-layout.h
         )
