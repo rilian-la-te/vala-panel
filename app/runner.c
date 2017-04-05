@@ -397,8 +397,8 @@ ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
 void gtk_run(ValaPanelRunner *self)
 {
 	gtk_widget_show(GTK_WIDGET(self));
-    GtkSettings* settings = gtk_widget_get_settings(GTK_WIDGET(self));
-    g_object_set(settings,"gtk-application-prefer-dark-theme",true,NULL);
+	GtkSettings *settings = gtk_widget_get_settings(GTK_WIDGET(self));
+	g_object_set(settings, "gtk-application-prefer-dark-theme", true, NULL);
 	gtk_widget_grab_focus(GTK_WIDGET(self->main_entry));
 	gtk_window_present_with_time(GTK_WINDOW(self), gtk_get_current_event_time());
 }
