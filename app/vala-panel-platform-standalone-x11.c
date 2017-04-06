@@ -94,74 +94,90 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 
 static long vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-    ulong s = 0;
-    if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
-        return 0;
-    bool autohide = false;
-    GtkOrientation orient = GTK_ORIENTATION_HORIZONTAL;
-    GtkAllocation a;
-    gtk_widget_get_allocation(GTK_WIDGET(top),&a);
-    g_object_get(top,VALA_PANEL_KEY_AUTOHIDE,autohide,VALA_PANEL_KEY_EDGE,orient,NULL);
-    if (autohide)
-        s = GAP;
-    else switch (orient)
-    {
-        case GTK_ORIENTATION_VERTICAL:
-            s = (uint)a.width;
-            break;
-        case GTK_ORIENTATION_HORIZONTAL:
-            s = (uint)a.height;
-            break;
-        default:
-            return 0;
-    }
-    int monitor;
-    g_object_get(top,VALA_PANEL_KEY_MONITOR,&monitor,NULL);
-    if (monitor < 0)
-        return s;
-    if (monitor >= gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top))))
-        return false;
-    GdkRectangle rect, rect2;
-    gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(gtk_window_get_screen(top)),monitor),&rect);
-    GtkPositionType edge;
-    g_object_get(top,VALA_PANEL_KEY_EDGE,&edge,NULL);
-    switch(edge)
-    {
-        case GTK_POS_LEFT:
-            rect.width = rect.x;
-            rect.x = 0;
-            s += rect.width;
-            break;
-        case GTK_POS_RIGHT:
-            rect.x += rect.width;
-            rect.width = gdk_screen_get_width(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.x;
-            s += rect.width;
-            break;
-        case GTK_POS_TOP:
-            rect.height = rect.y;
-            rect.y = 0;
-            s += rect.height;
-            break;
-        case GTK_POS_BOTTOM:
-            rect.y += rect.height;
-            rect.height = gdk_screen_get_height(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.y;
-            s += rect.height;
-            break;
-    }
-    if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
-    {
-        int n = gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top)));
-        for (int i = 0; i < n; i++)
-        {
-            if (i == monitor)
-                continue;
-            gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(gtk_window_get_screen(top)),i),&rect2);
-            if (gdk_rectangle_intersect(&rect,&rect2, NULL))
-                /* that monitor lies over the edge */
-                return 0;
-        }
-    }
-    return s;
+	ulong s = 0;
+	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
+		return 0;
+	bool autohide         = false;
+	GtkOrientation orient = GTK_ORIENTATION_HORIZONTAL;
+	GtkAllocation a;
+	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
+	g_object_get(top,
+	             VALA_PANEL_KEY_AUTOHIDE,
+	             autohide,
+	             VALA_PANEL_KEY_ORIENTATION,
+	             orient,
+	             NULL);
+	if (autohide)
+		s = GAP;
+	else
+		switch (orient)
+		{
+		case GTK_ORIENTATION_VERTICAL:
+			s = (uint)a.width;
+			break;
+		case GTK_ORIENTATION_HORIZONTAL:
+			s = (uint)a.height;
+			break;
+		default:
+			return 0;
+		}
+	int monitor;
+	g_object_get(top, VALA_PANEL_KEY_MONITOR, &monitor, NULL);
+	if (monitor < 0)
+		return s;
+	if (monitor >=
+	    gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top))))
+		return false;
+	GdkRectangle rect, rect2;
+	gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(
+	                                                     gtk_window_get_screen(top)),
+	                                                 monitor),
+	                         &rect);
+	GtkPositionType edge;
+	g_object_get(top, VALA_PANEL_KEY_EDGE, &edge, NULL);
+	switch (edge)
+	{
+	case GTK_POS_LEFT:
+		rect.width = rect.x;
+		rect.x     = 0;
+		s += rect.width;
+		break;
+	case GTK_POS_RIGHT:
+		rect.x += rect.width;
+		rect.width = gdk_screen_get_width(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.x;
+		s += rect.width;
+		break;
+	case GTK_POS_TOP:
+		rect.height = rect.y;
+		rect.y      = 0;
+		s += rect.height;
+		break;
+	case GTK_POS_BOTTOM:
+		rect.y += rect.height;
+		rect.height =
+		    gdk_screen_get_height(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.y;
+		s += rect.height;
+		break;
+	}
+	if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
+	{
+		int n =
+		    gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top)));
+		for (int i = 0; i < n; i++)
+		{
+			if (i == monitor)
+				continue;
+			gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(
+			                                                     gtk_window_get_screen(
+			                                                         top)),
+			                                                 i),
+			                         &rect2);
+			if (gdk_rectangle_intersect(&rect, &rect2, NULL))
+				/* that monitor lies over the edge */
+				return 0;
+		}
+	}
+	return s;
 }
 
 static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
@@ -174,80 +190,94 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	bool autohide;
 	GtkPositionType edge;
 
-	g_object_get(top, "autohide", &autohide, "edge", &edge, NULL);
+	g_object_get(top, VALA_PANEL_KEY_AUTOHIDE, &autohide, VALA_PANEL_KEY_EDGE, &edge, NULL);
 
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return;
 	/* most wm's tend to ignore struts of unmapped windows, and that's how
 	 * panel hides itself. so no reason to set it. If it was be, it must be removed */
-	//    if (autohide && this.strut_size == 0)
-	//        return;
-
+	/*this.strut_size == 0, we must take it from toplevel */
+	if (autohide && !gtk_widget_get_mapped(GTK_WIDGET(top)))
+		return;
+	GtkAllocation a;
+	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
 	//    /* Dispatch on edge to set up strut parameters. */
-	//    switch (edge)
-	//    {
-    //        case GTK_POS_LEFT:
-	//            index = 0;
-	//            strut_lower = a.y;
-	//            strut_upper = a.y + a.height;
-	//            break;
-    //        case GTK_POS_RIGHT:
-	//            index = 1;
-	//            strut_lower = a.y;
-	//            strut_upper = a.y + a.height;
-	//            break;
-    //        case GTK_POS_TOP:
-	//            index = 2;
-	//            strut_lower = a.x;
-	//            strut_upper = a.x + a.width;
-	//            break;
-    //        case GTK_POS_BOTTOM:
-	//            index = 3;
-	//            strut_lower = a.x;
-	//            strut_upper = a.x + a.width;
-	//            break;
-	//        default:
-	//            return;
-	//    }
+	switch (edge)
+	{
+	case GTK_POS_LEFT:
+		index       = 0;
+		strut_lower = a.y;
+		strut_upper = a.y + a.height;
+		break;
+	case GTK_POS_RIGHT:
+		index       = 1;
+		strut_lower = a.y;
+		strut_upper = a.y + a.height;
+		break;
+	case GTK_POS_TOP:
+		index       = 2;
+		strut_lower = a.x;
+		strut_upper = a.x + a.width;
+		break;
+	case GTK_POS_BOTTOM:
+		index       = 3;
+		strut_lower = a.x;
+		strut_upper = a.x + a.width;
+		break;
+	default:
+		return;
+	}
 
 	//    /* Set up strut value in property format. */
-//        ulong desired_strut[12];
-//        if (strut &&
-//            panel_edge_can_strut(out strut_size))
-//        {
-//            desired_strut[index] = strut_size;
-//            desired_strut[4 + index * 2] = strut_lower;
-//            desired_strut[5 + index * 2] = strut_upper-1;
-//        }
+	ulong desired_strut[12];
+	strut_size = vala_panel_platform_x11_edge_can_strut(f, top);
+	if (strut_size > 0)
+	{
+		desired_strut[index]         = strut_size;
+		desired_strut[4 + index * 2] = strut_lower;
+		desired_strut[5 + index * 2] = strut_upper - 1;
+	}
 	//    /* If strut value changed, set the property value on the panel window.
 	//     * This avoids property change traffic when the panel layout is recalculated but strut
 	//     geometry hasn't changed. */
 	//    if ((this.strut_size != strut_size) || (this.strut_lower != strut_lower) ||
 	//    (this.strut_upper
 	//    != strut_upper) || (this.strut_edge != this.edge))
-	//    {
-	//        this.strut_size = strut_size;
-	//        this.strut_lower = strut_lower;
-	//        this.strut_upper = strut_upper;
-	//        this.strut_edge = this.edge;
-	//        /* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
-	//         * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
-	//        var xwin = get_window();
-	//        if (strut_size != 0)
-	//        {
-	//            atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-	//            Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,12);
-	//            atom = Atom.intern_static_string("_NET_WM_STRUT");
-	//            Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,4);
-	//        }
-	//        else
-	//        {
-	//            atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-	//            Gdk.property_delete(xwin,atom);
-	//            atom = Atom.intern_static_string("_NET_WM_STRUT");
-	//            Gdk.property_delete(xwin,atom);
-	//        }
-	//    }
+	{
+		//            this.strut_size = strut_size;
+		//            this.strut_lower = strut_lower;
+		//            this.strut_upper = strut_upper;
+		//            this.strut_edge = this.edge;
+		/* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
+		 * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
+		GdkWindow *xwin = gtk_widget_get_window(GTK_WIDGET(top));
+		if (strut_size != 0)
+		{
+			atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
+			gdk_property_change(xwin,
+			                    atom,
+			                    gdk_atom_intern_static_string("CARDINAL"),
+			                    32,
+			                    GDK_PROP_MODE_REPLACE,
+			                    (u_int8_t *)desired_strut,
+			                    12);
+			atom = gdk_atom_intern_static_string("_NET_WM_STRUT");
+			gdk_property_change(xwin,
+			                    atom,
+			                    gdk_atom_intern_static_string("CARDINAL"),
+			                    32,
+			                    GDK_PROP_MODE_REPLACE,
+			                    (u_int8_t *)desired_strut,
+			                    4);
+		}
+		else
+		{
+			atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
+			gdk_property_delete(xwin, atom);
+			atom = gdk_atom_intern_static_string("_NET_WM_STRUT");
+			gdk_property_delete(xwin, atom);
+		}
+	}
 }
 
 static void vala_panel_platform_x11_finalize(GObject *obj)
@@ -267,7 +297,7 @@ static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_coords = vala_panel_platform_x11_move_to_coords;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side   = vala_panel_platform_x11_move_to_side;
 	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut   = vala_panel_platform_x11_update_strut;
-    VALA_PANEL_PLATFORM_CLASS(klass)->can_strut   = vala_panel_platform_x11_edge_can_strut;
+	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut      = vala_panel_platform_x11_edge_can_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->start_panels_from_profile =
 	    vala_panel_platform_x11_start_panels_from_profile;
 }
