@@ -50,6 +50,7 @@ struct _ValaPanelApplication
 
 G_DEFINE_TYPE(ValaPanelApplication, vala_panel_application, GTK_TYPE_APPLICATION)
 
+static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data);
 
@@ -66,7 +67,7 @@ static const GActionEntry vala_panel_application_app_entries[6] = {
 	//      { "panel-preferences",
 	//        activate_panel_preferences,
 	//        "s", NULL, NULL, { 0 } },
-	//	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
+	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
 	//      { "menu",
 	//        activate_menu,
 	//        NULL, NULL, NULL, { 0 } },
@@ -382,6 +383,19 @@ static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 		break;
 	}
+}
+
+static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	g_autoptr(GtkBuilder) builder =
+	    gtk_builder_new_from_resource("/org/vala-panel/app/about.ui");
+	GtkAboutDialog *d = GTK_ABOUT_DIALOG(gtk_builder_get_object(builder, "valapanel-about"));
+	gtk_about_dialog_set_version(d, CONFIG_VERSION);
+	gtk_window_set_position(GTK_WINDOW(d), GTK_WIN_POS_CENTER);
+	gtk_window_present(GTK_WINDOW(d));
+	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
 }
 
 static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data)
