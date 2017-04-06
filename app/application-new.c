@@ -19,9 +19,11 @@
 #include "config.h"
 
 #include "application-new.h"
-#include "launcher.h"
 #include "lib/css.h"
 #include "lib/definitions.h"
+#include "lib/launcher.h"
+#include "lib/panel-platform.h"
+#include "vala-panel-platform-standalone-x11.h"
 
 #include <glib/gi18n.h>
 #include <locale.h>
@@ -31,13 +33,13 @@
 
 struct _ValaPanelApplication
 {
-	bool started;
 	bool restart;
 	GtkDialog *pref_dialog;
 	GSettings *config;
 	bool dark;
 	bool custom;
 	char *css;
+	ValaPanelPlatformX11 *platform;
 	GtkCssProvider *provider;
 	char *profile;
 	char *run_command;
@@ -91,6 +93,29 @@ enum
 #define system_config_file_name(profile, dir, filename)                                            \
 	g_build_filename(dir, GETTEXT_PACKAGE, profile, filename, NULL)
 
+void apply_styling(ValaPanelApplication *app)
+{
+	if (gtk_settings_get_default() != NULL)
+		g_object_set(gtk_settings_get_default(),
+		             "gtk-application-prefer-dark-theme",
+		             app->dark,
+		             NULL);
+	if (app->custom)
+	{
+		if (app->provider)
+			gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
+			                                             GTK_STYLE_PROVIDER(
+			                                                 app->provider));
+		app->provider = css_apply_from_file_to_app_with_provider(app->css);
+	}
+	else if (app->provider)
+	{
+		gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
+		                                             GTK_STYLE_PROVIDER(app->provider));
+		app->provider = NULL;
+	}
+}
+
 ValaPanelApplication *vala_panel_application_new()
 {
 	return (ValaPanelApplication *)g_object_new(vala_panel_application_get_type(),
@@ -105,7 +130,6 @@ ValaPanelApplication *vala_panel_application_new()
 
 static void vala_panel_application_init(ValaPanelApplication *self)
 {
-	self->started = false;
 	self->restart = false;
 	self->profile = g_strdup("default");
 	g_application_add_main_option_entries(G_APPLICATION(self), entries);
@@ -215,6 +239,38 @@ static int vala_panel_app_command_line(GApplication *application,
 	return 0;
 }
 
+void vala_panel_application_activate(GApplication *app)
+{
+	static gboolean is_started = false;
+	ValaPanelApplication *self = VALA_PANEL_APPLICATION(app);
+	if (!is_started)
+	{
+		g_application_mark_busy(app);
+		/*load config*/
+		self->platform = vala_panel_platform_x11_new(GTK_APPLICATION(app), self->profile);
+		//        _ensure_user_config_dirs(PANEL_APP(app));
+		//        PANEL_APP(app)->priv->config =
+		//        load_global_config_gsettings(PANEL_APP(app),&(PANEL_APP(app)->priv->config_file));
+		gdk_window_set_events(gdk_get_default_root_window(),
+		                      (GdkEventMask)(GDK_STRUCTURE_MASK | GDK_SUBSTRUCTURE_MASK |
+		                                     GDK_PROPERTY_CHANGE_MASK));
+		if (G_UNLIKELY(!vala_panel_platform_start_panels_from_profile(VALA_PANEL_PLATFORM(
+		                                                                  self->platform),
+		                                                              GTK_APPLICATION(app),
+		                                                              self->profile)))
+		{
+			g_warning("Config files / toplevels are not found.\n");
+			g_application_quit(app);
+		}
+		else
+		{
+			is_started = true;
+			apply_styling(VALA_PANEL_APPLICATION(app));
+			g_application_unmark_busy(app);
+		}
+	}
+}
+
 static void vala_panel_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
@@ -231,29 +287,6 @@ static void vala_panel_app_finalize(GObject *object)
 	if (app->provider)
 		g_object_unref(app->provider);
 	g_free(app->profile);
-}
-
-void apply_styling(ValaPanelApplication *app)
-{
-	if (gtk_settings_get_default() != NULL)
-		g_object_set(gtk_settings_get_default(),
-		             "gtk-application-prefer-dark-theme",
-		             app->dark,
-		             NULL);
-	if (app->custom)
-	{
-		if (app->provider)
-			gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
-			                                             GTK_STYLE_PROVIDER(
-			                                                 app->provider));
-		app->provider = css_apply_from_file_to_app_with_provider(app->css);
-	}
-	else if (app->provider)
-	{
-		gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
-		                                             GTK_STYLE_PROVIDER(app->provider));
-		app->provider = NULL;
-	}
 }
 
 static void vala_panel_app_set_property(GObject *object, guint prop_id, const GValue *value,
@@ -371,10 +404,10 @@ static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data)
 
 static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 {
-	vala_panel_application_parent_class    = g_type_class_peek_parent(klass);
-	((GApplicationClass *)klass)->startup  = vala_panel_application_startup;
-	((GApplicationClass *)klass)->shutdown = vala_panel_application_shutdown;
-	//    ((GApplicationClass *) klass)->activate = vala_panel_app_real_activate;
+	vala_panel_application_parent_class                = g_type_class_peek_parent(klass);
+	((GApplicationClass *)klass)->startup              = vala_panel_application_startup;
+	((GApplicationClass *)klass)->shutdown             = vala_panel_application_shutdown;
+	((GApplicationClass *)klass)->activate             = vala_panel_application_activate;
 	((GApplicationClass *)klass)->handle_local_options = vala_panel_app_handle_local_options;
 	((GApplicationClass *)klass)->command_line         = vala_panel_app_command_line;
 	G_OBJECT_CLASS(klass)->get_property                = vala_panel_app_get_property;
