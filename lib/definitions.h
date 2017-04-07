@@ -61,6 +61,9 @@
 #define _user_config_file_name(name1, cprofile, name2)                                             \
 	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, name1, name2, NULL)
 
+#define _user_config_file_name_new(cprofile)                                                       \
+	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, NULL)
+
 #define g_ascii_inplace_tolower(string)                                                            \
 	{                                                                                          \
 		for (int i = 0; string[i] != '\0'; i++)                                            \
@@ -72,8 +75,8 @@
 	                prop,                                                                      \
 	                G_OBJECT(obj),                                                             \
 	                prop,                                                                      \
-	                (GBindingFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |                \
-	                                G_SETTINGS_BIND_DEFAULT));
+	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |           \
+	                                     G_SETTINGS_BIND_DEFAULT));
 
 #define VALA_PANEL_DECLARE_MODULE_TYPE(                                                            \
     ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)                                  \

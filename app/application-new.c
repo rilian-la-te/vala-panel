@@ -22,6 +22,7 @@
 #include "lib/css.h"
 #include "lib/definitions.h"
 #include "lib/launcher.h"
+#include "lib/misc.h"
 #include "lib/panel-platform.h"
 #include "vala-panel-platform-standalone-x11.h"
 
@@ -30,16 +31,24 @@
 #include <stdbool.h>
 
 #define COMMAND_DES_TR N_("Run command on already opened panel")
+#define DEFAULT_PROFILE "default"
+
+#define VALA_PANEL_KEY_RUN "run-command"
+#define VALA_PANEL_KEY_LOGOUT "logout-command"
+#define VALA_PANEL_KEY_SHUTDOWN "shutdown-command"
+#define VALA_PANEL_KEY_TERMINAL "terminal-command"
+#define VALA_PANEL_KEY_DARK "is-dark"
+#define VALA_PANEL_KEY_CUSTOM "is-custom"
+#define VALA_PANEL_KEY_CSS "css"
 
 struct _ValaPanelApplication
 {
 	bool restart;
-	GtkDialog *pref_dialog;
 	GSettings *config;
 	bool dark;
 	bool custom;
 	char *css;
-	ValaPanelPlatformX11 *platform;
+	ValaPanelPlatform *platform;
 	GtkCssProvider *provider;
 	char *profile;
 	char *run_command;
@@ -50,6 +59,7 @@ struct _ValaPanelApplication
 
 G_DEFINE_TYPE(ValaPanelApplication, vala_panel_application, GTK_TYPE_APPLICATION)
 
+static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data);
@@ -61,9 +71,7 @@ static const GOptionEntry entries[] =
       { NULL } };
 
 static const GActionEntry vala_panel_application_app_entries[6] = {
-	//      { "preferences",
-	//        activate_preferences, NULL,
-	//        NULL, NULL , { 0 } },
+	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
 	//      { "panel-preferences",
 	//        activate_panel_preferences,
 	//        "s", NULL, NULL, { 0 } },
@@ -94,7 +102,12 @@ enum
 #define system_config_file_name(profile, dir, filename)                                            \
 	g_build_filename(dir, GETTEXT_PACKAGE, profile, filename, NULL)
 
-void apply_styling(ValaPanelApplication *app)
+static inline void destroy0(GtkWidget *x)
+{
+	gtk_widget_destroy0(x);
+}
+
+static void apply_styling(ValaPanelApplication *app)
 {
 	if (gtk_settings_get_default() != NULL)
 		g_object_set(gtk_settings_get_default(),
@@ -132,7 +145,7 @@ ValaPanelApplication *vala_panel_application_new()
 static void vala_panel_application_init(ValaPanelApplication *self)
 {
 	self->restart = false;
-	self->profile = g_strdup("default");
+	self->profile = g_strdup(DEFAULT_PROFILE);
 	g_application_add_main_option_entries(G_APPLICATION(self), entries);
 }
 
@@ -240,6 +253,56 @@ static int vala_panel_app_command_line(GApplication *application,
 	return 0;
 }
 
+static bool load_settings(ValaPanelApplication *app)
+{
+	g_autofree char *file         = g_build_filename(CONFIG_PROFILES, app->profile, NULL);
+	g_autofree char *default_file = g_build_filename(CONFIG_PROFILES, DEFAULT_PROFILE, NULL);
+	bool loaded                   = false;
+	bool load_default             = false;
+	if (g_file_test(file, G_FILE_TEST_EXISTS))
+		loaded = true;
+	if (!loaded && g_file_test(default_file, G_FILE_TEST_EXISTS))
+	{
+		loaded       = true;
+		load_default = true;
+	}
+	g_autofree char *user_file = _user_config_file_name_new(app->profile);
+	if (!g_file_test(user_file, G_FILE_TEST_EXISTS) && loaded)
+	{
+		g_autoptr(GFile) src  = g_file_new_for_path(load_default ? default_file : file);
+		g_autoptr(GFile) dest = g_file_new_for_path(user_file);
+		g_autoptr(GError) err;
+		g_file_copy(src, dest, G_FILE_COPY_BACKUP, NULL, NULL, NULL, &err);
+		if (err)
+		{
+			g_warning("Cannot init global config: %s\n", err->message);
+			return false;
+		}
+	}
+	app->platform =
+	    VALA_PANEL_PLATFORM(vala_panel_platform_x11_new(GTK_APPLICATION(app), app->profile));
+	ValaPanelCoreSettings *s         = vala_panel_platform_get_settings(app->platform);
+	GSettingsBackend *config_backend = s->backend;
+	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_CORE_SCHEMA,
+	                                                   config_backend,
+	                                                   VALA_PANEL_CORE_PATH);
+	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_RUN);
+	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_LOGOUT);
+	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_SHUTDOWN);
+	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_TERMINAL);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_DARK);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_CUSTOM);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_CSS);
+	return true;
+}
+
+static void _ensure_user_config_dirs()
+{
+	g_autofree char *dir = _user_config_file_name_new("");
+	/* make sure the private profile and panels dir exists */
+	g_mkdir_with_parents(dir, 0700);
+}
+
 void vala_panel_application_activate(GApplication *app)
 {
 	static gboolean is_started = false;
@@ -248,10 +311,8 @@ void vala_panel_application_activate(GApplication *app)
 	{
 		g_application_mark_busy(app);
 		/*load config*/
-		self->platform = vala_panel_platform_x11_new(GTK_APPLICATION(app), self->profile);
-		//        _ensure_user_config_dirs(PANEL_APP(app));
-		//        PANEL_APP(app)->priv->config =
-		//        load_global_config_gsettings(PANEL_APP(app),&(PANEL_APP(app)->priv->config_file));
+		_ensure_user_config_dirs();
+		load_settings(self);
 		gdk_window_set_events(gdk_get_default_root_window(),
 		                      (GdkEventMask)(GDK_STRUCTURE_MASK | GDK_SUBSTRUCTURE_MASK |
 		                                     GDK_PROPERTY_CHANGE_MASK));
@@ -383,6 +444,46 @@ static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 		break;
 	}
+}
+
+static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplication *app)
+{
+	g_autofree char *file = gtk_file_chooser_get_filename(self);
+	if (file != NULL)
+		g_action_group_activate_action(G_ACTION_GROUP(app),
+		                               VALA_PANEL_KEY_CSS,
+		                               g_variant_new_string(file));
+}
+
+static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	static GtkDialog *pref_dialog = NULL;
+	ValaPanelApplication *self    = VALA_PANEL_APPLICATION(data);
+	if (pref_dialog != NULL)
+	{
+		gtk_window_present(GTK_WINDOW(pref_dialog));
+		return;
+	}
+	g_autoptr(GtkBuilder) builder =
+	    gtk_builder_new_from_resource("/org/vala-panel/app/pref.ui");
+	pref_dialog = GTK_DIALOG(gtk_builder_get_object(builder, "app-pref"));
+	gtk_application_add_window(GTK_APPLICATION(self), GTK_WINDOW(pref_dialog));
+	GObject *w = gtk_builder_get_object(builder, "logout");
+	g_settings_bind(self->config, VALA_PANEL_KEY_LOGOUT, w, "text", G_SETTINGS_BIND_DEFAULT);
+	w = gtk_builder_get_object(builder, "shutdown");
+	g_settings_bind(self->config, VALA_PANEL_KEY_SHUTDOWN, w, "text", G_SETTINGS_BIND_DEFAULT);
+	w = gtk_builder_get_object(builder, "css-chooser");
+	g_settings_bind(self->config,
+	                VALA_PANEL_KEY_CUSTOM,
+	                w,
+	                "sensitive",
+	                G_SETTINGS_BIND_DEFAULT);
+	GtkFileChooserButton *f = GTK_FILE_CHOOSER_BUTTON(w);
+	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(f), self->css);
+	g_signal_connect(f, "file-set", G_CALLBACK(file_chooser_helper), self);
+	gtk_window_present(GTK_WINDOW(pref_dialog));
+	g_signal_connect(pref_dialog, "hide", G_CALLBACK(destroy0), NULL);
+	g_signal_connect_after(pref_dialog, "response", G_CALLBACK(destroy0), NULL);
 }
 
 static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data)
