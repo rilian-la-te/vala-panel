@@ -84,25 +84,3 @@ namespace ValaPanel {
 	[CCode (cheader_filename = "vala-panel.h")]
 	public static void start_panels_from_dir (Gtk.Application app, string dirname);
 }
-namespace Config {
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string DATADIR;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string GETTEXT_PACKAGE;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string INSTALL_PREFIX;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string LOCALE_DIR;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string PKGDATADIR;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string PLUGINS_DATA;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string PLUGINS_DIRECTORY;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string RELEASE_NAME;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string VERSION;
-	[CCode (cheader_filename = "vala-panel.h")]
-	public const string VERSION_INFO;
-}
