@@ -6,13 +6,13 @@ namespace StatusNotifier
     [GtkTemplate (ui = "/org/vala-panel/sntray/snconfig.ui"), CCode (cname = "StatusNotifierConfig")]
     public class ConfigDialog : Dialog
     {
-        private static const int COLUMN_ID = 0;
-        private static const int COLUMN_NAME = 1;
-        private static const int COLUMN_OVERRIDE_INDEX = 2;
-        private static const int COLUMN_INDEX = 3;
-        private static const int COLUMN_OVERRIDE_VISIBLE = 4;
-        private static const int COLUMN_VISIBLE = 5;
-        private static const int COLUMN_ICON = 6;
+        private const int COLUMN_ID = 0;
+        private const int COLUMN_NAME = 1;
+        private const int COLUMN_OVERRIDE_INDEX = 2;
+        private const int COLUMN_INDEX = 3;
+        private const int COLUMN_OVERRIDE_VISIBLE = 4;
+        private const int COLUMN_VISIBLE = 5;
+        private const int COLUMN_ICON = 6;
 
         [GtkChild (name = "check-application")]
         CheckButton check_application;

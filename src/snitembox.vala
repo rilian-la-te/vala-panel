@@ -3,17 +3,17 @@ using GLib;
 
 namespace StatusNotifier
 {
-    public static const string SHOW_APPS = "show-application-status";
-    public static const string SHOW_COMM = "show-communications";
-    public static const string SHOW_SYS = "show-system";
-    public static const string SHOW_HARD = "show-hardware";
-    public static const string SHOW_OTHER = "show-other";
-    public static const string SHOW_PASSIVE = "show-passive";
-    public static const string INDICATOR_SIZE = "indicator-size";
-    public static const string USE_SYMBOLIC = "symbolic-icons";
-    public static const string USE_LABELS = "show-ayatana-labels";
-    public static const string INDEX_OVERRIDE = "index-override";
-    public static const string FILTER_OVERRIDE = "filter-override";
+    public const string SHOW_APPS = "show-application-status";
+    public const string SHOW_COMM = "show-communications";
+    public const string SHOW_SYS = "show-system";
+    public const string SHOW_HARD = "show-hardware";
+    public const string SHOW_OTHER = "show-other";
+    public const string SHOW_PASSIVE = "show-passive";
+    public const string INDICATOR_SIZE = "indicator-size";
+    public const string USE_SYMBOLIC = "symbolic-icons";
+    public const string USE_LABELS = "show-ayatana-labels";
+    public const string INDEX_OVERRIDE = "index-override";
+    public const string FILTER_OVERRIDE = "filter-override";
     public class ItemBox : FlowBox
     {
         static Host host;
