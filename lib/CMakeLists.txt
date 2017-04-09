@@ -6,7 +6,10 @@ set(ENUM_FILES
         generic-config-dialog.h
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
-option(ENABLE_NEW_INTERFACE "Enable new interface function" ON)
+option(ENABLE_NEW_INTERFACE "Enable new interface function" OFF)
+if (ENABLE_NEW_INTERFACE)
+    set(NEW_DEFINE -D NEW)
+endif()
 set(LIBVALAPANEL_C_SOURCES
     misc.c
     misc.h
@@ -50,6 +53,7 @@ OPTIONS
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
     --thread
+    ${NEW_DEFINE}
 GENERATE_VAPI
     ${APPNAME}
 GENERATE_HEADER

@@ -23,11 +23,6 @@ using Config;
 
 namespace ValaPanel
 {
-    private struct PluginData
-    {
-        unowned AppletPlugin plugin;
-        int count;
-    }
     public class Toplevel : Gtk.ApplicationWindow
     {
     /************************************************************************
@@ -227,7 +222,11 @@ namespace ValaPanel
                 else
                     box.get_preferred_height(null, out w);
                 if (w!=width)
+#if NEW
+                    settings.default_settings.set_int(Key.WIDTH,w);
+#else
                     settings.settings.set_int(Key.WIDTH,w);
+#endif
             }
             if (!this.get_realized())
                 return;
@@ -345,12 +344,25 @@ namespace ValaPanel
         /*************************************************************************************
          * Plugins stuff
          *************************************************************************************/
+#if NEW
+        private static unowned Platform platform = null;
+        private static unowned CoreSettings core_settings = null;
+#endif
+        private struct PluginData
+        {
+            unowned AppletPlugin plugin;
+            int count;
+        }
         private static Peas.Engine engine;
         private static ulong mon_handler;
         private static Peas.ExtensionSet extset;
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
+#if NEW
+        private unowned UnitSettings settings;
+#else
         private ToplevelSettings settings;
+#endif
         static construct
         {
             engine = Peas.Engine.get_default();
@@ -360,11 +372,21 @@ namespace ValaPanel
         }
         internal void add_applet(string type)
         {
+#if NEW
+            unowned UnitSettings s = core_settings.add_unit_settings(type,false);
+            s.default_settings.set_string(Key.NAME,type);
+            load_applet(s);
+#else
             unowned PluginSettings s = settings.add_plugin_settings(type);
             s.default_settings.set_string(Key.NAME,type);
             load_applet(s);
+#endif
         }
+#if NEW
+        internal void load_applet(UnitSettings s)
+#else
         internal void load_applet(PluginSettings s)
+#endif
         {
             /* Determine if the plugin is loaded yet. */
             string name = s.default_settings.get_string(Key.NAME);
@@ -413,6 +435,22 @@ namespace ValaPanel
             if (local_applets.contains(type))
                 return;
             // Iterate the children, and then load them into the panel
+#if NEW
+            unowned UnitSettings? pl = null;
+            foreach (var applet in settings.default_settings.get_strv(Key.APPLETS))
+            {
+                unowned UnitSettings s = core_settings.get_by_uuid(applet);
+                if (s.default_settings.get_string(Key.NAME) == type)
+                {
+                    pl = s;
+                    local_applets.insert(type,0);
+                    load_applet(pl);
+                    update_applet_positions();
+                    return;
+                }
+            }
+
+#else
             unowned PluginSettings? pl = null;
             foreach (unowned PluginSettings s in settings.plugins)
                 if (s.default_settings.get_string(Key.NAME) == type)
@@ -423,10 +461,19 @@ namespace ValaPanel
                     update_applet_positions();
                     return;
                 }
+#endif
         }
+#if NEW
+        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
+#else
         internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
+#endif
         {
+#if NEW
+            var aw = null;
+#else
             var aw = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
+#endif
             unowned Applet applet = aw;
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
@@ -436,17 +483,29 @@ namespace ValaPanel
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
                 applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
             }
+#if NEW
+            applet.destroy.connect(()=>{applet_removed(applet.uuid);});
+#else
             applet.destroy.connect(()=>{applet_removed(applet.number);});
+#endif
         }
         internal void remove_applet(Applet applet)
         {
             applet.destroy();
         }
+#if NEW
+        internal void applet_removed(string uuid)
+#else
         internal void applet_removed(uint num)
+#endif
         {
             if (this.in_destruction())
                 return;
+#if NEW
+            unowned UnitSettings s = core_settings.get_by_uuid(uuid);
+#else
             unowned PluginSettings s = settings.get_settings_by_num(num);
+#endif
             var name = s.default_settings.get_string(Key.NAME);
             var count = local_applets.lookup(name);
             count--;
@@ -465,7 +524,11 @@ namespace ValaPanel
             }
             else
                 loaded_types.insert(name,data);
+#if NEW
+            core_settings.remove_unit_settings(uuid);
+#else
             settings.remove_plugin_settings(num);
+#endif
         }
         internal void update_applet_positions()
         {
@@ -486,13 +549,25 @@ namespace ValaPanel
         }
         internal unowned AppletPlugin get_plugin(Applet pl)
         {
+#if NEW
+            return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
+                                        .default_settings.get_string(Key.NAME))).plugin;
+#else
             return loaded_types.lookup((settings.get_settings_by_num(pl.number)
                                         .default_settings.get_string(Key.NAME))).plugin;
+#endif
         }
+#if NEW
+        internal unowned UnitSettings get_applet_settings(Applet pl)
+        {
+            return core_settings.get_by_uuid(pl.uuid);
+        }
+#else
         internal unowned PluginSettings get_applet_settings(Applet pl)
         {
             return settings.get_settings_by_num(pl.number);
         }
+#endif
         internal uint get_applet_position(Applet pl)
         {
             int res;
@@ -659,7 +734,29 @@ namespace ValaPanel
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
-
+#if NEW
+        public Toplevel.with_platform(Gtk.Application app, Platform platform, string name)
+        {
+            Object(border_width: 0,
+                decorated: false,
+                name: "ValaPanel",
+                resizable: false,
+                title: "ValaPanel",
+                type_hint: Gdk.WindowTypeHint.DOCK,
+                window_position: Gtk.WindowPosition.NONE,
+                skip_taskbar_hint: true,
+                skip_pager_hint: true,
+                accept_focus: false,
+                application: app,
+                panel_name: name);
+            if (platform == null)
+            {
+                Toplevel.platform = platform;
+                Toplevel.core_settings = platform.get_settings();
+            }
+            setup(false);
+        }
+#endif
         [CCode (returns_floating_reference = true)]
         public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
         {
@@ -709,6 +806,35 @@ namespace ValaPanel
         }
         private void setup(bool use_internal_values)
         {
+#if NEW
+            settings = core_settings.get_by_uuid(this.name);
+            if (use_internal_values)
+            {
+                settings.default_settings.set_int(Key.MONITOR, _mon);
+                settings.default_settings.set_enum(Key.EDGE, edge);
+            }
+            settings_as_action(this,settings.default_settings,Key.EDGE);
+            settings_as_action(this,settings.default_settings,Key.ALIGNMENT);
+            settings_as_action(this,settings.default_settings,Key.HEIGHT);
+            settings_as_action(this,settings.default_settings,Key.WIDTH);
+            settings_as_action(this,settings.default_settings,Key.DYNAMIC);
+            settings_as_action(this,settings.default_settings,Key.AUTOHIDE);
+            settings_as_action(this,settings.default_settings,Key.STRUT);
+            settings_as_action(this,settings.default_settings,Key.DOCK);
+            settings_as_action(this,settings.default_settings,Key.MARGIN);
+            settings_bind(this,settings.default_settings,Key.MONITOR);
+            settings_as_action(this,settings.default_settings,Key.ICON_SIZE);
+            settings_as_action(this,settings.default_settings,Key.BACKGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.FOREGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.BACKGROUND_FILE);
+            settings_as_action(this,settings.default_settings,Key.FONT);
+            settings_as_action(this,settings.default_settings,Key.CORNERS_SIZE);
+            settings_as_action(this,settings.default_settings,Key.FONT_SIZE_ONLY);
+            settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.USE_FOREGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.USE_FONT);
+            settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_FILE);
+#else
             var filename = user_config_file_name("panels",profile,panel_name);
             settings = new ToplevelSettings(filename);
             if (use_internal_values)
@@ -737,6 +863,7 @@ namespace ValaPanel
             settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
             settings_as_action(this,settings.settings,Key.USE_FONT);
             settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
+#endif
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
@@ -826,11 +953,20 @@ namespace ValaPanel
 			box.show();
             this.ah_rev.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
+#if NEW
+            core_settings.init_toplevel_plugin_list(this.settings);
+            foreach(var applet in settings.default_settings.get_strv(Key.APPLETS))
+            {
+                unowned UnitSettings pl = core_settings.get_by_uuid(applet);
+                load_applet(pl);
+            }
+#else
             settings.init_plugin_list();
-            this.show();
-            this.stick();
             foreach(unowned PluginSettings pl in settings.plugins)
                 load_applet(pl);
+#endif
+            this.show();
+            this.stick();
             update_applet_positions();
             this.present();
             this.autohide = autohide;

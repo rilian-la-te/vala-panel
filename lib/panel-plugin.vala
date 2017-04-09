@@ -57,6 +57,9 @@ namespace ValaPanel
         public unowned Gtk.Widget background_widget {get; set;}
         public unowned ValaPanel.Toplevel toplevel {get; construct;}
         public unowned GLib.Settings? settings {get; construct;}
+#if NEW
+        public string uuid {get; construct;}
+#endif
         public uint number {get; construct;}
         public abstract void create();
         public virtual void update_context_menu(ref GLib.Menu parent_menu){}
