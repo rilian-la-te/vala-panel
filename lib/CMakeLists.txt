@@ -6,6 +6,7 @@ set(ENUM_FILES
         generic-config-dialog.h
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
+option(ENABLE_NEW_INTERFACE "Enable new interface function" ON)
 set(LIBVALAPANEL_C_SOURCES
     misc.c
     misc.h
