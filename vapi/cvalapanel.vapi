@@ -103,9 +103,9 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/misc.h")]
     public static void apply_window_icon(Window w);
     [CCode (cheader_filename="lib/misc.h")]
-	public static void reset_schema(GLib.Settings settings);
+    public static void reset_schema(GLib.Settings settings);
     [CCode (cheader_filename="lib/misc.h")]
-	public static void reset_schema_with_children(GLib.Settings settings);
+    public static void reset_schema_with_children(GLib.Settings settings);
     [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="lib/misc.h")]
     public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
     [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="lib/definitions.h")]
@@ -118,34 +118,47 @@ namespace ValaPanel
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
     [CCode (cheader_filename="lib/misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
-	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_core_settings_free")]
-	internal class CoreSettings
-	{
-		internal HashTable<string,UnitSettings> all_units;
-		internal GLib.SettingsBackend backend;
-		internal string root_name;
-		internal string root_schema;
-		internal string root_path;
-		internal static string get_uuid();
-		internal CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
-		internal UnitSettings add_unit_settings(string name);
-		internal UnitSettings add_unit_settings_full(string name, string uuid);
-		internal void remove_unit_settings(string name);
-		internal UnitSettings get_by_uuid(string uuid);
-		internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
-	}
-	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_unit_settings_free")]
-	internal class UnitSettings
-	{
-		internal GLib.Settings default_settings;
-		internal GLib.Settings custom_settings;
-		internal string uuid;
-		internal string path_elem;
-		internal UnitSettings(CoreSettings settings, string? name, string uuid);
-	}
-	
+    [Compact]
+    [CCode (cheader_filename="lib/settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_core_settings_get_type()")]
+    internal class CoreSettings
+    {
+        internal HashTable<string,UnitSettings> all_units;
+        internal GLib.SettingsBackend backend;
+        internal string root_name;
+        internal string root_schema;
+        internal string root_path;
+        internal static string get_uuid();
+        internal CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
+        internal unowned UnitSettings add_unit_settings(string name, bool is_toplevel);
+        internal unowned UnitSettings add_unit_settings_full(string name, string uuid, bool is_toplevel);
+        internal void remove_unit_settings(string name);
+        internal unowned UnitSettings get_by_uuid(string uuid);
+        internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
+    }
+    [Compact]
+    [CCode (cheader_filename="lib/settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_unit_settings_get_type()")]
+    internal class UnitSettings
+    {
+        internal GLib.Settings default_settings;
+        internal GLib.Settings custom_settings;
+        internal string uuid;
+        internal string path_elem;
+        internal UnitSettings(CoreSettings settings, string? name, string uuid);
+    }
+    [CCode (cheader_filename="lib/panel-platform.h")]
+    public class Platform : Object
+    {
+        [CCode (has_construct_function="false")]
+        protected Platform();
+        public bool start_panels_from_profile(Gtk.Application app,string *profile);
+        internal void init_settings(GLib.SettingsBackend backend);
+        internal void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
+        internal unowned CoreSettings get_settings();
+        internal long can_strut(Gtk.Window top);
+        internal void update_strut(Gtk.Window top);
+        internal void move_to_coords(Gtk.Window top, int x, int y);
+        internal void move_to_side(Gtk.Window top, Gtk.PositionType side);
+    }
 }
 [CCode (cprefix="")]
 namespace MenuMaker

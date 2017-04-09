@@ -152,11 +152,11 @@ void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settin
                                                    const char *name)
 {
 	g_auto(ValaPanelUnitSettingsPointer) removing_unit =
-	    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
+        (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
 	vala_panel_reset_schema_with_children(removing_unit->default_settings);
 	if (removing_unit->custom_settings != NULL)
 		vala_panel_reset_schema_with_children(removing_unit->custom_settings);
-	g_free(removing_unit);
+    g_hash_table_remove(settings->all_units,name);
 }
 
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
