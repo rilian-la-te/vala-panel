@@ -52,9 +52,7 @@ ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const cha
 	pl->app     = app;
 	pl->profile = g_strdup(profile);
 	GSettingsBackend *backend =
-	    g_keyfile_settings_backend_new(_user_config_file_name(GETTEXT_PACKAGE,
-	                                                          pl->profile,
-	                                                          NULL),
+	    g_keyfile_settings_backend_new(_user_config_file_name_new(pl->profile),
 	                                   VALA_PANEL_OBJECT_PATH,
 	                                   VALA_PANEL_CONFIG_HEADER);
 	vala_panel_platform_init_settings(VALA_PANEL_PLATFORM(pl), backend);

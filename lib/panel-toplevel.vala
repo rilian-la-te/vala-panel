@@ -244,7 +244,6 @@ namespace ValaPanel
                 this.update_strut();
             }
         }
-
         private void _calculate_position(ref Gtk.Allocation alloc)
         {
             unowned Gdk.Screen screen = this.get_screen();
