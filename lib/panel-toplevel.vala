@@ -587,6 +587,10 @@ namespace ValaPanel
         private int strut_edge;
         private bool panel_edge_can_strut(out ulong size)
         {
+#if NEW
+            size = platform.can_strut(this as Window);
+            return size > 0 ? true : false;
+#else
             ulong s = 0;
             size = 0;
             if (!get_mapped())
@@ -650,9 +654,13 @@ namespace ValaPanel
             }
             size = s;
             return true;
+#endif
         }
         private void update_strut()
         {
+#if NEW
+            platform.update_strut(this as Window);
+#else
             int index;
             Gdk.Atom atom;
             ulong strut_size = 0;
@@ -728,6 +736,7 @@ namespace ValaPanel
                     Gdk.property_delete(xwin,atom);
                 }
             }
+#endif
         }
 
 
