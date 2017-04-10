@@ -3,6 +3,7 @@ set(ENUM_FILES
         toplevel.h
         panel-layout.h
         )
+include(GLibHelpers)
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 add_library(cvalapanel SHARED
 

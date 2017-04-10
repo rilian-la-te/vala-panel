@@ -1,20 +1,20 @@
 #include "applet-engine-module.h"
 #include <gmodule.h>
 
-struct _ValaPanelAppletEngineModule
+struct _ValaPanelAppletEngineIfaceModule
 {
 	GTypeModule __parent__;
 	char *filename;
-	ValaPanelAppletEngine *engine;
+	ValaPanelAppletEngineIface *engine;
 	GModule *library;
 	GType plugin_type;
 };
 
-G_DEFINE_TYPE(ValaPanelAppletEngineModule, vala_panel_applet_engine_module, G_TYPE_TYPE_MODULE)
+G_DEFINE_TYPE(ValaPanelAppletEngineIfaceModule, vala_panel_applet_engine_iface_module, G_TYPE_TYPE_MODULE)
 
-ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const char *filename)
+ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from_ini(const char *filename)
 {
-	ValaPanelAppletEngineModule *module = NULL;
+	ValaPanelAppletEngineIfaceModule *module = NULL;
 	g_autoptr(GKeyFile) rc              = g_key_file_new();
 	g_autoptr(GError) err               = NULL;
 	g_key_file_load_from_file(rc, filename, G_KEY_FILE_KEEP_COMMENTS, &err);
@@ -44,7 +44,7 @@ ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const 
 		if (G_LIKELY(found))
 		{
 			/* create new module */
-			module = g_object_new(vala_panel_applet_engine_module_get_type(), NULL);
+			module = g_object_new(vala_panel_applet_engine_iface_module_get_type(), NULL);
 			module->filename = path;
 		}
 		else
@@ -56,7 +56,7 @@ ValaPanelAppletEngineModule *vala_panel_applet_engine_module_new_from_ini(const 
 	return module;
 }
 
-ValaPanelAppletEngine *vala_panel_applet_engine_module_get_engine(ValaPanelAppletEngineModule *self)
+ValaPanelAppletEngineIface *vala_panel_applet_engine_iface_module_get_engine(ValaPanelAppletEngineIfaceModule *self)
 {
 	if (g_type_module_use(G_TYPE_MODULE(self)))
 	{
@@ -72,17 +72,17 @@ ValaPanelAppletEngine *vala_panel_applet_engine_module_get_engine(ValaPanelApple
 	return self->engine;
 }
 
-void vala_panel_applet_engine_module_free_engine(ValaPanelAppletEngineModule *self)
+void vala_panel_applet_engine_iface_module_free_engine(ValaPanelAppletEngineIfaceModule *self)
 {
 	g_object_unref(self->engine);
 	self->engine = NULL;
 	g_type_module_unuse(G_TYPE_MODULE(self));
 }
 
-static void vala_panel_applet_engine_module_unload(GTypeModule *type_module)
+static void vala_panel_applet_engine_iface_module_unload(GTypeModule *type_module)
 {
-	ValaPanelAppletEngineModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
-	vala_panel_applet_engine_module_free_engine(module);
+	ValaPanelAppletEngineIfaceModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
+	vala_panel_applet_engine_iface_module_free_engine(module);
 	g_module_close(module->library);
 
 	/* reset plugin state */
@@ -90,10 +90,10 @@ static void vala_panel_applet_engine_module_unload(GTypeModule *type_module)
 	module->plugin_type = G_TYPE_NONE;
 }
 
-static bool vala_panel_applet_engine_module_load(GTypeModule *type_module)
+static bool vala_panel_applet_engine_iface_module_load(GTypeModule *type_module)
 {
-	ValaPanelAppletEngineModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
-	ValaPanelAppletEngineInitFunc init_func;
+	ValaPanelAppletEngineIfaceModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
+	ValaPanelAppletEngineIfaceInitFunc init_func;
 	bool make_resident = true;
 
 	/* open the module */
@@ -118,14 +118,14 @@ static bool vala_panel_applet_engine_module_load(GTypeModule *type_module)
 	{
 		g_critical("Module \"%s\" lacks a plugin register function.", module->filename);
 
-		vala_panel_applet_engine_module_unload(type_module);
+		vala_panel_applet_engine_iface_module_unload(type_module);
 
 		return FALSE;
 	}
 
 	return TRUE;
 }
-static void vala_panel_applet_engine_module_dispose(GObject *object)
+static void vala_panel_applet_engine_iface_module_dispose(GObject *object)
 {
 	/* Do nothing to avoid problems with dispose in GTypeModule when
 	 * types are registered.
@@ -134,31 +134,31 @@ static void vala_panel_applet_engine_module_dispose(GObject *object)
 	 * everything is destroyed. So we really want that last unref before
 	 * closing the application. */
 }
-static void vala_panel_applet_engine_module_finalize(GTypeModule *type_module)
+static void vala_panel_applet_engine_iface_module_finalize(GTypeModule *type_module)
 {
-	ValaPanelAppletEngineModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
+	ValaPanelAppletEngineIfaceModule *module = VALA_PANEL_APPLET_ENGINE_MODULE(type_module);
 
 	g_free(module->filename);
 
-	(*G_OBJECT_CLASS(vala_panel_applet_engine_module_parent_class)->finalize)(type_module);
+	(*G_OBJECT_CLASS(vala_panel_applet_engine_iface_module_parent_class)->finalize)(type_module);
 }
-static void vala_panel_applet_engine_module_init(ValaPanelAppletEngineModule *self)
+static void vala_panel_applet_engine_iface_module_init(ValaPanelAppletEngineIfaceModule *self)
 {
 	self->filename    = NULL;
 	self->engine      = NULL;
 	self->library     = NULL;
 	self->plugin_type = G_TYPE_NONE;
 }
-static void vala_panel_applet_engine_module_class_init(ValaPanelAppletEngineModuleClass *klass)
+static void vala_panel_applet_engine_iface_module_class_init(ValaPanelAppletEngineIfaceModuleClass *klass)
 {
 	GObjectClass *gobject_class;
 	GTypeModuleClass *gtype_module_class;
 
 	gobject_class           = G_OBJECT_CLASS(klass);
-	gobject_class->dispose  = vala_panel_applet_engine_module_dispose;
-	gobject_class->finalize = vala_panel_applet_engine_module_finalize;
+	gobject_class->dispose  = vala_panel_applet_engine_iface_module_dispose;
+	gobject_class->finalize = vala_panel_applet_engine_iface_module_finalize;
 
 	gtype_module_class         = G_TYPE_MODULE_CLASS(klass);
-	gtype_module_class->load   = vala_panel_applet_engine_module_load;
-	gtype_module_class->unload = vala_panel_applet_engine_module_unload;
+	gtype_module_class->load   = vala_panel_applet_engine_iface_module_load;
+	gtype_module_class->unload = vala_panel_applet_engine_iface_module_unload;
 }
