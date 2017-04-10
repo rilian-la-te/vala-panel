@@ -27,6 +27,15 @@ namespace ValaPanel
         public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
         public const string EXPANDABLE = "ValaPanel-Expandable";
     }
+#if NEW
+    public interface AppletEngine : Peas.ExtensionBase
+    {
+        public abstract ValaPanel.Applet get_applet_widget_by_oafid(ValaPanel.Toplevel toplevel,
+                                                                    GLib.Settings? settings,
+                                                                    string oafid,
+                                                                    string uuid);
+    }
+#endif
     public interface AppletPlugin : Peas.ExtensionBase
     {
         public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
