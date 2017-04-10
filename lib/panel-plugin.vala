@@ -34,8 +34,10 @@ namespace ValaPanel
                                                                     GLib.Settings? settings,
                                                                     string oafid,
                                                                     string uuid);
+        public abstract string[] get_available_oafids();
     }
 #endif
+
     public interface AppletPlugin : Peas.ExtensionBase
     {
         public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
