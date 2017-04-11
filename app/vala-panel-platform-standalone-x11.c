@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
+
 #include "vala-panel-platform-standalone-x11.h"
 #include "gio/gsettingsbackend.h"
 #include "lib/applets-new/applet-api.h"
@@ -64,14 +66,16 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
                                                               const char *profile)
 {
 	ValaPanelCoreSettings *core = vala_panel_platform_get_settings(obj);
-	ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
-	GSettingsBackend *backend   = core->backend;
+    ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
+    GSettingsBackend *backend   = core->backend;
 	g_autoptr(GSettings) s =
 	    g_settings_new_with_backend_and_path(core->root_schema, backend, core->root_schema);
 	g_auto(GStrv) panels = g_settings_get_strv(s, VALA_PANEL_APPLICATION_PANELS);
 	for (int i = 0; panels[i] != NULL; i++)
 	{
-		ValaPanelToplevel *unit = vala_panel_toplevel_new(self->app, panels[i]);
+#ifdef ENABLE_NEW_INTERFACE
+        ValaPanelToplevel *unit = vala_panel_toplevel_new_with_platform(self->app,obj, panels[i]);
+#endif
 		gtk_application_add_window(app, GTK_WINDOW(unit));
 	}
 	return true;
