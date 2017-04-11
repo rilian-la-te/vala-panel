@@ -90,7 +90,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 	gtk_window_move(top, 0, 0);
 }
 
-static long vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
+static ulong vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	ulong s = 0;
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
