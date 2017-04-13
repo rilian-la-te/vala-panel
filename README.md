@@ -16,7 +16,7 @@ TODO
  * [ ] Taskbar DBus library for compositor (1.0)
  * [x] ~~Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
-*TODO for 0.4.0:*
+*TODO for 0.4.0*
  * [ ] Rewrite plugins API and core into C
  * [ ] Split Toplevel into 3 objects: positioner, layout and window
  * [ ] Made PanelManager
@@ -54,9 +54,9 @@ Author
 Special thanks
 ---
  * [Ikey Doherty](mailto:ikey@evolve-os.com) for sidebar widget and inspirations.
- * [LXPanel team](https://github.com/lxde/lxqt-panel) for creating a base for my fork. Vala Panel uses lxpanel's tray code and other inspirations (including generic-config-dialog.vala and most positioning and autohide code in toplevel.vala).
+ * [LXPanel team](https://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=summary) for creating a base for my fork. Vala Panel uses LXPanel's tray code and other inspirations (including generic-config-dialog.vala and most positioning code in toplevel.vala).
 
 Inspirations
 ---
  * [Budgie Desktop](https://github.com/budgie-desktop/budgie-desktop)
- * [LXPanel](https://github.com/lxde/lxqt-panel)
+ * [LXPanel](https://wiki.lxde.org/en/LXPanel)
