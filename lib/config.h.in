@@ -13,6 +13,6 @@
 #define CONFIG_LOCALE_DIR "@CMAKE_INSTALL_DATAROOTDIR@/locale"
 #define CONFIG_PROFILES "@PROFILES_DIR@"
 #cmakedefine G252
-
+#cmakedefine ENABLE_NEW_INTERFACE
 
 #endif // CONFIG_H_IN
