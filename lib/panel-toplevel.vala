@@ -1192,8 +1192,12 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
+#if !NEW
+                core_settings.remove_unit_settings(this.name);
+#else
                 var fname = user_config_file_name("panels",pr,panel_name);
                 FileUtils.unlink( fname );
+#endif
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)
