@@ -19,15 +19,6 @@
 using ValaPanel;
 using Gtk;
 using Cairo;
-public class MonitorsApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new Monitors(toplevel,settings,number);
-    }
-}
 
 internal enum MonitorType
 {
@@ -358,7 +349,7 @@ public class Monitors: Applet, AppletConfigurable
     private uint timer;
     public Monitors(ValaPanel.Toplevel toplevel,
                                   GLib.Settings? settings,
-                                  uint number)
+                                  string number)
     {
         base(toplevel,settings,number);
     }
@@ -446,11 +437,3 @@ public class Monitors: Applet, AppletConfigurable
         return new_mon;
     }
 } // End class
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MonitorsApplet));
-}

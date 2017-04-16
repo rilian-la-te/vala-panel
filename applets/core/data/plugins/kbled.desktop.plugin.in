@@ -1,5 +1,5 @@
 [Plugin]
-Module=kbled
+Module=core
 Name=Keyboard LED
 Description=Indicators for CapsLock, NumLock, and ScrollLock keys
 X-ValaPanel-Configurable=true

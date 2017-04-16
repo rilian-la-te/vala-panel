@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gresources>
+  <gresource prefix="/org/vala-panel/launchbar">
+    <file compressed="true" preprocess="xml-stripblanks">config.ui</file>
+  </gresource>
+  <gresource prefix="/org/vala-panel/menumodel">
+    <file compressed="true" preprocess="xml-stripblanks">system-menus.ui</file>
+  </gresource>
+  <gresource prefix="/org/vala-panel/kbled">
+    <file compressed="true">data/capslock-on.png</file>
+    <file compressed="true">data/capslock-off.png</file>
+    <file compressed="true">data/numlock-on.png</file>
+    <file compressed="true">data/numlock-off.png</file>
+    <file compressed="true">data/scrllock-on.png</file>
+    <file compressed="true">data/scrllock-off.png</file>
+  </gresource>
+</gresources>

@@ -19,15 +19,6 @@
 using ValaPanel;
 using Gtk;
 
-public class DirmenuApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new Dirmenu(toplevel,settings,number);
-    }
-}
 public class Dirmenu: Applet, AppletConfigurable
 {
     private struct DirectorySort
@@ -46,7 +37,7 @@ public class Dirmenu: Applet, AppletConfigurable
     {get; set;}
     public Dirmenu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }
@@ -199,11 +190,3 @@ public class Dirmenu: Applet, AppletConfigurable
                             _("Icon"), ICON, GenericConfigType.FILE_ENTRY);
     }
 } // End class
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(DirmenuApplet));
-}

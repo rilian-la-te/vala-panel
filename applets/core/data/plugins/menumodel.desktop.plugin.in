@@ -1,5 +1,5 @@
 [Plugin]
-Module=menumodel
+Module=core
 Name=Applications Menu
 Description=Applications or custom menu in GMenuModel format.
 X-ValaPanel-Configurable=true

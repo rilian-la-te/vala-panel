@@ -27,15 +27,6 @@ public const TargetEntry[] MENU_TARGETS = {
 
 namespace LaunchBar
 {
-    public class AppletImpl : AppletPlugin, Peas.ExtensionBase
-    {
-        public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                        GLib.Settings? settings,
-                                        uint number)
-        {
-            return new Bar(toplevel,settings,number);
-        }
-    }
     private const string BUTTONS = "launch-buttons";
     public class Bar: Applet, AppletConfigurable
     {
@@ -45,7 +36,7 @@ namespace LaunchBar
         AppInfoMonitor? app_monitor;
         public Bar(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
-                                        uint number)
+                                        string number)
         {
             base(toplevel,settings,number);
         }
@@ -179,7 +170,7 @@ namespace LaunchBar
                             btn = new LaunchBar.Button.with_content_type(info,id,type,content_type);
                         else
                             btn = new LaunchBar.Button(info,id,type);
-                        toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
+                        toplevel.bind_property(ValaPanel.Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                         layout.add(btn);
                     }
                 }
@@ -188,7 +179,7 @@ namespace LaunchBar
             if (ids.length == 0)
             {
                 var btn = new LaunchBar.Button(null,null,ButtonType.BOOTSTRAP);
-                toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
+                toplevel.bind_property(ValaPanel.Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                 layout.add(btn);
             }
             layout.show_all();
@@ -275,12 +266,4 @@ namespace LaunchBar
             return id;
         }
     } // End class
-}
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(LaunchBar.AppletImpl));
 }

@@ -18,15 +18,6 @@
 
 using ValaPanel;
 using Gtk;
-public class MenuApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new Menu(toplevel,settings,number);
-    }
-}
 namespace Key
 {
     internal const string ICON = "icon-name";
@@ -59,7 +50,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     internal string? filename {get; set;}
     public Menu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }
@@ -290,11 +281,3 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         }
     }
 } // End class
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MenuApplet));
-}

@@ -1,6 +1,35 @@
 option(ENABLE_DRAWING "Enables drawing plugins, like CPU Graph plot" ON)
 
 if (ENABLE_DRAWING)
-	add_subdirectory(cpu)
-    add_subdirectory(monitors)
+    set(VALA_FILES
+        monitors.vala
+        cpu.vala
+        engine-drawing.vala)
+    add_custom_target(vala-ide-plugins-drawing SOURCES ${VALA_FILES})
+    vala_precompile(VALA_C drawing
+        ${VALA_FILES}
+    PACKAGES
+        ${CORE_PACKAGES}
+        vala-panel
+        cvalapanel
+    OPTIONS
+        --vapidir=${CMAKE_SOURCE_DIR}/vapi
+        --vapidir=${CMAKE_BINARY_DIR}/lib
+        --vapidir=${CMAKE_BINARY_DIR}/vapi
+        --target-glib=2.40
+        --gresources=${CMAKE_CURRENT_SOURCE_DIR}/core.gresource.xml
+        --thread
+    )
+    set (LIBS ${CORE_LIBRARIES} -lm)
+    set (LIB_PATHS ${CORE_LIBRARY_DIRS})
+    link_directories (${LIB_PATHS})
+    include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+    add_library (drawing MODULE
+        ${VALA_C}
+        ${RESOURCES}
+    )
+    target_link_libraries (drawing ${LIBS} valapanel)
+    install(TARGETS drawing DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/cpu.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/monitors.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
 endif()

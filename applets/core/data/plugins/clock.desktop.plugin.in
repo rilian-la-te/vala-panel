@@ -1,5 +1,5 @@
 [Plugin]
 Name=Clock
 Description=Digital clock with calendar
-Module=clock
+Module=core
 X-ValaPanel-Configurable=true
