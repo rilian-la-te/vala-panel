@@ -59,6 +59,8 @@ struct _ValaPanelApplication
 
 G_DEFINE_TYPE(ValaPanelApplication, vala_panel_application, GTK_TYPE_APPLICATION)
 
+static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data);
+static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data);
@@ -72,13 +74,9 @@ static const GOptionEntry entries[] =
 
 static const GActionEntry vala_panel_application_app_entries[6] = {
 	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
-	//      { "panel-preferences",
-	//        activate_panel_preferences,
-	//        "s", NULL, NULL, { 0 } },
+	{ "panel-preferences", activate_panel_preferences, "s", NULL, NULL, { 0 } },
 	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
-	//      { "menu",
-	//        activate_menu,
-	//        NULL, NULL, NULL, { 0 } },
+	{ "menu", activate_menu, NULL, NULL, NULL, { 0 } },
 	{ "session-command", activate_command, "s", NULL, NULL, { 0 } },
 	{ "quit", activate_exit, "b", NULL, NULL, { 0 } },
 };
@@ -453,6 +451,53 @@ static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplicatio
 		g_action_group_activate_action(G_ACTION_GROUP(app),
 		                               VALA_PANEL_KEY_CSS,
 		                               g_variant_new_string(file));
+}
+
+static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	GtkApplication *app      = GTK_APPLICATION(data);
+	g_autoptr(GList) windows = gtk_application_get_windows(app);
+	for (GList *l = windows; l != NULL; l = l->next)
+	{
+		//        if (VALA_PANEL_IS_TOPLEVEL(l->data))
+		//        {
+
+		//        }
+	}
+	//    foreach(unowned Window win in app.get_windows())
+	//    {
+	//        if (win is Toplevel)
+	//        {
+	//            unowned Toplevel p = win as Toplevel;
+	//            foreach(unowned Widget pl in p.get_applets_list())
+	//            {
+	//                if (pl is AppletMenu)
+	//                    (pl as AppletMenu).show_system_menu();
+	//            }
+	//        }
+	//    }
+}
+
+static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	GtkApplication *app      = GTK_APPLICATION(data);
+	g_autoptr(GList) windows = gtk_application_get_windows(app);
+	for (GList *l = windows; l != NULL; l = l->next)
+	{
+		//        if (VALA_PANEL_IS_TOPLEVEL(l->data))
+		//        {
+		//        if (win is Toplevel)
+		//        {
+		//            unowned Toplevel p = win as Toplevel;
+		//            if (p.panel_name == param.get_string())
+		//            {
+		//                p.configure("position");
+		//                break;
+		//            }
+		//        }
+		//        stderr.printf("No panel with this name found.\n");
+		//        }
+	}
 }
 
 static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data)

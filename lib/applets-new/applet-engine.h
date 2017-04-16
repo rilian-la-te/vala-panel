@@ -7,16 +7,16 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_INTERFACE(ValaPanelAppletEngineIface, vala_panel_applet_engine_iface_iface, VALA_PANEL, APPLET_ENGINE_IFACE,
-                    GObject)
+G_DECLARE_INTERFACE(ValaPanelAppletEngineIface, vala_panel_applet_engine_iface_iface, VALA_PANEL,
+                    APPLET_ENGINE_IFACE, GObject)
 
 struct _ValaPanelAppletEngineIfaceInterface
 {
 	GTypeInterface g_iface;
-    GSList *(*get_available_types)(ValaPanelAppletEngineIface *self);
-    ValaPanelAppletInfo *(*get_applet_info_for_type)(ValaPanelAppletEngineIface *self,
+	GSList *(*get_available_types)(ValaPanelAppletEngineIface *self);
+	ValaPanelAppletInfo *(*get_applet_info_for_type)(ValaPanelAppletEngineIface *self,
 	                                                 const char *applet_type);
-    ValaPanelAppletWidget *(*get_applet_widget_for_type)(ValaPanelAppletEngineIface *self,
+	ValaPanelAppletWidget *(*get_applet_widget_for_type)(ValaPanelAppletEngineIface *self,
 	                                                     const char *applet_type,
 	                                                     GSettings *settings, const char *uuid);
 	gpointer padding[12];

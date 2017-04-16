@@ -10,13 +10,15 @@ struct _ValaPanelAppletEngineIfaceModule
 	GType plugin_type;
 };
 
-G_DEFINE_TYPE(ValaPanelAppletEngineIfaceModule, vala_panel_applet_engine_iface_module, G_TYPE_TYPE_MODULE)
+G_DEFINE_TYPE(ValaPanelAppletEngineIfaceModule, vala_panel_applet_engine_iface_module,
+              G_TYPE_TYPE_MODULE)
 
-ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from_ini(const char *filename)
+ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from_ini(
+    const char *filename)
 {
 	ValaPanelAppletEngineIfaceModule *module = NULL;
-	g_autoptr(GKeyFile) rc              = g_key_file_new();
-	g_autoptr(GError) err               = NULL;
+	g_autoptr(GKeyFile) rc                   = g_key_file_new();
+	g_autoptr(GError) err                    = NULL;
 	g_key_file_load_from_file(rc, filename, G_KEY_FILE_KEEP_COMMENTS, &err);
 	if (G_UNLIKELY(rc == NULL))
 	{
@@ -44,7 +46,8 @@ ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from
 		if (G_LIKELY(found))
 		{
 			/* create new module */
-			module = g_object_new(vala_panel_applet_engine_iface_module_get_type(), NULL);
+			module =
+			    g_object_new(vala_panel_applet_engine_iface_module_get_type(), NULL);
 			module->filename = path;
 		}
 		else
@@ -56,7 +59,8 @@ ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from
 	return module;
 }
 
-ValaPanelAppletEngineIface *vala_panel_applet_engine_iface_module_get_engine(ValaPanelAppletEngineIfaceModule *self)
+ValaPanelAppletEngineIface *vala_panel_applet_engine_iface_module_get_engine(
+    ValaPanelAppletEngineIfaceModule *self)
 {
 	if (g_type_module_use(G_TYPE_MODULE(self)))
 	{
@@ -140,7 +144,8 @@ static void vala_panel_applet_engine_iface_module_finalize(GTypeModule *type_mod
 
 	g_free(module->filename);
 
-	(*G_OBJECT_CLASS(vala_panel_applet_engine_iface_module_parent_class)->finalize)(type_module);
+	(*G_OBJECT_CLASS(vala_panel_applet_engine_iface_module_parent_class)->finalize)(
+	    type_module);
 }
 static void vala_panel_applet_engine_iface_module_init(ValaPanelAppletEngineIfaceModule *self)
 {
@@ -149,7 +154,8 @@ static void vala_panel_applet_engine_iface_module_init(ValaPanelAppletEngineIfac
 	self->library     = NULL;
 	self->plugin_type = G_TYPE_NONE;
 }
-static void vala_panel_applet_engine_iface_module_class_init(ValaPanelAppletEngineIfaceModuleClass *klass)
+static void vala_panel_applet_engine_iface_module_class_init(
+    ValaPanelAppletEngineIfaceModuleClass *klass)
 {
 	GObjectClass *gobject_class;
 	GTypeModuleClass *gtype_module_class;

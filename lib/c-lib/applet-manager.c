@@ -50,8 +50,8 @@ GSList *vala_panel_applet_manager_get_available_types(ValaPanelAppletManager *se
 	g_hash_table_iter_init(&iter, self->available_engines);
 	while (g_hash_table_iter_next(&iter, &key, &value))
 	{
-		GSList *engine_types =
-		    vala_panel_applet_engine_iface_get_available_types((ValaPanelAppletEngineIface *)key);
+		GSList *engine_types = vala_panel_applet_engine_iface_get_available_types(
+		    (ValaPanelAppletEngineIface *)key);
 		available_types = g_slist_concat(available_types, engine_types);
 	}
 	return available_types;
@@ -65,9 +65,8 @@ ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
 	g_hash_table_iter_init(&iter, self->available_engines);
 	while (g_hash_table_iter_next(&iter, &key, &value))
 	{
-		ValaPanelAppletInfo *info =
-		    vala_panel_applet_engine_iface_get_applet_info_for_type((ValaPanelAppletEngineIface *)key,
-		                                                      applet_type);
+		ValaPanelAppletInfo *info = vala_panel_applet_engine_iface_get_applet_info_for_type(
+		    (ValaPanelAppletEngineIface *)key, applet_type);
 		if (info)
 			return info;
 	}
@@ -87,11 +86,8 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 		GSettings *settings =
 		    vala_panel_platform_get_settings_for_scheme(self->mgr, scheme, cpath);
 		ValaPanelAppletWidget *widget =
-		    vala_panel_applet_engine_iface_get_applet_widget_for_type((ValaPanelAppletEngineIface *)
-		                                                            key,
-		                                                        applet_type,
-		                                                        settings,
-		                                                        uuid);
+		    vala_panel_applet_engine_iface_get_applet_widget_for_type(
+		        (ValaPanelAppletEngineIface *)key, applet_type, settings, uuid);
 		if (widget)
 			return widget;
 	}

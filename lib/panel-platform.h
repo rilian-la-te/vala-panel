@@ -67,7 +67,7 @@ struct _ValaPanelPlatformClass
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);
 	/*struts*/
-    ulong (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
+	ulong (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
 	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
