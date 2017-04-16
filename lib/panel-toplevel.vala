@@ -513,17 +513,10 @@ namespace ValaPanel
         /**************************************************************************************
          * Strut handling
          **************************************************************************************/
-        private bool panel_edge_can_strut(out ulong size)
-        {
-            size = platform.can_strut(this as Gtk.Window);
-            return size > 0 ? true : false;
-        }
         private void update_strut()
         {
             platform.update_strut(this as Gtk.Window);
         }
-
-
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
@@ -834,29 +827,6 @@ namespace ValaPanel
                 }
             return true;
         }
-        /* FIXME: Potentially we can support multiple panels at the same edge,
-         * but currently this cannot be done due to some positioning problems. */
-        private static string gen_panel_name(string profile, PositionType edge, int mon)
-        {
-            string? edge_str = null;
-            if (edge == PositionType.TOP)
-                edge_str="top";
-            if (edge == PositionType.BOTTOM)
-                edge_str="bottom";
-            if (edge == PositionType.LEFT)
-                edge_str="left";
-            if (edge == PositionType.RIGHT)
-                edge_str="right";
-            string dir = user_config_file_name("panels",profile, null);
-            for(var i = 0; i < int.MAX; ++i )
-            {
-                var name = "%s-m%d-%d".printf(edge_str, mon, i);
-                var f = Path.build_filename( dir, name, null );
-                if( !FileUtils.test( f, FileTest.EXISTS ) )
-                    return name;
-            }
-            return "panel-max";
-        }
         private void activate_new_panel(SimpleAction act, Variant? param)
         {
             int new_mon = -2;
@@ -933,7 +903,6 @@ namespace ValaPanel
             dlg.destroy();
             if( ok )
             {
-                string pr = this.profile;
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
