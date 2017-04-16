@@ -534,7 +534,7 @@ namespace ValaPanel
                 accept_focus: false,
                 application: app,
                 panel_name: name);
-            if (platform == null)
+            if (Toplevel.platform == null)
             {
                 Toplevel.platform = platform;
                 Toplevel.core_settings = platform.get_settings();
