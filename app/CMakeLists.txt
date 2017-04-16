@@ -38,7 +38,7 @@ glib_compile_resources(GLIB_RESOURCES_APP
 # Executable
 #####
 set(APP_SOURCES
-	${GLIB_RESOURCES_APP}
+        ${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
 	vala-panel-platform-standalone-x11.h)
 add_custom_target(vala-ide-app SOURCES ${VALA_FILES})

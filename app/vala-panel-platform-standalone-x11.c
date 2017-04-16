@@ -95,6 +95,70 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 	gtk_window_move(top, 0, 0);
 }
 
+/*
+ *             ulong s = 0;
+            size = 0;
+            if (!get_mapped())
+                return false;
+            if (autohide)
+                s = GAP;
+            else switch (orientation)
+            {
+                case Gtk.Orientation.VERTICAL:
+                    s = a.width;
+                    break;
+                case Gtk.Orientation.HORIZONTAL:
+                    s = a.height;
+                    break;
+                default: return false;
+            }
+            if (monitor < 0)
+            {
+                size = s;
+                return true;
+            }
+            if (monitor >= get_screen().get_n_monitors())
+                return false;
+            Gdk.Rectangle rect, rect2;
+            get_screen().get_monitor_geometry(monitor, out rect);
+            switch(edge)
+            {
+                case PositionType.LEFT:
+                    rect.width = rect.x;
+                    rect.x = 0;
+                    s += rect.width;
+                    break;
+                case PositionType.RIGHT:
+                    rect.x += rect.width;
+                    rect.width = get_screen().get_width() - rect.x;
+                    s += rect.width;
+                    break;
+                case PositionType.TOP:
+                    rect.height = rect.y;
+                    rect.y = 0;
+                    s += rect.height;
+                    break;
+                case PositionType.BOTTOM:
+                    rect.y += rect.height;
+                    rect.height = get_screen().get_height() - rect.y;
+                    s += rect.height;
+                    break;
+            }
+            if (!(rect.height == 0 || rect.width == 0)) // on a border of monitor
+            {
+                var n = get_screen().get_n_monitors();
+                for (var i = 0; i < n; i++)
+                {
+                    if (i == monitor)
+                        continue;
+                    get_screen().get_monitor_geometry(i, out rect2);
+                    if (rect.intersect(rect2, null))
+                        // that monitor lies over the edge
+                        return false;
+                }
+            }
+            size = s;
+            return true;*/
 static ulong vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	ulong s = 0;

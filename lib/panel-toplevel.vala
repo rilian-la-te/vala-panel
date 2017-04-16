@@ -222,11 +222,7 @@ namespace ValaPanel
                 else
                     box.get_preferred_height(null, out w);
                 if (w!=width)
-#if NEW
                     settings.default_settings.set_int(Key.WIDTH,w);
-#else
-                    settings.settings.set_int(Key.WIDTH,w);
-#endif
             }
             if (!this.get_realized())
                 return;
@@ -344,13 +340,11 @@ namespace ValaPanel
         /*************************************************************************************
          * Plugins stuff
          *************************************************************************************/
-#if NEW
         private static unowned Platform platform = null;
         private static unowned CoreSettings core_settings = null;
-#endif
         private struct PluginData
         {
-            unowned AppletPlugin plugin;
+            unowned AppletEngine plugin;
             int count;
         }
         private static Peas.Engine engine;
@@ -358,11 +352,7 @@ namespace ValaPanel
         private static Peas.ExtensionSet extset;
         private static HashTable<string,PluginData?> loaded_types;
         private HashTable<string,int> local_applets;
-#if NEW
         private unowned UnitSettings settings;
-#else
-        private ToplevelSettings settings;
-#endif
         static construct
         {
             engine = Peas.Engine.get_default();
@@ -372,21 +362,11 @@ namespace ValaPanel
         }
         internal void add_applet(string type)
         {
-#if NEW
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
             load_applet(s);
-#else
-            unowned PluginSettings s = settings.add_plugin_settings(type);
-            s.default_settings.set_string(Key.NAME,type);
-            load_applet(s);
-#endif
         }
-#if NEW
         internal void load_applet(UnitSettings s)
-#else
-        internal void load_applet(PluginSettings s)
-#endif
         {
             /* Determine if the plugin is loaded yet. */
             string name = s.default_settings.get_string(Key.NAME);
@@ -423,7 +403,7 @@ namespace ValaPanel
         }
         private void on_extension_added(Peas.PluginInfo i, Object p)
         {
-            unowned AppletPlugin plugin = p as AppletPlugin;
+            unowned AppletEngine plugin = p as AppletEngine;
             unowned string type = i.get_module_name();
             if (!loaded_types.contains(type))
             {
@@ -435,7 +415,6 @@ namespace ValaPanel
             if (local_applets.contains(type))
                 return;
             // Iterate the children, and then load them into the panel
-#if NEW
             unowned UnitSettings? pl = null;
             foreach (var applet in settings.default_settings.get_strv(Key.APPLETS))
             {
@@ -449,63 +428,31 @@ namespace ValaPanel
                     return;
                 }
             }
-
-#else
-            unowned PluginSettings? pl = null;
-            foreach (unowned PluginSettings s in settings.plugins)
-                if (s.default_settings.get_string(Key.NAME) == type)
-                {
-                    pl = s;
-                    local_applets.insert(type,0);
-                    load_applet(pl);
-                    update_applet_positions();
-                    return;
-                }
-#endif
         }
-#if NEW
-        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
-#else
-        internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
-#endif
+        internal void place_applet(AppletEngine engine, UnitSettings s)
         {
-#if NEW
-            var aw = null;
-#else
-            var aw = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
-#endif
+            string oafid = s.default_settings.get_string(Key.NAME);
+            var aw = engine.get_applet_widget_by_oafid(this,s.custom_settings,oafid,s.uuid);
             unowned Applet applet = aw;
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
             box.reorder_child(applet,(int)position);
-            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-            {
+//            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
+//            {
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
                 applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
-            }
-#if NEW
+//            }
             applet.destroy.connect(()=>{applet_removed(applet.uuid);});
-#else
-            applet.destroy.connect(()=>{applet_removed(applet.number);});
-#endif
         }
         internal void remove_applet(Applet applet)
         {
             applet.destroy();
         }
-#if NEW
         internal void applet_removed(string uuid)
-#else
-        internal void applet_removed(uint num)
-#endif
         {
             if (this.in_destruction())
                 return;
-#if NEW
             unowned UnitSettings s = core_settings.get_by_uuid(uuid);
-#else
-            unowned PluginSettings s = settings.get_settings_by_num(num);
-#endif
             var name = s.default_settings.get_string(Key.NAME);
             var count = local_applets.lookup(name);
             count--;
@@ -517,18 +464,14 @@ namespace ValaPanel
             data.count -= 1;
             if (data.count <= 0)
             {
-                unowned AppletPlugin pl = loaded_types.lookup(name).plugin;
+                unowned AppletEngine pl = loaded_types.lookup(name).plugin;
                 loaded_types.remove(name);
                 unowned Peas.PluginInfo info = pl.plugin_info;
                 engine.try_unload_plugin(info);
             }
             else
                 loaded_types.insert(name,data);
-#if NEW
             core_settings.remove_unit_settings(uuid);
-#else
-            settings.remove_plugin_settings(num);
-#endif
         }
         internal void update_applet_positions()
         {
@@ -547,27 +490,16 @@ namespace ValaPanel
         {
             return engine.get_plugin_list();
         }
-        internal unowned AppletPlugin get_plugin(Applet pl)
+        internal unowned AppletEngine get_plugin(Applet pl)
         {
-#if NEW
+//TODO: Correct lookup
             return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
                                         .default_settings.get_string(Key.NAME))).plugin;
-#else
-            return loaded_types.lookup((settings.get_settings_by_num(pl.number)
-                                        .default_settings.get_string(Key.NAME))).plugin;
-#endif
         }
-#if NEW
         internal unowned UnitSettings get_applet_settings(Applet pl)
         {
             return core_settings.get_by_uuid(pl.uuid);
         }
-#else
-        internal unowned PluginSettings get_applet_settings(Applet pl)
-        {
-            return settings.get_settings_by_num(pl.number);
-        }
-#endif
         internal uint get_applet_position(Applet pl)
         {
             int res;
@@ -581,169 +513,20 @@ namespace ValaPanel
         /**************************************************************************************
          * Strut handling
          **************************************************************************************/
-        private ulong strut_size;
-        private ulong strut_lower;
-        private ulong strut_upper;
-        private int strut_edge;
         private bool panel_edge_can_strut(out ulong size)
         {
-#if NEW
             size = platform.can_strut(this as Gtk.Window);
             return size > 0 ? true : false;
-#else
-            ulong s = 0;
-            size = 0;
-            if (!get_mapped())
-                return false;
-            if (autohide)
-                s = GAP;
-            else switch (orientation)
-            {
-                case Gtk.Orientation.VERTICAL:
-                    s = a.width;
-                    break;
-                case Gtk.Orientation.HORIZONTAL:
-                    s = a.height;
-                    break;
-                default: return false;
-            }
-            if (monitor < 0)
-            {
-                size = s;
-                return true;
-            }
-            if (monitor >= get_screen().get_n_monitors())
-                return false;
-            Gdk.Rectangle rect, rect2;
-            get_screen().get_monitor_geometry(monitor, out rect);
-            switch(edge)
-            {
-                case PositionType.LEFT:
-                    rect.width = rect.x;
-                    rect.x = 0;
-                    s += rect.width;
-                    break;
-                case PositionType.RIGHT:
-                    rect.x += rect.width;
-                    rect.width = get_screen().get_width() - rect.x;
-                    s += rect.width;
-                    break;
-                case PositionType.TOP:
-                    rect.height = rect.y;
-                    rect.y = 0;
-                    s += rect.height;
-                    break;
-                case PositionType.BOTTOM:
-                    rect.y += rect.height;
-                    rect.height = get_screen().get_height() - rect.y;
-                    s += rect.height;
-                    break;
-            }
-            if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
-            {
-                var n = get_screen().get_n_monitors();
-                for (var i = 0; i < n; i++)
-                {
-                    if (i == monitor)
-                        continue;
-                    get_screen().get_monitor_geometry(i, out rect2);
-                    if (rect.intersect(rect2, null))
-                        /* that monitor lies over the edge */
-                        return false;
-                }
-            }
-            size = s;
-            return true;
-#endif
         }
         private void update_strut()
         {
-#if NEW
             platform.update_strut(this as Gtk.Window);
-#else
-            int index;
-            Gdk.Atom atom;
-            ulong strut_size = 0;
-            ulong strut_lower = 0;
-            ulong strut_upper = 0;
-
-            if (!get_mapped())
-                return;
-            /* most wm's tend to ignore struts of unmapped windows, and that's how
-             * panel hides itself. so no reason to set it. If it was be, it must be removed */
-            if (autohide && this.strut_size == 0)
-                return;
-
-            /* Dispatch on edge to set up strut parameters. */
-            switch (edge)
-            {
-                case PositionType.LEFT:
-                    index = 0;
-                    strut_lower = a.y;
-                    strut_upper = a.y + a.height;
-                    break;
-                case PositionType.RIGHT:
-                    index = 1;
-                    strut_lower = a.y;
-                    strut_upper = a.y + a.height;
-                    break;
-                case PositionType.TOP:
-                    index = 2;
-                    strut_lower = a.x;
-                    strut_upper = a.x + a.width;
-                    break;
-                case PositionType.BOTTOM:
-                    index = 3;
-                    strut_lower = a.x;
-                    strut_upper = a.x + a.width;
-                    break;
-                default:
-                    return;
-            }
-
-            /* Set up strut value in property format. */
-            ulong desired_strut[12];
-            if (strut &&
-                panel_edge_can_strut(out strut_size))
-            {
-                desired_strut[index] = strut_size;
-                desired_strut[4 + index * 2] = strut_lower;
-                desired_strut[5 + index * 2] = strut_upper-1;
-            }
-            /* If strut value changed, set the property value on the panel window.
-             * This avoids property change traffic when the panel layout is recalculated but strut geometry hasn't changed. */
-            if ((this.strut_size != strut_size) || (this.strut_lower != strut_lower) || (this.strut_upper != strut_upper) || (this.strut_edge != this.edge))
-            {
-                this.strut_size = strut_size;
-                this.strut_lower = strut_lower;
-                this.strut_upper = strut_upper;
-                this.strut_edge = this.edge;
-                /* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
-                 * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
-                var xwin = get_window();
-                if (strut_size != 0)
-                {
-                    atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-                    Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,12);
-                    atom = Atom.intern_static_string("_NET_WM_STRUT");
-                    Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,4);
-                }
-                else
-                {
-                    atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-                    Gdk.property_delete(xwin,atom);
-                    atom = Atom.intern_static_string("_NET_WM_STRUT");
-                    Gdk.property_delete(xwin,atom);
-                }
-            }
-#endif
         }
 
 
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
-#if NEW
         public Toplevel.with_platform(Gtk.Application app, Platform platform, string name)
         {
             Object(border_width: 0,
@@ -765,7 +548,6 @@ namespace ValaPanel
             }
             setup(false);
         }
-#endif
         [CCode (returns_floating_reference = true)]
         public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
         {
@@ -815,7 +597,6 @@ namespace ValaPanel
         }
         private void setup(bool use_internal_values)
         {
-#if NEW
             settings = core_settings.get_by_uuid(this.name);
             if (use_internal_values)
             {
@@ -843,36 +624,6 @@ namespace ValaPanel
             settings_as_action(this,settings.default_settings,Key.USE_FOREGROUND_COLOR);
             settings_as_action(this,settings.default_settings,Key.USE_FONT);
             settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_FILE);
-#else
-            var filename = user_config_file_name("panels",profile,panel_name);
-            settings = new ToplevelSettings(filename);
-            if (use_internal_values)
-            {
-                settings.settings.set_int(Key.MONITOR, _mon);
-                settings.settings.set_enum(Key.EDGE, edge);
-            }
-            settings_as_action(this,settings.settings,Key.EDGE);
-            settings_as_action(this,settings.settings,Key.ALIGNMENT);
-            settings_as_action(this,settings.settings,Key.HEIGHT);
-            settings_as_action(this,settings.settings,Key.WIDTH);
-            settings_as_action(this,settings.settings,Key.DYNAMIC);
-            settings_as_action(this,settings.settings,Key.AUTOHIDE);
-            settings_as_action(this,settings.settings,Key.STRUT);
-            settings_as_action(this,settings.settings,Key.DOCK);
-            settings_as_action(this,settings.settings,Key.MARGIN);
-            settings_bind(this,settings.settings,Key.MONITOR);
-            settings_as_action(this,settings.settings,Key.ICON_SIZE);
-            settings_as_action(this,settings.settings,Key.BACKGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.FOREGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.BACKGROUND_FILE);
-            settings_as_action(this,settings.settings,Key.FONT);
-            settings_as_action(this,settings.settings,Key.CORNERS_SIZE);
-            settings_as_action(this,settings.settings,Key.FONT_SIZE_ONLY);
-            settings_as_action(this,settings.settings,Key.USE_BACKGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.USE_FONT);
-            settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
-#endif
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
@@ -962,18 +713,12 @@ namespace ValaPanel
 			box.show();
             this.ah_rev.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
-#if NEW
             core_settings.init_toplevel_plugin_list(this.settings);
             foreach(var applet in settings.default_settings.get_strv(Key.APPLETS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(applet);
                 load_applet(pl);
             }
-#else
-            settings.init_plugin_list();
-            foreach(unowned PluginSettings pl in settings.plugins)
-                load_applet(pl);
-#endif
             this.show();
             this.stick();
             update_applet_positions();
@@ -1169,7 +914,7 @@ namespace ValaPanel
                 msg.destroy();
                 return;
             }
-            var new_name = gen_panel_name(profile,new_edge,new_mon);
+            var new_name = CoreSettings.get_uuid();
             var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
             new_toplevel.configure("position");
             new_toplevel.show_all();
@@ -1192,12 +937,7 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-#if !NEW
                 core_settings.remove_unit_settings(this.name);
-#else
-                var fname = user_config_file_name("panels",pr,panel_name);
-                FileUtils.unlink( fname );
-#endif
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)
