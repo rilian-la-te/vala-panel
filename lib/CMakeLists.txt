@@ -39,7 +39,6 @@ set(VALA_FILES
 	dbusmenu/dbusmenu.vala
 	panel-plugin.vala
 	panel-toplevel.vala
-	plugin-settings.vala
 	)
 vala_precompile(VALA_C ${LIBNAME}
     ${VALA_FILES}
