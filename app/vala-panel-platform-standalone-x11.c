@@ -73,6 +73,7 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	g_auto(GStrv) panels = g_settings_get_strv(s, VALA_PANEL_APPLICATION_PANELS);
 	for (int i = 0; panels[i] != NULL; i++)
 	{
+		vala_panel_core_settings_add_unit_settings_full(core, "toplevel", panels[i], true);
 		ValaPanelToplevel *unit =
 		    vala_panel_toplevel_new_with_platform(self->app, obj, panels[i]);
 		gtk_application_add_window(app, GTK_WINDOW(unit));

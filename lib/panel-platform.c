@@ -55,7 +55,7 @@ void vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend
 {
 	vala_panel_platform_init_settings_full(self,
 	                                       VALA_PANEL_CORE_SCHEMA,
-	                                       VALA_PANEL_CORE_PATH,
+	                                       VALA_PANEL_OBJECT_PATH,
 	                                       backend);
 }
 

@@ -168,9 +168,8 @@ ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSetting
 bool vala_panel_core_settings_init_toplevel_plugin_list(ValaPanelCoreSettings *settings,
                                                         ValaPanelUnitSettings *toplevel_settings)
 {
-	g_auto(GStrv) applets_list = NULL;
 	GSettings *tsettings       = toplevel_settings->default_settings;
-	g_settings_get(tsettings, "applets", "as", &applets_list, NULL);
+	g_auto(GStrv) applets_list = g_settings_get_strv(tsettings, VALA_PANEL_KEY_APPLETS);
 	for (int i = 0; applets_list[i] != NULL; i++)
 	{
 		g_autofree char *applet_uuid = g_strdup(applets_list[i]);
