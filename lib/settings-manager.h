@@ -61,6 +61,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
                                                     const char *name, const char *uuid,
                                                     bool is_toplevel);
 void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
+GType vala_panel_unit_settings_get_type();
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelUnitSettingsPointer, vala_panel_unit_settings_free, NULL);
 
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
@@ -78,6 +79,7 @@ ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSetting
 char *vala_panel_core_settings_get_uuid();
 bool vala_panel_core_settings_init_toplevel_plugin_list(ValaPanelCoreSettings *settings,
                                                         ValaPanelUnitSettings *toplevel_settings);
+GType vala_panel_core_settings_get_type();
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelCoreSettingsPointer, vala_panel_core_settings_free, NULL);
 
 G_END_DECLS
