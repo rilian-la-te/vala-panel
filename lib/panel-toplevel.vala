@@ -432,7 +432,7 @@ namespace ValaPanel
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
-        public Toplevel.with_platform(Gtk.Application app, Platform platform, string name)
+        public Toplevel(Gtk.Application app, Platform platform, string name)
         {
             Object(border_width: 0,
                 decorated: false,
@@ -454,33 +454,9 @@ namespace ValaPanel
             setup(false);
         }
         [CCode (returns_floating_reference = true)]
-        public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
-        {
-            if (GLib.FileUtils.test(config_file,FileTest.EXISTS))
-                return new Toplevel(app,config_name);
-            stderr.printf("Cannot find config file %s\n",config_file);
-            return null;
-        }
-        [CCode (returns_floating_reference = true)]
         public static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
         {
             return new Toplevel.from_position(app,name,mon,e);
-        }
-        public Toplevel (Gtk.Application app, string name)
-        {
-            Object(border_width: 0,
-                decorated: false,
-                name: "ValaPanel",
-                resizable: false,
-                title: "ValaPanel",
-                type_hint: Gdk.WindowTypeHint.DOCK,
-                window_position: Gtk.WindowPosition.NONE,
-                skip_taskbar_hint: true,
-                skip_pager_hint: true,
-                accept_focus: false,
-                application: app,
-                uuid: name);
-            setup(false);
         }
         private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
         {
