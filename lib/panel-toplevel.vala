@@ -357,14 +357,12 @@ namespace ValaPanel
         }
         private void on_applet_loaded(string type)
         {
-            unowned UnitSettings? pl = null;
             foreach (var applet in settings.default_settings.get_strv(Key.APPLETS))
             {
                 unowned UnitSettings s = core_settings.get_by_uuid(applet);
                 if (s.default_settings.get_string(Key.NAME) == type)
                 {
-                    pl = s;
-                    holder.load_applet(pl);
+                    place_applet(holder.applet_ref(type),s);
                     update_applet_positions();
                     return;
                 }

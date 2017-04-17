@@ -149,7 +149,7 @@ namespace ValaPanel
                 screen = get_screen();
             else
                 screen = Gdk.Screen.get_default();
-            var monitor = screen.get_display().get_monitor_at_point(x,y);
+            unowned Gdk.Monitor monitor = screen.get_display().get_monitor_at_point(x,y);
             a = (Gtk.Allocation)monitor.get_workarea();
             x = x.clamp(a.x,a.x + a.width - pa.width);
             y = y.clamp(a.y,a.y + a.height - pa.height);
@@ -206,10 +206,11 @@ namespace ValaPanel
     }
     public class AppletHolder: Object
     {
-        private struct PluginData
+        [Compact]
+        private class PluginData
         {
-            unowned AppletPlugin plugin;
-            int count;
+            internal unowned AppletPlugin plugin = null;
+            internal int count = 0;
         }
         private Peas.Engine engine;
         private Peas.ExtensionSet extset;
@@ -235,27 +236,34 @@ namespace ValaPanel
             unowned string type = i.get_module_name();
             if (!loaded_types.contains(type))
             {
-                var data = PluginData();
+                var data = new PluginData();
                 data.plugin = plugin;
                 data.count = 0;
-                loaded_types.insert(type,data);
+                loaded_types.insert(type,(owned)data);
             }
             applet_loaded(type);
         }
-        internal void load_applet(UnitSettings s)
+        internal unowned AppletPlugin? applet_ref(string name)
         {
-            string name = s.default_settings.get_string(Key.NAME);
             if (loaded_types.contains(name))
             {
                 unowned PluginData? data = loaded_types.lookup(name);
                 if (data!=null)
                 {
                     data.count +=1;
-                    loaded_types.insert(name,data);
-                    applet_ready_to_place(data.plugin,s);
-                    return;
+                    unowned AppletPlugin pl = data.plugin;
+                    if (pl.get_plugin_info().is_loaded())
+                        return pl;
                 }
             }
+            return null;
+        }
+        internal void load_applet(UnitSettings s)
+        {
+            string name = s.default_settings.get_string(Key.NAME);
+            var pl = applet_ref(name);
+            if (pl != null)
+                applet_ready_to_place(pl,s);
             // Got this far we actually need to load the underlying plugin
             unowned Peas.PluginInfo? plugin = null;
 
@@ -284,8 +292,6 @@ namespace ValaPanel
                 unowned Peas.PluginInfo info = pl.plugin_info;
                 engine.try_unload_plugin(info);
             }
-            else
-                loaded_types.insert(name,data);
         }
         internal unowned AppletPlugin get_plugin(Applet pl, CoreSettings core_settings)
         {
