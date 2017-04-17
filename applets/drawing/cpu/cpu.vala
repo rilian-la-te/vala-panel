@@ -23,7 +23,7 @@ public class CpuApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Cpu(toplevel,settings,number);
     }
@@ -51,7 +51,7 @@ public class Cpu: Applet
     private cpu_stat previous_cpu_stat;     /* Previous value of cpu_stat */
     public Cpu(ValaPanel.Toplevel toplevel,
                                   GLib.Settings? settings,
-                                  uint number)
+                                  string number)
     {
         base(toplevel,settings,number);
     }

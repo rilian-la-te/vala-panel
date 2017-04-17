@@ -22,7 +22,7 @@ public class PagerApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Pager(toplevel,settings,number);
     }
@@ -33,7 +33,7 @@ public class Pager: Applet
     int border;
     public Pager(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

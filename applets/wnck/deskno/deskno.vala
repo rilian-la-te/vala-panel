@@ -22,7 +22,7 @@ public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Deskno(toplevel,settings,number);
     }
@@ -39,7 +39,7 @@ public class Deskno: Applet, AppletConfigurable
     private ulong screen_handler;
     public Deskno(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

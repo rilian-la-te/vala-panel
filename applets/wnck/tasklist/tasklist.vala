@@ -22,7 +22,7 @@ public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Tasklist(toplevel,settings,number);
     }
@@ -40,7 +40,7 @@ public class Tasklist: Applet, AppletConfigurable
     {get; set;}
     public Tasklist(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

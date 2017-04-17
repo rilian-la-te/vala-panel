@@ -22,7 +22,7 @@ public class ButtonsApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Buttons(toplevel,settings,number);
     }
@@ -37,7 +37,7 @@ public class Buttons: Applet
     ulong state;
     public Buttons(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

@@ -22,7 +22,7 @@ public class WincmdApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Wincmd(toplevel,settings,number);
     }
@@ -52,7 +52,7 @@ public class Wincmd: Applet, AppletConfigurable
     {get; set;}
     public Wincmd(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }
