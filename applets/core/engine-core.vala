@@ -17,69 +17,40 @@
  */
 
 using ValaPanel;
-public class ClockApplet : AppletPlugin, Peas.ExtensionBase
+public class CoreAppletFactory : AppletEngine, Peas.ExtensionBase
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
+    public string[] get_available_oafids()
     {
-        return new Clock(toplevel,settings,number);
+        return {"clock","dirmenu","kbled","launchbar","menumodel","separator"};
+    }
+    public Applet get_applet_widget_by_oafid(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    string oafid,
+                                    string uuid)
+    {
+        switch (oafid)
+        {
+        case "clock":
+            return new Clock(toplevel,settings,uuid);
+        case "dirmenu":
+            return new Dirmenu(toplevel,settings,uuid);
+        case "kbled":
+            return new Kbled(toplevel,settings,uuid);
+        case "launchbar":
+            return new LaunchBar.Bar(toplevel,settings,uuid);
+        case "menumodel":
+            return new Menu(toplevel,settings,uuid);
+        case "separator":
+            return new Sep(toplevel,settings,uuid);
+        }
+        assert_not_reached();
     }
 }
-public class DirmenuApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Dirmenu(toplevel,settings,number);
-    }
-}
-public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Kbled(toplevel,settings,number);
-    }
-}
-public class LaunchbarApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new LaunchBar.Bar(toplevel,settings,number);
-    }
-}
-public class MenuApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Menu(toplevel,settings,number);
-    }
-}
-public class SepApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Sep(toplevel,settings,number);
-    }
-}
+
 [ModuleInit]
 public void peas_register_types(TypeModule module)
 {
     // boilerplate - all modules need this
     var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(ClockApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(DirmenuApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(KbLEDApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(LaunchbarApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MenuApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(SepApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletEngine), typeof(CoreAppletFactory));
 }

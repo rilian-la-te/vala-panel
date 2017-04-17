@@ -1,4 +1,4 @@
 [Plugin]
-Module=wnck
+Module=pager
 Name=Pager
 Description=Shows desktops.

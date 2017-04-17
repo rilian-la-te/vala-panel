@@ -1,5 +1,5 @@
 [Plugin]
-Module=wnck
+Module=wincmd
 Name=Show Desktop
 Description=Can shows desktop and shades window.
 X-ValaPanel-Configurable=true;

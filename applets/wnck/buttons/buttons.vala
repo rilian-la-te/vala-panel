@@ -18,7 +18,15 @@
 
 using ValaPanel;
 using Gtk;
-
+public class ButtonsApplet : AppletPlugin, Peas.ExtensionBase
+{
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    uint number)
+    {
+        return new Buttons(toplevel,settings,number);
+    }
+}
 public class Buttons: Applet
 {
     Button minimize;
@@ -29,7 +37,7 @@ public class Buttons: Applet
     ulong state;
     public Buttons(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    string number)
+                                    uint number)
     {
         base(toplevel,settings,number);
     }
@@ -191,3 +199,11 @@ public class Buttons: Applet
         btn.set_has_window(false);
     }
 } // End class
+
+[ModuleInit]
+public void peas_register_types(TypeModule module)
+{
+    // boilerplate - all modules need this
+    var objmodule = module as Peas.ObjectModule;
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(ButtonsApplet));
+}
