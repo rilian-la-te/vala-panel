@@ -491,7 +491,6 @@ namespace ValaPanel
         }
         internal unowned AppletPlugin get_plugin(Applet pl)
         {
-//TODO: Correct lookup
             return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
                                         .default_settings.get_string(Key.NAME))).plugin;
         }
