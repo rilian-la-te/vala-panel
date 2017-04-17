@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gresources>
+  <gresource prefix="/org/vala-panel/kbled">
+    <file compressed="true">images/capslock-on.png</file>
+    <file compressed="true">images/capslock-off.png</file>
+    <file compressed="true">images/numlock-on.png</file>
+    <file compressed="true">images/numlock-off.png</file>
+    <file compressed="true">images/scrllock-on.png</file>
+    <file compressed="true">images/scrllock-off.png</file>
+  </gresource>
+</gresources>

@@ -18,6 +18,15 @@
 
 using ValaPanel;
 using Gtk;
+public class SepApplet : AppletPlugin, Peas.ExtensionBase
+{
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    uint number)
+    {
+        return new Sep(toplevel,settings,number);
+    }
+}
 public class Sep: Applet, AppletConfigurable
 {
     Separator widget;
@@ -27,7 +36,7 @@ public class Sep: Applet, AppletConfigurable
     internal bool show_separator {get; set;}
     public Sep(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    string number)
+                                    uint number)
     {
         base(toplevel,settings,number);
     }
@@ -59,3 +68,11 @@ public class Sep: Applet, AppletConfigurable
                             _("Visible separator"), KEY_SHOW_SEPARATOR, GenericConfigType.BOOL);
     }
 } // End class
+
+[ModuleInit]
+public void peas_register_types(TypeModule module)
+{
+    // boilerplate - all modules need this
+    var objmodule = module as Peas.ObjectModule;
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(SepApplet));
+}

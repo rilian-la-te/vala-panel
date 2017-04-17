@@ -19,6 +19,15 @@
 using ValaPanel;
 using Gtk;
 using Cairo;
+public class CpuApplet : AppletPlugin, Peas.ExtensionBase
+{
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    uint number)
+    {
+        return new Cpu(toplevel,settings,number);
+    }
+}
 //TODO:Colors
 public class Cpu: Applet
 {
@@ -42,7 +51,7 @@ public class Cpu: Applet
     private cpu_stat previous_cpu_stat;     /* Previous value of cpu_stat */
     public Cpu(ValaPanel.Toplevel toplevel,
                                   GLib.Settings? settings,
-                                  string number)
+                                  uint number)
     {
         base(toplevel,settings,number);
     }
@@ -212,3 +221,11 @@ public class Cpu: Applet
         return false;
     }
 } // End class
+
+[ModuleInit]
+public void peas_register_types(TypeModule module)
+{
+    // boilerplate - all modules need this
+    var objmodule = module as Peas.ObjectModule;
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(CpuApplet));
+}

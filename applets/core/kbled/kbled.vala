@@ -18,6 +18,15 @@
 
 using ValaPanel;
 using Gtk;
+public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
+{
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    uint number)
+    {
+        return new Kbled(toplevel,settings,number);
+    }
+}
 public class Kbled: Applet, AppletConfigurable
 {
     private const string CAPS_ON = "capslock-on";
@@ -29,7 +38,7 @@ public class Kbled: Applet, AppletConfigurable
 
     public Kbled(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    string number)
+                                    uint number)
     {
         base(toplevel,settings,number);
     }
@@ -50,12 +59,12 @@ public class Kbled: Applet, AppletConfigurable
         widget.selection_mode = SelectionMode.NONE;
         add(widget);
         caps = new Image();
-        toplevel.bind_property(ValaPanel.Key.ICON_SIZE,caps,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+        toplevel.bind_property(Key.ICON_SIZE,caps,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
         settings.bind(CAPS_ON,caps,"visible",SettingsBindFlags.GET);
         caps.show();
         widget.add(caps);
         num = new Image();
-        toplevel.bind_property(ValaPanel.Key.ICON_SIZE,num,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+        toplevel.bind_property(Key.ICON_SIZE,num,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
         num.show();
         settings.bind(NUM_ON,num,"visible",SettingsBindFlags.GET);
         widget.add(num);
@@ -100,3 +109,11 @@ public class Kbled: Applet, AppletConfigurable
         toggle_num();
     }
 } // End class
+
+[ModuleInit]
+public void peas_register_types(TypeModule module)
+{
+    // boilerplate - all modules need this
+    var objmodule = module as Peas.ObjectModule;
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(KbLEDApplet));
+}

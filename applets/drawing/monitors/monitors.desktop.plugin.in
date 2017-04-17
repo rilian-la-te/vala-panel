@@ -1,0 +1,5 @@
+[Plugin]
+Module=monitors
+Name=Monitors Graph
+Description=Draws monitors graph on panel (for CPU and RAM).
+X-ValaPanel-Configurable=true
