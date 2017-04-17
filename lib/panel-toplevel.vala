@@ -341,80 +341,27 @@ namespace ValaPanel
          * Plugins stuff
          *************************************************************************************/
         private static unowned Platform platform = null;
-        private static unowned CoreSettings core_settings = null;
+        internal static unowned CoreSettings core_settings = null;
+        internal static AppletHolder holder = null;
         private struct PluginData
         {
             unowned AppletPlugin plugin;
             int count;
         }
-        private static Peas.Engine engine;
         private static ulong mon_handler;
-        private static Peas.ExtensionSet extset;
-        private static HashTable<string,PluginData?> loaded_types;
-        private HashTable<string,int> local_applets;
         private unowned UnitSettings settings;
         static construct
         {
-            engine = new Peas.Engine.with_nonglobal_loaders();
-            engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
-            loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
-            extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
+            holder = new AppletHolder();
         }
         internal void add_applet(string type)
         {
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
-            load_applet(s);
+            holder.load_applet(s);
         }
-        internal void load_applet(UnitSettings s)
+        private void on_applet_loaded(string type)
         {
-            /* Determine if the plugin is loaded yet. */
-            string name = s.default_settings.get_string(Key.NAME);
-            if (loaded_types.contains(name))
-            {
-                unowned PluginData? data = loaded_types.lookup(name);
-                if (data!=null)
-                {
-                    place_applet(data.plugin,s);
-                    data.count +=1;
-                    var count = local_applets.lookup(name);
-                    count += 1;
-                    local_applets.insert(name,count);
-                    loaded_types.insert(name,data);
-                    return;
-                }
-            }
-            // Got this far we actually need to load the underlying plugin
-            unowned Peas.PluginInfo? plugin = null;
-
-            foreach(unowned Peas.PluginInfo plugini in engine.get_plugin_list())
-            {
-                if (plugini.get_module_name() == name)
-                {
-                    plugin = plugini;
-                    break;
-                }
-            }
-            if (plugin == null) {
-                warning("Could not find plugin: %s", name);
-                return;
-            }
-            engine.try_load_plugin(plugin);
-        }
-        private void on_extension_added(Peas.PluginInfo i, Object p)
-        {
-            unowned AppletPlugin plugin = p as AppletPlugin;
-            unowned string type = i.get_module_name();
-            if (!loaded_types.contains(type))
-            {
-                var data = PluginData();
-                data.plugin = plugin;
-                data.count = 0;
-                loaded_types.insert(type,data);
-            }
-            if (local_applets.contains(type))
-                return;
-            // Iterate the children, and then load them into the panel
             unowned UnitSettings? pl = null;
             foreach (var applet in settings.default_settings.get_strv(Key.APPLETS))
             {
@@ -422,8 +369,7 @@ namespace ValaPanel
                 if (s.default_settings.get_string(Key.NAME) == type)
                 {
                     pl = s;
-                    local_applets.insert(type,0);
-                    load_applet(pl);
+                    holder.load_applet(pl);
                     update_applet_positions();
                     return;
                 }
@@ -453,23 +399,7 @@ namespace ValaPanel
                 return;
             unowned UnitSettings s = core_settings.get_by_uuid(uuid);
             var name = s.default_settings.get_string(Key.NAME);
-            var count = local_applets.lookup(name);
-            count--;
-            if (count <= 0)
-                local_applets.remove(name);
-            else
-                local_applets.insert(name,count);
-            unowned PluginData data = loaded_types.lookup(name);
-            data.count -= 1;
-            if (data.count <= 0)
-            {
-                unowned AppletPlugin pl = loaded_types.lookup(name).plugin;
-                loaded_types.remove(name);
-                unowned Peas.PluginInfo info = pl.plugin_info;
-                engine.try_unload_plugin(info);
-            }
-            else
-                loaded_types.insert(name,data);
+            holder.applet_unref(name);
             core_settings.remove_unit_settings(uuid);
         }
         internal void update_applet_positions()
@@ -484,15 +414,6 @@ namespace ValaPanel
         public List<unowned Widget> get_applets_list()
         {
             return box.get_children();
-        }
-        internal unowned List<Peas.PluginInfo> get_all_types()
-        {
-            return engine.get_plugin_list();
-        }
-        internal unowned AppletPlugin get_plugin(Applet pl)
-        {
-            return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
-                                        .default_settings.get_string(Key.NAME))).plugin;
         }
         internal unowned UnitSettings get_applet_settings(Applet pl)
         {
@@ -624,7 +545,6 @@ namespace ValaPanel
         }
         construct
         {
-            local_applets = new HashTable<string,int>(str_hash,str_equal);
             unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
                 this.set_visual(visual);
@@ -642,13 +562,9 @@ namespace ValaPanel
                 if (p.name in anames)
                     this.update_appearance();
             });
+            holder.applet_ready_to_place.connect(place_applet);
+            holder.applet_loaded.connect(on_applet_loaded);
             this.add_action_entries(panel_entries,this);
-            extset.extension_added.connect(on_extension_added);
-            engine.load_plugin.connect_after((i)=>
-            {
-                var ext = extset.get_extension(i);
-                on_extension_added(i,ext);
-            });
         }
         /***************************************************************************
          * Common UI functions
@@ -708,7 +624,7 @@ namespace ValaPanel
             foreach(var applet in settings.default_settings.get_strv(Key.APPLETS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(applet);
-                load_applet(pl);
+                holder.load_applet(pl);
             }
             this.show();
             this.stick();
