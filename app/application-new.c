@@ -284,7 +284,7 @@ static bool load_settings(ValaPanelApplication *app)
 	GSettingsBackend *config_backend = s->backend;
 	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_CORE_SCHEMA,
 	                                                   config_backend,
-	                                                   VALA_PANEL_CORE_PATH);
+	                                                   VALA_PANEL_OBJECT_PATH);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_RUN);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_LOGOUT);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_SHUTDOWN);

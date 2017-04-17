@@ -78,8 +78,7 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 		                                                "toplevel",
 		                                                panels[count],
 		                                                true);
-		ValaPanelToplevel *unit =
-		    vala_panel_toplevel_new_with_platform(self->app, obj, panels[count]);
+		ValaPanelToplevel *unit = vala_panel_toplevel_new(self->app, obj, panels[count]);
 		gtk_application_add_window(app, GTK_WINDOW(unit));
 	}
 	return count > 0 ? true : false;
