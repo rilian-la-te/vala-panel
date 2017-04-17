@@ -43,6 +43,7 @@
 
 struct _ValaPanelApplication
 {
+	GtkApplication parent;
 	bool restart;
 	GSettings *config;
 	bool dark;
