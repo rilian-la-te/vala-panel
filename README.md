@@ -32,7 +32,7 @@ even broken.
 *Core:*
  * GLib (>= 2.50.0)
  * GTK3 (>= 3.22.0)
- * libpeas-1.0
+ * libpeas-1.0 (>= 1.14.0)
  * valac
  
 *Plugins:*

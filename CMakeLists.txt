@@ -119,10 +119,10 @@ pkg_check_modules (E
   gthread-2.0>=2.50)
 
 pkg_check_modules (F
-  libpeas-1.0>=1.2)
+  libpeas-1.0>=1.14)
 
 pkg_check_modules (G
-  libpeas-gtk-1.0>=1.2)
+  libpeas-gtk-1.0>=1.14)
 
 pkg_check_modules (H
   gmodule-2.0>=2.50)
@@ -133,8 +133,8 @@ pkg_check_modules (CORE REQUIRED QUIET
   gio-2.0>=2.50
   gio-unix-2.0>=2.50
   gthread-2.0>=2.50
-  libpeas-1.0>=1.2
-  libpeas-gtk-1.0>=1.2
+  libpeas-1.0>=1.14
+  libpeas-gtk-1.0>=1.14
   gmodule-2.0>=2.50)
 
 set(CORE_PACKAGES
