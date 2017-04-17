@@ -343,11 +343,6 @@ namespace ValaPanel
         private static unowned Platform platform = null;
         internal static unowned CoreSettings core_settings = null;
         internal static AppletHolder holder = null;
-        private struct PluginData
-        {
-            unowned AppletPlugin plugin;
-            int count;
-        }
         private static ulong mon_handler;
         private unowned UnitSettings settings;
         static construct
