@@ -22,7 +22,7 @@ public class MenuApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Menu(toplevel,settings,number);
     }
@@ -59,7 +59,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     internal string? filename {get; set;}
     public Menu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

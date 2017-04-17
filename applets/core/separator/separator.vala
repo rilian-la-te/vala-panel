@@ -22,7 +22,7 @@ public class SepApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Sep(toplevel,settings,number);
     }
@@ -36,7 +36,7 @@ public class Sep: Applet, AppletConfigurable
     internal bool show_separator {get; set;}
     public Sep(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

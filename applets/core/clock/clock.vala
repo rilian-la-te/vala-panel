@@ -22,7 +22,7 @@ public class ClockApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Clock(toplevel,settings,number);
     }
@@ -51,7 +51,7 @@ public class Clock: Applet, AppletConfigurable
 
     public Clock(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

@@ -92,6 +92,9 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 		-Wno-ignored-qualifiers
 		-Wno-deprecated-declarations #Vala warns us already
 		-Wno-incompatible-pointer-types
+		-Wno-missing-field-initializers
+		-Wno-discarded-qualifiers
+		-Wno-sign-compare
 		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 

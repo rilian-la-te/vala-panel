@@ -31,7 +31,7 @@ namespace LaunchBar
     {
         public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
-                                        uint number)
+                                        string number)
         {
             return new Bar(toplevel,settings,number);
         }
@@ -45,7 +45,7 @@ namespace LaunchBar
         AppInfoMonitor? app_monitor;
         public Bar(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
-                                        uint number)
+                                        string number)
         {
             base(toplevel,settings,number);
         }
