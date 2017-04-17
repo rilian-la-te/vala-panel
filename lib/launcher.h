@@ -25,6 +25,7 @@
 #include <stdbool.h>
 
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent);
+bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext* cxt, GList *uris);
 GAppInfo *vala_panel_get_default_for_uri(const char *uri);
 void child_spawn_func(void *data);
 void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data);
