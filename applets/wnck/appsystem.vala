@@ -235,7 +235,7 @@ public class AppSystem : GLib.Object
         /**
          * Attempt to gain foreign window connection
          */
-        Gdk.Window? foreign = new Gdk.X11.Window.foreign_for_display(display as Gdk.X11.Display, xid);
+        Gdk.Window? foreign = Gdk.X11Window.foreign_new_for_display(display, xid);
         if (foreign == null) {
             /* No window, bail */
             return null;
