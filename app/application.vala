@@ -164,7 +164,7 @@ namespace ValaPanel
                 if (win is Toplevel)
                 {
                     unowned Toplevel p = win as Toplevel;
-                    if (p.panel_name == param.get_string())
+                    if (p.uuid == param.get_string())
                     {
                         p.configure("position");
                         break;

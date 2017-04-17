@@ -44,7 +44,7 @@ namespace ValaPanel
                                                 Key.FONT_SIZE_ONLY, Key.FONT};
 
 
-        public string panel_name {get; internal construct;}
+        public string uuid {get; internal construct;}
 
         private string profile
         { owned get {
@@ -452,7 +452,7 @@ namespace ValaPanel
                 skip_pager_hint: true,
                 accept_focus: false,
                 application: app,
-                panel_name: name);
+                uuid: name);
             if (Toplevel.platform == null)
             {
                 Toplevel.platform = platform;
@@ -486,7 +486,7 @@ namespace ValaPanel
                 skip_pager_hint: true,
                 accept_focus: false,
                 application: app,
-                panel_name: name);
+                uuid: name);
             setup(false);
         }
         private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
@@ -502,14 +502,14 @@ namespace ValaPanel
                 skip_pager_hint: true,
                 accept_focus: false,
                 application: app,
-                panel_name: name);
+                uuid: name);
             monitor = mon;
             this.edge = e;
             setup(true);
         }
         private void setup(bool use_internal_values)
         {
-            settings = core_settings.get_by_uuid(this.name);
+            settings = core_settings.get_by_uuid(this.uuid);
             if (use_internal_values)
             {
                 settings.default_settings.set_int(Key.MONITOR, _mon);
@@ -820,7 +820,7 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-                core_settings.remove_unit_settings(this.name);
+                core_settings.remove_unit_settings(this.uuid);
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)
