@@ -1,22 +1,4 @@
 INCLUDE(GResource)
-set(VALA_FILES  application.vala)
-vala_precompile(VALA_C ${APPNAME}
-    ${VALA_FILES}
-PACKAGES
-    ${CORE_PACKAGES}
-    cvalapanel
-    vala-panel
-    posix
-OPTIONS
-    --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_BINARY_DIR}/vapi
-    --vapidir=${CMAKE_BINARY_DIR}/lib
-    --target-glib=2.50
-    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.gresource.xml
-    --thread
-    -D GLIB242
-)
-
 set(RUNNER_SOURCES
 	runner.c
 	runner.h
@@ -40,16 +22,13 @@ glib_compile_resources(GLIB_RESOURCES_APP
 set(APP_SOURCES
         ${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
-	vala-panel-platform-standalone-x11.h)
-add_custom_target(vala-ide-app SOURCES ${VALA_FILES})
-add_executable (${APPNAME} ${VALA_C} ${APP_SOURCES})
-add_executable(${APPNAME}-new  ${APP_SOURCES} application-new.c application-new.h)
+	vala-panel-platform-standalone-x11.h
+	application-new.c application-new.h)
+add_executable(${APPNAME}  ${APP_SOURCES} )
 target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES})
-target_link_libraries (${APPNAME}-new ${CORE_LIBRARIES} ${LIBNAME})
 target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
-target_include_directories(${APPNAME}-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)
 
-install (TARGETS ${APPNAME} ${APPNAME}-new RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
+install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
 
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_APP}
