@@ -71,14 +71,15 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	g_autoptr(GSettings) s =
 	    g_settings_new_with_backend_and_path(core->root_schema, backend, core->root_path);
 	g_auto(GStrv) panels = g_settings_get_strv(s, VALA_PANEL_APPLICATION_PANELS);
-	for (int i = 0; panels[i] != NULL; i++)
+    int count;
+    for (count = 0; panels[count] != NULL; count++)
 	{
-		vala_panel_core_settings_add_unit_settings_full(core, "toplevel", panels[i], true);
+        vala_panel_core_settings_add_unit_settings_full(core, "toplevel", panels[count], true);
 		ValaPanelToplevel *unit =
-		    vala_panel_toplevel_new_with_platform(self->app, obj, panels[i]);
+            vala_panel_toplevel_new_with_platform(self->app, obj, panels[count]);
 		gtk_application_add_window(app, GTK_WINDOW(unit));
 	}
-	return true;
+    return count > 0 ? true : false;
 }
 
 static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x,
