@@ -355,7 +355,7 @@ namespace ValaPanel
         private unowned UnitSettings settings;
         static construct
         {
-            engine = Peas.Engine.get_default();
+            engine = new Peas.Engine.with_nonglobal_loaders();
             engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
             loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
             extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
