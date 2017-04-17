@@ -24,7 +24,6 @@ OPTIONS
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/core.gresource.xml
     --thread
 )
-configure_file(data/plugins/core-plugins.gresource.xml.in ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/core-plugins.gresource.xml)
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
@@ -34,15 +33,15 @@ glib_compile_resources(RESOURCES
     source
         core.gresource.xml
 )
-glib_compile_resources_fullpath(APPLETS
-    source
-        ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/core-plugins.gresource.xml
-)
 add_library (core MODULE
     ${VALA_C}
     ${RESOURCES}
-    ${APPLETS}
 )
 target_link_libraries (core ${LIBS} valapanel)
 install(TARGETS core DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/core.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/clock.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/dirmenu.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/separator.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/kbled.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/launchbar.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/menumodel.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-base)

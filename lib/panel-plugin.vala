@@ -28,16 +28,6 @@ namespace ValaPanel
         public const string EXPANDABLE = "ValaPanel-Expandable";
         public const string OAFID = "ValaPanel-OAFID";
     }
-    public interface AppletEngine : Peas.ExtensionBase
-    {
-        public abstract ValaPanel.Applet get_applet_widget_by_oafid(ValaPanel.Toplevel toplevel,
-                                                           GLib.Settings? settings,
-                                                           string oafid,
-                                                           string number);
-        public abstract bool has_oafid(string oafid);
-        public abstract void applet_unref();
-        public abstract uint applet_get_ref_count();
-    }
     public interface AppletPlugin : Peas.ExtensionBase
     {
         public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,

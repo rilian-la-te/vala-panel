@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<gresources>
-  <gresource prefix="/org/vala-panel/applets">
-	<file compressed="true">cpu.plugin</file>
-	<file compressed="true">monitors.plugin</file>
-  </gresource>
-</gresources>

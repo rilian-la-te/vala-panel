@@ -1,6 +1,5 @@
 [Plugin]
-Module=launchbar
-Embedded=peas_register_launchbar
+Module=core
 Name=Quickstart
 Description=Container for application launchers.
 X-ValaPanel-Configurable=true

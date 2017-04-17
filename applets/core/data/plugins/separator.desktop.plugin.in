@@ -1,6 +1,5 @@
 [Plugin]
-Module=separator
-Embedded=peas_register_separator
+Module=core
 Name=Separator
 Description=Draws separator and makes space on panel
 X-ValaPanel-Expandable=true

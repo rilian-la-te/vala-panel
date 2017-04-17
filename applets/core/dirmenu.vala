@@ -117,7 +117,7 @@ public class Dirmenu: Applet, AppletConfigurable
             item.set_data("name",cursor.dirname);
             /* Connect signals. */
             item.select.connect(()=>{
-                if (item.get_submenu() != null)
+                if (item.get_submenu != null)
                 {
                     /* On first reference, populate the submenu using the parent directory and the item directory name. */
                     string dpath = item.get_submenu().get_data<string>("path");

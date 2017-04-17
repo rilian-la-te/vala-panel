@@ -1,6 +1,5 @@
 [Plugin]
-Module=menumodel
-Embedded=peas_register_menumodel
+Module=core
 Name=Applications Menu
 Description=Applications or custom menu in GMenuModel format.
 X-ValaPanel-Configurable=true

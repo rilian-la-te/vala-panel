@@ -15,7 +15,4 @@
     <file compressed="true">data/scrllock-on.png</file>
     <file compressed="true">data/scrllock-off.png</file>
   </gresource>
-  <gresource prefix="/org/vala-panel/applets">
-	
-  </gresource>
 </gresources>
