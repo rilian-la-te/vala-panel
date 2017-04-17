@@ -45,9 +45,14 @@ if (ENABLE_WNCK)
     add_definitions(-DWNCK_I_KNOW_THIS_IS_UNSTABLE)
     link_directories (${LIB_PATHS})
     include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+    configure_file(data/plugins/wnck-plugins.gresource.xml.in ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/wnck-plugins.gresource.xml)
+    glib_compile_resources_fullpath(APPLETS
+        source
+            ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/wnck-plugins.gresource.xml
+    )
     add_library (wnck MODULE
         ${VALA_C}
-        ${RESOURCES}
+        ${APPLETS}
     )
 
     target_link_libraries (wnck ${LIBS} valapanel)
@@ -55,12 +60,7 @@ if (ENABLE_WNCK)
 
     # Install plugin stuffs
     install(TARGETS wnck DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/deskno.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/buttons.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/pager.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/tasklist.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/wincmd.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/data/plugins/icontasks.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/wnck.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
 endif()
 
 option(ENABLE_X11 "Enables X11 system tray" ON)
