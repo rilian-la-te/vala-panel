@@ -344,7 +344,7 @@ namespace ValaPanel
         private static unowned CoreSettings core_settings = null;
         private struct PluginData
         {
-            unowned AppletEngine plugin;
+            unowned AppletPlugin plugin;
             int count;
         }
         private static Peas.Engine engine;
@@ -403,7 +403,7 @@ namespace ValaPanel
         }
         private void on_extension_added(Peas.PluginInfo i, Object p)
         {
-            unowned AppletEngine plugin = p as AppletEngine;
+            unowned AppletPlugin plugin = p as AppletPlugin;
             unowned string type = i.get_module_name();
             if (!loaded_types.contains(type))
             {
@@ -429,19 +429,18 @@ namespace ValaPanel
                 }
             }
         }
-        internal void place_applet(AppletEngine engine, UnitSettings s)
+        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
         {
-            string oafid = s.default_settings.get_string(Key.NAME);
-            var aw = engine.get_applet_widget_by_oafid(this,s.custom_settings,oafid,s.uuid);
+            var aw = applet_plugin.get_applet_widget(this,s.custom_settings,s.uuid);
             unowned Applet applet = aw;
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
             box.reorder_child(applet,(int)position);
-//            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-//            {
+            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
+            {
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
                 applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
-//            }
+            }
             applet.destroy.connect(()=>{applet_removed(applet.uuid);});
         }
         internal void remove_applet(Applet applet)
@@ -464,7 +463,7 @@ namespace ValaPanel
             data.count -= 1;
             if (data.count <= 0)
             {
-                unowned AppletEngine pl = loaded_types.lookup(name).plugin;
+                unowned AppletPlugin pl = loaded_types.lookup(name).plugin;
                 loaded_types.remove(name);
                 unowned Peas.PluginInfo info = pl.plugin_info;
                 engine.try_unload_plugin(info);
@@ -490,7 +489,7 @@ namespace ValaPanel
         {
             return engine.get_plugin_list();
         }
-        internal unowned AppletEngine get_plugin(Applet pl)
+        internal unowned AppletPlugin get_plugin(Applet pl)
         {
 //TODO: Correct lookup
             return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
