@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gresources>
+  <gresource prefix="/org/vala-panel/applets">
+	<file compressed="true">clock.plugin</file>
+	<file compressed="true">dirmenu.plugin</file>
+	<file compressed="true">kbled.plugin</file>
+	<file compressed="true">launchbar.plugin</file>
+	<file compressed="true">menumodel.plugin</file>
+	<file compressed="true">separator.plugin</file>
+  </gresource>
+</gresources>

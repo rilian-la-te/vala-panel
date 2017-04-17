@@ -1,5 +1,6 @@
 [Plugin]
-Module=core
+Module=dirmenu
 Name=Directory menu
+Embedded=peas_register_dirmenu
 Description=This menu shows filesystem hierarchy, started from given dir.
 X-ValaPanel-Configurable=true

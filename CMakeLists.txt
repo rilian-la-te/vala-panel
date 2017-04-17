@@ -86,13 +86,16 @@ ensure_vala_version ("0.34" MINIMUM)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
-#add_definitions(-w) #Suppress all GCC warnings
-add_definitions(-Wall -Wno-unused # Vala loves to create variables
-#		-pedantic
-		-Wno-ignored-qualifiers
-		-Wno-deprecated-declarations #Vala warns us already
-		-Wno-incompatible-pointer-types
-		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
+add_definitions(-w) #for Vala dev
+#add_definitions(-Wall
+#		-Wno-unused # Vala loves to create variables
+#		-Wno-missing-field-initializers # Silence missing padding warning
+##		-pedantic
+#		-Wno-ignored-qualifiers
+#		-Wno-discarded-qualifiers
+#		-Wno-deprecated-declarations #Vala warns us already
+#		-Wno-incompatible-pointer-types
+#		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 
 pkg_check_modules (A
@@ -130,8 +133,8 @@ pkg_check_modules (CORE REQUIRED QUIET
   gio-2.0>=2.50
   gio-unix-2.0>=2.50
   gthread-2.0>=2.50
-  libpeas-1.0>=1.2
-  libpeas-gtk-1.0>=1.2
+  libpeas-1.0>=1.18
+  libpeas-gtk-1.0>=1.18
   gmodule-2.0>=2.50)
 
 set(CORE_PACKAGES
