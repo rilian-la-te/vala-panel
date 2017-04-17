@@ -150,8 +150,8 @@ namespace ValaPanel
                 screen = get_screen();
             else
                 screen = Gdk.Screen.get_default();
-            var monitor = screen.get_monitor_at_point(x,y);
-            a = (Gtk.Allocation)screen.get_monitor_workarea(monitor);
+            var monitor = screen.get_display().get_monitor_at_point(x,y);
+            a = (Gtk.Allocation)monitor.get_workarea();
             x = x.clamp(a.x,a.x + a.width - pa.width);
             y = y.clamp(a.y,a.y + a.height - pa.height);
         }
