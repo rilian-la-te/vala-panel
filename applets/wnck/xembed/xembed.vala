@@ -23,7 +23,7 @@ public class XEmbedApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new XEmbedTray(toplevel,settings,number);
     }
@@ -34,7 +34,7 @@ public class XEmbedTray: Applet
     private XEmbed.Plugin plugin;
     public XEmbedTray(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }

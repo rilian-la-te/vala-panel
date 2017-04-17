@@ -1,5 +1,5 @@
 [Plugin]
-Module=icontasks
+Module=wnck
 Name=Icon Task List
 Description=Icon Task List
 Authors=Ikey Doherty

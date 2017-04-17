@@ -1,6 +1,6 @@
 /*
  * vala-panel
- * Copyright (C) 2017 Konstantin Pugin <ria.freelander@gmail.com>
+ * Copyright (C) 2015 Konstantin Pugin <ria.freelander@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,69 +17,71 @@
  */
 
 using ValaPanel;
-public class ClockApplet : AppletPlugin, Peas.ExtensionBase
+
+public class ButtonsApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Clock(toplevel,settings,number);
+        return new Buttons(toplevel,settings,number);
     }
 }
-public class DirmenuApplet : AppletPlugin, Peas.ExtensionBase
+public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Dirmenu(toplevel,settings,number);
+        return new Deskno(toplevel,settings,number);
     }
 }
-public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
+public class IconTasklist : ValaPanel.AppletPlugin, Peas.ExtensionBase
+{
+    public ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    string number)
+    {
+        return new IconTasklistApplet(toplevel,settings,number);
+    }
+}
+public class PagerApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Kbled(toplevel,settings,number);
+        return new Pager(toplevel,settings,number);
     }
 }
-public class LaunchbarApplet : AppletPlugin, Peas.ExtensionBase
+public class WincmdApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new LaunchBar.Bar(toplevel,settings,number);
+        return new Wincmd(toplevel,settings,number);
     }
 }
-public class MenuApplet : AppletPlugin, Peas.ExtensionBase
+public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Menu(toplevel,settings,number);
+        return new Tasklist(toplevel,settings,number);
     }
 }
-public class SepApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Sep(toplevel,settings,number);
-    }
-}
+
 [ModuleInit]
 public void peas_register_types(TypeModule module)
 {
     // boilerplate - all modules need this
     var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(ClockApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(DirmenuApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(KbLEDApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(LaunchbarApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MenuApplet));
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(SepApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(TasklistApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(WincmdApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(PagerApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(ButtonsApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(DesknoApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(IconTasklist));
 }

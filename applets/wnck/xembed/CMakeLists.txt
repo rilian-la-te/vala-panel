@@ -44,7 +44,7 @@ set (LIB_CFLAGS ${CORE_CFLAGS} ${X11_CFLAGS})
 include_directories(${CORE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 link_directories (${LIB_PATHS})
 
-add_library (${PLUGIN_NAME} MODULE
+add_library (x11 MODULE
     ${VALA_C}
     ${VALA_C_SOCKET}
     xembed-ccode.c
@@ -54,9 +54,9 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 add_definitions (${LIB_CFLAGS})
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+target_link_libraries (x11 ${LIBS} valapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES} ${VALA_FILES_SOCKET})
 
 # Install plugin stuffs
-install(TARGETS ${PLUGIN_NAME} DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
+install(TARGETS x11 DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.plugin DESTINATION ${PLUGINS_DIRECTORY} COMPONENT plugins-wnck)

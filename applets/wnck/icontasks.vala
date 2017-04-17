@@ -26,21 +26,15 @@ public static bool startupid_match(string id1, string id2)
     return (id2 == id3);
 }
 
-public class IconTasklist : ValaPanel.AppletPlugin, Peas.ExtensionBase
-{
-    public ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new IconTasklistApplet(toplevel,settings,number);
-    }
-}
-
 /**
  * Trivial helper for IconTasklist - i.e. desktop lookups
  */
 public class DesktopHelper : Object
 {
+    public const Gtk.TargetEntry[] targets = {
+        { "application/x-icon-tasklist-launcher-id", 0, 0 }
+    };
+
     public static void set_pinned(Settings? settings, DesktopAppInfo app_info, bool pinned)
     {
         string[] launchers = settings.get_strv("pinned-launchers");
@@ -80,14 +74,9 @@ public class IconTasklistApplet : ValaPanel.Applet
     protected HashTable<Wnck.Window,IconButton> buttons;
     protected HashTable<string?,PinnedIconButton?> pin_buttons;
     protected int icon_size = 32;
-
-    protected Gdk.AppLaunchContext context;
     protected AppSystem? helper;
 
     private unowned IconButton? active_button;
-
-    public string uuid { public set ; public get ; }
-
     protected void window_opened(Wnck.Window window)
     {
         // doesn't go on our list
@@ -108,7 +97,7 @@ public class IconTasklistApplet : ValaPanel.Applet
             PinnedIconButton? pbtn = null;
             var iter = HashTableIter<string?,PinnedIconButton?>(pin_buttons);
             while (iter.next(null, out pbtn)) {
-                if (pbtn.id != null && startupid_match(pbtn.id, launch_id)) {
+                if (pbtn.id != null && pbtn.id == launch_id) {
                     btn = pbtn;
                     break;
                 }
@@ -176,7 +165,7 @@ public class IconTasklistApplet : ValaPanel.Applet
             if (buttons.contains(previous_window)) {
                 btn = buttons[previous_window];
                 btn.set_active(false);
-            } 
+            }
         }
         new_active = screen.get_active_window();
         if (new_active == null || !buttons.contains(new_active)) {
@@ -197,14 +186,12 @@ public class IconTasklistApplet : ValaPanel.Applet
 
     public IconTasklistApplet(ValaPanel.Toplevel toplevel,
                               GLib.Settings? settings,
-                              uint number)
+                              string number)
     {
         base(toplevel,settings,number);
     }
     public override void create()
     {
-        this.context = Gdk.Screen.get_default().get_display().get_app_launch_context();
-
         helper = new AppSystem();
 
         // Easy mapping :)
@@ -238,6 +225,10 @@ public class IconTasklistApplet : ValaPanel.Applet
                 on_panel_size_changed(toplevel.height,toplevel.icon_size,24);
         });
 
+        Gtk.drag_dest_set(pinned, Gtk.DestDefaults.ALL, DesktopHelper.targets, Gdk.DragAction.MOVE);
+
+        pinned.drag_data_received.connect(on_drag_data_received);
+
         get_style_context().add_class("icon-tasklist");
 
         show_all();
@@ -250,7 +241,7 @@ public class IconTasklistApplet : ValaPanel.Applet
         unowned IconButton? val = null;
         unowned PinnedIconButton? pin_val = null;
 
-        icon_size = small_icons;    
+        icon_size = small_icons;
         Wnck.set_default_icon_size(icon_size);
 
         Idle.add(()=> {
@@ -284,7 +275,100 @@ public class IconTasklistApplet : ValaPanel.Applet
         set_icons_size();
     }
 
+    private void move_launcher(string app_id, int position)
+    {
+        string[] launchers = settings.get_strv("pinned-launchers");
 
+        if(position > launchers.length || position < 0) {
+            return;
+        }
+
+        // Create a new list for holding the launchers
+        var temp_launchers = new List<string>();
+
+        var old_index = 0;
+        var new_position = position;
+
+        for(var i = 0; i < launchers.length; i++) {
+
+            // Add launcher to the next position if it is not the one that has to be moved
+            if(launchers[i] != app_id) {
+                temp_launchers.append(launchers[i]);
+            } else {
+                old_index = i;
+            }
+        }
+
+        // Check if the indexes changed after removing the launcher from the list
+        if(new_position > old_index) {
+            new_position--;
+        }
+
+        temp_launchers.insert(app_id, new_position);
+
+        // Convert launchers list back to array
+        for(var i = 0; i < launchers.length; i++) {
+            launchers[i] = temp_launchers.nth_data(i);
+        }
+
+        // Save pinned launchers
+        settings.set_strv("pinned-launchers", launchers);
+    }
+
+    private void on_drag_data_received(Gtk.Widget widget, Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint item, uint time)
+    {
+        string[] launchers = settings.get_strv("pinned-launchers");
+        Gtk.Allocation main_layout_allocation;
+
+        // Get allocation of main layout
+        main_layout.get_allocation(out main_layout_allocation);
+
+        if(item != 0) {
+            message("Invalid target type");
+            return;
+        }
+
+        // id of app that is currently being dragged
+        var app_id = (string) selection_data.get_data();
+
+        // Iterate through launchers
+        for(var i = 0; i < launchers.length; i++) {
+
+            Gtk.Allocation alloc;
+
+            (pin_buttons[launchers[i]].get_parent() as ButtonWrapper).get_allocation(out alloc);
+
+            if(x <= (alloc.x + (alloc.width / 2) - main_layout_allocation.x)) {
+
+                // Check if launcher is being moved left to the same position as it currently is
+                if(launchers[i] == app_id) {
+                    break;
+                }
+
+                // Check if launcher is being moved right to the same position as it currently is
+                if(i > 0 && launchers[i - 1] == app_id) {
+                    break;
+                }
+
+                move_launcher(app_id, i);
+
+                break;
+            }
+
+            // Move launcher to the very end
+            if(i == launchers.length - 1) {
+
+                // Check if launcher is already at the end
+                if(launchers[i] == app_id) {
+                    break;
+                }
+
+                move_launcher(app_id, launchers.length);
+            }
+        }
+
+        Gtk.drag_finish(context, true, true, time);
+    }
     protected void on_settings_change(string key)
     {
         if (key != "pinned-launchers") {
@@ -303,7 +387,7 @@ public class IconTasklistApplet : ValaPanel.Applet
                 message("Invalid application! %s", desktopfile);
                 continue;
             }
-            var button = new PinnedIconButton(settings, info, icon_size, ref this.context, this.helper, panel_size);
+            var button = new PinnedIconButton(settings, info, icon_size, this.helper, panel_size);
             var button_wrap = new ButtonWrapper(button);
             pin_buttons[desktopfile] = button;
             pinned.pack_start(button_wrap, false, false, 0);
@@ -377,10 +461,3 @@ public class IconTasklistApplet : ValaPanel.Applet
     }
 } // End class
 
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(IconTasklist));
-}

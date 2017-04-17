@@ -18,22 +18,14 @@
 
 using ValaPanel;
 using Gtk;
-public class PagerApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new Pager(toplevel,settings,number);
-    }
-}
+
 public class Pager: Applet
 {
     Wnck.Pager widget;
     int border;
     public Pager(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }
@@ -100,11 +92,3 @@ public class Pager: Applet
             parent.prepend(_("Workspaces..."),"app.launch-command('%s')".printf(config_command));
     }
 } // End class
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(PagerApplet));
-}

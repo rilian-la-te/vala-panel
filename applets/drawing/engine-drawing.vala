@@ -17,25 +17,22 @@
  */
 
 using ValaPanel;
-public class DrawingAppletFactory : AppletEngine, Peas.ExtensionBase
+public class CpuApplet : AppletPlugin, Peas.ExtensionBase
 {
-    public string[] get_available_oafids()
-    {
-        return {"cpu","monitors"};
-    }
-    public Applet get_applet_widget_by_oafid(ValaPanel.Toplevel toplevel,
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    string oafid,
-                                    string uuid)
+                                    string number)
     {
-        switch (oafid)
-        {
-        case "cpu":
-            return new Cpu(toplevel,settings,uuid);
-        case "monitors":
-            return new Monitors(toplevel,settings,uuid);
-        }
-        assert_not_reached();
+        return new Cpu(toplevel,settings,number);
+    }
+}
+public class MonitorsApplet : AppletPlugin, Peas.ExtensionBase
+{
+    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    string number)
+    {
+        return new Monitors(toplevel,settings,number);
     }
 }
 
@@ -44,5 +41,6 @@ public void peas_register_types(TypeModule module)
 {
     // boilerplate - all modules need this
     var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletEngine), typeof(DrawingAppletFactory));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(CpuApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MonitorsApplet));
 }

@@ -1,8 +1,8 @@
 /*
  * This file is part of budgie-desktop
- * 
- * Copyright (C) 2014-2016 Ikey Doherty <ikey@solus-project.com>
- * 
+ *
+ * Copyright © 2014-2016 Ikey Doherty <ikey@solus-project.com>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -79,6 +79,8 @@ public class IconButton : Gtk.ToggleButton
 
     public int panel_size = 10;
 
+    protected Gdk.AppLaunchContext launch_context;
+
     private void update_app_info()
     {
         // Actions menu
@@ -128,7 +130,6 @@ public class IconButton : Gtk.ToggleButton
                     if (ainfo == null) {
                         return;
                     }
-                    var launch_context = Gdk.Screen.get_default().get_display().get_app_launch_context();
                     launch_context.set_screen(get_screen());
                     launch_context.set_timestamp(Gdk.CURRENT_TIME);
                     ainfo.launch_action(act, launch_context);
@@ -258,6 +259,7 @@ public class IconButton : Gtk.ToggleButton
     {
         this.settings = settings;
         this.helper = helper;
+        this.launch_context = get_display().get_app_launch_context();
 
         image = new Gtk.Image();
         image.pixel_size = size;
@@ -288,7 +290,7 @@ public class IconButton : Gtk.ToggleButton
                 }
             });
         }
-            
+
 
         // Replace styling with our own
         var st = get_style_context();
@@ -428,30 +430,28 @@ public class IconButton : Gtk.ToggleButton
 
         return base.button_release_event(event);
     }
-            
+
 }
 
 public class PinnedIconButton : IconButton
 {
     public DesktopAppInfo app_info;
-    protected unowned Gdk.AppLaunchContext? context;
     public string? id = null;
     private Gtk.Menu alt_menu;
 
     unowned Settings? settings;
 
-    public PinnedIconButton(Settings settings, DesktopAppInfo info, int size, ref Gdk.AppLaunchContext context, AppSystem? helper, int panel_size)
+    public PinnedIconButton(Settings settings, DesktopAppInfo info, int size, AppSystem? helper, int panel_size)
     {
         base(settings, null, size, info, helper, panel_size);
         this.app_info = info;
         this.settings = settings;
 
-        this.context = context;
-        set_tooltip_text("Launch %s".printf(info.get_display_name()));
+        set_tooltip_text(info.get_display_name());
         image.set_from_gicon(info.get_icon(), Gtk.IconSize.INVALID);
 
         alt_menu = new Gtk.Menu();
-        var item = new Gtk.MenuItem.with_label("Unpin from panel");
+        var item = new Gtk.MenuItem.with_label(_("Unpin from panel"));
         alt_menu.add(item);
         item.show_all();
 
@@ -459,6 +459,66 @@ public class PinnedIconButton : IconButton
             DesktopHelper.set_pinned(settings, this.app_info, false);
         });
         set_can_focus(false);
+
+        // Drag and drop
+        Gtk.drag_source_set(this, Gdk.ModifierType.BUTTON1_MASK, DesktopHelper.targets, Gdk.DragAction.MOVE);
+
+        drag_begin.connect((context)=> {
+            if(ainfo != null) {
+                Gtk.drag_set_icon_gicon(context, this.app_info.get_icon(), 0, 0);
+            } else {
+                Gtk.drag_set_icon_default(context);
+            }
+        });
+
+        launch_context.launched.connect(this.on_launched);
+        launch_context.launch_failed.connect(this.on_launch_failed);
+
+        drag_data_get.connect((widget, context, selection_data, info, time)=> {
+            selection_data.set(selection_data.get_target(), 8, (uchar []) this.app_info.get_id().to_utf8());
+        });
+    }
+
+    /**
+     * Handle startup notification, set our own ID to the ID selected
+     */
+    private void on_launched(GLib.AppInfo info, Variant v)
+    {
+        Variant? elem;
+
+        var iter = v.iterator();
+
+        while ((elem = iter.next_value()) != null) {
+            string? key = null;
+            Variant? val = null;
+
+            elem.get("{sv}", out key, out val);
+
+            if (key == null) {
+                continue;
+            }
+
+            if (!val.is_of_type(VariantType.STRING)) {
+                continue;
+            }
+
+            if (key != "startup-notification-id") {
+                continue;
+            }
+
+            // Force vala to ref this
+            this.id = val.dup_string();
+            get_display().notify_startup_complete(this.id);
+        }
+    }
+
+    /**
+     * Not much to do just set our ID to null
+     */
+    private void on_launch_failed(string id)
+    {
+        get_display().notify_startup_complete(id);
+        this.id = null;
     }
 
     protected override bool on_button_release(Gdk.EventButton event)
@@ -474,16 +534,9 @@ public class PinnedIconButton : IconButton
                 return true;
             }
             /* Launch ourselves. */
-            try {
-                context.set_screen(get_screen());
-                context.set_timestamp(event.time);
-                var id = context.get_startup_notify_id(app_info, new GLib.List<GLib.File>());
-                this.id = id;
-                MenuMaker.launch(app_info,null,this);
-            } catch (Error e) {
-                /* Animate a UFAILED image? */
-                message(e.message);
-            }
+            launch_context.set_screen(get_screen());
+            launch_context.set_timestamp(event.time);
+            MenuMaker.launch_with_context(app_info,launch_context,null);
             return base.on_button_release(event);
         } else {
             return base.on_button_release(event);
@@ -503,7 +556,7 @@ public class PinnedIconButton : IconButton
     public void reset()
     {
         image.set_from_gicon(app_info.get_icon(), Gtk.IconSize.INVALID);
-        set_tooltip_text("Launch %s".printf(app_info.get_display_name()));
+        set_tooltip_text(app_info.get_display_name());
         get_style_context().remove_class("running");
         set_active(false);
         // Actions menu

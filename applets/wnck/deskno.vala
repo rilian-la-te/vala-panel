@@ -18,15 +18,6 @@
 
 using ValaPanel;
 using Gtk;
-public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
-{
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    uint number)
-    {
-        return new Deskno(toplevel,settings,number);
-    }
-}
 public class Deskno: Applet, AppletConfigurable
 {
     private const string KEY_LABELS = "wm-labels";
@@ -39,7 +30,7 @@ public class Deskno: Applet, AppletConfigurable
     private ulong screen_handler;
     public Deskno(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
     }
@@ -105,11 +96,3 @@ public class Deskno: Applet, AppletConfigurable
         Wnck.Screen.get_default().disconnect(screen_handler);
     }
 } // End class
-
-[ModuleInit]
-public void peas_register_types(TypeModule module)
-{
-    // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(DesknoApplet));
-}

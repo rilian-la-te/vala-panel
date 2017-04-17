@@ -1,4 +1,4 @@
 [Plugin]
-Module=buttons
+Module=wnck
 Name=Window Buttons
 Description=Shows window buttons (such as minimize, maximize and close).
