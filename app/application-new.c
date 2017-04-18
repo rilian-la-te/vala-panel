@@ -96,10 +96,9 @@ enum
 	VALA_PANEL_APP_SHUTDOWN_COMMAND,
 	VALA_PANEL_APP_IS_DARK,
 	VALA_PANEL_APP_IS_CUSTOM,
-	VALA_PANEL_APP_CSS
+	VALA_PANEL_APP_CSS,
+	VALA_PANEL_APP_ALL
 };
-#define system_config_file_name(profile, dir, filename)                                            \
-	g_build_filename(dir, GETTEXT_PACKAGE, profile, filename, NULL)
 
 static inline void destroy0(GtkWidget *x)
 {
@@ -290,9 +289,9 @@ static bool load_settings(ValaPanelApplication *app)
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_LOGOUT);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_SHUTDOWN);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_TERMINAL);
+	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_CSS);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_DARK);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_CUSTOM);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_CSS);
 	return true;
 }
 
@@ -337,22 +336,14 @@ void vala_panel_application_activate(GApplication *app)
 static void vala_panel_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
-	if (app->config)
-		g_object_unref(app->config);
-	if (app->platform)
-		g_object_unref(app->platform);
-	if (app->css)
-		g_free(app->css);
-	if (app->terminal_command)
-		g_free(app->terminal_command);
-	if (app->run_command)
-		g_free(app->run_command);
-	if (app->logout_command)
-		g_free(app->logout_command);
-	if (app->shutdown_command)
-		g_free(app->shutdown_command);
-	if (app->provider)
-		g_object_unref(app->provider);
+	g_object_unref0(app->config);
+	g_object_unref0(app->platform);
+	g_free0(app->css);
+	g_free0(app->terminal_command);
+	g_free0(app->run_command);
+	g_free0(app->logout_command);
+	g_free0(app->shutdown_command);
+	g_object_unref0(app->provider);
 	g_free(app->profile);
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
@@ -401,8 +392,7 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 		app->profile = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_CSS:
-		if (app->css)
-			g_free(app->css);
+		g_free0(app->css);
 		app->css = g_strdup(g_value_get_string(value));
 		apply_styling(app);
 		break;
@@ -580,13 +570,13 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	((GApplicationClass *)klass)->command_line         = vala_panel_app_command_line;
 	G_OBJECT_CLASS(klass)->get_property                = vala_panel_app_get_property;
 	G_OBJECT_CLASS(klass)->set_property                = vala_panel_app_set_property;
-	G_OBJECT_CLASS(klass)->dispose                     = vala_panel_app_finalize;
+	G_OBJECT_CLASS(klass)->finalize                    = vala_panel_app_finalize;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_PROFILE,
 	                                g_param_spec_string("profile",
 	                                                    "profile",
 	                                                    "profile",
-	                                                    NULL,
+	                                                    "default",
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
 	                                                        G_PARAM_STATIC_BLURB |
@@ -594,9 +584,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_RUN_COMMAND,
-	                                g_param_spec_string("run-command",
-	                                                    "run-command",
-	                                                    "run-command",
+	                                g_param_spec_string(VALA_PANEL_KEY_RUN,
+	                                                    VALA_PANEL_KEY_RUN,
+	                                                    VALA_PANEL_KEY_RUN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -605,9 +595,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_TERMINAL_COMMAND,
-	                                g_param_spec_string("terminal-command",
-	                                                    "terminal-command",
-	                                                    "terminal-command",
+	                                g_param_spec_string(VALA_PANEL_KEY_TERMINAL,
+	                                                    VALA_PANEL_KEY_TERMINAL,
+	                                                    VALA_PANEL_KEY_TERMINAL,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -616,9 +606,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_LOGOUT_COMMAND,
-	                                g_param_spec_string("logout-command",
-	                                                    "logout-command",
-	                                                    "logout-command",
+	                                g_param_spec_string(VALA_PANEL_KEY_LOGOUT,
+	                                                    VALA_PANEL_KEY_LOGOUT,
+	                                                    VALA_PANEL_KEY_LOGOUT,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -627,9 +617,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_SHUTDOWN_COMMAND,
-	                                g_param_spec_string("shutdown-command",
-	                                                    "shutdown-command",
-	                                                    "shutdown-command",
+	                                g_param_spec_string(VALA_PANEL_KEY_SHUTDOWN,
+	                                                    VALA_PANEL_KEY_SHUTDOWN,
+	                                                    VALA_PANEL_KEY_SHUTDOWN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -638,9 +628,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_DARK,
-	                                g_param_spec_boolean("is-dark",
-	                                                     "is-dark",
-	                                                     "is-dark",
+	                                g_param_spec_boolean(VALA_PANEL_KEY_DARK,
+	                                                     VALA_PANEL_KEY_DARK,
+	                                                     VALA_PANEL_KEY_DARK,
 	                                                     false,
 	                                                     G_PARAM_STATIC_NAME |
 	                                                         G_PARAM_STATIC_NICK |
@@ -649,9 +639,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_CUSTOM,
-	                                g_param_spec_boolean("is-custom",
-	                                                     "is-custom",
-	                                                     "is-custom",
+	                                g_param_spec_boolean(VALA_PANEL_KEY_CUSTOM,
+	                                                     VALA_PANEL_KEY_CUSTOM,
+	                                                     VALA_PANEL_KEY_CUSTOM,
 	                                                     false,
 	                                                     G_PARAM_STATIC_NAME |
 	                                                         G_PARAM_STATIC_NICK |
@@ -660,9 +650,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_CSS,
-	                                g_param_spec_string("css",
-	                                                    "css",
-	                                                    "css",
+	                                g_param_spec_string(VALA_PANEL_KEY_CSS,
+	                                                    VALA_PANEL_KEY_CSS,
+	                                                    VALA_PANEL_KEY_CSS,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
