@@ -304,7 +304,7 @@ static void _ensure_user_config_dirs()
 
 void vala_panel_application_activate(GApplication *app)
 {
-	static gboolean is_started = false;
+	static bool is_started     = false;
 	ValaPanelApplication *self = VALA_PANEL_APPLICATION(app);
 	if (!is_started)
 	{
