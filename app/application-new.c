@@ -367,28 +367,23 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 		apply_styling(app);
 		break;
 	case VALA_PANEL_APP_TERMINAL_COMMAND:
-		if (app->terminal_command)
-			g_free(app->terminal_command);
+		g_free0(app->terminal_command);
 		app->terminal_command = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_RUN_COMMAND:
-		if (app->run_command)
-			g_free(app->run_command);
+		g_free0(app->run_command);
 		app->run_command = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_LOGOUT_COMMAND:
-		if (app->logout_command)
-			g_free(app->logout_command);
+		g_free0(app->logout_command);
 		app->logout_command = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_SHUTDOWN_COMMAND:
-		if (app->shutdown_command)
-			g_free(app->shutdown_command);
+		g_free0(app->shutdown_command);
 		app->shutdown_command = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_PROFILE:
-		if (app->profile)
-			g_free(app->profile);
+		g_free0(app->profile);
 		app->profile = g_strdup(g_value_get_string(value));
 		break;
 	case VALA_PANEL_APP_CSS:
