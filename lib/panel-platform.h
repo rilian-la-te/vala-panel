@@ -61,7 +61,7 @@ typedef enum {
 
 struct _ValaPanelPlatformClass
 {
-	GObject __parent__;
+	GObjectClass __parent__;
 	/*loading*/
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);

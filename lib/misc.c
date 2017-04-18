@@ -138,8 +138,7 @@ void vala_panel_reset_schema_with_children(GSettings *settings)
 	g_auto(GStrv) children = g_settings_list_children(settings);
 	for (int i = 0; children[i]; i++)
 	{
-		g_autoptr(GSettings) child;
-		child = g_settings_get_child(settings, children[i]);
+		g_autoptr(GSettings) child = g_settings_get_child(settings, children[i]);
 		vala_panel_reset_schema(child);
 	}
 	g_settings_apply(settings);

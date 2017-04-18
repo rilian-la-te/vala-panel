@@ -235,7 +235,7 @@ namespace ValaPanel
                 this.a.width = alloc.width;
                 this.a.height = alloc.height;
                 this.set_size_request(this.a.width, this.a.height);
-                this.move(this.a.x, this.a.y);
+                platform.move_to_coords(this, this.a.x, this.a.y);
                 this.update_strut();
             }
         }

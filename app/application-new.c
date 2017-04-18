@@ -143,8 +143,9 @@ ValaPanelApplication *vala_panel_application_new()
 
 static void vala_panel_application_init(ValaPanelApplication *self)
 {
-	self->restart = false;
-	self->profile = g_strdup(DEFAULT_PROFILE);
+	self->restart  = false;
+	self->profile  = g_strdup(DEFAULT_PROFILE);
+	self->provider = NULL;
 	g_application_add_main_option_entries(G_APPLICATION(self), entries);
 }
 
@@ -321,6 +322,7 @@ void vala_panel_application_activate(GApplication *app)
 		                                                              self->profile)))
 		{
 			g_warning("Config files / toplevels are not found.\n");
+			g_application_unmark_busy(app);
 			g_application_quit(app);
 		}
 		else
@@ -335,6 +337,10 @@ void vala_panel_application_activate(GApplication *app)
 static void vala_panel_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
+	if (app->config)
+		g_object_unref(app->config);
+	if (app->platform)
+		g_object_unref(app->platform);
 	if (app->css)
 		g_free(app->css);
 	if (app->terminal_command)
@@ -348,6 +354,7 @@ static void vala_panel_app_finalize(GObject *object)
 	if (app->provider)
 		g_object_unref(app->provider);
 	g_free(app->profile);
+	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
 
 static void vala_panel_app_set_property(GObject *object, guint prop_id, const GValue *value,
@@ -573,7 +580,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	((GApplicationClass *)klass)->command_line         = vala_panel_app_command_line;
 	G_OBJECT_CLASS(klass)->get_property                = vala_panel_app_get_property;
 	G_OBJECT_CLASS(klass)->set_property                = vala_panel_app_set_property;
-	G_OBJECT_CLASS(klass)->finalize                    = vala_panel_app_finalize;
+	G_OBJECT_CLASS(klass)->dispose                     = vala_panel_app_finalize;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_PROFILE,
 	                                g_param_spec_string("profile",
@@ -666,6 +673,6 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 
 int main(int argc, char *argv[])
 {
-	g_autoptr(ValaPanelApplication) app = vala_panel_application_new();
+	ValaPanelApplication *app = vala_panel_application_new();
 	return g_application_run(G_APPLICATION(app), argc, argv);
 }

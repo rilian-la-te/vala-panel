@@ -224,9 +224,7 @@ namespace ValaPanel
             loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
             extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
             extset.extension_added.connect(on_extension_added);
-            engine.load_plugin.connect_after((i)=>
-            {
-                var ext = extset.get_extension(i);
+            extset.@foreach((s,i,ext)=>{
                 on_extension_added(i,ext);
             });
         }

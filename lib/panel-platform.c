@@ -17,6 +17,7 @@
  */
 
 #include "panel-platform.h"
+#include "definitions.h"
 
 typedef struct
 {
@@ -86,8 +87,21 @@ ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 
 void vala_panel_platform_init(ValaPanelPlatform *self)
 {
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	priv->core_settings = NULL;
+}
+
+void vala_panel_platform_finalize(GObject *obj)
+{
+	ValaPanelPlatform *self = VALA_PANEL_PLATFORM(obj);
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	if (priv->core_settings)
+		vala_panel_core_settings_free(priv->core_settings);
 }
 
 void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
 {
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
 }

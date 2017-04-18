@@ -362,11 +362,11 @@ static void vala_panel_platform_x11_init(ValaPanelPlatformX11 *self)
 
 static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 {
-	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_platform_x11_finalize;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_coords = vala_panel_platform_x11_move_to_coords;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side   = vala_panel_platform_x11_move_to_side;
 	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut   = vala_panel_platform_x11_update_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut      = vala_panel_platform_x11_edge_can_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->start_panels_from_profile =
 	    vala_panel_platform_x11_start_panels_from_profile;
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_x11_finalize;
 }

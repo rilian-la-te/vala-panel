@@ -21,6 +21,8 @@
 #include "lib/definitions.h"
 #include "runner.h"
 
+#include <locale.h>
+
 struct _ValaPanelRunApplication
 {
 	GtkApplication __parent__;
