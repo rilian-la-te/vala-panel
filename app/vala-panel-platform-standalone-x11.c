@@ -172,9 +172,9 @@ static ulong vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWin
 	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
 	g_object_get(top,
 	             VALA_PANEL_KEY_AUTOHIDE,
-	             autohide,
+	             &autohide,
 	             VALA_PANEL_KEY_ORIENTATION,
-	             orient,
+	             &orient,
 	             NULL);
 	if (autohide)
 		s = GAP;
