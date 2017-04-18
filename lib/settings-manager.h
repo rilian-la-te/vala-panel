@@ -20,21 +20,13 @@
 #define SETTINGSMANAGER_H
 
 #include "config.h"
+#include "constants.h"
 
 #include <gio/gio.h>
 #include <glib.h>
 #include <stdbool.h>
 
 #define ROOT_NAME "profile"
-
-#define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
-
-#define VALA_PANEL_KEY_NAME "plugin-type"
-#define VALA_PANEL_KEY_EXPAND "is-expanded"
-#define VALA_PANEL_KEY_CAN_EXPAND "can-expand"
-#define VALA_PANEL_KEY_PACK "pack-type"
-#define VALA_PANEL_KEY_POSITION "position"
-#define VALA_PANEL_KEY_APPLETS "applets"
 
 G_BEGIN_DECLS
 

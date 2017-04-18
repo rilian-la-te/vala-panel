@@ -24,16 +24,11 @@
 #include <stdbool.h>
 
 #include "lib/settings-manager.h"
+#include "lib/constants.h"
 
 G_BEGIN_DECLS
 
 G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
-
-#define VALA_PANEL_CORE_SCHEMA "org.valapanel"
-#define VALA_PANEL_TOPLEVEL_SCHEMA "org.valapanel.toplevel"
-#define VALA_PANEL_OBJECT_PATH "/org/vala-panel/objects/"
-#define VALA_PANEL_OBJECT_PATH_TEMPLATE "/org/vala-panel/objects/%s/"
-#define VALA_PANEL_CONFIG_HEADER "global"
 
 typedef enum {
 	ALIGN_START  = 0,

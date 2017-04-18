@@ -54,10 +54,6 @@ namespace ValaPanel
     }
     [CCode(cheader_filename="lib/settings-manager.h")]
     public const string PLUGIN_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
-    public const string SETTINGS_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
-    public const string SETTINGS_PATH;
     [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/generic-config-dialog.h")]
     public enum GenericConfigType
     {
@@ -79,14 +75,14 @@ namespace ValaPanel
 		GRAB,
         WAITING
     }
-    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
+    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/panel-platform.h,lib/vala-panel-enums.h")]
     public enum AlignmentType
     {
         START,
         CENTER,
         END
     }
-    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
+    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/panel-platform.h,lib/vala-panel-enums.h")]
     internal enum IconSizeHints
     {
         XXS,
@@ -191,7 +187,7 @@ namespace ValaPanel.Configurator
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
 }
-[CCode (cheader_filename = "lib/panel-platform.h", cprefix = "VALA_PANEL_",lower_case_cprefix="VALA_PANEL_")]
+[CCode (cheader_filename = "lib/constants.h", cprefix = "VALA_PANEL_",lower_case_cprefix="VALA_PANEL_")]
 namespace ValaPanel.Setttings
 {
 	public const string CORE_SCHEMA;
@@ -200,7 +196,7 @@ namespace ValaPanel.Setttings
 	public const string OBJECT_PATH_TEMPLATE;
 }
 
-[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h,lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "lib/constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string EDGE;

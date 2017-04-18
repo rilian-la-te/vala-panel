@@ -11,6 +11,7 @@ if (ENABLE_NEW_INTERFACE)
     set(NEW_DEFINE -D NEW)
 endif()
 set(LIBVALAPANEL_C_SOURCES
+    constants.h
     misc.c
     misc.h
     menu-maker.h
