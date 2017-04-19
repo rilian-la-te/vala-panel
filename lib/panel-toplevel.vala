@@ -514,9 +514,6 @@ namespace ValaPanel
         }
         construct
         {
-            unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
-            if (visual != null)
-                this.set_visual(visual);
             a = Gtk.Allocation();
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
@@ -611,10 +608,10 @@ namespace ValaPanel
         private AutohideState ah_state;
         public bool autohide {get; internal set;}
 		private void ah_show()
-		{
-				PanelCSS.toggle_class(this,"-panel-transparent",false);
-				this.ah_rev.set_reveal_child(true);
-				this.ah_state = AutohideState.VISIBLE;
+        {
+                PanelCSS.toggle_class(this,"-panel-transparent",false);
+                this.ah_rev.set_reveal_child(true);
+                this.ah_state = AutohideState.VISIBLE;
 		}
 
 		private void ah_hide()

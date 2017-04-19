@@ -24,6 +24,7 @@
  */
 #define VALA_PANEL_CORE_SCHEMA "org.valapanel"
 #define VALA_PANEL_TOPLEVEL_SCHEMA "org.valapanel.toplevel"
+#define VALA_PANEL_TOPLEVEL_SCHEMA_ELEM "toplevel"
 #define VALA_PANEL_OBJECT_PATH "/org/vala-panel/objects/"
 #define VALA_PANEL_OBJECT_PATH_TEMPLATE "/org/vala-panel/objects/%s/"
 #define VALA_PANEL_CONFIG_HEADER "global"
