@@ -226,9 +226,9 @@ static int vala_panel_app_command_line(GApplication *application,
 	g_autofree gchar *profile_name = NULL;
 	g_autofree gchar *ccommand     = NULL;
 	GVariantDict *options          = g_application_command_line_get_options_dict(commandline);
-	if (g_variant_dict_lookup(options, "profile", "&s", &profile_name))
+	if (g_variant_dict_lookup(options, "profile", "s", &profile_name))
 		g_object_set(G_OBJECT(application), "profile", profile_name, NULL);
-	if (g_variant_dict_lookup(options, "command", "&s", &ccommand))
+	if (g_variant_dict_lookup(options, "command", "s", &ccommand))
 	{
 		g_autofree gchar *name    = NULL;
 		g_autoptr(GVariant) param = NULL;

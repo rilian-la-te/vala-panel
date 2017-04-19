@@ -66,9 +66,8 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 {
 	ValaPanelCoreSettings *core = vala_panel_platform_get_settings(obj);
 	ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
-	GSettingsBackend *backend   = core->backend;
 	g_autoptr(GSettings) s =
-	    g_settings_new_with_backend_and_path(core->root_schema, backend, core->root_path);
+	    g_settings_new_with_backend_and_path(core->root_schema, core->backend, core->root_path);
 	g_auto(GStrv) panels = g_settings_get_strv(s, VALA_PANEL_APPLICATION_PANELS);
 	int count;
 	for (count = 0; count < g_strv_length(panels); count++)
