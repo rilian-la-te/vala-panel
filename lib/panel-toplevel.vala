@@ -562,7 +562,6 @@ namespace ValaPanel
             set_wmclass("panel","vala-panel");
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
             PanelCSS.toggle_class(this,"-panel-transparent",false);
-            this.get_application().add_window(this);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                             Gdk.EventMask.ENTER_NOTIFY_MASK |
                             Gdk.EventMask.LEAVE_NOTIFY_MASK);
