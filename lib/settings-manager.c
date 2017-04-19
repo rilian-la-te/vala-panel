@@ -87,8 +87,7 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 		g_free(settings->schema_elem);
 		settings->schema_elem = NULL;
 	}
-	g_free(settings);
-	settings = NULL;
+	g_slice_free(ValaPanelUnitSettings, settings);
 }
 
 G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vala_panel_unit_settings, vala_panel_unit_settings_copy,
@@ -125,7 +124,7 @@ void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 	g_free0(settings->root_schema);
 	g_object_unref0(settings->backend);
 	g_hash_table_unref(settings->all_units);
-	g_free0(settings);
+	g_slice_free(ValaPanelCoreSettings, settings);
 }
 
 G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings, vala_panel_core_settings, vala_panel_core_settings_copy,
