@@ -273,7 +273,7 @@ static bool load_settings(ValaPanelApplication *app)
 	{
 		g_autoptr(GFile) src  = g_file_new_for_path(load_default ? default_file : file);
 		g_autoptr(GFile) dest = g_file_new_for_path(user_file);
-		g_autoptr(GError) err;
+		g_autoptr(GError) err = NULL;
 		g_file_copy(src, dest, G_FILE_COPY_BACKUP, NULL, NULL, NULL, &err);
 		if (err)
 		{
@@ -542,9 +542,9 @@ static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data
 
 static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	g_autofree gchar *command;
-	const char *cmd     = g_variant_get_string(param, NULL);
-	GtkApplication *app = GTK_APPLICATION(data);
+	g_autofree gchar *command = NULL;
+	const char *cmd           = g_variant_get_string(param, NULL);
+	GtkApplication *app       = GTK_APPLICATION(data);
 	g_object_get(app, cmd, &command, NULL);
 	g_autoptr(GVariant) par = g_variant_new_string(command);
 	activate_menu_launch_command(NULL, par, NULL);
