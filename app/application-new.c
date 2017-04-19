@@ -115,15 +115,19 @@ static void apply_styling(ValaPanelApplication *app)
 	if (app->custom)
 	{
 		if (app->provider)
+		{
 			gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
 			                                             GTK_STYLE_PROVIDER(
 			                                                 app->provider));
+			g_object_unref0(app->provider);
+		}
 		app->provider = css_apply_from_file_to_app_with_provider(app->css);
 	}
 	else if (app->provider)
 	{
 		gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
 		                                             GTK_STYLE_PROVIDER(app->provider));
+		g_object_unref(app->provider);
 		app->provider = NULL;
 	}
 }
