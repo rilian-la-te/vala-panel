@@ -44,7 +44,6 @@ struct _ValaPanelPlatformX11
 	                 : (GTK_POS_BOTTOM ? GDK_GRAVITY_SOUTH                                     \
 	                                   : (GTK_POS_LEFT ? GDK_GRAVITY_WEST : GDK_GRAVITY_EAST))
 
-static void vala_panel_platform_x11_default_init(ValaPanelPlatform *iface);
 G_DEFINE_TYPE(ValaPanelPlatformX11, vala_panel_platform_x11, vala_panel_platform_get_type())
 
 ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const char *profile)

@@ -97,7 +97,7 @@ G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vala_panel_unit_settings, vala_panel_
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
                                                     GSettingsBackend *backend)
 {
-	ValaPanelCoreSettings *new_settings = g_new0(ValaPanelCoreSettings, 1);
+	ValaPanelCoreSettings *new_settings = g_slice_new0(ValaPanelCoreSettings);
 	new_settings->all_units =
 	    g_hash_table_new_full(g_str_hash,
 	                          g_str_equal,
@@ -111,7 +111,7 @@ ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const ch
 
 ValaPanelCoreSettings *vala_panel_core_settings_copy(ValaPanelCoreSettings *settings)
 {
-	ValaPanelCoreSettings *new_settings = g_new0(ValaPanelCoreSettings, 1);
+	ValaPanelCoreSettings *new_settings = g_slice_new0(ValaPanelCoreSettings);
 	new_settings->root_path             = g_strdup(settings->root_path);
 	new_settings->root_schema           = g_strdup(settings->root_schema);
 	new_settings->backend               = g_object_ref(settings->backend);
