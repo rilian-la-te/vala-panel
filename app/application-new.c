@@ -45,9 +45,9 @@ struct _ValaPanelApplication
 {
 	GtkApplication parent;
 	bool restart;
-	GSettings *config;
 	bool dark;
 	bool custom;
+	GSettings *config;
 	char *css;
 	ValaPanelPlatform *platform;
 	GtkCssProvider *provider;
