@@ -353,6 +353,8 @@ namespace ValaPanel
         {
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
+            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
+            settings.default_settings.set_strv(Key.APPLETS, add_applet_pos(applets,s.uuid).get_strv());
             holder.load_applet(s);
         }
         private void on_applet_loaded(string type)
@@ -382,6 +384,22 @@ namespace ValaPanel
             }
             applet.destroy.connect(()=>{applet_removed(applet.uuid);});
         }
+        internal GLib.Variant add_applet_pos(string[] applets, string add)
+        {
+            VariantBuilder b = new VariantBuilder(VariantType.STRING_ARRAY);
+            b.add("s",add);
+            foreach(var a in applets)
+                b.add("s",a);
+            return b.end();
+        }
+        internal GLib.Variant del_applet_pos(string[] applets, string del)
+        {
+            VariantBuilder b = new VariantBuilder(VariantType.STRING_ARRAY);
+            foreach(var a in applets)
+                if (a != del)
+                    b.add("s",a);
+            return b.end();
+        }
         internal void remove_applet(Applet applet)
         {
             applet.destroy();
@@ -393,6 +411,8 @@ namespace ValaPanel
             unowned UnitSettings s = core_settings.get_by_uuid(uuid);
             var name = s.default_settings.get_string(Key.NAME);
             holder.applet_unref(name);
+            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
+            settings.default_settings.set_strv(Key.APPLETS, del_applet_pos(applets,s.uuid).get_strv());
             core_settings.remove_unit_settings(uuid);
         }
         internal void update_applet_positions()

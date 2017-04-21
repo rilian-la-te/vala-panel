@@ -75,18 +75,9 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
 		return;
-	if (settings->custom_settings)
-	{
-		g_object_unref(settings->custom_settings);
-		settings->custom_settings = NULL;
-	}
-	if (settings->default_settings)
-		g_object_unref(settings->default_settings);
-	if (settings->schema_elem)
-	{
-		g_free(settings->schema_elem);
-		settings->schema_elem = NULL;
-	}
+	g_object_unref0(settings->custom_settings);
+	g_object_unref0(settings->default_settings);
+	g_free0(settings->schema_elem);
 	g_slice_free(ValaPanelUnitSettings, settings);
 }
 
@@ -150,7 +141,7 @@ ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreS
 void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
                                                    const char *name)
 {
-	g_auto(ValaPanelUnitSettingsPointer) removing_unit =
+	ValaPanelUnitSettings *removing_unit =
 	    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
 	vala_panel_reset_schema_with_children(removing_unit->default_settings);
 	if (removing_unit->custom_settings != NULL)
