@@ -274,7 +274,8 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 		stop_ui(self);
 		gtk_widget_destroy(GTK_WIDGET(self));
 		/* delete the config file of this panel */
-		vala_panel_platform_remove_settings_path(mgr, path, uid);
+		ValaPanelCoreSettings *st = vala_panel_platform_get_settings(mgr);
+		vala_panel_core_settings_remove_unit_settings(st, uid);
 	}
 }
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data)
