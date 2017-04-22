@@ -17,9 +17,9 @@ TODO
  * [x] ~~Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
 *TODO for 0.4.0*
- * [ ] Rewrite plugins API and core into C
+ * [x] Rewrite plugins API and core into C
  * [ ] Split Toplevel into 3 objects: positioner, layout and window
- * [ ] Made PanelManager
+ * [x] Made PanelManager
  * [ ] Allow positioner to be changed and dynamically linked
 
 *Some notes about realization*
@@ -53,7 +53,7 @@ Author
 
 Special thanks
 ---
- * [Ikey Doherty](mailto:ikey@evolve-os.com) for sidebar widget and inspirations.
+ * [Ikey Doherty](mailto:ikey@evolve-os.com) for sidebar widget and icontasklist.
  * [LXPanel team](https://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=summary) for creating a base for my fork. Vala Panel uses LXPanel's tray code and other inspirations (including generic-config-dialog.vala and most positioning code in toplevel.vala).
 
 Inspirations
