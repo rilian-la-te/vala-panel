@@ -46,7 +46,7 @@ struct _ValaPanelRunner
 	bool cached;
 };
 
-G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG);
+G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG)
 #define BUTTON_QUARK g_quark_from_static_string("button-id")
 #define g_app_launcher_button_get_info_data(btn)                                                   \
 	(InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
@@ -98,29 +98,11 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 	if (G_LIKELY(response == GTK_RESPONSE_ACCEPT))
 	{
 		g_autoptr(GAppInfo) app_info = NULL;
-
-		g_autoptr(GError) err = NULL;
-		app_info              = g_app_info_create_from_commandline(gtk_entry_get_text(
-		                                                  GTK_ENTRY(self->main_entry)),
-		                                              NULL,
-		                                              gtk_toggle_button_get_active(
-		                                                  self->terminal_button)
-		                                                  ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-		                                                  : G_APP_INFO_CREATE_NONE,
-		                                              &err);
-		if (err)
+		bool launch                  = true;
+		GtkWidget *active_row =
+		    gtk_bin_get_child(GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
+		if (active_row)
 		{
-			g_error_free(err);
-			g_signal_stop_emission_by_name(dlg, "response");
-			return;
-		}
-		bool launch =
-		    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
-		if (!launch)
-		{
-			g_object_unref0(app_info);
-			GtkWidget *active_row = gtk_bin_get_child(
-			    GTK_BIN(gtk_list_box_get_selected_row(self->app_box)));
 			InfoData *data = g_app_launcher_button_get_info_data(active_row);
 			if (data)
 			{
@@ -135,6 +117,28 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 				                           NULL,
 				                           GTK_WIDGET(dlg));
 			}
+		}
+		else
+			launch = false;
+		if (!launch)
+		{
+			g_object_unref0(app_info);
+			g_autoptr(GError) err = NULL;
+			app_info              = g_app_info_create_from_commandline(
+			    gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
+			    NULL,
+			    gtk_toggle_button_get_active(self->terminal_button)
+			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+			        : G_APP_INFO_CREATE_NONE,
+			    &err);
+			if (err)
+			{
+				g_error_free(err);
+				g_signal_stop_emission_by_name(dlg, "response");
+				return;
+			}
+			launch =
+			    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
 			if (!launch)
 			{
 				g_signal_stop_emission_by_name(dlg, "response");
