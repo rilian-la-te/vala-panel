@@ -1,3 +1,4 @@
-add_subdirectory(default)
-add_subdirectory(two_panels)
-add_subdirectory(appmenu)
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/default.in ${CMAKE_CURRENT_BINARY_DIR}/default)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/default DESTINATION ${PROFILES_DIR} COMPONENT bin)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/appmenu DESTINATION ${PROFILES_DIR} COMPONENT bin)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/two_panels DESTINATION ${PROFILES_DIR} COMPONENT bin)

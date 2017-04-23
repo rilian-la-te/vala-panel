@@ -1,4 +1,11 @@
-[toplevel-settings]
+[global]
+toplevels=['toplevel1']
+is-dark=false
+is-custom=false
+logout-command='openbox --exit'
+shutdown-command='systemctl shutdown -h now'
+
+[toplevel1]
 strut=true
 monitor=-1
 background-type='image'
@@ -8,21 +15,18 @@ icon-size=24
 auto-hide=false
 enable-font-color=true
 font-color='rgb(255,255,255)'
-background-file='@CMAKE_INSTALL_PREFIX@/share/simple-panel/images/background.png'
+background-file='@DATADIR_INSTALL@/images/background.png'
+applets=['sep1','menu','launcher','sep2','wcm','sep3','pgr','sep4','tlist','cpu','xembed','clock']
 
 
-[0]
+[sep1]
 plugin-type='separator'
-has-schema=true
-can-expand=true
 size=2
 position=0
 show-separator=false
 
-[1]
+[menu]
 plugin-type='menumodel'
-has-schema=true
-is-expanded=false
 position=1
 icon-name='start-here-symbolic'
 menu-name=nothing
@@ -30,77 +34,57 @@ is-internal-menu=true
 is-system-menu=true
 is-menu-bar=false
 
-[2]
+[launcher]
 plugin-type='launchbar'
-has-schema=true
-can-expand=true
 launch-buttons=['pcmanfm.desktop', 'gnome-terminal.desktop', 'firefox.desktop']
 position=2
 
-[3]
+[sep2]
 plugin-type='separator'
-has-schema=true
-can-expand=true
 size=4
 show-separator=false
 position=3
 
-[4]
+[wcm]
 plugin-type='wincmd'
-has-schema=true
-is-expanded=false
 position=4
 left-button-command='iconify'
 middle-button-command='shade'
 image='gnome-window-manager'
 toggle-iconify-and-shade=true
 
-[5]
+[sep3]
 plugin-type='separator'
-has-schema=true
-can-expand=true
 show-separator=false
 size=4
 position=5
 
-[6]
+[pgr]
 plugin-type='pager'
-has-schema=false
-is-expanded=false
 position=6
 
-[7]
+[sep4]
 plugin-type='separator'
-has-schema=true
-can-expand=true
 size=4
 position=7
 
-[8]
+[tlist]
 plugin-type='tasklist'
-has-schema=true
-can-expand=true
 is-expanded=true
 position=8
 grouped-tasks=true
 all-desktops=false
 
-[9]
+[cpu]
 plugin-type='cpu'
-has-schema=false
-is-expanded=false
 position=9
 
-[12]
+[xembed]
 plugin-type='xembed'
-has-schema=false
-is-expanded=false
 position=10
 
-[13]
+[clock]
 plugin-type='clock'
-has-schema=true
-is-expanded=false
 clock-format='%R'
 tooltip-format='%A %x'
 bold-font=false
