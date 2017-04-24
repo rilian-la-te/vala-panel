@@ -353,8 +353,6 @@ namespace ValaPanel
         {
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
-            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
-            settings.default_settings.set_strv(Key.APPLETS, add_applet_pos(applets,s.uuid).get_strv());
             holder.load_applet(s);
         }
         private void on_applet_loaded(string type)
@@ -377,6 +375,8 @@ namespace ValaPanel
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
             box.reorder_child(applet,(int)position);
+            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
+            settings.default_settings.set_strv(Key.APPLETS, add_applet_pos(applets,s.uuid).get_strv());
             if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
             {
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
@@ -386,6 +386,8 @@ namespace ValaPanel
         }
         internal GLib.Variant add_applet_pos(string[] applets, string add)
         {
+            if (add in applets)
+                return new Variant.strv(applets);
             VariantBuilder b = new VariantBuilder(VariantType.STRING_ARRAY);
             b.add("s",add);
             foreach(var a in applets)
