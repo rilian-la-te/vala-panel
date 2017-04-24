@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Vala Panel
+Exec=vala-panel
+Icon=vala-panel
