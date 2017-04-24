@@ -128,6 +128,7 @@ namespace ValaPanel
         internal unowned UnitSettings add_unit_settings(string name, bool is_toplevel);
         internal unowned UnitSettings add_unit_settings_full(string name, string uuid, bool is_toplevel);
         internal void remove_unit_settings(string name);
+        internal void destroy_unit_settings(string name);
         internal unowned UnitSettings get_by_uuid(string uuid);
         internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
     }

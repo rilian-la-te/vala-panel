@@ -66,6 +66,8 @@ ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
     ValaPanelCoreSettings *settings, const char *name, const char *uuid, bool is_toplevel);
 void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
                                                    const char *name);
+void vala_panel_core_settings_destroy_unit_settings(ValaPanelCoreSettings *settings,
+                                                    const char *name);
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
                                                             const char *uuid);
 char *vala_panel_core_settings_get_uuid();

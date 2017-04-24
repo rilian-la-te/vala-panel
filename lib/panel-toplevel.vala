@@ -415,6 +415,7 @@ namespace ValaPanel
             holder.applet_unref(name);
             string[] applets = settings.default_settings.get_strv(Key.APPLETS);
             settings.default_settings.set_strv(Key.APPLETS, del_applet_pos(applets,s.uuid).get_strv());
+//TODO: Fix UnitSettings removal
             core_settings.remove_unit_settings(uuid);
         }
         internal void update_applet_positions()
@@ -807,7 +808,7 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-                core_settings.remove_unit_settings(this.uuid);
+                core_settings.destroy_unit_settings(this.uuid);
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)
