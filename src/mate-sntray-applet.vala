@@ -82,14 +82,14 @@ namespace StatusNotifier
     }
 }
 
-int _mate_panel_applet_shlib_factory()
-{
-    GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.LOCALE_DIR);
-    GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
-    return MatePanel.Applet.factory_main("SNTrayAppletFactory", false, typeof (MatePanel.Applet), StatusNotifier.factory_callback);
-}
-
-//void main(string[] args) {
-//    Gtk.init(ref args);
-//    MatePanel.Applet.factory_main("SNTrayAppletFactory", true, typeof (MatePanel.Applet), StatusNotifier.factory_callback);
+//int _mate_panel_applet_shlib_factory()
+//{
+//    GLib.Intl.bindtextdomain(Config.GETTEXT_PACKAGE,Config.LOCALE_DIR);
+//    GLib.Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE,"UTF-8");
+//    return MatePanel.Applet.factory_main("SNTrayAppletFactory", false, typeof (MatePanel.Applet), StatusNotifier.factory_callback);
 //}
+
+void main(string[] args) {
+    Gtk.init(ref args);
+    MatePanel.Applet.factory_main("SNTrayAppletFactory", true, typeof (MatePanel.Applet), StatusNotifier.factory_callback);
+}

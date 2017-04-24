@@ -201,7 +201,7 @@ if (ENABLE_MATE)
     #####
     # Plugin Library
     #####
-    add_library (sntray-mate SHARED
+    add_executable (sntray-mate
 	${VALA_C_DBUSMENU}
 	${VALA_C_CORE}
 	${VALA_C_MATE}

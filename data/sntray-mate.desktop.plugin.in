@@ -1,8 +1,8 @@
 [Applet Factory]
 Id=SNTrayAppletFactory
-Location=@CMAKE_INSTALL_FULL_LIBDIR@/mate-panel/libsntray-mate.so
+Location=@CMAKE_INSTALL_FULL_LIBDIR@/mate-panel/sntray-mate
 Name=SNTray applet factory
-InProcess=true
+InProcess=false
 
 [SNTrayApplet]
 Name=SNI Notification area
