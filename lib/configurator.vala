@@ -151,7 +151,7 @@ namespace ValaPanel
             /* monitors */
             monitors_button.set_relief(ReliefStyle.NONE);
             int monitors;
-            unowned Gdk.Screen screen = toplevel.get_screen();
+            unowned Gdk.Display screen = toplevel.get_display();
             if(screen != null)
                 monitors = screen.get_n_monitors();
             assert(monitors >= 1);
