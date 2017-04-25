@@ -61,7 +61,7 @@ struct _ValaPanelPlatformClass
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);
 	/*struts*/
-	ulong (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
+	bool (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
 	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
@@ -77,7 +77,7 @@ void vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend
 void vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
-ulong vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
+bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
 void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc,

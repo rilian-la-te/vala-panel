@@ -159,92 +159,11 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
             }
             size = s;
             return true;*/
-static ulong vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
+static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	ulong s = 0;
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
-		return 0;
-	bool autohide         = false;
-	GtkOrientation orient = GTK_ORIENTATION_HORIZONTAL;
-	GtkAllocation a;
-	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
-	g_object_get(top,
-	             VALA_PANEL_KEY_AUTOHIDE,
-	             &autohide,
-	             VALA_PANEL_KEY_ORIENTATION,
-	             &orient,
-	             NULL);
-	if (autohide)
-		s = GAP;
-	else
-		switch (orient)
-		{
-		case GTK_ORIENTATION_VERTICAL:
-			s = (uint)a.width;
-			break;
-		case GTK_ORIENTATION_HORIZONTAL:
-			s = (uint)a.height;
-			break;
-		default:
-			return 0;
-		}
-	int monitor;
-	g_object_get(top, VALA_PANEL_KEY_MONITOR, &monitor, NULL);
-	if (monitor < 0)
-		return s;
-	if (monitor >=
-	    gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top))))
 		return false;
-	GdkRectangle rect, rect2;
-	gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(
-	                                                     gtk_window_get_screen(top)),
-	                                                 monitor),
-	                         &rect);
-	GtkPositionType edge;
-	g_object_get(top, VALA_PANEL_KEY_EDGE, &edge, NULL);
-	switch (edge)
-	{
-	case GTK_POS_LEFT:
-		rect.width = rect.x;
-		rect.x     = 0;
-		s += rect.width;
-		break;
-	case GTK_POS_RIGHT:
-		rect.x += rect.width;
-		rect.width = gdk_screen_get_width(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.x;
-		s += rect.width;
-		break;
-	case GTK_POS_TOP:
-		rect.height = rect.y;
-		rect.y      = 0;
-		s += rect.height;
-		break;
-	case GTK_POS_BOTTOM:
-		rect.y += rect.height;
-		rect.height =
-		    gdk_screen_get_height(gtk_widget_get_screen(GTK_WIDGET(top))) - rect.y;
-		s += rect.height;
-		break;
-	}
-	if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
-	{
-		int n =
-		    gdk_display_get_n_monitors(gdk_screen_get_display(gtk_window_get_screen(top)));
-		for (int i = 0; i < n; i++)
-		{
-			if (i == monitor)
-				continue;
-			gdk_monitor_get_geometry(gdk_display_get_monitor(gdk_screen_get_display(
-			                                                     gtk_window_get_screen(
-			                                                         top)),
-			                                                 i),
-			                         &rect2);
-			if (gdk_rectangle_intersect(&rect, &rect2, NULL))
-				/* that monitor lies over the edge */
-				return 0;
-		}
-	}
-	return s;
+	return true;
 }
 
 static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
@@ -288,7 +207,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	case GTK_POS_TOP:
 		struts[2] = primary_monitor_rect.y + panel_size;
 		struts[8] = primary_monitor_rect.x;
-        struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width);
+		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width);
 		break;
 	case GTK_POS_LEFT:
 		struts[0] = panel_size;
@@ -303,7 +222,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	case GTK_POS_BOTTOM:
 		struts[3]  = (primary_monitor_rect.height + primary_monitor_rect.y) - panel_size;
 		struts[10] = primary_monitor_rect.x;
-        struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width);
+		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width);
 		break;
 	}
 	GdkAtom atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
