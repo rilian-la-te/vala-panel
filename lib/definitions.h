@@ -78,8 +78,9 @@
 	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |           \
 	                                     G_SETTINGS_BIND_DEFAULT));
 
-#define vala_panel_orient_from_edge(edge)\
-    ((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL
+#define vala_panel_orient_from_edge(edge)                                                          \
+	((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL           \
+	                                                    : GTK_ORIENTATION_VERTICAL
 
 #define vala_panel_dup_array(DST, SRC, LEN)                                                        \
 	{                                                                                          \
