@@ -746,8 +746,7 @@ namespace ValaPanel
             {
                 /* panel is spanned over the screen, guess from pointer now */
                 int x, y;
-                var manager = Gdk.Screen.get_default().get_display().get_device_manager();
-                var device = manager.get_client_pointer ();
+                var device = this.get_display().get_default_seat().get_pointer ();
                 Gdk.Screen scr;
                 device.get_position(out scr, out x, out y);
                 m = scr.get_monitor_at_point(x, y);

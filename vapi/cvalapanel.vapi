@@ -151,10 +151,10 @@ namespace ValaPanel
         internal void init_settings(GLib.SettingsBackend backend);
         internal void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
         internal unowned CoreSettings get_settings();
-        internal long can_strut(Gtk.Window top);
-        internal void update_strut(Gtk.Window top);
-        internal void move_to_coords(Gtk.Window top, int x, int y);
-        internal void move_to_side(Gtk.Window top, Gtk.PositionType side);
+        public long can_strut(Gtk.Window top);
+        public void update_strut(Gtk.Window top);
+        public void move_to_coords(Gtk.Window top, int x, int y);
+        public void move_to_side(Gtk.Window top, Gtk.PositionType side);
     }
 }
 [CCode (cprefix="")]
