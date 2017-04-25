@@ -184,7 +184,7 @@ namespace ValaPanel
         {get {return _mon;}
          internal set construct{
             int mons = 1;
-            var screen = Gdk.Screen.get_default();
+            var screen = Gdk.Display.get_default();
             if (screen != null)
                 mons = screen.get_n_monitors();
             assert(mons >= 1);
@@ -197,7 +197,7 @@ namespace ValaPanel
         private static void monitors_changed_cb(Gdk.Screen scr, void* data)
         {
             var app = data as Gtk.Application;
-            var mons = Gdk.Screen.get_default().get_n_monitors();
+            var mons = Gdk.Display.get_default().get_n_monitors();
             foreach(var w in app.get_windows())
             {
                 var panel = w as Toplevel;
@@ -738,8 +738,8 @@ namespace ValaPanel
             PositionType new_edge = PositionType.TOP;
             var found = false;
             /* Allocate the edge. */
-            assert(Gdk.Screen.get_default()!=null);
-            var monitors = Gdk.Screen.get_default().get_n_monitors();
+            assert(Gdk.Display.get_default()!=null);
+            var monitors = Gdk.Display.get_default().get_n_monitors();
             /* try to allocate edge on current monitor first */
             var m = _mon;
             if (m < 0)
