@@ -249,102 +249,75 @@ static ulong vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWin
 
 static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	int index;
-	GdkAtom atom;
-	ulong strut_size  = 0;
-	ulong strut_lower = 0;
-	ulong strut_upper = 0;
 	bool autohide;
 	GtkPositionType edge;
+	int monitor;
+	int size;
+	g_object_get(top,
+	             VALA_PANEL_KEY_AUTOHIDE,
+	             &autohide,
+	             VALA_PANEL_KEY_EDGE,
+	             &edge,
+	             VALA_PANEL_KEY_MONITOR,
+	             &monitor,
+	             VALA_PANEL_KEY_HEIGHT,
+	             &size,
+	             NULL);
+	GdkRectangle primary_monitor_rect;
+	long struts[12]    = { 0 };
+	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(top));
+	GdkMonitor *mon    = monitor < 0 ? gdk_display_get_primary_monitor(screen)
+	                              : gdk_display_get_monitor(screen, monitor);
+	gdk_monitor_get_geometry(mon, &primary_monitor_rect);
+	/*
+	strut-left strut-right strut-top strut-bottom
+	strut-left-start-y   strut-left-end-y
+	strut-right-start-y  strut-right-end-y
+	strut-top-start-x    strut-top-end-x
+	strut-bottom-start-x strut-bottom-end-x
+	*/
 
-	g_object_get(top, VALA_PANEL_KEY_AUTOHIDE, &autohide, VALA_PANEL_KEY_EDGE, &edge, NULL);
-
-	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
+	if (!gtk_widget_get_realized(GTK_WIDGET(top)))
+	{
 		return;
-	/* most wm's tend to ignore struts of unmapped windows, and that's how
-	 * panel hides itself. so no reason to set it. If it was be, it must be removed */
-	/*this.strut_size == 0, we must take it from toplevel */
-	if (autohide && !gtk_widget_get_mapped(GTK_WIDGET(top)))
-		return;
-	GtkAllocation a;
-	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
-	//    /* Dispatch on edge to set up strut parameters. */
+	}
+	int panel_size = autohide ? GAP : size;
+	// Struts dependent on position
 	switch (edge)
 	{
+	case GTK_POS_TOP:
+		struts[2] = primary_monitor_rect.y + panel_size;
+		struts[8] = primary_monitor_rect.x;
+        struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width);
+		break;
 	case GTK_POS_LEFT:
-		index       = 0;
-		strut_lower = a.y;
-		strut_upper = a.y + a.height;
+		struts[0] = panel_size;
+		struts[4] = primary_monitor_rect.y;
+		struts[5] = primary_monitor_rect.y + primary_monitor_rect.height;
 		break;
 	case GTK_POS_RIGHT:
-		index       = 1;
-		strut_lower = a.y;
-		strut_upper = a.y + a.height;
-		break;
-	case GTK_POS_TOP:
-		index       = 2;
-		strut_lower = a.x;
-		strut_upper = a.x + a.width;
+		struts[1] = panel_size;
+		struts[6] = primary_monitor_rect.y;
+		struts[7] = primary_monitor_rect.y + primary_monitor_rect.height;
 		break;
 	case GTK_POS_BOTTOM:
-		index       = 3;
-		strut_lower = a.x;
-		strut_upper = a.x + a.width;
+		struts[3]  = (primary_monitor_rect.height + primary_monitor_rect.y) - panel_size;
+		struts[10] = primary_monitor_rect.x;
+        struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width);
 		break;
-	default:
-		return;
 	}
-
-	//    /* Set up strut value in property format. */
-	ulong desired_strut[12];
-	strut_size = vala_panel_platform_x11_edge_can_strut(f, top);
-	if (strut_size > 0)
-	{
-		desired_strut[index]         = strut_size;
-		desired_strut[4 + index * 2] = strut_lower;
-		desired_strut[5 + index * 2] = strut_upper - 1;
-	}
-	//    /* If strut value changed, set the property value on the panel window.
-	//     * This avoids property change traffic when the panel layout is recalculated but strut
-	//     geometry hasn't changed. */
-	//    if ((this.strut_size != strut_size) || (this.strut_lower != strut_lower) ||
-	//    (this.strut_upper
-	//    != strut_upper) || (this.strut_edge != this.edge))
-	{
-		//            this.strut_size = strut_size;
-		//            this.strut_lower = strut_lower;
-		//            this.strut_upper = strut_upper;
-		//            this.strut_edge = this.edge;
-		/* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
-		 * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
-		GdkWindow *xwin = gtk_widget_get_window(GTK_WIDGET(top));
-		if (strut_size != 0)
-		{
-			atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
-			gdk_property_change(xwin,
-			                    atom,
-			                    gdk_atom_intern_static_string("CARDINAL"),
-			                    32,
-			                    GDK_PROP_MODE_REPLACE,
-			                    (u_int8_t *)desired_strut,
-			                    12);
-			atom = gdk_atom_intern_static_string("_NET_WM_STRUT");
-			gdk_property_change(xwin,
-			                    atom,
-			                    gdk_atom_intern_static_string("CARDINAL"),
-			                    32,
-			                    GDK_PROP_MODE_REPLACE,
-			                    (u_int8_t *)desired_strut,
-			                    4);
-		}
-		else
-		{
-			atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
-			gdk_property_delete(xwin, atom);
-			atom = gdk_atom_intern_static_string("_NET_WM_STRUT");
-			gdk_property_delete(xwin, atom);
-		}
-	}
+	GdkAtom atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
+	if (vala_panel_platform_x11_edge_can_strut(f, top))
+		// all relevant WMs support this, Mutter included
+		gdk_property_change(gtk_widget_get_window(GTK_WIDGET(top)),
+		                    atom,
+		                    gdk_atom_intern_static_string("CARDINAL"),
+		                    32,
+		                    GDK_PROP_MODE_REPLACE,
+		                    (unsigned char *)struts,
+		                    12);
+	else
+		gdk_property_delete(gtk_widget_get_window(GTK_WIDGET(top)), atom);
 }
 
 static void vala_panel_platform_x11_finalize(GObject *obj)
