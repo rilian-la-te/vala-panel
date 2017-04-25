@@ -64,8 +64,11 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data);
-static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data);
+static void activate_run(GSimpleAction *simple, GVariant *param, gpointer data);
+static void activate_logout(GSimpleAction *simple, GVariant *param, gpointer data);
+static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data);
+static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer data);
 
 static const GOptionEntry entries[] =
     { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
@@ -73,13 +76,16 @@ static const GOptionEntry entries[] =
       { "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
       { NULL } };
 
-static const GActionEntry vala_panel_application_app_entries[6] = {
+static const GActionEntry vala_panel_application_app_entries[9] = {
 	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
 	{ "panel-preferences", activate_panel_preferences, "s", NULL, NULL, { 0 } },
 	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
 	{ "menu", activate_menu, NULL, NULL, NULL, { 0 } },
-	{ "session-command", activate_command, "s", NULL, NULL, { 0 } },
-	{ "quit", activate_exit, "b", NULL, NULL, { 0 } },
+	{ "run", activate_run, NULL, NULL, NULL, { 0 } },
+	{ "logout", activate_logout, NULL, NULL, NULL, { 0 } },
+	{ "shutdown", activate_shutdown, NULL, NULL, NULL, { 0 } },
+	{ "quit", activate_exit, NULL, NULL, NULL, { 0 } },
+	{ "restart", activate_restart, NULL, NULL, NULL, { 0 } },
 };
 static const GActionEntry vala_panel_application_menu_entries[3] =
     { { "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
@@ -540,21 +546,37 @@ static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data
 	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
 }
 
-static void activate_command(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_run(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	g_autofree gchar *command = NULL;
-	const char *cmd           = g_variant_get_string(param, NULL);
-	GtkApplication *app       = GTK_APPLICATION(data);
-	g_object_get(app, cmd, &command, NULL);
-	g_autoptr(GVariant) par = g_variant_new_string(command);
-	activate_menu_launch_command(NULL, par, NULL);
+	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
+	g_autoptr(GVariant) par   = g_variant_new_string(app->run_command);
+	activate_menu_launch_command(NULL, par, app);
 }
 
+static void activate_logout(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
+	g_autoptr(GVariant) par   = g_variant_new_string(app->logout_command);
+	activate_menu_launch_command(NULL, par, app);
+}
+
+static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
+	g_autoptr(GVariant) par   = g_variant_new_string(app->shutdown_command);
+	activate_menu_launch_command(NULL, par, app);
+}
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	bool restart              = g_variant_get_boolean(param);
 	ValaPanelApplication *app = (ValaPanelApplication *)data;
-	app->restart              = restart;
+	app->restart              = false;
+	g_application_quit(G_APPLICATION(app));
+}
+
+static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer data)
+{
+	ValaPanelApplication *app = (ValaPanelApplication *)data;
+	app->restart              = true;
 	g_application_quit(G_APPLICATION(app));
 }
 

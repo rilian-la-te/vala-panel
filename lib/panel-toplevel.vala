@@ -537,6 +537,9 @@ namespace ValaPanel
         }
         construct
         {
+            unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
+            if (visual != null)
+                this.set_visual(visual);
             a = Gtk.Allocation();
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
