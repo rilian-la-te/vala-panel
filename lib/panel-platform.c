@@ -46,10 +46,10 @@ void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, GtkWindow *top,
 }
 
 void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top,
-                                      GtkPositionType alloc)
+                                      GtkPositionType alloc, int monitor)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_side(self, top, alloc);
+		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_side(self, top, alloc, monitor);
 }
 
 void vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)

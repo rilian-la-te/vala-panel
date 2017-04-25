@@ -39,11 +39,6 @@ struct _ValaPanelPlatformX11
 	                          G_KEY_FILE_KEEP_COMMENTS,                                        \
 	                          NULL)
 
-#define gravity_from_edge(e)                                                                       \
-	e == GTK_POS_TOP ? GDK_GRAVITY_NORTH                                                       \
-	                 : (GTK_POS_BOTTOM ? GDK_GRAVITY_SOUTH                                     \
-	                                   : (GTK_POS_LEFT ? GDK_GRAVITY_WEST : GDK_GRAVITY_EAST))
-
 G_DEFINE_TYPE(ValaPanelPlatformX11, vala_panel_platform_x11, vala_panel_platform_get_type())
 
 ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const char *profile)
@@ -90,9 +85,13 @@ static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWind
 }
 
 static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
-                                                 GtkPositionType alloc)
+                                                 GtkPositionType alloc, int monitor)
 {
-	gtk_window_set_gravity(top, gravity_from_edge(alloc));
+	GtkOrientation orient = vala_panel_orient_from_edge(alloc);
+	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
+	GdkMonitor *mon       = gdk_display_get_monitor(d, monitor);
+	GdkRectangle geom;
+	gdk_monitor_get_workarea(mon, &geom);
 	gtk_window_move(top, 0, 0);
 }
 
