@@ -35,10 +35,11 @@ if(GLIB_OLD_FOUND)
         guuid.h)
 endif()
 set(VALA_FILES
-        misc-old.vala
+	misc-old.vala
 	configurator.vala
 	dbusmenu/dbusmenu.vala
 	panel-plugin.vala
+	applet-holder.vala
 	panel-toplevel.vala
 	)
 vala_precompile(VALA_C ${LIBNAME}
