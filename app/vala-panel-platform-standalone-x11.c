@@ -197,9 +197,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	*/
 
 	if (!gtk_widget_get_realized(GTK_WIDGET(top)))
-	{
 		return;
-	}
 	int panel_size = autohide ? GAP : size;
 	// Struts dependent on position
 	switch (edge)

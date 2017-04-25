@@ -26,7 +26,7 @@ typedef struct
 
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
 
-ulong vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
+bool vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_CLASS(self)->can_strut(self, top);

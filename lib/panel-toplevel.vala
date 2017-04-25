@@ -541,7 +541,7 @@ namespace ValaPanel
             if (visual != null)
                 this.set_visual(visual);
             a = Gtk.Allocation();
-            this.notify.connect((s,p)=> {
+            this.notify.connect_after((s,p)=> {
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
