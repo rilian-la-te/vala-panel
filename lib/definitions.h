@@ -78,27 +78,8 @@
 	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |           \
 	                                     G_SETTINGS_BIND_DEFAULT));
 
-#define VALA_PANEL_DECLARE_MODULE_TYPE(                                                            \
-    ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)                                  \
-	GType module_obj_name##_get_type(void);                                                    \
-	G_GNUC_BEGIN_IGNORE_DEPRECATIONS                                                           \
-	typedef struct _##ModuleObjName ModuleObjName;                                             \
-	typedef struct                                                                             \
-	{                                                                                          \
-		ParentName##Class parent_class;                                                    \
-	} ModuleObjName##Class;                                                                    \
-                                                                                                   \
-	static inline ModuleObjName *MODULE##_##OBJ_NAME(gpointer ptr)                             \
-	{                                                                                          \
-		return G_TYPE_CHECK_INSTANCE_CAST(ptr,                                             \
-		                                  module_obj_name##_get_type(),                    \
-		                                  ModuleObjName);                                  \
-	}                                                                                          \
-	static inline gboolean MODULE##_IS_##OBJ_NAME(gpointer ptr)                                \
-	{                                                                                          \
-		return G_TYPE_CHECK_INSTANCE_TYPE(ptr, module_obj_name##_get_type());              \
-	}                                                                                          \
-	G_GNUC_END_IGNORE_DEPRECATIONS
+#define vala_panel_orient_from_edge(edge)\
+    ((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL
 
 #define vala_panel_dup_array(DST, SRC, LEN)                                                        \
 	{                                                                                          \
