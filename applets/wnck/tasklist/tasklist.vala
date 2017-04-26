@@ -48,7 +48,9 @@ public class Tasklist: Applet, AppletConfigurable
     {
         widget = new Wnck.Tasklist();
         this.add(widget);
-        toplevel.notify["edge"].connect((pspec)=>{widget.set_orientation(toplevel.orientation);});
+        toplevel.notify.connect((s,p)=>{
+            widget.set_orientation(toplevel.orientation);
+        });
         widget.set_button_relief(ReliefStyle.NONE);
         settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
         settings.changed.connect((key)=>{
@@ -75,14 +77,20 @@ public class Tasklist: Applet, AppletConfigurable
         if (toplevel.orientation == Orientation.VERTICAL)
             min = nat = unexpanded_limit;
         else
+        {
             base.get_preferred_height_internal(out min, out nat);
+            min = nat = toplevel.height;
+        }
     }
     public override void get_preferred_width(out int min, out int nat)
     {
         if (toplevel.orientation == Orientation.HORIZONTAL)
             min = nat = unexpanded_limit;
         else
+        {
             base.get_preferred_width_internal(out min, out nat);
+            min = nat = toplevel.height;
+        }
     }
     public Dialog get_config_dialog()
     {

@@ -551,6 +551,7 @@ namespace ValaPanel
                 if (p.name in gnames)
                 {
                     this.queue_resize();
+                    this.queue_draw();
                     this.update_strut();
                 }
                 if (p.name in anames)
