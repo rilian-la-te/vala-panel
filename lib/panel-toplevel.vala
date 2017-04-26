@@ -194,10 +194,10 @@ namespace ValaPanel
         public bool dock {get; internal set;}
         public bool strut {get; internal set;}
         public bool is_dynamic {get; internal set;}
-        private static void monitors_changed_cb(Gdk.Screen scr, void* data)
+        private static void monitors_changed_cb(Gdk.Display scr, Gdk.Monitor mon, void* data)
         {
             var app = data as Gtk.Application;
-            var mons = Gdk.Display.get_default().get_n_monitors();
+            var mons = scr.get_n_monitors();
             foreach(var w in app.get_windows())
             {
                 var panel = w as Toplevel;
@@ -343,7 +343,8 @@ namespace ValaPanel
         private static unowned Platform platform = null;
         internal static unowned CoreSettings core_settings = null;
         internal static AppletHolder holder = null;
-        private static ulong mon_handler;
+        private static ulong mon_handler = 0;
+        private static ulong mon_rm_handler = 0;
         private unowned UnitSettings settings;
         static construct
         {
@@ -531,8 +532,11 @@ namespace ValaPanel
             if (monitor < Gdk.Screen.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
-            if (mon_handler != 0)
-                mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
+            if (mon_handler == 0)
+                mon_handler = Signal.connect(Gdk.Display.get_default(),"monitor-added",
+                                            (GLib.Callback)(monitors_changed_cb),panel_app);
+            if (mon_rm_handler == 0)
+                mon_rm_handler = Signal.connect(Gdk.Display.get_default(),"monitor-removed",
                                             (GLib.Callback)(monitors_changed_cb),panel_app);
         }
         construct
