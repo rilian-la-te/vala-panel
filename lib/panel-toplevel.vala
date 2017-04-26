@@ -529,7 +529,7 @@ namespace ValaPanel
             settings_as_action(this,settings.default_settings,Key.USE_FOREGROUND_COLOR);
             settings_as_action(this,settings.default_settings,Key.USE_FONT);
             settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_FILE);
-            if (monitor < Gdk.Screen.get_default().get_n_monitors())
+            if (monitor < Gdk.Display.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
             if (mon_handler == 0)
