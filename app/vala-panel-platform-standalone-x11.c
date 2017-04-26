@@ -151,29 +151,27 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 		return;
 	int panel_size = autohide ? GAP : size;
 	// Struts dependent on position
-	GtkAllocation a;
-	gtk_widget_get_allocation(GTK_WIDGET(top), &a);
 	switch (edge)
 	{
 	case GTK_POS_TOP:
 		struts[2] = primary_monitor_rect.y + panel_size;
-		struts[8] = a.x;
-		struts[9] = a.x + a.width;
+		struts[8] = primary_monitor_rect.x;
+		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width);
 		break;
 	case GTK_POS_LEFT:
 		struts[0] = panel_size;
-		struts[4] = a.y;
-		struts[5] = a.y + a.height;
+		struts[4] = primary_monitor_rect.y;
+		struts[5] = primary_monitor_rect.y + primary_monitor_rect.height;
 		break;
 	case GTK_POS_RIGHT:
 		struts[1] = panel_size;
-		struts[6] = a.y;
-		struts[7] = a.y + a.height;
+		struts[6] = primary_monitor_rect.y;
+		struts[7] = primary_monitor_rect.y + primary_monitor_rect.height;
 		break;
 	case GTK_POS_BOTTOM:
 		struts[3]  = (primary_monitor_rect.height + primary_monitor_rect.y) - panel_size;
-		struts[10] = a.x;
-		struts[11] = a.x + a.width;
+		struts[10] = primary_monitor_rect.x;
+		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width);
 		break;
 	}
 	GdkAtom atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
