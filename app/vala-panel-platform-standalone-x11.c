@@ -110,9 +110,11 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 
 static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
+	bool strut_set = false;
+	g_object_get(top, VALA_PANEL_KEY_STRUT, &strut_set, NULL);
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return false;
-	return true;
+	return strut_set;
 }
 
 static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
@@ -179,10 +181,11 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len);
 		break;
 	}
-	GdkAtom atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
-	if (vala_panel_platform_x11_edge_can_strut(f, top))
+	GdkAtom atom    = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
+	GdkWindow *xwin = gtk_widget_get_window(GTK_WIDGET(top));
+	if (vala_panel_platform_can_strut(f, top))
 		// all relevant WMs support this, Mutter included
-		gdk_property_change(gtk_widget_get_window(GTK_WIDGET(top)),
+		gdk_property_change(xwin,
 		                    atom,
 		                    gdk_atom_intern_static_string("CARDINAL"),
 		                    32,
@@ -190,7 +193,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 		                    (unsigned char *)struts,
 		                    12);
 	else
-		gdk_property_delete(gtk_widget_get_window(GTK_WIDGET(top)), atom);
+		gdk_property_delete(xwin, atom);
 }
 
 static void vala_panel_platform_x11_finalize(GObject *obj)
