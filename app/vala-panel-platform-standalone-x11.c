@@ -110,9 +110,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 
 static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	bool strut;
-	g_object_get(f, VALA_PANEL_KEY_STRUT, &strut, NULL);
-	if (!gtk_widget_get_mapped(GTK_WIDGET(top)) || !strut)
+	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return false;
 	return true;
 }
@@ -156,7 +154,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	case GTK_POS_TOP:
 		struts[2] = primary_monitor_rect.y + panel_size;
 		struts[8] = primary_monitor_rect.x;
-		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width);
+		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width) - 1;
 		break;
 	case GTK_POS_LEFT:
 		struts[0] = panel_size;
@@ -169,9 +167,9 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 		struts[7] = primary_monitor_rect.y + primary_monitor_rect.height;
 		break;
 	case GTK_POS_BOTTOM:
-		struts[3]  = (primary_monitor_rect.height + primary_monitor_rect.y) - panel_size;
+		struts[3]  = primary_monitor_rect.y + panel_size;
 		struts[10] = primary_monitor_rect.x;
-		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width);
+		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width) - 1;
 		break;
 	}
 	GdkAtom atom = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
