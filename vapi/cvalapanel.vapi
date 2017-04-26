@@ -99,6 +99,8 @@ namespace ValaPanel
     [CCode (cheader_filename="lib/misc.h")]
     public static void apply_window_icon(Window w);
     [CCode (cheader_filename="lib/misc.h")]
+	public static int monitor_num_from_mon(Gdk.Display display, Gdk.Monitor monitor);
+    [CCode (cheader_filename="lib/misc.h")]
     public static void reset_schema(GLib.Settings settings);
     [CCode (cheader_filename="lib/misc.h")]
     public static void reset_schema_with_children(GLib.Settings settings);
