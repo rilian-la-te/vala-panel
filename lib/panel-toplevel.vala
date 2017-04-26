@@ -34,7 +34,7 @@ namespace ValaPanel
         internal ConfigureDialog pref_dialog;
         private bool initialized;
         public const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
-                                                Key.MONITOR,Key.AUTOHIDE,Key.SHOW_HIDDEN,
+                                                Key.MONITOR,Key.AUTOHIDE,
                                                 Key.MARGIN,Key.DOCK,Key.STRUT,
                                                 Key.DYNAMIC};
         public const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
@@ -622,6 +622,8 @@ namespace ValaPanel
             update_applet_positions();
             this.present();
             this.autohide = autohide;
+            this.queue_resize();
+            platform.update_strut(this);
             initialized = true;
         }
 
