@@ -241,18 +241,15 @@ namespace ValaPanel
         }
         private void _calculate_position(ref Gtk.Allocation alloc)
         {
-            unowned Gdk.Screen screen = this.get_screen();
+            unowned Gdk.Display screen = this.get_display();
             Gdk.Rectangle marea = Gdk.Rectangle();
             if (monitor < 0)
             {
-                marea.x = 0;
-                marea.y = 0;
-                marea.width = screen.get_width();
-                marea.height = screen.get_height();
+                marea = screen.get_primary_monitor().get_geometry();
             }
             else if (monitor < screen.get_n_monitors())
             {
-                screen.get_monitor_geometry(monitor,out marea);
+                marea = screen.get_monitor(monitor).get_geometry();
 //~                 marea = screen.get_monitor_workarea(monitor);
 //~                 var hmod = (autohide) ? GAP : height;
 //~                 switch (edge)
@@ -751,15 +748,6 @@ namespace ValaPanel
             var monitors = Gdk.Display.get_default().get_n_monitors();
             /* try to allocate edge on current monitor first */
             var m = _mon;
-            if (m < 0)
-            {
-                /* panel is spanned over the screen, guess from pointer now */
-                int x, y;
-                var device = this.get_display().get_default_seat().get_pointer ();
-                Gdk.Screen scr;
-                device.get_position(out scr, out x, out y);
-                m = scr.get_monitor_at_point(x, y);
-            }
             for (int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
             {
                 if (panel_edge_available((PositionType)e, m, true))
