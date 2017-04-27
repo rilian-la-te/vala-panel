@@ -233,14 +233,16 @@ namespace ValaPanel
         protected override void get_preferred_width(out int min, out int nat)
         {
             int x,y;
+            Gtk.Orientation eff_ori = Orientation.VERTICAL;
             base.get_preferred_width_internal(out min, out nat);
-            measure(this.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL ,this.width,out min, out nat,out x,out y);
+            measure(eff_ori, this.width,out min, out nat,out x,out y);
         }
         protected override void get_preferred_height(out int min, out int nat)
         {
             int x,y;
+            Gtk.Orientation eff_ori = Orientation.HORIZONTAL;
             base.get_preferred_height_internal(out min, out nat);
-            measure(this.orientation,this.width,out min, out nat,out x,out y);
+            measure(eff_ori,this.width,out min, out nat,out x,out y);
         }
         private int calc_width(int scrw, int panel_width,int panel_margin)
         {
@@ -257,10 +259,11 @@ namespace ValaPanel
                 marea = screen.get_primary_monitor().get_geometry();
             else if (monitor < screen.get_n_monitors())
                 marea = screen.get_monitor(monitor).get_geometry();
+            int scrw = this.orientation == Orientation.HORIZONTAL ? marea.width : marea.height;
             if (this.orientation == orient)
                 min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
             else
-                min = nat = base_min = base_nat = calc_width(marea.width, for_size, panel_margin);
+                min = nat = base_min = base_nat = calc_width(scrw, for_size, panel_margin);
 
         }
 
