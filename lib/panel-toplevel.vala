@@ -541,12 +541,11 @@ namespace ValaPanel
                 marea = screen.get_primary_monitor().get_geometry();
             else if (monitor < screen.get_n_monitors())
                 marea = screen.get_monitor(monitor).get_geometry();
-            var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.width-marea.x ;
-            var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.height-marea.y : height;
+            var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.height-marea.y ;
+            var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.width-marea.x : height;
             this.set_size_request(effective_width, effective_height);
-            this.queue_resize();
-            this.queue_draw();
             platform.move_to_side(this, this.edge, this.monitor);
+            this.queue_resize();
             this.update_strut();
         }
         protected override void destroy()
@@ -609,8 +608,7 @@ namespace ValaPanel
             update_applet_positions();
             this.present();
             this.autohide = autohide;
-            this.queue_resize();
-            platform.update_strut(this);
+            this.update_geometry();
             initialized = true;
         }
 
