@@ -48,9 +48,9 @@ public class Tasklist: Applet, AppletConfigurable
     {
         widget = new Wnck.Tasklist();
         this.add(widget);
-//        toplevel.notify.connect_after((s,p)=>{
-//            widget.set_orientation(toplevel.orientation);
-//        });
+        toplevel.notify["orientation"].connect_after((s,p)=>{
+            widget.set_orientation(toplevel.orientation);
+        });
         widget.set_button_relief(ReliefStyle.NONE);
         settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
         settings.changed.connect((key)=>{
