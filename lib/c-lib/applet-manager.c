@@ -83,13 +83,6 @@ ValaPanelAppletWidget *vala_panel_applet_manager_get_applet_widget_for_type(
 	{
 		g_autofree char *scheme = g_strdup_printf(PLUGIN_SETTINGS_SCHEMA_BASE, applet_type);
 		g_autofree char *cpath  = g_strconcat(path, uuid, "/", NULL);
-		GSettings *settings =
-		    vala_panel_platform_get_settings_for_scheme(self->mgr, scheme, cpath);
-		ValaPanelAppletWidget *widget =
-		    vala_panel_applet_engine_iface_get_applet_widget_for_type(
-		        (ValaPanelAppletEngineIface *)key, applet_type, settings, uuid);
-		if (widget)
-			return widget;
 	}
 	return NULL;
 }

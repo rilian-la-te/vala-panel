@@ -40,8 +40,6 @@ public class Pager: Applet
     public override void create()
     {
         widget = new Wnck.Pager();
-        border = 1; /* NOTE: old 'pager' used 2, WnckPager has 1, need 1 more */
-
         /* FIXME: use some global setting for border */
         toplevel.notify.connect((pspec)=>{
             if (pspec.name == "edge" || pspec.name == "height" || pspec.name == "width")
@@ -51,7 +49,6 @@ public class Pager: Applet
         widget.set_size_request(0,0);
         widget.show();
         this.add(widget);
-        this.set_border_width(border);
         on_params_change_callback();
         this.show_all();
     }
@@ -61,8 +58,6 @@ public class Pager: Applet
         h -= 2 * border;
         /* set geometry */
         widget.set_orientation(toplevel.orientation);
-        if (toplevel.orientation == Orientation.VERTICAL)
-            h *= (int)Math.round((double) Gdk.Screen.height() / (double) Gdk.Screen.width());
         var rows = h / (toplevel.icon_size * 2) + 1; /* min */
         var r = (h - 2) / toplevel.icon_size; /* max */
         rows = uint.max(rows, r);

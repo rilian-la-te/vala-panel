@@ -9,6 +9,7 @@ endif()
 
 if (ENABLE_WNCK)
     add_subdirectory(tasklist)
+    add_subdirectory(tasklist-xfce)
     add_subdirectory(pager)
     add_subdirectory(icontasks)
     add_subdirectory(deskno)
