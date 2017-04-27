@@ -475,9 +475,7 @@ namespace ValaPanel
             });
             this.notify.connect((s,p)=> {
                 if (p.name in gnames)
-                {
                     this.update_geometry();
-                }
                 if (p.name in anames)
                     this.update_appearance();
             });
@@ -501,6 +499,8 @@ namespace ValaPanel
             this.set_size_request(effective_width, effective_height);
             platform.move_to_side(this, this.edge, this.monitor);
             this.queue_resize();
+            while (Gtk.events_pending ())
+              Gtk.main_iteration ();
             platform.update_strut(this as Gtk.Window);
         }
         protected override void destroy()
