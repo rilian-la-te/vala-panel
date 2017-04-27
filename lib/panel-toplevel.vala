@@ -473,7 +473,7 @@ namespace ValaPanel
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
                     if (autohide) ah_hide(); else ah_show();
             });
-            this.notify.connect_after((s,p)=> {
+            this.notify.connect((s,p)=> {
                 if (p.name in gnames)
                 {
                     this.update_geometry();
