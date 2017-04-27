@@ -158,7 +158,7 @@ namespace ValaPanel
         public long can_strut(Gtk.Window top);
         public void update_strut(Gtk.Window top);
         public void move_to_coords(Gtk.Window top, int x, int y);
-        public void move_to_side(Gtk.Window top, Gtk.PositionType side);
+        public void move_to_side(Gtk.Window top, Gtk.PositionType side, int monitor);
     }
 }
 [CCode (cprefix="")]
