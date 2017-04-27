@@ -67,7 +67,7 @@ static ValaPanelUnitSettings *vala_panel_unit_settings_copy(ValaPanelUnitSetting
 	created_settings->uuid                  = g_strdup(source->uuid);
 	created_settings->schema_elem           = g_strdup(source->schema_elem);
 	created_settings->default_settings = G_SETTINGS(g_object_ref(source->default_settings));
-    created_settings->custom_settings = NULL;
+	created_settings->custom_settings  = NULL;
 	if (source->custom_settings)
 		created_settings->custom_settings =
 		    G_SETTINGS(g_object_ref(source->custom_settings));
