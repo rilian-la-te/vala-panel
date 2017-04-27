@@ -169,7 +169,6 @@ namespace ValaPanel
          * Positioning
          *********************************************************************************************/
         private int _mon;
-        private Gtk.Allocation a;
         internal AlignmentType alignment {get; internal set;}
         public int panel_margin {get; internal set;}
         public Gtk.PositionType edge {get; internal set construct;}
@@ -209,34 +208,6 @@ namespace ValaPanel
                 {
                     panel.queue_resize();
                 }
-            }
-        }
-        protected override void size_allocate(Gtk.Allocation alloc)
-        {
-            int x,y,w;
-            base.size_allocate(a);
-            if (is_dynamic && box != null)
-            {
-                if (orientation == Gtk.Orientation.HORIZONTAL)
-                    box.get_preferred_width(null, out w);
-                else
-                    box.get_preferred_height(null, out w);
-                if (w!=width)
-                    settings.default_settings.set_int(Key.WIDTH,w);
-            }
-            if (!this.get_realized())
-                return;
-            get_window().get_origin(out x, out y);
-            _calculate_position (ref alloc);
-            this.a.x = alloc.x;
-            this.a.y = alloc.y;
-            if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x || this.a.y != y)
-            {
-                this.a.width = alloc.width;
-                this.a.height = alloc.height;
-                this.set_size_request(this.a.width, this.a.height);
-                platform.move_to_coords(this, this.a.x, this.a.y);
-                this.update_strut();
             }
         }
         private void _calculate_position(ref Gtk.Allocation alloc)
@@ -541,7 +512,6 @@ namespace ValaPanel
             unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
                 this.set_visual(visual);
-            a = Gtk.Allocation();
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
@@ -551,9 +521,7 @@ namespace ValaPanel
             this.notify.connect_after((s,p)=> {
                 if (p.name in gnames)
                 {
-                    this.queue_resize();
-                    this.queue_draw();
-                    this.update_strut();
+                    this.update_geometry();
                 }
                 if (p.name in anames)
                     this.update_appearance();
@@ -565,6 +533,22 @@ namespace ValaPanel
         /***************************************************************************
          * Common UI functions
          ***************************************************************************/
+        private void update_geometry()
+        {
+            Gdk.Display screen = this.get_display();
+            Gdk.Rectangle marea = Gdk.Rectangle();
+            if (monitor < 0)
+                marea = screen.get_primary_monitor().get_geometry();
+            else if (monitor < screen.get_n_monitors())
+                marea = screen.get_monitor(monitor).get_geometry();
+            var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.width-marea.x ;
+            var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.height-marea.y : height;
+            this.set_size_request(effective_width, effective_height);
+            this.queue_resize();
+            this.queue_draw();
+            platform.move_to_side(this, this.edge, this.monitor);
+            this.update_strut();
+        }
         protected override void destroy()
         {
             stop_ui();
@@ -588,7 +572,6 @@ namespace ValaPanel
 
         private void start_ui()
         {
-            a.x = a.y = a.width = a.height = 0;
             set_wmclass("panel","vala-panel");
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
             PanelCSS.toggle_class(this,"-panel-transparent",false);
