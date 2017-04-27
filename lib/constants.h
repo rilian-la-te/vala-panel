@@ -41,6 +41,10 @@
 #define VALA_PANEL_KEY_APPLETS "applets"
 
 /*
+ * Autohide gap
+ */
+#define GAP 2
+/*
  * Toplevel keys
  */
 #define VALA_PANEL_KEY_EDGE "edge"
