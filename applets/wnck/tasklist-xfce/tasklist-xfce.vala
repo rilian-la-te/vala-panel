@@ -18,18 +18,18 @@
 
 using ValaPanel;
 using Gtk;
-public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
+public class TasklistXFCEApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Tasklist(toplevel,settings,number);
+        return new TasklistXFCE(toplevel,settings,number);
     }
 }
-public class Tasklist: Applet, AppletConfigurable
+public class TasklistXFCE: Applet, AppletConfigurable
 {
-    Wnck.Tasklist widget;
+    Xfce.Tasklist widget;
     private const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
     private const string KEY_ALL_DESKTOPS = "all-desktops";
     private const string KEY_GROUPING = "grouped-tasks";
@@ -38,7 +38,7 @@ public class Tasklist: Applet, AppletConfigurable
     private const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
     internal int unexpanded_limit
     {get; set;}
-    public Tasklist(ValaPanel.Toplevel toplevel,
+    public TasklistXFCE(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -46,30 +46,29 @@ public class Tasklist: Applet, AppletConfigurable
     }
     public override void create()
     {
-        widget = new Wnck.Tasklist();
+        widget = new Xfce.Tasklist();
         this.add(widget);
-//        toplevel.notify.connect_after((s,p)=>{
-//            widget.set_orientation(toplevel.orientation);
-//        });
-        widget.set_button_relief(ReliefStyle.NONE);
-        settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
-        settings.changed.connect((key)=>{
-            if (key == KEY_ALL_DESKTOPS)
-                widget.set_include_all_workspaces(settings.get_boolean(key));
-            if (key == KEY_SWITCH_UNMIN)
-                widget.set_switch_workspace_on_unminimize(settings.get_boolean(key));
-            if (key == KEY_GROUPING)
-                widget.set_grouping(settings.get_boolean(key) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
-            if (key == KEY_MIDDLE_CLICK_CLOSE)
-                widget.set_middle_click_close(settings.get_boolean(key));
-            if (key == KEY_GROUPING_LIMIT)
-                widget.set_grouping_limit(settings.get_int(key));
+        toplevel.notify["orientation"].connect_after((s,p)=>{
+            widget.set_orientation(toplevel.orientation);
         });
-        widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
-        widget.set_switch_workspace_on_unminimize(settings.get_boolean(KEY_SWITCH_UNMIN));
-        widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
-        widget.set_middle_click_close(settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE));
-        widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
+//        settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
+//        settings.changed.connect((key)=>{
+//            if (key == KEY_ALL_DESKTOPS)
+//                widget.set_include_all_workspaces(settings.get_boolean(key));
+//            if (key == KEY_SWITCH_UNMIN)
+//                widget.set_switch_workspace_on_unminimize(settings.get_boolean(key));
+//            if (key == KEY_GROUPING)
+//                widget.set_grouping(settings.get_boolean(key) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
+//            if (key == KEY_MIDDLE_CLICK_CLOSE)
+//                widget.set_middle_click_close(settings.get_boolean(key));
+//            if (key == KEY_GROUPING_LIMIT)
+//                widget.set_grouping_limit(settings.get_int(key));
+//        });
+//        widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
+//        widget.set_switch_workspace_on_unminimize(settings.get_boolean(KEY_SWITCH_UNMIN));
+//        widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
+//        widget.set_middle_click_close(settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE));
+//        widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
         this.show_all();
     }
     public override void get_preferred_height(out int min, out int nat)
@@ -110,5 +109,5 @@ public void peas_register_types(TypeModule module)
 {
     // boilerplate - all modules need this
     var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(TasklistApplet));
+    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(TasklistXFCEApplet));
 }

@@ -5,11 +5,13 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
+    xfce-tasklist
     libwnck-3.0
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
     --target-glib=2.40
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
@@ -37,7 +39,7 @@ add_library (${PLUGIN_NAME} MODULE
 )
 
 target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS})
+target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

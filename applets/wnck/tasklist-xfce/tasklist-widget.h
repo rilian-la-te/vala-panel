@@ -23,70 +23,67 @@
 
 G_BEGIN_DECLS
 
-typedef struct _XfceTasklistClass     XfceTasklistClass;
-typedef struct _XfceTasklist          XfceTasklist;
-typedef enum   _XfceTasklistGrouping  XfceTasklistGrouping;
-typedef enum   _XfceTasklistSortOrder XfceTasklistSortOrder;
-typedef enum   _XfceTasklistMClick    XfceTasklistMClick;
+typedef struct _XfceTasklistClass XfceTasklistClass;
+typedef struct _XfceTasklist XfceTasklist;
+typedef enum _XfceTasklistGrouping XfceTasklistGrouping;
+typedef enum _XfceTasklistSortOrder XfceTasklistSortOrder;
+typedef enum _XfceTasklistMClick XfceTasklistMClick;
 
-#define XFCE_TYPE_TASKLIST            (xfce_tasklist_get_type ())
-#define XFCE_TASKLIST(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_TASKLIST, XfceTasklist))
-#define XFCE_TASKLIST_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_TASKLIST, XfceTasklistClass))
-#define XFCE_IS_TASKLIST(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_TASKLIST))
-#define XFCE_IS_TASKLIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_TASKLIST))
-#define XFCE_TASKLIST_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_TASKLIST, XfceTasklistClass))
-
-
+#define XFCE_TYPE_TASKLIST (xfce_tasklist_get_type())
+#define XFCE_TASKLIST(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), XFCE_TYPE_TASKLIST, XfceTasklist))
+#define XFCE_TASKLIST_CLASS(klass)                                                                 \
+	(G_TYPE_CHECK_CLASS_CAST((klass), XFCE_TYPE_TASKLIST, XfceTasklistClass))
+#define XFCE_IS_TASKLIST(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), XFCE_TYPE_TASKLIST))
+#define XFCE_IS_TASKLIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), XFCE_TYPE_TASKLIST))
+#define XFCE_TASKLIST_GET_CLASS(obj)                                                               \
+	(G_TYPE_INSTANCE_GET_CLASS((obj), XFCE_TYPE_TASKLIST, XfceTasklistClass))
 
 enum _XfceTasklistGrouping
 {
-  XFCE_TASKLIST_GROUPING_NEVER,
-  XFCE_TASKLIST_GROUPING_ALWAYS,
-  /*XFCE_TASKLIST_GROUPING_AUTO, *//* when space is limited */
+	XFCE_TASKLIST_GROUPING_NEVER,
+	XFCE_TASKLIST_GROUPING_ALWAYS,
+	/*XFCE_TASKLIST_GROUPING_AUTO, */ /* when space is limited */
 
-  XFCE_TASKLIST_GROUPING_MIN = XFCE_TASKLIST_GROUPING_NEVER,
-  XFCE_TASKLIST_GROUPING_MAX = XFCE_TASKLIST_GROUPING_ALWAYS,
-  XFCE_TASKLIST_GROUPING_DEFAULT = XFCE_TASKLIST_GROUPING_NEVER
+	XFCE_TASKLIST_GROUPING_MIN     = XFCE_TASKLIST_GROUPING_NEVER,
+	XFCE_TASKLIST_GROUPING_MAX     = XFCE_TASKLIST_GROUPING_ALWAYS,
+	XFCE_TASKLIST_GROUPING_DEFAULT = XFCE_TASKLIST_GROUPING_NEVER
 };
 
 enum _XfceTasklistSortOrder
 {
-  XFCE_TASKLIST_SORT_ORDER_TIMESTAMP, /* sort by unique_id */
-  XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP, /* sort by group and then by timestamp */
-  XFCE_TASKLIST_SORT_ORDER_TITLE, /* sort by window title */
-  XFCE_TASKLIST_SORT_ORDER_GROUP_TITLE, /* sort by group and then by title */
-  XFCE_TASKLIST_SORT_ORDER_DND, /* append and support dnd */
+	XFCE_TASKLIST_SORT_ORDER_TIMESTAMP,       /* sort by unique_id */
+	XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP, /* sort by group and then by timestamp */
+	XFCE_TASKLIST_SORT_ORDER_TITLE,           /* sort by window title */
+	XFCE_TASKLIST_SORT_ORDER_GROUP_TITLE,     /* sort by group and then by title */
+	XFCE_TASKLIST_SORT_ORDER_DND,             /* append and support dnd */
 
-  XFCE_TASKLIST_SORT_ORDER_MIN = XFCE_TASKLIST_SORT_ORDER_TIMESTAMP,
-  XFCE_TASKLIST_SORT_ORDER_MAX = XFCE_TASKLIST_SORT_ORDER_DND,
-  XFCE_TASKLIST_SORT_ORDER_DEFAULT = XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP
+	XFCE_TASKLIST_SORT_ORDER_MIN     = XFCE_TASKLIST_SORT_ORDER_TIMESTAMP,
+	XFCE_TASKLIST_SORT_ORDER_MAX     = XFCE_TASKLIST_SORT_ORDER_DND,
+	XFCE_TASKLIST_SORT_ORDER_DEFAULT = XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP
 };
 
 enum _XfceTasklistMClick
 {
-  XFCE_TASKLIST_MIDDLE_CLICK_NOTHING, /* do nothing */
-  XFCE_TASKLIST_MIDDLE_CLICK_CLOSE_WINDOW, /* close the window */
-  XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW, /* minimize, never minimize with button 1 */
+	XFCE_TASKLIST_MIDDLE_CLICK_NOTHING,         /* do nothing */
+	XFCE_TASKLIST_MIDDLE_CLICK_CLOSE_WINDOW,    /* close the window */
+	XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW, /* minimize, never minimize with button 1 */
 
-  XFCE_TASKLIST_MIDDLE_CLICK_MIN = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING,
-  XFCE_TASKLIST_MIDDLE_CLICK_MAX = XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW,
-  XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING
+	XFCE_TASKLIST_MIDDLE_CLICK_MIN     = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING,
+	XFCE_TASKLIST_MIDDLE_CLICK_MAX     = XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW,
+	XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING
 };
 
+GType xfce_tasklist_get_type(void) G_GNUC_CONST;
 
+XfceTasklist *xfce_tasklist_new();
 
-GType xfce_tasklist_get_type                (void) G_GNUC_CONST;
+void xfce_tasklist_set_orientation(XfceTasklist *tasklist, GtkOrientation mode);
 
-void  xfce_tasklist_set_orientation                (XfceTasklist        *tasklist,
-                                             GtkOrientation  mode);
+void xfce_tasklist_set_size(XfceTasklist *tasklist, gint size);
 
-void  xfce_tasklist_set_size                (XfceTasklist   *tasklist,
-                                             gint            size);
+void xfce_tasklist_set_nrows(XfceTasklist *tasklist, gint nrows);
 
-void  xfce_tasklist_set_nrows               (XfceTasklist   *tasklist,
-                                             gint            nrows);
-
-void  xfce_tasklist_update_monitor_geometry (XfceTasklist   *tasklist);
+void xfce_tasklist_update_monitor_geometry(XfceTasklist *tasklist);
 
 G_END_DECLS
 
