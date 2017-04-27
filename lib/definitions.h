@@ -82,6 +82,9 @@
 	((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL           \
 	                                                    : GTK_ORIENTATION_VERTICAL
 
+#define vala_panel_invert_orient(orient)                                                           \
+	orient == GTK_ORIENTATION_HORIZONTAL ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL
+
 #define vala_panel_dup_array(DST, SRC, LEN)                                                        \
 	{                                                                                          \
 		size_t TMPSZ = sizeof(*(SRC)) * (LEN);                                             \

@@ -118,6 +118,8 @@ namespace ValaPanel
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cheader_filename="lib/definitions.h")]
     public static Gtk.Orientation orient_from_edge(Gtk.PositionType edge);
+    [CCode (cheader_filename="lib/definitions.h")]
+    public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
     [Compact]
     [CCode (cheader_filename="lib/settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_core_settings_get_type()")]
     internal class CoreSettings
