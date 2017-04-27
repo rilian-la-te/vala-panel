@@ -242,17 +242,11 @@ namespace ValaPanel
             base.get_preferred_height_internal(out min, out nat);
             measure(this.orientation,this.width,out min, out nat,out x,out y);
         }
-        private int calc_width(int panel_width,int panel_margin)
+        private int calc_width(int scrw, int panel_width,int panel_margin)
         {
-            unowned Gdk.Display screen = this.get_display();
-            Gdk.Rectangle marea = Gdk.Rectangle();
-            if (monitor < 0)
-                marea = screen.get_primary_monitor().get_geometry();
-            else if (monitor < screen.get_n_monitors())
-                marea = screen.get_monitor(monitor).get_geometry();
-            int effective_width = marea.width*panel_width/100;
-            if ((effective_width + panel_margin) > marea.width)
-                effective_width = marea.width - panel_margin;
+            int effective_width = scrw*panel_width/100;
+            if ((effective_width + panel_margin) > scrw)
+                effective_width = scrw - panel_margin;
             return effective_width;
         }
         private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
@@ -266,7 +260,7 @@ namespace ValaPanel
             if (this.orientation == orient)
                 min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
             else
-                min = nat = base_min = base_nat = calc_width(for_size, panel_margin);
+                min = nat = base_min = base_nat = calc_width(marea.width, for_size, panel_margin);
 
         }
 
