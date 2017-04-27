@@ -205,104 +205,42 @@ namespace ValaPanel
                     panel.stop_ui();
                 else
                 {
-                    panel.queue_resize();
+                    panel.update_geometry();
                 }
             }
         }
-        private void _calculate_position(ref Gtk.Allocation alloc)
-        {
-            unowned Gdk.Display screen = this.get_display();
-            Gdk.Rectangle marea = Gdk.Rectangle();
-            if (monitor < 0)
-            {
-                marea = screen.get_primary_monitor().get_geometry();
-            }
-            else if (monitor < screen.get_n_monitors())
-            {
-                marea = screen.get_monitor(monitor).get_geometry();
-//~                 marea = screen.get_monitor_workarea(monitor);
-//~                 var hmod = (autohide) ? GAP : height;
-//~                 switch (edge)
-//~                 {
-//~                     case PositionType.TOP:
-//~                         marea.x -= hmod;
-//~                         marea.height += hmod;
-//~                         break;
-//~                     case PositionType.BOTTOM:
-//~                         marea.height += hmod;
-//~                         break;
-//~                     case PositionType.LEFT:
-//~                         marea.y -= hmod;
-//~                         marea.width += hmod;
-//~                         break;
-//~                     case PositionType.RIGHT:
-//~                         marea.width += hmod;
-//~                         break;
-//~                 }
-            }
-            if (orientation == Gtk.Orientation.HORIZONTAL)
-            {
-                alloc.width = width;
-                alloc.x = marea.x;
-                calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref alloc.x);
-                alloc.height = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
-                                        GAP;
-                alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
-            }
-            else
-            {
-                alloc.height = width;
-                alloc.y = marea.y;
-                calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref alloc.y);
-                alloc.width = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
-                                         GAP;
-                alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
-            }
-        }
-
-        private static void calculate_width(int scrw, bool dyn, AlignmentType align,
-                                            int margin, ref int panw, ref int x)
-        {
-            if (!dyn)
-            {
-                panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
-                panw = (int)(((double)scrw * (double) panw)/100.0);
-            }
-            margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
-            panw = int.min(scrw - margin, panw);
-            if (align == AlignmentType.START)
-                x+=margin;
-            else if (align == AlignmentType.END)
-            {
-                x += scrw - panw - margin;
-                x = (x < 0) ? 0 : x;
-            }
-            else if (align == AlignmentType.CENTER)
-                x += (scrw - panw)/2;
-        }
+//        private static void calculate_width(int scrw, bool dyn, AlignmentType align,
+//                                            int margin, ref int panw, ref int x)
+//        {
+//            if (!dyn)
+//            {
+//                panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
+//                panw = (int)(((double)scrw * (double) panw)/100.0);
+//            }
+//            margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
+//            panw = int.min(scrw - margin, panw);
+//            if (align == AlignmentType.START)
+//                x+=margin;
+//            else if (align == AlignmentType.END)
+//            {
+//                x += scrw - panw - margin;
+//                x = (x < 0) ? 0 : x;
+//            }
+//            else if (align == AlignmentType.CENTER)
+//                x += (scrw - panw)/2;
+//        }
 
         protected override void get_preferred_width(out int min, out int nat)
         {
+            int x,y;
             base.get_preferred_width_internal(out min, out nat);
-            Gtk.Requisition req = Gtk.Requisition();
-            this.get_panel_preferred_size(ref req);
-            min = nat = req.width;
+            measure(this.orientation == Orientation.VERTICAL ? Orientation.HORIZONTAL : Orientation.VERTICAL ,this.width,out min, out nat,out x,out y);
         }
         protected override void get_preferred_height(out int min, out int nat)
         {
+            int x,y;
             base.get_preferred_height_internal(out min, out nat);
-            Gtk.Requisition req = Gtk.Requisition();
-            this.get_panel_preferred_size(ref req);
-            min = nat = req.height;
-        }
-        private void get_panel_preferred_size (ref Gtk.Requisition min)
-        {
-            var rect = Gtk.Allocation();
-            rect.width = min.width;
-            rect.height = min.height;
-            _calculate_position(ref rect);
-            min.width = rect.width;
-            min.height = rect.height;
+            measure(this.orientation,this.width,out min, out nat,out x,out y);
         }
         private int calc_width(int panel_width,int panel_margin)
         {
