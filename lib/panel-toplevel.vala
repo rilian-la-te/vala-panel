@@ -373,13 +373,6 @@ namespace ValaPanel
         {
             box.reorder_child(pl,pos);
         }
-        /**************************************************************************************
-         * Strut handling
-         **************************************************************************************/
-        private void update_strut()
-        {
-            platform.update_strut(this as Gtk.Window);
-        }
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
@@ -505,7 +498,7 @@ namespace ValaPanel
             this.set_size_request(effective_width, effective_height);
             platform.move_to_side(this, this.edge, this.monitor);
             this.queue_resize();
-            this.update_strut();
+            platform.update_strut(this as Gtk.Window);
         }
         protected override void destroy()
         {
