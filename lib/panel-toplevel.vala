@@ -502,6 +502,7 @@ namespace ValaPanel
             while (Gtk.events_pending ())
               Gtk.main_iteration ();
             platform.update_strut(this as Gtk.Window);
+            this.notify["orientation"](this.get_class().find_property("orientation"));
         }
         protected override void destroy()
         {
