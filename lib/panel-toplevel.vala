@@ -230,14 +230,14 @@ namespace ValaPanel
 //                x += (scrw - panw)/2;
 //        }
 
-        protected override void get_preferred_width(out int min, out int nat)
+        protected override void get_preferred_width_for_height(int height, out int min, out int nat)
         {
             int x,y;
             Gtk.Orientation eff_ori = Orientation.VERTICAL;
             base.get_preferred_width_internal(out min, out nat);
             measure(eff_ori, this.width,out min, out nat,out x,out y);
         }
-        protected override void get_preferred_height(out int min, out int nat)
+        protected override void get_preferred_height_for_width(int width, out int min, out int nat)
         {
             int x,y;
             Gtk.Orientation eff_ori = Orientation.HORIZONTAL;
