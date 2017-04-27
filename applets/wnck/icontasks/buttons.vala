@@ -260,7 +260,6 @@ public class IconButton : Gtk.ToggleButton
         this.settings = settings;
         this.helper = helper;
         this.launch_context = get_display().get_app_launch_context();
-
         image = new Gtk.Image();
         image.pixel_size = size;
         icon_size = size;
@@ -291,13 +290,9 @@ public class IconButton : Gtk.ToggleButton
             });
         }
 
-
         // Replace styling with our own
-        var st = get_style_context();
-        st.remove_class(Gtk.STYLE_CLASS_BUTTON);
-        st.add_class(BUDGIE_STYLE_CLASS_BUTTON);
-        size_allocate.connect(on_size_allocate);
-
+        PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-icon-button");
+        PanelCSS.apply_with_class(this,"",Gtk.STYLE_CLASS_BUTTON,true);
         update_from_window();
 
         // Handle clicking, etc.

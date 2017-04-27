@@ -219,6 +219,9 @@ public class IconTasklistApplet : ValaPanel.Applet
         main_layout.pack_start(widget, false, false, 0);
 
         add(main_layout);
+        toplevel.bind_property("orientation",main_layout,"orientation",BindingFlags.SYNC_CREATE);
+        toplevel.bind_property("orientation",pinned,"orientation",BindingFlags.SYNC_CREATE);
+        toplevel.bind_property("orientation",widget,"orientation",BindingFlags.SYNC_CREATE);
         show_all();
 
         settings.changed.connect(on_settings_change);
