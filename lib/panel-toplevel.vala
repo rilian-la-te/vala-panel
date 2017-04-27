@@ -175,8 +175,7 @@ namespace ValaPanel
         public Gtk.Orientation orientation
         {
             get {
-                return (_edge == Gtk.PositionType.TOP || _edge == Gtk.PositionType.BOTTOM)
-                    ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+                return orient_from_edge(edge);
             }
         }
         public int monitor
