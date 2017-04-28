@@ -95,7 +95,7 @@ struct _XfceTasklist
 
 	/* the screen of this tasklist */
 	WnckScreen *screen;
-	GdkScreen *gdk_screen;
+	GdkDisplay *gdk_display;
 
 	/* window children in the tasklist */
 	GList *windows;
@@ -151,7 +151,7 @@ struct _XfceTasklist
 	 * the monitor the tasklist is on */
 	bool all_monitors : 1;
 	guint n_monitors;
-	guint my_monitor;
+	GdkMonitor *my_monitor;
 	GdkRectangle *all_monitors_geometry;
 
 	/* whether we show wireframes when hovering a button in
@@ -1407,11 +1407,11 @@ static void xfce_tasklist_connect_screen(XfceTasklist *tasklist)
 
 	g_return_if_fail(XFCE_IS_TASKLIST(tasklist));
 	g_return_if_fail(tasklist->screen == NULL);
-	g_return_if_fail(tasklist->gdk_screen == NULL);
+	g_return_if_fail(tasklist->gdk_display == NULL);
 
 	/* set the new screen */
-	tasklist->gdk_screen = gtk_widget_get_screen(GTK_WIDGET(tasklist));
-	tasklist->screen     = wnck_screen_get(gdk_screen_get_number(tasklist->gdk_screen));
+	tasklist->gdk_display = gtk_widget_get_display(GTK_WIDGET(tasklist));
+	tasklist->screen      = wnck_screen_get_default();
 
 	/* add all existing windows on this screen */
 	windows = wnck_screen_get_windows(tasklist->screen);
@@ -1419,11 +1419,11 @@ static void xfce_tasklist_connect_screen(XfceTasklist *tasklist)
 		xfce_tasklist_window_added(tasklist->screen, li->data, tasklist);
 
 	/* monitor gdk changes */
-	g_signal_connect(G_OBJECT(tasklist->gdk_screen),
+	g_signal_connect(G_OBJECT(tasklist->gdk_display),
 	                 "monitors-changed",
 	                 G_CALLBACK(xfce_tasklist_gdk_screen_changed),
 	                 tasklist);
-	g_signal_connect(G_OBJECT(tasklist->gdk_screen),
+	g_signal_connect(G_OBJECT(tasklist->gdk_display),
 	                 "size-changed",
 	                 G_CALLBACK(xfce_tasklist_gdk_screen_changed),
 	                 tasklist);
@@ -1451,7 +1451,7 @@ static void xfce_tasklist_connect_screen(XfceTasklist *tasklist)
 	                 tasklist);
 
 	/* update the viewport if not all monitors are shown */
-	xfce_tasklist_gdk_screen_changed(tasklist->gdk_screen, tasklist);
+	xfce_tasklist_gdk_screen_changed(tasklist->gdk_display, tasklist);
 }
 
 static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
@@ -1463,7 +1463,7 @@ static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
 
 	g_return_if_fail(XFCE_IS_TASKLIST(tasklist));
 	g_return_if_fail(WNCK_IS_SCREEN(tasklist->screen));
-	g_return_if_fail(GDK_IS_SCREEN(tasklist->gdk_screen));
+	g_return_if_fail(GDK_IS_SCREEN(tasklist->gdk_display));
 
 	/* disconnect monitor signals */
 	n = g_signal_handlers_disconnect_matched(G_OBJECT(tasklist->screen),
@@ -1476,7 +1476,7 @@ static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
 	g_return_if_fail(n == 5);
 
 	/* disconnect geometry changed signals */
-	g_signal_handlers_disconnect_by_func(G_OBJECT(tasklist->gdk_screen),
+	g_signal_handlers_disconnect_by_func(G_OBJECT(tasklist->gdk_display),
 	                                     G_CALLBACK(xfce_tasklist_gdk_screen_changed),
 	                                     tasklist);
 
@@ -1506,15 +1506,14 @@ static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
 	g_assert(tasklist->windows == NULL);
 	g_assert(tasklist->skipped_windows == NULL);
 
-	tasklist->screen     = NULL;
-	tasklist->gdk_screen = NULL;
+	tasklist->screen      = NULL;
+	tasklist->gdk_display = NULL;
 }
 
 static void xfce_tasklist_gdk_screen_changed(GdkScreen *gdk_screen, XfceTasklist *tasklist)
 {
 	g_return_if_fail(XFCE_IS_TASKLIST(tasklist));
 	g_return_if_fail(GDK_IS_SCREEN(gdk_screen));
-	g_return_if_fail(tasklist->gdk_screen == gdk_screen);
 
 	if (!tasklist->all_monitors)
 	{
@@ -1873,20 +1872,19 @@ static gboolean xfce_tasklist_update_monitor_geometry_idle(gpointer data)
 	GdkScreen *screen;
 	gboolean geometry_set = false;
 	GdkWindow *window;
-	guint tmp;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(tasklist), false);
 
 	if (!tasklist->all_monitors)
 	{
-		screen = gtk_widget_get_screen(GTK_WIDGET(tasklist));
-		window = gtk_widget_get_window(GTK_WIDGET(tasklist));
+		GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(tasklist));
+		window             = gtk_widget_get_window(GTK_WIDGET(tasklist));
 
 		if (G_LIKELY(screen != NULL && window != NULL &&
-		             (tasklist->n_monitors = gdk_screen_get_n_monitors(screen)) > 1))
+		             (tasklist->n_monitors = gdk_display_get_n_monitors(screen)) > 1))
 		{
 			/* set the monitor geometry */
-			tasklist->my_monitor = gdk_screen_get_monitor_at_window(screen, window);
+			tasklist->my_monitor = gdk_display_get_monitor_at_window(screen, window);
 
 			if (tasklist->all_monitors_geometry)
 			{
@@ -1901,12 +1899,11 @@ static gboolean xfce_tasklist_update_monitor_geometry_idle(gpointer data)
 				    g_new(GdkRectangle, tasklist->n_monitors);
 			}
 
-			for (tmp = 0; tmp < tasklist->n_monitors; tmp++)
+			for (int tmp = 0; tmp < tasklist->n_monitors; tmp++)
 			{
-				gdk_screen_get_monitor_geometry(screen,
-				                                tmp,
-				                                &tasklist
-				                                     ->all_monitors_geometry[tmp]);
+				GdkMonitor *mon = gdk_display_get_monitor(screen, tmp);
+				gdk_monitor_get_geometry(mon,
+				                         &tasklist->all_monitors_geometry[tmp]);
 			}
 
 			geometry_set = true;
@@ -2215,7 +2212,8 @@ static inline gboolean xfce_tasklist_button_visible(XfceTasklistChild *child,
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(child->tasklist);
 	GdkRectangle window, intersection;
-	guint best_size = 0, best_monitor = 0, size, tmp;
+	GdkMonitor *best_mon = NULL;
+	guint best_size      = 0, size, tmp;
 
 	g_return_val_if_fail(active_ws == NULL || WNCK_IS_WORKSPACE(active_ws), false);
 	g_return_val_if_fail(XFCE_IS_TASKLIST(tasklist), false);
@@ -2238,11 +2236,11 @@ static inline gboolean xfce_tasklist_button_visible(XfceTasklistChild *child,
 			size = intersection.width * intersection.height;
 			if (size > best_size)
 			{
-				best_size    = size;
-				best_monitor = tmp;
+				best_size = size;
+				best_mon  = gdk_display_get_monitor(tasklist->gdk_display, tmp);
 			}
 		}
-		if (best_monitor != tasklist->my_monitor)
+		if (best_mon != tasklist->my_monitor)
 			return false;
 	}
 
@@ -2747,6 +2745,7 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 	GtkWidget *mi;
 	GtkWidget *image;
 	GtkWidget *label;
+	GtkWidget *tmp;
 	XfceTasklist *tasklist = child->tasklist;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(child->tasklist), NULL);
@@ -2756,10 +2755,14 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 	g_return_val_if_fail(GTK_IS_LABEL(child->label), NULL);
 	g_return_val_if_fail(WNCK_IS_WINDOW(child->window), NULL);
 
-	mi = gtk_image_menu_item_new();
+	mi  = gtk_menu_item_new();
+	tmp = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+	gtk_container_add(GTK_CONTAINER(mi), tmp);
+	label = gtk_label_new("");
+	gtk_box_pack_end(GTK_BOX(tmp), label, true, true, 0);
 	g_object_bind_property(G_OBJECT(child->label),
 	                       "label",
-	                       G_OBJECT(mi),
+	                       G_OBJECT(label),
 	                       "label",
 	                       G_BINDING_SYNC_CREATE);
 	g_object_bind_property(G_OBJECT(child->label),
@@ -2768,15 +2771,13 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 	                       "tooltip-text",
 	                       G_BINDING_SYNC_CREATE);
 
-	label = gtk_bin_get_child(GTK_BIN(mi));
-	g_return_val_if_fail(GTK_IS_LABEL(label), NULL);
 	gtk_label_set_max_width_chars(GTK_LABEL(label), tasklist->menu_max_width_chars);
 	gtk_label_set_ellipsize(GTK_LABEL(label), tasklist->ellipsize_mode);
 
 	if (G_LIKELY(tasklist->menu_icon_size > 0))
 	{
 		image = gtk_image_new();
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(mi), image);
+		gtk_box_pack_start(GTK_BOX(tmp), image, false, true, 0);
 		gtk_image_set_pixel_size(GTK_IMAGE(image), tasklist->menu_icon_size);
 		g_object_bind_property(G_OBJECT(child->icon),
 		                       "pixbuf",
@@ -2785,7 +2786,7 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 		                       G_BINDING_SYNC_CREATE);
 		gtk_widget_show(image);
 	}
-
+	gtk_widget_show_all(tmp);
 	if (allow_wireframe)
 	{
 		g_object_ref(G_OBJECT(child->window));
@@ -3303,18 +3304,15 @@ static GtkWidget *xfce_tasklist_group_button_menu(XfceTasklistChild *group_child
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		gtk_widget_show(mi);
 
-		mi = gtk_image_menu_item_new_with_mnemonic(_("Mi_nimize All"));
+		mi = gtk_menu_item_new_with_mnemonic(_("Mi_nimize All"));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		g_signal_connect_swapped(G_OBJECT(mi),
 		                         "activate",
 		                         G_CALLBACK(xfce_tasklist_group_button_menu_minimize_all),
 		                         group_child);
 		gtk_widget_show(mi);
-		image = gtk_image_new_from_icon_name("wnck-stock-minimize", GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(mi), image);
-		gtk_widget_show(image);
 
-		mi = gtk_image_menu_item_new_with_mnemonic(_("Un_minimize All"));
+		mi = gtk_menu_item_new_with_mnemonic(_("Un_minimize All"));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		g_signal_connect_swapped(G_OBJECT(mi),
 		                         "activate",
@@ -3322,18 +3320,15 @@ static GtkWidget *xfce_tasklist_group_button_menu(XfceTasklistChild *group_child
 		                         group_child);
 		gtk_widget_show(mi);
 
-		mi = gtk_image_menu_item_new_with_mnemonic(_("Ma_ximize All"));
+		mi = gtk_menu_item_new_with_mnemonic(_("Ma_ximize All"));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		g_signal_connect_swapped(G_OBJECT(mi),
 		                         "activate",
 		                         G_CALLBACK(xfce_tasklist_group_button_menu_maximize_all),
 		                         group_child);
 		gtk_widget_show(mi);
-		image = gtk_image_new_from_icon_name("wnck-stock-maximize", GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(mi), image);
-		gtk_widget_show(image);
 
-		mi = gtk_image_menu_item_new_with_mnemonic(_("_Unmaximize All"));
+		mi = gtk_menu_item_new_with_mnemonic(_("_Unmaximize All"));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		g_signal_connect_swapped(G_OBJECT(mi),
 		                         "activate",
@@ -3345,17 +3340,13 @@ static GtkWidget *xfce_tasklist_group_button_menu(XfceTasklistChild *group_child
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		gtk_widget_show(mi);
 
-		mi = gtk_image_menu_item_new_with_mnemonic(_("_Close All"));
+		mi = gtk_menu_item_new_with_mnemonic(_("_Close All"));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
 		g_signal_connect_swapped(G_OBJECT(mi),
 		                         "activate",
 		                         G_CALLBACK(xfce_tasklist_group_button_menu_close_all),
 		                         group_child);
 		gtk_widget_show(mi);
-
-		image = gtk_image_new_from_icon_name("wnck-stock-delete", GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(mi), image);
-		gtk_widget_show(image);
 	}
 
 	return menu;
@@ -3738,9 +3729,9 @@ void xfce_tasklist_set_include_all_monitors(XfceTasklist *tasklist, gboolean all
 			/* update visibility of buttons */
 			xfce_tasklist_active_workspace_changed(tasklist->screen, NULL, tasklist);
 		}
-		else if (tasklist->gdk_screen != NULL)
+		else if (tasklist->gdk_display != NULL)
 		{
-			xfce_tasklist_gdk_screen_changed(tasklist->gdk_screen, tasklist);
+			xfce_tasklist_gdk_screen_changed(tasklist->gdk_display, tasklist);
 		}
 	}
 }
