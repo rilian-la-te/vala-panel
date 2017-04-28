@@ -70,7 +70,7 @@ struct _XfceArrowButtonPrivate
 {
 	/* arrow type of the button */
 	GtkArrowType arrow_type;
-    bool blinking;
+	bool blinking;
 };
 typedef struct _XfceArrowButtonPrivate XfceArrowButtonPrivate;
 static guint arrow_button_signals[LAST_SIGNAL];
@@ -137,7 +137,7 @@ static void xfce_arrow_button_init(XfceArrowButton *button)
 	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
 
 	/* initialize button values */
-	priv->arrow_type          = GTK_ARROW_UP;
+	priv->arrow_type = GTK_ARROW_UP;
 
 	/* set some widget properties */
 	gtk_widget_set_has_window(GTK_WIDGET(button), FALSE);
@@ -464,9 +464,9 @@ void xfce_arrow_button_set_arrow_type(XfceArrowButton *button, GtkArrowType arro
  **/
 gboolean xfce_arrow_button_get_blinking(XfceArrowButton *button)
 {
-    XfceArrowButtonPrivate *priv =
-        (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-    return priv->blinking;
+	XfceArrowButtonPrivate *priv =
+	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
+	return priv->blinking;
 }
 
 /**
@@ -486,7 +486,9 @@ void xfce_arrow_button_set_blinking(XfceArrowButton *button, gboolean blinking)
 	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
 
 	if (blinking)
-        css_apply_from_resource(GTK_WIDGET(button),"/org/vala-panel/lib/style.css","-panel-button-blink");
-    else
-        css_toggle_class(GTK_WIDGET(button),"-panel-button-blink", false);
+		css_apply_from_resource(GTK_WIDGET(button),
+		                        "/org/vala-panel/lib/style.css",
+		                        "-panel-button-blink");
+	else
+		css_toggle_class(GTK_WIDGET(button), "-panel-button-blink", false);
 }

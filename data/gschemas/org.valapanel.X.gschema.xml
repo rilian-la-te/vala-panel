@@ -62,6 +62,9 @@
     <key name="show-labels" type="b">
       <default>true</default>
     </key>
+    <key name="unexpanded-limit" type="i">
+      <default>600</default>
+    </key>
   </schema>
   <schema id="org.valapanel.icontasks">
     <key type="as" name="pinned-launchers">

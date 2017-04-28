@@ -35,8 +35,8 @@ public class TasklistXFCE: Applet, AppletConfigurable
     private const string KEY_GROUPING = "grouped-tasks";
     private const string KEY_SHOW_LABELS = "show-labels";
     private const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
-    internal int unexpanded_limit
-    {get; set;}
+    private const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
+    internal int unexpanded_limit {get; set;}
     public TasklistXFCE(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
@@ -64,12 +64,15 @@ public class TasklistXFCE: Applet, AppletConfigurable
                 widget.middle_click = settings.get_boolean(key) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
             if (key == KEY_SHOW_LABELS)
                 widget.set_show_labels(settings.get_boolean(key));
+//            if (key == KEY_UNEXPANDED_LIMIT)
+//                widget.set_size(settings.get_int(key));
         });
         widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
         widget.switch_workspace_on_unminimize = settings.get_boolean(KEY_SWITCH_UNMIN);
         widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Xfce.TasklistGrouping.ALWAYS : Xfce.TasklistGrouping.NEVER);
         widget.middle_click = settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
         widget.set_show_labels(settings.get_boolean(KEY_SHOW_LABELS));
+//        widget.set_size(settings.get_int(KEY_UNEXPANDED_LIMIT));
         widget.update_edge(toplevel.edge);
         widget.set_orientation(toplevel.orientation);
         this.show_all();

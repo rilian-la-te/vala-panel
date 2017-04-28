@@ -29,6 +29,7 @@ namespace Xfce
 		public Tasklist();
 		public void set_orientation(Gtk.Orientation orient);
 		public void set_button_relief(Gtk.ReliefStyle relief);
+		public void set_size(int size);
 		public void update_edge(Gtk.PositionType edge);
 	}
 }
