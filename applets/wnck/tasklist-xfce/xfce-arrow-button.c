@@ -24,6 +24,7 @@
 
 #include <gtk/gtk.h>
 
+#include "lib/css.h"
 #include "xfce-arrow-button.h"
 
 /**
@@ -138,13 +139,11 @@ static void xfce_arrow_button_class_init(XfceArrowButtonClass *klass)
 	                                                  GTK_ARROW_UP,
 	                                                  G_PARAM_READWRITE |
 	                                                      G_PARAM_STATIC_STRINGS));
+	gtk_widget_class_set_css_name(gtkwidget_class, "tasklist-arrow-button");
 }
 
 static void xfce_arrow_button_init(XfceArrowButton *button)
 {
-	GtkStyleContext *context;
-	GtkCssProvider *provider;
-
 	button->priv =
 	    G_TYPE_INSTANCE_GET_PRIVATE(button, XFCE_TYPE_ARROW_BUTTON, XfceArrowButtonPrivate);
 
@@ -161,12 +160,8 @@ static void xfce_arrow_button_init(XfceArrowButton *button)
 	gtk_widget_set_focus_on_click(GTK_WIDGET(button), FALSE);
 	/* Make sure themes like Adwaita, which set excessive padding, don't cause the
 	   launcher buttons to overlap when panels have a fairly normal size */
-	context  = gtk_widget_get_style_context(GTK_WIDGET(button));
-	provider = gtk_css_provider_new();
-	gtk_css_provider_load_from_data(provider, ".xfce4-panel button { padding: 0; }", -1, NULL);
-	gtk_style_context_add_provider(context,
-	                               GTK_STYLE_PROVIDER(provider),
-	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	css_add_css_to_widget(GTK_WIDGET(button), ".-panel-flat-button { padding: 0; }");
+	css_toggle_class(GTK_WIDGET(button), "-panel-flat-button", true);
 }
 
 static void xfce_arrow_button_set_property(GObject *object, guint prop_id, const GValue *value,

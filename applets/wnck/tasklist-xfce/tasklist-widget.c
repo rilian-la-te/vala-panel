@@ -31,6 +31,7 @@
 #include <gdk/gdkx.h>
 #endif
 
+#include "lib/css.h"
 #include "lib/definitions.h"
 #include "lib/vala-panel-compat.h"
 #include "tasklist-widget.h"
@@ -3875,33 +3876,46 @@ static void xfce_tasklist_update_orientation(XfceTasklist *tasklist)
 	horizontal = !xfce_tasklist_vertical(tasklist);
 
 	/* update the tasklist */
-	//  for (li = tasklist->windows; li != NULL; li = li->next)
-	//    {
-	//      child = li->data;
+	for (li = tasklist->windows; li != NULL; li = li->next)
+	{
+		child = li->data;
+		/* update task box */
+		//      gtk_orientable_set_orientation (GTK_ORIENTABLE (child->box),
+		//          horizontal ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
 
-	/* update task box */
-	//      gtk_orientable_set_orientation (GTK_ORIENTABLE (child->box),
-	//          horizontal ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
-
-	/* update the label */
-	//      if (horizontal)
-	//        {
-	//          /* gtk_box_reorder_child (GTK_BOX (child->box), child->icon, 0); */
-	//          gtk_label_set_xalign (GTK_LABEL (child->label), 0.0);
-	//          gtk_label_set_angle (GTK_LABEL (child->label), 0);
-	//          gtk_label_set_ellipsize (GTK_LABEL (child->label),
-	//                                   child->tasklist->ellipsize_mode);
-	//        }
-	//      else
-	//        {
-	//          /* gtk_box_reorder_child (GTK_BOX (child->box), child->icon, -1); */
-	//          gtk_label_set_yalign (GTK_LABEL (child->label), 0.0);
-	//          gtk_label_set_angle (GTK_LABEL (child->label), 270);
-	//          gtk_label_set_ellipsize (GTK_LABEL (child->label), PANGO_ELLIPSIZE_NONE);
-	//        }
-	//    }
+		/* update the label */
+		if (horizontal)
+		{
+			//          /* gtk_box_reorder_child (GTK_BOX (child->box), child->icon, 0);
+			//          */
+			//          gtk_label_set_xalign (GTK_LABEL (child->label), 0.0);
+			//          gtk_label_set_angle (GTK_LABEL (child->label), 0);
+			//          gtk_label_set_ellipsize (GTK_LABEL (child->label),
+			//                                   child->tasklist->ellipsize_mode);
+		}
+		else
+		{
+			//          /* gtk_box_reorder_child (GTK_BOX (child->box), child->icon,
+			//          -1); */
+			//          gtk_label_set_yalign (GTK_LABEL (child->label), 0.0);
+			//          gtk_label_set_angle (GTK_LABEL (child->label), 270);
+			//          gtk_label_set_ellipsize (GTK_LABEL (child->label),
+			//          PANGO_ELLIPSIZE_NONE);
+		}
+	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(tasklist));
+}
+
+void xfce_tasklist_update_edge(XfceTasklist *tasklist, GtkPositionType edge)
+{
+	/* update the tasklist */
+	for (GList *li = tasklist->windows; li != NULL; li = li->next)
+	{
+		XfceTasklistChild *child = li->data;
+		g_autofree char *css     = css_generate_flat_button(child->button, edge);
+		css_add_css_to_widget(child->button, css);
+	}
 }
 
 void xfce_tasklist_set_nrows(XfceTasklist *tasklist, gint nrows)

@@ -49,6 +49,7 @@ public class TasklistXFCE: Applet, AppletConfigurable
         this.add(widget);
         toplevel.notify["orientation"].connect_after((s,p)=>{
             widget.set_orientation(toplevel.orientation);
+            widget.update_edge(toplevel.edge);
         });
         widget.set_button_relief(ReliefStyle.NONE);
 //        settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
@@ -69,6 +70,8 @@ public class TasklistXFCE: Applet, AppletConfigurable
         widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Xfce.TasklistGrouping.ALWAYS : Xfce.TasklistGrouping.NEVER);
         widget.middle_click = settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
         widget.set_show_labels(settings.get_boolean(KEY_SHOW_LABELS));
+        widget.update_edge(toplevel.edge);
+        widget.set_orientation(toplevel.orientation);
         this.show_all();
     }
     public Dialog get_config_dialog()

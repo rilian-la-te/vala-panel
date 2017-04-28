@@ -99,6 +99,8 @@ void xfce_tasklist_set_show_wireframes(XfceTasklist *tasklist, gboolean show_wir
 
 void xfce_tasklist_set_grouping(XfceTasklist *tasklist, XfceTasklistGrouping grouping);
 
+void xfce_tasklist_update_edge(XfceTasklist *tasklist, GtkPositionType edge);
+
 G_END_DECLS
 
 #endif /* !__XFCE_TASKLIST_H__ */
