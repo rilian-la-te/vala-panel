@@ -66,7 +66,6 @@ static void stop_ui(ValaPanelToplevelUnit *self)
 static void start_ui(ValaPanelToplevelUnit *self)
 {
 	//    a.x = a.y = a.width = a.height = 0;
-	gtk_window_set_wmclass(GTK_WINDOW(self), "panel", "vala-panel");
 	gtk_application_add_window(gtk_window_get_application(GTK_WINDOW(self)), GTK_WINDOW(self));
 	gtk_widget_add_events(GTK_WIDGET(self),
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
