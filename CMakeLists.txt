@@ -90,7 +90,6 @@ add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 add_definitions(-Wall -Wno-unused # Vala loves to create variables
 #		-pedantic
 		-Wno-ignored-qualifiers
-		-Wno-deprecated-declarations #Vala warns us already
 		-Wno-incompatible-pointer-types
 		-Wno-missing-field-initializers
 		-Wno-discarded-qualifiers
