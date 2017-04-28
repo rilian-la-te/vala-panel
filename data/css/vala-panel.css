@@ -33,3 +33,16 @@
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 }
+.-panel-button-blink
+{
+    animation-name: blinker;
+    animation-duration: 3s;
+    animation-timing-function: linear; 
+    animation-iteration-count: infinite;
+}
+
+@keyframes blinker { 
+    0% { opacity: 1.0; } 
+    50% { opacity: 0.3; } 
+    100% { opacity: 1.0; } 
+}

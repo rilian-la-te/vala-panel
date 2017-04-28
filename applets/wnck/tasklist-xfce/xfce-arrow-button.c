@@ -70,16 +70,7 @@ struct _XfceArrowButtonPrivate
 {
 	/* arrow type of the button */
 	GtkArrowType arrow_type;
-
-	/* blinking timeout id */
-	guint blinking_timeout_id;
-
-	/* counter to make the blinking stop when
-	 * MAX_BLINKING_COUNT is reached */
-	guint blinking_counter;
-
-	/* button relief when the blinking starts */
-	GtkReliefStyle last_relief;
+    bool blinking;
 };
 typedef struct _XfceArrowButtonPrivate XfceArrowButtonPrivate;
 static guint arrow_button_signals[LAST_SIGNAL];
@@ -147,9 +138,6 @@ static void xfce_arrow_button_init(XfceArrowButton *button)
 
 	/* initialize button values */
 	priv->arrow_type          = GTK_ARROW_UP;
-	priv->blinking_timeout_id = 0;
-	priv->blinking_counter    = 0;
-	priv->last_relief         = GTK_RELIEF_NORMAL;
 
 	/* set some widget properties */
 	gtk_widget_set_has_window(GTK_WIDGET(button), FALSE);
@@ -198,13 +186,6 @@ static void xfce_arrow_button_get_property(GObject *object, guint prop_id, GValu
 
 static void xfce_arrow_button_finalize(GObject *object)
 {
-	XfceArrowButton *button = XFCE_ARROW_BUTTON(object);
-	XfceArrowButtonPrivate *priv =
-	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-	if (priv->blinking_timeout_id != 0)
-	{
-		g_source_remove(priv->blinking_timeout_id);
-	}
 	(*G_OBJECT_CLASS(xfce_arrow_button_parent_class)->finalize)(object);
 }
 
@@ -409,24 +390,6 @@ static void xfce_arrow_button_size_allocate(GtkWidget *widget, GtkAllocation *al
 	}
 }
 
-static gboolean xfce_arrow_button_blinking_timeout(gpointer user_data)
-{
-	XfceArrowButton *button = XFCE_ARROW_BUTTON(user_data);
-	XfceArrowButtonPrivate *priv =
-	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-	return (priv->blinking_counter++ < MAX_BLINKING_COUNT);
-}
-
-static void xfce_arrow_button_blinking_timeout_destroyed(gpointer user_data)
-{
-	XfceArrowButton *button = XFCE_ARROW_BUTTON(user_data);
-	XfceArrowButtonPrivate *priv =
-	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-	gtk_button_set_relief(GTK_BUTTON(button), priv->last_relief);
-	priv->blinking_timeout_id = 0;
-	priv->blinking_counter    = 0;
-}
-
 /**
  * xfce_arrow_button_new:
  * @arrow_type : #GtkArrowType for the arrow button
@@ -501,10 +464,9 @@ void xfce_arrow_button_set_arrow_type(XfceArrowButton *button, GtkArrowType arro
  **/
 gboolean xfce_arrow_button_get_blinking(XfceArrowButton *button)
 {
-	g_return_val_if_fail(XFCE_IS_ARROW_BUTTON(button), FALSE);
-	XfceArrowButtonPrivate *priv =
-	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-	return !!(priv->blinking_timeout_id != 0);
+    XfceArrowButtonPrivate *priv =
+        (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
+    return priv->blinking;
 }
 
 /**
@@ -524,25 +486,7 @@ void xfce_arrow_button_set_blinking(XfceArrowButton *button, gboolean blinking)
 	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
 
 	if (blinking)
-	{
-		/* store the relief of the button */
-		priv->last_relief = gtk_button_get_relief(GTK_BUTTON(button));
-
-		if (priv->blinking_timeout_id == 0)
-		{
-			/* start blinking timeout */
-			priv->blinking_timeout_id = gdk_threads_add_timeout_full(
-			    G_PRIORITY_DEFAULT_IDLE,
-			    500,
-			    xfce_arrow_button_blinking_timeout,
-			    button,
-			    xfce_arrow_button_blinking_timeout_destroyed);
-			xfce_arrow_button_blinking_timeout(button);
-		}
-	}
-	else if (priv->blinking_timeout_id != 0)
-	{
-		/* stop the blinking timeout */
-		g_source_remove(priv->blinking_timeout_id);
-	}
+        css_apply_from_resource(GTK_WIDGET(button),"/org/vala-panel/lib/style.css","-panel-button-blink");
+    else
+        css_toggle_class(GTK_WIDGET(button),"-panel-button-blink", false);
 }
