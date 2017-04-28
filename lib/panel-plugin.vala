@@ -162,11 +162,6 @@ namespace ValaPanel
             else
                 popup.get_window().move(x,y);
         }
-        public void menu_position_func(Gtk.Menu m, out int x, out int y, out bool push)
-        {
-            popup_position_helper(m,out x, out y);
-            push = true;
-        }
         private void activate_configure(SimpleAction act, Variant? param)
         {
             show_config_dialog();

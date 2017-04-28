@@ -1074,7 +1074,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 				x = area_x;
 				y = area.y;
 
-				if (xfce_tasklist_deskbar(tasklist) &&
+				if (xfce_tasklist_vertical(tasklist) &&
 				    tasklist->show_labels) /* position the arrow in the correct
 				                              position */
 

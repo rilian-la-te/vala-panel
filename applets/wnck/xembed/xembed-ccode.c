@@ -461,7 +461,9 @@ static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
 	gtk_container_add(GTK_CONTAINER(flowbox_child), tc->socket);
 	gtk_widget_show(tc->socket);
 	gtk_widget_show(flowbox_child);
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	gdk_window_set_composited(gtk_widget_get_window(tc->socket), TRUE);
+	G_GNUC_END_IGNORE_DEPRECATIONS
 	/* Connect the socket to the plug.  This can only be done after the socket is realized. */
 	gtk_socket_add_id(GTK_SOCKET(tc->socket), tc->window);
 
@@ -611,8 +613,7 @@ static void tray_set_visual_property(GtkWidget *invisible, GdkScreen *screen)
 
 	display     = gtk_widget_get_display(invisible);
 	visual_atom = gdk_x11_get_xatom_by_name_for_display(display, "_NET_SYSTEM_TRAY_VISUAL");
-
-	if (gdk_screen_get_rgba_visual(screen) != NULL && gdk_display_supports_composite(display))
+	if (gdk_screen_get_rgba_visual(screen) != NULL)
 	{
 		xvisual = GDK_VISUAL_XVISUAL(gdk_screen_get_rgba_visual(screen));
 	}
@@ -624,7 +625,6 @@ static void tray_set_visual_property(GtkWidget *invisible, GdkScreen *screen)
 		 */
 		xvisual = GDK_VISUAL_XVISUAL(gdk_screen_get_system_visual(screen));
 	}
-
 	data[0] = XVisualIDFromVisual(xvisual);
 
 	XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
@@ -673,8 +673,7 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 
 	/* Create the selection atom.  This has the screen number in it, so cannot be done ahead of
 	 * time. */
-	char *selection_atom_name =
-        g_strdup_printf("_NET_SYSTEM_TRAY_S%d", 1);
+	char *selection_atom_name = g_strdup_printf("_NET_SYSTEM_TRAY_S%d", 0);
 	Atom selection_atom = gdk_x11_get_xatom_by_name_for_display(display, selection_atom_name);
 	GdkAtom gdk_selection_atom = gdk_atom_intern(selection_atom_name, FALSE);
 	g_free(selection_atom_name);
