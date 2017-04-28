@@ -674,7 +674,7 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 	/* Create the selection atom.  This has the screen number in it, so cannot be done ahead of
 	 * time. */
 	char *selection_atom_name =
-	    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", gdk_screen_get_number(screen));
+        g_strdup_printf("_NET_SYSTEM_TRAY_S%d", 1);
 	Atom selection_atom = gdk_x11_get_xatom_by_name_for_display(display, selection_atom_name);
 	GdkAtom gdk_selection_atom = gdk_atom_intern(selection_atom_name, FALSE);
 	g_free(selection_atom_name);

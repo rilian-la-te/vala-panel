@@ -404,7 +404,7 @@ public class IconButton : Gtk.ToggleButton
 
         // Right click, i.e. actions menu
         if (event.button == 3) {
-            menu.popup(null, null, null, event.button, timestamp);
+            menu.popup_at_widget(this, Gdk.Gravity.NORTH, Gdk.Gravity.NORTH, event);
             return true;
         }
         if (window == null) {
@@ -522,7 +522,7 @@ public class PinnedIconButton : IconButton
         {
             if (event.button == 3) {
                 // Expose our own unpin option
-                alt_menu.popup(null, null, null, event.button, Gtk.get_current_event_time());
+                alt_menu.popup_at_widget(this, Gdk.Gravity.NORTH, Gdk.Gravity.NORTH, event);
                 return true;
             }
             if (event.button != 1) {
