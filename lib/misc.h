@@ -35,8 +35,6 @@ void vala_panel_apply_window_icon(GtkWindow *win);
 int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon);
 void vala_panel_reset_schema(GSettings *settings);
 void vala_panel_reset_schema_with_children(GSettings *settings);
-void vala_panel_reset_path(GSettings *settings);
-char *vala_panel_generate_new_hash();
 G_END_DECLS
 
 #endif // MISC_H

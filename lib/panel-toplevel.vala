@@ -527,7 +527,6 @@ namespace ValaPanel
 
         private void start_ui()
         {
-            set_wmclass("panel","vala-panel");
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
             PanelCSS.toggle_class(this,"-panel-transparent",false);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
@@ -628,7 +627,7 @@ namespace ValaPanel
                 if (context_menu == null)
                 {
                     var menu = get_plugin_menu(null);
-                    menu.popup(null,null,null,e.button,e.time);
+                    menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,e);
                     return true;
                 }
                 else

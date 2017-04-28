@@ -156,8 +156,6 @@ inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direct
 	returnie     = g_strdup_printf(
 	    ".-panel-flat-button {\n"
 	    "padding: 0px;\n"
-	    " -GtkWidget-focus-line-width: 0px;\n"
-	    " -GtkWidget-focus-padding: 0px;\n"
 	    "border-style: solid;"
 	    "border-color: transparent;"
 	    "border-width: %s;"

@@ -179,7 +179,6 @@ namespace ValaPanel
             toplevel.bind_property(Key.ICON_SIZE,spin_iconsize,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             toplevel.bind_property(Key.CORNERS_SIZE,spin_corners,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
             /* background */
-            IconInfo info;
             color.parse(toplevel.background_color);
             color_background.set_rgba(color);
             color_background.set_relief(ReliefStyle.NONE);
