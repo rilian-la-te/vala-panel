@@ -88,8 +88,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     {
         if (GLib.MainContext.current_source().is_destroyed()) return false;
         if (int_menu != null)
-            int_menu.popup(null,null,menu_position_func,
-                        0, Gdk.CURRENT_TIME);
+            int_menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
         else
         {
             unowned Gtk.MenuBar menubar = button as Gtk.MenuBar;
@@ -181,7 +180,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         int_menu.attach_to_widget(menubutton,null);
         menubutton.toggled.connect(()=>{
             if(menubutton.active)
-                int_menu.popup(null,null,this.menu_position_func,0,get_current_event_time());
+                int_menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
             else
                 int_menu.popdown();
         });
