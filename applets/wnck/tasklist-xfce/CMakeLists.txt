@@ -5,14 +5,14 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
-    xfce-tasklist
+    ${PLUGIN_NAME}
     libwnck-3.0
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
     --vapidir=${CMAKE_BINARY_DIR}/vapi
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
-    --target-glib=2.40
+    --target-glib=2.50
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
 )
