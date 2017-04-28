@@ -23,20 +23,13 @@
 
 G_BEGIN_DECLS
 
-typedef struct _XfceTasklistClass XfceTasklistClass;
-typedef struct _XfceTasklist XfceTasklist;
 typedef enum _XfceTasklistGrouping XfceTasklistGrouping;
 typedef enum _XfceTasklistSortOrder XfceTasklistSortOrder;
 typedef enum _XfceTasklistMClick XfceTasklistMClick;
 
+G_DECLARE_FINAL_TYPE(XfceTasklist, xfce_tasklist, XFCE, TASKLIST, GtkContainer)
+
 #define XFCE_TYPE_TASKLIST (xfce_tasklist_get_type())
-#define XFCE_TASKLIST(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), XFCE_TYPE_TASKLIST, XfceTasklist))
-#define XFCE_TASKLIST_CLASS(klass)                                                                 \
-	(G_TYPE_CHECK_CLASS_CAST((klass), XFCE_TYPE_TASKLIST, XfceTasklistClass))
-#define XFCE_IS_TASKLIST(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), XFCE_TYPE_TASKLIST))
-#define XFCE_IS_TASKLIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), XFCE_TYPE_TASKLIST))
-#define XFCE_TASKLIST_GET_CLASS(obj)                                                               \
-	(G_TYPE_INSTANCE_GET_CLASS((obj), XFCE_TYPE_TASKLIST, XfceTasklistClass))
 
 enum _XfceTasklistGrouping
 {

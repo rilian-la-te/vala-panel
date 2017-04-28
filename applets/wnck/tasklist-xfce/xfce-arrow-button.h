@@ -24,19 +24,8 @@
 
 G_BEGIN_DECLS
 
-typedef struct _XfceArrowButtonPrivate XfceArrowButtonPrivate;
-typedef struct _XfceArrowButtonClass XfceArrowButtonClass;
-typedef struct _XfceArrowButton XfceArrowButton;
-
+G_DECLARE_DERIVABLE_TYPE(XfceArrowButton, xfce_arrow_button, XFCE, ARROW_BUTTON, GtkToggleButton)
 #define XFCE_TYPE_ARROW_BUTTON (xfce_arrow_button_get_type())
-#define XFCE_ARROW_BUTTON(obj)                                                                     \
-	(G_TYPE_CHECK_INSTANCE_CAST((obj), XFCE_TYPE_ARROW_BUTTON, XfceArrowButton))
-#define XFCE_ARROW_BUTTON_CLASS(klass)                                                             \
-	(G_TYPE_CHECK_CLASS_CAST((klass), XFCE_TYPE_ARROW_BUTTON, XfceArrowButtonClass))
-#define XFCE_IS_ARROW_BUTTON(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), XFCE_TYPE_ARROW_BUTTON))
-#define XFCE_IS_ARROW_BUTTON_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), XFCE_TYPE_ARROW_BUTTON))
-#define XFCE_ARROW_BUTTON_GET_CLASS(obj)                                                           \
-	(G_TYPE_INSTANCE_GET_CLASS((obj), XFCE_TYPE_ARROW_BUTTON, XfceArrowButtonClass))
 
 struct _XfceArrowButtonClass
 {
@@ -45,21 +34,6 @@ struct _XfceArrowButtonClass
 
 	/*< signals >*/
 	void (*arrow_type_changed)(XfceArrowButton *button, GtkArrowType type);
-};
-
-/**
- * XfceArrowButton:
- *
- * This struct contain private data only and should be accessed by
- * the functions below.
- **/
-struct _XfceArrowButton
-{
-	/*< private >*/
-	GtkToggleButton __parent__;
-
-	/*< private >*/
-	XfceArrowButtonPrivate *priv;
 };
 
 GType xfce_arrow_button_get_type(void) G_GNUC_CONST;
