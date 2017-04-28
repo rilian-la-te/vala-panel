@@ -33,9 +33,8 @@ public class TasklistXFCE: Applet, AppletConfigurable
     private const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
     private const string KEY_ALL_DESKTOPS = "all-desktops";
     private const string KEY_GROUPING = "grouped-tasks";
-    private const string KEY_GROUPING_LIMIT = "grouping-limit";
+    private const string KEY_SHOW_LABELS = "show-labels";
     private const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
-    private const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
     internal int unexpanded_limit
     {get; set;}
     public TasklistXFCE(ValaPanel.Toplevel toplevel,
@@ -51,45 +50,26 @@ public class TasklistXFCE: Applet, AppletConfigurable
         toplevel.notify["orientation"].connect_after((s,p)=>{
             widget.set_orientation(toplevel.orientation);
         });
+        widget.set_button_relief(ReliefStyle.NONE);
 //        settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
-//        settings.changed.connect((key)=>{
-//            if (key == KEY_ALL_DESKTOPS)
-//                widget.set_include_all_workspaces(settings.get_boolean(key));
-//            if (key == KEY_SWITCH_UNMIN)
-//                widget.set_switch_workspace_on_unminimize(settings.get_boolean(key));
-//            if (key == KEY_GROUPING)
-//                widget.set_grouping(settings.get_boolean(key) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
-//            if (key == KEY_MIDDLE_CLICK_CLOSE)
-//                widget.set_middle_click_close(settings.get_boolean(key));
-//            if (key == KEY_GROUPING_LIMIT)
-//                widget.set_grouping_limit(settings.get_int(key));
-//        });
-//        widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
-//        widget.set_switch_workspace_on_unminimize(settings.get_boolean(KEY_SWITCH_UNMIN));
-//        widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
-//        widget.set_middle_click_close(settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE));
-//        widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
+        settings.changed.connect((key)=>{
+            if (key == KEY_ALL_DESKTOPS)
+                widget.set_include_all_workspaces(settings.get_boolean(key));
+            if (key == KEY_SWITCH_UNMIN)
+                widget.switch_workspace_on_unminimize = settings.get_boolean(key);
+            if (key == KEY_GROUPING)
+                widget.set_grouping(settings.get_boolean(key) ? Xfce.TasklistGrouping.ALWAYS : Xfce.TasklistGrouping.NEVER);
+            if (key == KEY_MIDDLE_CLICK_CLOSE)
+                widget.middle_click = settings.get_boolean(key) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
+            if (key == KEY_SHOW_LABELS)
+                widget.set_show_labels(settings.get_boolean(key));
+        });
+        widget.set_include_all_workspaces(settings.get_boolean(KEY_ALL_DESKTOPS));
+        widget.switch_workspace_on_unminimize = settings.get_boolean(KEY_SWITCH_UNMIN);
+        widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Xfce.TasklistGrouping.ALWAYS : Xfce.TasklistGrouping.NEVER);
+        widget.middle_click = settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
+        widget.set_show_labels(settings.get_boolean(KEY_SHOW_LABELS));
         this.show_all();
-    }
-    public override void get_preferred_height(out int min, out int nat)
-    {
-        if (toplevel.orientation == Orientation.VERTICAL)
-            min = nat = unexpanded_limit;
-        else
-        {
-            base.get_preferred_height_internal(out min, out nat);
-            min = nat = toplevel.height;
-        }
-    }
-    public override void get_preferred_width(out int min, out int nat)
-    {
-        if (toplevel.orientation == Orientation.HORIZONTAL)
-            min = nat = unexpanded_limit;
-        else
-        {
-            base.get_preferred_width_internal(out min, out nat);
-            min = nat = toplevel.height;
-        }
     }
     public Dialog get_config_dialog()
     {
@@ -99,8 +79,7 @@ public class TasklistXFCE: Applet, AppletConfigurable
                             _("Show window`s workspace on unminimize"), KEY_SWITCH_UNMIN, GenericConfigType.BOOL,
                             _("Close windows on middle click"), KEY_MIDDLE_CLICK_CLOSE, GenericConfigType.BOOL,
                             _("Group windows when needed"), KEY_GROUPING, GenericConfigType.BOOL,
-                            _("Ungrouped buttons limit"), KEY_GROUPING_LIMIT, GenericConfigType.INT,
-                            _("Unexpanded size limit"), KEY_UNEXPANDED_LIMIT, GenericConfigType.INT);
+                            _("Show task labels"), KEY_SHOW_LABELS, GenericConfigType.BOOL);
     }
 } // End class
 
