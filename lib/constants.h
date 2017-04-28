@@ -44,6 +44,8 @@
  * Autohide gap
  */
 #define GAP 2
+
+#define MAX_PANEL_HEIGHT 200
 /*
  * Toplevel keys
  */

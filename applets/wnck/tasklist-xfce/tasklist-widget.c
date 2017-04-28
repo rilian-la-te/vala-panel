@@ -1007,7 +1007,6 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 
 	/* set widget allocation */
 	gtk_widget_set_allocation(widget, allocation);
-
 	/* swap integers with vertical orientation */
 	if (!xfce_tasklist_horizontal(tasklist))
 		vala_panel_transpose_area(area);
@@ -1054,7 +1053,10 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 	area_x     = area.x;
 	area_width = area.width;
 	h          = area.height / rows;
-
+	if (area.height > MAX_PANEL_HEIGHT)
+	{
+		area.width = area.height;
+	}
 	/* allocate all the children */
 	for (li = tasklist->windows, i = 0; li != NULL; li = li->next)
 	{
@@ -1072,7 +1074,10 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 				x = area_x;
 				y = area.y;
 
-				if (xfce_tasklist_deskbar(tasklist) && tasklist->show_labels)
+				if (xfce_tasklist_deskbar(tasklist) &&
+				    tasklist->show_labels) /* position the arrow in the correct
+				                              position */
+
 				{
 					/* fixed width is OK because area.width==w*cols */
 					w = MIN(area.height / tasklist->nrows,
