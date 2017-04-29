@@ -233,16 +233,24 @@ namespace ValaPanel
         protected override void get_preferred_width_for_height(int height, out int min, out int nat)
         {
             int x,y;
-            Gtk.Orientation eff_ori = Orientation.VERTICAL;
-            base.get_preferred_width_internal(out min, out nat);
-            measure(eff_ori, this.width,out min, out nat,out x,out y);
+            Gtk.Orientation eff_ori = Orientation.HORIZONTAL;
+            base.get_preferred_width_internal(out x, out y);
+            measure(eff_ori, height,out min, out nat,out x,out y);
         }
         protected override void get_preferred_height_for_width(int width, out int min, out int nat)
         {
             int x,y;
-            Gtk.Orientation eff_ori = Orientation.HORIZONTAL;
-            base.get_preferred_height_internal(out min, out nat);
-            measure(eff_ori,this.width,out min, out nat,out x,out y);
+            Gtk.Orientation eff_ori = Orientation.VERTICAL;
+            base.get_preferred_height_internal(out x, out y);
+            measure(eff_ori,width,out min, out nat,out x,out y);
+        }
+        protected override void get_preferred_width(out int min, out int nat)
+        {
+            min = nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? this.height : GAP;
+        }
+        protected override void get_preferred_height(out int min, out int nat)
+        {
+            min = nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? this.height : GAP;
         }
         private int calc_width(int scrw, int panel_width,int panel_margin)
         {
@@ -260,11 +268,14 @@ namespace ValaPanel
             else if (monitor < screen.get_n_monitors())
                 marea = screen.get_monitor(monitor).get_geometry();
             int scrw = this.orientation == Orientation.HORIZONTAL ? marea.width : marea.height;
-            if (this.orientation == orient)
+            if (this.orientation != orient)
                 min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
             else
                 min = nat = base_min = base_nat = calc_width(scrw, for_size, panel_margin);
-
+        }
+        protected override SizeRequestMode get_request_mode()
+        {
+            return (this.orientation == Orientation.HORIZONTAL) ? SizeRequestMode.WIDTH_FOR_HEIGHT : SizeRequestMode.HEIGHT_FOR_WIDTH;
         }
 
         /*************************************************************************************
