@@ -72,25 +72,26 @@ public class Tasklist: Applet, AppletConfigurable
         widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
         this.show_all();
     }
+    private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
+    {
+        if(toplevel.orientation != orient)
+            min = nat = toplevel.height;
+        else
+            min = nat = unexpanded_limit;
+        base_min = base_nat = -1;
+    }
+
     public override void get_preferred_height(out int min, out int nat)
     {
-        if (toplevel.orientation == Orientation.VERTICAL)
-            min = nat = unexpanded_limit;
-        else
-        {
-            base.get_preferred_height_internal(out min, out nat);
-            min = nat = toplevel.height;
-        }
+        int x,y;
+        base.get_preferred_height_internal(out x, out y);
+        measure(Orientation.VERTICAL,-1,out min,out nat,out x, out y);
     }
     public override void get_preferred_width(out int min, out int nat)
     {
-        if (toplevel.orientation == Orientation.HORIZONTAL)
-            min = nat = unexpanded_limit;
-        else
-        {
-            base.get_preferred_width_internal(out min, out nat);
-            min = nat = toplevel.height;
-        }
+        int x,y;
+        base.get_preferred_width_internal(out x, out y);
+        measure(Orientation.HORIZONTAL,-1,out min,out nat,out x, out y);
     }
     public Dialog get_config_dialog()
     {
