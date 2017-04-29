@@ -31,7 +31,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
                                                     const char *name, const char *uuid,
                                                     bool is_toplevel)
 {
-	ValaPanelUnitSettings *created_settings = g_new(ValaPanelUnitSettings, 1);
+	ValaPanelUnitSettings *created_settings = g_slice_new(ValaPanelUnitSettings);
 	created_settings->uuid                  = g_strdup(uuid);
 	g_autofree gchar *path =
 	    g_strdup_printf("%s%s/", settings->root_path, created_settings->uuid);
@@ -90,7 +90,7 @@ G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vala_panel_unit_settings, vala_panel_
 ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
                                                     GSettingsBackend *backend)
 {
-	ValaPanelCoreSettings *new_settings = g_slice_new0(ValaPanelCoreSettings);
+	ValaPanelCoreSettings *new_settings = g_slice_new(ValaPanelCoreSettings);
 	new_settings->all_units =
 	    g_hash_table_new_full(g_str_hash,
 	                          g_str_equal,
