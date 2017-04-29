@@ -97,71 +97,6 @@ namespace ValaPanel
                                       "-vala-panel-background",
                                       false);
         }
-        public void popup_position_helper(Gtk.Widget popup,
-                                          out int x, out int y)
-        {
-            Gtk.Allocation pa;
-            Gtk.Allocation a;
-            unowned Gdk.Screen screen;
-            popup.realize();
-            popup.get_allocation(out pa);
-            if (popup.is_toplevel())
-            {
-                Gdk.Rectangle ext;
-                popup.get_window().get_frame_extents(out ext);
-                pa.width = ext.width;
-                pa.height = ext.height;
-            }
-            if (popup is Gtk.Menu)
-            {
-                int min, nat, new_height = 0;
-                foreach (var item in (popup as Gtk.Menu).get_children())
-                {
-                    item.get_preferred_height(out min, out nat);
-                    new_height += nat;
-                }
-                pa.height = int.max(pa.height,new_height);
-            }
-            get_allocation(out a);
-            get_window().get_origin(out x, out y);
-            if (!get_has_window())
-            {
-                x += a.x;
-                y += a.y;
-            }
-            switch (toplevel.edge)
-            {
-                case Gtk.PositionType.TOP:
-                    y+=a.height;
-                    break;
-                case Gtk.PositionType.BOTTOM:
-                    y-=pa.height;
-                    break;
-                case Gtk.PositionType.LEFT:
-                    x+=a.width;
-                    break;
-                case Gtk.PositionType.RIGHT:
-                    x-=pa.width;
-                    break;
-            }
-            if (has_screen())
-                screen = get_screen();
-            else
-                screen = Gdk.Screen.get_default();
-            unowned Gdk.Monitor monitor = screen.get_display().get_monitor_at_point(x,y);
-            a = (Gtk.Allocation)monitor.get_workarea();
-            x = x.clamp(a.x,a.x + a.width - pa.width);
-            y = y.clamp(a.y,a.y + a.height - pa.height);
-        }
-        public void set_popup_position(Gtk.Widget popup)
-        {
-            int x,y;
-            popup_position_helper(popup,out x, out y);
-            if (popup is Gtk.Window)
-                (popup as Window).move(x,y);
-            else
-                popup.get_window().move(x,y);
-        }
         private void activate_configure(SimpleAction act, Variant? param)
         {
             show_config_dialog();
@@ -172,13 +107,9 @@ namespace ValaPanel
                 return;
             if (dialog == null)
             {
-                int x,y;
                 var dlg = (this as AppletConfigurable).get_config_dialog();
                 this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
-                /* adjust config dialog window position to be near plugin */
                 dlg.set_transient_for(toplevel);
-                popup_position_helper(dlg,out x, out y);
-                dlg.move(x,y);
                 dialog = dlg;
                 dialog.hide.connect(()=>{dialog.destroy(); dialog = null;});
                 dialog.response.connect(()=>{dialog.destroy(); dialog = null;});

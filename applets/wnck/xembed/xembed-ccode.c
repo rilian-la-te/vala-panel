@@ -211,7 +211,59 @@ static gboolean balloon_message_timeout(TrayPlugin *tr)
 		balloon_message_advance(tr, FALSE, TRUE);
 	return FALSE;
 }
-
+static void popup_position_helper(GtkWidget *applet, GtkWidget *popup, int *x, int *y)
+{
+	GtkAllocation pa;
+	GtkAllocation a;
+	gtk_widget_realize(popup);
+	gtk_widget_get_allocation(popup, &pa);
+	if (gtk_widget_is_toplevel(popup))
+	{
+		GdkRectangle ext;
+		gdk_window_get_frame_extents(gtk_widget_get_window(popup), &ext);
+		pa.width  = ext.width;
+		pa.height = ext.height;
+	}
+	if (GTK_IS_MENU(popup))
+	{
+		int min, nat, new_height = 0;
+		for (GList *li = gtk_container_get_children(GTK_CONTAINER(popup)); li != NULL;
+		     li        = g_list_next(li))
+		{
+			gtk_widget_get_preferred_height(GTK_WIDGET(li->data), &min, &nat);
+			new_height += nat;
+		}
+		pa.height = MAX(pa.height, new_height);
+	}
+	gtk_widget_get_allocation(applet, &a);
+	gdk_window_get_origin(gtk_widget_get_window(popup), x, y);
+	if (!gtk_widget_get_has_window(applet))
+	{
+		*x += a.x;
+		*y += a.y;
+	}
+	GtkPositionType edge;
+	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(applet)),
+	             VALA_PANEL_KEY_EDGE,
+	             &edge,
+	             NULL);
+	switch (edge)
+	{
+	case GTK_POS_TOP:
+	case GTK_POS_BOTTOM:
+		y += a.height;
+		break;
+	case GTK_POS_LEFT:
+	case GTK_POS_RIGHT:
+		x += a.width;
+		break;
+	}
+	GdkMonitor *monitor =
+	    gdk_display_get_monitor_at_point(gtk_widget_get_display(applet), *x, *y);
+	gdk_monitor_get_workarea(monitor, &a);
+	*x = CLAMP(*x, a.x, a.x + a.width - pa.width);
+	*y = CLAMP(*y, a.y, a.y + a.height - pa.height);
+}
 /* Create the graphic elements to display a balloon message. */
 static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg)
 {
@@ -233,7 +285,7 @@ static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg)
 
 	/* Compute the desired position in screen coordinates near the tray plugin. */
 	int x, y;
-	vala_panel_applet_popup_position_helper(tr->applet, tr->balloon_message_popup, &x, &y);
+	popup_position_helper(tr->applet, tr->balloon_message_popup, &x, &y);
 
 	/* Show the popup. */
 	gtk_window_move(GTK_WINDOW(tr->balloon_message_popup), x, y);
