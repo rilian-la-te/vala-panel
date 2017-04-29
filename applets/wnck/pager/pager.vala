@@ -40,15 +40,15 @@ public class Pager: Applet
         widget = new Wnck.Pager();
         /* FIXME: use some global setting for border */
         this.set_border_width(0);
-        toplevel.notify.connect((pspec)=>{
-            if (pspec.name == "edge" || pspec.name == "height" || pspec.name == "width")
-                on_params_change_callback();
-        });
         widget.set_show_all(true);
         widget.set_display_mode(Wnck.PagerDisplayMode.CONTENT);
         widget.set_shadow_type(Gtk.ShadowType.IN);
         widget.set_size_request(0,0);
         this.add(widget);
+        toplevel.notify.connect((pspec)=>{
+            if (pspec.name == "edge" || pspec.name == "height" || pspec.name == "width")
+                on_params_change_callback();
+        });
         on_params_change_callback();
         this.show_all();
     }
