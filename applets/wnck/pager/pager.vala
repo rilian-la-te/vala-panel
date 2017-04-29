@@ -47,7 +47,6 @@ public class Pager: Applet
         });
         widget.set_display_mode(Wnck.PagerDisplayMode.CONTENT);
         widget.set_size_request(0,0);
-        widget.show();
         this.add(widget);
         on_params_change_callback();
         this.show_all();
