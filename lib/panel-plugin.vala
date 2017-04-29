@@ -78,7 +78,7 @@ namespace ValaPanel
                 if (b.button == 3 &&
                     ((b.state & Gtk.accelerator_get_default_mod_mask ()) == 0))
                 {
-                    toplevel.get_plugin_menu(this).popup_at_widget(this,Gdk.Gravity.NORTH_WEST, Gdk.Gravity.NORTH_WEST,b);
+                    toplevel.get_plugin_menu(this).popup_at_widget(this,Gdk.Gravity.NORTH, Gdk.Gravity.NORTH,b);
                     return true;
                 }
                 return false;
