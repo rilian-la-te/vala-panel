@@ -55,17 +55,6 @@ public class Wincmd: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-
-       return Configurator.generic_config_dlg(_("Minimize All Windows"),
-        toplevel, this.settings,
-        _("Alternately iconify/shade and raise"), KEY_TOGGLE, GenericConfigType.BOOL
-        /* FIXME: configure buttons 1 and 2 */);
-    }
-    public override void create()
-    {
         button = new Button();
         image = new Image();
         settings.bind(KEY_LEFT,this,KEY_LEFT,SettingsBindFlags.GET);
@@ -90,6 +79,14 @@ public class Wincmd: Applet, AppletConfigurable
         });
         this.add(button);
         this.show_all();
+    }
+    public Dialog get_config_dialog()
+    {
+
+       return Configurator.generic_config_dlg(_("Minimize All Windows"),
+        toplevel, this.settings,
+        _("Alternately iconify/shade and raise"), KEY_TOGGLE, GenericConfigType.BOOL
+        /* FIXME: configure buttons 1 and 2 */);
     }
     private void update_icon()
     {

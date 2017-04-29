@@ -361,19 +361,6 @@ public class Monitors: Applet, AppletConfigurable
                                   string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-        return Configurator.generic_config_dlg(_("Resource monitors"),
-            toplevel, this.settings,
-            _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
-            _("CPU color"), CPU_CL, GenericConfigType.STR,
-            _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,
-            _("RAM color"), RAM_CL, GenericConfigType.STR,
-            _("Action when clicked"), ACTION, GenericConfigType.STR);
-    }
-    public override void create()
-    {
         monitors = new Monitor[2];
         box = new Gtk.Box(Orientation.HORIZONTAL,2);
         box.set_homogeneous(true);
@@ -403,6 +390,16 @@ public class Monitors: Applet, AppletConfigurable
         this.destroy.connect(()=>{Source.remove(timer);});
         this.add(box);
         this.show_all();
+    }
+    public Dialog get_config_dialog()
+    {
+        return Configurator.generic_config_dlg(_("Resource monitors"),
+            toplevel, this.settings,
+            _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
+            _("CPU color"), CPU_CL, GenericConfigType.STR,
+            _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,
+            _("RAM color"), RAM_CL, GenericConfigType.STR,
+            _("Action when clicked"), ACTION, GenericConfigType.STR);
     }
     private void rebuild_mons()
     {

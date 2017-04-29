@@ -42,17 +42,6 @@ public class Deskno: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-
-       return Configurator.generic_config_dlg(_("Desktop Number / Workspace Name"),
-            toplevel, this.settings,
-            _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
-            _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
-    }
-    public override void create()
-    {
         label = new Label(null);
         settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
         settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
@@ -69,6 +58,14 @@ public class Deskno: Applet, AppletConfigurable
         name_update();
         this.add(label);
         this.show_all();
+    }
+    public Dialog get_config_dialog()
+    {
+
+       return Configurator.generic_config_dlg(_("Desktop Number / Workspace Name"),
+            toplevel, this.settings,
+            _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
+            _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
     }
     private void name_update()
     {

@@ -40,9 +40,6 @@ public class Buttons: Applet
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         Wnck.Screen.get_default().force_update();
         handler = Wnck.Screen.get_default().active_window_changed.connect(update_buttons_sensitivity);
         state = Wnck.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{
@@ -53,11 +50,11 @@ public class Buttons: Applet
                 image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
         });
         box = new Box(Orientation.HORIZONTAL,0);
-        var settings = this.get_settings();
-        settings.notify["gtk-decoration-layout"].connect(()=>{
-            update_window_buttons(settings.gtk_decoration_layout);
+        var gtksettings = this.get_settings();
+        gtksettings.notify["gtk-decoration-layout"].connect(()=>{
+            update_window_buttons(gtksettings.gtk_decoration_layout);
         });
-        update_window_buttons(settings.gtk_decoration_layout);
+        update_window_buttons(gtksettings.gtk_decoration_layout);
         this.add(box);
         this.show_all();
     }

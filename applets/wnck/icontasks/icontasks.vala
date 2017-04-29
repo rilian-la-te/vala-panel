@@ -199,9 +199,6 @@ public class IconTasklistApplet : ValaPanel.Applet
                               string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         helper = new AppSystem();
 
         // Easy mapping :)

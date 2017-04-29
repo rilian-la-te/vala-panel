@@ -61,8 +61,44 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
                                     GLib.Settings? settings,
                                     string number)
     {
-        base(toplevel,settings,number);
-    }
+         base(toplevel,settings,number);
+         button = null;
+         this.set_visible_window(false);
+         settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
+         settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
+         settings.bind(Key.IS_INTERNAL_MENU,this,"intern",SettingsBindFlags.GET);
+         settings.bind(Key.MODEL_FILE,this,"filename",SettingsBindFlags.GET);
+         settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
+         settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
+         var w = menumodel_widget_create();
+         button = w;
+         this.add(button);
+         unowned Gtk.Settings gtksettings = this.get_settings();
+         gtksettings.gtk_shell_shows_menubar = false;
+         this.show_all();
+         settings.changed.connect((key)=>{
+             if ((key == Key.IS_INTERNAL_MENU)
+                 || (key == Key.MODEL_FILE && !intern)
+                 || (key == Key.IS_MENU_BAR)
+                 || (key == Key.ICON && bar))
+             {
+                 menumodel_widget_rebuild();
+             }
+             else if (key == Key.CAPTION && !bar)
+             {
+                 unowned Button btn = button as Button;
+                 btn.label = caption;
+             }
+             else if (key == Key.ICON && !bar)
+             {
+                 try
+                 {
+                     unowned Button btn = button as Button;
+                     (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
+                 } catch (Error e){stderr.printf("%s\n",e.message);}
+             }
+         });
+     }
     public override void destroy()
     {
         menumodel_widget_destroy();
@@ -96,45 +132,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         }
         show_system_menu_idle = 0;
         return false;
-    }
-    public override void create()
-    {
-        button = null;
-        this.set_visible_window(false);
-        settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
-        settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
-        settings.bind(Key.IS_INTERNAL_MENU,this,"intern",SettingsBindFlags.GET);
-        settings.bind(Key.MODEL_FILE,this,"filename",SettingsBindFlags.GET);
-        settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
-        settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
-        var w = menumodel_widget_create();
-        button = w;
-        this.add(button);
-        unowned Gtk.Settings gtksettings = this.get_settings();
-        gtksettings.gtk_shell_shows_menubar = false;
-        this.show_all();
-        settings.changed.connect((key)=>{
-            if ((key == Key.IS_INTERNAL_MENU)
-                || (key == Key.MODEL_FILE && !intern)
-                || (key == Key.IS_MENU_BAR)
-                || (key == Key.ICON && bar))
-            {
-                menumodel_widget_rebuild();
-            }
-            else if (key == Key.CAPTION && !bar)
-            {
-                unowned Button btn = button as Button;
-                btn.label = caption;
-            }
-            else if (key == Key.ICON && !bar)
-            {
-                try
-                {
-                    unowned Button btn = button as Button;
-                    (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
-                } catch (Error e){stderr.printf("%s\n",e.message);}
-            }
-        });
     }
     private void menumodel_widget_rebuild()
     {

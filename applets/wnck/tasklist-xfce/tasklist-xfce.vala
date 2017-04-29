@@ -42,9 +42,6 @@ public class TasklistXFCE: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         widget = new Xfce.Tasklist();
         this.add(widget);
         toplevel.notify["orientation"].connect_after((s,p)=>{

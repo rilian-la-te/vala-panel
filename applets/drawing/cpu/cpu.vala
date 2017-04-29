@@ -54,10 +54,6 @@ public class Cpu: Applet
                                   string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
-
         /* Allocate drawing area as a child of top level widget.  Enable button press events. */
         da = new DrawingArea();
         da.set_size_request(toplevel.height > 40 ? toplevel.height : 40, toplevel.height);

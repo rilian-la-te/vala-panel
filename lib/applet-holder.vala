@@ -22,6 +22,17 @@ using Config;
 
 namespace ValaPanel
 {
+    namespace Data
+    {
+        public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
+        public const string EXPANDABLE = "ValaPanel-Expandable";
+    }
+    public interface AppletPlugin : Peas.ExtensionBase
+    {
+        public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                                           GLib.Settings? settings,
+                                                           string number);
+    }
     public class AppletHolder: Object
     {
         [Compact]

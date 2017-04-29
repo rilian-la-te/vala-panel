@@ -41,18 +41,6 @@ public class Kbled: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-        Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
-                            toplevel, this.settings,
-                            _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
-                            _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
-        dlg.set_size_request(200, -1);  /* Improve geometry */
-        return dlg;
-    }
-    public override void create()
-    {
         IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
         widget = new FlowBox();
         widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
@@ -76,6 +64,15 @@ public class Kbled: Applet, AppletConfigurable
             widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         show_all();
+    }
+    public Dialog get_config_dialog()
+    {
+        Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
+                            toplevel, this.settings,
+                            _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
+                            _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
+        dlg.set_size_request(200, -1);  /* Improve geometry */
+        return dlg;
     }
 
     /* Handle caps lock changes */

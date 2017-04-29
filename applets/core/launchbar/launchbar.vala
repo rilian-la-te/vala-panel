@@ -48,18 +48,6 @@ namespace LaunchBar
                                         string number)
         {
             base(toplevel,settings,number);
-        }
-        private Dialog get_config_dialog()
-        {
-            return new ConfigDialog(this);
-        }
-        private void update_buttons_from_gsettings()
-        {
-            var loaded_ids = this.settings.get_strv(LaunchBar.BUTTONS);
-            load_buttons(loaded_ids);
-        }
-        public override void create()
-        {
             layout = new FlowBox();
             Gtk.drag_dest_set (
                     layout,                     // widget that will accept a drop
@@ -88,6 +76,15 @@ namespace LaunchBar
                 layout.unselect_child(lb);
             });
             show_all();
+        }
+        private Dialog get_config_dialog()
+        {
+            return new ConfigDialog(this);
+        }
+        private void update_buttons_from_gsettings()
+        {
+            var loaded_ids = this.settings.get_strv(LaunchBar.BUTTONS);
+            load_buttons(loaded_ids);
         }
         internal void request_remove_id(string id)
         {

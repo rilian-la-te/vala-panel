@@ -43,9 +43,6 @@ public class Tasklist: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         widget = new Wnck.Tasklist();
         this.add(widget);
         toplevel.notify["orientation"].connect_after((s,p)=>{

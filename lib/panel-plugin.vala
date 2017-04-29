@@ -17,22 +17,10 @@
  */
 
 using Gtk;
-using Peas;
 using Config;
 
 namespace ValaPanel
 {
-    namespace Data
-    {
-        public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
-        public const string EXPANDABLE = "ValaPanel-Expandable";
-    }
-    public interface AppletPlugin : Peas.ExtensionBase
-    {
-        public abstract ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                                           GLib.Settings? settings,
-                                                           string number);
-    }
     public interface AppletMenu
     {
         public abstract void show_system_menu();
@@ -58,7 +46,6 @@ namespace ValaPanel
         public unowned ValaPanel.Toplevel toplevel {get; construct;}
         public unowned GLib.Settings? settings {get; construct;}
         public string uuid {get; construct;}
-        public abstract void create();
         public virtual void update_context_menu(ref GLib.Menu parent_menu){}
         public Applet(ValaPanel.Toplevel top, GLib.Settings? s, string uuid)
         {
@@ -68,10 +55,6 @@ namespace ValaPanel
         {
             SimpleActionGroup grp = new SimpleActionGroup();
             this.set_has_window(false);
-            this.create();
-            if (background_widget == null)
-                background_widget = this;
-            init_background();
             this.border_width = 0;
             this.button_release_event.connect((b)=>
             {
@@ -87,6 +70,15 @@ namespace ValaPanel
                 grp.add_action_entries(config_entry,this);
             grp.add_action_entries(remove_entry,this);
             this.insert_action_group("applet",grp);
+        }
+        protected override void parent_set(Gtk.Widget? prev_parent)
+        {
+            if (prev_parent == null)
+            {
+                if (background_widget == null)
+                    background_widget = this;
+                init_background();
+            }
         }
         public void init_background()
         {

@@ -37,9 +37,6 @@ public class XEmbedTray: Applet
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         plugin = new XEmbed.Plugin(this);
         if (plugin == null || plugin.plugin == null || !(plugin.plugin is Widget))
             return;

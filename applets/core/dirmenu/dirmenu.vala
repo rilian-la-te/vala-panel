@@ -49,9 +49,6 @@ public class Dirmenu: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         var button = new MenuButton();
         var img = new Image();
         settings.bind(DIR,this,DIR,SettingsBindFlags.GET);

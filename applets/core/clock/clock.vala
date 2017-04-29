@@ -54,9 +54,6 @@ public class Clock: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         settings.bind(LABEL_FORMAT,this,LABEL_FORMAT,SettingsBindFlags.GET);
         settings.bind(TIP_FORMAT,this,TIP_FORMAT,SettingsBindFlags.GET);
         settings.bind(BOLD,this,BOLD,SettingsBindFlags.GET);

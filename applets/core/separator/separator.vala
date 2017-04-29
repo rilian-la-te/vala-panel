@@ -39,9 +39,6 @@ public class Sep: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         widget = new Separator(toplevel.orientation == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL);
         this.add(widget);
         toplevel.notify["edge"].connect((pspec)=>{
@@ -58,7 +55,7 @@ public class Sep: Applet, AppletConfigurable
         settings.bind(KEY_SIZE,this,KEY_SIZE,SettingsBindFlags.GET);
         settings.bind(KEY_SHOW_SEPARATOR,this,KEY_SHOW_SEPARATOR,SettingsBindFlags.GET);
         this.bind_property(KEY_SHOW_SEPARATOR,widget,"visible",BindingFlags.SYNC_CREATE);
-        this.show_all();
+        this.show();
     }
     public Dialog get_config_dialog()
     {
