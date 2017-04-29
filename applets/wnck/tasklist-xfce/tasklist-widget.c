@@ -755,7 +755,7 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
                                   int *natural_baseline)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(widget);
-	if (tasklist->mode != orientation)
+	if (tasklist->mode == orientation)
 	{
 		gint rows, cols;
 		gint n_windows;
@@ -829,8 +829,8 @@ static void xfce_tasklist_get_preferred_width(GtkWidget *widget, gint *minimum_w
 {
 	int x, y;
 	xfce_tasklist_measure(widget,
-	                      GTK_ORIENTATION_VERTICAL,
-	                      0,
+	                      GTK_ORIENTATION_HORIZONTAL,
+	                      -1,
 	                      minimum_width,
 	                      natural_width,
 	                      &x,
@@ -842,8 +842,8 @@ static void xfce_tasklist_get_preferred_height(GtkWidget *widget, gint *minimum_
 {
 	int x, y;
 	xfce_tasklist_measure(widget,
-	                      GTK_ORIENTATION_HORIZONTAL,
-	                      0,
+	                      GTK_ORIENTATION_VERTICAL,
+	                      -1,
 	                      minimum_height,
 	                      natural_height,
 	                      &x,

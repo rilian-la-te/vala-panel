@@ -274,7 +274,7 @@ static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientat
 	GtkWidget *child = gtk_bin_get_child(GTK_BIN(widget));
 	XfceArrowButtonPrivate *priv =
 	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
-	if (orientation == GTK_ORIENTATION_VERTICAL)
+	if (orientation == GTK_ORIENTATION_HORIZONTAL)
 	{
 		/* use gtk for the widget size */
 		(*GTK_WIDGET_CLASS(xfce_arrow_button_parent_class)
@@ -292,12 +292,12 @@ static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientat
 		{
 		case GTK_ARROW_UP:
 		case GTK_ARROW_DOWN:
-			natural_child += orientation == GTK_ORIENTATION_VERTICAL ? ARROW_WIDTH : 0;
+			natural_child +=
+			    orientation == GTK_ORIENTATION_HORIZONTAL ? ARROW_WIDTH : 0;
 			break;
 		case GTK_ARROW_LEFT:
 		case GTK_ARROW_RIGHT:
-			natural_child +=
-			    orientation == GTK_ORIENTATION_HORIZONTAL ? ARROW_WIDTH : 0;
+			natural_child += orientation == GTK_ORIENTATION_VERTICAL ? ARROW_WIDTH : 0;
 		default:
 			break;
 		}
@@ -311,7 +311,7 @@ static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientat
 		                              gtk_widget_get_state_flags(widget),
 		                              &padding);
 		gtk_style_context_get_border(context, gtk_widget_get_state_flags(widget), &border);
-		int padding_sum = GTK_ORIENTATION_VERTICAL
+		int padding_sum = GTK_ORIENTATION_HORIZONTAL
 		                      ? padding.left + padding.right + border.left + border.right
 		                      : padding.top + padding.bottom + border.top + border.bottom;
 		natural_child = (ARROW_WIDTH + padding_sum);
@@ -330,8 +330,8 @@ static void xfce_arrow_button_get_preferred_width(GtkWidget *widget, gint *minim
 {
 	int x, y;
 	xfce_arrow_button_measure(widget,
-	                          GTK_ORIENTATION_VERTICAL,
-	                          0,
+	                          GTK_ORIENTATION_HORIZONTAL,
+	                          -1,
 	                          minimum_width,
 	                          natural_width,
 	                          &x,
@@ -344,7 +344,7 @@ static void xfce_arrow_button_get_preferred_height(GtkWidget *widget, gint *mini
 	int x, y;
 	xfce_arrow_button_measure(widget,
 	                          GTK_ORIENTATION_VERTICAL,
-	                          0,
+	                          -1,
 	                          minimum_height,
 	                          natural_height,
 	                          &x,
