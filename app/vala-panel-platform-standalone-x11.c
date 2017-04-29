@@ -91,7 +91,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
 	GdkMonitor *mon =
 	    monitor < 0 ? gdk_display_get_primary_monitor(d) : gdk_display_get_monitor(d, monitor);
-	GdkRectangle marea, alloc;
+	GdkRectangle marea;
 	int x, y;
 	gdk_monitor_get_geometry(mon, &marea);
 	int height;
