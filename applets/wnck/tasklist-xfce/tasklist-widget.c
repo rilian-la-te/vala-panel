@@ -804,10 +804,10 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 
 			if (!tasklist->show_labels)
 				length = (tasklist->size / rows) * cols;
-			else if (tasklist->max_button_length != -1)
-				length = cols * tasklist->max_button_length;
+			else if (tasklist->min_button_length != -1)
+				length = cols * tasklist->min_button_length;
 			else
-				length = cols * DEFAULT_MAX_BUTTON_LENGTH;
+				length = cols * DEFAULT_MIN_BUTTON_LENGTH;
 		}
 
 		/* set the requested sizes */
@@ -1010,10 +1010,15 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 	/* swap integers with vertical orientation */
 	if (!xfce_tasklist_horizontal(tasklist))
 		vala_panel_transpose_area(area);
+	if (area.height > MAX_PANEL_HEIGHT)
+	{
+		area.height = MIN(area.height, area.width);
+		area.width  = MIN(area.height, area.width);
+	}
 	//  g_return_if_fail (area.height == tasklist->size);
 
 	/* TODO if we compare the allocation with the requisition we can
-	 * do a fast path to the child allocation, i think */
+     * do a fast path to the child allocation, i think */
 
 	/* useless but hides compiler warning */
 	w = h = x = y = rows = cols = 0;
@@ -1053,10 +1058,6 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 	area_x     = area.x;
 	area_width = area.width;
 	h          = area.height / rows;
-	if (area.height > MAX_PANEL_HEIGHT)
-	{
-		area.width = area.height;
-	}
 	/* allocate all the children */
 	for (li = tasklist->windows, i = 0; li != NULL; li = li->next)
 	{
