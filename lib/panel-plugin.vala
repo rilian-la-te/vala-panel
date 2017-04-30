@@ -120,47 +120,46 @@ namespace ValaPanel
             }
             toplevel.remove_applet(this);
         }
-      private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
-      {
-          if(toplevel.orientation != orient)
-          {
-              min = (int)toplevel.icon_size;
-              nat = toplevel.height;
-          }
-          else
-          {
-              if (orient == Gtk.Orientation.HORIZONTAL)
-                  base.get_preferred_width_for_height_internal(for_size, out min, out nat);
-              else
-                  base.get_preferred_height_for_width_internal(for_size, out min, out nat);
-          }
-          base_min=base_nat = -1;
-      }
+        private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
+        {
+            if(toplevel.orientation != orient)
+            {
+                min = (int)toplevel.icon_size;
+                nat = toplevel.height;
+            }
+            else
+            {
+                if (orient == Gtk.Orientation.HORIZONTAL)
+                    base.get_preferred_width_for_height_internal(for_size, out min, out nat);
+                else
+                    base.get_preferred_height_for_width_internal(for_size, out min, out nat);
+            }
+            base_min=base_nat = -1;
+        }
 
-      public override void get_preferred_height_for_width(int width,out int min, out int nat)
-      {
-          int x,y;
-          measure(Orientation.VERTICAL,width,out min,out nat,out x, out y);
-      }
-      public override void get_preferred_width_for_height(int height, out int min, out int nat)
-      {
-          int x,y;
-          measure(Orientation.HORIZONTAL,height,out min,out nat,out x, out y);
-      }
-      protected override SizeRequestMode get_request_mode()
-      {
-          return (toplevel.orientation == Orientation.HORIZONTAL) ? SizeRequestMode.WIDTH_FOR_HEIGHT : SizeRequestMode.HEIGHT_FOR_WIDTH;
-      }
-      protected override void get_preferred_width(out int min, out int nat)
-      {
-          min = (int)toplevel.icon_size;
-          nat = toplevel.height;
-      }
-      protected override void get_preferred_height(out int min, out int nat)
-      {
-          min = (int)toplevel.icon_size;
-          nat = toplevel.height;
-      }
-
+        public override void get_preferred_height_for_width(int width,out int min, out int nat)
+        {
+            int x,y;
+            measure(Orientation.VERTICAL,width,out min,out nat,out x, out y);
+        }
+        public override void get_preferred_width_for_height(int height, out int min, out int nat)
+        {
+            int x,y;
+            measure(Orientation.HORIZONTAL,height,out min,out nat,out x, out y);
+        }
+        protected override SizeRequestMode get_request_mode()
+        {
+            return (toplevel.orientation == Orientation.HORIZONTAL) ? SizeRequestMode.WIDTH_FOR_HEIGHT : SizeRequestMode.HEIGHT_FOR_WIDTH;
+        }
+        protected override void get_preferred_width(out int min, out int nat)
+        {
+            min = (int)toplevel.icon_size;
+            nat = toplevel.height;
+        }
+        protected override void get_preferred_height(out int min, out int nat)
+        {
+            min = (int)toplevel.icon_size;
+            nat = toplevel.height;
+        }
     }
 }
