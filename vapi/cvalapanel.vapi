@@ -126,6 +126,7 @@ namespace ValaPanel
     {
         internal HashTable<string,UnitSettings> all_units;
         internal GLib.SettingsBackend backend;
+        internal GLib.Settings core_settings;
         internal string root_name;
         internal string root_schema;
         internal string root_path;
@@ -136,7 +137,7 @@ namespace ValaPanel
         internal void remove_unit_settings(string name);
         internal void remove_unit_settings_full(string name, bool destroy);
         internal unowned UnitSettings get_by_uuid(string uuid);
-        internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
+        internal bool init_unit_list();
     }
     [Compact]
     [CCode (cheader_filename="lib/settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_unit_settings_get_type()")]
@@ -146,6 +147,8 @@ namespace ValaPanel
         internal GLib.Settings custom_settings;
         internal string uuid;
         internal string path_elem;
+		internal bool get_is_toplevel();
+		internal string get_toplevel();
         internal UnitSettings(CoreSettings settings, string? name, string uuid);
     }
     [CCode (cheader_filename="lib/panel-platform.h")]
@@ -195,12 +198,14 @@ namespace ValaPanel.Configurator
                                     GLib.Settings settings, ...);
 }
 [CCode (cheader_filename = "lib/constants.h", cprefix = "VALA_PANEL_",lower_case_cprefix="VALA_PANEL_")]
-namespace ValaPanel.Setttings
+namespace ValaPanel.Settings
 {
 	public const string CORE_SCHEMA;
 	public const string CORE_PATH;
+	public const string CORE_UNITS;
 	public const string OBJECT_PATH;
 	public const string OBJECT_PATH_TEMPLATE;
+	public const string TOPLEVEL_ID;
 }
 
 [CCode (cheader_filename = "lib/constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]

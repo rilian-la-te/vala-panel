@@ -22,23 +22,30 @@
 /*
  * GSettings constants
  */
-#define VALA_PANEL_CORE_SCHEMA "org.valapanel"
+#define VALA_PANEL_BASE_SCHEMA "org.valapanel"
+
+#define VALA_PANEL_CORE_SCHEMA "org.valapanel.core"
+#define VALA_PANEL_CORE_PATH_ELEM "core-version-1"
+#define VALA_PANEL_CORE_UNITS "used-units-version-1"
+
+#define VALA_PANEL_OBJECT_SCHEMA "org.valapanel.object"
+#define VALA_PANEL_OBJECT_TYPE "object-type"
+
 #define VALA_PANEL_TOPLEVEL_SCHEMA "org.valapanel.toplevel"
 #define VALA_PANEL_TOPLEVEL_SCHEMA_ELEM "toplevel"
 #define VALA_PANEL_OBJECT_PATH "/org/vala-panel/objects/"
 #define VALA_PANEL_OBJECT_PATH_TEMPLATE "/org/vala-panel/objects/%s/"
-#define VALA_PANEL_CONFIG_HEADER "global"
-#define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
 
 /*
  * Plugins keys
  */
+#define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
+#define VALA_PANEL_TOPLEVEL_ID "toplevel-id"
 #define VALA_PANEL_KEY_NAME "plugin-type"
 #define VALA_PANEL_KEY_EXPAND "is-expanded"
 #define VALA_PANEL_KEY_CAN_EXPAND "can-expand"
 #define VALA_PANEL_KEY_PACK "pack-type"
 #define VALA_PANEL_KEY_POSITION "position"
-#define VALA_PANEL_KEY_APPLETS "applets"
 
 /*
  * Autohide gap

@@ -291,7 +291,7 @@ static bool load_settings(ValaPanelApplication *app)
 	    VALA_PANEL_PLATFORM(vala_panel_platform_x11_new(GTK_APPLICATION(app), app->profile));
 	ValaPanelCoreSettings *s         = vala_panel_platform_get_settings(app->platform);
 	GSettingsBackend *config_backend = s->backend;
-	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_CORE_SCHEMA,
+	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_BASE_SCHEMA,
 	                                                   config_backend,
 	                                                   VALA_PANEL_OBJECT_PATH);
 	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_RUN);

@@ -4,6 +4,7 @@ include(GLibHelpers)
 set(ENUM_FILES
         panel-platform.h
         generic-config-dialog.h
+        settings-manager.c
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 option(ENABLE_NEW_INTERFACE "Enable new interface function" OFF)

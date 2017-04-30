@@ -52,20 +52,21 @@ void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top,
 		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_side(self, top, alloc, monitor);
 }
 
-void vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)
+bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)
 {
-	vala_panel_platform_init_settings_full(self,
-	                                       VALA_PANEL_CORE_SCHEMA,
-	                                       VALA_PANEL_OBJECT_PATH,
-	                                       backend);
+	return vala_panel_platform_init_settings_full(self,
+	                                              VALA_PANEL_BASE_SCHEMA,
+	                                              VALA_PANEL_OBJECT_PATH,
+	                                              backend);
 }
 
-void vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend)
 {
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	priv->core_settings = vala_panel_core_settings_new(schema, path, backend);
+	return vala_panel_core_settings_init_unit_list(priv->core_settings);
 }
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,

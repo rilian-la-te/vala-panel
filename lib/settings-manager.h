@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 typedef struct
 {
 	GSettingsBackend *backend;
+	GSettings *core_settings;
 	char *root_schema;
 	char *root_path;
 	GHashTable *all_units;
@@ -40,14 +41,23 @@ typedef struct
 
 typedef struct
 {
+	GSettings *type_settings;
 	GSettings *default_settings;
 	GSettings *custom_settings;
 	char *schema_elem;
 	char *uuid;
 } ValaPanelUnitSettings;
 
+typedef enum {
+	TOPLEVEL = 0,
+	APPLET   = 1,
+} ValaPanelType;
+
 #define vala_panel_core_settings_remove_unit_settings(s, n)                                        \
 	vala_panel_core_settings_remove_unit_settings_full(s, n, false)
+
+#define vala_panel_unit_settings_get_is_toplevel(s)                                                \
+	g_settings_get_enum(s->default_settings, VALA_PANEL_OBJECT_TYPE) == TOPLEVEL
 
 typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
 typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;
@@ -73,8 +83,7 @@ void vala_panel_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *s
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
                                                             const char *uuid);
 char *vala_panel_core_settings_get_uuid();
-bool vala_panel_core_settings_init_toplevel_plugin_list(ValaPanelCoreSettings *settings,
-                                                        ValaPanelUnitSettings *toplevel_settings);
+bool vala_panel_core_settings_init_unit_list(ValaPanelCoreSettings *settings);
 GType vala_panel_core_settings_get_type();
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelCoreSettingsPointer, vala_panel_core_settings_free, NULL);
 

@@ -92,6 +92,9 @@
     </key>
   </schema>
   <schema id="org.valapanel.toplevel.plugin">
+    <key name="toplevel-id" type="s">
+      <default>''</default>
+    </key>
     <key name="plugin-type" type="s">
       <default>''</default>
     </key>

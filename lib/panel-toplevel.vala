@@ -299,14 +299,17 @@ namespace ValaPanel
         }
         private void on_applet_loaded(string type)
         {
-            foreach (var applet in settings.default_settings.get_strv(Key.APPLETS))
+            foreach (var unit in core_settings.core_settings.get_strv(Settings.CORE_UNITS))
             {
-                unowned UnitSettings s = core_settings.get_by_uuid(applet);
-                if (s.default_settings.get_string(Key.NAME) == type)
+                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
+                if (!pl.get_is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
                 {
-                    place_applet(holder.applet_ref(type),s);
-                    update_applet_positions();
-                    return;
+                    if (pl.default_settings.get_string(Key.NAME) == type)
+                    {
+                        place_applet(holder.applet_ref(type),pl);
+                        update_applet_positions();
+                        return;
+                }
                 }
             }
         }
@@ -317,8 +320,6 @@ namespace ValaPanel
             var position = s.default_settings.get_uint(Key.POSITION);
             box.pack_start(applet,false, true);
             box.reorder_child(applet,(int)position);
-            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
-            settings.default_settings.set_strv(Key.APPLETS, add_applet_pos(applets,s.uuid).get_strv());
             if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
             {
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
@@ -331,30 +332,10 @@ namespace ValaPanel
                         core_settings.remove_unit_settings(uuid);
             });
         }
-        internal GLib.Variant add_applet_pos(string[] applets, string add)
-        {
-            if (add in applets)
-                return new Variant.strv(applets);
-            VariantBuilder b = new VariantBuilder(VariantType.STRING_ARRAY);
-            b.add("s",add);
-            foreach(var a in applets)
-                b.add("s",a);
-            return b.end();
-        }
-        internal GLib.Variant del_applet_pos(string[] applets, string del)
-        {
-            VariantBuilder b = new VariantBuilder(VariantType.STRING_ARRAY);
-            foreach(var a in applets)
-                if (a != del)
-                    b.add("s",a);
-            return b.end();
-        }
         internal void remove_applet(Applet applet)
         {
             unowned UnitSettings s = core_settings.get_by_uuid(applet.uuid);
             applet.destroy();
-            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
-            settings.default_settings.set_strv(Key.APPLETS, del_applet_pos(applets,s.uuid).get_strv());
             core_settings.remove_unit_settings_full(s.uuid, true);
         }
         internal void applet_destroyed(string uuid)
@@ -566,11 +547,11 @@ namespace ValaPanel
 			box.show();
             this.ah_rev.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
-            core_settings.init_toplevel_plugin_list(this.settings);
-            foreach(var applet in settings.default_settings.get_strv(Key.APPLETS))
+            foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
             {
-                unowned UnitSettings pl = core_settings.get_by_uuid(applet);
-                holder.load_applet(pl);
+                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
+                if (!pl.get_is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                    holder.load_applet(pl);
             }
             this.show();
             this.stick();

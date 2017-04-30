@@ -73,8 +73,8 @@ struct _ValaPanelPlatformClass
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile);
-void vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
-void vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
+bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
 bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
