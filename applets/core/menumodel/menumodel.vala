@@ -176,7 +176,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         int_menu.show_all();
         int_menu.attach_to_widget(menubutton,null);
         menubutton.toggled.connect(()=>{
-            if(menubutton.active)
+            if(menubutton.active && !int_menu.visible)
                 int_menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
             else
                 int_menu.popdown();
