@@ -21,6 +21,7 @@ namespace XEmbed
         }
         protected override void realize()
         {
+            PanelCSS.add_css_to_widget(this,"* {background-color: transparent; background-image: none;}");
             base.realize();
             this.set_app_paintable(true);
         }
