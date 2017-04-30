@@ -46,6 +46,9 @@ typedef struct
 	char *uuid;
 } ValaPanelUnitSettings;
 
+#define vala_panel_core_settings_remove_unit_settings(s, n)                                        \
+	vala_panel_core_settings_remove_unit_settings_full(s, n, false)
+
 typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
 typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;
 
@@ -64,10 +67,9 @@ ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreS
                                                                   bool is_toplevel);
 ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
     ValaPanelCoreSettings *settings, const char *name, const char *uuid, bool is_toplevel);
-void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
-                                                   const char *name);
-void vala_panel_core_settings_destroy_unit_settings(ValaPanelCoreSettings *settings,
-                                                    const char *name);
+
+void vala_panel_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *settings,
+                                                        const char *name, bool destroy);
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
                                                             const char *uuid);
 char *vala_panel_core_settings_get_uuid();

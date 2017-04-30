@@ -324,7 +324,12 @@ namespace ValaPanel
                 s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
                 applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
             }
-            applet.destroy.connect(()=>{applet_removed(applet.uuid);});
+            applet.destroy.connect(()=>{
+                    string uuid = applet.uuid;
+                    applet_destroyed(uuid);
+                    if (this.in_destruction())
+                        core_settings.remove_unit_settings(uuid);
+            });
         }
         internal GLib.Variant add_applet_pos(string[] applets, string add)
         {
@@ -346,19 +351,17 @@ namespace ValaPanel
         }
         internal void remove_applet(Applet applet)
         {
+            unowned UnitSettings s = core_settings.get_by_uuid(applet.uuid);
             applet.destroy();
+            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
+            settings.default_settings.set_strv(Key.APPLETS, del_applet_pos(applets,s.uuid).get_strv());
+            core_settings.remove_unit_settings_full(s.uuid, true);
         }
-        internal void applet_removed(string uuid)
+        internal void applet_destroyed(string uuid)
         {
-            if (this.in_destruction())
-                return;
             unowned UnitSettings s = core_settings.get_by_uuid(uuid);
             var name = s.default_settings.get_string(Key.NAME);
             holder.applet_unref(name);
-            string[] applets = settings.default_settings.get_strv(Key.APPLETS);
-            settings.default_settings.set_strv(Key.APPLETS, del_applet_pos(applets,s.uuid).get_strv());
-//TODO: Fix UnitSettings removal
-            core_settings.remove_unit_settings(uuid);
         }
         internal void update_applet_positions()
         {
@@ -754,7 +757,7 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-                core_settings.destroy_unit_settings(this.uuid);
+                core_settings.remove_unit_settings_full(this.uuid, true);
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)

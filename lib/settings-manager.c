@@ -141,21 +141,18 @@ ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreS
 	return vala_panel_core_settings_add_unit_settings_full(settings, name, uuid, is_toplevel);
 }
 
-void vala_panel_core_settings_remove_unit_settings(ValaPanelCoreSettings *settings,
-                                                   const char *name)
+void vala_panel_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *settings,
+                                                        const char *name, bool destroy)
 {
+	if (destroy)
+	{
+		ValaPanelUnitSettings *removing_unit =
+		    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
+		vala_panel_reset_schema_with_children(removing_unit->default_settings);
+		if (removing_unit->custom_settings != NULL)
+			vala_panel_reset_schema_with_children(removing_unit->custom_settings);
+	}
 	g_hash_table_remove(settings->all_units, name);
-}
-
-void vala_panel_core_settings_destroy_unit_settings(ValaPanelCoreSettings *settings,
-                                                    const char *name)
-{
-	ValaPanelUnitSettings *removing_unit =
-	    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
-	vala_panel_reset_schema_with_children(removing_unit->default_settings);
-	if (removing_unit->custom_settings != NULL)
-		vala_panel_reset_schema_with_children(removing_unit->custom_settings);
-	vala_panel_core_settings_remove_unit_settings(settings, name);
 }
 
 ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
