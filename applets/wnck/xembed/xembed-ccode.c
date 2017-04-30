@@ -32,6 +32,8 @@
 #include <gtk/gtkx.h>
 
 #include <X11/Xatom.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/Xdamage.h>
 
 #include "xembed-ccode.h"
 #include "xembed-internal.h"
@@ -479,6 +481,38 @@ static void balloon_message_data_event(TrayPlugin *tr, XClientMessageEvent *xeve
 		}
 	}
 }
+#define xembed_set_xdamage_metadata(window, xid)                                                   \
+	g_object_set_qdata(G_OBJECT(window),                                                       \
+	                   g_quark_from_static_string("xdamage"),                                  \
+	                   GUINT_TO_POINTER(xid))
+
+#define xembed_get_xdamage_metadata(window)                                                        \
+	GPOINTER_TO_UINT(                                                                          \
+	    g_object_get_qdata(G_OBJECT(window), g_quark_from_static_string("xdamage")))
+
+static void gdk_x11_window_set_composited(GdkWindow *window, bool composited)
+{
+	GdkDisplay *display;
+	Display *dpy;
+	Window xid;
+
+	display = gdk_window_get_display(window);
+	dpy     = GDK_DISPLAY_XDISPLAY(display);
+	xid     = GDK_WINDOW_XID(window);
+
+	if (composited)
+	{
+		XCompositeRedirectWindow(dpy, xid, CompositeRedirectManual);
+		xembed_set_xdamage_metadata(window,
+		                            XDamageCreate(dpy, xid, XDamageReportBoundingBox));
+	}
+	else
+	{
+		XCompositeUnredirectWindow(dpy, xid, CompositeRedirectManual);
+		XDamageDestroy(dpy, xembed_get_xdamage_metadata(window));
+		xembed_set_xdamage_metadata(window, None);
+	}
+}
 
 /* Handler for request dock message. */
 static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
@@ -513,9 +547,7 @@ static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
 	gtk_container_add(GTK_CONTAINER(flowbox_child), tc->socket);
 	gtk_widget_show(tc->socket);
 	gtk_widget_show(flowbox_child);
-	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-	gdk_window_set_composited(gtk_widget_get_window(tc->socket), TRUE);
-	G_GNUC_END_IGNORE_DEPRECATIONS
+	gdk_x11_window_set_composited(gtk_widget_get_window(tc->socket), TRUE);
 	/* Connect the socket to the plug.  This can only be done after the socket is realized. */
 	gtk_socket_add_id(GTK_SOCKET(tc->socket), tc->window);
 

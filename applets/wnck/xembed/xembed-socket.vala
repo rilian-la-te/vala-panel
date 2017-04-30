@@ -21,22 +21,13 @@ namespace XEmbed
         }
         protected override void realize()
         {
-            Gdk.RGBA transparent = { 0, 0, 0, 0 };
-            Gdk.Window window = this.get_window();
             base.realize();
-            if (window is Gdk.Window)
-            {
-                window.set_background_rgba(transparent);
-                window.set_composited(true);
-            }
             this.set_app_paintable(true);
         }
         protected override void size_allocate(Allocation alloc)
         {
             Allocation prev_alloc;
             this.get_allocation(out prev_alloc);
-            alloc.height = icon_size;
-            alloc.width = icon_size;
             var moved = alloc.x != prev_alloc.x || alloc.y != prev_alloc.y;
             var resized = alloc.width != prev_alloc.width || alloc.height != prev_alloc.height;
             if ((moved || resized) && this.get_mapped())
@@ -59,6 +50,25 @@ namespace XEmbed
             cr.paint ();
             cr.restore ();
             return base.draw(cr);
+        }
+        protected override SizeRequestMode get_request_mode()
+        {
+            return Gtk.SizeRequestMode.CONSTANT_SIZE;
+        }
+        private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
+        {
+            min = nat = this.icon_size;
+            base_min = base_nat = -1;
+        }
+        protected override void get_preferred_height(out int min, out int nat)
+        {
+            int x,y;
+            measure(Orientation.VERTICAL,-1,out min, out nat, out x, out y);
+        }
+        protected override void get_preferred_width(out int min, out int nat)
+        {
+            int x,y;
+            measure(Orientation.HORIZONTAL,-1,out min, out nat, out x, out y);
         }
         private string? get_name_prop(string prop_name, string type_name)
         {

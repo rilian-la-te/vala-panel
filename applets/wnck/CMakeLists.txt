@@ -20,7 +20,7 @@ endif()
 option(ENABLE_X11 "Enables X11 system tray" ON)
 
 if (ENABLE_X11)
-    pkg_check_modules(X11 x11 gdk-x11-3.0)
+    pkg_check_modules(X11 x11 xcomposite xdamage xfixes gdk-x11-3.0)
     if (NOT(X11_FOUND))
         set(ENABLE_X11 OFF)
     endif()
