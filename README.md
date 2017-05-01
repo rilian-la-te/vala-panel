@@ -18,8 +18,19 @@ This is Vala rewrite of [SimplePanel](https://github.com/rilian-la-te/simple-pan
 *TODO for 0.4.0*
  * [x] Rewrite plugins API and core into C
  * [ ] Split Toplevel into 3 objects: positioner, layout and window
- * [x] Made PanelManager
- * [X] Allow positioner to be changed and dynamically linked
+   * [x] Create Platform (abstraction that will handle all positioning)
+   * [X] Allow Platform to be changed and independent form toplevel code
+   * [x] Create X11 platform (with current positioning code)
+   * [ ] Introduce gravity-based positioning
+   * [ ] Create Layout and made pack-type useful
+   * [ ] Rewrite toplevel into C
+   * [ ] Rewrite applet into C
+ * [x] Made PanelManager (done as Platform)
+
+*TODO for 0.5.0*
+ * [ ] Copy GtkPlug and GtkSocket into local tree (it is removed from GTK4)
+ * [ ] Drop libpeas in favor to applets-new.
+ * [ ] Be prepared for GTK4
 
 *Some notes about realization*
 
