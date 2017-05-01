@@ -47,6 +47,9 @@ struct _ValaPanelToplevelUnit
 };
 
 G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICATION_WINDOW)
+/*
+ * Common functions
+ */
 
 static void stop_ui(ValaPanelToplevelUnit *self)
 {
@@ -262,11 +265,10 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 		g_autofree char *uid  = g_strdup(self->uid);
 		g_autofree char *path = NULL;
 		g_object_get(self->settings->default_settings, "path", &path, NULL);
-		ValaPanelPlatform *mgr = vala_panel_applet_manager_get_manager(self->manager);
 		stop_ui(self);
 		gtk_widget_destroy(GTK_WIDGET(self));
 		/* delete the config file of this panel */
-		ValaPanelCoreSettings *st = vala_panel_platform_get_settings(mgr);
+		ValaPanelCoreSettings *st = vala_panel_platform_get_settings(platform);
 		vala_panel_core_settings_remove_unit_settings_full(st, uid, true);
 	}
 }
