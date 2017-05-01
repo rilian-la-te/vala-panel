@@ -12,7 +12,7 @@ set(APP_SOURCES
         ${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
 	vala-panel-platform-standalone-x11.h
-	application-new.c application-new.h)
+        application.c application.h)
 add_executable(${APPNAME}  ${APP_SOURCES} )
 target_link_libraries (${APPNAME} ${LIBNAME} ${CORE_LIBRARIES})
 target_include_directories(${APPNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/lib/c-lib ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/lib)

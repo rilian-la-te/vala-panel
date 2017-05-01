@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#include "application-new.h"
+#include "application.h"
 #include "lib/css.h"
 #include "lib/definitions.h"
 #include "lib/launcher.h"
