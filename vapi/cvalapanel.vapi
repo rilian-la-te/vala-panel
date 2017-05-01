@@ -147,8 +147,7 @@ namespace ValaPanel
         internal GLib.Settings custom_settings;
         internal string uuid;
         internal string path_elem;
-		internal bool get_is_toplevel();
-		internal string get_toplevel();
+		internal bool is_toplevel();
         internal UnitSettings(CoreSettings settings, string? name, string uuid);
     }
     [CCode (cheader_filename="lib/panel-platform.h")]

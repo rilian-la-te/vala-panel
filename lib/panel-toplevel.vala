@@ -302,7 +302,7 @@ namespace ValaPanel
             foreach (var unit in core_settings.core_settings.get_strv(Settings.CORE_UNITS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.get_is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
                 {
                     if (pl.default_settings.get_string(Key.NAME) == type)
                     {
@@ -550,7 +550,7 @@ namespace ValaPanel
             foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.get_is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
                     holder.load_applet(pl);
             }
             this.show();

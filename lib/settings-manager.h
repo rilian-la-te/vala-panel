@@ -56,8 +56,8 @@ typedef enum {
 #define vala_panel_core_settings_remove_unit_settings(s, n)                                        \
 	vala_panel_core_settings_remove_unit_settings_full(s, n, false)
 
-#define vala_panel_unit_settings_get_is_toplevel(s)                                                \
-	g_settings_get_enum(s->default_settings, VALA_PANEL_OBJECT_TYPE) == TOPLEVEL
+#define vala_panel_unit_settings_is_toplevel(s)                                                    \
+	g_settings_get_enum(s->type_settings, VALA_PANEL_OBJECT_TYPE) == TOPLEVEL
 
 typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
 typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;

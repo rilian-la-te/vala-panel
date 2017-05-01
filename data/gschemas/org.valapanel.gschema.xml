@@ -1,8 +1,5 @@
 <schemalist>
   <schema id="org.valapanel">
-    <key name="toplevels" type="as">
-      <default>[]</default>
-    </key>
     <key name="is-dark" type="b">
       <default>false</default>
     </key>
@@ -26,20 +23,6 @@
     </key>
     <key name="confirm-panel-remove" type="b">
       <default>true</default>
-    </key>
-  </schema>
-  <schema id="org.valapanel.core">
-    <key name="units" type="as">
-      <default>[]</default>
-    </key>
-  </schema>
-  <enum id="org.valapanel.Type">
-    <value nick="toplevel" value="0"/>
-    <value nick="applet" value="1"/>
-  </enum>
-  <schema id="org.valapanel.type">
-    <key name="object-type" enum="org.valapanel.Type">
-      <default>'applet'</default>
     </key>
   </schema>
 </schemalist>

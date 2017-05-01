@@ -1,4 +1,18 @@
 <schemalist>
+  <schema id="org.valapanel.core">
+    <key name="units" type="as">
+      <default>[]</default>
+    </key>
+  </schema>
+  <enum id="org.valapanel.Type">
+    <value nick="toplevel" value="0"/>
+    <value nick="applet" value="1"/>
+  </enum>
+  <schema id="org.valapanel.object">
+    <key name="object-type" enum="org.valapanel.Type">
+      <default>'applet'</default>
+    </key>
+  </schema>
   <enum id="org.valapanel.GtkPositionType">
     <value nick="left" value="0"/>
     <value nick="right" value="1"/>

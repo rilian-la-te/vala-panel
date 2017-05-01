@@ -1,17 +1,20 @@
+[core-version-1]
+units = ['toplevel1','toplevel2','wcm','sep1','tlist','pgr','sep2','menubar','launch','sep3','xembed','clock']
+
 [global]
-toplevels=['toplevel1','toplevel2']
 is-custom=false
 logout-command='lxsession-logout'
 shutdown-command='lxsession-logout'
 
 [toplevel2]
+object-type='toplevel'
 edge='bottom'
 monitor=-1
 height=26
 auto-hide=false
-applets = ['wcm','sep1','tlist','pgr']
 
 [wcm]
+toplevel-id='toplevel2'
 plugin-type='wincmd'
 position=0
 left-button-command='iconify'
@@ -20,35 +23,40 @@ image='gnome-window-manager'
 toggle-iconify-and-shade=true
 
 [sep1]
+toplevel-id='toplevel2'
 plugin-type='separator'
 position=1
 show-separator=false
 size=4
 
 [tlist]
+toplevel-id='toplevel2'
 plugin-type='tasklist'
 position=2
 is-expanded=true
 
 [pgr]
+toplevel-id='toplevel2'
 plugin-type='pager'
 position=3
 
 [toplevel1]
+object-type='toplevel'
 monitor=-1
 edge='top'
 height=26
 auto-hide=false
 alignment='center'
-applets = ['sep2','menubar','launch','sep3','xembed','clock']
 
 [sep2]
+toplevel-id='toplevel1'
 plugin-type='separator'
 position=0
 show-separator=false
 size=2
 
 [menubar]
+toplevel-id='toplevel1'
 plugin-type='menumodel'
 position=1
 icon-name='start-here-symbolic'
@@ -57,11 +65,13 @@ is-system-menu=true
 is-menu-bar=true
 
 [launch]
+toplevel-id='toplevel1'
 plugin-type='launchbar'
 launch-buttons=['pcmanfm.desktop', 'gnome-terminal.desktop', 'firefox.desktop']
 position=2
 
 [sep3]
+toplevel-id='toplevel1'
 plugin-type='separator'
 is-expanded=true
 show-separator=false
@@ -69,10 +79,12 @@ size=2
 position=3
 
 [xembed]
+toplevel-id='toplevel1'
 plugin-type='xembed'
 position=4
 
 [clock]
+toplevel-id='toplevel1'
 plugin-type='clock'
 clock-format='%R'
 tooltip-format='%A %x'

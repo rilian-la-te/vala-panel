@@ -26,7 +26,7 @@
 
 #define VALA_PANEL_CORE_SCHEMA "org.valapanel.core"
 #define VALA_PANEL_CORE_PATH_ELEM "core-version-1"
-#define VALA_PANEL_CORE_UNITS "used-units-version-1"
+#define VALA_PANEL_CORE_UNITS "units"
 
 #define VALA_PANEL_OBJECT_SCHEMA "org.valapanel.object"
 #define VALA_PANEL_OBJECT_TYPE "object-type"

@@ -22,7 +22,6 @@
 #include "panel-platform.h"
 #include <glib-object.h>
 
-#define VALA_PANEL_APPLICATION_PANELS "toplevels"
 #define VALA_PANEL_CONFIG_HEADER "global"
 
 G_BEGIN_DECLS

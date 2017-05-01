@@ -55,27 +55,36 @@ ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const cha
 	return pl;
 }
 
+typedef struct
+{
+	GtkApplication *app;
+	ValaPanelPlatform *obj;
+	int toplevels_count;
+} DataStruct;
+
+static void predicate_func(const char *key, ValaPanelUnitSettings *value, DataStruct *user_data)
+{
+	bool is_toplevel = vala_panel_unit_settings_is_toplevel(value);
+	if (is_toplevel)
+	{
+		ValaPanelToplevel *unit =
+		    vala_panel_toplevel_new(user_data->app, user_data->obj, key);
+		gtk_application_add_window(user_data->app, GTK_WINDOW(unit));
+		user_data->toplevels_count++;
+	}
+}
+
 static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform *obj,
                                                               GtkApplication *app,
                                                               const char *profile)
 {
 	ValaPanelCoreSettings *core = vala_panel_platform_get_settings(obj);
-	ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
-	g_autoptr(GSettings) s =
-	    g_settings_new_with_backend_and_path(core->root_schema, core->backend, core->root_path);
-	g_auto(GStrv) panels = g_settings_get_strv(s, VALA_PANEL_APPLICATION_PANELS);
-	int count;
-	for (count = 0; count < g_strv_length(panels); count++)
-	{
-		g_autofree char *toplevel_uuid = g_strdup(panels[count]);
-		vala_panel_core_settings_add_unit_settings_full(core,
-		                                                VALA_PANEL_TOPLEVEL_SCHEMA_ELEM,
-		                                                toplevel_uuid,
-		                                                true);
-		ValaPanelToplevel *unit = vala_panel_toplevel_new(self->app, obj, toplevel_uuid);
-		gtk_application_add_window(app, GTK_WINDOW(unit));
-	}
-	return count > 0 ? true : false;
+	DataStruct user_data;
+	user_data.app             = app;
+	user_data.obj             = obj;
+	user_data.toplevels_count = 0;
+	g_hash_table_foreach(core->all_units, (GHFunc)predicate_func, &user_data);
+	return user_data.toplevels_count;
 }
 
 static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x,
