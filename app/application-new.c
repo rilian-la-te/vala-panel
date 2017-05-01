@@ -199,11 +199,13 @@ static void vala_panel_application_shutdown(GApplication *base)
 	                                                          GtkApplication));
 	if (VALA_PANEL_APPLICATION(base)->restart)
 	{
+		g_autoptr(GError) err = NULL;
 		char cwd[1024];
 		getcwd(cwd, 1024);
 		const char *argv[] = { CONFIG_GETTEXT_PACKAGE,
 			               "-p",
-			               VALA_PANEL_APPLICATION(base)->profile };
+			               VALA_PANEL_APPLICATION(base)->profile,
+			               NULL };
 		g_auto(GStrv) envp = g_get_environ();
 		g_spawn_async(cwd,
 		              (GStrv)argv,
@@ -212,7 +214,9 @@ static void vala_panel_application_shutdown(GApplication *base)
 		              child_spawn_func,
 		              NULL,
 		              NULL,
-		              NULL);
+		              &err);
+		if (err)
+			g_critical("%s\n", err->message);
 	}
 }
 
