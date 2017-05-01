@@ -56,9 +56,6 @@ typedef enum {
 #define vala_panel_core_settings_remove_unit_settings(s, n)                                        \
 	vala_panel_core_settings_remove_unit_settings_full(s, n, false)
 
-#define vala_panel_unit_settings_is_toplevel(s)                                                    \
-	g_settings_get_enum(s->type_settings, VALA_PANEL_OBJECT_TYPE) == TOPLEVEL
-
 typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
 typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;
 
@@ -66,6 +63,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
                                                     const char *name, const char *uuid,
                                                     bool is_toplevel);
 void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
+bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings);
 GType vala_panel_unit_settings_get_type();
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelUnitSettingsPointer, vala_panel_unit_settings_free, NULL);
 
