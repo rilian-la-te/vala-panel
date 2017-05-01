@@ -28,9 +28,9 @@ This is Vala rewrite of [SimplePanel](https://github.com/rilian-la-te/simple-pan
  * [x] Made PanelManager (done as Platform)
 
 *TODO for 0.5.0*
- * [ ] Copy GtkPlug and GtkSocket into local tree (it is removed from GTK4)
  * [ ] Drop libpeas in favor to applets-new.
  * [ ] Be prepared for GTK4
+ * [ ] Replace XEmbed to proxy and move it to extras
 
 *Some notes about realization*
 
