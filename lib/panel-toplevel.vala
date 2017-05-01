@@ -33,11 +33,11 @@ namespace ValaPanel
         private Gtk.Menu context_menu;
         internal ConfigureDialog pref_dialog;
         private bool initialized;
-        public const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
+        private const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
                                                 Key.MONITOR,Key.AUTOHIDE,
                                                 Key.MARGIN,Key.DOCK,Key.STRUT,
                                                 Key.DYNAMIC};
-        public const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
+        private const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
                                                 Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
                                                 Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
                                                 Key.USE_BACKGROUND_FILE, Key.USE_FONT,
@@ -45,14 +45,6 @@ namespace ValaPanel
 
 
         public string uuid {get; internal construct;}
-
-        private string profile
-        { owned get {
-            GLib.Value v = Value(typeof(string));
-            this.get_application().get_property("profile",ref v);
-            return v.get_string();
-            }
-        }
         public int height { get; internal set;}
         private int _w;
         public int width
@@ -353,7 +345,7 @@ namespace ValaPanel
                 box.reorder_child((l.data as Applet),(int)idx);
             }
         }
-        public List<unowned Widget> get_applets_list()
+        internal List<unowned Widget> get_applets_list()
         {
             return box.get_children();
         }
@@ -396,7 +388,7 @@ namespace ValaPanel
             setup(false);
         }
         [CCode (returns_floating_reference = true)]
-        public static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
+        private static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
         {
             return new Toplevel.from_position(app,name,mon,e);
         }

@@ -19,7 +19,6 @@
 #ifndef SETTINGSMANAGER_H
 #define SETTINGSMANAGER_H
 
-#include "config.h"
 #include "constants.h"
 
 #include <gio/gio.h>

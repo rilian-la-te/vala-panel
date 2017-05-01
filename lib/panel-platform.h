@@ -23,8 +23,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-#include "lib/constants.h"
-#include "lib/settings-manager.h"
+#include "constants.h"
+#include "settings-manager.h"
 
 G_BEGIN_DECLS
 

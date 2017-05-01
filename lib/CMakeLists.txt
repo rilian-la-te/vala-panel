@@ -11,24 +11,25 @@ option(ENABLE_NEW_INTERFACE "Enable new interface function" OFF)
 if (ENABLE_NEW_INTERFACE)
     set(NEW_DEFINE -D NEW)
 endif()
-set(LIBVALAPANEL_C_SOURCES
+set(LIBVALAPANEL_HEADERS
     constants.h
-    misc.c
     misc.h
     menu-maker.h
+    css.h
+    launcher.h
+    generic-config-dialog.h
+    settings-manager.h
+    panel-platform.h
+    ${ENUMSH})
+set(LIBVALAPANEL_C_SOURCES
+    misc.c
     menu-maker.c
     css.c
-    css.h
     launcher.c
-    launcher.h
     generic-config-dialog.c
-    generic-config-dialog.h
     settings-manager.c
-    settings-manager.h
     panel-platform.c
-    panel-platform.h
-    ${ENUMSC}
-    ${ENUMSH})
+    ${ENUMSC})
 INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
     list(APPEND LIBVALAPANEL_C_SOURCES
@@ -83,6 +84,7 @@ add_custom_target(vala-ide-lib SOURCES ${VALA_FILES})
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${LIBVALAPANEL_C_SOURCES}
+    ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
     definitions.h
 )
@@ -97,7 +99,9 @@ set_target_properties (${LIBNAME} PROPERTIES
 install (TARGETS ${LIBNAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT bin)
 
 # Install lib stuffs
+list(APPEND LIBVALAPANEL_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}-compat.h)
+
 install (FILES ${CMAKE_BINARY_DIR}/${APPNAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/ COMPONENT dev)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.vapi DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.deps DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}-compat.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev RENAME ${APPNAME}.h)
+install (FILES ${LIBVALAPANEL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)

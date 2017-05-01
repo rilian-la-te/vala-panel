@@ -137,12 +137,12 @@ namespace ValaPanel
             base_min=base_nat = -1;
         }
 
-        public override void get_preferred_height_for_width(int width,out int min, out int nat)
+        protected override void get_preferred_height_for_width(int width,out int min, out int nat)
         {
             int x,y;
             measure(Orientation.VERTICAL,width,out min,out nat,out x, out y);
         }
-        public override void get_preferred_width_for_height(int height, out int min, out int nat)
+        protected override void get_preferred_width_for_height(int height, out int min, out int nat)
         {
             int x,y;
             measure(Orientation.HORIZONTAL,height,out min,out nat,out x, out y);
