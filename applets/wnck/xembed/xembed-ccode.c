@@ -38,6 +38,8 @@
 #include "xembed-ccode.h"
 #include "xembed-internal.h"
 
+#include "definitions.h"
+
 /* Standards reference:  http://standards.freedesktop.org/systemtray-spec/ */
 
 /* Protocol constants. */
@@ -49,14 +51,14 @@
 #define SYSTEM_TRAY_ORIENTATION_VERT 1
 
 /* X11 data types */
-Atom a_UTF8_STRING;
-Atom a_XROOTPMAP_ID;
+static Atom a_UTF8_STRING;
+static Atom a_XROOTPMAP_ID;
 /* SYSTEM TRAY spec */
-Atom a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
-Atom a_NET_SYSTEM_TRAY_OPCODE;
-Atom a_NET_SYSTEM_TRAY_MESSAGE_DATA;
-Atom a_NET_SYSTEM_TRAY_ORIENTATION;
-Atom a_MANAGER;
+static Atom a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
+static Atom a_NET_SYSTEM_TRAY_OPCODE;
+static Atom a_NET_SYSTEM_TRAY_MESSAGE_DATA;
+static Atom a_NET_SYSTEM_TRAY_ORIENTATION;
+static Atom a_MANAGER;
 enum
 {
 	I_UTF8_STRING,
@@ -841,7 +843,8 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 void tray_destructor(gpointer user_data)
 {
 	TrayPlugin *tr = user_data;
-	gtk_widget_destroy(tr->plugin);
+	if (GTK_IS_WIDGET(tr->plugin))
+		gtk_widget_destroy0(tr->plugin);
 
 	/* Remove GDK event filter. */
 	gdk_window_remove_filter(NULL, (GdkFilterFunc)tray_event_filter, tr);
