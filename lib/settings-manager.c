@@ -60,7 +60,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 	g_autoptr(GSettingsSchema) schema = g_settings_schema_source_lookup(source, id, true);
 	if (schema != NULL)
 		created_settings->custom_settings =
-		    g_settings_new_with_backend_and_path(id, settings->backend, path);
+		    g_settings_new_full(schema, settings->backend, path);
 	else
 		created_settings->custom_settings = NULL;
 	return created_settings;
