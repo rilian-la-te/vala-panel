@@ -41,19 +41,10 @@ namespace ValaPanel {
         EXTERNAL
     }
 	[CCode (cheader_filename = "vala-panel-compat.h")]
-	public interface AppletConfigurable {
-		[CCode (returns_floating_reference = true)]
-		public abstract Gtk.Dialog get_config_dialog ();
-	}
-	[CCode (cheader_filename = "vala-panel-compat.h")]
-	public interface AppletMenu {
-		public abstract void show_system_menu ();
-	}
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public interface AppletPlugin : Peas.ExtensionBase {
 		public abstract ValaPanel.Applet get_applet_widget (ValaPanel.Toplevel toplevel, GLib.Settings? settings, string number);
 	}
-	[CCode (cheader_filename = "vala-panel-compat.h", cname = "PanelApplet")]
+	[CCode (cheader_filename = "applet-widget.h")]
 	public abstract class Applet : Gtk.EventBox {
 		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
 		public void init_background ();

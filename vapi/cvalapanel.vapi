@@ -36,6 +36,17 @@ namespace PanelCSS
 }
 namespace ValaPanel
 {
+	[CCode (cheader_filename = "applet-widget.h")]
+	public abstract class Applet : Gtk.Bin {
+		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
+		public void init_background ();
+		public void show_config_dialog ();
+		public virtual void update_context_menu (ref GLib.Menu parent_menu);
+		public Gtk.Widget background_widget { get; set; }
+		public GLib.Settings? settings { get; construct; }
+		public ValaPanel.Toplevel toplevel { get; construct; }
+		public string uuid { get; construct; }
+	}
     [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "c-panel-layout.h")]
     public enum AppletPackType
     {

@@ -12,6 +12,7 @@ if (ENABLE_NEW_INTERFACE)
     set(NEW_DEFINE -D NEW)
 endif()
 set(LIBVALAPANEL_HEADERS
+    applet-widget.h
     constants.h
     misc.h
     menu-maker.h
@@ -29,6 +30,7 @@ set(LIBVALAPANEL_C_SOURCES
     generic-config-dialog.c
     settings-manager.c
     panel-platform.c
+    applet-widget.c
     ${ENUMSC})
 INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
@@ -40,7 +42,6 @@ set(VALA_FILES
 	misc-old.vala
 	configurator.vala
 	dbusmenu/dbusmenu.vala
-	panel-plugin.vala
 	applet-holder.vala
 	panel-toplevel.vala
 	)

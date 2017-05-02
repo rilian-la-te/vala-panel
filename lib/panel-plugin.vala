@@ -21,25 +21,14 @@ using Config;
 
 namespace ValaPanel
 {
-    public interface AppletMenu
-    {
-        public abstract void show_system_menu();
-    }
-    public interface AppletConfigurable
-    {
-        [CCode (returns_floating_reference = true)]
-        public abstract Gtk.Dialog get_config_dialog();
-    }
     [CCode (cname = "PanelApplet")]
-    public abstract class Applet : Gtk.EventBox
+    public abstract class Applet : Gtk.Bin
     {
         private Dialog? dialog;
-        const GLib.ActionEntry[] config_entry =
-        {
-            {"configure",activate_configure,null,null,null}
-        };
         const GLib.ActionEntry[] remove_entry =
         {
+            {"menu",activate_menu,null,null,null},
+            {"configure",activate_configure,null,null,null},
             {"remove",activate_remove,null,null,null}
         };
         public unowned Gtk.Widget background_widget {get; set;}
@@ -47,13 +36,14 @@ namespace ValaPanel
         public unowned GLib.Settings? settings {get; construct;}
         public string uuid {get; construct;}
         public virtual void update_context_menu(ref GLib.Menu parent_menu){}
+        public SimpleActionGroup grp {get; private set;}
         public Applet(ValaPanel.Toplevel top, GLib.Settings? s, string uuid)
         {
             Object(toplevel: top, settings: s, uuid: uuid);
         }
         construct
         {
-            SimpleActionGroup grp = new SimpleActionGroup();
+            grp = new SimpleActionGroup();
             this.set_has_window(false);
             this.border_width = 0;
             this.button_release_event.connect((b)=>
@@ -66,10 +56,13 @@ namespace ValaPanel
                 }
                 return false;
             });
-            if (this is AppletConfigurable)
-                grp.add_action_entries(config_entry,this);
             grp.add_action_entries(remove_entry,this);
             this.insert_action_group("applet",grp);
+            var cnf = grp.lookup_action("configure") as SimpleAction;
+            var mn = grp.lookup_action("menu") as SimpleAction;
+            cnf.set_enabled(false);
+            cnf.set_enabled(false);
+            set_actions();
         }
         protected override void parent_set(Gtk.Widget? prev_parent)
         {
@@ -93,13 +86,14 @@ namespace ValaPanel
         {
             show_config_dialog();
         }
+        protected virtual void activate_menu(SimpleAction act, Variant? param)
+        {
+        }
         public void show_config_dialog()
         {
-            if (!(this is AppletConfigurable))
-                return;
             if (dialog == null)
             {
-                var dlg = (this as AppletConfigurable).get_config_dialog();
+                var dlg = this.get_config_dialog();
                 this.destroy.connect(()=>{dlg.response(Gtk.ResponseType.CLOSE);});
                 dlg.set_transient_for(toplevel);
                 dialog = dlg;
@@ -107,6 +101,10 @@ namespace ValaPanel
                 dialog.response.connect(()=>{dialog.destroy(); dialog = null;});
             }
             dialog.present();
+        }
+        public bool is_configurable()
+        {
+        return grp.get_action_enabled("configure");
         }
         private void activate_remove(SimpleAction act, Variant? param)
         {
@@ -160,6 +158,15 @@ namespace ValaPanel
         {
             min = (int)toplevel.icon_size;
             nat = toplevel.height;
+        }
+        [CCode (returns_floating_reference = true)]
+        public virtual Gtk.Dialog? get_config_dialog()
+        {
+            return null;
+        }
+        public virtual void set_actions()
+        {
+
         }
     }
 }

@@ -235,7 +235,7 @@ namespace ValaPanel
                 model.get(it, Column.DATA, out pl, -1 );
                 var desc = Toplevel.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_description();
                 plugin_desc.set_text(_(desc) );
-                configure_button.set_sensitive(pl is AppletConfigurable);
+                configure_button.set_sensitive(pl.is_configurable());
             }
         }
         private void on_plugin_expand_toggled(string path)
@@ -312,7 +312,7 @@ namespace ValaPanel
                 if( ! tree_sel.get_selected(out model, out iter ) )
                     return;
                 model.get(iter, Column.DATA, out pl, -1);
-                if (pl is AppletConfigurable)
+                if (pl.is_configurable())
                     pl.show_config_dialog();
             });
             var list = plugin_list.get_model();
@@ -332,7 +332,7 @@ namespace ValaPanel
             if( ! tree_sel.get_selected(out model, out iter ) )
                 return;
             model.get(iter, Column.DATA, out pl, -1);
-            if (pl is AppletConfigurable)
+            if (pl.is_configurable())
                 pl.show_config_dialog();
         }
         private int sort_by_name(TreeModel model, TreeIter a, TreeIter b)
