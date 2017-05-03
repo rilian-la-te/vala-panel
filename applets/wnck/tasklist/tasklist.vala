@@ -27,7 +27,7 @@ public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
         return new Tasklist(toplevel,settings,number);
     }
 }
-public class Tasklist: Applet, AppletConfigurable
+public class Tasklist: Applet
 {
     Wnck.Tasklist widget;
     private const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
@@ -43,6 +43,7 @@ public class Tasklist: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         widget = new Wnck.Tasklist();
         this.add(widget);
         toplevel.notify["orientation"].connect_after((s,p)=>{
@@ -90,10 +91,9 @@ public class Tasklist: Applet, AppletConfigurable
         base.get_preferred_width_internal(out x, out y);
         measure(Orientation.HORIZONTAL,-1,out min,out nat,out x, out y);
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Tasklist Applet"),
-                            toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                             _("Show windows from all desktops"), KEY_ALL_DESKTOPS, GenericConfigType.BOOL,
                             _("Show window`s workspace on unminimize"), KEY_SWITCH_UNMIN, GenericConfigType.BOOL,
                             _("Close windows on middle click"), KEY_MIDDLE_CLICK_CLOSE, GenericConfigType.BOOL,

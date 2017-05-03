@@ -27,7 +27,7 @@ public class WincmdApplet : AppletPlugin, Peas.ExtensionBase
         return new Wincmd(toplevel,settings,number);
     }
 }
-public class Wincmd: Applet, AppletConfigurable
+public class Wincmd: Applet
 {
     private const string KEY_LEFT = "left-button-command";
     private const string KEY_MIDDLE = "middle-button-command";
@@ -55,6 +55,7 @@ public class Wincmd: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         button = new Button();
         image = new Image();
         settings.bind(KEY_LEFT,this,KEY_LEFT,SettingsBindFlags.GET);
@@ -80,11 +81,9 @@ public class Wincmd: Applet, AppletConfigurable
         this.add(button);
         this.show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-
-       return Configurator.generic_config_dlg(_("Minimize All Windows"),
-        toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
         _("Alternately iconify/shade and raise"), KEY_TOGGLE, GenericConfigType.BOOL
         /* FIXME: configure buttons 1 and 2 */);
     }

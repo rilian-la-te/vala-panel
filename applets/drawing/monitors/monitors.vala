@@ -343,7 +343,7 @@ internal class MemMonitor : Monitor
     }
 }
 
-public class Monitors: Applet, AppletConfigurable
+public class Monitors: Applet
 {
     private const uint UPDATE_PERIOD = 1; /* Seconds              */
     private const uint N_MONITORS = 2;
@@ -361,6 +361,7 @@ public class Monitors: Applet, AppletConfigurable
                                   string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         monitors = new Monitor[2];
         box = new Gtk.Box(Orientation.HORIZONTAL,2);
         box.set_homogeneous(true);
@@ -391,10 +392,9 @@ public class Monitors: Applet, AppletConfigurable
         this.add(box);
         this.show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Resource monitors"),
-            toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
             _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
             _("CPU color"), CPU_CL, GenericConfigType.STR,
             _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,

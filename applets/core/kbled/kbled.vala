@@ -27,7 +27,7 @@ public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
         return new Kbled(toplevel,settings,number);
     }
 }
-public class Kbled: Applet, AppletConfigurable
+public class Kbled: Applet
 {
     private const string CAPS_ON = "capslock-on";
     private const string NUM_ON = "numlock-on";
@@ -41,6 +41,7 @@ public class Kbled: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
         widget = new FlowBox();
         widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;

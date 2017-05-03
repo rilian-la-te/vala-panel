@@ -43,7 +43,7 @@ internal enum InternalMenu
     RECENT,
     MOUNTS
 }
-public class Menu: Applet, AppletConfigurable, AppletMenu
+public class Menu: Applet
 {
     GLib.Menu? menu;
     unowned Container? button;
@@ -62,8 +62,9 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
                                     string number)
     {
          base(toplevel,settings,number);
+         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+         (this.action_group.lookup_action(AppletAction.MENU) as SimpleAction).set_enabled(true);
          button = null;
-         this.set_visible_window(false);
          settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
          settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
          settings.bind(Key.IS_INTERNAL_MENU,this,"intern",SettingsBindFlags.GET);
@@ -104,9 +105,9 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         menumodel_widget_destroy();
         base.destroy();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Custom Menu"), toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                                       _("If internal menu is enabled, menu file will not be used, predefeined menu will be used instead."),null, GenericConfigType.TRIM,
                                       _("Is internal menu"), Key.IS_INTERNAL_MENU, GenericConfigType.BOOL,
                                       _("Is system menu (can be keybound)"), Key.IS_SYSTEM_MENU, GenericConfigType.BOOL,

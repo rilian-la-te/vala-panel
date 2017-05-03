@@ -37,7 +37,7 @@ namespace LaunchBar
         }
     }
     private const string BUTTONS = "launch-buttons";
-    public class Bar: Applet, AppletConfigurable
+    public class Bar: Applet
     {
         internal string[]? ids;
         FlowBox layout;
@@ -48,6 +48,7 @@ namespace LaunchBar
                                         string number)
         {
             base(toplevel,settings,number);
+            (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
             layout = new FlowBox();
             Gtk.drag_dest_set (
                     layout,                     // widget that will accept a drop
@@ -77,9 +78,9 @@ namespace LaunchBar
             });
             show_all();
         }
-        private Dialog get_config_dialog()
+        protected override Widget get_settings_ui()
         {
-            return new ConfigDialog(this);
+            return new ConfigWidget(this);
         }
         private void update_buttons_from_gsettings()
         {

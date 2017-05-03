@@ -27,7 +27,7 @@ public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
         return new Deskno(toplevel,settings,number);
     }
 }
-public class Deskno: Applet, AppletConfigurable
+public class Deskno: Applet
 {
     private const string KEY_LABELS = "wm-labels";
     private const string KEY_BOLD = "bold-font";
@@ -42,6 +42,7 @@ public class Deskno: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         label = new Label(null);
         settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
         settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
@@ -59,11 +60,10 @@ public class Deskno: Applet, AppletConfigurable
         this.add(label);
         this.show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
 
-       return Configurator.generic_config_dlg(_("Desktop Number / Workspace Name"),
-            toplevel, this.settings,
+       return Configurator.generic_config_widget(this.settings,
             _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
             _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
     }

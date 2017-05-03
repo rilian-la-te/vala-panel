@@ -25,6 +25,13 @@ namespace ValaPanel.Configurator
 {
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
+    public static Widget generic_config_widget(GLib.Settings settings, ...);
+}
+[CCode (cheader_filename = "applet-widget.h")]
+namespace ValaPanel.AppletAction
+{
+	public const string MENU;
+	public const string CONFIGURE;
 }
 namespace ValaPanel {
     [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "generic-config-dialog.h")]
@@ -45,13 +52,18 @@ namespace ValaPanel {
 		public abstract ValaPanel.Applet get_applet_widget (ValaPanel.Toplevel toplevel, GLib.Settings? settings, string number);
 	}
 	[CCode (cheader_filename = "applet-widget.h")]
-	public abstract class Applet : Gtk.EventBox {
+	public abstract class Applet : Gtk.Bin {
+		[CCode (cheader_filename = "applet-widget-api.h")]
 		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
 		public void init_background ();
 		public void show_config_dialog ();
+		public bool is_configurable();
 		public virtual void update_context_menu (ref GLib.Menu parent_menu);
+		public virtual Widget get_settings_ui();
 		public Gtk.Widget background_widget { get; set; }
 		public GLib.Settings? settings { get; construct; }
+		public SimpleActionGroup action_group { get; }
+		[CCode (cheader_filename = "applet-widget-api.h")]
 		public ValaPanel.Toplevel toplevel { get; construct; }
 		public string uuid { get; construct; }
 	}

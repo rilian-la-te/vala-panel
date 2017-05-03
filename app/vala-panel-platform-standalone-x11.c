@@ -18,12 +18,12 @@
 
 #include "config.h"
 
+#include "applet-widget.h"
 #include "gio/gsettingsbackend.h"
-#include "lib/applets-new/applet-api.h"
 #include "lib/c-lib/toplevel.h"
 #include "lib/definitions.h"
 #include "lib/settings-manager.h"
-#include "lib/vala-panel-compat.h"
+#include "vala-panel-compat.h"
 #include "vala-panel-platform-standalone-x11.h"
 
 struct _ValaPanelPlatformX11

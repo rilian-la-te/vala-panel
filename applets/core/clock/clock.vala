@@ -27,7 +27,7 @@ public class ClockApplet : AppletPlugin, Peas.ExtensionBase
         return new Clock(toplevel,settings,number);
     }
 }
-public class Clock: Applet, AppletConfigurable
+public class Clock: Applet
 {
     private const string TIP_FORMAT = "tooltip-format";
     private const string LABEL_FORMAT = "clock-format";
@@ -54,6 +54,7 @@ public class Clock: Applet, AppletConfigurable
                                     string number)
     {
         base(toplevel,settings,number);
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         settings.bind(LABEL_FORMAT,this,LABEL_FORMAT,SettingsBindFlags.GET);
         settings.bind(TIP_FORMAT,this,TIP_FORMAT,SettingsBindFlags.GET);
         settings.bind(BOLD,this,BOLD,SettingsBindFlags.GET);
@@ -93,10 +94,9 @@ public class Clock: Applet, AppletConfigurable
         this.add(clock);
         this.show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Digital Clock"),
-        toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
         _("Clock Format"), LABEL_FORMAT, GenericConfigType.STR,
         _("Tooltip Format"), TIP_FORMAT, GenericConfigType.STR,
         _("Format codes: man 3 strftime; %n for line break"), null, GenericConfigType.TRIM,

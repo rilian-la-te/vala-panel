@@ -38,6 +38,7 @@
 #include "xembed-ccode.h"
 #include "xembed-internal.h"
 
+#include "applet-widget-api.h"
 #include "definitions.h"
 
 /* Standards reference:  http://standards.freedesktop.org/systemtray-spec/ */
@@ -748,7 +749,7 @@ static void tray_draw_box(GtkWidget *box, cairo_t *cr)
 }
 
 /* Plugin constructor. */
-TrayPlugin *tray_constructor(PanelApplet *applet)
+TrayPlugin *tray_constructor(ValaPanelApplet *applet)
 {
 	GtkWidget *p;
 	resolve_atoms();

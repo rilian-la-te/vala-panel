@@ -324,7 +324,7 @@ namespace ValaPanel
                         core_settings.remove_unit_settings(uuid);
             });
         }
-        internal void remove_applet(Applet applet)
+        public void remove_applet(Applet applet)
         {
             unowned UnitSettings s = core_settings.get_by_uuid(applet.uuid);
             applet.destroy();
@@ -627,7 +627,7 @@ namespace ValaPanel
             return false;
         }
 
-        internal Gtk.Menu get_plugin_menu(Applet? pl)
+        public Gtk.Menu get_plugin_menu(Applet? pl)
         {
             var builder = new Builder.from_resource("/org/vala-panel/lib/menus.ui");
             unowned GLib.Menu gmenu = builder.get_object("panel-context-menu") as GLib.Menu;

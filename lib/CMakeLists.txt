@@ -12,6 +12,7 @@ if (ENABLE_NEW_INTERFACE)
     set(NEW_DEFINE -D NEW)
 endif()
 set(LIBVALAPANEL_HEADERS
+    applet-widget-api.h
     applet-widget.h
     constants.h
     misc.h

@@ -1,4 +1,5 @@
 #include "applet-widget.h"
+#include "css.h"
 #include "definitions.h"
 #include "vala-panel-compat.h"
 
@@ -20,12 +21,15 @@ static inline void destroy0(GtkWidget *x)
 
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelApplet, vala_panel_applet, GTK_TYPE_BIN)
 
-static void activate_remove(GSimpleAction *act, GVariant *param, ValaPanelApplet *self);
+static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self);
+static void activate_menu(GSimpleAction *act, GVariant *param, gpointer self);
+static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 
-static const GActionEntry entries[] = { { "menu", activate_menu, NULL, NULL, NULL },
-	                                { "configure", activate_configure, NULL, NULL, NULL },
-	                                { "remove", activate_remove, NULL, NULL, NULL },
-	                                { NULL } };
+static const GActionEntry entries[] =
+    { { VALA_PANEL_APPLET_ACTION_MENU, activate_menu, NULL, NULL, NULL },
+      { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
+      { "remove", activate_remove, NULL, NULL, NULL },
+      { NULL } };
 
 enum
 {
@@ -37,72 +41,69 @@ enum
 	VALA_PANEL_APPLET_GRP
 };
 
-// private Dialog? dialog;
-// public unowned Gtk.Widget background_widget {get; set;}
-// public unowned ValaPanel.Toplevel toplevel {get; construct;}
-// public unowned GLib.Settings? settings {get; construct;}
-// public string uuid {get; construct;}
-// public virtual void update_context_menu(ref GLib.Menu parent_menu){}
-// public SimpleActionGroup grp {get; private set;}
-// public Applet(ValaPanel.Toplevel top, GLib.Settings? s, string uuid)
-//{
-//    Object(toplevel: top, settings: s, uuid: uuid);
-//}
-// construct
-//{
-//    grp = new SimpleActionGroup();
-//    this.set_has_window(false);
-//    this.border_width = 0;
-//    this.button_release_event.connect((b)=>
-//    {
-//        if (b.button == 3 &&
-//            ((b.state & Gtk.accelerator_get_default_mod_mask ()) == 0))
-//        {
-//            toplevel.get_plugin_menu(this).popup_at_widget(this,Gdk.Gravity.NORTH,
-//            Gdk.Gravity.NORTH,b);
-//            return true;
-//        }
-//        return false;
-//    });
-//    grp.add_action_entries(remove_entry,this);
-//    this.insert_action_group("applet",grp);
-//    var cnf = grp.lookup_action("configure") as SimpleAction;
-//    var mn = grp.lookup_action("menu") as SimpleAction;
-//    cnf.set_enabled(false);
-//    cnf.set_enabled(false);
-//    set_actions();
-//}
-// protected override void parent_set(Gtk.Widget? prev_parent)
-//{
-//    if (prev_parent == null)
-//    {
-//        if (background_widget == null)
-//            background_widget = this;
-//        init_background();
-//    }
-//}
-// public void init_background()
-//{
-//    var color = Gdk.RGBA();
-//    color.parse ("transparent");
-//    PanelCSS.apply_with_class(background_widget,
-//                              PanelCSS.generate_background(null,color),
-//                              "-vala-panel-background",
-//                              false);
-//}
-// private void activate_configure(SimpleAction act, Variant? param)
-//{
-//    show_config_dialog();
-//}
-// protected virtual void activate_menu(SimpleAction act, Variant? param)
-//{
-//}
+static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
+{
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(_sender, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	if (b->button == 3 && ((b->state & gtk_accelerator_get_default_mod_mask()) == 0))
+	{
+		GtkMenu *m = vala_panel_toplevel_get_plugin_menu(p->toplevel, self);
+		gtk_menu_popup_at_widget(m,
+		                         GTK_WIDGET(self),
+		                         GDK_GRAVITY_NORTH,
+		                         GDK_GRAVITY_NORTH,
+		                         (GdkEvent *)b);
+		return true;
+	}
+	return false;
+}
+
+ValaPanelApplet *vala_panel_applet_new(ValaPanelToplevel *top, GSettings *settings,
+                                       const char *uuid)
+{
+	return VALA_PANEL_APPLET(g_object_new(VALA_PANEL_TYPE_APPLET,
+	                                      "toplevel",
+	                                      top,
+	                                      "settings",
+	                                      settings,
+	                                      "uuid",
+	                                      uuid,
+	                                      NULL));
+}
+
+static GObject *vala_panel_applet_constructor(GType type, guint n_construct_properties,
+                                              GObjectConstructParam *construct_properties)
+{
+	GObjectClass *parent_class = G_OBJECT_CLASS(vala_panel_applet_parent_class);
+	GObject *obj =
+	    parent_class->constructor(type, n_construct_properties, construct_properties);
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	gtk_widget_set_has_window((GtkWidget *)self, false);
+	gtk_widget_insert_action_group(self, "applet", p->grp);
+	g_signal_connect(self, "button-release-event", G_CALLBACK(release_event_helper), NULL);
+	return G_OBJECT(self);
+}
+
+void vala_panel_applet_init_background(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	GdkRGBA color;
+	gdk_rgba_parse(&color, "transparent");
+	g_autofree char *css = css_generate_background(NULL, &color);
+	css_apply_with_class(p->background, css, "-vala-panel-background", false);
+}
+
 void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	if (p->dialog == NULL)
 	{
-		GtkWidget *dlg = vala_panel_applet_get_config_dialog(self);
+		GtkWidget *dlg = gtk_dialog_new();
+		GtkWidget *ui  = VALA_PANEL_APPLET_GET_CLASS(self)->get_settings_ui(self);
+		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), ui);
 		g_signal_connect(dlg, "destroy", G_CALLBACK(destroy0), self);
 		gtk_native_dialog_set_transient_for(dlg, p->toplevel);
 		p->dialog = dlg;
@@ -111,13 +112,23 @@ void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 	}
 	gtk_window_present(p->dialog);
 }
-bool _vala_panel_appletis_configurable(ValaPanelApplet(self))
+bool vala_panel_applet_is_configurable(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	return g_action_group_get_action_enabled(p->grp, "configure");
+	return g_action_group_get_action_enabled(G_ACTION_GROUP(p->grp), "configure");
 }
-static void activate_remove(GSimpleAction *act, GVariant *param, ValaPanelApplet *self)
+static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self)
 {
+	vala_panel_applet_show_config_dialog(VALA_PANEL_APPLET(self));
+}
+static void activate_menu(GSimpleAction *act, GVariant *param, gpointer self)
+{
+	VALA_PANEL_APPLET_GET_CLASS(self)->show_menu(act, param, self);
+}
+static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
+{
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
@@ -125,15 +136,13 @@ static void activate_remove(GSimpleAction *act, GVariant *param, ValaPanelApplet
 	gtk_widget_destroy0(p->toplevel->pref_dialog);
 	vala_panel_toplevel_remove_applet(p->toplevel, self);
 }
-GtkDialog *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
+static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
 {
 	return NULL;
 }
-void vala_panel_applet_set_actions(ValaPanelApplet *self)
-{
-}
-static void measure(ValaPanelApplet *self, GtkOrientation orient, int for_size, int *min, int *nat,
-                    int *base_min, int *base_nat)
+
+static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orient, int for_size,
+                                      int *min, int *nat, int *base_min, int *base_nat)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
@@ -177,25 +186,31 @@ static void vala_panel_applet_get_preferred_height_for_width(GtkWidget *self, in
                                                              int *nat)
 {
 	int x, y;
-	measure(self, GTK_ORIENTATION_VERTICAL, width, &min, &nat, &x, &y);
+	vala_panel_applet_measure(VALA_PANEL_APPLET(self),
+	                          GTK_ORIENTATION_VERTICAL,
+	                          width,
+	                          &min,
+	                          &nat,
+	                          &x,
+	                          &y);
 }
 static void vala_panel_applet_get_preferred_width_for_height(GtkWidget *self, int height, int *min,
                                                              int *nat)
 {
 	int x, y;
-	measure(self, GTK_ORIENTATION_HORIZONTAL, height, &min, &nat, &x, &y);
+	vala_panel_applet_measure(self, GTK_ORIENTATION_HORIZONTAL, height, &min, &nat, &x, &y);
 }
 GtkSizeRequestMode vala_panel_applet_get_request_mode(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	vala_panel_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &pos, NULL);
-	return (VALA_PANEL_KEY_ORIENTATION == GTK_ORIENTATION_HORIZONTAL)
-	           ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
-	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	GtkOrientation pos;
+	g_object_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &pos, NULL);
+	return (pos == GTK_ORIENTATION_HORIZONTAL) ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
+	                                           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
 static void vala_panel_applet_get_preferred_width(GtkWidget *self, int *min, int *nat)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
 	int height, icon_size;
 	g_object_get(p->toplevel,
@@ -209,7 +224,7 @@ static void vala_panel_applet_get_preferred_width(GtkWidget *self, int *min, int
 }
 static void vala_panel_applet_get_preferred_height(GtkWidget *self, int *min, int *nat)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
 	int height, icon_size;
 	g_object_get(p->toplevel,
@@ -222,31 +237,90 @@ static void vala_panel_applet_get_preferred_height(GtkWidget *self, int *min, in
 	*nat = height;
 }
 
-static void vala_panel_applet_init(ValaPanelApplet *self)
+static void vala_panel_applet_parent_set(ValaPanelApplet *self, GtkWidget *prev_parent)
 {
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	if (prev_parent == NULL)
+	{
+		if (p->background == NULL)
+			p->background = GTK_WIDGET(self);
+		vala_panel_applet_init_background(self);
+	}
 }
 
+void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu)
+{
+	VALA_PANEL_APPLET_GET_CLASS(self)->update_context_menu(self, parent_menu);
+}
+
+static void vala_panel_applet_init(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	p->grp                    = g_simple_action_group_new();
+	p->settings               = NULL;
+	g_action_map_add_action_entries(G_ACTION_MAP(p->grp), entries, G_N_ELEMENTS(entries), self);
+	GSimpleAction *cnf =
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(p->grp), "configure"));
+	g_simple_action_set_enabled(cnf, false);
+	cnf = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(p->grp), "menu"));
+	g_simple_action_set_enabled(cnf, false);
+}
+GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	return p->background;
+}
+
+void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	p->background             = w;
+}
+
+ValaPanelToplevel *vala_panel_applet_get_toplevel(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	return p->toplevel;
+}
+
+GSettings *vala_panel_applet_get_settings(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	return p->settings;
+}
+const char *vala_panel_applet_get_uuid(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	return p->uuid;
+}
+
+const char *vala_panel_applet_get_action_group(ValaPanelApplet *self)
+{
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	return p->grp;
+}
 static void vala_panel_applet_get_property(GObject *object, guint property_id, GValue *value,
                                            GParamSpec *pspec)
 {
-	ValaPanelApplet *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, PanelApplet);
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	switch (property_id)
 	{
 	case VALA_PANEL_APPLET_BACKGROUND_WIDGET:
-		g_value_set_object(value, vala_panel_applet_get_background_widget(self));
+		g_value_set_object(value, p->background);
 		break;
 	case VALA_PANEL_APPLET_TOPLEVEL:
-		g_value_set_object(value, vala_panel_applet_get_toplevel(self));
+		g_value_set_object(value, p->toplevel);
 		break;
 	case VALA_PANEL_APPLET_SETTINGS:
-		g_value_set_object(value, vala_panel_applet_get_settings(self));
+		g_value_set_object(value, p->settings);
 		break;
 	case VALA_PANEL_APPLET_UUID:
-		g_value_set_string(value, vala_panel_applet_get_uuid(self));
+		g_value_set_string(value, p->uuid);
 		break;
 	case VALA_PANEL_APPLET_GRP:
-		g_value_set_object(value, vala_panel_applet_get_grp(self));
+		g_value_set_object(value, p->grp);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -258,110 +332,118 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
                                            GParamSpec *pspec)
 {
 	ValaPanelApplet *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, PanelApplet);
+	self = G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	switch (property_id)
 	{
 	case VALA_PANEL_APPLET_BACKGROUND_WIDGET:
-		vala_panel_applet_set_background_widget(self, g_value_get_object(value));
+		p->background = GTK_WIDGET(g_value_get_object(value));
 		break;
 	case VALA_PANEL_APPLET_TOPLEVEL:
-		vala_panel_applet_set_toplevel(self, g_value_get_object(value));
+		p->toplevel = VALA_PANEL_TOPLEVEL(g_value_get_object(value));
 		break;
 	case VALA_PANEL_APPLET_SETTINGS:
-		vala_panel_applet_set_settings(self, g_value_get_object(value));
+		p->settings = G_SETTINGS(g_value_get_object(value));
 	case VALA_PANEL_APPLET_UUID:
-		vala_panel_applet_set_uuid(self, g_value_get_string(value));
+		g_free0(p->uuid);
+		p->uuid = g_value_dup_string(value);
 		break;
 	case VALA_PANEL_APPLET_GRP:
-		vala_panel_applet_set_grp(self, g_value_get_object(value));
-		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
-	static void vala_panel_applet_class_init(PanelAppletClass * klass)
-	{
-		vala_panel_applet_parent_class = g_type_class_peek_parent(klass);
-		g_type_class_add_private(klass, sizeof(PanelAppletPrivate));
-		//((PanelAppletClass *) klass)->update_context_menu = (void (*) (PanelApplet *,
-		//GMenu* *)) vala_panel_applet_real_update_context_menu;
-		//((GtkWidgetClass *) klass)->parent_set = (void (*) (GtkWidget *, GtkWidget*))
-		//vala_panel_applet_real_parent_set;
-		//((PanelAppletClass *) klass)->show_menu = (void (*) (PanelApplet *,
-		//GSimpleAction*, GVariant*)) vala_panel_applet_real_activate_menu;
-		((GtkWidgetClass *)klass)->get_preferred_height_for_width =
-		    (void (*)(GtkWidget *, gint, gint *, gint *))
-		        vala_panel_applet_get_preferred_height_for_width;
-		((GtkWidgetClass *)klass)->get_preferred_width_for_height =
-		    (void (*)(GtkWidget *, gint, gint *, gint *))
-		        vala_panel_applet_get_preferred_width_for_height;
-		((GtkWidgetClass *)klass)->get_request_mode =
-		    (GtkSizeRequestMode(*)(GtkWidget *))vala_panel_applet_get_request_mode;
-		((GtkWidgetClass *)klass)->get_preferred_width =
-		    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_width;
-		((GtkWidgetClass *)klass)->get_preferred_height =
-		    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_height;
-		((PanelAppletClass *)klass)->get_config_dialog =
-		    (GtkDialog * (*)(PanelApplet *)) vala_panel_applet_get_config_dialog;
-		((PanelAppletClass *)klass)->set_actions =
-		    (void (*)(PanelApplet *))vala_panel_applet_real_set_actions;
-		G_OBJECT_CLASS(klass)->get_property = vala_panel_applet_get_property;
-		G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_set_property;
-		G_OBJECT_CLASS(klass)->finalize     = vala_panel_applet_finalize;
-		g_object_class_install_property(G_OBJECT_CLASS(klass),
-		                                VALA_PANEL_APPLET_BACKGROUND_WIDGET,
-		                                g_param_spec_object("background-widget",
-		                                                    "background-widget",
-		                                                    "background-widget",
-		                                                    gtk_widget_get_type(),
-		                                                    G_PARAM_STATIC_NAME |
-		                                                        G_PARAM_STATIC_NICK |
-		                                                        G_PARAM_STATIC_BLURB |
-		                                                        G_PARAM_READABLE |
-		                                                        G_PARAM_WRITABLE));
-		g_object_class_install_property(G_OBJECT_CLASS(klass),
-		                                VALA_PANEL_APPLET_TOPLEVEL,
-		                                g_param_spec_object("toplevel",
-		                                                    "toplevel",
-		                                                    "toplevel",
-		                                                    VALA_PANEL_TYPE_TOPLEVEL,
-		                                                    G_PARAM_STATIC_NAME |
-		                                                        G_PARAM_STATIC_NICK |
-		                                                        G_PARAM_STATIC_BLURB |
-		                                                        G_PARAM_READABLE |
-		                                                        G_PARAM_WRITABLE |
-		                                                        G_PARAM_CONSTRUCT_ONLY));
-		g_object_class_install_property(G_OBJECT_CLASS(),
-		                                VALA_PANEL_APPLET_SETTINGS,
-		                                g_param_spec_object("settings",
-		                                                    "settings",
-		                                                    "settings",
-		                                                    g_settings_get_type(),
-		                                                    G_PARAM_STATIC_NAME |
-		                                                        G_PARAM_STATIC_NICK |
-		                                                        G_PARAM_STATIC_BLURB |
-		                                                        G_PARAM_READABLE |
-		                                                        G_PARAM_WRITABLE |
-		                                                        G_PARAM_CONSTRUCT_ONLY));
-		g_object_class_install_property(G_OBJECT_CLASS(klklassass),
-		                                VALA_PANEL_APPLET_UUID,
-		                                g_param_spec_string("uuid",
-		                                                    "uuid",
-		                                                    "uuid",
-		                                                    NULL,
-		                                                    G_PARAM_STATIC_NAME |
-		                                                        G_PARAM_STATIC_NICK |
-		                                                        G_PARAM_STATIC_BLURB |
-		                                                        G_PARAM_READABLE |
-		                                                        G_PARAM_WRITABLE |
-		                                                        G_PARAM_CONSTRUCT_ONLY));
-		g_object_class_install_property(
-		    G_OBJECT_CLASS(klass),
-		    VALA_PANEL_APPLET_GRP,
-		    g_param_spec_object("grp",
-		                        "grp",
-		                        "grp",
-		                        g_simple_action_group_get_type(),
-		                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-		                            G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
-	}
+}
+
+static void vala_panel_applet_finalize(GObject *obj)
+{
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	g_object_unref0(p->grp);
+	g_free0(p->uuid);
+}
+static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
+{
+	vala_panel_applet_parent_class = g_type_class_peek_parent(klass);
+	g_type_class_add_private(klass, sizeof(ValaPanelAppletPrivate));
+	((ValaPanelAppletClass *)klass)->update_context_menu = NULL;
+	((GtkWidgetClass *)klass)->parent_set =
+	    (void (*)(GtkWidget *, GtkWidget *))vala_panel_applet_parent_set;
+	((ValaPanelAppletClass *)klass)->show_menu = NULL;
+	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
+	    (void (*)(GtkWidget *, gint, gint *, gint *))
+	        vala_panel_applet_get_preferred_height_for_width;
+	((GtkWidgetClass *)klass)->get_preferred_width_for_height =
+	    (void (*)(GtkWidget *, gint, gint *, gint *))
+	        vala_panel_applet_get_preferred_width_for_height;
+	((GtkWidgetClass *)klass)->get_request_mode =
+	    (GtkSizeRequestMode(*)(GtkWidget *))vala_panel_applet_get_request_mode;
+	((GtkWidgetClass *)klass)->get_preferred_width =
+	    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_width;
+	((GtkWidgetClass *)klass)->get_preferred_height =
+	    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_height;
+	((ValaPanelAppletClass *)klass)->get_settings_ui =
+	    (GtkDialog * (*)(ValaPanelApplet *)) vala_panel_applet_get_config_dialog;
+	G_OBJECT_CLASS(klass)->constructor  = vala_panel_applet_constructor;
+	G_OBJECT_CLASS(klass)->get_property = vala_panel_applet_get_property;
+	G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_set_property;
+	G_OBJECT_CLASS(klass)->finalize     = vala_panel_applet_finalize;
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APPLET_BACKGROUND_WIDGET,
+	                                g_param_spec_object("background-widget",
+	                                                    "background-widget",
+	                                                    "background-widget",
+	                                                    gtk_widget_get_type(),
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE));
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APPLET_TOPLEVEL,
+	                                g_param_spec_object("toplevel",
+	                                                    "toplevel",
+	                                                    "toplevel",
+	                                                    VALA_PANEL_TYPE_TOPLEVEL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE |
+	                                                        G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APPLET_SETTINGS,
+	                                g_param_spec_object("settings",
+	                                                    "settings",
+	                                                    "settings",
+	                                                    g_settings_get_type(),
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE |
+	                                                        G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APPLET_UUID,
+	                                g_param_spec_string("uuid",
+	                                                    "uuid",
+	                                                    "uuid",
+	                                                    NULL,
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE |
+	                                                        G_PARAM_WRITABLE |
+	                                                        G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                VALA_PANEL_APPLET_GRP,
+	                                g_param_spec_object("action-group",
+	                                                    "grp",
+	                                                    "grp",
+	                                                    g_simple_action_group_get_type(),
+	                                                    G_PARAM_STATIC_NAME |
+	                                                        G_PARAM_STATIC_NICK |
+	                                                        G_PARAM_STATIC_BLURB |
+	                                                        G_PARAM_READABLE));
+}
