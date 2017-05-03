@@ -28,8 +28,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 static const GActionEntry entries[] =
     { { VALA_PANEL_APPLET_ACTION_MENU, activate_menu, NULL, NULL, NULL },
       { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
-      { "remove", activate_remove, NULL, NULL, NULL },
-      { NULL } };
+      { "remove", activate_remove, NULL, NULL, NULL } };
 
 enum
 {
@@ -59,17 +58,10 @@ static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer
 	return false;
 }
 
-ValaPanelApplet *vala_panel_applet_new(ValaPanelToplevel *top, GSettings *settings,
-                                       const char *uuid)
+gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
+                                     const char *uuid)
 {
-	return VALA_PANEL_APPLET(g_object_new(VALA_PANEL_TYPE_APPLET,
-	                                      "toplevel",
-	                                      top,
-	                                      "settings",
-	                                      settings,
-	                                      "uuid",
-	                                      uuid,
-	                                      NULL));
+	return g_object_new(ex, "toplevel", top, "settings", settings, "uuid", uuid, NULL);
 }
 
 static GObject *vala_panel_applet_constructor(GType type, guint n_construct_properties,
@@ -91,7 +83,7 @@ void vala_panel_applet_init_background(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	GdkRGBA color;
-	gdk_rgba_parse(&color, "transparent");
+	gdk_rgba_parse(&color, "rgba(0,0,0,0)");
 	g_autofree char *css = css_generate_background(NULL, &color);
 	css_apply_with_class(p->background, css, "-vala-panel-background", false);
 }
@@ -103,9 +95,10 @@ void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 	{
 		GtkWidget *dlg = gtk_dialog_new();
 		GtkWidget *ui  = VALA_PANEL_APPLET_GET_CLASS(self)->get_settings_ui(self);
+		gtk_widget_show(ui);
 		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), ui);
 		g_signal_connect(dlg, "destroy", G_CALLBACK(destroy0), self);
-		gtk_native_dialog_set_transient_for(dlg, p->toplevel);
+		gtk_window_set_transient_for(dlg, p->toplevel);
 		p->dialog = dlg;
 		g_signal_connect(p->dialog, "hide", G_CALLBACK(destroy0), self);
 		g_signal_connect(p->dialog, "destroy", G_CALLBACK(destroy0), self);
@@ -167,8 +160,8 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
 			                                                gtk_bin_get_type(),
 			                                                GtkBin),
 			        for_size,
-			        &min,
-			        &nat);
+			        min,
+			        nat);
 		else
 			GTK_WIDGET_CLASS(vala_panel_applet_parent_class)
 			    ->get_preferred_height_for_width(
@@ -176,8 +169,8 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
 			                                                gtk_bin_get_type(),
 			                                                GtkBin),
 			        for_size,
-			        &min,
-			        &nat);
+			        min,
+			        nat);
 	}
 	*base_min = *base_nat = -1;
 }
@@ -189,8 +182,8 @@ static void vala_panel_applet_get_preferred_height_for_width(GtkWidget *self, in
 	vala_panel_applet_measure(VALA_PANEL_APPLET(self),
 	                          GTK_ORIENTATION_VERTICAL,
 	                          width,
-	                          &min,
-	                          &nat,
+	                          min,
+	                          nat,
 	                          &x,
 	                          &y);
 }
@@ -198,10 +191,12 @@ static void vala_panel_applet_get_preferred_width_for_height(GtkWidget *self, in
                                                              int *nat)
 {
 	int x, y;
-	vala_panel_applet_measure(self, GTK_ORIENTATION_HORIZONTAL, height, &min, &nat, &x, &y);
+	vala_panel_applet_measure(self, GTK_ORIENTATION_HORIZONTAL, height, min, nat, &x, &y);
 }
-GtkSizeRequestMode vala_panel_applet_get_request_mode(ValaPanelApplet *self)
+GtkSizeRequestMode vala_panel_applet_get_request_mode(GtkWidget *obj)
 {
+	ValaPanelApplet *self =
+	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	GtkOrientation pos;
 	g_object_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &pos, NULL);
@@ -251,6 +246,10 @@ static void vala_panel_applet_parent_set(ValaPanelApplet *self, GtkWidget *prev_
 void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu)
 {
 	VALA_PANEL_APPLET_GET_CLASS(self)->update_context_menu(self, parent_menu);
+}
+
+void vala_panel_applet_update_context_menu_private(ValaPanelApplet *self, GMenu *parent_menu)
+{
 }
 
 static void vala_panel_applet_init(ValaPanelApplet *self)
@@ -344,6 +343,7 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
 		break;
 	case VALA_PANEL_APPLET_SETTINGS:
 		p->settings = G_SETTINGS(g_value_get_object(value));
+		break;
 	case VALA_PANEL_APPLET_UUID:
 		g_free0(p->uuid);
 		p->uuid = g_value_dup_string(value);
@@ -366,29 +366,24 @@ static void vala_panel_applet_finalize(GObject *obj)
 static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 {
 	vala_panel_applet_parent_class = g_type_class_peek_parent(klass);
-	g_type_class_add_private(klass, sizeof(ValaPanelAppletPrivate));
-	((ValaPanelAppletClass *)klass)->update_context_menu = NULL;
+	((ValaPanelAppletClass *)klass)->update_context_menu =
+	    vala_panel_applet_update_context_menu_private;
 	((GtkWidgetClass *)klass)->parent_set =
 	    (void (*)(GtkWidget *, GtkWidget *))vala_panel_applet_parent_set;
 	((ValaPanelAppletClass *)klass)->show_menu = NULL;
 	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
-	    (void (*)(GtkWidget *, gint, gint *, gint *))
-	        vala_panel_applet_get_preferred_height_for_width;
+	    vala_panel_applet_get_preferred_height_for_width;
 	((GtkWidgetClass *)klass)->get_preferred_width_for_height =
-	    (void (*)(GtkWidget *, gint, gint *, gint *))
-	        vala_panel_applet_get_preferred_width_for_height;
-	((GtkWidgetClass *)klass)->get_request_mode =
-	    (GtkSizeRequestMode(*)(GtkWidget *))vala_panel_applet_get_request_mode;
-	((GtkWidgetClass *)klass)->get_preferred_width =
-	    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_width;
-	((GtkWidgetClass *)klass)->get_preferred_height =
-	    (void (*)(GtkWidget *, gint *, gint *))vala_panel_applet_get_preferred_height;
-	((ValaPanelAppletClass *)klass)->get_settings_ui =
-	    (GtkDialog * (*)(ValaPanelApplet *)) vala_panel_applet_get_config_dialog;
-	G_OBJECT_CLASS(klass)->constructor  = vala_panel_applet_constructor;
-	G_OBJECT_CLASS(klass)->get_property = vala_panel_applet_get_property;
-	G_OBJECT_CLASS(klass)->set_property = vala_panel_applet_set_property;
-	G_OBJECT_CLASS(klass)->finalize     = vala_panel_applet_finalize;
+
+	    vala_panel_applet_get_preferred_width_for_height;
+	((GtkWidgetClass *)klass)->get_request_mode      = vala_panel_applet_get_request_mode;
+	((GtkWidgetClass *)klass)->get_preferred_width   = vala_panel_applet_get_preferred_width;
+	((GtkWidgetClass *)klass)->get_preferred_height  = vala_panel_applet_get_preferred_height;
+	((ValaPanelAppletClass *)klass)->get_settings_ui = vala_panel_applet_get_config_dialog;
+	G_OBJECT_CLASS(klass)->constructor               = vala_panel_applet_constructor;
+	G_OBJECT_CLASS(klass)->get_property              = vala_panel_applet_get_property;
+	G_OBJECT_CLASS(klass)->set_property              = vala_panel_applet_set_property;
+	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_applet_finalize;
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_BACKGROUND_WIDGET,
 	                                g_param_spec_object("background-widget",

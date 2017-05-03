@@ -73,8 +73,10 @@ ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info_for_type(
 	return NULL;
 }
 
-ValaPanelApplet *vala_panel_applet_manager_get_applet_widget_for_type(
-    ValaPanelAppletManager *self, const char *path, const char *applet_type, const char *uuid)
+ValaPanelApplet *vala_panel_applet_manager_get_applet_widget_for_type(ValaPanelAppletManager *self,
+                                                                      const char *path,
+                                                                      const char *applet_type,
+                                                                      const char *uuid)
 {
 	GHashTableIter iter;
 	gpointer key, value;

@@ -16,9 +16,9 @@ struct _ValaPanelAppletEngineIfaceInterface
 	GSList *(*get_available_types)(ValaPanelAppletEngineIface *self);
 	ValaPanelAppletInfo *(*get_applet_info_for_type)(ValaPanelAppletEngineIface *self,
 	                                                 const char *applet_type);
-    ValaPanelApplet *(*get_applet_widget_for_type)(ValaPanelAppletEngineIface *self,
-	                                                     const char *applet_type,
-	                                                     GSettings *settings, const char *uuid);
+	ValaPanelApplet *(*get_applet_widget_for_type)(ValaPanelAppletEngineIface *self,
+	                                               const char *applet_type, GSettings *settings,
+	                                               const char *uuid);
 	gpointer padding[12];
 };
 
