@@ -37,6 +37,21 @@ typedef enum {
 } PanelAlignmentType;
 
 typedef enum {
+	NORTH_LEFT   = 0,
+	NORTH_CENTER = 1,
+	NORTH_RIGHT  = 2,
+	SOUTH_LEFT   = 3,
+	SOUTH_CENTER = 4,
+	SOUTH_RIGHT  = 5,
+	WEST_UP      = 6,
+	WEST_CENTER  = 7,
+	WEST_DOWN    = 8,
+	EAST_UP      = 9,
+	EAST_CENTER  = 10,
+	EAST_DOWN    = 11
+} PanelGravity;
+
+typedef enum {
 	XXS  = 16,
 	XS   = 22,
 	S    = 24,
