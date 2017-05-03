@@ -96,6 +96,8 @@ void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 		GtkWidget *dlg = gtk_dialog_new();
 		GtkWidget *ui  = VALA_PANEL_APPLET_GET_CLASS(self)->get_settings_ui(self);
 		gtk_widget_show(ui);
+		gtk_widget_set_hexpand(ui, true);
+		gtk_widget_set_vexpand(ui, true);
 		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), ui);
 		g_signal_connect(dlg, "destroy", G_CALLBACK(destroy0), self);
 		gtk_window_set_transient_for(dlg, p->toplevel);
