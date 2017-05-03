@@ -319,7 +319,7 @@ namespace StatusNotifier
                 icon = change_icon(tooltip.icon_name, tooltip.pixmap,48,false);
             }
         }
-        private Icon? change_icon(string? icon_name, IconPixmap[] pixmaps, int icon_size, bool use_symbolic)
+        private Icon? change_icon(string? icon_name, IconPixmap[]? pixmaps, int icon_size, bool use_symbolic)
         {
             var new_name = (use_symbolic) ? icon_name+"-symbolic" : icon_name;
             if (icon_name != null && icon_name.length > 0)
@@ -333,7 +333,7 @@ namespace StatusNotifier
                     return new ThemedIcon.with_default_fallbacks(new_name);
                 else return find_file_icon(icon_name,icon_theme_path);
             }
-            else if (pixmaps.length > 0)
+            else if (pixmaps != null && pixmaps.length > 0)
             {
                 Gdk.Pixbuf? pixbuf = null;
                 foreach (var pixmap in pixmaps)
