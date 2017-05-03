@@ -8,7 +8,7 @@
 
 struct _ValaPanelAppletInfo
 {
-	ValaPanelAppletWidget *applet;
+    ValaPanelApplet *applet;
 	GSettings *settings;
 	gchar *icon;
 	gchar *applet_type;

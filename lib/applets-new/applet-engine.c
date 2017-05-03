@@ -19,7 +19,7 @@ ValaPanelAppletInfo *vala_panel_applet_engine_iface_get_applet_info_for_type(
 	return NULL;
 }
 
-ValaPanelAppletWidget *vala_panel_applet_engine_iface_get_applet_widget_for_type(
+ValaPanelApplet *vala_panel_applet_engine_iface_get_applet_widget_for_type(
     ValaPanelAppletEngineIface *self, const char *applet_type, GSettings *settings,
     const char *uuid)
 {
