@@ -208,7 +208,6 @@ GtkSizeRequestMode vala_panel_applet_get_request_mode(GtkWidget *obj)
 static void vala_panel_applet_get_preferred_width(GtkWidget *self, int *min, int *nat)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
-	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
 	int height, icon_size;
 	g_object_get(p->toplevel,
 	             VALA_PANEL_KEY_HEIGHT,
@@ -222,7 +221,6 @@ static void vala_panel_applet_get_preferred_width(GtkWidget *self, int *min, int
 static void vala_panel_applet_get_preferred_height(GtkWidget *self, int *min, int *nat)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
-	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
 	int height, icon_size;
 	g_object_get(p->toplevel,
 	             VALA_PANEL_KEY_HEIGHT,
