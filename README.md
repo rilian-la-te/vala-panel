@@ -24,7 +24,7 @@ This is Vala rewrite of [SimplePanel](https://github.com/rilian-la-te/simple-pan
    * [ ] Introduce gravity-based positioning
    * [ ] Create Layout and made pack-type useful
    * [ ] Rewrite toplevel into C
-   * [ ] Rewrite applet into C
+   * [X] Rewrite applet into C
  * [x] Made PanelManager (done as Platform)
 
 *TODO for 0.5.0*
