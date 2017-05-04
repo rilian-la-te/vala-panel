@@ -22,12 +22,12 @@ public class SepApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Sep(toplevel,settings,number);
     }
 }
-public class Sep: Applet, AppletConfigurable
+public class Sep: Applet
 {
     Separator widget;
     private const string KEY_SIZE = "size";
@@ -36,12 +36,10 @@ public class Sep: Applet, AppletConfigurable
     internal bool show_separator {get; set;}
     public Sep(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         widget = new Separator(toplevel.orientation == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL);
         this.add(widget);
         toplevel.notify["edge"].connect((pspec)=>{
@@ -58,12 +56,11 @@ public class Sep: Applet, AppletConfigurable
         settings.bind(KEY_SIZE,this,KEY_SIZE,SettingsBindFlags.GET);
         settings.bind(KEY_SHOW_SEPARATOR,this,KEY_SHOW_SEPARATOR,SettingsBindFlags.GET);
         this.bind_property(KEY_SHOW_SEPARATOR,widget,"visible",BindingFlags.SYNC_CREATE);
-        this.show_all();
+        this.show();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Separator Applet"),
-                            toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                             _("Size"), KEY_SIZE, GenericConfigType.INT,
                             _("Visible separator"), KEY_SHOW_SEPARATOR, GenericConfigType.BOOL);
     }

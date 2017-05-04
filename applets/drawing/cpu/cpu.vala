@@ -23,7 +23,7 @@ public class CpuApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Cpu(toplevel,settings,number);
     }
@@ -51,13 +51,9 @@ public class Cpu: Applet
     private cpu_stat previous_cpu_stat;     /* Previous value of cpu_stat */
     public Cpu(ValaPanel.Toplevel toplevel,
                                   GLib.Settings? settings,
-                                  uint number)
+                                  string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
-
         /* Allocate drawing area as a child of top level widget.  Enable button press events. */
         da = new DrawingArea();
         da.set_size_request(toplevel.height > 40 ? toplevel.height : 40, toplevel.height);

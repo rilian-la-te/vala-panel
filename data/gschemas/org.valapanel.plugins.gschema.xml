@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.valapanel.toplevel.thermal">
+  <schema id="org.valapanel.thermal">
     <key name="auto-temperature-levels" type="b">
       <default>true</default>
     </key>
@@ -25,7 +25,7 @@
       <default>'green'</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.indicator">
+  <schema id="org.valapanel.indicator">
     <key name="enabled-indicators" type="as">
       <default>['applications']</default>
     </key>

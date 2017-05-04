@@ -32,9 +32,14 @@
 #include <gtk/gtkx.h>
 
 #include <X11/Xatom.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/Xdamage.h>
 
 #include "xembed-ccode.h"
 #include "xembed-internal.h"
+
+#include "applet-widget-api.h"
+#include "definitions.h"
 
 /* Standards reference:  http://standards.freedesktop.org/systemtray-spec/ */
 
@@ -47,14 +52,14 @@
 #define SYSTEM_TRAY_ORIENTATION_VERT 1
 
 /* X11 data types */
-Atom a_UTF8_STRING;
-Atom a_XROOTPMAP_ID;
+static Atom a_UTF8_STRING;
+static Atom a_XROOTPMAP_ID;
 /* SYSTEM TRAY spec */
-Atom a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
-Atom a_NET_SYSTEM_TRAY_OPCODE;
-Atom a_NET_SYSTEM_TRAY_MESSAGE_DATA;
-Atom a_NET_SYSTEM_TRAY_ORIENTATION;
-Atom a_MANAGER;
+static Atom a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
+static Atom a_NET_SYSTEM_TRAY_OPCODE;
+static Atom a_NET_SYSTEM_TRAY_MESSAGE_DATA;
+static Atom a_NET_SYSTEM_TRAY_ORIENTATION;
+static Atom a_MANAGER;
 enum
 {
 	I_UTF8_STRING,
@@ -211,7 +216,59 @@ static gboolean balloon_message_timeout(TrayPlugin *tr)
 		balloon_message_advance(tr, FALSE, TRUE);
 	return FALSE;
 }
-
+static void popup_position_helper(GtkWidget *applet, GtkWidget *popup, int *x, int *y)
+{
+	GtkAllocation pa;
+	GtkAllocation a;
+	gtk_widget_realize(popup);
+	gtk_widget_get_allocation(popup, &pa);
+	if (gtk_widget_is_toplevel(popup))
+	{
+		GdkRectangle ext;
+		gdk_window_get_frame_extents(gtk_widget_get_window(popup), &ext);
+		pa.width  = ext.width;
+		pa.height = ext.height;
+	}
+	if (GTK_IS_MENU(popup))
+	{
+		int min, nat, new_height = 0;
+		for (GList *li = gtk_container_get_children(GTK_CONTAINER(popup)); li != NULL;
+		     li        = g_list_next(li))
+		{
+			gtk_widget_get_preferred_height(GTK_WIDGET(li->data), &min, &nat);
+			new_height += nat;
+		}
+		pa.height = MAX(pa.height, new_height);
+	}
+	gtk_widget_get_allocation(applet, &a);
+	gdk_window_get_origin(gtk_widget_get_window(popup), x, y);
+	if (!gtk_widget_get_has_window(applet))
+	{
+		*x += a.x;
+		*y += a.y;
+	}
+	GtkPositionType edge;
+	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(applet)),
+	             VALA_PANEL_KEY_EDGE,
+	             &edge,
+	             NULL);
+	switch (edge)
+	{
+	case GTK_POS_TOP:
+	case GTK_POS_BOTTOM:
+		y += a.height;
+		break;
+	case GTK_POS_LEFT:
+	case GTK_POS_RIGHT:
+		x += a.width;
+		break;
+	}
+	GdkMonitor *monitor =
+	    gdk_display_get_monitor_at_point(gtk_widget_get_display(applet), *x, *y);
+	gdk_monitor_get_workarea(monitor, &a);
+	*x = CLAMP(*x, a.x, a.x + a.width - pa.width);
+	*y = CLAMP(*y, a.y, a.y + a.height - pa.height);
+}
 /* Create the graphic elements to display a balloon message. */
 static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg)
 {
@@ -233,7 +290,7 @@ static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg)
 
 	/* Compute the desired position in screen coordinates near the tray plugin. */
 	int x, y;
-	vala_panel_applet_popup_position_helper(tr->applet, tr->balloon_message_popup, &x, &y);
+	popup_position_helper(tr->applet, tr->balloon_message_popup, &x, &y);
 
 	/* Show the popup. */
 	gtk_window_move(GTK_WINDOW(tr->balloon_message_popup), x, y);
@@ -427,6 +484,38 @@ static void balloon_message_data_event(TrayPlugin *tr, XClientMessageEvent *xeve
 		}
 	}
 }
+#define xembed_set_xdamage_metadata(window, xid)                                                   \
+	g_object_set_qdata(G_OBJECT(window),                                                       \
+	                   g_quark_from_static_string("xdamage"),                                  \
+	                   GUINT_TO_POINTER(xid))
+
+#define xembed_get_xdamage_metadata(window)                                                        \
+	GPOINTER_TO_UINT(                                                                          \
+	    g_object_get_qdata(G_OBJECT(window), g_quark_from_static_string("xdamage")))
+
+static void gdk_x11_window_set_composited(GdkWindow *window, bool composited)
+{
+	GdkDisplay *display;
+	Display *dpy;
+	Window xid;
+
+	display = gdk_window_get_display(window);
+	dpy     = GDK_DISPLAY_XDISPLAY(display);
+	xid     = GDK_WINDOW_XID(window);
+
+	if (composited)
+	{
+		XCompositeRedirectWindow(dpy, xid, CompositeRedirectManual);
+		xembed_set_xdamage_metadata(window,
+		                            XDamageCreate(dpy, xid, XDamageReportBoundingBox));
+	}
+	else
+	{
+		XCompositeUnredirectWindow(dpy, xid, CompositeRedirectManual);
+		XDamageDestroy(dpy, xembed_get_xdamage_metadata(window));
+		xembed_set_xdamage_metadata(window, None);
+	}
+}
 
 /* Handler for request dock message. */
 static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
@@ -461,7 +550,7 @@ static void trayclient_request_dock(TrayPlugin *tr, XClientMessageEvent *xevent)
 	gtk_container_add(GTK_CONTAINER(flowbox_child), tc->socket);
 	gtk_widget_show(tc->socket);
 	gtk_widget_show(flowbox_child);
-	gdk_window_set_composited(gtk_widget_get_window(tc->socket), TRUE);
+	gdk_x11_window_set_composited(gtk_widget_get_window(tc->socket), TRUE);
 	/* Connect the socket to the plug.  This can only be done after the socket is realized. */
 	gtk_socket_add_id(GTK_SOCKET(tc->socket), tc->window);
 
@@ -611,8 +700,7 @@ static void tray_set_visual_property(GtkWidget *invisible, GdkScreen *screen)
 
 	display     = gtk_widget_get_display(invisible);
 	visual_atom = gdk_x11_get_xatom_by_name_for_display(display, "_NET_SYSTEM_TRAY_VISUAL");
-
-	if (gdk_screen_get_rgba_visual(screen) != NULL && gdk_display_supports_composite(display))
+	if (gdk_screen_get_rgba_visual(screen) != NULL)
 	{
 		xvisual = GDK_VISUAL_XVISUAL(gdk_screen_get_rgba_visual(screen));
 	}
@@ -624,7 +712,6 @@ static void tray_set_visual_property(GtkWidget *invisible, GdkScreen *screen)
 		 */
 		xvisual = GDK_VISUAL_XVISUAL(gdk_screen_get_system_visual(screen));
 	}
-
 	data[0] = XVisualIDFromVisual(xvisual);
 
 	XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
@@ -662,7 +749,7 @@ static void tray_draw_box(GtkWidget *box, cairo_t *cr)
 }
 
 /* Plugin constructor. */
-TrayPlugin *tray_constructor(PanelApplet *applet)
+TrayPlugin *tray_constructor(ValaPanelApplet *applet)
 {
 	GtkWidget *p;
 	resolve_atoms();
@@ -673,8 +760,7 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 
 	/* Create the selection atom.  This has the screen number in it, so cannot be done ahead of
 	 * time. */
-	char *selection_atom_name =
-	    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", gdk_screen_get_number(screen));
+	char *selection_atom_name = g_strdup_printf("_NET_SYSTEM_TRAY_S%d", 0);
 	Atom selection_atom = gdk_x11_get_xatom_by_name_for_display(display, selection_atom_name);
 	GdkAtom gdk_selection_atom = gdk_atom_intern(selection_atom_name, FALSE);
 	g_free(selection_atom_name);
@@ -758,7 +844,8 @@ TrayPlugin *tray_constructor(PanelApplet *applet)
 void tray_destructor(gpointer user_data)
 {
 	TrayPlugin *tr = user_data;
-	gtk_widget_destroy(tr->plugin);
+	if (GTK_IS_WIDGET(tr->plugin))
+		gtk_widget_destroy0(tr->plugin);
 
 	/* Remove GDK event filter. */
 	gdk_window_remove_filter(NULL, (GdkFilterFunc)tray_event_filter, tr);

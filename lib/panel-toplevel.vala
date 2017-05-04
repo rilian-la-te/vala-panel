@@ -23,90 +23,47 @@ using Config;
 
 namespace ValaPanel
 {
-    private struct PluginData
-    {
-        unowned AppletPlugin plugin;
-        int count;
-    }
     public class Toplevel : Gtk.ApplicationWindow
     {
-        private static Peas.Engine engine;
-        private static ulong mon_handler;
-        private static Peas.ExtensionSet extset;
-        private static HashTable<string,PluginData?> loaded_types;
-        private HashTable<string,int> local_applets;
-        private ToplevelSettings settings;
+    /************************************************************************
+     * Core -----------------------------------------------------------------
+     ************************************************************************/
         private unowned Gtk.Revealer ah_rev = null;
         private unowned Gtk.Box box;
         private Gtk.Menu context_menu;
-        private int _mon;
-        private int _w;
-        private Gtk.Allocation a;
-
-        private IconSizeHints ihints;
-        private Gdk.RGBA bgc;
-        private Gdk.RGBA fgc;
-        private Gtk.CssProvider provider;
-
         internal ConfigureDialog pref_dialog;
-        private AutohideState ah_state;
-
-        private ulong strut_size;
-        private ulong strut_lower;
-        private ulong strut_upper;
-        private int strut_edge;
-
         private bool initialized;
-
-        public const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
-                                                Key.MONITOR,Key.AUTOHIDE,Key.SHOW_HIDDEN,
+        private const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
+                                                Key.MONITOR,Key.AUTOHIDE,
                                                 Key.MARGIN,Key.DOCK,Key.STRUT,
                                                 Key.DYNAMIC};
-        public const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
+        private const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
                                                 Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
                                                 Key.USE_BACKGROUND_COLOR, Key.USE_FOREGROUND_COLOR,
                                                 Key.USE_BACKGROUND_FILE, Key.USE_FONT,
                                                 Key.FONT_SIZE_ONLY, Key.FONT};
 
-        public string panel_name {get; internal construct;}
 
-        private string profile
-        { owned get {
-            GLib.Value v = Value(typeof(string));
-            this.get_application().get_property("profile",ref v);
-            return v.get_string();
-            }
-        }
+        public string uuid {get; internal construct;}
         public int height { get; internal set;}
+        private int _w;
         public int width
         {get {return _w;}
-         internal set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
+            internal set {_w = (value > 0) ? ((value <=100) ? value : 100) : 1;}
         }
-        internal AlignmentType alignment {get; internal set;}
-        public int panel_margin {get; internal set;}
-        public Gtk.PositionType edge {get; internal set construct;}
-        public Gtk.Orientation orientation
+        const GLib.ActionEntry[] panel_entries =
         {
-            get {
-                return (_edge == Gtk.PositionType.TOP || _edge == Gtk.PositionType.BOTTOM)
-                    ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
-            }
-        }
-        public int monitor
-        {get {return _mon;}
-         internal set construct{
-            int mons = 1;
-            var screen = Gdk.Screen.get_default();
-            if (screen != null)
-                mons = screen.get_n_monitors();
-            assert(mons >= 1);
-            if (-1 <= value)
-                _mon = value;
-         }}
-        public bool dock {get; internal set;}
-        public bool strut {get; internal set;}
-        public bool autohide {get; internal set;}
-        public bool is_dynamic {get; internal set;}
+            {"new-panel", activate_new_panel, null, null, null},
+            {"remove-panel", activate_remove_panel, null, null, null},
+            {"panel-settings", activate_panel_settings, "s", null, null},
+        };
+        /**************************************************************************
+         * Appearance -------------------------------------------------------------
+         **************************************************************************/
+        private IconSizeHints ihints;
+        private Gdk.RGBA bgc;
+        private Gdk.RGBA fgc;
+        private Gtk.CssProvider provider;
         public bool use_font {get; internal set;}
         public bool use_background_color {get; internal set;}
         public bool use_foreground_color {get; internal set;}
@@ -144,26 +101,93 @@ namespace ValaPanel
           }
         }
         public string background_file {get; internal set;}
-        const GLib.ActionEntry[] panel_entries =
+        private void update_appearance()
         {
-            {"new-panel", activate_new_panel, null, null, null},
-            {"remove-panel", activate_remove_panel, null, null, null},
-            {"panel-settings", activate_panel_settings, "s", null, null},
-        };
-/*
- *  Constructors
- */
-        static construct
-        {
-            engine = Peas.Engine.get_default();
-            engine.add_search_path(PLUGINS_DIRECTORY,PLUGINS_DATA);
-            loaded_types = new HashTable<string,PluginData?>(str_hash,str_equal);
-            extset = new Peas.ExtensionSet(engine,typeof(AppletPlugin));
+            if (provider != null)
+                this.get_style_context().remove_provider(provider);
+            if (font == null)
+                return;
+            StringBuilder str = new StringBuilder();
+            str.append_printf(".-vala-panel-background {\n");
+            if (use_background_color)
+                str.append_printf(" background-color: %s;\n",background_color);
+            else
+                str.append_printf(" background-color: transparent;\n");
+            if (use_background_file)
+            {
+                str.append_printf(" background-image: url('%s');\n",background_file);
+        /* Feature proposed: Background repeat */
+        //~                 if (false)
+        //~                     str.append_printf(" background-repeat: no-repeat;\n");
+            }
+            else
+                str.append_printf(" background-image: none;\n");
+            str.append_printf("}\n");
+        /* Feature proposed: Panel Layout and Shadow */
+        //~             str.append_printf(".-vala-panel-shadow {\n");
+        //~             str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
+        //~             str.append_printf(" border-style: none;\n margin: 3px;\n");
+        //~             str.append_printf("}\n");
+            str.append_printf(".-vala-panel-round-corners {\n");
+            str.append_printf(" border-radius: %upx;\n",round_corners_size);
+            str.append_printf("}\n");
+            Pango.FontDescription desc = Pango.FontDescription.from_string(font);
+            str.append_printf(".-vala-panel-font-size {\n");
+            str.append_printf(" font-size: %dpx;\n",desc.get_size()/Pango.SCALE);
+            str.append_printf("}\n");
+            str.append_printf(".-vala-panel-font {\n");
+            var family = desc.get_family();
+            var weight = desc.get_weight();
+            var style = desc.get_style();
+            var variant = desc.get_variant();
+            str.append_printf(" font-style: %s;\n",(style == Pango.Style.ITALIC) ? "italic" : ((style == Pango.Style.OBLIQUE) ? "oblique" : "normal"));
+            str.append_printf(" font-variant: %s;\n",(variant == Pango.Variant.SMALL_CAPS) ? "small-caps" : "normal");
+            str.append_printf(" font-weight: %s;\n",(weight <= Pango.Weight.SEMILIGHT) ? "light" : (weight >= Pango.Weight.SEMIBOLD ? "bold" : "normal"));
+            str.append_printf(" font-family: %s;\n",family);
+            str.append_printf("}\n");
+            str.append_printf(".-vala-panel-foreground-color {\n");
+            str.append_printf(" color: %s;\n",foreground_color);
+            str.append_printf("}\n");
+            var css = str.str;
+            provider = PanelCSS.add_css_to_widget(this as Widget, css);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-background",use_background_color || use_background_file);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-shadow",false);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-round-corners",round_corners_size > 0);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-font-size",use_font);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-font", use_font && !font_size_only);
+            PanelCSS.toggle_class(this as Widget,"-vala-panel-foreground-color",use_foreground_color);
         }
-        private static void monitors_changed_cb(Gdk.Screen scr, void* data)
+        /*********************************************************************************************
+         * Positioning
+         *********************************************************************************************/
+        private int _mon;
+        internal AlignmentType alignment {get; internal set;}
+        public int panel_margin {get; internal set;}
+        public Gtk.PositionType edge {get; internal set construct;}
+        public Gtk.Orientation orientation
+        {
+            get {
+                return orient_from_edge(edge);
+            }
+        }
+        public int monitor
+        {get {return _mon;}
+         internal set construct{
+            int mons = 1;
+            var screen = Gdk.Display.get_default();
+            if (screen != null)
+                mons = screen.get_n_monitors();
+            assert(mons >= 1);
+            if (-1 <= value)
+                _mon = value;
+         }}
+        public bool dock {get; internal set;}
+        public bool strut {get; internal set;}
+        public bool is_dynamic {get; internal set;}
+        private static void monitors_changed_cb(Gdk.Display scr, Gdk.Monitor mon, void* data)
         {
             var app = data as Gtk.Application;
-            var mons = Gdk.Screen.get_default().get_n_monitors();
+            var mons = scr.get_n_monitors();
             foreach(var w in app.get_windows())
             {
                 var panel = w as Toplevel;
@@ -173,27 +197,176 @@ namespace ValaPanel
                     panel.stop_ui();
                 else
                 {
-                    panel.queue_resize();
+                    panel.update_geometry();
                 }
             }
         }
-        [CCode (returns_floating_reference = true)]
-        public static Toplevel? load(Gtk.Application app, string config_file, string config_name)
+//        private static void calculate_width(int scrw, bool dyn, AlignmentType align,
+//                                            int margin, ref int panw, ref int x)
+//        {
+//            if (!dyn)
+//            {
+//                panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
+//                panw = (int)(((double)scrw * (double) panw)/100.0);
+//            }
+//            margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
+//            panw = int.min(scrw - margin, panw);
+//            if (align == AlignmentType.START)
+//                x+=margin;
+//            else if (align == AlignmentType.END)
+//            {
+//                x += scrw - panw - margin;
+//                x = (x < 0) ? 0 : x;
+//            }
+//            else if (align == AlignmentType.CENTER)
+//                x += (scrw - panw)/2;
+//        }
+
+        protected override void get_preferred_width_for_height(int height, out int min, out int nat)
         {
-            if (GLib.FileUtils.test(config_file,FileTest.EXISTS))
-                return new Toplevel(app,config_name);
-            stderr.printf("Cannot find config file %s\n",config_file);
-            return null;
+            int x,y;
+            Gtk.Orientation eff_ori = Orientation.HORIZONTAL;
+            base.get_preferred_width_internal(out x, out y);
+            measure(eff_ori, height,out min, out nat,out x,out y);
         }
-        [CCode (returns_floating_reference = true)]
-        public static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
+        protected override void get_preferred_height_for_width(int width, out int min, out int nat)
         {
-            return new Toplevel.from_position(app,name,mon,e);
+            int x,y;
+            Gtk.Orientation eff_ori = Orientation.VERTICAL;
+            base.get_preferred_height_internal(out x, out y);
+            measure(eff_ori,width,out min, out nat,out x,out y);
         }
-/*
- * Big constructor
- */
-        private Toplevel (Gtk.Application app, string name)
+        protected override void get_preferred_width(out int min, out int nat)
+        {
+            min = nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? this.height : GAP;
+        }
+        protected override void get_preferred_height(out int min, out int nat)
+        {
+            min = nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? this.height : GAP;
+        }
+        private int calc_width(int scrw, int panel_width,int panel_margin)
+        {
+            int effective_width = scrw*panel_width/100;
+            if ((effective_width + panel_margin) > scrw)
+                effective_width = scrw - panel_margin;
+            return effective_width;
+        }
+        private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
+        {
+            unowned Gdk.Display screen = this.get_display();
+            Gdk.Rectangle marea = Gdk.Rectangle();
+            if (monitor < 0)
+                marea = screen.get_primary_monitor().get_geometry();
+            else if (monitor < screen.get_n_monitors())
+                marea = screen.get_monitor(monitor).get_geometry();
+            int scrw = this.orientation == Orientation.HORIZONTAL ? marea.width : marea.height;
+            if (this.orientation != orient)
+                min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
+            else
+                min = nat = base_min = base_nat = calc_width(scrw, for_size, panel_margin);
+        }
+        protected override SizeRequestMode get_request_mode()
+        {
+            return (this.orientation == Orientation.HORIZONTAL) ? SizeRequestMode.WIDTH_FOR_HEIGHT : SizeRequestMode.HEIGHT_FOR_WIDTH;
+        }
+
+        /*************************************************************************************
+         * Plugins stuff
+         *************************************************************************************/
+        private static unowned Platform platform = null;
+        internal static unowned CoreSettings core_settings = null;
+        internal static AppletHolder holder = null;
+        private static ulong mon_handler = 0;
+        private static ulong mon_rm_handler = 0;
+        private unowned UnitSettings settings;
+        static construct
+        {
+            holder = new AppletHolder();
+        }
+        internal void add_applet(string type)
+        {
+            unowned UnitSettings s = core_settings.add_unit_settings(type,false);
+            s.default_settings.set_string(Key.NAME,type);
+            holder.load_applet(s);
+        }
+        private void on_applet_loaded(string type)
+        {
+            foreach (var unit in core_settings.core_settings.get_strv(Settings.CORE_UNITS))
+            {
+                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                {
+                    if (pl.default_settings.get_string(Key.NAME) == type)
+                    {
+                        place_applet(holder.applet_ref(type),pl);
+                        update_applet_positions();
+                        return;
+                }
+                }
+            }
+        }
+        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
+        {
+            var aw = applet_plugin.get_applet_widget(this,s.custom_settings,s.uuid);
+            unowned Applet applet = aw;
+            var position = s.default_settings.get_uint(Key.POSITION);
+            box.pack_start(applet,false, true);
+            box.reorder_child(applet,(int)position);
+            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
+            {
+                s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
+                applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
+            }
+            applet.destroy.connect(()=>{
+                    string uuid = applet.uuid;
+                    applet_destroyed(uuid);
+                    if (this.in_destruction())
+                        core_settings.remove_unit_settings(uuid);
+            });
+        }
+        public void remove_applet(Applet applet)
+        {
+            unowned UnitSettings s = core_settings.get_by_uuid(applet.uuid);
+            applet.destroy();
+            core_settings.remove_unit_settings_full(s.uuid, true);
+        }
+        internal void applet_destroyed(string uuid)
+        {
+            unowned UnitSettings s = core_settings.get_by_uuid(uuid);
+            var name = s.default_settings.get_string(Key.NAME);
+            holder.applet_unref(name);
+        }
+        internal void update_applet_positions()
+        {
+            var children = box.get_children();
+            for (unowned List<unowned Widget> l = children; l != null; l = l.next)
+            {
+                var idx = get_applet_settings(l.data as Applet).default_settings.get_uint(Key.POSITION);
+                box.reorder_child((l.data as Applet),(int)idx);
+            }
+        }
+        internal List<unowned Widget> get_applets_list()
+        {
+            return box.get_children();
+        }
+        internal unowned UnitSettings get_applet_settings(Applet pl)
+        {
+            return core_settings.get_by_uuid(pl.uuid);
+        }
+        internal uint get_applet_position(Applet pl)
+        {
+            int res;
+            box.child_get(pl,"position",out res, null);
+            return (uint)res;
+        }
+        internal void set_applet_position(Applet pl, int pos)
+        {
+            box.reorder_child(pl,pos);
+        }
+        /************************************************************************************************
+         *  Constructors
+         ************************************************************************************************/
+        public Toplevel(Gtk.Application app, Platform platform, string name)
         {
             Object(border_width: 0,
                 decorated: false,
@@ -206,8 +379,18 @@ namespace ValaPanel
                 skip_pager_hint: true,
                 accept_focus: false,
                 application: app,
-                panel_name: name);
+                uuid: name);
+            if (Toplevel.platform == null)
+            {
+                Toplevel.platform = platform;
+                Toplevel.core_settings = platform.get_settings();
+            }
             setup(false);
+        }
+        [CCode (returns_floating_reference = true)]
+        private static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
+        {
+            return new Toplevel.from_position(app,name,mon,e);
         }
         private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
         {
@@ -222,79 +405,92 @@ namespace ValaPanel
                 skip_pager_hint: true,
                 accept_focus: false,
                 application: app,
-                panel_name: name);
+                uuid: name);
             monitor = mon;
             this.edge = e;
             setup(true);
         }
         private void setup(bool use_internal_values)
         {
-            var filename = user_config_file_name("panels",profile,panel_name);
-            settings = new ToplevelSettings(filename);
+            settings = core_settings.get_by_uuid(this.uuid);
             if (use_internal_values)
             {
-                settings.settings.set_int(Key.MONITOR, _mon);
-                settings.settings.set_enum(Key.EDGE, edge);
+                settings.default_settings.set_int(Key.MONITOR, _mon);
+                settings.default_settings.set_enum(Key.EDGE, edge);
             }
-            settings_as_action(this,settings.settings,Key.EDGE);
-            settings_as_action(this,settings.settings,Key.ALIGNMENT);
-            settings_as_action(this,settings.settings,Key.HEIGHT);
-            settings_as_action(this,settings.settings,Key.WIDTH);
-            settings_as_action(this,settings.settings,Key.DYNAMIC);
-            settings_as_action(this,settings.settings,Key.AUTOHIDE);
-            settings_as_action(this,settings.settings,Key.STRUT);
-            settings_as_action(this,settings.settings,Key.DOCK);
-            settings_as_action(this,settings.settings,Key.MARGIN);
-            settings_bind(this,settings.settings,Key.MONITOR);
-            settings_as_action(this,settings.settings,Key.ICON_SIZE);
-            settings_as_action(this,settings.settings,Key.BACKGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.FOREGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.BACKGROUND_FILE);
-            settings_as_action(this,settings.settings,Key.FONT);
-            settings_as_action(this,settings.settings,Key.CORNERS_SIZE);
-            settings_as_action(this,settings.settings,Key.FONT_SIZE_ONLY);
-            settings_as_action(this,settings.settings,Key.USE_BACKGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.USE_FOREGROUND_COLOR);
-            settings_as_action(this,settings.settings,Key.USE_FONT);
-            settings_as_action(this,settings.settings,Key.USE_BACKGROUND_FILE);
-            if (monitor < Gdk.Screen.get_default().get_n_monitors())
+            settings_as_action(this,settings.default_settings,Key.EDGE);
+            settings_as_action(this,settings.default_settings,Key.ALIGNMENT);
+            settings_as_action(this,settings.default_settings,Key.HEIGHT);
+            settings_as_action(this,settings.default_settings,Key.WIDTH);
+            settings_as_action(this,settings.default_settings,Key.DYNAMIC);
+            settings_as_action(this,settings.default_settings,Key.AUTOHIDE);
+            settings_as_action(this,settings.default_settings,Key.STRUT);
+            settings_as_action(this,settings.default_settings,Key.DOCK);
+            settings_as_action(this,settings.default_settings,Key.MARGIN);
+            settings_bind(this,settings.default_settings,Key.MONITOR);
+            settings_as_action(this,settings.default_settings,Key.ICON_SIZE);
+            settings_as_action(this,settings.default_settings,Key.BACKGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.FOREGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.BACKGROUND_FILE);
+            settings_as_action(this,settings.default_settings,Key.FONT);
+            settings_as_action(this,settings.default_settings,Key.CORNERS_SIZE);
+            settings_as_action(this,settings.default_settings,Key.FONT_SIZE_ONLY);
+            settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.USE_FOREGROUND_COLOR);
+            settings_as_action(this,settings.default_settings,Key.USE_FONT);
+            settings_as_action(this,settings.default_settings,Key.USE_BACKGROUND_FILE);
+            if (monitor < Gdk.Display.get_default().get_n_monitors())
                 start_ui();
             unowned Gtk.Application panel_app = get_application();
-            if (mon_handler != 0)
-                mon_handler = Signal.connect(Gdk.Screen.get_default(),"monitors-changed",
+            if (mon_handler == 0)
+                mon_handler = Signal.connect(Gdk.Display.get_default(),"monitor-added",
+                                            (GLib.Callback)(monitors_changed_cb),panel_app);
+            if (mon_rm_handler == 0)
+                mon_rm_handler = Signal.connect(Gdk.Display.get_default(),"monitor-removed",
                                             (GLib.Callback)(monitors_changed_cb),panel_app);
         }
         construct
         {
-            local_applets = new HashTable<string,int>(str_hash,str_equal);
             unowned Gdk.Visual visual = this.get_screen().get_rgba_visual();
             if (visual != null)
                 this.set_visual(visual);
-            a = Gtk.Allocation();
             this.notify.connect((s,p)=> {
                 if (p.name == Key.EDGE)
                     if (box != null) box.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
                     if (autohide) ah_hide(); else ah_show();
+            });
+            this.notify.connect((s,p)=> {
                 if (p.name in gnames)
-                {
-                    this.queue_resize();
-                    this.update_strut();
-                }
+                    this.update_geometry();
                 if (p.name in anames)
                     this.update_appearance();
             });
+            holder.applet_ready_to_place.connect(place_applet);
+            holder.applet_loaded.connect(on_applet_loaded);
             this.add_action_entries(panel_entries,this);
-            extset.extension_added.connect(on_extension_added);
-            engine.load_plugin.connect_after((i)=>
-            {
-                var ext = extset.get_extension(i);
-                on_extension_added(i,ext);
-            });
         }
-/*
- * Common UI functions
- */
+        /***************************************************************************
+         * Common UI functions
+         ***************************************************************************/
+        private void update_geometry()
+        {
+            Gdk.Display screen = this.get_display();
+            Gdk.Rectangle marea = Gdk.Rectangle();
+            if (monitor < 0)
+                marea = screen.get_primary_monitor().get_geometry();
+            else if (monitor < screen.get_n_monitors())
+                marea = screen.get_monitor(monitor).get_geometry();
+            var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.height-marea.y ;
+            var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.width-marea.x : height;
+            this.set_size_request(effective_width, effective_height);
+            platform.move_to_side(this, this.edge, this.monitor);
+            this.queue_resize();
+            while (Gtk.events_pending ())
+              Gtk.main_iteration ();
+            platform.update_strut(this as Gtk.Window);
+            this.notify["orientation"](this.get_class().find_property("orientation"));
+        }
         protected override void destroy()
         {
             stop_ui();
@@ -318,11 +514,8 @@ namespace ValaPanel
 
         private void start_ui()
         {
-            a.x = a.y = a.width = a.height = 0;
-            set_wmclass("panel","vala-panel");
             PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-transparent");
             PanelCSS.toggle_class(this,"-panel-transparent",false);
-            this.get_application().add_window(this);
             this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                             Gdk.EventMask.ENTER_NOTIFY_MASK |
                             Gdk.EventMask.LEAVE_NOTIFY_MASK);
@@ -346,155 +539,33 @@ namespace ValaPanel
 			box.show();
             this.ah_rev.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
-            settings.init_plugin_list();
+            foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
+            {
+                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                    holder.load_applet(pl);
+            }
             this.show();
             this.stick();
-            foreach(unowned PluginSettings pl in settings.plugins)
-                load_applet(pl);
             update_applet_positions();
             this.present();
             this.autohide = autohide;
+            this.update_geometry();
             initialized = true;
         }
 
-/*
- * Position calculating.
- */
-        protected override void size_allocate(Gtk.Allocation alloc)
-        {
-            int x,y,w;
-            base.size_allocate(a);
-            if (is_dynamic && box != null)
-            {
-                if (orientation == Gtk.Orientation.HORIZONTAL)
-                    box.get_preferred_width(null, out w);
-                else
-                    box.get_preferred_height(null, out w);
-                if (w!=width)
-                    settings.settings.set_int(Key.WIDTH,w);
-            }
-            if (!this.get_realized())
-                return;
-            get_window().get_origin(out x, out y);
-            _calculate_position (ref alloc);
-            this.a.x = alloc.x;
-            this.a.y = alloc.y;
-            if (alloc.width != this.a.width || alloc.height != this.a.height || this.a.x != x || this.a.y != y)
-            {
-                this.a.width = alloc.width;
-                this.a.height = alloc.height;
-                this.set_size_request(this.a.width, this.a.height);
-                this.move(this.a.x, this.a.y);
-                this.update_strut();
-            }
-        }
-
-        private void _calculate_position(ref Gtk.Allocation alloc)
-        {
-            unowned Gdk.Screen screen = this.get_screen();
-            Gdk.Rectangle marea = Gdk.Rectangle();
-            if (monitor < 0)
-            {
-                marea.x = 0;
-                marea.y = 0;
-                marea.width = screen.get_width();
-                marea.height = screen.get_height();
-            }
-            else if (monitor < screen.get_n_monitors())
-            {
-                screen.get_monitor_geometry(monitor,out marea);
-//~                 marea = screen.get_monitor_workarea(monitor);
-//~                 var hmod = (autohide) ? GAP : height;
-//~                 switch (edge)
-//~                 {
-//~                     case PositionType.TOP:
-//~                         marea.x -= hmod;
-//~                         marea.height += hmod;
-//~                         break;
-//~                     case PositionType.BOTTOM:
-//~                         marea.height += hmod;
-//~                         break;
-//~                     case PositionType.LEFT:
-//~                         marea.y -= hmod;
-//~                         marea.width += hmod;
-//~                         break;
-//~                     case PositionType.RIGHT:
-//~                         marea.width += hmod;
-//~                         break;
-//~                 }
-            }
-            if (orientation == Gtk.Orientation.HORIZONTAL)
-            {
-                alloc.width = width;
-                alloc.x = marea.x;
-                calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref alloc.x);
-                alloc.height = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
-                                        GAP;
-                alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
-            }
-            else
-            {
-                alloc.height = width;
-                alloc.y = marea.y;
-                calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref alloc.y);
-                alloc.width = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height :
-                                         GAP;
-                alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
-            }
-        }
-
-        private static void calculate_width(int scrw, bool dyn, AlignmentType align,
-                                            int margin, ref int panw, ref int x)
-        {
-            if (!dyn)
-            {
-                panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
-                panw = (int)(((double)scrw * (double) panw)/100.0);
-            }
-            margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
-            panw = int.min(scrw - margin, panw);
-            if (align == AlignmentType.START)
-                x+=margin;
-            else if (align == AlignmentType.END)
-            {
-                x += scrw - panw - margin;
-                x = (x < 0) ? 0 : x;
-            }
-            else if (align == AlignmentType.CENTER)
-                x += (scrw - panw)/2;
-        }
-
-        protected override void get_preferred_width(out int min, out int nat)
-        {
-            base.get_preferred_width_internal(out min, out nat);
-            Gtk.Requisition req = Gtk.Requisition();
-            this.get_panel_preferred_size(ref req);
-            min = nat = req.width;
-        }
-        protected override void get_preferred_height(out int min, out int nat)
-        {
-            base.get_preferred_height_internal(out min, out nat);
-            Gtk.Requisition req = Gtk.Requisition();
-            this.get_panel_preferred_size(ref req);
-            min = nat = req.height;
-        }
-        private void get_panel_preferred_size (ref Gtk.Requisition min)
-        {
-            var rect = Gtk.Allocation();
-            rect.width = min.width;
-            rect.height = min.height;
-            _calculate_position(ref rect);
-            min.width = rect.width;
-            min.height = rect.height;
-        }
-/****************************************************
- *         autohide : new version                   *
- ****************************************************/
+        /****************************************************
+         *         autohide : new version                   *
+         ****************************************************/
+        private const int PERIOD = 200;
+        private const int GAP = 2;
+        private AutohideState ah_state;
+        public bool autohide {get; internal set;}
 		private void ah_show()
-		{
-				PanelCSS.toggle_class(this,"-panel-transparent",false);
-				this.ah_rev.set_reveal_child(true);
-				this.ah_state = AutohideState.VISIBLE;
+        {
+                PanelCSS.toggle_class(this,"-panel-transparent",false);
+                this.ah_rev.set_reveal_child(true);
+                this.ah_state = AutohideState.VISIBLE;
 		}
 
 		private void ah_hide()
@@ -532,31 +603,6 @@ namespace ValaPanel
                 this.ah_hide();
         }
 
-/****************************************************
- *         autohide : borrowed from fbpanel         *
- ****************************************************/
-
-/* Autohide is behaviour when panel hides itself when mouse is "far enough"
- * and pops up again when mouse comes "close enough".
- * Formally, it's a state machine with 3 states that driven by mouse
- * coordinates and timer:
- * 1. VISIBLE - ensures that panel is visible. When/if mouse goes "far enough"
- *      switches to WAITING state
- * 2. WAITING - starts timer. If mouse comes "close enough", stops timer and
- *      switches to VISIBLE.  If timer expires, switches to HIDDEN
- * 3. HIDDEN - hides panel. When mouse comes "close enough" switches to VISIBLE
- *
- * Note 1
- * Mouse coordinates are queried every PERIOD milisec
- *
- * Note 2
- * If mouse is less then GAP pixels to panel it's considered to be close,
- * otherwise it's far
- */
-        private const int PERIOD = 200;
-        private const int GAP = 2;
-/* end of the autohide code
- * ------------------------------------------------------------- */
 /*
  * Menus stuff
  */
@@ -568,7 +614,7 @@ namespace ValaPanel
                 if (context_menu == null)
                 {
                     var menu = get_plugin_menu(null);
-                    menu.popup(null,null,null,e.button,e.time);
+                    menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,e);
                     return true;
                 }
                 else
@@ -581,7 +627,7 @@ namespace ValaPanel
             return false;
         }
 
-        internal Gtk.Menu get_plugin_menu(Applet? pl)
+        public Gtk.Menu get_plugin_menu(Applet? pl)
         {
             var builder = new Builder.from_resource("/org/vala-panel/lib/menus.ui");
             unowned GLib.Menu gmenu = builder.get_object("panel-context-menu") as GLib.Menu;
@@ -601,357 +647,6 @@ namespace ValaPanel
             return context_menu;
         }
 /*
- * Plugins stuff.
- */
-        internal void add_applet(string type)
-        {
-            unowned PluginSettings s = settings.add_plugin_settings(type);
-            s.default_settings.set_string(Key.NAME,type);
-            load_applet(s);
-        }
-        internal void load_applet(PluginSettings s)
-        {
-            /* Determine if the plugin is loaded yet. */
-            string name = s.default_settings.get_string(Key.NAME);
-            if (loaded_types.contains(name))
-            {
-                unowned PluginData? data = loaded_types.lookup(name);
-                if (data!=null)
-                {
-                    place_applet(data.plugin,s);
-                    data.count +=1;
-                    var count = local_applets.lookup(name);
-                    count += 1;
-                    local_applets.insert(name,count);
-                    loaded_types.insert(name,data);
-                    return;
-                }
-            }
-            // Got this far we actually need to load the underlying plugin
-            unowned Peas.PluginInfo? plugin = null;
-
-            foreach(unowned Peas.PluginInfo plugini in engine.get_plugin_list())
-            {
-                if (plugini.get_module_name() == name)
-                {
-                    plugin = plugini;
-                    break;
-                }
-            }
-            if (plugin == null) {
-                warning("Could not find plugin: %s", name);
-                return;
-            }
-            engine.try_load_plugin(plugin);
-        }
-        private void on_extension_added(Peas.PluginInfo i, Object p)
-        {
-            unowned AppletPlugin plugin = p as AppletPlugin;
-            unowned string type = i.get_module_name();
-            if (!loaded_types.contains(type))
-            {
-                var data = PluginData();
-                data.plugin = plugin;
-                data.count = 0;
-                loaded_types.insert(type,data);
-            }
-            if (local_applets.contains(type))
-                return;
-            // Iterate the children, and then load them into the panel
-            unowned PluginSettings? pl = null;
-            foreach (unowned PluginSettings s in settings.plugins)
-                if (s.default_settings.get_string(Key.NAME) == type)
-                {
-                    pl = s;
-                    local_applets.insert(type,0);
-                    load_applet(pl);
-                    update_applet_positions();
-                    return;
-                }
-        }
-        internal void place_applet(AppletPlugin applet_plugin, PluginSettings s)
-        {
-            var aw = applet_plugin.get_applet_widget(this,s.config_settings,s.number);
-            unowned Applet applet = aw;
-            var position = s.default_settings.get_uint(Key.POSITION);
-            box.pack_start(applet,false, true);
-            box.reorder_child(applet,(int)position);
-            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-            {
-                s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
-                applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
-            }
-            applet.destroy.connect(()=>{applet_removed(applet.number);});
-        }
-        internal void remove_applet(Applet applet)
-        {
-            applet.destroy();
-        }
-        internal void applet_removed(uint num)
-        {
-            if (this.in_destruction())
-                return;
-            unowned PluginSettings s = settings.get_settings_by_num(num);
-            var name = s.default_settings.get_string(Key.NAME);
-            var count = local_applets.lookup(name);
-            count--;
-            if (count <= 0)
-                local_applets.remove(name);
-            else
-                local_applets.insert(name,count);
-            unowned PluginData data = loaded_types.lookup(name);
-            data.count -= 1;
-            if (data.count <= 0)
-            {
-                unowned AppletPlugin pl = loaded_types.lookup(name).plugin;
-                loaded_types.remove(name);
-                unowned Peas.PluginInfo info = pl.plugin_info;
-                engine.try_unload_plugin(info);
-            }
-            else
-                loaded_types.insert(name,data);
-            settings.remove_plugin_settings(num);
-        }
-        internal void update_applet_positions()
-        {
-            var children = box.get_children();
-            for (unowned List<unowned Widget> l = children; l != null; l = l.next)
-            {
-                var idx = get_applet_settings(l.data as Applet).default_settings.get_uint(Key.POSITION);
-                box.reorder_child((l.data as Applet),(int)idx);
-            }
-        }
-        public List<unowned Widget> get_applets_list()
-        {
-            return box.get_children();
-        }
-        internal unowned List<Peas.PluginInfo> get_all_types()
-        {
-            return engine.get_plugin_list();
-        }
-        internal unowned AppletPlugin get_plugin(Applet pl)
-        {
-            return loaded_types.lookup((settings.get_settings_by_num(pl.number)
-                                        .default_settings.get_string(Key.NAME))).plugin;
-        }
-        internal unowned PluginSettings get_applet_settings(Applet pl)
-        {
-            return settings.get_settings_by_num(pl.number);
-        }
-        internal uint get_applet_position(Applet pl)
-        {
-            int res;
-            box.child_get(pl,"position",out res, null);
-            return (uint)res;
-        }
-        internal void set_applet_position(Applet pl, int pos)
-        {
-            box.reorder_child(pl,pos);
-        }
-/*
- * Properties handling
- */
-        private bool panel_edge_can_strut(out ulong size)
-        {
-            ulong s = 0;
-            size = 0;
-            if (!get_mapped())
-                return false;
-            if (autohide)
-                s = GAP;
-            else switch (orientation)
-            {
-                case Gtk.Orientation.VERTICAL:
-                    s = a.width;
-                    break;
-                case Gtk.Orientation.HORIZONTAL:
-                    s = a.height;
-                    break;
-                default: return false;
-            }
-            if (monitor < 0)
-            {
-                size = s;
-                return true;
-            }
-            if (monitor >= get_screen().get_n_monitors())
-                return false;
-            Gdk.Rectangle rect, rect2;
-            get_screen().get_monitor_geometry(monitor, out rect);
-            switch(edge)
-            {
-                case PositionType.LEFT:
-                    rect.width = rect.x;
-                    rect.x = 0;
-                    s += rect.width;
-                    break;
-                case PositionType.RIGHT:
-                    rect.x += rect.width;
-                    rect.width = get_screen().get_width() - rect.x;
-                    s += rect.width;
-                    break;
-                case PositionType.TOP:
-                    rect.height = rect.y;
-                    rect.y = 0;
-                    s += rect.height;
-                    break;
-                case PositionType.BOTTOM:
-                    rect.y += rect.height;
-                    rect.height = get_screen().get_height() - rect.y;
-                    s += rect.height;
-                    break;
-            }
-            if (!(rect.height == 0 || rect.width == 0)) /* on a border of monitor */
-            {
-                var n = get_screen().get_n_monitors();
-                for (var i = 0; i < n; i++)
-                {
-                    if (i == monitor)
-                        continue;
-                    get_screen().get_monitor_geometry(i, out rect2);
-                    if (rect.intersect(rect2, null))
-                        /* that monitor lies over the edge */
-                        return false;
-                }
-            }
-            size = s;
-            return true;
-        }
-        private void update_strut()
-        {
-            int index;
-            Gdk.Atom atom;
-            ulong strut_size = 0;
-            ulong strut_lower = 0;
-            ulong strut_upper = 0;
-
-            if (!get_mapped())
-                return;
-            /* most wm's tend to ignore struts of unmapped windows, and that's how
-             * panel hides itself. so no reason to set it. If it was be, it must be removed */
-            if (autohide && this.strut_size == 0)
-                return;
-
-            /* Dispatch on edge to set up strut parameters. */
-            switch (edge)
-            {
-                case PositionType.LEFT:
-                    index = 0;
-                    strut_lower = a.y;
-                    strut_upper = a.y + a.height;
-                    break;
-                case PositionType.RIGHT:
-                    index = 1;
-                    strut_lower = a.y;
-                    strut_upper = a.y + a.height;
-                    break;
-                case PositionType.TOP:
-                    index = 2;
-                    strut_lower = a.x;
-                    strut_upper = a.x + a.width;
-                    break;
-                case PositionType.BOTTOM:
-                    index = 3;
-                    strut_lower = a.x;
-                    strut_upper = a.x + a.width;
-                    break;
-                default:
-                    return;
-            }
-
-            /* Set up strut value in property format. */
-            ulong desired_strut[12];
-            if (strut &&
-                panel_edge_can_strut(out strut_size))
-            {
-                desired_strut[index] = strut_size;
-                desired_strut[4 + index * 2] = strut_lower;
-                desired_strut[5 + index * 2] = strut_upper-1;
-            }
-            /* If strut value changed, set the property value on the panel window.
-             * This avoids property change traffic when the panel layout is recalculated but strut geometry hasn't changed. */
-            if ((this.strut_size != strut_size) || (this.strut_lower != strut_lower) || (this.strut_upper != strut_upper) || (this.strut_edge != this.edge))
-            {
-                this.strut_size = strut_size;
-                this.strut_lower = strut_lower;
-                this.strut_upper = strut_upper;
-                this.strut_edge = this.edge;
-                /* If window manager supports STRUT_PARTIAL, it will ignore STRUT.
-                 * Set STRUT also for window managers that do not support STRUT_PARTIAL. */
-                var xwin = get_window();
-                if (strut_size != 0)
-                {
-                    atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-                    Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,12);
-                    atom = Atom.intern_static_string("_NET_WM_STRUT");
-                    Gdk.property_change(xwin,atom,Atom.intern_static_string("CARDINAL"),32,Gdk.PropMode.REPLACE,(uint8[])desired_strut,4);
-                }
-                else
-                {
-                    atom = Atom.intern_static_string("_NET_WM_STRUT_PARTIAL");
-                    Gdk.property_delete(xwin,atom);
-                    atom = Atom.intern_static_string("_NET_WM_STRUT");
-                    Gdk.property_delete(xwin,atom);
-                }
-            }
-        }
-        private void update_appearance()
-        {
-            if (provider != null)
-                this.get_style_context().remove_provider(provider);
-            if (font == null)
-                return;
-            StringBuilder str = new StringBuilder();
-            str.append_printf(".-vala-panel-background {\n");
-            if (use_background_color)
-                str.append_printf(" background-color: %s;\n",background_color);
-            else
-                str.append_printf(" background-color: transparent;\n");
-            if (use_background_file)
-            {
-                str.append_printf(" background-image: url('%s');\n",background_file);
-/* Feature proposed: Background repeat */
-//~                 if (false)
-//~                     str.append_printf(" background-repeat: no-repeat;\n");
-            }
-            else
-                str.append_printf(" background-image: none;\n");
-            str.append_printf("}\n");
-/* Feature proposed: Panel Layout and Shadow */
-//~             str.append_printf(".-vala-panel-shadow {\n");
-//~             str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
-//~             str.append_printf(" border-style: none;\n margin: 3px;\n");
-//~             str.append_printf("}\n");
-            str.append_printf(".-vala-panel-round-corners {\n");
-            str.append_printf(" border-radius: %upx;\n",round_corners_size);
-            str.append_printf("}\n");
-            Pango.FontDescription desc = Pango.FontDescription.from_string(font);
-            str.append_printf(".-vala-panel-font-size {\n");
-            str.append_printf(" font-size: %dpx;\n",desc.get_size()/Pango.SCALE);
-            str.append_printf("}\n");
-            str.append_printf(".-vala-panel-font {\n");
-            var family = desc.get_family();
-            var weight = desc.get_weight();
-            var style = desc.get_style();
-            var variant = desc.get_variant();
-            str.append_printf(" font-style: %s;\n",(style == Pango.Style.ITALIC) ? "italic" : ((style == Pango.Style.OBLIQUE) ? "oblique" : "normal"));
-            str.append_printf(" font-variant: %s;\n",(variant == Pango.Variant.SMALL_CAPS) ? "small-caps" : "normal");
-            str.append_printf(" font-weight: %s;\n",(weight <= Pango.Weight.SEMILIGHT) ? "light" : (weight >= Pango.Weight.SEMIBOLD ? "bold" : "normal"));
-            str.append_printf(" font-family: %s;\n",family);
-            str.append_printf("}\n");
-            str.append_printf(".-vala-panel-foreground-color {\n");
-            str.append_printf(" color: %s;\n",foreground_color);
-            str.append_printf("}\n");
-            var css = str.str;
-            provider = PanelCSS.add_css_to_widget(this as Widget, css);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-background",use_background_color || use_background_file);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-shadow",false);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-round-corners",round_corners_size > 0);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-font-size",use_font);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-font", use_font && !font_size_only);
-            PanelCSS.toggle_class(this as Widget,"-vala-panel-foreground-color",use_foreground_color);
-        }
-/*
  * Actions stuff
  */
         /* If there is a panel on this edge and it is not the panel being configured, set the edge unavailable. */
@@ -966,49 +661,16 @@ namespace ValaPanel
                 }
             return true;
         }
-        /* FIXME: Potentially we can support multiple panels at the same edge,
-         * but currently this cannot be done due to some positioning problems. */
-        private static string gen_panel_name(string profile, PositionType edge, int mon)
-        {
-            string? edge_str = null;
-            if (edge == PositionType.TOP)
-                edge_str="top";
-            if (edge == PositionType.BOTTOM)
-                edge_str="bottom";
-            if (edge == PositionType.LEFT)
-                edge_str="left";
-            if (edge == PositionType.RIGHT)
-                edge_str="right";
-            string dir = user_config_file_name("panels",profile, null);
-            for(var i = 0; i < int.MAX; ++i )
-            {
-                var name = "%s-m%d-%d".printf(edge_str, mon, i);
-                var f = Path.build_filename( dir, name, null );
-                if( !FileUtils.test( f, FileTest.EXISTS ) )
-                    return name;
-            }
-            return "panel-max";
-        }
         private void activate_new_panel(SimpleAction act, Variant? param)
         {
             int new_mon = -2;
             PositionType new_edge = PositionType.TOP;
             var found = false;
             /* Allocate the edge. */
-            assert(Gdk.Screen.get_default()!=null);
-            var monitors = Gdk.Screen.get_default().get_n_monitors();
+            assert(Gdk.Display.get_default()!=null);
+            var monitors = Gdk.Display.get_default().get_n_monitors();
             /* try to allocate edge on current monitor first */
             var m = _mon;
-            if (m < 0)
-            {
-                /* panel is spanned over the screen, guess from pointer now */
-                int x, y;
-                var manager = Gdk.Screen.get_default().get_display().get_device_manager();
-                var device = manager.get_client_pointer ();
-                Gdk.Screen scr;
-                device.get_position(out scr, out x, out y);
-                m = scr.get_monitor_at_point(x, y);
-            }
             for (int e = PositionType.BOTTOM; e >= PositionType.LEFT; e--)
             {
                 if (panel_edge_available((PositionType)e, m, true))
@@ -1046,7 +708,7 @@ namespace ValaPanel
                 msg.destroy();
                 return;
             }
-            var new_name = gen_panel_name(profile,new_edge,new_mon);
+            var new_name = CoreSettings.get_uuid();
             var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
             new_toplevel.configure("position");
             new_toplevel.show_all();
@@ -1065,12 +727,10 @@ namespace ValaPanel
             dlg.destroy();
             if( ok )
             {
-                string pr = this.profile;
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-                var fname = user_config_file_name("panels",pr,panel_name);
-                FileUtils.unlink( fname );
+                core_settings.remove_unit_settings_full(this.uuid, true);
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)

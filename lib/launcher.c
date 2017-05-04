@@ -33,9 +33,14 @@ void child_spawn_func(void *data)
 
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
 {
-	g_autoptr(GError) err            = NULL;
 	g_autoptr(GAppLaunchContext) cxt = G_APP_LAUNCH_CONTEXT(
 	    gdk_display_get_app_launch_context(gtk_widget_get_display(parent)));
+	return vala_panel_launch_with_context(app_info, cxt, uris);
+}
+
+bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris)
+{
+	g_autoptr(GError) err = NULL;
 	bool ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),
 	                                                     uris,
 	                                                     cxt,

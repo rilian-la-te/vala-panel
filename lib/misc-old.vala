@@ -32,7 +32,7 @@ namespace ValaPanel
     public static void setup_icon_button(Button btn, Icon? icon = null, string? label = null, Toplevel? top = null)
     {
         PanelCSS.apply_from_resource(btn,"/org/vala-panel/lib/style.css","-panel-icon-button");
-        PanelCSS.apply_with_class(btn,"",Gtk.STYLE_CLASS_BUTTON,true);
+        PanelCSS.toggle_class(btn,Gtk.STYLE_CLASS_BUTTON,true);
         Image? img = null;
         if (icon != null)
         {

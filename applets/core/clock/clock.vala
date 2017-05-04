@@ -22,12 +22,12 @@ public class ClockApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Clock(toplevel,settings,number);
     }
 }
-public class Clock: Applet, AppletConfigurable
+public class Clock: Applet
 {
     private const string TIP_FORMAT = "tooltip-format";
     private const string LABEL_FORMAT = "clock-format";
@@ -51,12 +51,10 @@ public class Clock: Applet, AppletConfigurable
 
     public Clock(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         settings.bind(LABEL_FORMAT,this,LABEL_FORMAT,SettingsBindFlags.GET);
         settings.bind(TIP_FORMAT,this,TIP_FORMAT,SettingsBindFlags.GET);
         settings.bind(BOLD,this,BOLD,SettingsBindFlags.GET);
@@ -96,14 +94,73 @@ public class Clock: Applet, AppletConfigurable
         this.add(clock);
         this.show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Digital Clock"),
-        toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
         _("Clock Format"), LABEL_FORMAT, GenericConfigType.STR,
         _("Tooltip Format"), TIP_FORMAT, GenericConfigType.STR,
         _("Format codes: man 3 strftime; %n for line break"), null, GenericConfigType.TRIM,
         _("Bold font"), BOLD, GenericConfigType.BOOL);
+    }
+    private void popup_position_helper(Gtk.Widget popup,
+                                      out int x, out int y)
+    {
+        Gtk.Allocation pa;
+        Gtk.Allocation a;
+        popup.realize();
+        popup.get_allocation(out pa);
+        if (popup.is_toplevel())
+        {
+            Gdk.Rectangle ext;
+            popup.get_window().get_frame_extents(out ext);
+            pa.width = ext.width;
+            pa.height = ext.height;
+        }
+        if (popup is Gtk.Menu)
+        {
+            int min, nat, new_height = 0;
+            foreach (var item in (popup as Gtk.Menu).get_children())
+            {
+                item.get_preferred_height(out min, out nat);
+                new_height += nat;
+            }
+            pa.height = int.max(pa.height,new_height);
+        }
+        get_allocation(out a);
+        get_window().get_origin(out x, out y);
+        if (!get_has_window())
+        {
+            x += a.x;
+            y += a.y;
+        }
+        switch (toplevel.edge)
+        {
+            case Gtk.PositionType.TOP:
+                y+=a.height;
+                break;
+            case Gtk.PositionType.BOTTOM:
+                y-=pa.height;
+                break;
+            case Gtk.PositionType.LEFT:
+                x+=a.width;
+                break;
+            case Gtk.PositionType.RIGHT:
+                x-=pa.width;
+                break;
+        }
+        unowned Gdk.Monitor monitor = get_display().get_monitor_at_point(x,y);
+        a = (Gtk.Allocation)monitor.get_workarea();
+        x = x.clamp(a.x,a.x + a.width - pa.width);
+        y = y.clamp(a.y,a.y + a.height - pa.height);
+    }
+    private void set_popup_position(Gtk.Widget popup)
+    {
+        int x,y;
+        popup_position_helper(popup,out x, out y);
+        if (popup is Gtk.Window)
+            (popup as Window).move(x,y);
+        else
+            popup.get_window().move(x,y);
     }
     private string get_css()
     {

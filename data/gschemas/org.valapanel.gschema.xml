@@ -1,8 +1,5 @@
 <schemalist>
   <schema id="org.valapanel">
-    <key name="toplevels" type="as">
-      <default>[]</default>
-    </key>
     <key name="is-dark" type="b">
       <default>false</default>
     </key>

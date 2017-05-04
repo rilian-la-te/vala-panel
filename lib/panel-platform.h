@@ -23,15 +23,33 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+#include "constants.h"
+#include "settings-manager.h"
+
 G_BEGIN_DECLS
 
-G_DECLARE_INTERFACE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
+G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
 
 typedef enum {
 	ALIGN_START  = 0,
 	ALIGN_CENTER = 1,
 	ALIGN_END    = 2,
 } PanelAlignmentType;
+
+typedef enum {
+	NORTH_LEFT   = 0,
+	NORTH_CENTER = 1,
+	NORTH_RIGHT  = 2,
+	SOUTH_LEFT   = 3,
+	SOUTH_CENTER = 4,
+	SOUTH_RIGHT  = 5,
+	WEST_UP      = 6,
+	WEST_CENTER  = 7,
+	WEST_DOWN    = 8,
+	EAST_UP      = 9,
+	EAST_CENTER  = 10,
+	EAST_DOWN    = 11
+} PanelGravity;
 
 typedef enum {
 	XXS  = 16,
@@ -51,35 +69,34 @@ typedef enum {
 	AH_VISIBLE,
 } PanelAutohideState;
 
-struct _ValaPanelPlatformInterface
+struct _ValaPanelPlatformClass
 {
-	GTypeInterface g_iface;
+	GObjectClass __parent__;
 	/*loading*/
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);
 	/*struts*/
-	long (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
+	bool (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
 	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
-	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
+	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc,
+	                     int monitor);
 	/*GSettings management*/
-	GSettings *(*get_settings_for_scheme)(ValaPanelPlatform *self, const char *scheme,
-	                                      const char *path);
-	void (*remove_settings_path)(ValaPanelPlatform *self, const char *path, const char *name);
 	gpointer padding[12];
 };
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile);
-long vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
+bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
+bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+                                            const char *path, GSettingsBackend *backend);
+ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
+bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
-void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc);
-GSettings *vala_panel_platform_get_settings_for_scheme(ValaPanelPlatform *self, const char *scheme,
-                                                       const char *path);
-void vala_panel_platform_remove_settings_path(ValaPanelPlatform *self, const char *path,
-                                              const char *child_name);
+void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, GtkPositionType alloc,
+                                      int monitor);
 
 G_END_DECLS
 

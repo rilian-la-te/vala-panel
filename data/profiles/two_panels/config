@@ -1,4 +1,0 @@
-[global]
-is-custom=false
-logout-command='lxsession-logout'
-shutdown-command='lxsession-logout'

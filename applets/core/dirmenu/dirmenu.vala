@@ -23,12 +23,12 @@ public class DirmenuApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Dirmenu(toplevel,settings,number);
     }
 }
-public class Dirmenu: Applet, AppletConfigurable
+public class Dirmenu: Applet
 {
     private struct DirectorySort
     {
@@ -46,12 +46,10 @@ public class Dirmenu: Applet, AppletConfigurable
     {get; set;}
     public Dirmenu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         var button = new MenuButton();
         var img = new Image();
         settings.bind(DIR,this,DIR,SettingsBindFlags.GET);
@@ -126,7 +124,7 @@ public class Dirmenu: Applet, AppletConfigurable
             item.set_data("name",cursor.dirname);
             /* Connect signals. */
             item.select.connect(()=>{
-                if (item.get_submenu != null)
+                if (item.get_submenu() != null)
                 {
                     /* On first reference, populate the submenu using the parent directory and the item directory name. */
                     string dpath = item.get_submenu().get_data<string>("path");
@@ -190,10 +188,9 @@ public class Dirmenu: Applet, AppletConfigurable
             launch_terminal(dir_path);
         return false;
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Directory Menu"),
-                            toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                             _("Directory"), DIR, GenericConfigType.DIRECTORY,
                             _("Label"), LABEL, GenericConfigType.STR,
                             _("Icon"), ICON, GenericConfigType.FILE_ENTRY);

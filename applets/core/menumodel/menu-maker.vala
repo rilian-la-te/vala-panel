@@ -133,7 +133,7 @@ namespace MenuMaker
             item.set_action_and_target("app.launch-id","s",info.get_id());
             section.prepend_item(item);
         }
-        section.remove(1);
+//        section.remove(1);
         return (GLib.MenuModel) menu;
     }
 

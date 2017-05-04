@@ -8,7 +8,7 @@
 
 struct _ValaPanelAppletInfo
 {
-	ValaPanelAppletWidget *applet;
+	ValaPanelApplet *applet;
 	GSettings *settings;
 	gchar *icon;
 	gchar *applet_type;
@@ -223,7 +223,7 @@ void vala_panel_applet_info_class_init(ValaPanelAppletInfoClass *klass)
 	                                g_param_spec_object("applet",
 	                                                    "applet",
 	                                                    "applet",
-	                                                    vala_panel_applet_widget_get_type(),
+	                                                    vala_panel_applet_get_type(),
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
 	                                                        G_PARAM_STATIC_BLURB |

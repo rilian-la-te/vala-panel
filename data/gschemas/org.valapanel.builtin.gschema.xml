@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.valapanel.toplevel.clock">
+  <schema id="org.valapanel.clock">
     <key name="clock-format" type="s">
       <default>'%R'</default>
     </key>
@@ -10,7 +10,7 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.dirmenu">
+  <schema id="org.valapanel.dirmenu">
     <key name="caption" type="s">
       <default>''</default>
     </key>
@@ -21,7 +21,7 @@
       <default>'system-file-manager'</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.separator">
+  <schema id="org.valapanel.separator">
     <key name="size" type="i">
       <range min="0" max="100000"/>
       <default>2</default>
@@ -30,7 +30,7 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.menumodel">
+  <schema id="org.valapanel.menumodel">
     <key name="menu-caption" type="s">
       <default>''</default>
     </key>
@@ -50,12 +50,12 @@
       <default>''</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.launchbar">
+  <schema id="org.valapanel.launchbar">
     <key name="launch-buttons" type="as">
       <default>[]</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.kbled">
+  <schema id="org.valapanel.kbled">
     <key name="numlock-on" type="b">
       <default>true</default>
     </key>

@@ -29,7 +29,7 @@ typedef struct _tray_client
 typedef struct _tray_plugin
 {
 	GtkWidget *plugin; /* Back pointer to Plugin */
-	PanelApplet *applet;
+	ValaPanelApplet *applet;
 	TrayClient *client_list;             /* List of tray clients */
 	BalloonMessage *incomplete_messages; /* List of balloon messages for which we are awaiting
 	                                        data */
@@ -43,6 +43,6 @@ typedef struct _tray_plugin
 	GdkAtom selection_atom;           /* Atom for _NET_SYSTEM_TRAY_S%d */
 } TrayPlugin;
 
-TrayPlugin *tray_constructor(PanelApplet *applet);
+TrayPlugin *tray_constructor(ValaPanelApplet *applet);
 void tray_destructor(gpointer data);
 G_END_DECLS

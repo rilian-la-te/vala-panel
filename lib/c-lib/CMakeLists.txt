@@ -1,10 +1,9 @@
 include(GResource)
 set(ENUM_FILES
-	panel-platform.h
-        generic-config-dialog.h
         toplevel.h
         panel-layout.h
         )
+include(GLibHelpers)
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 add_library(cvalapanel SHARED
 

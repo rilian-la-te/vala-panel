@@ -90,8 +90,10 @@ add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 add_definitions(-Wall -Wno-unused # Vala loves to create variables
 #		-pedantic
 		-Wno-ignored-qualifiers
-		-Wno-deprecated-declarations #Vala warns us already
 		-Wno-incompatible-pointer-types
+		-Wno-missing-field-initializers
+		-Wno-discarded-qualifiers
+		-Wno-sign-compare
 		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 
@@ -116,10 +118,10 @@ pkg_check_modules (E
   gthread-2.0>=2.50)
 
 pkg_check_modules (F
-  libpeas-1.0>=1.2)
+  libpeas-1.0>=1.14)
 
 pkg_check_modules (G
-  libpeas-gtk-1.0>=1.2)
+  libpeas-gtk-1.0>=1.14)
 
 pkg_check_modules (H
   gmodule-2.0>=2.50)
@@ -130,8 +132,8 @@ pkg_check_modules (CORE REQUIRED QUIET
   gio-2.0>=2.50
   gio-unix-2.0>=2.50
   gthread-2.0>=2.50
-  libpeas-1.0>=1.2
-  libpeas-gtk-1.0>=1.2
+  libpeas-1.0>=1.14
+  libpeas-gtk-1.0>=1.14
   gmodule-2.0>=2.50)
 
 set(CORE_PACKAGES
@@ -164,6 +166,7 @@ set(TARGET_GLIB ${GLIB_VERSION_MAJOR}.${GLIB_VERSION_MINOR})
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(lib)
 ADD_SUBDIRECTORY(app)
+ADD_SUBDIRECTORY(runner)
 ADD_SUBDIRECTORY(applets)
 ADD_SUBDIRECTORY(data)
 

@@ -22,12 +22,12 @@ public class DesknoApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Deskno(toplevel,settings,number);
     }
 }
-public class Deskno: Applet, AppletConfigurable
+public class Deskno: Applet
 {
     private const string KEY_LABELS = "wm-labels";
     private const string KEY_BOLD = "bold-font";
@@ -39,20 +39,10 @@ public class Deskno: Applet, AppletConfigurable
     private ulong screen_handler;
     public Deskno(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-
-       return Configurator.generic_config_dlg(_("Desktop Number / Workspace Name"),
-            toplevel, this.settings,
-            _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
-            _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         label = new Label(null);
         settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
         settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
@@ -69,6 +59,13 @@ public class Deskno: Applet, AppletConfigurable
         name_update();
         this.add(label);
         this.show_all();
+    }
+    public override Widget get_settings_ui()
+    {
+
+       return Configurator.generic_config_widget(this.settings,
+            _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
+            _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
     }
     private void name_update()
     {

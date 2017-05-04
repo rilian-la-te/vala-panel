@@ -22,12 +22,12 @@ public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Tasklist(toplevel,settings,number);
     }
 }
-public class Tasklist: Applet, AppletConfigurable
+public class Tasklist: Applet
 {
     Wnck.Tasklist widget;
     private const string KEY_MIDDLE_CLICK_CLOSE = "middle-click-close";
@@ -40,15 +40,15 @@ public class Tasklist: Applet, AppletConfigurable
     {get; set;}
     public Tasklist(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         widget = new Wnck.Tasklist();
         this.add(widget);
-        toplevel.notify["edge"].connect((pspec)=>{widget.set_orientation(toplevel.orientation);});
+        toplevel.notify["orientation"].connect_after((s,p)=>{
+            widget.set_orientation(toplevel.orientation);
+        });
         widget.set_button_relief(ReliefStyle.NONE);
         settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
         settings.changed.connect((key)=>{
@@ -70,24 +70,30 @@ public class Tasklist: Applet, AppletConfigurable
         widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
         this.show_all();
     }
+    private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
+    {
+        if(toplevel.orientation != orient)
+            min = nat = toplevel.height;
+        else
+            min = nat = unexpanded_limit;
+        base_min = base_nat = -1;
+    }
+
     public override void get_preferred_height(out int min, out int nat)
     {
-        if (toplevel.orientation == Orientation.VERTICAL)
-            min = nat = unexpanded_limit;
-        else
-            base.get_preferred_height_internal(out min, out nat);
+        int x,y;
+        base.get_preferred_height_internal(out x, out y);
+        measure(Orientation.VERTICAL,-1,out min,out nat,out x, out y);
     }
     public override void get_preferred_width(out int min, out int nat)
     {
-        if (toplevel.orientation == Orientation.HORIZONTAL)
-            min = nat = unexpanded_limit;
-        else
-            base.get_preferred_width_internal(out min, out nat);
+        int x,y;
+        base.get_preferred_width_internal(out x, out y);
+        measure(Orientation.HORIZONTAL,-1,out min,out nat,out x, out y);
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Tasklist Applet"),
-                            toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                             _("Show windows from all desktops"), KEY_ALL_DESKTOPS, GenericConfigType.BOOL,
                             _("Show window`s workspace on unminimize"), KEY_SWITCH_UNMIN, GenericConfigType.BOOL,
                             _("Close windows on middle click"), KEY_MIDDLE_CLICK_CLOSE, GenericConfigType.BOOL,

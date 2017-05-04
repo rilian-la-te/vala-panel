@@ -22,7 +22,7 @@ public class MenuApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Menu(toplevel,settings,number);
     }
@@ -43,7 +43,7 @@ internal enum InternalMenu
     RECENT,
     MOUNTS
 }
-public class Menu: Applet, AppletConfigurable, AppletMenu
+public class Menu: Applet
 {
     GLib.Menu? menu;
     unowned Container? button;
@@ -59,18 +59,55 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     internal string? filename {get; set;}
     public Menu(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
-        base(toplevel,settings,number);
-    }
+         base(toplevel,settings,number);
+         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+         (this.action_group.lookup_action(AppletAction.MENU) as SimpleAction).set_enabled(true);
+         button = null;
+         settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
+         settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
+         settings.bind(Key.IS_INTERNAL_MENU,this,"intern",SettingsBindFlags.GET);
+         settings.bind(Key.MODEL_FILE,this,"filename",SettingsBindFlags.GET);
+         settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
+         settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
+         var w = menumodel_widget_create();
+         button = w;
+         this.add(button);
+         unowned Gtk.Settings gtksettings = this.get_settings();
+         gtksettings.gtk_shell_shows_menubar = false;
+         this.show_all();
+         settings.changed.connect((key)=>{
+             if ((key == Key.IS_INTERNAL_MENU)
+                 || (key == Key.MODEL_FILE && !intern)
+                 || (key == Key.IS_MENU_BAR)
+                 || (key == Key.ICON && bar))
+             {
+                 menumodel_widget_rebuild();
+             }
+             else if (key == Key.CAPTION && !bar)
+             {
+                 unowned Button btn = button as Button;
+                 btn.label = caption;
+             }
+             else if (key == Key.ICON && !bar)
+             {
+                 try
+                 {
+                     unowned Button btn = button as Button;
+                     (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
+                 } catch (Error e){stderr.printf("%s\n",e.message);}
+             }
+         });
+     }
     public override void destroy()
     {
         menumodel_widget_destroy();
         base.destroy();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_dlg(_("Custom Menu"), toplevel, this.settings,
+        return Configurator.generic_config_widget(this.settings,
                                       _("If internal menu is enabled, menu file will not be used, predefeined menu will be used instead."),null, GenericConfigType.TRIM,
                                       _("Is internal menu"), Key.IS_INTERNAL_MENU, GenericConfigType.BOOL,
                                       _("Is system menu (can be keybound)"), Key.IS_SYSTEM_MENU, GenericConfigType.BOOL,
@@ -88,8 +125,7 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
     {
         if (GLib.MainContext.current_source().is_destroyed()) return false;
         if (int_menu != null)
-            int_menu.popup(null,null,menu_position_func,
-                        0, Gdk.CURRENT_TIME);
+            int_menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
         else
         {
             unowned Gtk.MenuBar menubar = button as Gtk.MenuBar;
@@ -97,45 +133,6 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         }
         show_system_menu_idle = 0;
         return false;
-    }
-    public override void create()
-    {
-        button = null;
-        this.set_visible_window(false);
-        settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
-        settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
-        settings.bind(Key.IS_INTERNAL_MENU,this,"intern",SettingsBindFlags.GET);
-        settings.bind(Key.MODEL_FILE,this,"filename",SettingsBindFlags.GET);
-        settings.bind(Key.ICON,this,"icon",SettingsBindFlags.GET);
-        settings.bind(Key.CAPTION,this,"caption",SettingsBindFlags.GET);
-        var w = menumodel_widget_create();
-        button = w;
-        this.add(button);
-        unowned Gtk.Settings gtksettings = this.get_settings();
-        gtksettings.gtk_shell_shows_menubar = false;
-        this.show_all();
-        settings.changed.connect((key)=>{
-            if ((key == Key.IS_INTERNAL_MENU)
-                || (key == Key.MODEL_FILE && !intern)
-                || (key == Key.IS_MENU_BAR)
-                || (key == Key.ICON && bar))
-            {
-                menumodel_widget_rebuild();
-            }
-            else if (key == Key.CAPTION && !bar)
-            {
-                unowned Button btn = button as Button;
-                btn.label = caption;
-            }
-            else if (key == Key.ICON && !bar)
-            {
-                try
-                {
-                    unowned Button btn = button as Button;
-                    (btn.image as Gtk.Image).gicon = Icon.new_for_string(icon);
-                } catch (Error e){stderr.printf("%s\n",e.message);}
-            }
-        });
     }
     private void menumodel_widget_rebuild()
     {
@@ -180,8 +177,8 @@ public class Menu: Applet, AppletConfigurable, AppletMenu
         int_menu.show_all();
         int_menu.attach_to_widget(menubutton,null);
         menubutton.toggled.connect(()=>{
-            if(menubutton.active)
-                int_menu.popup(null,null,this.menu_position_func,0,get_current_event_time());
+            if(menubutton.active && !int_menu.visible)
+                int_menu.popup_at_widget(this,Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
             else
                 int_menu.popdown();
         });

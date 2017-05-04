@@ -1,4 +1,4 @@
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/${CMAKE_PROJECT_NAME}/")
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 add_subdirectory(core)
-add_subdirectory(wnck)
 add_subdirectory(drawing)
+add_subdirectory(wnck)

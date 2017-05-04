@@ -22,7 +22,7 @@ public class PagerApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Pager(toplevel,settings,number);
     }
@@ -33,25 +33,21 @@ public class Pager: Applet
     int border;
     public Pager(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public override void create()
-    {
         widget = new Wnck.Pager();
-        border = 1; /* NOTE: old 'pager' used 2, WnckPager has 1, need 1 more */
-
         /* FIXME: use some global setting for border */
+        this.set_border_width(0);
+        widget.set_show_all(true);
+        widget.set_display_mode(Wnck.PagerDisplayMode.CONTENT);
+        widget.set_shadow_type(Gtk.ShadowType.IN);
+        widget.set_size_request(0,0);
+        this.add(widget);
         toplevel.notify.connect((pspec)=>{
             if (pspec.name == "edge" || pspec.name == "height" || pspec.name == "width")
                 on_params_change_callback();
         });
-        widget.set_display_mode(Wnck.PagerDisplayMode.CONTENT);
-        widget.set_size_request(0,0);
-        widget.show();
-        this.add(widget);
-        this.set_border_width(border);
         on_params_change_callback();
         this.show_all();
     }
@@ -61,12 +57,11 @@ public class Pager: Applet
         h -= 2 * border;
         /* set geometry */
         widget.set_orientation(toplevel.orientation);
-        if (toplevel.orientation == Orientation.VERTICAL)
-            h *= (int)Math.round((double) Gdk.Screen.height() / (double) Gdk.Screen.width());
         var rows = h / (toplevel.icon_size * 2) + 1; /* min */
         var r = (h - 2) / toplevel.icon_size; /* max */
         rows = uint.max(rows, r);
         widget.set_n_rows((int)rows);
+        widget.queue_resize();
     }
     public override void update_context_menu(ref GLib.Menu parent)
     {

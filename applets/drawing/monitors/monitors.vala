@@ -23,7 +23,7 @@ public class MonitorsApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Monitors(toplevel,settings,number);
     }
@@ -343,7 +343,7 @@ internal class MemMonitor : Monitor
     }
 }
 
-public class Monitors: Applet, AppletConfigurable
+public class Monitors: Applet
 {
     private const uint UPDATE_PERIOD = 1; /* Seconds              */
     private const uint N_MONITORS = 2;
@@ -358,22 +358,10 @@ public class Monitors: Applet, AppletConfigurable
     private uint timer;
     public Monitors(ValaPanel.Toplevel toplevel,
                                   GLib.Settings? settings,
-                                  uint number)
+                                  string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-        return Configurator.generic_config_dlg(_("Resource monitors"),
-            toplevel, this.settings,
-            _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
-            _("CPU color"), CPU_CL, GenericConfigType.STR,
-            _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,
-            _("RAM color"), RAM_CL, GenericConfigType.STR,
-            _("Action when clicked"), ACTION, GenericConfigType.STR);
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         monitors = new Monitor[2];
         box = new Gtk.Box(Orientation.HORIZONTAL,2);
         box.set_homogeneous(true);
@@ -403,6 +391,15 @@ public class Monitors: Applet, AppletConfigurable
         this.destroy.connect(()=>{Source.remove(timer);});
         this.add(box);
         this.show_all();
+    }
+    public override Widget get_settings_ui()
+    {
+        return Configurator.generic_config_widget(this.settings,
+            _("Display CPU usage"), DISPLAY_CPU, GenericConfigType.BOOL,
+            _("CPU color"), CPU_CL, GenericConfigType.STR,
+            _("Display RAM usage"), DISPLAY_RAM, GenericConfigType.BOOL,
+            _("RAM color"), RAM_CL, GenericConfigType.STR,
+            _("Action when clicked"), ACTION, GenericConfigType.STR);
     }
     private void rebuild_mons()
     {

@@ -4,25 +4,35 @@ include(GLibHelpers)
 set(ENUM_FILES
         panel-platform.h
         generic-config-dialog.h
+        settings-manager.c
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
-set(LIBVALAPANEL_C_SOURCES
-    misc.c
+option(ENABLE_NEW_INTERFACE "Enable new interface function" OFF)
+if (ENABLE_NEW_INTERFACE)
+    set(NEW_DEFINE -D NEW)
+endif()
+set(LIBVALAPANEL_HEADERS
+    applet-widget-api.h
+    applet-widget.h
+    constants.h
     misc.h
     menu-maker.h
+    css.h
+    launcher.h
+    generic-config-dialog.h
+    settings-manager.h
+    panel-platform.h
+    ${ENUMSH})
+set(LIBVALAPANEL_C_SOURCES
+    misc.c
     menu-maker.c
     css.c
-    css.h
     launcher.c
-    launcher.h
     generic-config-dialog.c
-    generic-config-dialog.h
     settings-manager.c
-    settings-manager.h
     panel-platform.c
-    panel-platform.h
-    ${ENUMSC}
-    ${ENUMSH})
+    applet-widget.c
+    ${ENUMSC})
 INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
     list(APPEND LIBVALAPANEL_C_SOURCES
@@ -30,12 +40,11 @@ if(GLIB_OLD_FOUND)
         guuid.h)
 endif()
 set(VALA_FILES
-        misc-old.vala
+	misc-old.vala
 	configurator.vala
 	dbusmenu/dbusmenu.vala
-	panel-plugin.vala
+	applet-holder.vala
 	panel-toplevel.vala
-	plugin-settings.vala
 	)
 vala_precompile(VALA_C ${LIBNAME}
     ${VALA_FILES}
@@ -46,9 +55,10 @@ PACKAGES
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/vapi
-    --target-glib=2.40
+    --target-glib=2.50
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
     --thread
+    ${NEW_DEFINE}
 GENERATE_VAPI
     ${APPNAME}
 GENERATE_HEADER
@@ -76,6 +86,7 @@ add_custom_target(vala-ide-lib SOURCES ${VALA_FILES})
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${LIBVALAPANEL_C_SOURCES}
+    ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
     definitions.h
 )
@@ -90,7 +101,9 @@ set_target_properties (${LIBNAME} PROPERTIES
 install (TARGETS ${LIBNAME} DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT bin)
 
 # Install lib stuffs
+list(APPEND LIBVALAPANEL_HEADERS ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}-compat.h)
+
 install (FILES ${CMAKE_BINARY_DIR}/${APPNAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/ COMPONENT dev)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}.vapi DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.deps DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/vala/vapi/ COMPONENT dev)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPNAME}-compat.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev RENAME ${APPNAME}.h)
+install (FILES ${LIBVALAPANEL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)

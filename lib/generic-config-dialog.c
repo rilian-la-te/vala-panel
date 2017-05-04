@@ -171,6 +171,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 			}
 		}
 	}
+	gtk_widget_show_all(GTK_WIDGET(dlg_vbox));
 	return GTK_WIDGET(dlg_vbox);
 }
 
@@ -200,7 +201,7 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 	gtk_box_set_spacing(dlg_vbox, 4);
 	g_signal_connect(dlg, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 	gtk_container_set_border_width(GTK_CONTAINER(dlg), 8);
-	gtk_widget_show_all(GTK_WIDGET(dlg_vbox));
+	gtk_widget_show(GTK_WIDGET(dlg_vbox));
 	va_end(l);
 	return dlg;
 }

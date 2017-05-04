@@ -17,63 +17,92 @@
  */
 
 #include "panel-platform.h"
+#include "definitions.h"
 
-G_DEFINE_INTERFACE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
-
-void vala_panel_platform_default_init(ValaPanelPlatformInterface *self)
+typedef struct
 {
-}
+	ValaPanelCoreSettings *core_settings;
+} ValaPanelPlatformPrivate;
 
-long vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
+G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
+
+bool vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
-		return VALA_PANEL_PLATFORM_GET_IFACE(self)->can_strut(self, top);
+		return VALA_PANEL_PLATFORM_GET_CLASS(self)->can_strut(self, top);
 	return -1;
 }
 
 void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->update_strut(self, top);
+		VALA_PANEL_PLATFORM_GET_CLASS(self)->update_strut(self, top);
 }
 
 void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, GtkWindow *top, int x, int y)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->move_to_coords(self, top, x, y);
+		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_coords(self, top, x, y);
 }
 
 void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top,
-                                      GtkPositionType alloc)
+                                      GtkPositionType alloc, int monitor)
 {
 	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->move_to_side(self, top, alloc);
+		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_side(self, top, alloc, monitor);
+}
+
+bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)
+{
+	return vala_panel_platform_init_settings_full(self,
+	                                              VALA_PANEL_BASE_SCHEMA,
+	                                              VALA_PANEL_OBJECT_PATH,
+	                                              backend);
+}
+
+bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+                                            const char *path, GSettingsBackend *backend)
+{
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	priv->core_settings = vala_panel_core_settings_new(schema, path, backend);
+	return vala_panel_core_settings_init_unit_list(priv->core_settings);
 }
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile)
 {
 	if (self)
-		return VALA_PANEL_PLATFORM_GET_IFACE(self)->start_panels_from_profile(self,
+		return VALA_PANEL_PLATFORM_GET_CLASS(self)->start_panels_from_profile(self,
 		                                                                      app,
 		                                                                      profile);
 	return false;
 }
 
-GSettings *vala_panel_platform_get_settings_for_scheme(ValaPanelPlatform *self, const char *scheme,
-                                                       const char *path)
+ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 {
-	if (self)
-		return VALA_PANEL_PLATFORM_GET_IFACE(self)->get_settings_for_scheme(self,
-		                                                                    scheme,
-		                                                                    path);
-	return NULL;
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	return priv->core_settings;
 }
 
-void vala_panel_platform_remove_settings_path(ValaPanelPlatform *self, const char *path,
-                                              const char *child_name)
+void vala_panel_platform_init(ValaPanelPlatform *self)
 {
-	if (self)
-		VALA_PANEL_PLATFORM_GET_IFACE(self)->remove_settings_path(self, path, child_name);
-	return;
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	priv->core_settings = NULL;
+}
+
+void vala_panel_platform_finalize(GObject *obj)
+{
+	ValaPanelPlatform *self = VALA_PANEL_PLATFORM(obj);
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	if (priv->core_settings)
+		vala_panel_core_settings_free(priv->core_settings);
+}
+
+void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
+{
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
 }

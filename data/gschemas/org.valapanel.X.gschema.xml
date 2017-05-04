@@ -4,7 +4,7 @@
     <value nick="iconify" value="1"/>
     <value nick="shade" value="2"/>
   </enum>
-  <schema id="org.valapanel.toplevel.wincmd">
+  <schema id="org.valapanel.wincmd">
     <key name="left-button-command" enum="org.valapanel.WcCommand">
       <default>'iconify'</default>
     </key>
@@ -18,7 +18,7 @@
       <default>'preferences-desktop-wallpaper-symbolic'</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.deskno">
+  <schema id="org.valapanel.deskno">
     <key name="bold-font" type="b">
       <default>false</default>
     </key>
@@ -26,7 +26,7 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.tasklist">
+  <schema id="org.valapanel.tasklist">
     <key name="all-desktops" type="b">
       <default>true</default>
     </key>
@@ -46,7 +46,27 @@
       <default>600</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.icontasks">
+  <schema id="org.valapanel.tasklist-xfce">
+    <key name="all-desktops" type="b">
+      <default>true</default>
+    </key>
+    <key name="grouped-tasks" type="b">
+      <default>false</default>
+    </key>
+    <key name="middle-click-close" type="b">
+      <default>false</default>
+    </key>
+    <key name="switch-workspace-on-unminimize" type="b">
+      <default>false</default>
+    </key>
+    <key name="show-labels" type="b">
+      <default>true</default>
+    </key>
+    <key name="unexpanded-limit" type="i">
+      <default>600</default>
+    </key>
+  </schema>
+  <schema id="org.valapanel.icontasks">
     <key type="as" name="pinned-launchers">
       <default>[]</default>
     </key>

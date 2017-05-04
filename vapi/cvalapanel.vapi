@@ -19,7 +19,7 @@
 using Gtk;
 using GLib;
 
-[CCode (cheader_filename = "lib/css.h", cprefix = "",lower_case_cprefix="css_")]
+[CCode (cheader_filename = "css.h", cprefix = "",lower_case_cprefix="css_")]
 namespace PanelCSS
 {
     public void apply_with_class(Gtk.Widget w, string css, string klass, bool add);
@@ -34,31 +34,49 @@ namespace PanelCSS
     public string generate_font_label(double size ,bool bold);
     public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e);
 }
+[CCode (cheader_filename = "applet-widget.h")]
+namespace ValaPanel.AppletAction
+{
+	public const string MENU;
+	public const string CONFIGURE;
+}
 namespace ValaPanel
 {
-    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "lib/c-lib/panel-layout.h")]
+	[CCode (cheader_filename = "applet-widget.h")]
+	public abstract class Applet : Gtk.Bin {
+		[CCode (cheader_filename = "applet-widget-api.h")]
+		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
+		public void init_background ();
+		public void show_config_dialog ();
+		public bool is_configurable();
+		public virtual void update_context_menu (ref GLib.Menu parent_menu);
+		public virtual Widget get_settings_ui();
+		public Gtk.Widget background_widget { get; set; }
+		public GLib.Settings? settings { get; construct; }
+		public SimpleActionGroup action_group { get; }
+		[CCode (cheader_filename = "applet-widget-api.h")]
+		public ValaPanel.Toplevel toplevel { get; construct; }
+		public string uuid { get; construct; }
+	}
+    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "c-panel-layout.h")]
     public enum AppletPackType
     {
         START,
         CENTER,
         END
     }
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode (cheader_filename="panel-layout.h")]
     public void applet_set_position_metadata(Gtk.Widget applet, int metadata);
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode (cheader_filename="panel-layout.h")]
     public int applet_get_position_metadata(Gtk.Widget applet);
-    [CCode (cheader_filename="lib/c-lib/panel-layout.h")]
+    [CCode (cheader_filename="panel-layout.h")]
     public class AppletLayout : Gtk.Box
     {
 		public AppletLayout(Gtk.Orientation orient, int spacing);
     }
-    [CCode(cheader_filename="lib/settings-manager.h")]
+    [CCode(cheader_filename="settings-manager.h")]
     public const string PLUGIN_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
-    public const string SETTINGS_SCHEMA;
-    [CCode(cheader_filename="lib/c-lib/toplevel.h")]
-    public const string SETTINGS_PATH;
-    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "lib/generic-config-dialog.h")]
+    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "generic-config-dialog.h")]
     public enum GenericConfigType
     {
         STR,
@@ -71,7 +89,7 @@ namespace ValaPanel
         TRIM,
         EXTERNAL
     }
-    [CCode(cname="PanelAutohideState", cprefix="AH_", cheader_filename = "lib/panel-platform.h")]
+    [CCode(cname="PanelAutohideState", cprefix="AH_", cheader_filename = "panel-platform.h")]
     internal enum AutohideState
     {
         VISIBLE,
@@ -79,14 +97,14 @@ namespace ValaPanel
 		GRAB,
         WAITING
     }
-    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
+    [CCode(cname="PanelAlignmentType", cprefix="ALIGN_", cheader_filename = "panel-platform.h,vala-panel-enums.h")]
     public enum AlignmentType
     {
         START,
         CENTER,
         END
     }
-    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "lib/c-lib/toplevel.h,lib/vala-panel-enums.h")]
+    [CCode(cname="PanelIconSizeHints", cprefix="", cheader_filename = "panel-platform.h,vala-panel-enums.h")]
     internal enum IconSizeHints
     {
         XXS,
@@ -98,92 +116,121 @@ namespace ValaPanel
         XXL,
         XXXL;
     }
-    [CCode(cname = "_user_config_file_name",cheader_filename="lib/definitions.h")]
-    public string user_config_file_name(string name1, string profile, string? name2);
-    [CCode (cheader_filename="lib/misc.h")]
+    [CCode(cname = "_user_config_file_name",cheader_filename="definitions.h")]
+    internal string user_config_file_name(string name1, string profile, string? name2);
+    [CCode (cheader_filename="misc.h")]
     public static void apply_window_icon(Window w);
-    [CCode (cheader_filename="lib/misc.h")]
-	public static void reset_schema(GLib.Settings settings);
-    [CCode (cheader_filename="lib/misc.h")]
-	public static void reset_schema_with_children(GLib.Settings settings);
-    [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="lib/misc.h")]
+    [CCode (cheader_filename="misc.h")]
+	public static int monitor_num_from_mon(Gdk.Display display, Gdk.Monitor monitor);
+    [CCode (cheader_filename="misc.h")]
+    public static void reset_schema(GLib.Settings settings);
+    [CCode (cheader_filename="misc.h")]
+    public static void reset_schema_with_children(GLib.Settings settings);
+    [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="misc.h")]
     public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
-    [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="lib/definitions.h")]
+    [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="definitions.h")]
     public static void settings_bind(Object map, GLib.Settings settings, string prop);
-    [CCode (cheader_filename="lib/misc.h")]
+    [CCode (cheader_filename="misc.h")]
     public static void setup_button(Button b, Image? img = null, string? label = null);
-    [CCode (cheader_filename="lib/misc.h")]
+    [CCode (cheader_filename="misc.h")]
     public static void setup_label(Label label, string text, bool bold, double factor);
-    [CCode (cheader_filename="lib/misc.h")]
+    [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
-    [CCode (cheader_filename="lib/misc.h")]
+    [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
-	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_core_settings_free")]
-	internal class CoreSettings
-	{
-		internal HashTable<string,UnitSettings> all_units;
-		internal GLib.SettingsBackend backend;
-		internal string root_name;
-		internal string root_schema;
-		internal string root_path;
-		internal static string get_uuid();
-		internal CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
-		internal UnitSettings add_unit_settings(string name);
-		internal UnitSettings add_unit_settings_full(string name, string uuid);
-		internal void remove_unit_settings(string name);
-		internal UnitSettings get_by_uuid(string uuid);
-		internal bool init_toplevel_plugin_list(UnitSettings toplevel_settings);
-	}
-	[Compact]
-	[CCode (cheader_filename="lib/settings-manager.h",free_function="vala_panel_unit_settings_free")]
-	internal class UnitSettings
-	{
-		internal GLib.Settings default_settings;
-		internal GLib.Settings custom_settings;
-		internal string uuid;
-		internal string path_elem;
-		internal UnitSettings(CoreSettings settings, string? name, string uuid);
-	}
-	
+    [CCode (cheader_filename="definitions.h")]
+    public static Gtk.Orientation orient_from_edge(Gtk.PositionType edge);
+    [CCode (cheader_filename="definitions.h")]
+    public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
+    [Compact]
+    [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_core_settings_get_type()")]
+    internal class CoreSettings
+    {
+        internal HashTable<string,UnitSettings> all_units;
+        internal GLib.SettingsBackend backend;
+        internal GLib.Settings core_settings;
+        internal string root_name;
+        internal string root_schema;
+        internal string root_path;
+        internal static string get_uuid();
+        internal CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
+        internal unowned UnitSettings add_unit_settings(string name, bool is_toplevel);
+        internal unowned UnitSettings add_unit_settings_full(string name, string uuid, bool is_toplevel);
+        internal void remove_unit_settings(string name);
+        internal void remove_unit_settings_full(string name, bool destroy);
+        internal unowned UnitSettings get_by_uuid(string uuid);
+        internal bool init_unit_list();
+    }
+    [Compact]
+    [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_unit_settings_get_type()")]
+    internal class UnitSettings
+    {
+        internal GLib.Settings default_settings;
+        internal GLib.Settings custom_settings;
+        internal string uuid;
+        internal string path_elem;
+		internal bool is_toplevel();
+        internal UnitSettings(CoreSettings settings, string? name, string uuid);
+    }
+    [CCode (cheader_filename="panel-platform.h")]
+    public class Platform : Object
+    {
+        [CCode (has_construct_function="false")]
+        protected Platform();
+        public bool start_panels_from_profile(Gtk.Application app,string *profile);
+        internal void init_settings(GLib.SettingsBackend backend);
+        internal void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
+        internal unowned CoreSettings get_settings();
+        public long can_strut(Gtk.Window top);
+        public void update_strut(Gtk.Window top);
+        public void move_to_coords(Gtk.Window top, int x, int y);
+        public void move_to_side(Gtk.Window top, Gtk.PositionType side, int monitor);
+    }
 }
 [CCode (cprefix="")]
 namespace MenuMaker
 {
-    [CCode (cheader_filename="lib/menu-maker.h",cname="ATTRIBUTE_DND_SOURCE")]
+    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_DND_SOURCE")]
     public const string ATTRIBUTE_DND_SOURCE;
-    [CCode (cheader_filename="lib/menu-maker.h",cname="ATTRIBUTE_TOOLTIP")]
+    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_TOOLTIP")]
     public const string ATTRIBUTE_TOOLTIP;
-    [CCode (cheader_filename="lib/launcher.h",cname="activate_menu_launch_id")]
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_id")]
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="lib/launcher.h",cname="activate_menu_launch_uri")]
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_uri")]
     public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="lib/launcher.h",cname="activate_menu_launch_command")]
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_command")]
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="lib/launcher.h",cname="vala_panel_launch")]
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch")]
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
-    [CCode (cheader_filename="lib/launcher.h",cname="vala_panel_get_default_for_uri")]
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch_with_context")]
+    public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_get_default_for_uri")]
     public static AppInfo get_default_for_uri(string uri);
-    [CCode (cheader_filename="lib/menu-maker.h",cname="append_all_sections")]
+    [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
-    [CCode (cheader_filename="lib/menu-maker.h",cname="apply_menu_properties")]
+    [CCode (cheader_filename="menu-maker.h",cname="apply_menu_properties")]
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu);
 }
 
-[CCode (cheader_filename = "lib/generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
+[CCode (cheader_filename = "generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
 namespace ValaPanel.Configurator
 {
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
+    public static Widget generic_config_widget(GLib.Settings settings, ...);
 }
-[CCode (cheader_filename = "app/vala-panel-platform-standalone-x11.h", cprefix = "VALA_PANEL_APPLICATION_",lower_case_cprefix="VALA_PANEL_APPLICATION_")]
-namespace ValaPanel.Application
+[CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_",lower_case_cprefix="VALA_PANEL_")]
+namespace ValaPanel.Settings
 {
-	public const string PANELS;
-	public const string SETTINGS;
+	public const string CORE_SCHEMA;
+	public const string CORE_PATH;
+	public const string CORE_UNITS;
+	public const string OBJECT_PATH;
+	public const string OBJECT_PATH_TEMPLATE;
+	public const string TOPLEVEL_ID;
 }
 
-[CCode (cheader_filename = "lib/c-lib/toplevel.h,lib/c-lib/panel-layout.h,lib/settings-manager.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string EDGE;
@@ -208,7 +255,6 @@ namespace ValaPanel.Key
     public const string USE_FONT;
     public const string FONT_SIZE_ONLY;
     public const string USE_BACKGROUND_FILE;
-    internal const string APPLETS;
     internal const string NAME;
     internal const string EXPAND;
     internal const string CAN_EXPAND;

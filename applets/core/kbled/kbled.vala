@@ -22,12 +22,12 @@ public class KbLEDApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         return new Kbled(toplevel,settings,number);
     }
 }
-public class Kbled: Applet, AppletConfigurable
+public class Kbled: Applet
 {
     private const string CAPS_ON = "capslock-on";
     private const string NUM_ON = "numlock-on";
@@ -38,21 +38,10 @@ public class Kbled: Applet, AppletConfigurable
 
     public Kbled(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
-                                    uint number)
+                                    string number)
     {
         base(toplevel,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-        Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
-                            toplevel, this.settings,
-                            _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
-                            _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
-        dlg.set_size_request(200, -1);  /* Improve geometry */
-        return dlg;
-    }
-    public override void create()
-    {
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
         widget = new FlowBox();
         widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
@@ -76,6 +65,15 @@ public class Kbled: Applet, AppletConfigurable
             widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         show_all();
+    }
+    public Dialog get_config_dialog()
+    {
+        Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
+                            toplevel, this.settings,
+                            _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
+                            _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
+        dlg.set_size_request(200, -1);  /* Improve geometry */
+        return dlg;
     }
 
     /* Handle caps lock changes */

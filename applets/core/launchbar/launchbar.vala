@@ -31,13 +31,13 @@ namespace LaunchBar
     {
         public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
-                                        uint number)
+                                        string number)
         {
             return new Bar(toplevel,settings,number);
         }
     }
     private const string BUTTONS = "launch-buttons";
-    public class Bar: Applet, AppletConfigurable
+    public class Bar: Applet
     {
         internal string[]? ids;
         FlowBox layout;
@@ -45,21 +45,10 @@ namespace LaunchBar
         AppInfoMonitor? app_monitor;
         public Bar(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
-                                        uint number)
+                                        string number)
         {
             base(toplevel,settings,number);
-        }
-        private Dialog get_config_dialog()
-        {
-            return new ConfigDialog(this);
-        }
-        private void update_buttons_from_gsettings()
-        {
-            var loaded_ids = this.settings.get_strv(LaunchBar.BUTTONS);
-            load_buttons(loaded_ids);
-        }
-        public override void create()
-        {
+            (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
             layout = new FlowBox();
             Gtk.drag_dest_set (
                     layout,                     // widget that will accept a drop
@@ -70,7 +59,7 @@ namespace LaunchBar
                 );
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
             layout.activate_on_single_click = true;
-            layout.selection_mode = SelectionMode.SINGLE;
+            layout.selection_mode = SelectionMode.NONE;
             add(layout);
             toplevel.notify["edge"].connect((o,a)=> {
                 layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
@@ -88,6 +77,15 @@ namespace LaunchBar
                 layout.unselect_child(lb);
             });
             show_all();
+        }
+        protected override Widget get_settings_ui()
+        {
+            return new ConfigWidget(this);
+        }
+        private void update_buttons_from_gsettings()
+        {
+            var loaded_ids = this.settings.get_strv(LaunchBar.BUTTONS);
+            load_buttons(loaded_ids);
         }
         internal void request_remove_id(string id)
         {

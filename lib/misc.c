@@ -78,8 +78,8 @@ void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 
 inline void vala_panel_apply_window_icon(GtkWindow *win)
 {
-	g_autoptr(GdkPixbuf) icon;
-	icon = gdk_pixbuf_new_from_resource("/org/vala-panel/lib/panel.png", NULL);
+	g_autoptr(GdkPixbuf) icon =
+	    gdk_pixbuf_new_from_resource("/org/vala-panel/lib/panel.png", NULL);
 	gtk_window_set_icon(win, icon);
 }
 
@@ -111,15 +111,15 @@ void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, co
 	g_action_map_add_action(map, action);
 }
 
-char *vala_panel_generate_new_hash()
+int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 {
-	g_autoptr(GDateTime) time = g_date_time_new_now_utc();
-	g_autofree char *time_str = g_date_time_format(time, "%X %R:%S");
-	g_autofree char *pointer_string =
-	    g_strdup_printf("%d,%s,%" PRIu64 "", g_random_int(), time_str, g_get_real_time());
-	return g_compute_checksum_for_string(G_CHECKSUM_SHA512,
-	                                     pointer_string,
-	                                     strlen(pointer_string));
+	int mons = gdk_display_get_n_monitors(disp);
+	for (int i = 0; i < mons; i++)
+	{
+		if (mon == gdk_display_get_monitor(disp, i))
+			return i;
+	}
+	return -1;
 }
 
 void vala_panel_reset_schema(GSettings *settings)
@@ -138,8 +138,7 @@ void vala_panel_reset_schema_with_children(GSettings *settings)
 	g_auto(GStrv) children = g_settings_list_children(settings);
 	for (int i = 0; children[i]; i++)
 	{
-		g_autoptr(GSettings) child;
-		child = g_settings_get_child(settings, children[i]);
+		g_autoptr(GSettings) child = g_settings_get_child(settings, children[i]);
 		vala_panel_reset_schema(child);
 	}
 	g_settings_apply(settings);

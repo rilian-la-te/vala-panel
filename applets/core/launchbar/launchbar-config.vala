@@ -22,7 +22,7 @@ using Gtk;
 namespace LaunchBar
 {
     [GtkTemplate (ui = "/org/vala-panel/launchbar/config.ui"), CCode (cname = "LaunchBarConfig")]
-    public class ConfigDialog : Dialog
+    public class ConfigWidget : Gtk.Box
     {
         Bar launchbar;
         [GtkChild (name = "liststore-currentitems")]
@@ -37,9 +37,8 @@ namespace LaunchBar
         FileChooserWidget choose_file;
         [GtkChild (name = "box-popover")]
         Box box_popover;
-        public ConfigDialog(Bar launchbar)
+        public ConfigWidget(Bar launchbar)
         {
-            ValaPanel.apply_window_icon(this);
             TreeIter iter;
             this.launchbar = launchbar;
             foreach(var id in launchbar.ids)
@@ -204,7 +203,7 @@ namespace LaunchBar
         private void show_error(string error_i18n)
         {
             var msg = new MessageDialog
-                    (this,
+                    (this.get_toplevel() as Window,
                      DialogFlags.DESTROY_WITH_PARENT,
                      MessageType.ERROR,ButtonsType.CLOSE,
                      error_i18n);

@@ -24,32 +24,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define gtk_widget_destroy0(x)                                                                     \
+#define vala_panel_destroy(x, func)                                                                \
 	{                                                                                          \
 		if (x)                                                                             \
 		{                                                                                  \
-			gtk_widget_destroy(GTK_WIDGET(x));                                         \
+			func(x);                                                                   \
 			x = NULL;                                                                  \
 		}                                                                                  \
 	}
 
-#define g_object_unref0(x)                                                                         \
-	{                                                                                          \
-		if (x)                                                                             \
-		{                                                                                  \
-			g_object_unref(x);                                                         \
-			x = NULL;                                                                  \
-		}                                                                                  \
-	}
+#define gtk_widget_destroy0(x) vala_panel_destroy(x, gtk_widget_destroy)
 
-#define g_free0(x)                                                                                 \
-	{                                                                                          \
-		if (x)                                                                             \
-		{                                                                                  \
-			g_free(x);                                                                 \
-			x = NULL;                                                                  \
-		}                                                                                  \
-	}
+#define g_object_unref0(x) vala_panel_destroy(x, g_object_unref)
+
+#define g_free0(x) vala_panel_destroy(x, g_free)
 
 #define g_value_replace_string(string, value)                                                      \
                                                                                                    \
@@ -60,6 +48,9 @@
 
 #define _user_config_file_name(name1, cprofile, name2)                                             \
 	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, name1, name2, NULL)
+
+#define _user_config_file_name_new(cprofile)                                                       \
+	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, NULL)
 
 #define g_ascii_inplace_tolower(string)                                                            \
 	{                                                                                          \
@@ -72,30 +63,27 @@
 	                prop,                                                                      \
 	                G_OBJECT(obj),                                                             \
 	                prop,                                                                      \
-	                (GBindingFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |                \
-	                                G_SETTINGS_BIND_DEFAULT));
+	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |           \
+	                                     G_SETTINGS_BIND_DEFAULT));
 
-#define VALA_PANEL_DECLARE_MODULE_TYPE(                                                            \
-    ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)                                  \
-	GType module_obj_name##_get_type(void);                                                    \
-	G_GNUC_BEGIN_IGNORE_DEPRECATIONS                                                           \
-	typedef struct _##ModuleObjName ModuleObjName;                                             \
-	typedef struct                                                                             \
+#define vala_panel_orient_from_edge(edge)                                                          \
+	((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL           \
+	                                                    : GTK_ORIENTATION_VERTICAL
+
+#define vala_panel_invert_orient(orient)                                                           \
+	orient == GTK_ORIENTATION_HORIZONTAL ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL
+
+#define vala_panel_transpose_area(marea)                                                           \
 	{                                                                                          \
-		ParentName##Class parent_class;                                                    \
-	} ModuleObjName##Class;                                                                    \
-                                                                                                   \
-	static inline ModuleObjName *MODULE##_##OBJ_NAME(gpointer ptr)                             \
-	{                                                                                          \
-		return G_TYPE_CHECK_INSTANCE_CAST(ptr,                                             \
-		                                  module_obj_name##_get_type(),                    \
-		                                  ModuleObjName);                                  \
-	}                                                                                          \
-	static inline gboolean MODULE##_IS_##OBJ_NAME(gpointer ptr)                                \
-	{                                                                                          \
-		return G_TYPE_CHECK_INSTANCE_TYPE(ptr, module_obj_name##_get_type());              \
-	}                                                                                          \
-	G_GNUC_END_IGNORE_DEPRECATIONS
+		int i        = marea.height;                                                       \
+		marea.height = marea.width;                                                        \
+		marea.width  = i;                                                                  \
+		i            = marea.y;                                                            \
+		marea.y      = marea.x;                                                            \
+		marea.x      = i;                                                                  \
+	}
+
+#define vala_panel_str_is_empty(str) !str ? true : !g_strcmp0(str, "") ? true : false
 
 #define vala_panel_dup_array(DST, SRC, LEN)                                                        \
 	{                                                                                          \
