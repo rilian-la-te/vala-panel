@@ -24,32 +24,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define gtk_widget_destroy0(x)                                                                     \
+#define vala_panel_destroy(x, func)                                                                \
 	{                                                                                          \
 		if (x)                                                                             \
 		{                                                                                  \
-			gtk_widget_destroy(GTK_WIDGET(x));                                         \
+			func(x);                                                                   \
 			x = NULL;                                                                  \
 		}                                                                                  \
 	}
 
-#define g_object_unref0(x)                                                                         \
-	{                                                                                          \
-		if (x)                                                                             \
-		{                                                                                  \
-			g_object_unref(x);                                                         \
-			x = NULL;                                                                  \
-		}                                                                                  \
-	}
+#define gtk_widget_destroy0(x) vala_panel_destroy(x, gtk_widget_destroy)
 
-#define g_free0(x)                                                                                 \
-	{                                                                                          \
-		if (x)                                                                             \
-		{                                                                                  \
-			g_free(x);                                                                 \
-			x = NULL;                                                                  \
-		}                                                                                  \
-	}
+#define g_object_unref0(x) vala_panel_destroy(x, g_object_unref)
+
+#define g_free0(x) vala_panel_destroy(x, g_free)
 
 #define g_value_replace_string(string, value)                                                      \
                                                                                                    \
