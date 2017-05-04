@@ -1,4 +1,8 @@
-namespace Config {
+using GLib;
+using Gtk;
+
+[CCode (upper_case_cprefix="")]
+namespace PanelConfig {
 	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string DATADIR;
 	[CCode (cheader_filename = "vala-panel-compat.h")]
