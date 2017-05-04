@@ -18,6 +18,13 @@ namespace XEmbed
             this.notify["icon-size"].connect(()=>{
                 this.queue_resize();
             });
+            //GTK 3.22 temporary dirty hack (we do not know about updates of plug)
+            Timeout.add(250,()=>{
+                Allocation prev_alloc;
+                this.get_allocation(out prev_alloc);
+                this.get_window().get_parent().invalidate_rect((Gdk.Rectangle)prev_alloc,false);
+                return true;
+            });
         }
         protected override void realize()
         {
