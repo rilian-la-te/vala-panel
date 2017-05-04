@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <locale.h>
 #include "runner-app.h"
 #include "lib/config.h"
 #include "lib/definitions.h"
