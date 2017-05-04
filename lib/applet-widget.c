@@ -14,9 +14,9 @@ typedef struct
 
 } ValaPanelAppletPrivate;
 
-static inline void destroy0(GtkWidget *x)
+static inline void destroy_dialog(GtkDialog *p, gpointer user_data)
 {
-	gtk_widget_destroy0(x);
+	gtk_widget_destroy0(((ValaPanelAppletPrivate *)user_data)->dialog);
 }
 
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelApplet, vala_panel_applet, GTK_TYPE_BIN)
@@ -99,11 +99,10 @@ void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 		gtk_widget_set_hexpand(ui, true);
 		gtk_widget_set_vexpand(ui, true);
 		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), ui);
-		g_signal_connect(dlg, "destroy", G_CALLBACK(destroy0), self);
 		gtk_window_set_transient_for(dlg, p->toplevel);
 		p->dialog = dlg;
-		g_signal_connect(p->dialog, "hide", G_CALLBACK(destroy0), self);
-		g_signal_connect(p->dialog, "destroy", G_CALLBACK(destroy0), self);
+		g_signal_connect_after(dlg, "hide", G_CALLBACK(destroy_dialog), p);
+		g_signal_connect_after(dlg, "destroy", G_CALLBACK(destroy_dialog), p);
 	}
 	gtk_window_present(p->dialog);
 }
