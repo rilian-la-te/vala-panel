@@ -13,9 +13,9 @@ Summary: Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPane
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: cmake >= 2.8.0
 BuildRequires: gettext
-BuildRequires: vala >= 0.28.0
-BuildRequires: pkgconfig(gtk+-3.0) >= 3.16.0
-BuildRequires: pkgconfig(libpeas-1.0) >= 1.2.0
+BuildRequires: vala >= 0.34.0
+BuildRequires: pkgconfig(gtk+-3.0) >= 3.22.0
+BuildRequires: pkgconfig(libpeas-1.0) >= 1.14.0
 BuildRequires: pkgconfig(libwnck-3.0) >= 3.4.0
 
 %description
@@ -36,7 +36,7 @@ cmake . -DGSETTINGS_COMPILE=OFF -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_INSTAL
 make %{?_smp_mflags}
 
 %install 
-make install DESTDIR=%{buildroot}
+make DESTDIR=%{buildroot} install
 %find_lang %{name}
 
 %clean
@@ -68,6 +68,19 @@ set -o monitor
 %{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.gschema.xml
 %{_datadir}/vala-panel/images
 %{_datadir}/icons/*
+%{_datadir}/applications/org.valapanel.application.desktop
+
+%package runner
+Group: User Interface/Desktops
+Summary:  This is a simple commands runner for %{name}
+Requires: %{name} = %{version}
+Requires: pkgconfig
+%description runner
+Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
+This is a development files for %{name}.
+%files runner
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/vala-panel-runner
 
 %package lang
 Group: User Interface/Desktops
@@ -149,10 +162,14 @@ Group: User Interface/Desktops
 %{_libdir}/vala-panel/applets/libtasklist.so
 %{_libdir}/vala-panel/applets/libwincmd.so
 %{_libdir}/vala-panel/applets/libpager.so
+%{_libdir}/vala-panel/applets/libicontasks.so
+%{_libdir}/vala-panel/applets/libtasklist-xfce.so
 %{_libdir}/vala-panel/applets/libbuttons.so
 %{_libdir}/vala-panel/applets/xembed.plugin
 %{_libdir}/vala-panel/applets/deskno.plugin
 %{_libdir}/vala-panel/applets/tasklist.plugin
+%{_libdir}/vala-panel/applets/tasklist-xfce.plugin
+%{_libdir}/vala-panel/applets/icontasks.plugin
 %{_libdir}/vala-panel/applets/wincmd.plugin
 %{_libdir}/vala-panel/applets/pager.plugin
 %{_libdir}/vala-panel/applets/buttons.plugin

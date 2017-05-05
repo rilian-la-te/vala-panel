@@ -168,6 +168,3 @@ ADD_SUBDIRECTORY(app)
 ADD_SUBDIRECTORY(runner)
 ADD_SUBDIRECTORY(applets)
 ADD_SUBDIRECTORY(data)
-
-#Additional install
-#install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/vala-panel.desktop DESTINATION share/applications)

@@ -18,5 +18,5 @@ target_include_directories(applet-api-new PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_C
 set_target_properties (applet-api-new PROPERTIES
     VERSION ${VERSION}
     SOVERSION ${SOVERSION})
-install (TARGETS applet-api-new DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/ COMPONENT bin)
+#install (TARGETS applet-api-new DESTINATION ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/ COMPONENT bin)
 
