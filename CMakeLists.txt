@@ -72,7 +72,6 @@ endif(RPMTools_FOUND)
 
 add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Configuration
-configure_file (${CMAKE_SOURCE_DIR}/vapi/config.vala.in ${CMAKE_BINARY_DIR}/vapi/config.vala)
 configure_file (${CMAKE_SOURCE_DIR}/lib/config.h.in ${CMAKE_BINARY_DIR}/lib/config.h)
 configure_file (${CMAKE_SOURCE_DIR}/${APPNAME}.pc.cmake ${CMAKE_BINARY_DIR}/${APPNAME}.pc)
 

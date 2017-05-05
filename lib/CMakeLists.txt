@@ -14,6 +14,7 @@ endif()
 set(LIBVALAPANEL_HEADERS
     applet-widget-api.h
     applet-widget.h
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
     constants.h
     misc.h
     menu-maker.h
@@ -48,7 +49,6 @@ set(VALA_FILES
 	)
 vala_precompile(VALA_C ${LIBNAME}
     ${VALA_FILES}
-    ${CMAKE_BINARY_DIR}/vapi/config.vala
 PACKAGES
     ${CORE_PACKAGES}
     cvalapanel
@@ -82,7 +82,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 link_directories (${LIB_PATHS})
 
 set (LIB_FILES ${VALA_C})
-add_custom_target(vala-ide-lib SOURCES ${VALA_FILES})
+add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.vapi)
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${LIBVALAPANEL_C_SOURCES}

@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <locale.h>
 #include "runner-app.h"
 #include "lib/config.h"
 #include "lib/definitions.h"
 #include "runner.h"
+#include <locale.h>
 
 #include <locale.h>
 
@@ -58,9 +58,9 @@ static void vala_panel_run_application_finalize(GObject *app)
 static void vala_panel_run_application_init(ValaPanelRunApplication *self)
 {
 	setlocale(LC_CTYPE, "");
-	bindtextdomain(CONFIG_GETTEXT_PACKAGE, CONFIG_LOCALE_DIR);
-	bind_textdomain_codeset(CONFIG_GETTEXT_PACKAGE, "UTF-8");
-	textdomain(CONFIG_GETTEXT_PACKAGE);
+	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
 }
 
 static void vala_panel_run_application_class_init(ValaPanelRunApplicationClass *klass)

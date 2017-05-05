@@ -261,3 +261,17 @@ namespace ValaPanel.Key
     internal const string PACK;
     internal const string POSITION;
 }
+[CCode (cheader_filename="config.h", upper_case_cprefix="", lower_case_cprefix="")]
+namespace Config
+{
+   public const string DATADIR;
+   public const string PKGDATADIR;
+   public const string GETTEXT_PACKAGE;
+   public const string RELEASE_NAME;
+   public const string VERSION;
+   public const string VERSION_INFO;
+   public const string PLUGINS_DIRECTORY;
+   public const string PLUGINS_DATA;
+   public const string INSTALL_PREFIX;
+   public const string LOCALE_DIR;
+}

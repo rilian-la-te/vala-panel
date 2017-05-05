@@ -1,27 +1,17 @@
 using GLib;
 using Gtk;
 
-[CCode (upper_case_cprefix="")]
+[CCode (cheader_filename = "config.h", upper_case_cprefix="")]
 namespace PanelConfig {
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string DATADIR;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string GETTEXT_PACKAGE;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string INSTALL_PREFIX;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string LOCALE_DIR;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string PKGDATADIR;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string PLUGINS_DATA;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string PLUGINS_DIRECTORY;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string RELEASE_NAME;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string VERSION;
-	[CCode (cheader_filename = "vala-panel-compat.h")]
 	public const string VERSION_INFO;
 }
 [CCode (cheader_filename = "generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]

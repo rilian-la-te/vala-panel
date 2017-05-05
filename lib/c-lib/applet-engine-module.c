@@ -40,7 +40,7 @@ ValaPanelAppletEngineIfaceModule *vala_panel_applet_engine_iface_module_new_from
 	    g_key_file_get_string(rc, MODULE_GROUP_NAME, MODULE_NAME_STRING, NULL);
 	if (G_LIKELY(module_name != NULL))
 	{
-		g_autofree char *path = g_module_build_path(CONFIG_PLUGINS_DIRECTORY, module_name);
+		g_autofree char *path = g_module_build_path(PLUGINS_DIRECTORY, module_name);
 		bool found            = g_file_test(path, G_FILE_TEST_EXISTS);
 
 		if (G_LIKELY(found))

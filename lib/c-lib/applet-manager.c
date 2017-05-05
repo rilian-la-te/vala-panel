@@ -18,7 +18,7 @@ G_DEFINE_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, G_TYPE_OBJECT)
 void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 {
 	g_autoptr(GError) err = NULL;
-	g_autoptr(GDir) dir   = g_dir_open(CONFIG_PLUGINS_DATA, 0, &err);
+	g_autoptr(GDir) dir   = g_dir_open(PLUGINS_DATA, 0, &err);
 	for (const char *file = g_dir_read_name(dir); file != NULL; file = g_dir_read_name(dir))
 	{
 		ValaPanelAppletEngineIfaceModule *module =

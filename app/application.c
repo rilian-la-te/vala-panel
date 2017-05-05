@@ -167,10 +167,10 @@ static void vala_panel_application_startup(GApplication *base)
 	                                                         GtkApplication));
 	g_application_mark_busy((GApplication *)self);
 	setlocale(LC_CTYPE, "");
-	bindtextdomain(CONFIG_GETTEXT_PACKAGE, CONFIG_LOCALE_DIR);
-	bind_textdomain_codeset(CONFIG_GETTEXT_PACKAGE, "UTF-8");
-	textdomain(CONFIG_GETTEXT_PACKAGE);
-	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), CONFIG_DATADIR "/images");
+	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
+	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), DATADIR "/images");
 	g_action_map_add_action_entries((GActionMap *)self,
 	                                vala_panel_application_app_entries,
 	                                G_N_ELEMENTS(vala_panel_application_app_entries),
@@ -202,7 +202,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 		g_autoptr(GError) err = NULL;
 		char cwd[1024];
 		getcwd(cwd, 1024);
-		const char *argv[] = { CONFIG_GETTEXT_PACKAGE,
+		const char *argv[] = { GETTEXT_PACKAGE,
 			               "-p",
 			               VALA_PANEL_APPLICATION(base)->profile,
 			               NULL };
@@ -224,7 +224,7 @@ static gint vala_panel_app_handle_local_options(GApplication *application, GVari
 {
 	if (g_variant_dict_contains(options, "version"))
 	{
-		g_print(_("%s - Version %s\n"), g_get_application_name(), CONFIG_VERSION);
+		g_print(_("%s - Version %s\n"), g_get_application_name(), VERSION);
 		return 0;
 	}
 	return -1;
@@ -267,8 +267,8 @@ static int vala_panel_app_command_line(GApplication *application,
 
 static bool load_settings(ValaPanelApplication *app)
 {
-	g_autofree char *file         = g_build_filename(CONFIG_PROFILES, app->profile, NULL);
-	g_autofree char *default_file = g_build_filename(CONFIG_PROFILES, DEFAULT_PROFILE, NULL);
+	g_autofree char *file         = g_build_filename(PROFILES, app->profile, NULL);
+	g_autofree char *default_file = g_build_filename(PROFILES, DEFAULT_PROFILE, NULL);
 	bool loaded                   = false;
 	bool load_default             = false;
 	if (g_file_test(file, G_FILE_TEST_EXISTS))
@@ -542,7 +542,7 @@ static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/app/about.ui");
 	GtkAboutDialog *d = GTK_ABOUT_DIALOG(gtk_builder_get_object(builder, "valapanel-about"));
-	gtk_about_dialog_set_version(d, CONFIG_VERSION);
+	gtk_about_dialog_set_version(d, VERSION);
 	gtk_window_set_position(GTK_WINDOW(d), GTK_WIN_POS_CENTER);
 	gtk_window_present(GTK_WINDOW(d));
 	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
