@@ -214,5 +214,5 @@ if (ENABLE_MATE)
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
 
     # Install plugin stuffs
-    install(TARGETS sntray-mate DESTINATION ${CMAKE_INSTALL_LIBDIR}/mate-panel)
+    install(TARGETS sntray-mate DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/mate-panel)
 endif()

@@ -23,7 +23,7 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 		-Wno-discarded-qualifiers
 		-Wno-sign-compare
 		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
-pkg_check_modules(GTK+ REQUIRED gtk+-3.0 >= 3.22)
+pkg_check_modules(GTK+ REQUIRED gtk+-3.0>=3.22)
 
 option(ENABLE_XFCE "Enable xfce4-panel plugin" ON)
 if (ENABLE_XFCE)

@@ -14,11 +14,13 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: cmake >= 2.8.0
 BuildRequires: gettext
 BuildRequires: vala >= 0.24.0
-BuildRequires: pkgconfig(gtk+-3.0) >= 3.12.0
+BuildRequires: pkgconfig(gtk+-3.0) >= 3.22.0
 BuildRequires: pkgconfig(libpeas-1.0) >= 1.2.0
 BuildRequires: pkgconfig(libxfce4panel-2.0)
 BuildRequires: pkgconfig(libxfconf-0)
 BuildRequires: pkgconfig(vala-panel)
+BuildRequires: pkgconfig(libmatepanelapplet-4.0) >= 1.18.0
+BuildRequires: pkgconfig(budgie-1.0)
 Provides: vala-panel-sntray-plugin
 
 %description
@@ -31,7 +33,7 @@ for XFCE it is indicator-application and xfce4-snw-plugin
 %setup -q 
 
 %build
-cmake . -DGSETTINGS_COMPILE=OFF -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_INSTALL_INCLUDEDIR=%{_includedir} -DCMAKE_INSTALL_LIBDIR=%{_libdir} -DCMAKE_INSTALL_SYSCONFDIR=%{_sysconfdir} -DCMAKE_INSTALL_DATAROOTDIR=%{_datarootdir} -DCMAKE_INSTALL_DATADIR=%{_datadir}
+cmake . -DGSETTINGS_COMPILE=OFF -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_INSTALL_INCLUDEDIR=%{_includedir} -DCMAKE_INSTALL_LIBDIR=%{_libdir} -DCMAKE_INSTALL_SYSCONFDIR=%{_sysconfdir} -DCMAKE_INSTALL_DATAROOTDIR=%{_datarootdir} -DCMAKE_INSTALL_DATADIR=%{_datadir} -DCMAKE_INSTALL_LIBEXECDIR=%{_libexecdir} 
 make %{?_smp_mflags}
 
 %install 
@@ -52,6 +54,27 @@ rm -rf %{buildroot}
 %{_libdir}/xfce4/panel/plugins/libsntray-xfce.so
 %{_datadir}/xfce4/panel/plugins/sntray.desktop
 
+%package common
+Group: User Interface/Desktops
+Summary: GSettings scheme for %{name}
+BuildArch: noarch
+Requires: vala-panel-sntray-plugin
+%description common
+This is a GSettings scheme for %{name} package.
+%files common
+%defattr(644,root,root,755)
+%{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.sntray.gschema.xml
+
+%postun common
+set -o monitor
+if [ $1 -eq 0 ] ; then
+    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+fi
+
+%posttrans common
+set -o monitor
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+
 %package lang
 Group: User Interface/Desktops
 Summary: Translations for %{name}
@@ -65,7 +88,7 @@ This is a translation files for %{name} package.
 %package -n vala-panel-sntray
 Group: User Interface/Desktops
 Summary: This package provides StatusNotifier plugin for vala-panel
-Requires: bamf-daemon
+Requires: %{name}-common
 Provides: vala-panel-sntray-plugin
 %description -n vala-panel-sntray
 StatusNotifier is new D-Bus standard for system tray.
@@ -75,21 +98,50 @@ but for vala-panel only this implementation exists yet.
 %files -n vala-panel-sntray
 %defattr(644,root,root,755)
 %doc README.md
-%{_datadir}/glib-2.0/schemas/org.valapanel.toplevel.sntray.gschema.xml
 %dir %{_libdir}/vala-panel
 %dir %{_libdir}/vala-panel/applets
 %{_libdir}/vala-panel/applets/libsntray-valapanel.so
 %{_libdir}/vala-panel/applets/sntray.plugin
 
-%postun -n vala-panel-sntray
-set -o monitor
-if [ $1 -eq 0 ] ; then
-    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-fi
 
-%posttrans -n vala-panel-sntray
-set -o monitor
-/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+%package -n mate-panel-sntray
+Group: User Interface/Desktops
+Summary: This package provides StatusNotifier plugin for mate-panel
+Requires: %{name}-common
+Provides: vala-panel-sntray-plugin
+%description -n mate-panel-sntray
+StatusNotifier is new D-Bus standard for system tray.
+It is shared both by Ubuntu Unity and KDE.
+There is several plugins for show StatusNotifiers for different DEs,
+for mate-panel it is builtin, indicator-application, xfce4-snw-plugin
+and this. However, this is most configurable.
+
+%files -n mate-panel-sntray
+%defattr(644,root,root,755)
+%doc README.md
+%{_libexecdir}/mate-panel/sntray-mate
+%{_datarootdir}/mate-panel/applets/org.vala-panel.SNTray.mate-panel-applet
+%{_datarootdir}/dbus-1/services/org.mate.panel.applet.SNTrayAppletFactory.service
+
+%package -n budgie-panel-sntray
+Group: User Interface/Desktops
+Summary: This package provides StatusNotifier plugin for mate-panel
+Requires: %{name}-common
+Provides: vala-panel-sntray-plugin
+%description -n budgie-panel-sntray
+StatusNotifier is new D-Bus standard for system tray.
+It is shared both by Ubuntu Unity and KDE.
+There is several plugins for show StatusNotifiers for different DEs,
+for mate-panel it is builtin, indicator-application, xfce4-snw-plugin
+and this. However, this is most configurable.
+
+%files -n budgie-panel-sntray
+%defattr(644,root,root,755)
+%doc README.md
+%dir %{_libdir}/budgie-desktop
+%dir %{_libdir}/budgie-desktop/plugins
+%{_libdir}/budgie-desktop/plugins/libsntray-budgie.so
+%{_libdir}/budgie-desktop/plugins/sntray-budgie.plugin
 
 %changelog
 * Mon Apr 27 2015 Konstantin <ria.freelander@gmail.com> - @CPACK_PACKAGE_VERSION@
