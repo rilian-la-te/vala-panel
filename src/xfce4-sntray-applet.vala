@@ -13,7 +13,6 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
         layout = widget;
         add(widget);
         add_action_widget(widget);
-        widget.menu_position_func = (menu,ref x,ref y,out push)=>{Xfce.PanelPlugin.position_menu(menu, ref x, ref y, out push, this);};
         widget.indicator_size = (int)this.size/(int)this.nrows - 2;
         widget.show_passive = true;
         widget.orientation = (this.mode != Xfce.PanelPluginMode.DESKBAR) ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
@@ -49,8 +48,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
     }
     public override void configure_plugin()
     {
-        var dlg = new ConfigDialog(layout);
-        dlg.configure_icon_size = false;
+        var dlg = ConfigWidget.get_config_dialog(layout, false);
         dlg.present();
         dlg.unmap.connect(()=>{
             dlg.destroy();

@@ -250,7 +250,7 @@ namespace StatusNotifier
             if (iface.items_in_menu || iface.menu != null)
             {
                 menu.hide.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
-                menu.popup(null,null,get_applet().menu_position_func,0,get_current_event_time());
+                menu.popup_at_widget(get_applet(),Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
                 menu.reposition();
                 return true;
             }

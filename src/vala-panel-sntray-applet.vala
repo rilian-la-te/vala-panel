@@ -7,26 +7,36 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
+#if NEW
+                                    string number)
+#else
                                     uint number)
+#endif
     {
         return new SNTray(toplevel,settings,number);
     }
 }
-public class SNTray: Applet, AppletConfigurable
+public class SNTray: Applet
+#if NEW
+#else
+    , AppletConfigurable
+#endif
 {
     unowned ItemBox widget;
+#if NEW
+    public SNTray (Toplevel top, GLib.Settings? settings, string number)
+#else
     public SNTray (Toplevel top, GLib.Settings? settings, uint number)
+#endif
     {
         base(top,settings,number);
-    }
-    public Dialog get_config_dialog()
-    {
-        var dlg = new ConfigDialog(widget);
-        dlg.configure_icon_size = true;
-        return dlg;
+#if NEW
+        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+#else
     }
     public override void create()
     {
+#endif
         var layout = new ItemBox();
         widget = layout;
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
@@ -50,10 +60,24 @@ public class SNTray: Applet, AppletConfigurable
         toplevel.notify["edge"].connect((o,a)=> {
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
-        layout.menu_position_func = this.menu_position_func;
         this.add(layout);
         show_all();
     }
+#if NEW
+    public override Widget get_settings_ui()
+    {
+        var dlg = new ConfigWidget(widget);
+        dlg.configure_icon_size = true;
+        return dlg;
+    }
+#else
+    public Dialog get_config_dialog()
+    {
+        var dlg = new ConfigDialog(widget);
+        dlg.configure_icon_size = true;
+        return dlg;
+    }
+#endif
     private static bool get_vardict(Value val, Variant variant,void* data)
     {
         var iter = variant.iterator();

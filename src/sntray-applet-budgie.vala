@@ -17,9 +17,9 @@ public class SNTray: Budgie.Applet
 	public string uuid { public set ; public get; }
     public override Gtk.Widget? get_settings_ui()
     {
-        var dlg = new ConfigDialog(widget);
+        var dlg = new ConfigWidget(widget);
         dlg.configure_icon_size = false;
-        return dlg.get_content_area();
+        return dlg;
     }
 
     public override bool supports_settings()

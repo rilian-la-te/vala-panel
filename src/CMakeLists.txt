@@ -124,6 +124,7 @@ if (ENABLE_VALAPANEL)
 	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
         --thread
+        ${NEW_DEFINE}
     )
     #####
     # Plugin Library

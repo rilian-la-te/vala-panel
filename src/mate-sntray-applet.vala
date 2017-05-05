@@ -49,8 +49,7 @@ namespace StatusNotifier
         Gtk.Action a = new Gtk.Action("SNTrayPreferences",N_("_Preferences"),null,Gtk.Stock.PREFERENCES);
         a.activate.connect(()=>
         {
-                var dlg = new ConfigDialog(layout);
-                dlg.configure_icon_size = true;
+                var dlg = ConfigWidget.get_config_dialog(layout,true);
                 dlg.show();
                 dlg.response.connect(()=>{
                     dlg.destroy();

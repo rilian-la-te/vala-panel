@@ -13,9 +13,17 @@ set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 include(GitVersion)
 determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake/vala)
 include(FallbackVersion)
-add_definitions(-w) # Disable gcc warnings
+
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
-pkg_check_modules(GTK+ REQUIRED gtk+-3.0)
+add_definitions(-Wall -Wno-unused # Vala loves to create variables
+#		-pedantic
+		-Wno-ignored-qualifiers
+		-Wno-incompatible-pointer-types
+		-Wno-missing-field-initializers
+		-Wno-discarded-qualifiers
+		-Wno-sign-compare
+		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
+pkg_check_modules(GTK+ REQUIRED gtk+-3.0 >= 3.22)
 
 option(ENABLE_XFCE "Enable xfce4-panel plugin" ON)
 if (ENABLE_XFCE)
@@ -38,6 +46,11 @@ if (ENABLE_VALAPANEL)
     pkg_check_modules(VALAPANEL vala-panel libpeas-1.0)
     if (NOT VALAPANEL_FOUND)
         set(ENABLE_VALAPANEL OFF)
+    endif()
+    pkg_check_modules(VP_NEW vala-panel>=0.3.50)
+    if (VP_NEW_FOUND)
+        set(NEW_DEFINE -D NEW)
+        set(NEW_IFACE ON)
     endif()
 endif()
 

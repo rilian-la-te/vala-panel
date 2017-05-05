@@ -30,7 +30,6 @@ namespace StatusNotifier
         public bool show_passive {get; set;}
         public int indicator_size {get; set;}
         public bool show_ayatana_labels {get; set;}
-        public unowned MenuPositionFunc? menu_position_func {internal get; set;}
         internal signal void item_added(string id);
         internal signal void item_removed(string id);
         static construct
@@ -47,7 +46,6 @@ namespace StatusNotifier
             show_system = true;
             show_hardware = true;
             show_passive = false;
-            menu_position_func = null;
             child_activated.connect((ch)=>{
                 select_child(ch);
                 (ch as Item).context_menu();

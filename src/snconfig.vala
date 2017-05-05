@@ -4,7 +4,7 @@ using Gtk;
 namespace StatusNotifier
 {
     [GtkTemplate (ui = "/org/vala-panel/sntray/snconfig.ui"), CCode (cname = "StatusNotifierConfig")]
-    public class ConfigDialog : Dialog
+    public class ConfigWidget : Box
     {
         private const int COLUMN_ID = 0;
         private const int COLUMN_NAME = 1;
@@ -38,7 +38,16 @@ namespace StatusNotifier
         Scale scale_indicator;
         unowned ItemBox layout;
         public bool configure_icon_size {get; set;}
-        public ConfigDialog(ItemBox box)
+        public static Gtk.Dialog get_config_dialog(ItemBox layout, bool configure_icon_size)
+        {
+            var widget = new ConfigWidget(layout);
+            widget.configure_icon_size = configure_icon_size;
+            var dlg = new Dialog();
+            dlg.set_title(_("StatusNotifier Configuration"));
+            dlg.get_content_area().add(widget);
+            return dlg;
+        }
+        public ConfigWidget(ItemBox box)
         {
             layout = box;
             this.bind_property("configure-icon-size",box_indicator,"visible",BindingFlags.SYNC_CREATE);
