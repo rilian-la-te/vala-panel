@@ -247,19 +247,17 @@ static void popup_position_helper(GtkWidget *applet, GtkWidget *popup, int *x, i
 		*x += a.x;
 		*y += a.y;
 	}
-	GtkPositionType edge;
+	GtkOrientation edge;
 	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(applet)),
-	             VALA_PANEL_KEY_EDGE,
+	             VALA_PANEL_KEY_ORIENTATION,
 	             &edge,
 	             NULL);
 	switch (edge)
 	{
-	case GTK_POS_TOP:
-	case GTK_POS_BOTTOM:
+	case GTK_ORIENTATION_HORIZONTAL:
 		y += a.height;
 		break;
-	case GTK_POS_LEFT:
-	case GTK_POS_RIGHT:
+	case GTK_ORIENTATION_VERTICAL:
 		x += a.width;
 		break;
 	}

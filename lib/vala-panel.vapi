@@ -114,7 +114,7 @@ namespace ValaPanel {
     [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cheader_filename="definitions.h")]
-    public static Gtk.Orientation orient_from_edge(Gtk.PositionType edge);
+    public static Gtk.Orientation orient_from_gravity(Gravity gravity);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
     [Compact]
@@ -137,26 +137,41 @@ namespace ValaPanel {
         internal string uuid;
 		internal bool is_toplevel();
     }
+    [CCode(cname="PanelGravity", cprefix="", cheader_filename = "panel-platform.h")]
+	public enum Gravity
+	{
+		NORTH_LEFT,
+		NORTH_CENTER,
+		NORTH_RIGHT,
+		SOUTH_LEFT,
+		SOUTH_CENTER,
+		SOUTH_RIGHT,
+		WEST_UP,
+		WEST_CENTER,
+		WEST_DOWN,
+		EAST_UP,
+		EAST_CENTER,
+		EAST_DOWN
+	}
     [CCode (cheader_filename="panel-platform.h")]
     public class Platform : Object
     {
         [CCode (has_construct_function="false")]
         protected Platform();
-        public virtual bool start_panels_from_profile(Gtk.Application app,string *profile);
-        public void init_settings(GLib.SettingsBackend backend);
-        public void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
-        public unowned CoreSettings get_settings();
-        public virtual long can_strut(Gtk.Window top);
-        public virtual void update_strut(Gtk.Window top);
-        public virtual void move_to_coords(Gtk.Window top, int x, int y);
-        public virtual void move_to_side(Gtk.Window top, Gtk.PositionType side, int monitor);
+        public bool start_panels_from_profile(Gtk.Application app,string *profile);
+        internal void init_settings(GLib.SettingsBackend backend);
+        internal void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
+        internal unowned CoreSettings get_settings();
+        public long can_strut(Gtk.Window top);
+        public void update_strut(Gtk.Window top);
+        public void move_to_coords(Gtk.Window top, int x, int y);
+        public void move_to_side(Gtk.Window top, Gravity side, int monitor);
     }
 }
 [CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
-    public const string EDGE;
-    public const string ALIGNMENT;
+    public const string GRAVITY;
     public const string HEIGHT;
     public const string WIDTH;
     public const string DYNAMIC;

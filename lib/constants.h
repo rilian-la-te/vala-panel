@@ -56,8 +56,7 @@
 /*
  * Toplevel keys
  */
-#define VALA_PANEL_KEY_EDGE "edge"
-#define VALA_PANEL_KEY_ALIGNMENT "alignment"
+#define VALA_PANEL_KEY_GRAVITY "panel-gravity"
 #define VALA_PANEL_KEY_ORIENTATION "orientation"
 #define VALA_PANEL_KEY_HEIGHT "height"
 #define VALA_PANEL_KEY_WIDTH "width"

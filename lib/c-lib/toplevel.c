@@ -41,7 +41,7 @@ struct _ValaPanelToplevelUnit
 	char *uid;
 	int mon;
 	GtkOrientation orientation;
-	GtkPositionType edge;
+	PanelGravity gravity;
 	GtkDialog *pref_dialog;
 	char *font;
 };
@@ -96,15 +96,12 @@ static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
 		                   VALA_PANEL_KEY_MONITOR,
 		                   self->mon);
 		g_settings_set_enum(self->settings->default_settings,
-		                    VALA_PANEL_KEY_EDGE,
-		                    self->edge);
+		                    VALA_PANEL_KEY_GRAVITY,
+		                    self->gravity);
 	}
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->default_settings,
-	                                   VALA_PANEL_KEY_EDGE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
-	                                   self->settings->default_settings,
-	                                   VALA_PANEL_KEY_ALIGNMENT);
+	                                   VALA_PANEL_KEY_GRAVITY);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->default_settings,
 	                                   VALA_PANEL_KEY_HEIGHT);
@@ -176,7 +173,8 @@ G_GNUC_INTERNAL bool panel_edge_available(ValaPanelToplevelUnit *self, uint edge
 		if (VALA_PANEL_IS_TOPLEVEL_UNIT(w))
 		{
 			ValaPanelToplevelUnit *pl = VALA_PANEL_TOPLEVEL_UNIT(w->data);
-			if (((pl != self) || include_this) && (self->edge == edge) &&
+			if (((pl != self) || include_this) &&
+			    (vala_panel_edge_from_gravity(self->gravity) == edge) &&
 			    ((monitor == self->mon) || self->mon < 0))
 				return false;
 		}
@@ -363,7 +361,7 @@ G_GNUC_INTERNAL void update_appearance(ValaPanelToplevelUnit *self)
 
 ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_position(GtkApplication *app,
                                                                   const char *uid, int mon,
-                                                                  GtkPositionType edge)
+                                                                  PanelGravity edge)
 {
 	ValaPanelToplevelUnit *ret =
 	    VALA_PANEL_TOPLEVEL_UNIT(g_object_new(vala_panel_toplevel_unit_get_type(),
@@ -391,8 +389,8 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_position(GtkApplication
 	                                          app,
 	                                          "uuid",
 	                                          uid));
-	ret->mon  = mon;
-	ret->edge = edge;
+	ret->mon     = mon;
+	ret->gravity = edge;
 	setup(ret, true);
 	return ret;
 }

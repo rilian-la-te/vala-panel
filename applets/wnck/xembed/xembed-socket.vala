@@ -22,7 +22,8 @@ namespace XEmbed
             Timeout.add(250,()=>{
                 Allocation prev_alloc;
                 this.get_allocation(out prev_alloc);
-                this.get_window().get_parent().invalidate_rect((Gdk.Rectangle)prev_alloc,false);
+                if(this.get_window() is Gdk.Window && this.get_window().get_parent() is Gdk.Window)
+                    this.get_window().get_parent().invalidate_rect((Gdk.Rectangle)prev_alloc,false);
                 return true;
             });
         }

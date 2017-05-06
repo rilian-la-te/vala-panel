@@ -161,7 +161,7 @@ public class Menu: Applet
         menubar.show();
         var orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
         menubar.set_pack_direction(orient);
-        toplevel.notify["edge"].connect(()=>{
+        toplevel.notify["panel-gravity"].connect(()=>{
             orient = toplevel.orientation == Orientation.HORIZONTAL ? PackDirection.LTR : PackDirection.TTB;
             menubar.set_pack_direction(orient);
         });

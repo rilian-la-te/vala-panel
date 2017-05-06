@@ -61,7 +61,7 @@ namespace LaunchBar
             layout.activate_on_single_click = true;
             layout.selection_mode = SelectionMode.NONE;
             add(layout);
-            toplevel.notify["edge"].connect((o,a)=> {
+            toplevel.notify["panel-gravity"].connect((o,a)=> {
                 layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
             });
             layout.drag_drop.connect(drag_drop_cb);

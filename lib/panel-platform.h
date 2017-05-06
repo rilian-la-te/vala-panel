@@ -31,12 +31,6 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
 
 typedef enum {
-	ALIGN_START  = 0,
-	ALIGN_CENTER = 1,
-	ALIGN_END    = 2,
-} PanelAlignmentType;
-
-typedef enum {
 	NORTH_LEFT   = 0,
 	NORTH_CENTER = 1,
 	NORTH_RIGHT  = 2,

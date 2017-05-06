@@ -47,7 +47,7 @@ public class Deskno: Applet
         settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
         settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
         toplevel.notify.connect((pspec)=>{
-            if (pspec.name == "edge" || pspec.name == "monitor")
+            if (pspec.name == "panel-gravity" || pspec.name == "monitor")
                 name_update();
         });
         this.notify.connect((pspec)=>{

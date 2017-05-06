@@ -45,7 +45,7 @@ public class Pager: Applet
         widget.set_size_request(0,0);
         this.add(widget);
         toplevel.notify.connect((pspec)=>{
-            if (pspec.name == "edge" || pspec.name == "height" || pspec.name == "width")
+            if (pspec.name == "panel-gravity" || pspec.name == "height" || pspec.name == "width")
                 on_params_change_callback();
         });
         on_params_change_callback();

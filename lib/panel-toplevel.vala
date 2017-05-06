@@ -33,9 +33,9 @@ namespace ValaPanel
         private Gtk.Menu context_menu;
         internal ConfigureDialog pref_dialog;
         private bool initialized;
-        private const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.EDGE,Key.ALIGNMENT,
+        private const string[] gnames = {Key.WIDTH,Key.HEIGHT,Key.GRAVITY,
                                                 Key.MONITOR,Key.AUTOHIDE,
-                                                Key.MARGIN,Key.DOCK,Key.STRUT,
+                                                Key.DOCK,Key.STRUT,
                                                 Key.DYNAMIC};
         private const string[] anames = {Key.BACKGROUND_COLOR,Key.FOREGROUND_COLOR,
                                                 Key.CORNERS_SIZE, Key.BACKGROUND_FILE,
@@ -161,13 +161,11 @@ namespace ValaPanel
          * Positioning
          *********************************************************************************************/
         private int _mon;
-        internal AlignmentType alignment {get; internal set;}
-        public int panel_margin {get; internal set;}
-        public Gtk.PositionType edge {get; internal set construct;}
+        public Gravity panel_gravity {get; internal set construct;}
         public Gtk.Orientation orientation
         {
             get {
-                return orient_from_edge(edge);
+                return orient_from_gravity(panel_gravity);
             }
         }
         public int monitor
@@ -263,7 +261,7 @@ namespace ValaPanel
             if (this.orientation != orient)
                 min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
             else
-                min = nat = base_min = base_nat = calc_width(scrw, for_size, panel_margin);
+                min = nat = base_min = base_nat = calc_width(scrw, for_size, 0);
         }
         protected override SizeRequestMode get_request_mode()
         {
@@ -388,11 +386,11 @@ namespace ValaPanel
             setup(false);
         }
         [CCode (returns_floating_reference = true)]
-        private static Toplevel create(Gtk.Application app, string name, int mon, PositionType e)
+        private static Toplevel create(Gtk.Application app, string name, int mon, Gravity e)
         {
             return new Toplevel.from_position(app,name,mon,e);
         }
-        private Toplevel.from_position(Gtk.Application app, string name, int mon, PositionType e)
+        private Toplevel.from_position(Gtk.Application app, string name, int mon, Gravity e)
         {
             Object(border_width: 0,
                 decorated: false,
@@ -407,7 +405,7 @@ namespace ValaPanel
                 application: app,
                 uuid: name);
             monitor = mon;
-            this.edge = e;
+            this.panel_gravity = e;
             setup(true);
         }
         private void setup(bool use_internal_values)
@@ -416,17 +414,15 @@ namespace ValaPanel
             if (use_internal_values)
             {
                 settings.default_settings.set_int(Key.MONITOR, _mon);
-                settings.default_settings.set_enum(Key.EDGE, edge);
+                settings.default_settings.set_enum(Key.GRAVITY, gravity);
             }
-            settings_as_action(this,settings.default_settings,Key.EDGE);
-            settings_as_action(this,settings.default_settings,Key.ALIGNMENT);
+            settings_as_action(this,settings.default_settings,Key.GRAVITY);
             settings_as_action(this,settings.default_settings,Key.HEIGHT);
             settings_as_action(this,settings.default_settings,Key.WIDTH);
             settings_as_action(this,settings.default_settings,Key.DYNAMIC);
             settings_as_action(this,settings.default_settings,Key.AUTOHIDE);
             settings_as_action(this,settings.default_settings,Key.STRUT);
             settings_as_action(this,settings.default_settings,Key.DOCK);
-            settings_as_action(this,settings.default_settings,Key.MARGIN);
             settings_bind(this,settings.default_settings,Key.MONITOR);
             settings_as_action(this,settings.default_settings,Key.ICON_SIZE);
             settings_as_action(this,settings.default_settings,Key.BACKGROUND_COLOR);
@@ -455,7 +451,7 @@ namespace ValaPanel
             if (visual != null)
                 this.set_visual(visual);
             this.notify.connect((s,p)=> {
-                if (p.name == Key.EDGE)
+                if (p.name == Key.GRAVITY)
                     if (box != null) box.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
                     if (autohide) ah_hide(); else ah_show();
@@ -484,7 +480,7 @@ namespace ValaPanel
             var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.height-marea.y ;
             var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.width-marea.x : height;
             this.set_size_request(effective_width, effective_height);
-            platform.move_to_side(this, this.edge, this.monitor);
+            platform.move_to_side(this, this.panel_gravity, this.monitor);
             this.queue_resize();
             while (Gtk.events_pending ())
               Gtk.main_iteration ();
@@ -656,7 +652,7 @@ namespace ValaPanel
                 if (w is Toplevel)
                 {
                     Toplevel pl = w as Toplevel;
-                    if (((pl != this)|| include_this) && (pl.edge == edge) && ((pl._mon == _mon)||pl._mon<0))
+                    if (((pl != this)|| include_this) && (edge_from_gravity(pl.panel_gravity) == edge) && ((pl._mon == _mon)||pl._mon<0))
                         return false;
                 }
             return true;
@@ -708,8 +704,9 @@ namespace ValaPanel
                 msg.destroy();
                 return;
             }
+            var gravity = new_edge == PositionType.TOP ? Gravity.NORTH_LEFT : new_edge == PositionType.BOTTOM ? Gravity.SOUTH_LEFT : new_edge == PositionType.LEFT ? Gravity.WEST_UP : Gravity.EAST_UP;
             var new_name = CoreSettings.get_uuid();
-            var new_toplevel = Toplevel.create(application,new_name,new_mon,new_edge);
+            var new_toplevel = Toplevel.create(application,new_name,new_mon,gravity);
             new_toplevel.configure("position");
             new_toplevel.show_all();
             new_toplevel.queue_draw();

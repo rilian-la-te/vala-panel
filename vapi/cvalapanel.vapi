@@ -58,7 +58,7 @@ namespace ValaPanel
 		public ValaPanel.Toplevel toplevel { get; construct; }
 		public string uuid { get; construct; }
 	}
-    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "c-panel-layout.h")]
+    [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "panel-layout.h")]
     public enum AppletPackType
     {
         START,
@@ -139,7 +139,9 @@ namespace ValaPanel
     [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cheader_filename="definitions.h")]
-    public static Gtk.Orientation orient_from_edge(Gtk.PositionType edge);
+    public static Gtk.Orientation orient_from_gravity(Gravity gravity);
+ 	[CCode (cheader_filename="definitions.h")]
+    public static Gtk.PositionType edge_from_gravity(Gravity gravity);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
     [Compact]
@@ -172,6 +174,22 @@ namespace ValaPanel
 		internal bool is_toplevel();
         internal UnitSettings(CoreSettings settings, string? name, string uuid);
     }
+    [CCode(cname="PanelGravity", cprefix="", cheader_filename = "panel-platform.h")]
+	public enum Gravity
+	{
+		NORTH_LEFT,
+		NORTH_CENTER,
+		NORTH_RIGHT,
+		SOUTH_LEFT,
+		SOUTH_CENTER,
+		SOUTH_RIGHT,
+		WEST_UP,
+		WEST_CENTER,
+		WEST_DOWN,
+		EAST_UP,
+		EAST_CENTER,
+		EAST_DOWN
+	}
     [CCode (cheader_filename="panel-platform.h")]
     public class Platform : Object
     {
@@ -184,7 +202,7 @@ namespace ValaPanel
         public long can_strut(Gtk.Window top);
         public void update_strut(Gtk.Window top);
         public void move_to_coords(Gtk.Window top, int x, int y);
-        public void move_to_side(Gtk.Window top, Gtk.PositionType side, int monitor);
+        public void move_to_side(Gtk.Window top, Gravity side, int monitor);
     }
 }
 [CCode (cprefix="")]
@@ -233,8 +251,7 @@ namespace ValaPanel.Settings
 [CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
-    public const string EDGE;
-    public const string ALIGNMENT;
+    public const string GRAVITY;
     public const string HEIGHT;
     public const string WIDTH;
     public const string DYNAMIC;
@@ -261,7 +278,7 @@ namespace ValaPanel.Key
     internal const string PACK;
     internal const string POSITION;
 }
-[CCode (cheader_filename="config.h", upper_case_cprefix="", lower_case_cprefix="")]
+[CCode (cheader_filename="config.h", lower_case_cprefix="")]
 namespace Config
 {
    public const string DATADIR;

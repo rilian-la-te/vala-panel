@@ -32,14 +32,8 @@ namespace ValaPanel
     internal class ConfigureDialog : Dialog
     {
         public unowned Toplevel toplevel {get; construct;}
-        [GtkChild (name="edge-button")]
-        MenuButton edge_button;
-        [GtkChild (name="alignment-button")]
-        MenuButton alignment_button;
         [GtkChild (name="monitors-button")]
         MenuButton monitors_button;
-        [GtkChild (name="spin-margin")]
-        SpinButton spin_margin;
         [GtkChild (name="spin-iconsize")]
         SpinButton spin_iconsize;
         [GtkChild (name="spin-height")]
@@ -83,71 +77,6 @@ namespace ValaPanel
             var color = Gdk.RGBA();
             var conf = new SimpleActionGroup();
             apply_window_icon(this as Window);
-            /* edge */
-            edge_button.set_relief(ReliefStyle.NONE);
-            switch(toplevel.edge)
-            {
-                case PositionType.TOP:
-                    edge_button.set_label(_("Top"));
-                    break;
-                case PositionType.BOTTOM:
-                    edge_button.set_label(_("Bottom"));
-                    break;
-                case PositionType.LEFT:
-                    edge_button.set_label(_("Left"));
-                    break;
-                case PositionType.RIGHT:
-                    edge_button.set_label(_("Right"));
-                    break;
-            }
-            toplevel.notify["edge"].connect((pspec,data)=>
-            {
-                switch(toplevel.edge)
-                {
-                    case PositionType.TOP:
-                        edge_button.set_label(_("Top"));
-                        break;
-                    case PositionType.BOTTOM:
-                        edge_button.set_label(_("Bottom"));
-                        break;
-                    case PositionType.LEFT:
-                        edge_button.set_label(_("Left"));
-                        break;
-                    case PositionType.RIGHT:
-                        edge_button.set_label(_("Right"));
-                        break;
-                }
-            });
-            /* alignment */
-            alignment_button.set_relief(ReliefStyle.NONE);
-            switch(toplevel.alignment)
-            {
-                case AlignmentType.START:
-                    alignment_button.set_label(_("Start"));
-                    break;
-                case AlignmentType.CENTER:
-                    alignment_button.set_label(_("Center"));
-                    break;
-                case AlignmentType.END:
-                    alignment_button.set_label(_("End"));
-                    break;
-            }
-            toplevel.notify["alignment"].connect((pspec,data)=>
-            {
-                switch(toplevel.alignment)
-                {
-                    case AlignmentType.START:
-                        alignment_button.set_label(_("Start"));
-                        break;
-                    case AlignmentType.CENTER:
-                        alignment_button.set_label(_("Center"));
-                        break;
-                    case AlignmentType.END:
-                        alignment_button.set_label(_("End"));
-                        break;
-                }
-                spin_margin.set_sensitive(toplevel.alignment!=AlignmentType.CENTER);
-            });
             /* monitors */
             monitors_button.set_relief(ReliefStyle.NONE);
             int monitors;
@@ -168,9 +97,6 @@ namespace ValaPanel
             conf.add_action_entries(entries_monitor,this);
             var v = new Variant.int32(toplevel.monitor);
             conf.change_action_state("configure-monitors",v);
-            /* margin */
-            toplevel.bind_property(Key.MARGIN,spin_margin,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
-            spin_margin.set_sensitive(toplevel.alignment != AlignmentType.CENTER);
 
             /* size */
             toplevel.bind_property(Key.WIDTH,spin_width,"value",BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
@@ -217,7 +143,7 @@ namespace ValaPanel
             /* change monitor */
             int request_mon = param.get_int32();
             string str = request_mon < 0 ? _("All") : _("%d").printf(request_mon+1);
-            PositionType edge = (PositionType) toplevel.edge;
+            PositionType edge = (PositionType) edge_from_gravity(toplevel.panel_gravity);
             if(toplevel.panel_edge_available(edge, request_mon,false) || (state<-1))
             {
                 toplevel.monitor = request_mon;

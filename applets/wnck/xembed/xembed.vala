@@ -42,7 +42,7 @@ public class XEmbedTray: Applet
             return;
         this.add(plugin.plugin);
         plugin.plugin.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
-        toplevel.notify["edge"].connect((o,a)=> {
+        toplevel.notify["panel-gravity"].connect((o,a)=> {
             plugin.plugin.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         this.show_all();

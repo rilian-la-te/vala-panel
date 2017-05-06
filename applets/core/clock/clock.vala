@@ -133,7 +133,8 @@ public class Clock: Applet
             x += a.x;
             y += a.y;
         }
-        switch (toplevel.edge)
+        var edge = edge_from_gravity(toplevel.panel_gravity);
+        switch (edge)
         {
             case Gtk.PositionType.TOP:
                 y+=a.height;

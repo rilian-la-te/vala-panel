@@ -61,7 +61,7 @@ public class Kbled: Applet
         keymap = Gdk.Keymap.get_default();
         keymap.state_changed.connect(on_state_changed);
         on_state_changed();
-        toplevel.notify["edge"].connect((o,a)=> {
+        toplevel.notify["panel-gravity"].connect((o,a)=> {
             widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         show_all();

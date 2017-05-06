@@ -47,7 +47,7 @@ public class TasklistXFCE: Applet
         this.add(widget);
         toplevel.notify["orientation"].connect_after((s,p)=>{
             widget.set_orientation(toplevel.orientation);
-            widget.update_edge(toplevel.edge);
+            widget.update_edge(edge_from_gravity(toplevel.panel_gravity));
         });
         widget.set_button_relief(ReliefStyle.NONE);
 //        settings.bind(KEY_UNEXPANDED_LIMIT,this,KEY_UNEXPANDED_LIMIT,SettingsBindFlags.GET);
@@ -71,7 +71,7 @@ public class TasklistXFCE: Applet
         widget.middle_click = settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE) ? Xfce.TasklistMiddleClick.CLOSE_WINDOW : Xfce.TasklistMiddleClick.NOTHING;
         widget.set_show_labels(settings.get_boolean(KEY_SHOW_LABELS));
 //        widget.set_size(settings.get_int(KEY_UNEXPANDED_LIMIT));
-        widget.update_edge(toplevel.edge);
+        widget.update_edge(edge_from_gravity(toplevel.panel_gravity));
         widget.set_orientation(toplevel.orientation);
         this.show_all();
     }

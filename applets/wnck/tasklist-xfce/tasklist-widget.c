@@ -2001,7 +2001,7 @@ static void xfce_tasklist_child_drag_leave(XfceTasklistChild *child, GdkDragCont
 static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 {
 	XfceTasklistChild *child;
-	GtkPositionType edge;
+	PanelGravity edge;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(tasklist), NULL);
 
@@ -2012,8 +2012,9 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 	child->button = xfce_arrow_button_new(GTK_ARROW_NONE);
 	gtk_widget_set_parent(child->button, GTK_WIDGET(tasklist));
 	gtk_button_set_relief(GTK_BUTTON(child->button), tasklist->button_relief);
-	g_object_get(xfce_tasklist_get_toplevel(tasklist), VALA_PANEL_KEY_EDGE, &edge, NULL);
-	g_autofree char *css = css_generate_flat_button(child->button, edge);
+	g_object_get(xfce_tasklist_get_toplevel(tasklist), VALA_PANEL_KEY_GRAVITY, &edge, NULL);
+	g_autofree char *css =
+	    css_generate_flat_button(child->button, vala_panel_edge_from_gravity(edge));
 	css_add_css_to_widget(child->button, css);
 	css_toggle_class(child->button, "-panel-flat-button", true);
 

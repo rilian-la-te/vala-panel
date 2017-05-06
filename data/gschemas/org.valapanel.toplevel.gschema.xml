@@ -13,16 +13,19 @@
       <default>'applet'</default>
     </key>
   </schema>
-  <enum id="org.valapanel.GtkPositionType">
-    <value nick="left" value="0"/>
-    <value nick="right" value="1"/>
-    <value nick="top" value="2"/>
-    <value nick="bottom" value="3"/>
-  </enum>
-  <enum id="org.valapanel.AlignType">
-    <value nick="start" value="0"/>
-    <value nick="center" value="1"/>
-    <value nick="end" value="2"/>
+  <enum id="org.valapanel.Gravity">
+    <value nick="north-left" value="0"/>
+    <value nick="north-center" value="1"/>
+    <value nick="north-right" value="2"/>
+    <value nick="south-left" value="3"/>
+    <value nick="south-center" value="4"/>
+    <value nick="south-right" value="5"/>
+    <value nick="west-up" value="6"/>
+    <value nick="west-center" value="7"/>
+    <value nick="west-down" value="8"/>
+    <value nick="east-up" value="9"/>
+    <value nick="east-center" value="10"/>
+    <value nick="east-down" value="11"/>
   </enum>
   <enum id="org.valapanel.PackType">
     <value nick="start" value="0"/>
@@ -39,8 +42,8 @@
     <key name="monitor" type="i">
       <default>-1</default>
     </key>
-    <key name="edge" enum="org.valapanel.GtkPositionType">
-      <default>'top'</default>
+    <key name="panel-gravity" enum="org.valapanel.Gravity">
+      <default>'north-left'</default>
     </key>
     <key name="height" type="i">
 	  <range min="16" max="200"/>
@@ -52,9 +55,6 @@
     <key name="is-dynamic" type="b">
       <default>false</default>
     </key>
-    <key name="alignment" enum="org.valapanel.AlignType">
-      <default>'center'</default>
-    </key>
     <key name="icon-size" type="i">
 	  <range min="16" max="200"/>
       <default>24</default>
@@ -65,13 +65,7 @@
     <key name="strut" type="b">
       <default>true</default>
     </key>
-    <key name="panel-margin" type="i">
-      <default>0</default>
-    </key>
     <key name="autohide" type="b">
-      <default>false</default>
-    </key>
-    <key name="show-hidden" type="b">
       <default>false</default>
     </key>
     <key name="background-color" type="s">

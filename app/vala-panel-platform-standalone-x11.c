@@ -169,30 +169,26 @@ static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWind
 static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	bool autohide;
-	GtkPositionType edge;
+	PanelGravity gravity;
 	int monitor;
-	int size, margin, len;
-	PanelAlignmentType align;
+	int size, len;
 	g_object_get(top,
 	             VALA_PANEL_KEY_AUTOHIDE,
 	             &autohide,
-	             VALA_PANEL_KEY_EDGE,
-	             &edge,
+	             VALA_PANEL_KEY_GRAVITY,
+	             &gravity,
 	             VALA_PANEL_KEY_MONITOR,
 	             &monitor,
 	             VALA_PANEL_KEY_HEIGHT,
 	             &size,
-	             VALA_PANEL_KEY_MARGIN,
-	             &margin,
 	             VALA_PANEL_KEY_WIDTH,
 	             &len,
-	             VALA_PANEL_KEY_ALIGNMENT,
-	             &align,
 	             NULL);
 	GdkRectangle primary_monitor_rect;
-	long struts[12]    = { 0 };
-	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon    = monitor < 0 ? gdk_display_get_primary_monitor(screen)
+	GtkPositionType edge = vala_panel_edge_from_gravity(gravity);
+	long struts[12]      = { 0 };
+	GdkDisplay *screen   = gtk_widget_get_display(GTK_WIDGET(top));
+	GdkMonitor *mon      = monitor < 0 ? gdk_display_get_primary_monitor(screen)
 	                              : gdk_display_get_monitor(screen, monitor);
 	gdk_monitor_get_geometry(mon, &primary_monitor_rect);
 	/*
@@ -211,22 +207,22 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	{
 	case GTK_POS_TOP:
 		struts[2] = primary_monitor_rect.y + panel_size;
-		struts[8] = primary_monitor_rect.x + (align == ALIGN_START ? margin : 0);
+		struts[8] = primary_monitor_rect.x;
 		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len);
 		break;
 	case GTK_POS_LEFT:
 		struts[0] = panel_size;
-		struts[4] = primary_monitor_rect.y + (align == ALIGN_START ? margin : 0);
+		struts[4] = primary_monitor_rect.y;
 		struts[5] = primary_monitor_rect.y + primary_monitor_rect.height / 100 * len;
 		break;
 	case GTK_POS_RIGHT:
 		struts[1] = panel_size;
-		struts[6] = primary_monitor_rect.y + (align == ALIGN_START ? margin : 0);
+		struts[6] = primary_monitor_rect.y;
 		struts[7] = primary_monitor_rect.y + primary_monitor_rect.height / 100 * len;
 		break;
 	case GTK_POS_BOTTOM:
 		struts[3]  = primary_monitor_rect.y + panel_size;
-		struts[10] = primary_monitor_rect.x + (align == ALIGN_START ? margin : 0);
+		struts[10] = primary_monitor_rect.x;
 		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len);
 		break;
 	}
