@@ -62,7 +62,7 @@ public class SNTray: Applet
         settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_OTHER,layout,SHOW_OTHER,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.DEFAULT);
-        settings.bind(INDICATOR_SIZE,layout,INDICATOR_SIZE,SettingsBindFlags.DEFAULT);
+        toplevel.bind_property(Key.ICON_SIZE,layout,INDICATOR_SIZE,BindingFlags.SYNC_CREATE);
         settings.bind(USE_SYMBOLIC,layout,USE_SYMBOLIC,SettingsBindFlags.DEFAULT);
         settings.bind(USE_LABELS,layout,USE_LABELS,SettingsBindFlags.DEFAULT);
         settings.bind_with_mapping(INDEX_OVERRIDE,layout,INDEX_OVERRIDE,SettingsBindFlags.DEFAULT,
@@ -88,14 +88,14 @@ public class SNTray: Applet
     public override Widget get_settings_ui()
     {
         var dlg = new ConfigWidget(widget);
-        dlg.configure_icon_size = true;
+        dlg.configure_icon_size = false;
         return dlg;
     }
 #else
     public Dialog get_config_dialog()
     {
         var dlg = new ConfigDialog(widget);
-        dlg.configure_icon_size = true;
+        dlg.configure_icon_size = false;
         return dlg;
     }
 #endif

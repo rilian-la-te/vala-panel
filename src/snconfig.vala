@@ -117,6 +117,13 @@ namespace StatusNotifier
                                                          COLUMN_OVERRIDE_VISIBLE,over_filter,COLUMN_VISIBLE,filter,
                                                          COLUMN_ICON,icon);
         }
+        private void layout_notify_by_pspec(string prop)
+        {
+            Type type = typeof (ItemBox);
+            ObjectClass ocl = (ObjectClass) type.class_ref ();
+            unowned ParamSpec? spec = ocl.find_property (prop);
+            layout.notify(spec);
+        }
         [GtkCallback]
         private void on_index_override(string path)
         {
@@ -176,8 +183,7 @@ namespace StatusNotifier
             store.get(iter,COLUMN_ID,out id);
             store.set(iter,COLUMN_INDEX,val);
             layout.index_override.insert(id,new Variant.int32(int.parse(val)));
-            var over_dict = layout.index_override;
-            layout.index_override = over_dict;
+            layout_notify_by_pspec("index-override");
         }
         [GtkCallback]
         private void on_filter_visible(string path)
@@ -190,8 +196,7 @@ namespace StatusNotifier
             over = !over;
             store.set(iter,COLUMN_VISIBLE,over);
             layout.filter_override.insert(id,new Variant.boolean(over));
-            var over_dict = layout.filter_override;
-            layout.filter_override = over_dict;
+            layout_notify_by_pspec("filter-override");
         }
     }
 }
