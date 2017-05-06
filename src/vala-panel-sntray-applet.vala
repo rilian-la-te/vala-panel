@@ -74,7 +74,11 @@ public class SNTray: Applet
                                    (SettingsBindSetMappingShared)set_vardict,
                                    (void*)"b",null);
         layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
+#if NEW
+        toplevel.notify["orientation"].connect((o,a)=> {
+#else
         toplevel.notify["edge"].connect((o,a)=> {
+#endif
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         this.add(layout);
