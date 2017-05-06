@@ -9,7 +9,7 @@ shutdown-command='lxsession-logout'
 
 [appmenu]
 object-type='toplevel'
-edge='top'
+panel-gravity='north-left'
 monitor=-1
 height=26
 strut=true

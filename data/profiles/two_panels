@@ -8,7 +8,7 @@ shutdown-command='lxsession-logout'
 
 [toplevel2]
 object-type='toplevel'
-edge='bottom'
+panel-gravity='south-left'
 monitor=-1
 height=26
 auto-hide=false
@@ -43,7 +43,7 @@ position=3
 [toplevel1]
 object-type='toplevel'
 monitor=-1
-edge='top'
+panel-gravity='north-left'
 height=26
 auto-hide=false
 alignment='center'
