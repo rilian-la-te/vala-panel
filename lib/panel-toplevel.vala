@@ -244,7 +244,7 @@ namespace ValaPanel
         }
         private int calc_width(int scrw, int panel_width,int panel_margin)
         {
-            int effective_width = scrw*panel_width/100;
+            int effective_width = (int)Math.round(scrw*panel_width/100.0);
             if ((effective_width + panel_margin) > scrw)
                 effective_width = scrw - panel_margin;
             return effective_width;
@@ -261,7 +261,7 @@ namespace ValaPanel
             if (this.orientation != orient)
                 min = nat = base_min = base_nat = (!autohide || (ah_rev != null && ah_rev.reveal_child)) ? height : GAP;
             else
-                min = nat = base_min = base_nat = calc_width(scrw, for_size, 0);
+                min = nat = base_min = base_nat = calc_width(scrw, this.width, 0);
         }
         protected override SizeRequestMode get_request_mode()
         {
@@ -480,10 +480,10 @@ namespace ValaPanel
             var effective_height = this.orientation == Orientation.HORIZONTAL ? height : (width/100) * marea.height-marea.y ;
             var effective_width = this.orientation == Orientation.HORIZONTAL ? (width/100) * marea.width-marea.x : height;
             this.set_size_request(effective_width, effective_height);
-            platform.move_to_side(this, this.panel_gravity, this.monitor);
             this.queue_resize();
             while (Gtk.events_pending ())
               Gtk.main_iteration ();
+            platform.move_to_side(this, this.panel_gravity, this.monitor);
             platform.update_strut(this as Gtk.Window);
             this.notify["orientation"](this.get_class().find_property("orientation"));
         }
