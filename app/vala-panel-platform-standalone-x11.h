@@ -30,6 +30,8 @@ G_DECLARE_FINAL_TYPE(ValaPanelPlatformX11, vala_panel_platform_x11, VALA_PANEL, 
                      ValaPanelPlatform)
 
 ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const char *profile);
+#define _user_config_file_name_new(cprofile)                                                       \
+	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, NULL)
 
 G_END_DECLS
 

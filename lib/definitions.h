@@ -46,12 +46,6 @@
 		string = g_value_dup_string(value);                                                \
 	}
 
-#define _user_config_file_name(name1, cprofile, name2)                                             \
-	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, name1, name2, NULL)
-
-#define _user_config_file_name_new(cprofile)                                                       \
-	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, NULL)
-
 #define g_ascii_inplace_tolower(string)                                                            \
 	{                                                                                          \
 		for (int i = 0; string[i] != '\0'; i++)                                            \
@@ -72,6 +66,14 @@
 
 #define vala_panel_invert_orient(orient)                                                           \
 	orient == GTK_ORIENTATION_HORIZONTAL ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL
+
+#define vala_panel_effective_height(orient)                                                        \
+	orient == GTK_ORIENTATION_HORIZONTAL ? gtk_widget_get_allocated_height(GTK_WIDGET(top))    \
+	                                     : gtk_widget_get_allocated_width(GTK_WIDGET(top))
+
+#define vala_panel_effective_width(orient)                                                         \
+	orient == GTK_ORIENTATION_HORIZONTAL ? gtk_widget_get_allocated_width(GTK_WIDGET(top))     \
+	                                     : gtk_widget_get_allocated_height(GTK_WIDGET(top))
 
 #define vala_panel_transpose_area(marea)                                                           \
 	{                                                                                          \

@@ -103,12 +103,8 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 	GdkRectangle marea;
 	int x, y;
 	gdk_monitor_get_geometry(mon, &marea);
-	int height = orient == GTK_ORIENTATION_HORIZONTAL
-	                 ? gtk_widget_get_allocated_height(GTK_WIDGET(top))
-	                 : gtk_widget_get_allocated_width(GTK_WIDGET(top));
-	int width = orient == GTK_ORIENTATION_HORIZONTAL
-	                ? gtk_widget_get_allocated_width(GTK_WIDGET(top))
-	                : gtk_widget_get_allocated_height(GTK_WIDGET(top));
+	int height = vala_panel_effective_height(orient);
+	int width  = vala_panel_effective_width(orient);
 	if (orient == GTK_ORIENTATION_HORIZONTAL)
 	{
 		x = marea.x;
