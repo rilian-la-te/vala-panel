@@ -93,34 +93,66 @@ static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWind
 	gtk_window_move(top, x, y);
 }
 
-//0,0,height,width - NorthLeft
-//0,mon-width,height,mon - NorthRight
-//0,(mon-width)/2,height,(mon+width/2) - NorthCenter
-//mon-height,0,mon,width - SouthLeft
-//mon-height,mon-width,mon,mon - SouthRight
-//mon,(mon-width)/2,mon,(mon+width/2) - SouthCenter
-//Swap for Orientation.VERTICAL
+// TODO: Make more readable code without switch
 static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
-                                                 GtkPositionType edge, int monitor)
+                                                 PanelGravity gravity, int monitor)
 {
-	GtkOrientation orient = vala_panel_orient_from_edge(edge);
+	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
 	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
 	GdkMonitor *mon =
 	    monitor < 0 ? gdk_display_get_primary_monitor(d) : gdk_display_get_monitor(d, monitor);
 	GdkRectangle marea;
-	int x, y;
+	int x = 0, y = 0;
 	gdk_monitor_get_geometry(mon, &marea);
 	int height = vala_panel_effective_height(orient);
 	int width  = vala_panel_effective_width(orient);
-	if (orient == GTK_ORIENTATION_HORIZONTAL)
+	switch (gravity)
 	{
+	case NORTH_LEFT:
+	case WEST_UP:
 		x = marea.x;
-		y = marea.y + ((edge == GTK_POS_TOP) ? 0 : (marea.height - height));
-	}
-	else
-	{
 		y = marea.y;
-		x = marea.x + ((edge == GTK_POS_LEFT) ? 0 : (marea.width - height));
+		break;
+	case NORTH_CENTER:
+		x = marea.x + (marea.width - width) / 2;
+		y = marea.y;
+		break;
+	case NORTH_RIGHT:
+		x = marea.x + marea.width - width;
+		y = marea.y;
+		break;
+	case SOUTH_LEFT:
+		x = marea.x;
+		y = marea.y + marea.height - height;
+		break;
+	case SOUTH_CENTER:
+		x = marea.x + (marea.width - width) / 2;
+		y = marea.y + marea.height - height;
+		break;
+	case SOUTH_RIGHT:
+		x = marea.x + marea.width - width;
+		y = marea.y + marea.height - height;
+		break;
+	case WEST_CENTER:
+		x = marea.x;
+		y = marea.y + (marea.height - width) / 2;
+		break;
+	case WEST_DOWN:
+		x = marea.x;
+		y = marea.y + (marea.height - width);
+		break;
+	case EAST_UP:
+		x = marea.x + marea.width - height;
+		y = marea.y;
+		break;
+	case EAST_CENTER:
+		x = marea.x + marea.width - height;
+		y = marea.y + (marea.height - width) / 2;
+		break;
+	case EAST_DOWN:
+		x = marea.x + marea.width - height;
+		y = marea.y + (marea.height - width);
+		break;
 	}
 	gtk_window_move(top, x, y);
 }

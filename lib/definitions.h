@@ -64,6 +64,14 @@
 	((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL           \
 	                                                    : GTK_ORIENTATION_VERTICAL
 
+#define vala_panel_orient_from_gravity(gravity)                                                    \
+	(gravity < 6) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL
+
+#define vala_panel_edge_from_gravity(gravity)                                                      \
+	(gravity < 3)                                                                              \
+	    ? GTK_POS_TOP                                                                          \
+	    : (gravity < 6) ? GTK_POS_BOTTOM : (gravity < 9) ? GTK_POS_LEFT : GTK_POS_RIGHT
+
 #define vala_panel_invert_orient(orient)                                                           \
 	orient == GTK_ORIENTATION_HORIZONTAL ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL
 
