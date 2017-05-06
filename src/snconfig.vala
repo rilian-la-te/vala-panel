@@ -122,7 +122,7 @@ namespace StatusNotifier
             Type type = typeof (ItemBox);
             ObjectClass ocl = (ObjectClass) type.class_ref ();
             unowned ParamSpec? spec = ocl.find_property (prop);
-            layout.notify(spec);
+            layout.notify[prop](spec);
         }
         [GtkCallback]
         private void on_index_override(string path)
