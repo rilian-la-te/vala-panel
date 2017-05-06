@@ -22,7 +22,7 @@ TODO
    * [x] Create Platform (abstraction that will handle all positioning)
    * [X] Allow Platform to be changed and independent form toplevel code
    * [x] Create X11 platform (with current positioning code)
-   * [ ] Introduce gravity-based positioning
+   * [X] Introduce gravity-based positioning
    * [ ] Create Layout and made pack-type useful
    * [ ] Rewrite toplevel into C
    * [X] Rewrite applet into C
