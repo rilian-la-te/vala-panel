@@ -99,7 +99,7 @@ static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWind
 //mon-height,0,mon,width - SouthLeft
 //mon-height,mon-width,mon,mon - SouthRight
 //mon,(mon-width)/2,mon,(mon+width/2) - SouthCenter
-
+//Swap for Orientation.VERTICAL
 static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
                                                  GtkPositionType edge, int monitor)
 {
