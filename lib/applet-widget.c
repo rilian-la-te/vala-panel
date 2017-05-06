@@ -37,8 +37,11 @@ enum
 	VALA_PANEL_APPLET_TOPLEVEL,
 	VALA_PANEL_APPLET_SETTINGS,
 	VALA_PANEL_APPLET_UUID,
-	VALA_PANEL_APPLET_GRP
+	VALA_PANEL_APPLET_GRP,
+	VALA_PANEL_APPLET_ALL
 };
+
+static GParamSpec *pspecs[VALA_PANEL_APPLET_ALL];
 
 static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
 {
@@ -336,16 +339,20 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
 	{
 	case VALA_PANEL_APPLET_BACKGROUND_WIDGET:
 		p->background = GTK_WIDGET(g_value_get_object(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APPLET_TOPLEVEL:
 		p->toplevel = VALA_PANEL_TOPLEVEL(g_value_get_object(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APPLET_SETTINGS:
 		p->settings = G_SETTINGS(g_value_get_object(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APPLET_UUID:
 		g_free0(p->uuid);
 		p->uuid = g_value_dup_string(value);
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APPLET_GRP:
 	default:
@@ -383,61 +390,54 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	G_OBJECT_CLASS(klass)->get_property              = vala_panel_applet_get_property;
 	G_OBJECT_CLASS(klass)->set_property              = vala_panel_applet_set_property;
 	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_applet_finalize;
+	pspecs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
+	    g_param_spec_object("background-widget",
+	                        "background-widget",
+	                        "background-widget",
+	                        gtk_widget_get_type(),
+	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                            G_PARAM_READABLE | G_PARAM_WRITABLE);
+	pspecs[VALA_PANEL_APPLET_TOPLEVEL] =
+	    g_param_spec_object("toplevel",
+	                        "toplevel",
+	                        "toplevel",
+	                        VALA_PANEL_TYPE_TOPLEVEL,
+	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
+	pspecs[VALA_PANEL_APPLET_UUID] =
+	    g_param_spec_string("uuid",
+	                        "uuid",
+	                        "uuid",
+	                        NULL,
+	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
+	pspecs[VALA_PANEL_APPLET_SETTINGS] =
+	    g_param_spec_object("settings",
+	                        "settings",
+	                        "settings",
+	                        g_settings_get_type(),
+	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
+	pspecs[VALA_PANEL_APPLET_GRP] =
+	    g_param_spec_object("action-group",
+	                        "grp",
+	                        "grp",
+	                        g_simple_action_group_get_type(),
+	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                            G_PARAM_READABLE);
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_BACKGROUND_WIDGET,
-	                                g_param_spec_object("background-widget",
-	                                                    "background-widget",
-	                                                    "background-widget",
-	                                                    gtk_widget_get_type(),
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                pspecs[VALA_PANEL_APPLET_BACKGROUND_WIDGET]);
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_TOPLEVEL,
-	                                g_param_spec_object("toplevel",
-	                                                    "toplevel",
-	                                                    "toplevel",
-	                                                    VALA_PANEL_TYPE_TOPLEVEL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE |
-	                                                        G_PARAM_CONSTRUCT_ONLY));
+	                                pspecs[VALA_PANEL_APPLET_TOPLEVEL]);
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_SETTINGS,
-	                                g_param_spec_object("settings",
-	                                                    "settings",
-	                                                    "settings",
-	                                                    g_settings_get_type(),
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE |
-	                                                        G_PARAM_CONSTRUCT_ONLY));
+	                                pspecs[VALA_PANEL_APPLET_SETTINGS]);
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_UUID,
-	                                g_param_spec_string("uuid",
-	                                                    "uuid",
-	                                                    "uuid",
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE |
-	                                                        G_PARAM_CONSTRUCT_ONLY));
+	                                pspecs[VALA_PANEL_APPLET_UUID]);
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APPLET_GRP,
-	                                g_param_spec_object("action-group",
-	                                                    "grp",
-	                                                    "grp",
-	                                                    g_simple_action_group_get_type(),
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
-	                                                        G_PARAM_READABLE));
+	                                pspecs[VALA_PANEL_APPLET_GRP]);
 }

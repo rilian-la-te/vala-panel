@@ -374,35 +374,43 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 	case VALA_PANEL_APP_IS_DARK:
 		app->dark = g_value_get_boolean(value);
 		apply_styling(app);
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_IS_CUSTOM:
 		app->custom = g_value_get_boolean(value);
 		apply_styling(app);
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_TERMINAL_COMMAND:
 		g_free0(app->terminal_command);
 		app->terminal_command = g_strdup(g_value_get_string(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_RUN_COMMAND:
 		g_free0(app->run_command);
 		app->run_command = g_strdup(g_value_get_string(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_LOGOUT_COMMAND:
 		g_free0(app->logout_command);
 		app->logout_command = g_strdup(g_value_get_string(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_SHUTDOWN_COMMAND:
 		g_free0(app->shutdown_command);
 		app->shutdown_command = g_strdup(g_value_get_string(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_PROFILE:
 		g_free0(app->profile);
 		app->profile = g_strdup(g_value_get_string(value));
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APP_CSS:
 		g_free0(app->css);
 		app->css = g_strdup(g_value_get_string(value));
 		apply_styling(app);
+		g_object_notify_by_pspec(object, pspec);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
