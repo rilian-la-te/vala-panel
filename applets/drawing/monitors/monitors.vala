@@ -305,8 +305,7 @@ internal class MemMonitor : Monitor
         }
         if (readmask != 0)
         {
-            warning("""monitors: Could not read all values from /proc/meminfo:
-                      readmask %x""", readmask);
+            warning("monitors: Could not read all values from /proc/meminfo:\n readmask %x", readmask);
             return false;
         }
         m.total = mem_total;

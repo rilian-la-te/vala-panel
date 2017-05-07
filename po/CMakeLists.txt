@@ -4,5 +4,6 @@ add_translations_catalog("vala-panel"
     ../lib
     ../app
     ../data/ui
+    ../data/desktop
     ../applets
 )

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+​  <id>org.valapanel.application</id>
+​  <_name>Vala Panel</_name>
+​  <_summary>Vala Panel is GTK+ 3 desktop panel. It is based on Vala and some LXPanel ideas</_summary>
+  <description>
+	 <_p>Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas.
+	 It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is
+	 completely rewritten in Vala. It offers same functionality as LXPanel, but:</_p>
+	 <ol>
+	 <_li> It has slightly more memory usage. </_li>
+	 <_li> X11 dependency is stripped from panel core (but it is not tested on
+		another display servers, such as Wayland or Mir, right now). </_li>
+	 <_li> Some of former LXPanel plugins is separate binaries now
+		and lives in another packages (Example is volume applet). </_li>
+     </ol>
+  </description>
+​  <url type="homepage">https://github.com/rilian-la-te/vala-panel</url>
+​  <metadata_license>CC0-1.0</metadata_license>
+​​  <launch type="desktop-id">org.valapanel.application.desktop</launch>
+​  <provides>
+​    <library>libvalapanel.so.0</library>
+​  </provides>
+​  <releases>
+​    <release version="0.3.60" date="2017-05-06" />
+​  </releases>
+  ​<translation type="gettext">vala-panel</translation>
+​  <developer_name>Konstantin</developer_name>
+​</component>
