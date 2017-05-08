@@ -93,7 +93,9 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 		-Wno-missing-field-initializers
 		-Wno-discarded-qualifiers
 		-Wno-sign-compare
-		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
+                -Wextra
+                -fstack-protector -fstack-protector-all
+                ) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
 
 pkg_check_modules (A

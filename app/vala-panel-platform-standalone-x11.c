@@ -161,7 +161,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 
 static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	bool strut_set = false;
+	gboolean strut_set = false;
 	g_object_get(top, VALA_PANEL_KEY_STRUT, &strut_set, NULL);
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return false;
