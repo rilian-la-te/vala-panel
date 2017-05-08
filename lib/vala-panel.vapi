@@ -1,7 +1,7 @@
 using GLib;
 using Gtk;
 
-[CCode (cheader_filename = "config.h", upper_case_cprefix="")]
+[CCode (cheader_filename = "config.h", lower_case_cprefix="", cprefix="")]
 namespace PanelConfig {
 	public const string DATADIR;
 	public const string GETTEXT_PACKAGE;
@@ -20,6 +20,45 @@ namespace ValaPanel.Configurator
     public static Dialog generic_config_dlg(string title, Gtk.Window parent,
                                     GLib.Settings settings, ...);
     public static Widget generic_config_widget(GLib.Settings settings, ...);
+}
+[CCode (cheader_filename = "css.h", cprefix = "",lower_case_cprefix="css_")]
+namespace PanelCSS
+{
+    public void apply_with_class(Gtk.Widget w, string css, string klass, bool add);
+    public void toggle_class(Widget w, string klass, bool apply);
+    public CssProvider? add_css_to_widget(Widget w, string css);
+    public Gtk.CssProvider? apply_from_file_to_app_with_provider(string file);
+    public string apply_from_file_to_app(string file);
+    public void apply_from_resource(Gtk.Widget w, string file, string klass);
+    public string generate_background(string? name, Gdk.RGBA color);
+    public string generate_font_size(int size);
+    public string generate_font_color(Gdk.RGBA color);
+    public string generate_font_label(double size ,bool bold);
+    public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e);
+}
+[CCode (cprefix="")]
+namespace MenuMaker
+{
+    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_DND_SOURCE")]
+    public const string ATTRIBUTE_DND_SOURCE;
+    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_TOOLTIP")]
+    public const string ATTRIBUTE_TOOLTIP;
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_id")]
+    public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_uri")]
+    public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_command")]
+    public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch")]
+    public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch_with_context")]
+    public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
+    [CCode (cheader_filename="launcher.h",cname="vala_panel_get_default_for_uri")]
+    public static AppInfo get_default_for_uri(string uri);
+    [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
+    public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
+    [CCode (cheader_filename="menu-maker.h",cname="apply_menu_properties")]
+    public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu);
 }
 [CCode (cheader_filename = "applet-widget.h")]
 namespace ValaPanel.AppletAction
@@ -69,7 +108,6 @@ namespace ValaPanel {
 		public string background_color { owned get; internal set; }
 		public string background_file { get; internal set; }
 		public bool dock { get; internal set; }
-		public Gtk.PositionType edge { get; internal set construct; }
 		public string font { get; internal set; }
 		public uint font_size { get; internal set; }
 		public bool font_size_only { get; internal set; }
@@ -79,7 +117,7 @@ namespace ValaPanel {
 		public bool is_dynamic { get; internal set; }
 		public int monitor { get; internal set construct; }
 		public Gtk.Orientation orientation { get; }
-		public int panel_margin { get; internal set; }
+		public Gravity panel_gravity { get;}
 		public uint round_corners_size { get; internal set; }
 		public bool strut { get; internal set; }
 		public bool use_background_color { get; internal set; }
@@ -115,6 +153,8 @@ namespace ValaPanel {
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation orient_from_gravity(Gravity gravity);
+ 	[CCode (cheader_filename="definitions.h")]
+    public static Gtk.PositionType edge_from_gravity(Gravity gravity);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
     [Compact]

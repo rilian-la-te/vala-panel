@@ -10,9 +10,9 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 	vala-panel
     OPTIONS
 	--vapidir=${CMAKE_SOURCE_DIR}/vapi
-	--vapidir=${CMAKE_BINARY_DIR}/lib
-	--vapidir=${CMAKE_BINARY_DIR}/vapi
-	--target-glib=2.40
+        --vapidir=${CMAKE_SOURCE_DIR}/lib
+        --vapidir=${CMAKE_BINARY_DIR}/vapi
+        --target-glib=2.50
 	--gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
 	--thread
     )

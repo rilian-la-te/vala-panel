@@ -181,7 +181,7 @@ namespace MenuMaker
         }
         else
         {
-            menu.append("%s %s".printf(_("Vala Panel"),Config.VERSION),"foo.improper-action");
+            menu.append("%s %s".printf(_("Vala Panel"),PanelConfig.VERSION),"foo.improper-action");
             menu.append_section(null,MenuMaker.create_applications_menu (false));
             var section = new GLib.Menu();
             section.append_submenu(_("Places"),MenuMaker.create_places_menu());

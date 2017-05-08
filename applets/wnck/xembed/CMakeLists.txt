@@ -11,9 +11,9 @@ GENERATE_HEADER
     xembed-internal
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_BINARY_DIR}/lib
+    --vapidir=${CMAKE_SOURCE_DIR}/lib
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
-    --target-glib=2.40
+    --target-glib=2.50
     --thread
 )
 set(VALA_FILES ${PLUGIN_NAME}.vala)
@@ -28,9 +28,9 @@ PACKAGES
     gdk-x11-3.0
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_BINARY_DIR}/lib
+    --vapidir=${CMAKE_SOURCE_DIR}/lib
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
-    --target-glib=2.40
+    --target-glib=2.50
     --thread
 )
 #####
