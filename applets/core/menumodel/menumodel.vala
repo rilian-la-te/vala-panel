@@ -116,12 +116,13 @@ public class Menu: Applet
                                       _("Caption (for button only)"), Key.CAPTION, GenericConfigType.STR,
                                       _("Menu file name"), Key.MODEL_FILE, GenericConfigType.FILE_ENTRY);
     }
-    public void show_system_menu()
+    [CCode (instance_pos=2.1)]
+    public override void show_menu(GLib.Action act, Variant? param)
     {
         if (system && show_system_menu_idle == 0)
-            Timeout.add(200,show_menu);
+            Timeout.add(200,show_menu_int);
     }
-    public bool show_menu()
+    public bool show_menu_int()
     {
         if (GLib.MainContext.current_source().is_destroyed()) return false;
         if (int_menu != null)

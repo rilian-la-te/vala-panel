@@ -17,7 +17,7 @@ G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vala_panel_applet, VALA_PANEL, APPLET,
 struct _ValaPanelAppletClass
 {
 	GtkBinClass parent_class;
-	void (*show_menu)(GSimpleAction *act, GVariant *param, gpointer *self);
+	void (*show_menu)(GAction *act, GVariant *param, gpointer *self);
 	GtkWidget *(*get_settings_ui)(ValaPanelApplet *self);
 	void (*update_context_menu)(ValaPanelApplet *self, GMenu *parent_menu);
 	gpointer padding[12];

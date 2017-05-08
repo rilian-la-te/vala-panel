@@ -93,6 +93,8 @@ namespace ValaPanel {
 		public bool is_configurable();
 		public virtual void update_context_menu (ref GLib.Menu parent_menu);
 		public virtual Widget get_settings_ui();
+		[CCode (instance_pos = 2.1)]
+		public virtual void show_menu(GLib.Action act, Variant? param);
 		public Gtk.Widget background_widget { get; set; }
 		public GLib.Settings? settings { get; construct; }
 		public SimpleActionGroup action_group { get; }

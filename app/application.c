@@ -470,13 +470,13 @@ static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplicatio
 
 static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	GtkApplication *app       = GTK_APPLICATION(data);
-	g_autofree GList *windows = gtk_application_get_windows(app);
+	GtkApplication *app = GTK_APPLICATION(data);
+	GList *windows      = gtk_application_get_windows(app);
 	for (GList *l = windows; l != NULL; l = l->next)
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(l->data))
 		{
-			g_autofree GList *applets = vala_panel_toplevel_get_applets_list(l->data);
+			GList *applets = vala_panel_toplevel_get_applets_list(l->data);
 			for (GList *il = applets; il != NULL; il = il->next)
 			{
 				GSimpleActionGroup *grp;
@@ -489,15 +489,17 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 					break;
 				}
 			}
+			//            g_list_free(applets);
 		}
 	}
+	//    g_list_free(windows);
 }
 
 static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	GtkApplication *app       = GTK_APPLICATION(data);
-	g_autofree GList *windows = gtk_application_get_windows(app);
-	g_autofree char *name     = NULL;
+	GtkApplication *app   = GTK_APPLICATION(data);
+	GList *windows        = gtk_application_get_windows(app);
+	g_autofree char *name = NULL;
 	for (GList *l = windows; l != NULL; l = l->next)
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(l->data))
