@@ -59,8 +59,6 @@ OPTIONS
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
     --thread
     ${NEW_DEFINE}
-GENERATE_VAPI
-    ${APPNAME}
 GENERATE_HEADER
     ${APPNAME}-compat
 )
@@ -82,7 +80,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 link_directories (${LIB_PATHS})
 
 set (LIB_FILES ${VALA_C})
-add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/vala-panel.vapi)
+add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi)
 add_library (${LIBNAME} SHARED
     ${LIB_FILES}
     ${LIBVALAPANEL_C_SOURCES}
