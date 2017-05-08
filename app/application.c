@@ -24,6 +24,7 @@
 #include "lib/launcher.h"
 #include "lib/misc.h"
 #include "lib/panel-platform.h"
+#include "vala-panel-compat.h"
 #include "vala-panel-platform-standalone-x11.h"
 
 #include <glib/gi18n.h>
@@ -469,48 +470,46 @@ static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplicatio
 
 static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	GtkApplication *app      = GTK_APPLICATION(data);
-	g_autoptr(GList) windows = gtk_application_get_windows(app);
+	GtkApplication *app       = GTK_APPLICATION(data);
+	g_autofree GList *windows = gtk_application_get_windows(app);
 	for (GList *l = windows; l != NULL; l = l->next)
 	{
-		//        if (VALA_PANEL_IS_TOPLEVEL(l->data))
-		//        {
-
-		//        }
+		if (VALA_PANEL_IS_TOPLEVEL(l->data))
+		{
+			g_autofree GList *applets = vala_panel_toplevel_get_applets_list(l->data);
+			for (GList *il = applets; il != NULL; il = il->next)
+			{
+				GSimpleActionGroup *grp;
+				g_object_get(il->data, VALA_PANEL_KEY_ACTION_GROUP, &grp, NULL);
+				if (g_action_group_get_action_enabled(
+				        grp, VALA_PANEL_APPLET_ACTION_MENU))
+				{
+					g_action_group_activate_action(
+					    grp, VALA_PANEL_APPLET_ACTION_MENU, NULL);
+					break;
+				}
+			}
+		}
 	}
-	//    foreach(unowned Window win in app.get_windows())
-	//    {
-	//        if (win is Toplevel)
-	//        {
-	//            unowned Toplevel p = win as Toplevel;
-	//            foreach(unowned Widget pl in p.get_applets_list())
-	//            {
-	//                if (pl is AppletMenu)
-	//                    (pl as AppletMenu).show_system_menu();
-	//            }
-	//        }
-	//    }
 }
 
 static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
 {
-	GtkApplication *app      = GTK_APPLICATION(data);
-	g_autoptr(GList) windows = gtk_application_get_windows(app);
+	GtkApplication *app       = GTK_APPLICATION(data);
+	g_autofree GList *windows = gtk_application_get_windows(app);
+	g_autofree char *name     = NULL;
 	for (GList *l = windows; l != NULL; l = l->next)
 	{
-		//        if (VALA_PANEL_IS_TOPLEVEL(l->data))
-		//        {
-		//        if (win is Toplevel)
-		//        {
-		//            unowned Toplevel p = win as Toplevel;
-		//            if (p.panel_name == param.get_string())
-		//            {
-		//                p.configure("position");
-		//                break;
-		//            }
-		//        }
-		//        stderr.printf("No panel with this name found.\n");
-		//        }
+		if (VALA_PANEL_IS_TOPLEVEL(l->data))
+		{
+			g_object_get(l->data, VALA_PANEL_KEY_UUID, &name, NULL);
+			if (!g_strcmp0(name, g_variant_get_string(param, NULL)))
+			{
+				vala_panel_toplevel_configure(l->data, "position");
+				break;
+			}
+			g_warning(_("No panel with this name found.\n"));
+		}
 	}
 }
 

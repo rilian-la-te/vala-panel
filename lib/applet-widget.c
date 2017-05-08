@@ -391,35 +391,35 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	G_OBJECT_CLASS(klass)->set_property              = vala_panel_applet_set_property;
 	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_applet_finalize;
 	pspecs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
-	    g_param_spec_object("background-widget",
+	    g_param_spec_object(VALA_PANEL_KEY_BACKGROUND_WIDGET,
 	                        "background-widget",
 	                        "background-widget",
 	                        gtk_widget_get_type(),
 	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
 	                            G_PARAM_READABLE | G_PARAM_WRITABLE);
 	pspecs[VALA_PANEL_APPLET_TOPLEVEL] =
-	    g_param_spec_object("toplevel",
+	    g_param_spec_object(VALA_PANEL_KEY_TOPLEVEL,
 	                        "toplevel",
 	                        "toplevel",
 	                        VALA_PANEL_TYPE_TOPLEVEL,
 	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
 	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
 	pspecs[VALA_PANEL_APPLET_UUID] =
-	    g_param_spec_string("uuid",
+	    g_param_spec_string(VALA_PANEL_KEY_UUID,
 	                        "uuid",
 	                        "uuid",
 	                        NULL,
 	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
 	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
 	pspecs[VALA_PANEL_APPLET_SETTINGS] =
-	    g_param_spec_object("settings",
+	    g_param_spec_object(VALA_PANEL_KEY_SETTINGS,
 	                        "settings",
 	                        "settings",
 	                        g_settings_get_type(),
 	                        G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
 	                            G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY);
 	pspecs[VALA_PANEL_APPLET_GRP] =
-	    g_param_spec_object("action-group",
+	    g_param_spec_object(VALA_PANEL_KEY_ACTION_GROUP,
 	                        "grp",
 	                        "grp",
 	                        g_simple_action_group_get_type(),

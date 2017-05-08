@@ -37,7 +37,7 @@
 #define VALA_PANEL_OBJECT_PATH_TEMPLATE "/org/vala-panel/objects/%s/"
 
 /*
- * Plugins keys
+ * Plugins base positioning keys
  */
 #define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
 #define VALA_PANEL_TOPLEVEL_ID "toplevel-id"
@@ -48,6 +48,14 @@
 #define VALA_PANEL_KEY_POSITION "position"
 
 /*
+ * Basic applet keys
+ */
+#define VALA_PANEL_KEY_TOPLEVEL "toplevel"
+#define VALA_PANEL_KEY_BACKGROUND_WIDGET "background-widget"
+#define VALA_PANEL_KEY_SETTINGS "settings"
+#define VALA_PANEL_KEY_ACTION_GROUP "action-group"
+
+/*
  * Autohide gap
  */
 #define GAP 2
@@ -56,6 +64,7 @@
 /*
  * Toplevel keys
  */
+#define VALA_PANEL_KEY_UUID "uuid"
 #define VALA_PANEL_KEY_GRAVITY "panel-gravity"
 #define VALA_PANEL_KEY_ORIENTATION "orientation"
 #define VALA_PANEL_KEY_HEIGHT "height"

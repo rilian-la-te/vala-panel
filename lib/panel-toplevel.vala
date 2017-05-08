@@ -343,7 +343,7 @@ namespace ValaPanel
                 box.reorder_child((l.data as Applet),(int)idx);
             }
         }
-        internal List<unowned Widget> get_applets_list()
+        public List<unowned Widget> get_applets_list()
         {
             return box.get_children();
         }
