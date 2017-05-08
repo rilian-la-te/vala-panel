@@ -6,7 +6,6 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
 PACKAGES
     ${CORE_PACKAGES}
     vala-panel
-    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib

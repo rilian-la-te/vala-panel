@@ -7,7 +7,6 @@ PACKAGES
     vala-panel
     libwnck-3.0
     gdk-x11-3.0
-    cvalapanel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_BINARY_DIR}/lib
