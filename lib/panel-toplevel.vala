@@ -285,6 +285,7 @@ namespace ValaPanel
         {
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
+            s.default_settings.set_string(Settings.TOPLEVEL_ID,this.uuid);
             holder.load_applet(s);
         }
         private void on_applet_loaded(string type)
@@ -292,17 +293,23 @@ namespace ValaPanel
             foreach (var unit in core_settings.core_settings.get_strv(Settings.CORE_UNITS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
                 {
                     if (pl.default_settings.get_string(Key.NAME) == type)
                     {
                         place_applet(holder.applet_ref(type),pl);
                         update_applet_positions();
                         return;
-                }
+                    }
                 }
             }
         }
+        private void on_applet_ready_to_place(AppletPlugin applet_plugin, UnitSettings pl)
+        {
+            if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
+                place_applet(applet_plugin,pl);
+        }
+
         internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
         {
             var aw = applet_plugin.get_applet_widget(this,s.custom_settings,s.uuid);
@@ -388,6 +395,7 @@ namespace ValaPanel
         [CCode (returns_floating_reference = true)]
         private static Toplevel create(Gtk.Application app, string name, int mon, Gravity e)
         {
+            core_settings.add_unit_settings_full(name,name,true);
             return new Toplevel.from_position(app,name,mon,e);
         }
         private Toplevel.from_position(Gtk.Application app, string name, int mon, Gravity e)
@@ -462,7 +470,7 @@ namespace ValaPanel
                 if (p.name in anames)
                     this.update_appearance();
             });
-            holder.applet_ready_to_place.connect(place_applet);
+            holder.applet_ready_to_place.connect(on_applet_ready_to_place);
             holder.applet_loaded.connect(on_applet_loaded);
             this.add_action_entries(panel_entries,this);
         }
@@ -501,7 +509,7 @@ namespace ValaPanel
                 Gdk.flush();
                 initialized = false;
             }
-            if (this.get_child() != null)
+            if (box != null)
             {
                 box.destroy();
                 box = null;
@@ -538,7 +546,7 @@ namespace ValaPanel
             foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
             {
                 unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) != this.name)
+                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
                     holder.load_applet(pl);
             }
             this.show();
@@ -713,6 +721,7 @@ namespace ValaPanel
         }
         private void activate_remove_panel(SimpleAction act, Variant? param)
         {
+            string rem_uuid = this.uuid;
             var dlg = new MessageDialog.with_markup(this,
                                                     DialogFlags.MODAL,
                                                     MessageType.QUESTION,
@@ -727,7 +736,7 @@ namespace ValaPanel
                 this.stop_ui();
                 this.destroy();
                 /* delete the config file of this panel */
-                core_settings.remove_unit_settings_full(this.uuid, true);
+                core_settings.remove_unit_settings_full(rem_uuid, true);
             }
         }
         private void activate_panel_settings(SimpleAction act, Variant? param)
