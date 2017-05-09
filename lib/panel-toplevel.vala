@@ -371,6 +371,7 @@ namespace ValaPanel
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
+        [CCode (returns_floating_reference = true)]
         public Toplevel(Gtk.Application app, Platform platform, string name)
         {
             Object(border_width: 0,
