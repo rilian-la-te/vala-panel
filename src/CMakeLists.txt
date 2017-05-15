@@ -2,7 +2,6 @@
 # DBusMenu
 #####
 set(VALA_FILES_DBUSMENU  dbusmenu/dbusmenu.vala)
-macro(precompile_dbusmenu)
 vala_precompile(VALA_C_DBUSMENU vala-dbusmenu
     ${VALA_FILES_DBUSMENU}
 PACKAGES
@@ -20,12 +19,8 @@ GENERATE_VAPI
 GENERATE_HEADER
     vala-dbusmenu
 )
-endmacro(precompile_dbusmenu)
-if(NOT EXISTS ${CMAKE_BINARY_DIR}/vapi/vala-dbusmenu.vapi
-   OR ${CMAKE_CURRENT_BINARY_DIR}/vala-dbusmenu_valac.stamp IS_NEWER_THAN ${CMAKE_BINARY_DIR}/vapi/vala-dbusmenu.vapi)
-   precompile_dbusmenu()
-endif()
-add_custom_target(vala-dbusmenu DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/vala-dbusmenu_valac.stamp)
+add_library(vala-dbusmenu STATIC ${VALA_C_DBUSMENU})
+add_definitions(-fPIC)
 #####
 # Core Parts (GResource, definitions)
 #####
@@ -39,7 +34,6 @@ set(VALA_FILES_CORE
 	qrichtextparser.vala
         ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
-macro(precompile_core)
     vala_precompile(VALA_C_CORE sntray-core
 	${VALA_FILES_CORE}
     PACKAGES
@@ -59,14 +53,9 @@ macro(precompile_core)
         source
             sntray.gresource.xml
     )
-endmacro(precompile_core)
-if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/vala-panel-sntray.vapi
-   OR ${CMAKE_CURRENT_BINARY_DIR}/sntray-core_valac.stamp IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/vala-panel-sntray.vapi)
-   precompile_core()
-endif()
-add_custom_target(sntray-core DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/sntray.gresource.c ${CMAKE_CURRENT_BINARY_DIR}/sntray-core_valac.stamp)
+add_library(sntray-core STATIC ${VALA_C_CORE})
+target_link_libraries (sntray-core ${CORE_LIBRARIES} m vala-dbusmenu)
 add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
-add_dependencies(sntray-core vala-dbusmenu)
 #################
 # Xfce Panel part
 #################
@@ -91,14 +80,11 @@ if (ENABLE_XFCE)
     # Plugin Library
     #####
     add_library (sntray-xfce SHARED
-        ${VALA_C_DBUSMENU}
-        ${VALA_C_CORE}
         ${VALA_C_XFCE}
         ${RESOURCES}
     )
-    add_dependencies(sntray-xfce sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${XFCE_INCLUDE_DIRS})
-    target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES} -lm)
+    target_link_libraries(sntray-xfce ${GTK+_LIBRARIES} ${XFCE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
     # Install plugin stuffs
@@ -130,13 +116,11 @@ if (ENABLE_VALAPANEL)
     # Plugin Library
     #####
     add_library (sntray-valapanel SHARED
-        ${VALA_C_CORE}
         ${VALA_C_VALAPANEL}
         ${RESOURCES}
     )
-    add_dependencies(sntray-valapanel sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${VALAPANEL_INCLUDE_DIRS})
-    target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES} -lm)
+    target_link_libraries(sntray-valapanel ${GTK+_LIBRARIES} ${VALAPANEL_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
 
     # Install plugin stuffs
@@ -165,14 +149,11 @@ if (ENABLE_BUDGIE)
     # Plugin Library
     #####
     add_library (sntray-budgie SHARED
-        ${VALA_C_CORE}
-		${VALA_C_DBUSMENU}
         ${VALA_C_BUDGIE}
         ${RESOURCES}
     )
-    add_dependencies(sntray-budgie sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${BUDGIE_INCLUDE_DIRS})
-    target_link_libraries(sntray-budgie ${GTK+_LIBRARIES} ${BUDGIE_LIBRARIES} -lm)
+    target_link_libraries(sntray-budgie ${GTK+_LIBRARIES} ${BUDGIE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
     # Install plugin stuffs
@@ -203,14 +184,12 @@ if (ENABLE_MATE)
     # Plugin Library
     #####
     add_executable (sntray-mate
-	${VALA_C_DBUSMENU}
-	${VALA_C_CORE}
 	${VALA_C_MATE}
 	${RESOURCES}
     )
     add_dependencies(sntray-mate sntray-core)
     include_directories(${GTK+_INCLUDE_DIRS} ${MATE_INCLUDE_DIRS})
-    target_link_libraries(sntray-mate ${GTK+_LIBRARIES} ${MATE_LIBRARIES} -lm)
+    target_link_libraries(sntray-mate ${GTK+_LIBRARIES} ${MATE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
 
     # Install plugin stuffs
