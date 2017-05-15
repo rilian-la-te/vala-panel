@@ -24,6 +24,7 @@ set(VALA_FILES_CORE
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
+        --vapidir=${CMAKE_CURRENT_BINARY_DIR}/dbusmenu
 	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/sntray.gresource.xml
         --thread
