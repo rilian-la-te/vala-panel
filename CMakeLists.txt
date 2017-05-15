@@ -21,7 +21,7 @@ add_definitions(-Wall -Wno-unused # Vala loves to create variables
 
 find_package (PkgConfig)
 
-pkg_check_modules(GTK3 REQUIRED
+pkg_check_modules(GTK3 REQUIRED QUIET
     gtk+-3.0>=3.10)
 
 set(VALA_FILES_DBUSMENU dbusmenu.vala)
@@ -46,4 +46,5 @@ GENERATE_HEADER
 add_library(vala-dbusmenu STATIC ${VALA_C_DBUSMENU})
 target_link_libraries (vala-dbusmenu ${GTK3_LIBRARIES})
 target_include_directories (vala-dbusmenu PRIVATE ${GTK3_INCLUDE_DIRS})
+add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
 add_definitions(-fPIC)
