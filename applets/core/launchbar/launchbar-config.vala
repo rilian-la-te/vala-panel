@@ -206,7 +206,7 @@ namespace LaunchBar
                     (this.get_toplevel() as Window,
                      DialogFlags.DESTROY_WITH_PARENT,
                      MessageType.ERROR,ButtonsType.CLOSE,
-                     error_i18n);
+                     "%s", error_i18n);
             ValaPanel.apply_window_icon(msg as Gtk.Window);
             msg.set_title(_("Error"));
             msg.run();
