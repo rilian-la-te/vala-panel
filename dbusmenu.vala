@@ -1038,8 +1038,9 @@ namespace DBusMenu
         }
         public void attach_to_menu(Gtk.MenuShell menu)
         {
-            foreach (unowned string path in iface.icon_theme_path)
-                IconTheme.get_default().prepend_search_path(path);
+            if (iface.icon_theme_path != null && iface.icon_theme_path.length > 0)
+                foreach (unowned string path in iface.icon_theme_path)
+                    IconTheme.get_default().prepend_search_path(path != null ? path : "");
             root_menu = menu;
             root_menu.foreach((c)=>{menu.remove(c); c.destroy();});
             root_menu.realize.connect(open_cb);
