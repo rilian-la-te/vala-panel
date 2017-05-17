@@ -1,5 +1,8 @@
-cmake_minimum_required (VERSION 2.8)
-cmake_policy (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.8)
+if (NOT ${CMAKE_VERSION} VERSION_LESS 3.3.0)
+        cmake_policy(SET CMP0063 NEW) # Honor visibility properties for all target types.
+        cmake_policy(SET CMP0051 NEW) # List TARGET_OBJECTS in SOURCES target property.
+endif()
 project (vala-dbusmenu C)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -43,8 +46,10 @@ GENERATE_HEADER
     vala-dbusmenu
 )
 
-add_library(vala-dbusmenu STATIC ${VALA_C_DBUSMENU})
-target_link_libraries (vala-dbusmenu ${GTK3_LIBRARIES})
+add_library(vala-dbusmenu OBJECT ${VALA_C_DBUSMENU})
+set_target_properties(vala-dbusmenu PROPERTIES
+        CXX_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
+        POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
+)
 target_include_directories (vala-dbusmenu PRIVATE ${GTK3_INCLUDE_DIRS})
 add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
-add_definitions(-fPIC)
