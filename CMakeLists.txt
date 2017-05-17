@@ -13,14 +13,16 @@ ensure_vala_version ("0.24" MINIMUM)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
-add_definitions(-Wall -Wno-unused # Vala loves to create variables
+add_definitions(-Wall -Wextra
+                -Wno-unused
+                -Wno-unused-parameter# Vala loves to create variables
 #				-pedantic
                 -Wno-ignored-qualifiers
                 -Wno-incompatible-pointer-types
                 -Wno-missing-field-initializers
                 -Wno-discarded-qualifiers
                 -Wno-sign-compare
-                -Wextra) #Vala often forgot cast to GtkWidget or gpointer
+                ) #Vala often forgot cast to GtkWidget or gpointer
 
 find_package (PkgConfig)
 
@@ -46,10 +48,11 @@ GENERATE_HEADER
     vala-dbusmenu
 )
 
-add_library(vala-dbusmenu OBJECT ${VALA_C_DBUSMENU})
-set_target_properties(vala-dbusmenu PROPERTIES
+add_library(vala-dbusmenu-o OBJECT ${VALA_C_DBUSMENU})
+set_target_properties(vala-dbusmenu-o PROPERTIES
         CXX_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
         POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
 )
-target_include_directories (vala-dbusmenu PRIVATE ${GTK3_INCLUDE_DIRS})
+target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
+add_library(vala-dbusmenu STATIC $<TARGET_OBJECTS:vala-dbusmenu-o>)
 add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
