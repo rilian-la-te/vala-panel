@@ -1,8 +1,5 @@
-cmake_minimum_required (VERSION 2.8.8)
-if (NOT ${CMAKE_VERSION} VERSION_LESS 3.3.0)
-        cmake_policy(SET CMP0063 NEW) # Honor visibility properties for all target types.
-        cmake_policy(SET CMP0051 NEW) # List TARGET_OBJECTS in SOURCES target property.
-endif()
+cmake_minimum_required (VERSION 2.8)
+cmake_policy (VERSION 2.8)
 project (vala-dbusmenu C)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -55,4 +52,5 @@ set_target_properties(vala-dbusmenu-o PROPERTIES
 )
 target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
 add_library(vala-dbusmenu STATIC $<TARGET_OBJECTS:vala-dbusmenu-o>)
+target_link_libraries (vala-dbusmenu ${GTK3_LIBRARIES})
 add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
