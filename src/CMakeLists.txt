@@ -36,8 +36,8 @@ set(VALA_FILES_CORE
         source
             sntray.gresource.xml
     )
-add_library(sntray-core STATIC ${VALA_C_CORE})
-target_link_libraries (sntray-core ${CORE_LIBRARIES} m vala-dbusmenu)
+add_library(sntray-core STATIC ${VALA_C_CORE} $<TARGET_OBJECTS:vala-dbusmenu-o>)
+target_link_libraries (sntray-core ${CORE_LIBRARIES} m)
 add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
 #################
 # Xfce Panel part

@@ -61,6 +61,7 @@ namespace StatusNotifier
             widget.configure_icon_size = configure_icon_size;
             var dlg = new Dialog();
             dlg.set_title(_("StatusNotifier Configuration"));
+            widget.show();
             dlg.get_content_area().add(widget);
             return dlg;
         }

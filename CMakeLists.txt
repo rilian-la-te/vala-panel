@@ -15,14 +15,16 @@ determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake/vala)
 include(FallbackVersion)
 
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
-add_definitions(-Wall -Wno-unused # Vala loves to create variables
-#		-pedantic
-		-Wno-ignored-qualifiers
-		-Wno-incompatible-pointer-types
-		-Wno-missing-field-initializers
-		-Wno-discarded-qualifiers
-		-Wno-sign-compare
-		-Wextra) #Vala often forgot cast to GtkWidget or gpointer
+add_definitions(-Wall -Wextra
+                -Wno-unused
+                -Wno-unused-parameter# Vala loves to create variables
+#				-pedantic
+                -Wno-ignored-qualifiers
+                -Wno-incompatible-pointer-types
+                -Wno-missing-field-initializers
+                -Wno-discarded-qualifiers
+                -Wno-sign-compare
+                ) #Vala often forgot cast to GtkWidget or gpointer
 pkg_check_modules(GTK+ REQUIRED gtk+-3.0>=3.22)
 
 option(ENABLE_XFCE "Enable xfce4-panel plugin" ON)
