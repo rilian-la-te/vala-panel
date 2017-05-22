@@ -43,6 +43,8 @@ endif()
 set(VALA_FILES
 	misc-old.vala
 	configurator.vala
+	dbusmenu/dbusmenu-proxy.vala
+	dbusmenu/dbusmenu-gtk.vala
 	dbusmenu/dbusmenu.vala
 	applet-holder.vala
 	panel-toplevel.vala
