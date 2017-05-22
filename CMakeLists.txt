@@ -52,10 +52,8 @@ GENERATE_HEADER
 
 add_library(vala-dbusmenu-o OBJECT ${VALA_C_DBUSMENU})
 set_target_properties(vala-dbusmenu-o PROPERTIES
-        C_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
+#        C_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
         POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
 )
 target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
-add_library(vala-dbusmenu STATIC $<TARGET_OBJECTS:vala-dbusmenu-o>)
-target_link_libraries (vala-dbusmenu ${GTK3_LIBRARIES})
 add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
