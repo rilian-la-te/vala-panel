@@ -13,7 +13,7 @@ add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 add_definitions(-Wall -Wextra
                 -Wno-unused
                 -Wno-unused-parameter# Vala loves to create variables
-#				-pedantic
+               #-pedantic
                 -Wno-ignored-qualifiers
                 -Wno-incompatible-pointer-types
                 -Wno-missing-field-initializers
@@ -26,7 +26,11 @@ find_package (PkgConfig)
 pkg_check_modules(GTK3 REQUIRED QUIET
     gtk+-3.0>=3.10)
 
-set(VALA_FILES_DBUSMENU dbusmenu.vala)
+set(VALA_FILES_DBUSMENU
+    dbusmenu.vala
+    dbusmenu-proxy.vala
+    dbusmenu-gtk.vala
+    )
 vala_precompile(VALA_C_DBUSMENU vala-dbusmenu
     ${VALA_FILES_DBUSMENU}
 PACKAGES
