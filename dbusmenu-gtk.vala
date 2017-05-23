@@ -40,7 +40,13 @@ namespace DBusMenu
         public bool always_show_image_placeholder
         {
             get;
-            set construct;
+            construct;
+            default = true;
+        }
+        public bool always_show_checkbox
+        {
+            get;
+            construct;
             default = true;
         }
         private bool has_indicator;
@@ -72,9 +78,9 @@ namespace DBusMenu
             this.deselect.connect(on_deselect_cb);
             this.notify["visible"].connect(()=>{this.visible = item.get_bool_property("visible");});
         }
-        public GtkMainItem(Item item, bool show_im_pl = true)
+        public GtkMainItem(Item item, bool show_im_pl = true, bool show_check_pl = true)
         {
-            Object(item:item, always_show_image_placeholder: show_im_pl);
+            Object(item:item, always_show_image_placeholder: show_im_pl,always_show_checkbox: show_check_pl);
         }
         private void init()
         {
@@ -156,12 +162,24 @@ namespace DBusMenu
                 this.has_indicator = false;
             }
         }
+        protected override void toggle_size_request(void* req)
+        {
+            if(always_show_checkbox || has_indicator)
+                base.toggle_size_request(req);
+            else
+            {
+                int* req_int = req;
+                *req_int = 0;
+            }
+        }
         private void update_icon(Variant? val)
         {
             if (val == null)
             {
                 var icon = image.gicon;
-                if (!(icon != null && icon is ThemedIcon && is_themed_icon))
+                if (icon == null && !always_show_image_placeholder)
+                    image.hide();
+                else if (!(icon != null && icon is ThemedIcon && is_themed_icon))
                     is_themed_icon = false;
                 return;
             }
@@ -175,8 +193,7 @@ namespace DBusMenu
                 icon = new BytesIcon(val.get_data_as_bytes());
             else return;
             image.set_from_gicon(icon,IconSize.MENU);
-            image.show();
-            image.set_pixel_size(always_show_image_placeholder ? 16 : -1);
+            image.set_pixel_size(16);
         }
         private void update_shortcut(Variant? val)
         {
@@ -429,7 +446,7 @@ namespace DBusMenu
                 return new GtkSeparatorItem(item);
             else if (item.get_string_property("type") == "slider" || item.get_string_property("type") == "scale")
                 return new GtkScaleItem(item);
-            return new GtkMainItem(item,show_im_pl);
+            return new GtkMainItem(item,show_im_pl, show_im_pl);
         }
         public GtkClient(string object_name, string object_path)
         {
@@ -471,7 +488,8 @@ namespace DBusMenu
         private void on_child_added_cb(int id, Item item)
         {
             Gtk.MenuItem menuitem;
-            menuitem = new_item(item,!(this.root_menu is Gtk.MenuBar));
+            bool show_image = !(this.root_menu is Gtk.MenuBar);
+            menuitem = new_item(item,show_image);
             root_menu.insert(menuitem,get_root_item().get_child_position(item.id));
         }
         private void on_child_moved_cb(int oldpos, int newpos, Item item)
@@ -504,3 +522,4 @@ namespace DBusMenu
         }
     }
 }
+
