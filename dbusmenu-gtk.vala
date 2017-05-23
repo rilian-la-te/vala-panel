@@ -56,7 +56,7 @@ namespace DBusMenu
             image = img;
             var label = new AccelLabel("");
             accel_label = label;
-            box.add(image);
+            box.pack_start(image,false,false,2);
             box.add(accel_label);
             this.add(box);
             this.show_all();
@@ -164,6 +164,10 @@ namespace DBusMenu
                 int* req_int = req;
                 *req_int = 0;
             }
+        }
+        protected override void toggle_size_allocate(int alloc)
+        {
+            base.toggle_size_allocate(has_indicator ? alloc : 0);
         }
         private void update_icon(Variant? val)
         {
@@ -515,4 +519,5 @@ namespace DBusMenu
         }
     }
 }
+
 
