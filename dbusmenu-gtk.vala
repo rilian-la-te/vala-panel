@@ -43,12 +43,6 @@ namespace DBusMenu
             construct;
             default = true;
         }
-        public bool always_show_checkbox
-        {
-            get;
-            construct;
-            default = true;
-        }
         private bool has_indicator;
         private unowned Image image;
         private unowned AccelLabel accel_label;
@@ -78,9 +72,9 @@ namespace DBusMenu
             this.deselect.connect(on_deselect_cb);
             this.notify["visible"].connect(()=>{this.visible = item.get_bool_property("visible");});
         }
-        public GtkMainItem(Item item, bool show_im_pl = true, bool show_check_pl = true)
+        public GtkMainItem(Item item, bool show_im_pl = true)
         {
-            Object(item:item, always_show_image_placeholder: show_im_pl,always_show_checkbox: show_check_pl);
+            Object(item:item, always_show_image_placeholder: show_im_pl);
         }
         private void init()
         {
@@ -164,7 +158,7 @@ namespace DBusMenu
         }
         protected override void toggle_size_request(void* req)
         {
-            if(always_show_checkbox || has_indicator)
+            if(has_indicator)
                 base.toggle_size_request(req);
             else
             {
@@ -177,7 +171,7 @@ namespace DBusMenu
             if (val == null)
             {
                 var icon = image.gicon;
-                if (icon == null && !always_show_image_placeholder)
+                if (has_indicator || (icon == null && !always_show_image_placeholder))
                     image.hide();
                 else if (!(icon != null && icon is ThemedIcon && is_themed_icon))
                     is_themed_icon = false;
@@ -446,7 +440,7 @@ namespace DBusMenu
                 return new GtkSeparatorItem(item);
             else if (item.get_string_property("type") == "slider" || item.get_string_property("type") == "scale")
                 return new GtkScaleItem(item);
-            return new GtkMainItem(item,show_im_pl, show_im_pl);
+            return new GtkMainItem(item,show_im_pl);
         }
         public GtkClient(string object_name, string object_path)
         {
