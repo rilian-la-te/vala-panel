@@ -43,14 +43,13 @@ namespace DBusMenu
             construct;
             default = true;
         }
-        private bool has_indicator;
+        private bool has_indicator = false;
         private unowned Image image;
         private unowned AccelLabel accel_label;
         private ulong activate_handler;
-        private bool is_themed_icon;
+        private bool is_themed_icon = false;
         construct
         {
-            is_themed_icon = false;
             this.item = item;
             var box = new Box(Orientation.HORIZONTAL, 5);
             var img = new Image();
