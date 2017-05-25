@@ -1,5 +1,6 @@
 add_subdirectory(applets-new)
 add_subdirectory(c-lib)
+add_subdirectory(dbusmenu)
 include(GLibHelpers)
 set(ENUM_FILES
         panel-platform.h
@@ -43,9 +44,6 @@ endif()
 set(VALA_FILES
 	misc-old.vala
 	configurator.vala
-	dbusmenu/dbusmenu-proxy.vala
-	dbusmenu/dbusmenu-gtk.vala
-	dbusmenu/dbusmenu.vala
 	applet-holder.vala
 	panel-toplevel.vala
 	)
@@ -88,6 +86,7 @@ add_library (${LIBNAME} SHARED
     ${LIBVALAPANEL_C_SOURCES}
     ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
+    $<TARGET_OBJECTS:vala-dbusmenu-o>
     definitions.h
 )
 
