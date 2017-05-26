@@ -1,6 +1,6 @@
 [submodule "cmake/vala"]
 	path = cmake/vala
-	url = git://github.com/rilian-la-te/cmake-vala.git
+	url = https://github.com/rilian-la-te/cmake-vala.git
 [submodule "src/dbusmenu"]
 	path = src/dbusmenu
-	url = git://github.com/rilian-la-te/vala-dbusmenu.git
+	url = https://github.com/rilian-la-te/vala-dbusmenu.git

@@ -110,9 +110,11 @@ namespace StatusNotifier
             ebox.button_release_event.connect(button_press_event_cb);
             ebox.enter_notify_event.connect((e)=>{
                 this.get_style_context().add_class("-panel-launch-button-selected");
+                return false;
             });
             ebox.leave_notify_event.connect((e)=>{
                 this.get_style_context().remove_class("-panel-launch-button-selected");
+                return false;
             });
 
             this.query_tooltip.connect(query_tooltip_cb);
