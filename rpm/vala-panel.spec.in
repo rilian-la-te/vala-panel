@@ -69,6 +69,7 @@ set -o monitor
 %{_datadir}/vala-panel/images
 %{_datadir}/icons/*
 %{_datadir}/applications/org.valapanel.application.desktop
+%{_datadir}/metainfo/org.valapanel.application.appdata.xml
 
 %package runner
 Group: User Interface/Desktops
