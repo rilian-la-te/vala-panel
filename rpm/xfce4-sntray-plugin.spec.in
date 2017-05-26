@@ -119,6 +119,9 @@ and this. However, this is most configurable.
 %files -n mate-panel-sntray
 %defattr(644,root,root,755)
 %doc README.md
+%dir %{_libdir}/mate-panel
+%dir %{_datarootdir}/mate-panel
+%dir %{_datarootdir}/mate-panel/applets
 %{_libexecdir}/mate-panel/sntray-mate
 %{_datarootdir}/mate-panel/applets/org.vala-panel.SNTray.mate-panel-applet
 %{_datarootdir}/dbus-1/services/org.mate.panel.applet.SNTrayAppletFactory.service
