@@ -119,7 +119,7 @@ and this. However, this is most configurable.
 %files -n mate-panel-sntray
 %defattr(644,root,root,755)
 %doc README.md
-%dir %{_libdir}/mate-panel
+%dir %{_libexecdir}/mate-panel
 %dir %{_datarootdir}/mate-panel
 %dir %{_datarootdir}/mate-panel/applets
 %{_libexecdir}/mate-panel/sntray-mate
