@@ -2,6 +2,6 @@
 Type=Application
 Name=Vala Panel
 GenericName=Desktop Panel
-Categories=Utility;
+Categories=System;Monitor;
 Exec=vala-panel
 Icon=vala-panel
