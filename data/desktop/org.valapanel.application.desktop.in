@@ -1,5 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Vala Panel
+GenericName=Desktop Panel
+Category=Utility
 Exec=vala-panel
 Icon=vala-panel
