@@ -156,3 +156,14 @@ void vala_panel_generate_error_dialog(GtkWindow* parent, const char* error)
     gtk_dialog_run ((GtkDialog*) dlg);
     gtk_widget_destroy ((GtkWidget*) dlg);
 }
+
+bool vala_panel_generate_confirmation_dialog(GtkWindow* parent, const char* error)
+{
+    GtkMessageDialog* dlg;
+    dlg = (GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) parent, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK_CANCEL, "%s", error);
+    vala_panel_apply_window_icon (G_TYPE_CHECK_INSTANCE_TYPE (dlg, gtk_window_get_type ()) ? ((GtkWindow*) dlg) : NULL);
+    gtk_window_set_title ((GtkWindow*) dlg, _("Error"));
+    bool ret = (gtk_dialog_run ((GtkDialog*) dlg) == GTK_RESPONSE_OK);
+    gtk_widget_destroy ((GtkWidget*) dlg);
+    return ret;
+}

@@ -137,6 +137,8 @@ namespace ValaPanel
     [CCode (cheader_filename="misc.h")]
     public static void generate_error_dialog(Gtk.Window parent, string error);
     [CCode (cheader_filename="misc.h")]
+    public static bool generate_confirmation_dialog(Gtk.Window parent, string error);
+    [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
     [CCode (cheader_filename="misc.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);

@@ -693,15 +693,7 @@ namespace ValaPanel
         private void activate_remove_panel(SimpleAction act, Variant? param)
         {
             string rem_uuid = this.uuid;
-            var dlg = new MessageDialog.with_markup(this,
-                                                    DialogFlags.MODAL,
-                                                    MessageType.QUESTION,
-                                                    ButtonsType.OK_CANCEL,
-                                                    N_("Really delete this panel?\n<b>Warning: This can not be recovered.</b>"));
-            apply_window_icon(dlg as Gtk.Window);
-            dlg.set_title(_("Confirm"));
-            var ok = (dlg.run() == ResponseType.OK );
-            dlg.destroy();
+            var ok = generate_confirmation_dialog(this as Gtk.Window, N_("Really delete this panel?\n<b>Warning: This can not be recovered.</b>"));
             if( ok )
             {
                 this.stop_ui();
