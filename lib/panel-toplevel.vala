@@ -199,27 +199,6 @@ namespace ValaPanel
                 }
             }
         }
-//        private static void calculate_width(int scrw, bool dyn, AlignmentType align,
-//                                            int margin, ref int panw, ref int x)
-//        {
-//            if (!dyn)
-//            {
-//                panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
-//                panw = (int)(((double)scrw * (double) panw)/100.0);
-//            }
-//            margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
-//            panw = int.min(scrw - margin, panw);
-//            if (align == AlignmentType.START)
-//                x+=margin;
-//            else if (align == AlignmentType.END)
-//            {
-//                x += scrw - panw - margin;
-//                x = (x < 0) ? 0 : x;
-//            }
-//            else if (align == AlignmentType.CENTER)
-//                x += (scrw - panw)/2;
-//        }
-
         protected override void get_preferred_width_for_height(int height, out int min, out int nat)
         {
             int x,y;
