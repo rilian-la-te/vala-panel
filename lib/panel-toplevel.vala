@@ -680,16 +680,7 @@ namespace ValaPanel
                 }
             if (!found)
             {
-                warning("Error adding panel: There is no room for another panel. All the edges are taken.");
-                var msg = new MessageDialog
-                        (this,
-                         DialogFlags.DESTROY_WITH_PARENT,
-                         MessageType.ERROR,ButtonsType.CLOSE,
-                         N_("There is no room for another panel. All the edges are taken."));
-                apply_window_icon(msg as Gtk.Window);
-                msg.set_title(_("Error"));
-                msg.run();
-                msg.destroy();
+                generate_error_dialog(this as Gtk.Window,N_("There is no room for another panel. All the edges are taken."));
                 return;
             }
             var gravity = new_edge == PositionType.TOP ? Gravity.NORTH_LEFT : new_edge == PositionType.BOTTOM ? Gravity.SOUTH_LEFT : new_edge == PositionType.LEFT ? Gravity.WEST_UP : Gravity.EAST_UP;

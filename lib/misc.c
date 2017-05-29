@@ -18,6 +18,7 @@
 
 #include <inttypes.h>
 #include <string.h>
+#include <glib/gi18n.h>
 
 #include "css.h"
 #include "lib/definitions.h"
@@ -143,4 +144,15 @@ void vala_panel_reset_schema_with_children(GSettings *settings)
 	}
 	g_settings_apply(settings);
 	g_settings_sync();
+}
+
+void vala_panel_generate_error_dialog(GtkWindow* parent, const char* error)
+{
+    GtkMessageDialog* dlg;
+    g_warning ("%s",error);
+    dlg = (GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", error);
+    vala_panel_apply_window_icon (G_TYPE_CHECK_INSTANCE_TYPE (dlg, gtk_window_get_type ()) ? ((GtkWindow*) dlg) : NULL);
+    gtk_window_set_title ((GtkWindow*) dlg, _("Error"));
+    gtk_dialog_run ((GtkDialog*) dlg);
+    gtk_widget_destroy ((GtkWidget*) dlg);
 }
