@@ -16,9 +16,9 @@ G_DECLARE_FINAL_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, VALA_PANEL
 ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_position(GtkApplication *app,
                                                                   const char *uid, int mon,
                                                                   PanelGravity edge);
-ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app,
-                                                             ValaPanelPlatform *plt,
-                                                             const char *uid);
+ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uuid(GtkApplication *app,
+                                                              ValaPanelPlatform *plt,
+                                                              const char *uid);
 
 G_END_DECLS
 

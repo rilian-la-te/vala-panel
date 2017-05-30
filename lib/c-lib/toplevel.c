@@ -3,6 +3,8 @@
 #include "misc.h"
 #include "panel-layout.h"
 
+#include <math.h>
+
 static const int PERIOD = 200;
 
 static ValaPanelPlatform *platform = NULL;
@@ -15,6 +17,33 @@ static const GActionEntry panel_entries[] =
     { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
       { "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
       { "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } } };
+
+enum
+{
+	VALA_PANEL_TOPLEVEL_DUMMY_PROPERTY,
+	VALA_PANEL_TOPLEVEL_UUID,
+	VALA_PANEL_TOPLEVEL_HEIGHT,
+	VALA_PANEL_TOPLEVEL_WIDTH,
+	VALA_PANEL_TOPLEVEL_USE_FONT,
+	VALA_PANEL_TOPLEVEL_USE_BACKGROUND_COLOR,
+	VALA_PANEL_TOPLEVEL_USE_FOREGROUND_COLOR,
+	VALA_PANEL_TOPLEVEL_USE_BACKGROUND_FILE,
+	VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY,
+	VALA_PANEL_TOPLEVEL_FONT_SIZE,
+	VALA_PANEL_TOPLEVEL_ROUND_CORNERS_SIZE,
+	VALA_PANEL_TOPLEVEL_FONT,
+	VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR,
+	VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR,
+	VALA_PANEL_TOPLEVEL_ICON_SIZE,
+	VALA_PANEL_TOPLEVEL_BACKGROUND_FILE,
+	VALA_PANEL_TOPLEVEL_PANEL_GRAVITY,
+	VALA_PANEL_TOPLEVEL_ORIENTATION,
+	VALA_PANEL_TOPLEVEL_MONITOR,
+	VALA_PANEL_TOPLEVEL_DOCK,
+	VALA_PANEL_TOPLEVEL_STRUT,
+	VALA_PANEL_TOPLEVEL_IS_DYNAMIC,
+	VALA_PANEL_TOPLEVEL_AUTOHIDE
+};
 
 struct _ValaPanelToplevelUnit
 {
@@ -394,9 +423,9 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_position(GtkApplication
 	setup(ret, true);
 	return ret;
 }
-ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app,
-                                                             ValaPanelPlatform *plt,
-                                                             const char *uid)
+ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uuid(GtkApplication *app,
+                                                              ValaPanelPlatform *plt,
+                                                              const char *uid)
 {
 	ValaPanelToplevelUnit *ret =
 	    VALA_PANEL_TOPLEVEL_UNIT(g_object_new(vala_panel_toplevel_unit_get_type(),
@@ -432,108 +461,94 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uid(GtkApplication *app
 	return ret;
 }
 
-// void _calculate_position(ref Gtk.Allocation alloc)
-//{
-//    unowned Gdk.Screen screen = this.get_screen();
-//    Gdk.Rectangle marea = Gdk.Rectangle();
-//    if (monitor < 0)
-//    {
-//        marea.x = 0;
-//        marea.y = 0;
-//        marea.width = screen.get_width();
-//        marea.height = screen.get_height();
-//    }
-//    else if (monitor < screen.get_n_monitors())
-//    {
-//        screen.get_monitor_geometry(monitor,&marea);
-////~                 marea = screen.get_monitor_workarea(monitor);
-////~                 var hmod = (autohide && show_hidden) ? 1 : height;
-////~                 switch (edge)
-////~                 {
-////~                     case PositionType.TOP:
-////~                         marea.x -= hmod;
-////~                         marea.height += hmod;
-////~                         break;
-////~                     case PositionType.BOTTOM:
-////~                         marea.height += hmod;
-////~                         break;
-////~                     case PositionType.LEFT:
-////~                         marea.y -= hmod;
-////~                         marea.width += hmod;
-////~                         break;
-////~                     case PositionType.RIGHT:
-////~                         marea.width += hmod;
-////~                         break;
-////~                 }
-//    }
-//    if (orientation == GTK_ORIENTATION_HORIZONTAL)
-//    {
-//        alloc.width = width;
-//        alloc.x = marea.x;
-//        calculate_width(marea.width,is_dynamic,alignment,panel_margin,ref alloc.width, ref
-//        alloc.x);
-//        alloc.height = (!autohide || ah_visible) ? height :
-//                                show_hidden ? 1 : 0;
-//        alloc.y = marea.y + ((edge == Gtk.PositionType.TOP) ? 0 : (marea.height - alloc.height));
-//    }
-//    else
-//    {
-//        alloc.height = width;
-//        alloc.y = marea.y;
-//        calculate_width(marea.height,is_dynamic,alignment,panel_margin,ref alloc.height, ref
-//        alloc.y);
-//        alloc.width = (!autohide || ah_visible) ? height :
-//                                show_hidden ? 1 : 0;
-//        alloc.x = marea.x + ((edge == Gtk.PositionType.LEFT) ? 0 : (marea.width - alloc.width));
-//    }
-//}
+static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
+{
+	GtkApplication *app   = (GtkApplication *)data;
+	int mons              = gdk_display_get_n_monitors(scr);
+	g_autofree GList *win = gtk_application_get_windows(app);
+	for (GList *il = win; il != NULL; il = il->next)
+	{
+		if (VALA_PANEL_IS_TOPLEVEL_UNIT(il->data))
+		{
+			ValaPanelToplevelUnit *panel = (ValaPanelToplevelUnit *)il->data;
+			if (panel->mon < mons && !panel->initialized)
+				start_ui(panel);
+			else if (panel->mon >= mons && panel->initialized)
+				stop_ui(panel);
+			else
+			{
+				//                panel.update_geometry();
+			}
+		}
+	}
+}
 
-// static void calculate_width(int scrw, bool dyn, AlignmentType align,
-//                                    int margin, ref int panw, ref int x)
-//{
-//    if (!dyn)
-//    {
-//        panw = (panw >= 100) ? 100 : (panw <= 1) ? 1 : panw;
-//        panw = (int)(((double)scrw * (double) panw)/100.0);
-//    }
-//    margin = (align != AlignmentType.CENTER && margin > scrw) ? 0 : margin;
-//    panw = int.min(scrw - margin, panw);
-//    if (align == AlignmentType.START)
-//        x+=margin;
-//    else if (align == AlignmentType.END)
-//    {
-//        x += scrw - panw - margin;
-//        x = (x < 0) ? 0 : x;
-//    }
-//    else if (align == AlignmentType.CENTER)
-//        x += (scrw - panw)/2;
-//}
-
-// static void get_preferred_width(&int min, &int nat)
-//{
-//    base.get_preferred_width_internal(&min, &nat);
-//    Gtk.Requisition req = Gtk.Requisition();
-//    this.get_panel_preferred_size(ref req);
-//    min = nat = req.width;
-//}
-// static void get_preferred_height(&int min, &int nat)
-//{
-//    base.get_preferred_height_internal(&min, &nat);
-//    Gtk.Requisition req = Gtk.Requisition();
-//    this.get_panel_preferred_size(ref req);
-//    min = nat = req.height;
-//}
-// static void get_panel_preferred_size (ref Gtk.Requisition min)
-//{
-//    if (!ah_visible && box != NULL)
-//        box.get_preferred_size(&min, NULL);
-//    var rect = Gtk.Allocation();
-//    rect.width = min.width;
-//    rect.height = min.height;
-//    _calculate_position(ref rect);
-//    min.width = rect.width;
-//    min.height = rect.height;
-//}
+static int calc_width(int scrw, int panel_width, int panel_margin)
+{
+	int effective_width = (int)round(scrw * panel_width / 100.0);
+	if ((effective_width + panel_margin) > scrw)
+		effective_width = scrw - panel_margin;
+	return effective_width;
+}
+static void measure(GtkWidget *w, GtkOrientation orient, int for_size, int *min, int *nat,
+                    int *base_min, int *base_nat)
+{
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	GdkDisplay *screen          = gtk_widget_get_display(w);
+	GdkRectangle marea          = { 0, 0, 0, 0 };
+	if (self->mon < 0)
+		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
+	else if (self->mon < gdk_display_get_n_monitors(screen))
+		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	int scrw = self->orientation == GTK_ORIENTATION_HORIZONTAL ? marea.width : marea.height;
+	if (self->orientation != orient)
+		*min = *nat = (!self->autohide || (self->ah_rev != NULL &&
+		                                   gtk_revealer_get_reveal_child(self->ah_rev)))
+		                  ? vala_panel_applet_layout_get_height(self->layout)
+		                  : GAP;
+	else
+		*min = *nat = *base_min = *base_nat =
+		    calc_width(scrw, vala_panel_applet_layout_get_width(self->layout), 0);
+}
+static void get_preferred_width_for_height(GtkWidget *w, int height, int *min, int *nat)
+{
+	int *x = NULL, *y = NULL;
+	GtkOrientation eff_ori = GTK_ORIENTATION_HORIZONTAL;
+	GTK_WIDGET_CLASS(vala_panel_toplevel_unit_parent_class)
+	    ->get_preferred_width_for_height(w, height, x, y);
+	measure(w, eff_ori, height, min, nat, x, y);
+}
+static void get_preferred_height_for_width(GtkWidget *w, int height, int *min, int *nat)
+{
+	int *x = NULL, *y = NULL;
+	GtkOrientation eff_ori = GTK_ORIENTATION_VERTICAL;
+	GTK_WIDGET_CLASS(vala_panel_toplevel_unit_parent_class)
+	    ->get_preferred_width_for_height(w, height, x, y);
+	measure(w, eff_ori, height, min, nat, x, y);
+}
+static void get_preferred_width(GtkWidget *w, int *min, int *nat)
+{
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	*min = *nat = (!self->autohide ||
+	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
+	                  ? vala_panel_applet_layout_get_height(self->layout)
+	                  : GAP;
+}
+static void get_preferred_height(GtkWidget *w, int *min, int *nat)
+{
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	*min = *nat = (!self->autohide ||
+	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
+	                  ? vala_panel_applet_layout_get_height(self->layout)
+	                  : GAP;
+}
+static GtkSizeRequestMode get_request_mode(GtkWidget *w)
+{
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	return (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+	           ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
+	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
+}
 
 /****************************************************
  *         autohide : new version                   *

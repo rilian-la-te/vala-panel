@@ -33,6 +33,16 @@ G_DEFINE_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, GTK_TYPE_BOX)
 		}                                                                                  \
 	}
 
+int vala_panel_applet_layout_get_height(ValaPanelAppletLayout *self)
+{
+	return self->height;
+}
+
+int vala_panel_applet_layout_get_width(ValaPanelAppletLayout *self)
+{
+	return self->width;
+}
+
 static void vala_panel_applet_layout_get_preferred_height(GtkWidget *widget, gint *minimum_height,
                                                           gint *natural_height)
 {

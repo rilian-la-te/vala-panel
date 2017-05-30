@@ -36,6 +36,8 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPane
                                            PanelAppletPackType pack, int pos);
 void vala_panel_applet_layout_load_applets(ValaPanelAppletLayout *self, ValaPanelAppletManager *mgr,
                                            GSettings *settings);
+int vala_panel_applet_layout_get_height(ValaPanelAppletLayout *self);
+int vala_panel_applet_layout_get_width(ValaPanelAppletLayout *self);
 
 G_END_DECLS
 
