@@ -134,7 +134,7 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	gtk_window_set_type_hint(GTK_WINDOW(self),
 	                         (self->dock) ? GDK_WINDOW_TYPE_HINT_DOCK
 	                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
-	// To Layout
+	// TODO: To Layout
 	ValaPanelCoreSettings *settings = vala_panel_platform_get_settings(platform);
 	g_auto(GStrv) units = g_settings_get_strv(settings->core_settings, VALA_PANEL_CORE_UNITS);
 	for (char *unit = *(units); unit != NULL; unit = *(units++))
@@ -342,7 +342,9 @@ static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *d
 {
 	//    this.configure(param.get_string());
 }
-
+/**************************************************************************
+ * Appearance -------------------------------------------------------------
+ **************************************************************************/
 G_GNUC_INTERNAL void update_appearance(ValaPanelToplevelUnit *self)
 {
 	if (self->provider)
@@ -499,6 +501,9 @@ ValaPanelToplevelUnit *vala_panel_toplevel_unit_new_from_uuid(GtkApplication *ap
 	setup(ret, false);
 	return ret;
 }
+/*********************************************************************************************
+ * Positioning
+ *********************************************************************************************/
 
 static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 {
