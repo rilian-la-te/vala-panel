@@ -169,7 +169,7 @@ namespace ValaPanel
     }
     [Compact]
     [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_unit_settings_get_type()")]
-    internal class UnitSettings
+    public class UnitSettings
     {
         internal GLib.Settings default_settings;
         internal GLib.Settings custom_settings;

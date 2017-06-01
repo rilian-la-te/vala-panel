@@ -85,7 +85,7 @@ namespace ValaPanel
             }
             return null;
         }
-        internal void load_applet(UnitSettings s)
+        public void load_applet(UnitSettings s)
         {
             string name = s.default_settings.get_string(Key.NAME);
             var pl = applet_ref(name);

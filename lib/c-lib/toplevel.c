@@ -10,8 +10,8 @@
 
 static const int PERIOD = 200;
 
-static ValaPanelPlatform *platform = NULL;
-static ValaPanelAppletHolder* holder = NULL;
+static ValaPanelPlatform *platform   = NULL;
+static ValaPanelAppletHolder *holder = NULL;
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -52,7 +52,7 @@ enum
 struct _ValaPanelToplevelUnit
 {
 	GtkApplicationWindow __parent__;
-    GtkBox *layout;
+	GtkBox *layout;
 	GtkRevealer *ah_rev;
 	GtkSeparator *ah_sep;
 	PanelAutohideState ah_state;
@@ -70,7 +70,7 @@ struct _ValaPanelToplevelUnit
 	GdkRGBA background_color;
 	GdkRGBA foreground_color;
 	char *background_file;
-	char *uid;
+	char *uuid;
 	int mon;
 	GtkOrientation orientation;
 	PanelGravity gravity;
@@ -100,24 +100,59 @@ static void stop_ui(ValaPanelToplevelUnit *self)
 
 static void start_ui(ValaPanelToplevelUnit *self)
 {
-    css_apply_from_resource(GTK_WIDGET(self),"/org/vala-panel/lib/style.css","-panel-transparent");
-    css_toggle_class(self,"-panel-transparent",false);
+	css_apply_from_resource(GTK_WIDGET(self),
+	                        "/org/vala-panel/lib/style.css",
+	                        "-panel-transparent");
+	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_application_add_window(gtk_window_get_application(GTK_WINDOW(self)), GTK_WINDOW(self));
 	gtk_widget_add_events(GTK_WIDGET(self),
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
 	                          GDK_LEAVE_NOTIFY_MASK);
 	gtk_widget_realize(GTK_WIDGET(self));
+	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
+	self->layout = GTK_BOX(gtk_box_new(self->orientation, 0));
+	gtk_revealer_set_transition_type(self->ah_rev, GTK_REVEALER_TRANSITION_TYPE_CROSSFADE);
+	g_signal_connect_swapped(self->ah_rev,
+	                         "notify::child-revealed",
+	                         G_CALLBACK(gtk_widget_queue_draw),
+	                         self->layout);
+	gtk_container_add(GTK_CONTAINER(self->ah_rev), GTK_WIDGET(self->layout));
+	g_object_set(self->layout,
+	             "baseline-position",
+	             GTK_BASELINE_POSITION_CENTER,
+	             "border-width",
+	             0,
+	             "hexpand",
+	             true,
+	             "vexpand",
+	             true,
+	             NULL);
+	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->ah_rev));
+	gtk_widget_show(GTK_WIDGET(self->ah_rev));
+	gtk_widget_show(GTK_WIDGET(self->layout));
+	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	gtk_window_set_type_hint(GTK_WINDOW(self),
 	                         (self->dock) ? GDK_WINDOW_TYPE_HINT_DOCK
 	                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
+	// To Layout
+	ValaPanelCoreSettings *settings = vala_panel_platform_get_settings(platform);
+	g_auto(GStrv) units = g_settings_get_strv(settings->core_settings, VALA_PANEL_CORE_UNITS);
+	for (char *unit = *(units); unit != NULL; unit = *(units++))
+	{
+		ValaPanelUnitSettings *pl = vala_panel_core_settings_get_by_uuid(settings, unit);
+		g_autofree char *got_uuid =
+		    g_settings_get_string(pl->default_settings, VALA_PANEL_TOPLEVEL_ID);
+		if (vala_panel_unit_settings_is_toplevel(pl) && !g_strcmp0(got_uuid, self->uuid))
+			vala_panel_applet_holder_load_applet(holder, pl);
+	}
+	// End To Layout
 	gtk_widget_show(GTK_WIDGET(self));
 	gtk_window_stick(GTK_WINDOW(self));
-	vala_panel_applet_layout_load_applets(self->layout,
-	                                      self->manager,
-	                                      self->settings->default_settings);
+	// update_applet_positions();
 	gtk_window_present(GTK_WINDOW(self));
 	self->autohide =
 	    g_settings_get_boolean(self->settings->default_settings, VALA_PANEL_KEY_AUTOHIDE);
+	// this.update_geometry();
 	self->initialized = true;
 }
 
@@ -293,7 +328,7 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 	gtk_widget_destroy(GTK_WIDGET(dlg));
 	if (ok)
 	{
-		g_autofree char *uid  = g_strdup(self->uid);
+		g_autofree char *uid  = g_strdup(self->uuid);
 		g_autofree char *path = NULL;
 		g_object_get(self->settings->default_settings, "path", &path, NULL);
 		stop_ui(self);
@@ -583,14 +618,14 @@ static void ah_hide(ValaPanelToplevelUnit *self)
 
 static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
-    ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	ah_show(self);
 	return false;
 }
 
 static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
-    ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
+	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	if (self->autohide &&
 	    (event->detail != GDK_NOTIFY_INFERIOR && event->detail != GDK_NOTIFY_VIRTUAL))
 		ah_hide(self);
@@ -624,11 +659,11 @@ void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
 {
-    GTK_WIDGET_CLASS(parent)->enter_notify_event = enter_notify_event;
-    GTK_WIDGET_CLASS(parent)->leave_notify_event = leave_notify_event;
-    GTK_WIDGET_CLASS(parent)->get_preferred_height = get_preferred_height;
-    GTK_WIDGET_CLASS(parent)->get_preferred_width = get_preferred_width;
-    GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
-    GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
-    GTK_WIDGET_CLASS(parent)->get_request_mode = get_request_mode;
+	GTK_WIDGET_CLASS(parent)->enter_notify_event             = enter_notify_event;
+	GTK_WIDGET_CLASS(parent)->leave_notify_event             = leave_notify_event;
+	GTK_WIDGET_CLASS(parent)->get_preferred_height           = get_preferred_height;
+	GTK_WIDGET_CLASS(parent)->get_preferred_width            = get_preferred_width;
+	GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
+	GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
+	GTK_WIDGET_CLASS(parent)->get_request_mode               = get_request_mode;
 }
