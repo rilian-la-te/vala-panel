@@ -33,7 +33,7 @@ namespace ValaPanel
         internal const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
         internal const string EXPANDABLE = "ValaPanel-Expandable";
     }
-    internal class AppletHolder: Object
+    public class AppletHolder: Object
     {
         [Compact]
         private class PluginData

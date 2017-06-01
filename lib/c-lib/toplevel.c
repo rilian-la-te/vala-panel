@@ -3,11 +3,15 @@
 #include "misc.h"
 #include "panel-layout.h"
 
+#include "vala-panel-compat.h"
+
 #include <math.h>
+#include <stdbool.h>
 
 static const int PERIOD = 200;
 
 static ValaPanelPlatform *platform = NULL;
+static ValaPanelAppletHolder* holder = NULL;
 
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -48,8 +52,7 @@ enum
 struct _ValaPanelToplevelUnit
 {
 	GtkApplicationWindow __parent__;
-	ValaPanelAppletManager *manager;
-	ValaPanelAppletLayout *layout;
+    GtkBox *layout;
 	GtkRevealer *ah_rev;
 	GtkSeparator *ah_sep;
 	PanelAutohideState ah_state;
@@ -97,7 +100,8 @@ static void stop_ui(ValaPanelToplevelUnit *self)
 
 static void start_ui(ValaPanelToplevelUnit *self)
 {
-	//    a.x = a.y = a.width = a.height = 0;
+    css_apply_from_resource(GTK_WIDGET(self),"/org/vala-panel/lib/style.css","-panel-transparent");
+    css_toggle_class(self,"-panel-transparent",false);
 	gtk_application_add_window(gtk_window_get_application(GTK_WINDOW(self)), GTK_WINDOW(self));
 	gtk_widget_add_events(GTK_WIDGET(self),
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
@@ -577,14 +581,16 @@ static void ah_hide(ValaPanelToplevelUnit *self)
 	g_timeout_add(PERIOD, (GSourceFunc)timeout_func, self);
 }
 
-static bool enter_notify_event(ValaPanelToplevelUnit *self, GdkEventCrossing *event, gpointer data)
+static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
+    ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	ah_show(self);
 	return false;
 }
 
-static bool leave_notify_event(ValaPanelToplevelUnit *self, GdkEventCrossing *event, gpointer data)
+static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
+    ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	if (self->autohide &&
 	    (event->detail != GDK_NOTIFY_INFERIOR && event->detail != GDK_NOTIFY_VIRTUAL))
 		ah_hide(self);
@@ -618,4 +624,11 @@ void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
 {
+    GTK_WIDGET_CLASS(parent)->enter_notify_event = enter_notify_event;
+    GTK_WIDGET_CLASS(parent)->leave_notify_event = leave_notify_event;
+    GTK_WIDGET_CLASS(parent)->get_preferred_height = get_preferred_height;
+    GTK_WIDGET_CLASS(parent)->get_preferred_width = get_preferred_width;
+    GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
+    GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
+    GTK_WIDGET_CLASS(parent)->get_request_mode = get_request_mode;
 }
