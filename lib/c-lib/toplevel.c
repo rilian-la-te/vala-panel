@@ -647,19 +647,7 @@ static void grab_notify(ValaPanelToplevelUnit *self, bool was_grabbed, gpointer 
 
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
-	// Move this to init, lay&must not be reinit in start/stop UI
-	self->layout = vala_panel_applet_layout_new(self->orientation, 0);
-	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
-	self->ah_sep = GTK_SEPARATOR(gtk_separator_new(GTK_ORIENTATION_HORIZONTAL));
-	gtk_revealer_set_reveal_child(self->ah_rev, true);
-	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
-	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
-	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_rev));
-	gtk_container_add(GTK_CONTAINER(box), GTK_WIDGET(self->ah_sep));
-	gtk_container_add(GTK_CONTAINER(self->ah_rev), GTK_WIDGET(self->layout));
-	g_object_bind_property(self, "orientation", self->layout, "orentation", (GBindingFlags)0);
-	g_object_bind_property(self, "orientation", box, "orentation", (GBindingFlags)0);
-	g_object_bind_property(self, "orientation", self->ah_sep, "orentation", (GBindingFlags)0);
+
 }
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
