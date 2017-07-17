@@ -1,1 +1,2 @@
 install (FILES vala-panel.1 DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man1)
+install (FILES vala-panel-runner.1 DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/man/man1)
