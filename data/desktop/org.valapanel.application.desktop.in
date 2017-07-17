@@ -3,5 +3,6 @@ Type=Application
 Name=Vala Panel
 GenericName=Desktop Panel
 Categories=System;Monitor;
+Keywords=panel;launcher;menu;tasklist
 Exec=vala-panel
 Icon=vala-panel
