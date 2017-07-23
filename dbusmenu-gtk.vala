@@ -477,6 +477,11 @@ namespace DBusMenu
             get_root_item().handle_event("opened",null,0);
             get_root_item().request_about_to_show();
             root_menu.queue_resize();
+            foreach(unowned Item i in get_root_item().get_children()) 
+            {
+                i.request_about_to_show();
+                i.handle_event("opened",null,0);
+            }
         }
         private void close_cb()
         {
