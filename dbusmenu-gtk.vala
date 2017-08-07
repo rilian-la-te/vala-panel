@@ -482,6 +482,10 @@ namespace DBusMenu
                 i.request_about_to_show();
                 i.handle_event("opened",null,0);
             }
+            foreach(unowned Item i in get_root_item().get_children()) 
+            {
+                i.handle_event("closed",null,0);
+            }
         }
         private void close_cb()
         {
