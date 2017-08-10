@@ -68,6 +68,13 @@ namespace DBusMenu
             checker.insert("x-valapanel-page-increment", VariantType.DOUBLE);
             checker.insert("x-valapanel-draw-value", VariantType.BOOLEAN);
             checker.insert("x-valapanel-format-value", VariantType.STRING);
+/*
+ * JAyatana properties
+ */
+            checker.insert("jayatana-menuid", VariantType.INT32);
+            checker.insert("jayatana-windowxid", VariantType.VARIANT);
+            checker.insert("jayatana-parent-menuid", VariantType.INT32);
+            checker.insert("jayatana-need-open", VariantType.BOOLEAN);
         }
         private unowned Client client;
         private PropertyStore store;
