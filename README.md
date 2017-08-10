@@ -1,1 +1,1 @@
-This is git submodule for Vala-DBusMenu. It is useless standalone. (And does not builds).
+This is git submodule for Vala-DBusMenu. Now it builds standalone as a set of object files.
