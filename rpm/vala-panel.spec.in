@@ -82,6 +82,7 @@ This is a development files for %{name}.
 %files runner
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/vala-panel-runner
+%{_mandir}/man1/vala-panel-runner.1*
 
 %package lang
 Group: User Interface/Desktops
