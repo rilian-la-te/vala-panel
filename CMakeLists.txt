@@ -27,13 +27,22 @@ find_package (PkgConfig)
 pkg_check_modules(GTK3 REQUIRED QUIET
     gtk+-3.0>=3.10)
 
-set(VALA_FILES_DBUSMENU
-    dbusmenu.vala
-    dbusmenu-proxy.vala
-    dbusmenu-gtk.vala
+set(VALA_FILES_DBUSMENU_CORE
+    item.vala
+    proxy.vala
+    client.vala
+    property-store.vala
+    )
+set(VALA_FILES_DBUSMENU_GTK
+    gtk/client.vala
+    gtk/main-item.vala
+    gtk/separator-item.vala
+    gtk/item-iface.vala
+    gtk/scale-item.vala
     )
 vala_precompile(VALA_C_DBUSMENU vala-dbusmenu
-    ${VALA_FILES_DBUSMENU}
+    ${VALA_FILES_DBUSMENU_CORE}
+    ${VALA_FILES_DBUSMENU_GTK}
 PACKAGES
     gtk+-3.0
     gio-2.0
@@ -56,4 +65,4 @@ set_target_properties(vala-dbusmenu-o PROPERTIES
         POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
 )
 target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
-add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU})
+add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU_CORE} ${VALA_FILES_DBUSMENU_GTK})
