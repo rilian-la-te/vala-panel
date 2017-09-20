@@ -15,30 +15,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-[CCode (cname = "volatile int")]
-public struct Volatile : int {
-}
-
-namespace Posix
-{
-    [CCode (cname = "getcwd", cheader_filename = "unistd.h")]
-    public long getcwd(char[] cwd);
-}
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib
 {
-    [CCode (cname = "g_slist_free_full")]
-    public void slist_free_full(SList list, DestroyNotify? free_func);
     namespace SignalHandler
     {
         [CCode (cname = "g_signal_handlers_disconnect_by_data")]
         public void disconnect_by_data(Object instance, void* data);
-    }
-    [CCode (cname = "GSettingsBackend")]
-    public class KeyfileSettingsBackend : GLib.SettingsBackend
-    {
-        [CCode (cname = "g_keyfile_settings_backend_new", cheader_filename = "gio/gsettingsbackend.h")]
-        public KeyfileSettingsBackend(string filename, string root_path, string? root_group);
     }
 }

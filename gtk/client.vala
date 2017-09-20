@@ -10,7 +10,7 @@ namespace DBusMenu
         {
             if (item.get_string_property("type") == "separator")
                 return new GtkSeparatorItem(item);
-            else if (item.get_string_property("type") == "slider" || item.get_string_property("type") == "scale")
+            else if (item.get_string_property("type") == "scale")
                 return new GtkScaleItem(item);
             return new GtkMainItem(item,show_im_pl);
         }
