@@ -161,7 +161,7 @@ namespace DBusMenu
                 iface.about_to_show(id,out need_update);
             } catch (Error e)
             {
-                stderr.printf("%s\n",e.message);
+                stderr.printf("Error requesting about to show:%s\n",e.message);
                 return;
             }
             if (need_update)
@@ -176,7 +176,7 @@ namespace DBusMenu
             try{
                 iface.get_group_properties(requested_props_ids,names,out props);
             } catch (GLib.Error e) {
-                stderr.printf("%s\n",e.message);
+                stderr.printf("Error requesting properties:%s\n",e.message);
                 return;
             }
             requested_props_ids = {};

@@ -127,7 +127,7 @@ namespace DBusMenu
                 client.iface.event(this.id,event_id,data ?? new Variant.int32(0),timestamp);
             } catch (Error e)
             {
-                stderr.printf("%s\n",e.message);
+                stderr.printf("Error handling event:%s\n",e.message);
             }
         }
         public void request_about_to_show()
