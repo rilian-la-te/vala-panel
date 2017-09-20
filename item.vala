@@ -36,6 +36,7 @@ namespace DBusMenu
             checker.insert("jayatana-windowxid", VariantType.VARIANT);
             checker.insert("jayatana-parent-menuid", VariantType.INT32);
             checker.insert("jayatana-need-open", VariantType.BOOLEAN);
+            checker.insert("jayatana-hashcode", VariantType.INT32);
         }
         private unowned Client client;
         private PropertyStore store;
