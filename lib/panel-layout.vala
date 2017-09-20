@@ -46,7 +46,7 @@ namespace ValaPanel
             holder.applet_ready_to_place.connect(on_applet_ready_to_place);
             holder.applet_loaded.connect(on_applet_loaded);
         }
-        internal void init_applets()
+        public void init_applets()
         {
             foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
             {
@@ -115,7 +115,7 @@ namespace ValaPanel
             var name = s.default_settings.get_string(Key.NAME);
             holder.applet_unref(name);
         }
-        internal void update_applet_positions()
+        public void update_applet_positions()
         {
             var children = this.get_children();
             for (unowned List<unowned Widget> l = children; l != null; l = l.next)

@@ -52,7 +52,7 @@ enum
 struct _ValaPanelToplevelUnit
 {
 	GtkApplicationWindow __parent__;
-	GtkBox *layout;
+	ValaPanelLayout *layout;
 	GtkRevealer *ah_rev;
 	GtkSeparator *ah_sep;
 	PanelAutohideState ah_state;
@@ -79,9 +79,9 @@ struct _ValaPanelToplevelUnit
 };
 
 G_DEFINE_TYPE(ValaPanelToplevelUnit, vala_panel_toplevel_unit, GTK_TYPE_APPLICATION_WINDOW)
-/*
- * Common functions
- */
+/*****************************************************************************************
+ *                                   Common functions
+ *****************************************************************************************/
 
 static void stop_ui(ValaPanelToplevelUnit *self)
 {
@@ -110,45 +110,26 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	                          GDK_LEAVE_NOTIFY_MASK);
 	gtk_widget_realize(GTK_WIDGET(self));
 	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
-	self->layout = GTK_BOX(gtk_box_new(self->orientation, 0));
+	self->layout = VALA_PANEL_LAYOUT(
+	    vala_panel_layout_new((ValaPanelToplevel *)self, self->orientation, 0));
 	gtk_revealer_set_transition_type(self->ah_rev, GTK_REVEALER_TRANSITION_TYPE_CROSSFADE);
 	g_signal_connect_swapped(self->ah_rev,
 	                         "notify::child-revealed",
 	                         G_CALLBACK(gtk_widget_queue_draw),
 	                         self->layout);
 	gtk_container_add(GTK_CONTAINER(self->ah_rev), GTK_WIDGET(self->layout));
-	g_object_set(self->layout,
-	             "baseline-position",
-	             GTK_BASELINE_POSITION_CENTER,
-	             "border-width",
-	             0,
-	             "hexpand",
-	             true,
-	             "vexpand",
-	             true,
-	             NULL);
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->ah_rev));
+	vala_panel_layout_init_applets(self->layout);
 	gtk_widget_show(GTK_WIDGET(self->ah_rev));
 	gtk_widget_show(GTK_WIDGET(self->layout));
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	gtk_window_set_type_hint(GTK_WINDOW(self),
 	                         (self->dock) ? GDK_WINDOW_TYPE_HINT_DOCK
 	                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
-	// TODO: To Layout
-	ValaPanelCoreSettings *settings = vala_panel_platform_get_settings(platform);
-	g_auto(GStrv) units = g_settings_get_strv(settings->core_settings, VALA_PANEL_CORE_UNITS);
-	for (char *unit = *(units); unit != NULL; unit = *(units++))
-	{
-		ValaPanelUnitSettings *pl = vala_panel_core_settings_get_by_uuid(settings, unit);
-		g_autofree char *got_uuid =
-		    g_settings_get_string(pl->default_settings, VALA_PANEL_TOPLEVEL_ID);
-		if (vala_panel_unit_settings_is_toplevel(pl) && !g_strcmp0(got_uuid, self->uuid))
-			vala_panel_applet_holder_load_applet(holder, pl);
-	}
 	// End To Layout
 	gtk_widget_show(GTK_WIDGET(self));
 	gtk_window_stick(GTK_WINDOW(self));
-	// update_applet_positions();
+	vala_panel_layout_update_applet_positions(self->layout);
 	gtk_window_present(GTK_WINDOW(self));
 	self->autohide =
 	    g_settings_get_boolean(self->settings->default_settings, VALA_PANEL_KEY_AUTOHIDE);
@@ -231,6 +212,10 @@ static void setup(ValaPanelToplevelUnit *self, bool use_internal_values)
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
 }
+
+/**************************************************************************************
+ *                                     Actions stuff
+ **************************************************************************************/
 
 G_GNUC_INTERNAL bool panel_edge_available(ValaPanelToplevelUnit *self, uint edge, int monitor,
                                           bool include_this)
@@ -647,7 +632,6 @@ static void grab_notify(ValaPanelToplevelUnit *self, bool was_grabbed, gpointer 
 
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
-
 }
 
 void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
