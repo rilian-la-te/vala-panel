@@ -28,6 +28,7 @@ pkg_check_modules(GTK3 REQUIRED QUIET
     gtk+-3.0>=3.10)
 
 set(VALA_FILES_DBUSMENU_CORE
+    common.vala
     item.vala
     proxy.vala
     client.vala
@@ -39,6 +40,11 @@ set(VALA_FILES_DBUSMENU_GTK
     gtk/separator-item.vala
     gtk/item-iface.vala
     gtk/scale-item.vala
+    )
+set(VALA_FILES_DBUSMENU_SERVER
+    common.vala
+    serializer/menuserializer.vala
+    serializer/serveritem.vala
     )
 vala_precompile(VALA_C_DBUSMENU vala-dbusmenu
     ${VALA_FILES_DBUSMENU_CORE}
@@ -59,10 +65,34 @@ GENERATE_HEADER
     vala-dbusmenu
 )
 
+vala_precompile(VALA_C_DBUSMENU_SERVER vala-dbusmenu-server
+    ${VALA_FILES_DBUSMENU_SERVER}
+PACKAGES
+    gtk+-3.0
+    gio-2.0
+    glib-2.0
+    gio-addons-2.0
+    gobject-2.0
+OPTIONS
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
+    --target-glib=2.44
+    --thread
+GENERATE_VAPI
+    vala-dbusmenu-server
+GENERATE_HEADER
+    vala-dbusmenu-server
+)
+
 add_library(vala-dbusmenu-o OBJECT ${VALA_C_DBUSMENU})
 set_target_properties(vala-dbusmenu-o PROPERTIES
 #        C_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
         POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
 )
 target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
-add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU_CORE} ${VALA_FILES_DBUSMENU_GTK})
+add_library(vala-dbusmenu-server-o OBJECT ${VALA_C_DBUSMENU_SERVER})
+set_target_properties(vala-dbusmenu-server-o PROPERTIES
+#        C_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
+        POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
+)
+target_include_directories (vala-dbusmenu-server-o PRIVATE ${GTK3_INCLUDE_DIRS})
+add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU_CORE} ${VALA_FILES_DBUSMENU_GTK} ${VALA_FILES_DBUSMENU_SERVER})
