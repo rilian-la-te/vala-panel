@@ -476,7 +476,8 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(l->data))
 		{
-			GList *applets = vala_panel_toplevel_get_applets_list(l->data);
+            ValaPanelLayout* layout = VALA_PANEL_TOPLEVEL(l->data)->layout;
+            GList *applets = vala_panel_layout_get_applets_list(layout);
 			for (GList *il = applets; il != NULL; il = il->next)
 			{
 				GSimpleActionGroup *grp;

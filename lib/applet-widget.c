@@ -131,7 +131,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	 * user manipulates the Configured Plugins list, after we remove this entry.
 	 * Close the configuration dialog if it is open. */
 	gtk_widget_destroy0(p->toplevel->pref_dialog);
-	vala_panel_toplevel_remove_applet(p->toplevel, self);
+    vala_panel_layout_remove_applet(p->toplevel->layout, self);
 }
 static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
 {

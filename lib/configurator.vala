@@ -159,7 +159,7 @@ namespace ValaPanel
             if( tree_sel.get_selected(out model, out it ) )
             {
                 model.get(it, Column.DATA, out pl, -1 );
-                var desc = Toplevel.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_description();
+                var desc = Layout.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_description();
                 plugin_desc.set_text(_(desc) );
                 configure_button.set_sensitive(pl.is_configurable());
             }
@@ -174,11 +174,11 @@ namespace ValaPanel
                 Applet pl;
                 bool expand;
                 model.get(it, Column.DATA, out pl, Column.EXPAND, out expand, -1 );
-                if (Toplevel.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
+                if (Layout.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
                 {
                     expand = !expand;
                     (model as Gtk.ListStore).set(it,Column.EXPAND,expand,-1);
-                    unowned UnitSettings s = toplevel.get_applet_settings(pl);
+                    unowned UnitSettings s = toplevel.layout.get_applet_settings(pl);
                     s.default_settings.set_boolean(Key.EXPAND,expand);
                 }
             }
@@ -189,19 +189,19 @@ namespace ValaPanel
              * The g_object_set method is touchy about its parameter, so we can't pass the boolean directly. */
             Applet pl;
             model.get(iter, Column.DATA, out pl, -1);
-            renderer.visible = (Toplevel.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null) ? true : false;
+            renderer.visible = (Layout.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null) ? true : false;
         }
         private void update_plugin_list_model()
         {
             TreeIter it;
             var list = new Gtk.ListStore( 3, typeof(string), typeof(bool), typeof(Applet) );
-            var plugins = toplevel.get_applets_list();
+            var plugins = toplevel.layout.get_applets_list();
             foreach(var widget in plugins)
             {
                 var w = widget as Applet;
                 var expand = widget.hexpand && widget.vexpand;
                 list.append(out it );
-                var name = Toplevel.holder.get_plugin(w,Toplevel.core_settings).plugin_info.get_name();
+                var name = Layout.holder.get_plugin(w,Toplevel.core_settings).plugin_info.get_name();
                 list.set(it,
                          Column.NAME, _(name),
                          Column.EXPAND, expand,
@@ -294,7 +294,7 @@ namespace ValaPanel
 
             /* Populate list of available plugins.
              * Omit plugins that can only exist once per system if it is already configured. */
-            foreach(var type in Toplevel.holder.get_all_types())
+            foreach(var type in Layout.holder.get_all_types())
             {
                 var once = type.get_external_data(Data.ONE_PER_SYSTEM);
                 if (once == null || !type.is_loaded())
@@ -320,8 +320,8 @@ namespace ValaPanel
                 {
                     string type;
                     list.get(it, 1, out type, -1 );
-                    toplevel.add_applet(type);
-                    toplevel.update_applet_positions();
+                    toplevel.layout.add_applet(type);
+                    toplevel.layout.update_applet_positions();
                     update_plugin_list_model();
                 }
                 update_widget_position_keys();
@@ -350,16 +350,16 @@ namespace ValaPanel
                 (model as Gtk.ListStore).remove(it);
 #endif
                 tree_sel.select_path(tree_path );
-                toplevel.remove_applet(pl);
+                toplevel.layout.remove_applet(pl);
             }
         }
         private void update_widget_position_keys()
         {
-            foreach(var w in toplevel.get_applets_list())
+            foreach(var w in toplevel.layout.get_applets_list())
             {
                 var applet = w as Applet;
-                uint idx = toplevel.get_applet_position(applet);
-                unowned UnitSettings s = toplevel.get_applet_settings(applet);
+                uint idx = toplevel.layout.get_applet_position(applet);
+                unowned UnitSettings s = toplevel.layout.get_applet_settings(applet);
                 s.default_settings.set_uint(Key.POSITION,idx);
             }
         }
@@ -381,12 +381,12 @@ namespace ValaPanel
                     model.get(it, Column.DATA, out pl, -1 );
                     (model as Gtk.ListStore).move_before(ref it, prev );
 
-                    var i = toplevel.get_applet_position(pl);
+                    var i = toplevel.layout.get_applet_position(pl);
                     /* reorder in config, 0 is Global */
                     i = i > 0 ? i : 0;
 
                     /* reorder in panel */
-                    toplevel.set_applet_position(pl,(int)i-1);
+                    toplevel.layout.set_applet_position(pl,(int)i-1);
                     update_widget_position_keys();
                     return;
                 }
@@ -411,9 +411,9 @@ namespace ValaPanel
 
             (model as Gtk.ListStore).move_after(ref it, next );
 
-            var i = toplevel.get_applet_position(pl);
+            var i = toplevel.layout.get_applet_position(pl);
             /* reorder in panel */
-            toplevel.set_applet_position(pl,(int)i+1);
+            toplevel.layout.set_applet_position(pl,(int)i+1);
             update_widget_position_keys();
         }
     }

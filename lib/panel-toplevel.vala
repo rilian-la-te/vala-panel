@@ -29,7 +29,7 @@ namespace ValaPanel
      * Core -----------------------------------------------------------------
      ************************************************************************/
         private unowned Gtk.Revealer ah_rev = null;
-        private unowned Gtk.Box box;
+        public unowned Layout layout;
         private Gtk.Menu context_menu;
         internal ConfigureDialog pref_dialog;
         private bool initialized;
@@ -125,7 +125,7 @@ namespace ValaPanel
             str.append_printf("}\n");
         /* Feature proposed: Panel Layout and Shadow */
         //~             str.append_printf(".-vala-panel-shadow {\n");
-        //~             str.append_printf(" box-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
+        //~             str.append_printf(" layout-shadow: 0 0 0 3px alpha(0.3, %s);\n",foreground_color);
         //~             str.append_printf(" border-style: none;\n margin: 3px;\n");
         //~             str.append_printf("}\n");
             str.append_printf(".-vala-panel-round-corners {\n");
@@ -246,110 +246,14 @@ namespace ValaPanel
         {
             return (this.orientation == Orientation.HORIZONTAL) ? SizeRequestMode.WIDTH_FOR_HEIGHT : SizeRequestMode.HEIGHT_FOR_WIDTH;
         }
-
-        /*************************************************************************************
-         * Plugins stuff
-         *************************************************************************************/
-        private static unowned Platform platform = null;
-        internal static unowned CoreSettings core_settings = null;
-        internal static AppletHolder holder = null;
-        private static ulong mon_handler = 0;
-        private static ulong mon_rm_handler = 0;
-        private unowned UnitSettings settings;
-        static construct
-        {
-            holder = new AppletHolder();
-        }
-        internal void add_applet(string type)
-        {
-            unowned UnitSettings s = core_settings.add_unit_settings(type,false);
-            s.default_settings.set_string(Key.NAME,type);
-            s.default_settings.set_string(Settings.TOPLEVEL_ID,this.uuid);
-            holder.load_applet(s);
-        }
-        private void on_applet_loaded(string type)
-        {
-            foreach (var unit in core_settings.core_settings.get_strv(Settings.CORE_UNITS))
-            {
-                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
-                {
-                    if (pl.default_settings.get_string(Key.NAME) == type)
-                    {
-                        place_applet(holder.applet_ref(type),pl);
-                        update_applet_positions();
-                        return;
-                    }
-                }
-            }
-        }
-        private void on_applet_ready_to_place(AppletPlugin applet_plugin, UnitSettings pl)
-        {
-            if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
-                place_applet(applet_plugin,pl);
-        }
-
-        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
-        {
-            var aw = applet_plugin.get_applet_widget(this,s.custom_settings,s.uuid);
-            unowned Applet applet = aw;
-            var position = s.default_settings.get_uint(Key.POSITION);
-            box.pack_start(applet,false, true);
-            box.reorder_child(applet,(int)position);
-            if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-            {
-                s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
-                applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
-            }
-            applet.destroy.connect(()=>{
-                    string uuid = applet.uuid;
-                    applet_destroyed(uuid);
-                    if (this.in_destruction())
-                        core_settings.remove_unit_settings(uuid);
-            });
-        }
-        public void remove_applet(Applet applet)
-        {
-            unowned UnitSettings s = core_settings.get_by_uuid(applet.uuid);
-            applet.destroy();
-            core_settings.remove_unit_settings_full(s.uuid, true);
-        }
-        internal void applet_destroyed(string uuid)
-        {
-            unowned UnitSettings s = core_settings.get_by_uuid(uuid);
-            var name = s.default_settings.get_string(Key.NAME);
-            holder.applet_unref(name);
-        }
-        internal void update_applet_positions()
-        {
-            var children = box.get_children();
-            for (unowned List<unowned Widget> l = children; l != null; l = l.next)
-            {
-                var idx = get_applet_settings(l.data as Applet).default_settings.get_uint(Key.POSITION);
-                box.reorder_child((l.data as Applet),(int)idx);
-            }
-        }
-        public List<unowned Widget> get_applets_list()
-        {
-            return box.get_children();
-        }
-        internal unowned UnitSettings get_applet_settings(Applet pl)
-        {
-            return core_settings.get_by_uuid(pl.uuid);
-        }
-        internal uint get_applet_position(Applet pl)
-        {
-            int res;
-            box.child_get(pl,"position",out res, null);
-            return (uint)res;
-        }
-        internal void set_applet_position(Applet pl, int pos)
-        {
-            box.reorder_child(pl,pos);
-        }
         /************************************************************************************************
          *  Constructors
          ************************************************************************************************/
+        private static unowned Platform platform = null;
+        internal static unowned CoreSettings core_settings = null;
+        private static ulong mon_handler = 0;
+        private static ulong mon_rm_handler = 0;
+        private unowned UnitSettings settings;
         [CCode (returns_floating_reference = true)]
         public Toplevel(Gtk.Application app, Platform platform, string name)
         {
@@ -440,7 +344,7 @@ namespace ValaPanel
                 this.set_visual(visual);
             this.notify.connect((s,p)=> {
                 if (p.name == Key.GRAVITY)
-                    if (box != null) box.set_orientation(orientation);
+                    if (layout != null) layout.set_orientation(orientation);
                 if (p.name == Key.AUTOHIDE && this.ah_rev != null)
                     if (autohide) ah_hide(); else ah_show();
             });
@@ -450,8 +354,6 @@ namespace ValaPanel
                 if (p.name in anames)
                     this.update_appearance();
             });
-            holder.applet_ready_to_place.connect(on_applet_ready_to_place);
-            holder.applet_loaded.connect(on_applet_loaded);
             this.add_action_entries(panel_entries,this);
         }
         /***************************************************************************
@@ -489,10 +391,10 @@ namespace ValaPanel
                 Gdk.flush();
                 initialized = false;
             }
-            if (box != null)
+            if (layout != null)
             {
-                box.destroy();
-                box = null;
+                layout.destroy();
+                layout = null;
             }
         }
 
@@ -505,32 +407,23 @@ namespace ValaPanel
                             Gdk.EventMask.LEAVE_NOTIFY_MASK);
             this.realize();
 			var r = new Gtk.Revealer();
-            var mbox = new Box(this.orientation,0);
-            box = mbox;
+            var mlayout = new Layout(this,this.orientation,0);
+            layout = mlayout;
             this.ah_rev = r;
             r.set_transition_type(RevealerTransitionType.CROSSFADE);
             r.notify["child-revealed"].connect(()=>{
-                box.queue_draw();
+                layout.queue_draw();
             });
-            r.add(box);
-            box.set_baseline_position(Gtk.BaselinePosition.CENTER);
-            box.set_border_width(0);
-            box.set_hexpand(true);
-            box.set_vexpand(true);
+            r.add(layout);
             this.add(r);
             r.show();
-			box.show();
+            layout.show();
+            layout.init_applets();
             this.ah_rev.set_reveal_child(true);
             this.set_type_hint((dock)? Gdk.WindowTypeHint.DOCK : Gdk.WindowTypeHint.NORMAL);
-            foreach(var unit in core_settings.core_settings.get_strv(ValaPanel.Settings.CORE_UNITS))
-            {
-                unowned UnitSettings pl = core_settings.get_by_uuid(unit);
-                if (!pl.is_toplevel() && pl.default_settings.get_string(Settings.TOPLEVEL_ID) == this.uuid)
-                    holder.load_applet(pl);
-            }
             this.show();
             this.stick();
-            update_applet_positions();
+            layout.update_applet_positions();
             this.present();
             this.autohide = autohide;
             this.update_geometry();

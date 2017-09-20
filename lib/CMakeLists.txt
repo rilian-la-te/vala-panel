@@ -46,6 +46,7 @@ set(VALA_FILES
 	configurator.vala
 	applet-holder.vala
 	panel-toplevel.vala
+	panel-layout.vala
 	)
 vala_precompile(VALA_C ${LIBNAME}
     ${VALA_FILES}
