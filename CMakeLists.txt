@@ -42,7 +42,6 @@ set(VALA_FILES_DBUSMENU_GTK
     gtk/scale-item.vala
     )
 set(VALA_FILES_DBUSMENU_SERVER
-    common.vala
     serializer/menuserializer.vala
     serializer/serveritem.vala
     )
@@ -89,10 +88,10 @@ set_target_properties(vala-dbusmenu-o PROPERTIES
         POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
 )
 target_include_directories (vala-dbusmenu-o PRIVATE ${GTK3_INCLUDE_DIRS})
-add_library(vala-dbusmenu-server-o OBJECT ${VALA_C_DBUSMENU_SERVER})
-set_target_properties(vala-dbusmenu-server-o PROPERTIES
+#add_library(vala-dbusmenu-server-o OBJECT ${VALA_C_DBUSMENU_SERVER})
+#set_target_properties(vala-dbusmenu-server-o PROPERTIES
 #        C_VISIBILITY_PRESET hidden	# Make global variables and functions HIDDEN by default.
-        POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
-)
-target_include_directories (vala-dbusmenu-server-o PRIVATE ${GTK3_INCLUDE_DIRS})
+#        POSITION_INDEPENDENT_CODE ON	# Compile this object code position independent.
+#)
+#target_include_directories (vala-dbusmenu-server-o PRIVATE ${GTK3_INCLUDE_DIRS})
 add_custom_target(vala-dbusmenu-ide SOURCES ${VALA_FILES_DBUSMENU_CORE} ${VALA_FILES_DBUSMENU_GTK} ${VALA_FILES_DBUSMENU_SERVER})
