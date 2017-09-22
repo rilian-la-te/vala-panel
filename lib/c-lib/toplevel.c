@@ -72,6 +72,8 @@ struct _ValaPanelToplevelUnit
 	char *background_file;
 	char *uuid;
 	int mon;
+	int height;
+	int width;
 	GtkOrientation orientation;
 	PanelGravity gravity;
 	GtkDialog *pref_dialog;
@@ -533,11 +535,10 @@ static void measure(GtkWidget *w, GtkOrientation orient, int for_size, int *min,
 	if (self->orientation != orient)
 		*min = *nat = (!self->autohide || (self->ah_rev != NULL &&
 		                                   gtk_revealer_get_reveal_child(self->ah_rev)))
-		                  ? vala_panel_applet_layout_get_height(self->layout)
+		                  ? self->height
 		                  : GAP;
 	else
-		*min = *nat = *base_min = *base_nat =
-		    calc_width(scrw, vala_panel_applet_layout_get_width(self->layout), 0);
+		*min = *nat = *base_min = *base_nat = calc_width(scrw, self->width, 0);
 }
 static void get_preferred_width_for_height(GtkWidget *w, int height, int *min, int *nat)
 {
@@ -560,7 +561,7 @@ static void get_preferred_width(GtkWidget *w, int *min, int *nat)
 	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	*min = *nat = (!self->autohide ||
 	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
-	                  ? vala_panel_applet_layout_get_height(self->layout)
+	                  ? self->height
 	                  : GAP;
 }
 static void get_preferred_height(GtkWidget *w, int *min, int *nat)
@@ -568,7 +569,7 @@ static void get_preferred_height(GtkWidget *w, int *min, int *nat)
 	ValaPanelToplevelUnit *self = (ValaPanelToplevelUnit *)w;
 	*min = *nat = (!self->autohide ||
 	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
-	                  ? vala_panel_applet_layout_get_height(self->layout)
+	                  ? self->height
 	                  : GAP;
 }
 static GtkSizeRequestMode get_request_mode(GtkWidget *w)
