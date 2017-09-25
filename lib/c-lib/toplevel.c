@@ -16,6 +16,7 @@ static ValaPanelAppletHolder *holder = NULL;
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
+static void vala_panel_toplevel_unit_update_geometry(ValaPanelToplevelUnit *self);
 
 static const GActionEntry panel_entries[] =
     { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
@@ -135,7 +136,7 @@ static void start_ui(ValaPanelToplevelUnit *self)
 	gtk_window_present(GTK_WINDOW(self));
 	self->autohide =
 	    g_settings_get_boolean(self->settings->default_settings, VALA_PANEL_KEY_AUTOHIDE);
-	// this.update_geometry();
+	vala_panel_toplevel_unit_update_geometry(self);
 	self->initialized = true;
 }
 
@@ -508,7 +509,7 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 				stop_ui(panel);
 			else
 			{
-				//                panel.update_geometry();
+				vala_panel_toplevel_unit_update_geometry(panel);
 			}
 		}
 	}
@@ -580,6 +581,28 @@ static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
 
+static void vala_panel_toplevel_unit_update_geometry(ValaPanelToplevelUnit *self)
+{
+	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self));
+	GdkRectangle marea = { 0 };
+	if (self->mon < 0)
+		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
+	else if (self->mon < gdk_display_get_n_monitors(screen))
+		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	int effective_height = self->orientation == GTK_ORIENTATION_HORIZONTAL
+	                           ? self->height
+	                           : (self->width / 100) * marea.height - marea.y;
+	int effective_width = self->orientation == GTK_ORIENTATION_HORIZONTAL
+	                          ? (self->width / 100) * marea.width - marea.x
+	                          : self->height;
+	gtk_widget_set_size_request(GTK_WIDGET(self), effective_width, effective_height);
+	gtk_widget_queue_resize(GTK_WIDGET(self));
+	while (gtk_events_pending())
+		gtk_main_iteration();
+	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
+	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
+	g_object_notify(G_OBJECT(self), "orientation");
+}
 /****************************************************
  *         autohide : new version                   *
  ****************************************************/
