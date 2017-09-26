@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <stdbool.h>
+#include <glib.h>
 
 static const int PERIOD = 200;
 
@@ -62,6 +63,7 @@ struct _ValaPanelToplevelUnit
 	bool initialized;
 	bool dock;
 	bool autohide;
+    bool strut;
 	bool use_background_color;
 	bool use_foreground_color;
 	bool use_background_file;
@@ -654,6 +656,160 @@ static void grab_notify(ValaPanelToplevelUnit *self, bool was_grabbed, gpointer 
 		ah_hide(self);
 }
 
+static void vala_panel_toplevel_unit_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
+    ValaPanelToplevelUnit * self = NULL;
+    PangoFontDescription* desc = pango_font_description_from_string(self->font);
+    char *str = NULL, *str2 = NULL;
+    self = G_TYPE_CHECK_INSTANCE_CAST (object, vala_panel_toplevel_unit_get_type(), ValaPanelToplevelUnit);
+    switch (property_id) {
+        case VALA_PANEL_TOPLEVEL_UUID:
+        g_value_set_string (value, self->uuid);
+        break;
+        case VALA_PANEL_TOPLEVEL_HEIGHT:
+        g_value_set_int (value, self->height);
+        break;
+        case VALA_PANEL_TOPLEVEL_WIDTH:
+        g_value_set_int (value, self->width);
+        break;
+        case VALA_PANEL_TOPLEVEL_USE_FONT:
+        g_value_set_boolean (value, self->use_font);
+        break;
+        case VALA_PANEL_TOPLEVEL_USE_BACKGROUND_COLOR:
+        g_value_set_boolean (value,  self->use_background_color);
+        break;
+        case VALA_PANEL_TOPLEVEL_USE_FOREGROUND_COLOR:
+        g_value_set_boolean (value,  self->use_foreground_color);
+        break;
+        case VALA_PANEL_TOPLEVEL_USE_BACKGROUND_FILE:
+        g_value_set_boolean (value,  self->use_background_file);
+        break;
+        case VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY:
+        g_value_set_boolean (value,  self->font_size_only);
+        break;
+        case VALA_PANEL_TOPLEVEL_FONT_SIZE:
+        g_value_set_int (value, pango_font_description_get_size(desc));
+        break;
+        case VALA_PANEL_TOPLEVEL_ROUND_CORNERS_SIZE:
+        g_value_set_uint (value, self->round_corners_size);
+        break;
+        case VALA_PANEL_TOPLEVEL_FONT:
+        g_value_set_string (value, self->font);
+        break;
+        case VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR:
+        str = gdk_rgba_to_string(&self->background_color);
+        g_value_take_string (value, str);
+        break;
+        case VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR:
+        str2 = gdk_rgba_to_string(&self->foreground_color);
+        g_value_take_string (value, str2);
+        break;
+//        case VALA_PANEL_TOPLEVEL_ICON_SIZE:
+//        g_value_set_uint (value, self->);
+//        break;
+        case VALA_PANEL_TOPLEVEL_BACKGROUND_FILE:
+        g_value_set_string (value, self->background_file);
+        break;
+        case VALA_PANEL_TOPLEVEL_PANEL_GRAVITY:
+        g_value_set_enum (value, self->gravity);
+        break;
+        case VALA_PANEL_TOPLEVEL_ORIENTATION:
+        g_value_set_enum (value, self->orientation);
+        break;
+        case VALA_PANEL_TOPLEVEL_MONITOR:
+        g_value_set_int (value, self->mon);
+        break;
+        case VALA_PANEL_TOPLEVEL_DOCK:
+        g_value_set_boolean (value, self->dock);
+        break;
+        case VALA_PANEL_TOPLEVEL_STRUT:
+        g_value_set_boolean (value, self->strut);
+        break;
+//        case VALA_PANEL_TOPLEVEL_IS_DYNAMIC:
+//        g_value_set_boolean (value, self->);
+//        break;
+        case VALA_PANEL_TOPLEVEL_AUTOHIDE:
+        g_value_set_boolean (value, self->autohide);
+        break;
+        default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+        break;
+    }
+}
+
+
+//static void vala_panel_toplevel_unit_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
+//    ValaPanelToplevelUnit * self;
+//    self = G_TYPE_CHECK_INSTANCE_CAST (object, vala_panel_toplevel_unit_get_type(), ValaPanelToplevelUnit);
+//    switch (property_id) {
+//        case VALA_PANEL_TOPLEVEL_UUID:
+//        vala_panel_toplevel_set_uuid (self, g_value_get_string (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_HEIGHT:
+//        vala_panel_toplevel_set_height (self, g_value_get_int (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_WIDTH:
+//        vala_panel_toplevel_set_width (self, g_value_get_int (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_USE_FONT:
+//        vala_panel_toplevel_set_use_font (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_USE_BACKGROUND_COLOR:
+//        vala_panel_toplevel_set_use_background_color (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_USE_FOREGROUND_COLOR:
+//        vala_panel_toplevel_set_use_foreground_color (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_USE_BACKGROUND_FILE:
+//        vala_panel_toplevel_set_use_background_file (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY:
+//        vala_panel_toplevel_set_font_size_only (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_FONT_SIZE:
+//        vala_panel_toplevel_set_font_size (self, g_value_get_uint (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_ROUND_CORNERS_SIZE:
+//        vala_panel_toplevel_set_round_corners_size (self, g_value_get_uint (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_FONT:
+//        vala_panel_toplevel_set_font (self, g_value_get_string (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR:
+//        vala_panel_toplevel_set_background_color (self, g_value_get_string (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR:
+//        vala_panel_toplevel_set_foreground_color (self, g_value_get_string (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_ICON_SIZE:
+//        vala_panel_toplevel_set_icon_size (self, g_value_get_uint (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_BACKGROUND_FILE:
+//        vala_panel_toplevel_set_background_file (self, g_value_get_string (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_PANEL_GRAVITY:
+//        vala_panel_toplevel_set_panel_gravity (self, g_value_get_enum (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_MONITOR:
+//        vala_panel_toplevel_set_monitor (self, g_value_get_int (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_DOCK:
+//        vala_panel_toplevel_set_dock (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_STRUT:
+//        vala_panel_toplevel_set_strut (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_IS_DYNAMIC:
+//        vala_panel_toplevel_set_is_dynamic (self, g_value_get_boolean (value));
+//        break;
+//        case VALA_PANEL_TOPLEVEL_AUTOHIDE:
+//        vala_panel_toplevel_set_autohide (self, g_value_get_boolean (value));
+//        break;
+//        default:
+//        G_OBJECT_WARN_INVALID_ID (object, property_id, pspec);
+//        break;
+//    }
+//}
+
 void vala_panel_toplevel_unit_init(ValaPanelToplevelUnit *self)
 {
 }
@@ -667,4 +823,6 @@ void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
 	GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
 	GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
 	GTK_WIDGET_CLASS(parent)->get_request_mode               = get_request_mode;
+//    G_OBJECT_CLASS(parent)->set_property = vala_panel_toplevel_unit_set_property;
+    G_OBJECT_CLASS(parent)->get_property = vala_panel_toplevel_unit_get_property;
 }
