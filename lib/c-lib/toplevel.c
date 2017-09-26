@@ -2,6 +2,7 @@
 #include "css.h"
 #include "misc.h"
 #include "panel-layout.h"
+#include "vala-panel-enums.h"
 
 #include "vala-panel-compat.h"
 
@@ -26,7 +27,7 @@ static const GActionEntry panel_entries[] =
 
 enum
 {
-	VALA_PANEL_TOPLEVEL_DUMMY_PROPERTY,
+	VALA_PANEL_TOPLEVEL_DUMMY,
 	VALA_PANEL_TOPLEVEL_UUID,
 	VALA_PANEL_TOPLEVEL_HEIGHT,
 	VALA_PANEL_TOPLEVEL_WIDTH,
@@ -48,8 +49,10 @@ enum
 	VALA_PANEL_TOPLEVEL_DOCK,
 	VALA_PANEL_TOPLEVEL_STRUT,
 	VALA_PANEL_TOPLEVEL_IS_DYNAMIC,
-	VALA_PANEL_TOPLEVEL_AUTOHIDE
+	VALA_PANEL_TOPLEVEL_AUTOHIDE,
+	VALA_PANEL_TOPLEVEL_LAST
 };
+static GParamSpec *vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_LAST];
 
 struct _ValaPanelToplevelUnit
 {
@@ -826,9 +829,9 @@ static void vala_panel_toplevel_unit_set_property(GObject *object, guint propert
 		appearance_update_required = true;
 		break;
 	case VALA_PANEL_TOPLEVEL_STRUT:
-		self->strut = g_value_get_boolean(value);
-		break;
+		self->strut                = g_value_get_boolean(value);
 		appearance_update_required = true;
+		break;
 	//        case VALA_PANEL_TOPLEVEL_IS_DYNAMIC:
 	//        vala_panel_toplevel_set_is_dynamic (self, g_value_get_boolean (value));
 	//        break;
@@ -861,4 +864,261 @@ void vala_panel_toplevel_unit_class_init(ValaPanelToplevelUnitClass *parent)
 	GTK_WIDGET_CLASS(parent)->get_request_mode               = get_request_mode;
 	G_OBJECT_CLASS(parent)->set_property = vala_panel_toplevel_unit_set_property;
 	G_OBJECT_CLASS(parent)->get_property = vala_panel_toplevel_unit_get_property;
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_UUID,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_UUID] =
+	                                    g_param_spec_string("uuid",
+	                                                        "uuid",
+	                                                        "uuid",
+	                                                        NULL,
+	                                                        G_PARAM_STATIC_NAME |
+	                                                            G_PARAM_STATIC_NICK |
+	                                                            G_PARAM_STATIC_BLURB |
+	                                                            G_PARAM_READABLE |
+	                                                            G_PARAM_WRITABLE |
+	                                                            G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_HEIGHT,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_HEIGHT] =
+	                                    g_param_spec_int("height",
+	                                                     "height",
+	                                                     "height",
+	                                                     G_MININT,
+	                                                     G_MAXINT,
+	                                                     0,
+	                                                     G_PARAM_STATIC_NAME |
+	                                                         G_PARAM_STATIC_NICK |
+	                                                         G_PARAM_STATIC_BLURB |
+	                                                         G_PARAM_READABLE |
+	                                                         G_PARAM_WRITABLE));
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_WIDTH,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_WIDTH] =
+	                                    g_param_spec_int("width",
+	                                                     "width",
+	                                                     "width",
+	                                                     G_MININT,
+	                                                     G_MAXINT,
+	                                                     0,
+	                                                     G_PARAM_STATIC_NAME |
+	                                                         G_PARAM_STATIC_NICK |
+	                                                         G_PARAM_STATIC_BLURB |
+	                                                         G_PARAM_READABLE |
+	                                                         G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_USE_FONT,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_USE_FONT] =
+	        g_param_spec_boolean("use-font",
+	                             "use-font",
+	                             "use-font",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_USE_BACKGROUND_COLOR,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_USE_BACKGROUND_COLOR] =
+	        g_param_spec_boolean("use-background-color",
+	                             "use-background-color",
+	                             "use-background-color",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_USE_FOREGROUND_COLOR,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_USE_FOREGROUND_COLOR] =
+	        g_param_spec_boolean("use-foreground-color",
+	                             "use-foreground-color",
+	                             "use-foreground-color",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_USE_BACKGROUND_FILE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_USE_BACKGROUND_FILE] =
+	        g_param_spec_boolean("use-background-file",
+	                             "use-background-file",
+	                             "use-background-file",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY] =
+	        g_param_spec_boolean("font-size-only",
+	                             "font-size-only",
+	                             "font-size-only",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_FONT_SIZE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_FONT_SIZE] =
+	        g_param_spec_uint("font-size",
+	                          "font-size",
+	                          "font-size",
+	                          0,
+	                          G_MAXUINT,
+	                          0U,
+	                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                              G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_ROUND_CORNERS_SIZE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_ROUND_CORNERS_SIZE] =
+	        g_param_spec_uint("round-corners-size",
+	                          "round-corners-size",
+	                          "round-corners-size",
+	                          0,
+	                          G_MAXUINT,
+	                          0U,
+	                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                              G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_FONT,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_FONT] =
+	                                    g_param_spec_string("font",
+	                                                        "font",
+	                                                        "font",
+	                                                        NULL,
+	                                                        G_PARAM_STATIC_NAME |
+	                                                            G_PARAM_STATIC_NICK |
+	                                                            G_PARAM_STATIC_BLURB |
+	                                                            G_PARAM_READABLE |
+	                                                            G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR] =
+	        g_param_spec_string("background-color",
+	                            "background-color",
+	                            "background-color",
+	                            NULL,
+	                            G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR] =
+	        g_param_spec_string("foreground-color",
+	                            "foreground-color",
+	                            "foreground-color",
+	                            NULL,
+	                            G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_ICON_SIZE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_ICON_SIZE] =
+	        g_param_spec_uint("icon-size",
+	                          "icon-size",
+	                          "icon-size",
+	                          0,
+	                          G_MAXUINT,
+	                          0U,
+	                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                              G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_BACKGROUND_FILE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_BACKGROUND_FILE] =
+	        g_param_spec_string("background-file",
+	                            "background-file",
+	                            "background-file",
+	                            NULL,
+	                            G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_PANEL_GRAVITY,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_PANEL_GRAVITY] =
+	        g_param_spec_enum("panel-gravity",
+	                          "panel-gravity",
+	                          "panel-gravity",
+	                          VALA_PANEL_TYPE_GRAVITY,
+	                          0,
+	                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                              G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_ORIENTATION,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_ORIENTATION] =
+	        g_param_spec_enum("orientation",
+	                          "orientation",
+	                          "orientation",
+	                          GTK_TYPE_ORIENTATION,
+	                          0,
+	                          G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                              G_PARAM_READABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_MONITOR,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_MONITOR] =
+	        g_param_spec_int("monitor",
+	                         "monitor",
+	                         "monitor",
+	                         G_MININT,
+	                         G_MAXINT,
+	                         0,
+	                         G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
+	                             G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_DOCK,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_DOCK] =
+	                                    g_param_spec_boolean("dock",
+	                                                         "dock",
+	                                                         "dock",
+	                                                         FALSE,
+	                                                         G_PARAM_STATIC_NAME |
+	                                                             G_PARAM_STATIC_NICK |
+	                                                             G_PARAM_STATIC_BLURB |
+	                                                             G_PARAM_READABLE |
+	                                                             G_PARAM_WRITABLE));
+	g_object_class_install_property(G_OBJECT_CLASS(parent),
+	                                VALA_PANEL_TOPLEVEL_STRUT,
+	                                vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_STRUT] =
+	                                    g_param_spec_boolean("strut",
+	                                                         "strut",
+	                                                         "strut",
+	                                                         FALSE,
+	                                                         G_PARAM_STATIC_NAME |
+	                                                             G_PARAM_STATIC_NICK |
+	                                                             G_PARAM_STATIC_BLURB |
+	                                                             G_PARAM_READABLE |
+	                                                             G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_IS_DYNAMIC,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_IS_DYNAMIC] =
+	        g_param_spec_boolean("is-dynamic",
+	                             "is-dynamic",
+	                             "is-dynamic",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_AUTOHIDE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_AUTOHIDE] =
+	        g_param_spec_boolean("autohide",
+	                             "autohide",
+	                             "autohide",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
 }
