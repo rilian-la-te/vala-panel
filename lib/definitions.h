@@ -65,7 +65,7 @@
 	                                                    : GTK_ORIENTATION_VERTICAL
 
 #define vala_panel_orient_from_gravity(gravity)                                                    \
-	(gravity < 6) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL
+	(((gravity) < 6) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL)
 
 #define vala_panel_edge_from_gravity(gravity)                                                      \
 	(gravity < 3)                                                                              \

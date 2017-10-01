@@ -1,6 +1,7 @@
 #include "applet-widget.h"
 #include "css.h"
 #include "definitions.h"
+#include "toplevel.h"
 #include "vala-panel-compat.h"
 
 typedef struct
@@ -130,7 +131,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
      * Close the configuration dialog if it is open. */
-    gtk_widget_destroy0(p->toplevel->pref_dialog);
+	vala_panel_toplevel_destroy_pref_dialog(p->toplevel);
 	vala_panel_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }
 static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)

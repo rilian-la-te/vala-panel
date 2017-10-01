@@ -58,7 +58,7 @@ namespace ValaPanel
 		public ValaPanel.Toplevel toplevel { get; construct; }
 		public string uuid { get; construct; }
 	}
-/*
+
 	[CCode (cheader_filename = "toplevel.h")]
 	public class Toplevel : Gtk.ApplicationWindow {
         internal static CoreSettings core_settings {
@@ -116,7 +116,7 @@ namespace ValaPanel
 			get;
 		}
 		internal bool panel_edge_available(uint edge, int monitor, bool include_this);
-	} */
+	}
     [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "panel-layout.h")]
     public enum AppletPackType
     {

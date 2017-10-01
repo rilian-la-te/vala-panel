@@ -102,8 +102,7 @@ namespace ValaPanel {
 		public ValaPanel.Toplevel toplevel { get; construct; }
 		public string uuid { get; construct; }
 	}
-//	[CCode (cheader_filename = "toplevel.h")]
-	[CCode (cheader_filename = "vala-panel-compat.h")]
+	[CCode (cheader_filename = "toplevel.h")]
 	public class Toplevel : Gtk.ApplicationWindow {
 		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
 		public void configure (string page);

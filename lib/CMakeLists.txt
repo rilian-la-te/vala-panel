@@ -24,7 +24,7 @@ set(LIBVALAPANEL_HEADERS
     generic-config-dialog.h
     settings-manager.h
     panel-platform.h
-#    toplevel.h
+    toplevel.h
     ${ENUMSH})
 set(LIBVALAPANEL_C_SOURCES
     misc.c
@@ -35,7 +35,7 @@ set(LIBVALAPANEL_C_SOURCES
     settings-manager.c
     panel-platform.c
     applet-widget.c
-#    toplevel.c
+    toplevel.c
     ${ENUMSC})
 INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
@@ -47,7 +47,6 @@ set(VALA_FILES
 	misc-old.vala
 	configurator.vala
 	applet-holder.vala
-	panel-toplevel.vala
 	panel-layout.vala
 	)
 vala_precompile(VALA_C ${LIBNAME}

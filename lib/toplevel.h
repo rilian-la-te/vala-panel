@@ -5,8 +5,9 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include "lib/constants.h"
-#include "lib/panel-platform.h"
+#include "applet-widget.h"
+#include "constants.h"
+#include "panel-platform.h"
 
 G_BEGIN_DECLS
 
@@ -24,6 +25,8 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 	VALA_PANEL_LAYOUT(gtk_bin_get_child(gtk_bin_get_child(GTK_BIN(self))))
 
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
+GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl);
+void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self);
 
 G_END_DECLS
 

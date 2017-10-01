@@ -2373,9 +2373,10 @@ static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistCh
 	/* 0 means icons are disabled */
 	if (tasklist->minimized_icon_lucency == 0)
 		return;
-
-	icon_size = vala_panel_toplevel_get_icon_size(
-	    VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist)));
+	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist)),
+	             VALA_PANEL_KEY_ICON_SIZE,
+	             &icon_size,
+	             NULL);
 
 	/* get the window icon */
 	if (tasklist->show_labels)
@@ -3451,8 +3452,10 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
 	if (group_child->tasklist->minimized_icon_lucency == 0)
 		return;
 
-	icon_size = vala_panel_toplevel_get_icon_size(
-	    VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(group_child->tasklist)));
+	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(group_child->tasklist)),
+	             VALA_PANEL_KEY_ICON_SIZE,
+	             &icon_size,
+	             NULL);
 
 	/* get the class group icon */
 	if (group_child->tasklist->show_labels)
