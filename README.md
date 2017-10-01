@@ -24,7 +24,7 @@ TODO
    * [x] Create X11 platform (with current positioning code)
    * [X] Introduce gravity-based positioning
    * [ ] Create Layout and made pack-type useful
-   * [ ] Rewrite toplevel into C
+   * [X] Rewrite toplevel into C
    * [X] Rewrite applet into C
  * [x] Made PanelManager (done as Platform)
 
