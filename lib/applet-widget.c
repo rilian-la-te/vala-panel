@@ -129,9 +129,9 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
-	 * Close the configuration dialog if it is open. */
-	gtk_widget_destroy0(p->toplevel->pref_dialog);
-	vala_panel_layout_remove_applet(p->toplevel->layout, self);
+     * Close the configuration dialog if it is open. */
+    gtk_widget_destroy0(p->toplevel->pref_dialog);
+	vala_panel_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }
 static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
 {
@@ -142,7 +142,8 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
                                       int *min, int *nat, int *base_min, int *base_nat)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	GtkOrientation panel_ori  = vala_panel_toplevel_get_orientation(p->toplevel);
+	GtkOrientation panel_ori;
+	g_object_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &panel_ori, NULL);
 	int height, icon_size;
 	g_object_get(p->toplevel,
 	             VALA_PANEL_KEY_HEIGHT,

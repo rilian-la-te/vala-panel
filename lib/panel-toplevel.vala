@@ -382,6 +382,10 @@ namespace ValaPanel
             stop_ui();
             base.destroy();
         }
+        public unowned Layout get_layout()
+        {
+            return this.layout;
+        }
         private void stop_ui()
         {
             if (pref_dialog != null)

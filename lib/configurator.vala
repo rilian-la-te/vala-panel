@@ -29,7 +29,7 @@ namespace ValaPanel
     }
     [GtkTemplate (ui = "/org/vala-panel/lib/pref.ui")]
     [CCode (cname="ConfigureDialog")]
-    internal class ConfigureDialog : Dialog
+    public class ConfigureDialog : Dialog
     {
         public unowned Toplevel toplevel {get; construct;}
         [GtkChild (name="monitors-button")]
@@ -68,7 +68,7 @@ namespace ValaPanel
             {"configure-monitors", null,"i","-2" ,state_configure_monitor}
         };
 
-        internal ConfigureDialog(Toplevel top)
+        public ConfigureDialog(Toplevel top)
         {
             Object(toplevel: top, application: top.get_application(),window_position: WindowPosition.CENTER);
         }

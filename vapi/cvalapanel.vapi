@@ -58,6 +58,65 @@ namespace ValaPanel
 		public ValaPanel.Toplevel toplevel { get; construct; }
 		public string uuid { get; construct; }
 	}
+/*
+	[CCode (cheader_filename = "toplevel.h")]
+	public class Toplevel : Gtk.ApplicationWindow {
+        internal static CoreSettings core_settings {
+			[CCode (cname = "vala_panel_toplevel_get_core_settings")]
+			get;
+		}
+		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
+		public void configure (string page);
+		[NoAccessorMethod]
+		public bool autohide { get; internal set; }
+		[NoAccessorMethod]
+		public string background_color { owned get; internal set; }
+		[NoAccessorMethod]
+		public string background_file { owned get; internal set; }
+		[NoAccessorMethod]
+		public bool dock { get; internal set; }
+		[NoAccessorMethod]
+		public string font { owned get; internal set; }
+		[NoAccessorMethod]
+		public uint font_size { get; internal set; }
+		[NoAccessorMethod]
+		public bool font_size_only { get; internal set; }
+		[NoAccessorMethod]
+		public string foreground_color { owned get; internal set; }
+		[NoAccessorMethod]
+		public int height { get; internal set; }
+		[NoAccessorMethod]
+		public uint icon_size { get; internal set; }
+		[NoAccessorMethod]
+		public bool is_dynamic { get; internal set; }
+		[NoAccessorMethod]
+		public int monitor { get; internal set construct; }
+		[NoAccessorMethod]
+		public Gtk.Orientation orientation { get; }
+		[NoAccessorMethod]
+		public Gravity panel_gravity { get;}
+		[NoAccessorMethod]
+		public uint round_corners_size { get; internal set; }
+		[NoAccessorMethod]
+		public bool strut { get; internal set; }
+		[NoAccessorMethod]
+		public bool use_background_color { get; internal set; }
+		[NoAccessorMethod]
+		public bool use_background_file { get; internal set; }
+		[NoAccessorMethod]
+		public bool use_font { get; internal set; }
+		[NoAccessorMethod]
+		public bool use_foreground_color { get; internal set; }
+		[NoAccessorMethod]
+		public string uuid { owned get; internal construct; }
+		[NoAccessorMethod]
+		public int width { get; internal set; }
+		internal ValaPanel.Layout layout {
+			[CCode(cname = "vala_panel_toplevel_get_layout")]
+			get;
+		}
+		internal bool panel_edge_available(uint edge, int monitor, bool include_this);
+	} */
     [CCode(cname="PanelAppletPackType", cprefix="PACK_", cheader_filename = "panel-layout.h")]
     public enum AppletPackType
     {

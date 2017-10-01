@@ -9,8 +9,6 @@ add_library(cvalapanel SHARED
 
     panel-layout.h
     panel-layout.c
-    toplevel.c
-    toplevel.h
     applet-manager.c
     applet-engine-module.c
     private.h
