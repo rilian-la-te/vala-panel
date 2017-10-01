@@ -61,7 +61,7 @@ namespace ValaPanel
         [GtkChild (name="configure-button")]
         Button configure_button;
         [GtkChild (name="prefs")]
-        internal Stack prefs_stack;
+        public Stack prefs_stack;
 
         const GLib.ActionEntry[] entries_monitor =
         {

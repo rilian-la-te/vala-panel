@@ -44,7 +44,6 @@ if(GLIB_OLD_FOUND)
         guuid.h)
 endif()
 set(VALA_FILES
-	misc-old.vala
 	configurator.vala
 	applet-holder.vala
 	panel-layout.vala

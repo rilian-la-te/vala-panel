@@ -151,9 +151,9 @@ namespace ValaPanel {
 		[NoAccessorMethod]
 		public int width { get; internal set; }
 	}
-	[CCode (cheader_filename = "vala-panel-compat.h")]
+	[CCode (cheader_filename = "misc.h")]
 	public static void setup_icon (Gtk.Image img, GLib.Icon icon, ValaPanel.Toplevel? top = null, int size = -1);
-	[CCode (cheader_filename = "vala-panel-compat.h")]
+	[CCode (cheader_filename = "misc.h")]
 	public static void setup_icon_button (Gtk.Button btn, GLib.Icon? icon = null, string? label = null, ValaPanel.Toplevel? top = null);
     [CCode (cheader_filename="misc.h")]
     public static void apply_window_icon(Window w);

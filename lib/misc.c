@@ -21,8 +21,9 @@
 #include <string.h>
 
 #include "css.h"
-#include "lib/definitions.h"
+#include "definitions.h"
 #include "misc.h"
+#include "toplevel.h"
 
 static void set_widget_align(GtkWidget *user_data, gpointer data)
 {
@@ -75,6 +76,36 @@ void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 	if (label != NULL)
 		gtk_button_set_label(b, label);
 	gtk_button_set_relief(b, GTK_RELIEF_NONE);
+}
+
+void vala_panel_setup_icon(GtkImage *img, GIcon *icon, ValaPanelToplevel *top, int size)
+{
+	gtk_image_set_from_gicon(img, icon, GTK_ICON_SIZE_INVALID);
+	if (top != NULL)
+		g_object_bind_property(top,
+		                       VALA_PANEL_KEY_ICON_SIZE,
+		                       img,
+		                       "pixel-size",
+		                       G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+	else if (size > 0)
+		gtk_image_set_pixel_size(img, size);
+}
+
+void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label,
+                                  ValaPanelToplevel *top)
+{
+	css_apply_from_resource(btn, "/org/vala-panel/lib/style.css", "-panel-icon-button");
+	css_toggle_class(btn, GTK_STYLE_CLASS_BUTTON, true);
+	GtkImage *img = NULL;
+	if (icon != NULL)
+	{
+		img = gtk_image_new();
+		vala_panel_setup_icon(img, icon, top, -1);
+	}
+	vala_panel_setup_button(btn, img, label);
+	gtk_container_set_border_width(btn, 0);
+	gtk_widget_set_can_focus(btn, false);
+	gtk_widget_set_has_window(btn, false);
 }
 
 inline void vala_panel_apply_window_icon(GtkWindow *win)

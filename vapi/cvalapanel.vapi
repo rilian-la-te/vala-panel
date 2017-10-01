@@ -177,6 +177,10 @@ namespace ValaPanel
     }
     [CCode(cname = "_user_config_file_name",cheader_filename="definitions.h")]
     internal string user_config_file_name(string name1, string profile, string? name2);
+	[CCode (cheader_filename = "misc.h")]
+	public static void setup_icon (Gtk.Image img, GLib.Icon icon, ValaPanel.Toplevel? top = null, int size = -1);
+	[CCode (cheader_filename = "misc.h")]
+	public static void setup_icon_button (Gtk.Button btn, GLib.Icon? icon = null, string? label = null, ValaPanel.Toplevel? top = null);
     [CCode (cheader_filename="misc.h")]
     public static void apply_window_icon(Window w);
     [CCode (cheader_filename="misc.h")]
