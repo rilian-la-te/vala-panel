@@ -107,7 +107,7 @@ enum
 	VALA_PANEL_APP_ALL
 };
 
-static inline void destroy0(GtkWidget *x)
+static inline void destroy0(GtkWidget *x, void *data)
 {
 	gtk_widget_destroy0(x);
 }
@@ -521,7 +521,7 @@ static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointe
 {
 	static GtkDialog *pref_dialog = NULL;
 	ValaPanelApplication *self    = VALA_PANEL_APPLICATION(data);
-	if (pref_dialog != NULL)
+	if (pref_dialog != NULL && GTK_IS_DIALOG(pref_dialog))
 	{
 		gtk_window_present(GTK_WINDOW(pref_dialog));
 		return;
@@ -544,8 +544,8 @@ static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointe
 	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(f), self->css);
 	g_signal_connect(f, "file-set", G_CALLBACK(file_chooser_helper), self);
 	gtk_window_present(GTK_WINDOW(pref_dialog));
-	g_signal_connect(pref_dialog, "hide", G_CALLBACK(destroy0), NULL);
-	g_signal_connect_after(pref_dialog, "response", G_CALLBACK(destroy0), NULL);
+	g_signal_connect(pref_dialog, "hide", G_CALLBACK(destroy0), &pref_dialog);
+	g_signal_connect_after(pref_dialog, "response", G_CALLBACK(destroy0), &pref_dialog);
 }
 
 static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data)
