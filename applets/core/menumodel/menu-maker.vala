@@ -27,8 +27,8 @@ namespace MenuMaker
         {
             unowned GLib.Menu menu_link;
             var found = false;
-            var action = "app.launch-id('%s')".printf(info.get_id());
-            var item = new GLib.MenuItem(info.get_name(),action);
+            var item = new GLib.MenuItem(info.get_name(), null);
+            item.set_action_and_target("app.launch-id", "s", info.get_id());
             if (info.get_icon() != null)
                 item.set_icon(info.get_icon());
             else
