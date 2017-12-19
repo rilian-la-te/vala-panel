@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-08 00:38+0300\n"
+"POT-Creation-Date: 2017-12-19 22:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,25 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../lib/c-lib/toplevel.c:229 ../lib/panel-toplevel.vala:700
-msgid "There is no room for another panel. All the edges are taken."
-msgstr ""
-
-#: ../lib/c-lib/toplevel.c:231 ../lib/panel-toplevel.vala:702
-#: ../applets/core/launchbar/launchbar-config.vala:211
-msgid "Error"
-msgstr ""
-
-#: ../lib/c-lib/toplevel.c:255
-msgid ""
-"Really delete this panel?\n"
-"<b>Warning:This can not be recovered.</b>"
-msgstr ""
-
-#: ../lib/c-lib/toplevel.c:258 ../lib/panel-toplevel.vala:722
-msgid "Confirm"
-msgstr ""
 
 #: ../lib/generic-config-dialog.c:94 ../lib/generic-config-dialog.c:117
 msgid "Select a file"
@@ -44,55 +25,78 @@ msgstr ""
 msgid "_Close"
 msgstr ""
 
-#: ../app/application.c:33
+#: ../lib/misc.c:192 ../lib/misc.c:208 ../lib/toplevel.c:435
+#: ../applets/core/launchbar/launchbar-config.vala:211
+msgid "Error"
+msgstr ""
+
+#: ../lib/toplevel.c:433
+msgid "There is no room for another panel. All the edges are taken."
+msgstr ""
+
+#: ../lib/toplevel.c:459
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning:This can not be recovered.</b>"
+msgstr ""
+
+#: ../lib/toplevel.c:462
+msgid "Confirm"
+msgstr ""
+
+#: ../app/application.c:34
 msgid "Run command on already opened panel"
 msgstr ""
 
-#: ../app/application.c:74
+#: ../app/application.c:75
 msgid "Print version and exit"
 msgstr ""
 
-#: ../app/application.c:75
+#: ../app/application.c:76
 msgid "Use specified profile"
 msgstr ""
 
-#: ../app/application.c:75
+#: ../app/application.c:76
 msgid "profile"
 msgstr ""
 
-#: ../app/application.c:76
+#: ../app/application.c:77
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.c:227
+#: ../app/application.c:228
 #, c-format
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.c:258
+#: ../app/application.c:259
 #, c-format
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3293
+#: ../app/application.c:515
+msgid "No panel with this name found.\n"
+msgstr ""
+
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3294
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3301
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3302
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3309
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3310
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3317
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3318
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3329
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3330
 msgid "_Close All"
 msgstr ""
 
@@ -114,12 +118,6 @@ msgstr ""
 
 #: ../lib/configurator.vala:287
 msgid "Available plugins"
-msgstr ""
-
-#: ../lib/panel-toplevel.vala:720
-msgid ""
-"Really delete this panel?\n"
-"<b>Warning: This can not be recovered.</b>"
 msgstr ""
 
 #: ../applets/core/clock/clock.vala:100
@@ -631,7 +629,7 @@ msgid ""
 "packages (Example is volume applet)."
 msgstr ""
 
-#: ../data/desktop/org.valapanel.application.appdata.xml.in:28
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
 msgid "Konstantin"
 msgstr ""
 
@@ -757,6 +755,14 @@ msgstr ""
 msgid "Old XEmbed-based tray"
 msgstr ""
 
-#: ../data/desktop/org.valapanel.application.desktop.in:6
+#: ../data/desktop/org.valapanel.application.desktop.in:5
+msgid "Desktop Panel"
+msgstr ""
+
+#: ../data/desktop/org.valapanel.application.desktop.in:7
+msgid "panel;launcher;menu;tasklist"
+msgstr ""
+
+#: ../data/desktop/org.valapanel.application.desktop.in:9
 msgid "vala-panel"
 msgstr ""
