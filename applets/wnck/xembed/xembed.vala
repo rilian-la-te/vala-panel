@@ -48,6 +48,11 @@ public class XEmbedTray: Applet
         this.show_all();
         plugin.plugin.queue_resize();
     }
+    public override void destroy()
+    {
+        plugin = null;
+        base.destroy();
+    }
 } // End class
 
 [ModuleInit]

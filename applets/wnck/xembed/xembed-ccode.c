@@ -156,7 +156,8 @@ static void client_delete(TrayPlugin *tr, TrayClient *tc, gboolean unlink, gbool
 		GtkWidget *widget = gtk_widget_get_parent(tc->socket);
 		if (GTK_IS_WIDGET(tc->socket))
 			gtk_widget_destroy(tc->socket);
-		gtk_container_remove(GTK_CONTAINER(tr->plugin), widget);
+		if (GTK_IS_CONTAINER(tr->plugin))
+			gtk_container_remove(GTK_CONTAINER(tr->plugin), widget);
 		if (GTK_IS_WIDGET(widget))
 			gtk_widget_destroy(widget);
 	}
@@ -842,8 +843,6 @@ TrayPlugin *tray_constructor(ValaPanelApplet *applet)
 void tray_destructor(gpointer user_data)
 {
 	TrayPlugin *tr = user_data;
-	if (GTK_IS_WIDGET(tr->plugin))
-		gtk_widget_destroy0(tr->plugin);
 
 	/* Remove GDK event filter. */
 	gdk_window_remove_filter(NULL, (GdkFilterFunc)tray_event_filter, tr);
@@ -862,7 +861,8 @@ void tray_destructor(gpointer user_data)
 	/* Terminate message display and deallocate messages. */
 	while (tr->messages != NULL)
 		balloon_message_advance(tr, TRUE, FALSE);
-
+	if (GTK_IS_WIDGET(tr->plugin))
+		gtk_widget_destroy0(tr->plugin);
 	/* Deallocate client list - widgets are already destroyed. */
 	while (tr->client_list != NULL)
 		client_delete(tr, tr->client_list, TRUE, FALSE);
