@@ -112,7 +112,7 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, ValaPane
 	g_object_get(toplevel_settings, "path", &path, NULL);
 	g_autofree char *cpath = g_strconcat(path, uid, "/", NULL);
 	GtkWidget *applet      = GTK_WIDGET(
-	    vala_panel_applet_manager_get_applet_widget_for_type(mgr, path, applet_type, uid));
+            vala_panel_applet_manager_get_applet_widget_for_type(mgr, path, applet_type, uid));
 	ValaPanelCoreSettings *settings = vala_panel_platform_get_settings(gmgr);
 	ValaPanelUnitSettings *csettings =
 	    vala_panel_unit_settings_new(settings, applet_type, uid, false);

@@ -187,7 +187,7 @@ static void g_uuid_generate_v4(GUuid *uuid)
 
 	bytes = uuid->bytes;
 	ints  = (guint32 *)bytes;
-	for (i          = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 		ints[i] = g_random_int();
 
 	uuid_set_version(uuid, 4);

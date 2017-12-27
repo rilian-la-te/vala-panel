@@ -130,7 +130,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
-     * Close the configuration dialog if it is open. */
+	 * Close the configuration dialog if it is open. */
 	vala_panel_toplevel_destroy_pref_dialog(p->toplevel);
 	vala_panel_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }

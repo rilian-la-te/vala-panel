@@ -153,7 +153,7 @@ inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direct
 		edge = "0px 2px 0px 0px";
 	if (direction == GTK_POS_LEFT)
 		edge = "0px 0px 0px 2px";
-	returnie     = g_strdup_printf(
+	returnie = g_strdup_printf(
 	    ".-panel-flat-button {\n"
 	    "padding: 0px;\n"
 	    "border-style: solid;"

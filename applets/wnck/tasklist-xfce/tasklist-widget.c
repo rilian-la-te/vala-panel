@@ -1018,7 +1018,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 	//  g_return_if_fail (area.height == tasklist->size);
 
 	/* TODO if we compare the allocation with the requisition we can
-     * do a fast path to the child allocation, i think */
+	 * do a fast path to the child allocation, i think */
 
 	/* useless but hides compiler warning */
 	w = h = x = y = rows = cols = 0;
@@ -1090,7 +1090,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 					 * with counting the windows... */
 					if (cols < 1)
 						cols = 1;
-					w            = area_width / cols--;
+					w = area_width / cols--;
 					if (tasklist->max_button_length > 0 &&
 					    w > tasklist->max_button_length)
 						w = tasklist->max_button_length;
@@ -2678,8 +2678,7 @@ static gboolean xfce_tasklist_button_button_release_event(GtkWidget *button, Gdk
 	/* only respond to in-button events */
 	if (event->type == GDK_BUTTON_RELEASE &&
 	    !(event->x == 0 && event->y == 0) /* 0,0 = outside the widget in Gtk */
-	    &&
-	    event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
+	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
 		if (event->button == 1)
@@ -3045,13 +3044,10 @@ static void xfce_tasklist_button_drag_data_received(GtkWidget *button, GdkDragCo
 	{
 		child = li->data;
 
-		if (sibling != li /* drop on end previous button */
-		    &&
-		    child != child2 /* drop on the same button */
-		    &&
-		    g_list_next(li) != sibling /* drop start of next button */
-		    &&
-		    child->window != NULL && wnck_window_get_xid(child->window) == xid)
+		if (sibling != li                 /* drop on end previous button */
+		    && child != child2            /* drop on the same button */
+		    && g_list_next(li) != sibling /* drop start of next button */
+		    && child->window != NULL && wnck_window_get_xid(child->window) == xid)
 		{
 			/* swap items */
 			tasklist->windows = g_list_delete_link(tasklist->windows, li);

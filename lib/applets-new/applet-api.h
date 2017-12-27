@@ -1,8 +1,11 @@
 #ifndef APPLETAPI_H
 #define APPLETAPI_H
 
-#define VALA_PANEL_DECLARE_MODULE_TYPE(                                                            \
-    ModuleObjName, module_obj_name, MODULE, OBJ_NAME, ParentName)                                  \
+#define VALA_PANEL_DECLARE_MODULE_TYPE(ModuleObjName,                                              \
+                                       module_obj_name,                                            \
+                                       MODULE,                                                     \
+                                       OBJ_NAME,                                                   \
+                                       ParentName)                                                 \
 	GType module_obj_name##_get_type(void);                                                    \
 	G_GNUC_BEGIN_IGNORE_DEPRECATIONS                                                           \
 	typedef struct _##ModuleObjName ModuleObjName;                                             \

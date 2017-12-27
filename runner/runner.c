@@ -125,12 +125,12 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			g_object_unref0(app_info);
 			g_autoptr(GError) err = NULL;
 			app_info              = g_app_info_create_from_commandline(
-			    gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
-			    NULL,
-			    gtk_toggle_button_get_active(self->terminal_button)
-			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-			        : G_APP_INFO_CREATE_NONE,
-			    &err);
+                            gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
+                            NULL,
+                            gtk_toggle_button_get_active(self->terminal_button)
+                                ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+                                : G_APP_INFO_CREATE_NONE,
+                            &err);
 			if (err)
 			{
 				g_error_free(err);

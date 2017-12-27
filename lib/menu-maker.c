@@ -23,7 +23,8 @@
 #include <string.h>
 
 static const GtkTargetEntry MENU_TARGETS[] = {
-	{ "text/uri-list", 0, 0 }, { "application/x-desktop", 0, 0 },
+	{ "text/uri-list", 0, 0 },
+	{ "application/x-desktop", 0, 0 },
 };
 
 typedef struct
@@ -92,7 +93,7 @@ static void drag_data_begin(GtkWidget *item, GdkDragContext *context, DragData *
 	                                                                data->item_pos,
 	                                                                G_MENU_ATTRIBUTE_ICON,
 	                                                                NULL);
-	g_autoptr(GIcon) icon = g_icon_deserialize(val);
+	g_autoptr(GIcon) icon   = g_icon_deserialize(val);
 	if (icon)
 		gtk_drag_source_set_icon_gicon(GTK_WIDGET(item), icon);
 	else
@@ -120,7 +121,7 @@ static void apply_menu_dnd(GtkMenuItem *item, GMenuModel *section, int model_ite
 	                    MENU_TARGETS,     // lists of target to support
 	                    G_N_ELEMENTS(MENU_TARGETS),
 	                    GDK_ACTION_COPY // what to do with data after dropped
-	                    );
+	);
 	DragData *data = drag_data_new(item, section, model_item);
 	g_signal_connect(item, "drag-begin", G_CALLBACK(drag_data_begin), data);
 	g_signal_connect(item, "drag-data-get", G_CALLBACK(drag_data_get), data);
@@ -133,7 +134,7 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 	{
 		uint jumplen = 1;
 		if (GTK_IS_SEPARATOR_MENU_ITEM(l->data))
-			l                     = l->next;
+			l = l->next;
 		GtkMenuItem *shell            = GTK_MENU_ITEM(l->data);
 		const char *str               = NULL;
 		bool has_section              = false;
