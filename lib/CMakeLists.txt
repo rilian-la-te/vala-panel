@@ -25,11 +25,13 @@ set(LIBVALAPANEL_HEADERS
     settings-manager.h
     panel-platform.h
     toplevel.h
+    toplevel-config.h
     ${ENUMSH})
 set(LIBVALAPANEL_C_SOURCES
     misc.c
     menu-maker.c
     css.c
+    toplevel-config.c
     launcher.c
     generic-config-dialog.c
     settings-manager.c
