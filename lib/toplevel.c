@@ -670,7 +670,7 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 			}
 		}
 	}
-	g_free0(win);
+	
 }
 
 static int calc_width(int scrw, int panel_width, int panel_margin)
