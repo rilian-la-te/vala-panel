@@ -654,7 +654,7 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 {
 	GtkApplication *app   = (GtkApplication *)data;
 	int mons              = gdk_display_get_n_monitors(scr);
-	g_autofree GList *win = gtk_application_get_windows(app);
+	GList *win = gtk_application_get_windows(app);
 	for (GList *il = win; il != NULL; il = il->next)
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(il->data))
@@ -670,6 +670,7 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 			}
 		}
 	}
+	g_free0(win);
 }
 
 static int calc_width(int scrw, int panel_width, int panel_margin)
