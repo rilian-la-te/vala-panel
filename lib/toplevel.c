@@ -660,7 +660,7 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 		if (VALA_PANEL_IS_TOPLEVEL(il->data))
 		{
 			ValaPanelToplevel *panel = (ValaPanelToplevel *)il->data;
-			if (panel->mon < mons && !panel->initialized)
+			if (panel->mon < mons && !panel->initialized && mons > 0)
 				start_ui(panel);
 			else if ((panel->mon >= mons && panel->initialized) || mons == 0)
 				stop_ui(panel);
