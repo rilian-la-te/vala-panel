@@ -20,7 +20,6 @@
 #include "css.h"
 #include "definitions.h"
 #include "misc.h"
-//#include "panel-layout.h"
 #include "vala-panel-enums.h"
 
 #include "vala-panel-compat.h"
@@ -131,10 +130,9 @@ static void stop_ui(ValaPanelToplevel *self)
 		gdk_flush();
 		self->initialized = false;
 	}
-	if (gtk_bin_get_child(GTK_BIN(self)))
-	{
-		gtk_widget_hide(GTK_WIDGET(self->layout));
-	}
+	GtkWidget *ch = gtk_bin_get_child(GTK_BIN(self));
+	if (ch)
+		gtk_widget_destroy0(ch);
 }
 
 static void vala_panel_toplevel_destroy(GtkWidget *base)
@@ -652,9 +650,9 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 
 static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 {
-	GtkApplication *app   = (GtkApplication *)data;
-	int mons              = gdk_display_get_n_monitors(scr);
-	GList *win = gtk_application_get_windows(app);
+	GtkApplication *app = (GtkApplication *)data;
+	int mons            = gdk_display_get_n_monitors(scr);
+	GList *win          = gtk_application_get_windows(app);
 	for (GList *il = win; il != NULL; il = il->next)
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(il->data))
@@ -670,7 +668,6 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 			}
 		}
 	}
-	
 }
 
 static int calc_width(int scrw, int panel_width, int panel_margin)
