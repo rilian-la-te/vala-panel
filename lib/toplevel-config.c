@@ -44,6 +44,12 @@ struct _ValaPanelToplevelConfig
 
 G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIALOG);
 
+enum
+{
+	TOPLEVEL_PROPERTY,
+	NUM_PROPERTIES
+};
+static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
 static const GActionEntry entries_monitor[1] = {
 	{ "configure-monitors", NULL, "i", "-2", state_configure_monitor }
@@ -238,19 +244,64 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	return obj;
 }
 
+static void vala_panel_toplevel_config_get_property(GObject *object, guint property_id,
+                                                    GValue *value, GParamSpec *pspec)
+{
+	ValaPanelToplevelConfig *self;
+	self = G_TYPE_CHECK_INSTANCE_CAST(object,
+	                                  vala_panel_toplevel_config_get_type(),
+	                                  ValaPanelToplevelConfig);
+	switch (property_id)
+	{
+	case TOPLEVEL_PROPERTY:
+		g_value_set_object(value, self->_toplevel);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+
+static void vala_panel_toplevel_config_set_property(GObject *object, guint property_id,
+                                                    const GValue *value, GParamSpec *pspec)
+{
+	ValaPanelToplevelConfig *self;
+	self = G_TYPE_CHECK_INSTANCE_CAST(object,
+	                                  vala_panel_toplevel_config_get_type(),
+	                                  ValaPanelToplevelConfig);
+	switch (property_id)
+	{
+	case TOPLEVEL_PROPERTY:
+		self->_toplevel = G_TYPE_CHECK_INSTANCE_CAST(g_value_get_object(value),
+		                                             VALA_PANEL_TYPE_TOPLEVEL,
+		                                             ValaPanelToplevel);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 {
 	vala_panel_toplevel_config_parent_class = g_type_class_peek_parent(klass);
-	//    G_OBJECT_CLASS (klass)->get_property = _vala_vala_panel_configure_dialog_get_property;
-	//    G_OBJECT_CLASS (klass)->set_property = _vala_vala_panel_configure_dialog_set_property;
-	G_OBJECT_CLASS(klass)->constructor = vala_panel_configure_dialog_constructor;
-	G_OBJECT_CLASS(klass)->finalize    = vala_panel_configure_dialog_finalize;
-	//    g_object_class_install_property (G_OBJECT_CLASS (klass),
-	//    VALA_PANEL_CONFIGURE_DIALOG_TOPLEVEL_PROPERTY,
-	//    vala_panel_configure_dialog_properties[VALA_PANEL_CONFIGURE_DIALOG_TOPLEVEL_PROPERTY]
-	//    = g_param_spec_object ("toplevel", "toplevel", "toplevel", VALA_PANEL_TYPE_TOPLEVEL,
-	//    G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
-	//    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	G_OBJECT_CLASS(klass)->get_property     = vala_panel_toplevel_config_get_property;
+	G_OBJECT_CLASS(klass)->set_property     = vala_panel_toplevel_config_set_property;
+	G_OBJECT_CLASS(klass)->constructor      = vala_panel_configure_dialog_constructor;
+	G_OBJECT_CLASS(klass)->finalize         = vala_panel_configure_dialog_finalize;
+	g_object_class_install_property(G_OBJECT_CLASS(klass),
+	                                TOPLEVEL_PROPERTY,
+	                                vala_panel_toplevel_config_properties[TOPLEVEL_PROPERTY] =
+	                                    g_param_spec_object("toplevel",
+	                                                        "toplevel",
+	                                                        "toplevel",
+	                                                        VALA_PANEL_TYPE_TOPLEVEL,
+	                                                        G_PARAM_STATIC_NAME |
+	                                                            G_PARAM_STATIC_NICK |
+	                                                            G_PARAM_STATIC_BLURB |
+	                                                            G_PARAM_READABLE |
+	                                                            G_PARAM_WRITABLE |
+	                                                            G_PARAM_CONSTRUCT_ONLY));
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/lib/pref.ui");
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
