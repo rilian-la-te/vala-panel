@@ -128,7 +128,8 @@ static void apply_styling(ValaPanelApplication *app)
 			                                                 app->provider));
 			g_object_unref0(app->provider);
 		}
-		app->provider = css_apply_from_file_to_app_with_provider(app->css);
+		app->provider = css_apply_from_file_to_app_with_provider_and_priority(
+		    app->css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 	else if (app->provider)
 	{
@@ -462,10 +463,7 @@ static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *
 static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplication *app)
 {
 	g_autofree char *file = gtk_file_chooser_get_filename(self);
-	if (file != NULL)
-		g_action_group_activate_action(G_ACTION_GROUP(app),
-		                               VALA_PANEL_KEY_CSS,
-		                               g_variant_new_string(file));
+	g_object_set(app, VALA_PANEL_KEY_CSS, file, NULL);
 }
 
 static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
