@@ -50,6 +50,8 @@ enum
 	NUM_PROPERTIES
 };
 static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
+G_GNUC_INTERNAL bool vala_panel_toplevel_panel_edge_available(ValaPanelToplevel *self, uint edge,
+                                                              int monitor, bool include_this);
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
 static const GActionEntry entries_monitor[1] = {
 	{ "configure-monitors", NULL, "i", "-2", state_configure_monitor }
@@ -86,6 +88,28 @@ static void vala_panel_configure_dialog_finalize(GObject *obj)
 
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data)
 {
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
+	int panel_gravity, monitor;
+	g_object_get(self->_toplevel,
+	             VALA_PANEL_KEY_MONITOR,
+	             &monitor,
+	             VALA_PANEL_KEY_GRAVITY,
+	             &panel_gravity,
+	             NULL);
+	g_autoptr(GVariant) st = g_action_get_state(G_ACTION(act));
+	int state              = g_variant_get_int32(st);
+	/* change monitor */
+	int request_mon = g_variant_get_int32(param);
+	g_autofree char *str =
+	    request_mon < 0 ? g_strdup(_("All")) : g_strdup_printf(_("%d"), request_mon + 1);
+	GtkPositionType edge = (GtkPositionType)vala_panel_edge_from_gravity(panel_gravity);
+	if (vala_panel_toplevel_panel_edge_available(self->_toplevel, edge, request_mon, false) ||
+	    (state < -1))
+	{
+		g_object_set(self->_toplevel, VALA_PANEL_KEY_MONITOR, request_mon, NULL);
+		g_simple_action_set_state(act, param);
+		gtk_button_set_label(GTK_BUTTON(self->monitors_button), str);
+	}
 }
 static void background_color_connector(GtkColorButton *colorb, void *data)
 {
