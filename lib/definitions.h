@@ -24,20 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define vala_panel_destroy(x, func)                                                                \
-	{                                                                                          \
-		if (x)                                                                             \
-		{                                                                                  \
-			func(x);                                                                   \
-			x = NULL;                                                                  \
-		}                                                                                  \
-	}
-
-#define gtk_widget_destroy0(x) vala_panel_destroy(x, gtk_widget_destroy)
-
-#define g_object_unref0(x) vala_panel_destroy(x, g_object_unref)
-
-#define g_free0(x) vala_panel_destroy(x, g_free)
+#define gtk_widget_destroy0(x) g_clear_pointer(&x, gtk_widget_destroy)
+#define g_object_unref0(x) g_clear_pointer(&x, g_object_unref)
+#define g_free0(x) g_clear_pointer(&x, g_free)
 
 #define g_value_replace_string(string, value)                                                      \
                                                                                                    \

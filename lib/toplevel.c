@@ -336,7 +336,8 @@ static bool button_release_event(GtkWidget *w, GdkEventButton *e)
 		}
 		else
 		{
-			gtk_widget_destroy0(self->context_menu) return true;
+			gtk_widget_destroy0(self->context_menu);
+			return true;
 		}
 	}
 	return false;
