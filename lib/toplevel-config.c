@@ -50,8 +50,6 @@ enum
 	NUM_PROPERTIES
 };
 static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
-G_GNUC_INTERNAL bool vala_panel_toplevel_panel_edge_available(ValaPanelToplevel *self, uint edge,
-                                                              int monitor, bool include_this);
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
 static const GActionEntry entries_monitor[1] = {
 	{ "configure-monitors", NULL, "i", "-2", state_configure_monitor }
@@ -102,8 +100,11 @@ static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *d
 	int request_mon = g_variant_get_int32(param);
 	g_autofree char *str =
 	    request_mon < 0 ? g_strdup(_("All")) : g_strdup_printf(_("%d"), request_mon + 1);
-	GtkPositionType edge = (GtkPositionType)vala_panel_edge_from_gravity(panel_gravity);
-	if (vala_panel_toplevel_panel_edge_available(self->_toplevel, edge, request_mon, false) ||
+	ValaPanelPlatform *pf = vala_panel_toplevel_get_current_platform();
+	if (vala_panel_platform_edge_available(pf,
+	                                       GTK_WINDOW(self->_toplevel),
+	                                       panel_gravity,
+	                                       request_mon) ||
 	    (state < -1))
 	{
 		g_object_set(self->_toplevel, VALA_PANEL_KEY_MONITOR, request_mon, NULL);

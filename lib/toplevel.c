@@ -31,17 +31,12 @@
 static const int PERIOD = 200;
 
 static ValaPanelPlatform *platform = NULL;
-static uint mon_handler            = 0;
-static uint mon_rm_handler         = 0;
 
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
                                                      PanelGravity e);
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
-static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self);
-
-static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data);
 
 static const GActionEntry panel_entries[] =
     { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
@@ -120,8 +115,17 @@ inline ValaPanelCoreSettings *vala_panel_toplevel_get_core_settings()
 {
 	return vala_panel_platform_get_settings(platform);
 }
+inline bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self)
+{
+	return self->initialized;
+}
 
-static void stop_ui(ValaPanelToplevel *self)
+G_GNUC_INTERNAL inline ValaPanelPlatform *vala_panel_toplevel_get_current_platform()
+{
+	return platform;
+}
+
+void stop_ui(ValaPanelToplevel *self)
 {
 	if (self->pref_dialog != NULL)
 		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
@@ -159,7 +163,7 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
 }
 
-static void start_ui(ValaPanelToplevel *self)
+void start_ui(ValaPanelToplevel *self)
 {
 	css_apply_from_resource(GTK_WIDGET(self),
 	                        "/org/vala-panel/lib/style.css",
@@ -284,16 +288,6 @@ static void setup(ValaPanelToplevel *self, bool use_internal_values)
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
 	GtkApplication *panel_app = gtk_window_get_application(self);
-	if (mon_handler == 0)
-		mon_handler = g_signal_connect(gdk_display_get_default(),
-		                               "monitor-added",
-		                               G_CALLBACK(monitors_changed_cb),
-		                               panel_app);
-	if (mon_rm_handler == 0)
-		mon_rm_handler = g_signal_connect(gdk_display_get_default(),
-		                                  "monitor-removed",
-		                                  G_CALLBACK(monitors_changed_cb),
-		                                  panel_app);
 }
 
 /**************************************************************************************
@@ -346,24 +340,6 @@ static bool button_release_event(GtkWidget *w, GdkEventButton *e)
 /**************************************************************************************
  *                                     Actions stuff
  **************************************************************************************/
-
-G_GNUC_INTERNAL bool vala_panel_toplevel_panel_edge_available(ValaPanelToplevel *self, uint edge,
-                                                              int monitor, bool include_this)
-{
-	g_autoptr(GtkApplication) app;
-	g_object_get(self, "application", &app, NULL);
-	for (g_autoptr(GList) w = gtk_application_get_windows(app); w != NULL; w = w->next)
-		if (VALA_PANEL_IS_TOPLEVEL(w))
-		{
-			ValaPanelToplevel *pl = VALA_PANEL_TOPLEVEL(w->data);
-			if (((pl != self) || include_this) &&
-			    (vala_panel_edge_from_gravity(self->gravity) == edge) &&
-			    ((monitor == self->mon) || self->mon < 0))
-				return false;
-		}
-	return true;
-}
-
 void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 {
 	gtk_widget_destroy0(self->pref_dialog);
@@ -394,7 +370,7 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 	int m = self->mon;
 	for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
 	{
-		if (vala_panel_toplevel_panel_edge_available(self, (GtkPositionType)e, m, true))
+		if (vala_panel_platform_edge_available(platform, NULL, (PanelGravity)e * 3, m))
 		{
 			new_edge = (GtkPositionType)e;
 			new_mon  = m;
@@ -408,10 +384,10 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 			/* try each of the four edges */
 			for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
 			{
-				if (vala_panel_toplevel_panel_edge_available(self,
-				                                             (GtkPositionType)e,
-				                                             m,
-				                                             true))
+				if ((vala_panel_platform_edge_available(platform,
+				                                        NULL,
+				                                        (PanelGravity)e * 3,
+				                                        m)))
 				{
 					new_edge = (GtkPositionType)e;
 					new_mon  = m;
@@ -645,31 +621,6 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 	setup(ret, false);
 	return ret;
 }
-/*********************************************************************************************
- * Positioning
- *********************************************************************************************/
-
-static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
-{
-	GtkApplication *app = (GtkApplication *)data;
-	int mons            = gdk_display_get_n_monitors(scr);
-	GList *win          = gtk_application_get_windows(app);
-	for (GList *il = win; il != NULL; il = il->next)
-	{
-		if (VALA_PANEL_IS_TOPLEVEL(il->data))
-		{
-			ValaPanelToplevel *panel = (ValaPanelToplevel *)il->data;
-			if (panel->mon < mons && !panel->initialized && mons > 0)
-				start_ui(panel);
-			else if ((panel->mon >= mons && panel->initialized) || mons == 0)
-				stop_ui(panel);
-			else
-			{
-				vala_panel_toplevel_update_geometry(panel);
-			}
-		}
-	}
-}
 
 static int calc_width(int scrw, int panel_width, int panel_margin)
 {
@@ -739,7 +690,7 @@ static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
 
-static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
+void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 {
 	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self));
 	GdkRectangle marea = { 0 };

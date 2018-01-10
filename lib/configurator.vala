@@ -143,8 +143,7 @@ namespace ValaPanel
             /* change monitor */
             int request_mon = param.get_int32();
             string str = request_mon < 0 ? _("All") : _("%d").printf(request_mon+1);
-            PositionType edge = (PositionType) edge_from_gravity(toplevel.panel_gravity);
-            if(toplevel.panel_edge_available(edge, request_mon,false) || (state<-1))
+            if(Toplevel.current_platform.edge_available(toplevel,toplevel.panel_gravity, request_mon) || (state<-1))
             {
                 toplevel.monitor = request_mon;
                 act.set_state(param);

@@ -106,3 +106,14 @@ void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
 {
 	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
 }
+
+bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
+                                        PanelGravity gravity, int monitor)
+{
+	if (self)
+		return VALA_PANEL_PLATFORM_GET_CLASS(self)->edge_available(self,
+		                                                           top,
+		                                                           gravity,
+		                                                           monitor);
+	return false;
+}

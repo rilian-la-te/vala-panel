@@ -230,6 +230,7 @@ namespace ValaPanel {
         public void update_strut(Gtk.Window top);
         public void move_to_coords(Gtk.Window top, int x, int y);
         public void move_to_side(Gtk.Window top, Gravity side, int monitor);
+		public bool edge_available(Gtk.Window top, Gravity gravity, int monitor);
     }
 }
 [CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]

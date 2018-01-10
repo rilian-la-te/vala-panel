@@ -65,6 +65,10 @@ namespace ValaPanel
 			[CCode (cname = "vala_panel_toplevel_get_core_settings")]
 			get;
 		}
+        internal static Platform current_platform {
+			[CCode (cname = "vala_panel_toplevel_get_current_platform")]
+			get;
+		}
 		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
 		public void configure (string page);
 		[NoAccessorMethod]
@@ -270,6 +274,7 @@ namespace ValaPanel
         public void update_strut(Gtk.Window top);
         public void move_to_coords(Gtk.Window top, int x, int y);
         public void move_to_side(Gtk.Window top, Gravity side, int monitor);
+		public bool edge_available(Gtk.Window top, Gravity gravity, int monitor);
     }
 }
 [CCode (cprefix="")]
