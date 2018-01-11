@@ -26,7 +26,7 @@ struct _ValaPanelToplevelConfig
 	GtkDialog parent_instance;
 	GtkStack *prefs_stack;
 	ValaPanelToplevel *_toplevel;
-	GtkMenuButton *monitors_button;
+	GtkComboBox *monitors_box;
 	GtkSpinButton *spin_iconsize;
 	GtkSpinButton *spin_height;
 	GtkSpinButton *spin_width;
@@ -40,6 +40,7 @@ struct _ValaPanelToplevelConfig
 	GtkLabel *plugin_desc;
 	GtkButton *adding_button;
 	GtkButton *configure_button;
+	GtkListStore *store_monitors;
 };
 
 G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIALOG);
@@ -51,9 +52,6 @@ enum
 };
 static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
-static const GActionEntry entries_monitor[1] = {
-	{ "configure-monitors", NULL, "i", "-2", state_configure_monitor }
-};
 
 static void vala_panel_toplevel_config_init(ValaPanelToplevelConfig *self)
 {
@@ -66,9 +64,10 @@ static void vala_panel_configure_dialog_finalize(GObject *obj)
 	self = G_TYPE_CHECK_INSTANCE_CAST(obj,
 	                                  vala_panel_toplevel_config_get_type(),
 	                                  ValaPanelToplevelConfig);
-	g_object_unref0(self->monitors_button);
+	g_object_unref0(self->monitors_box);
 	g_object_unref0(self->spin_iconsize);
 	g_object_unref0(self->spin_height);
+	g_object_unref0(self->store_monitors);
 	g_object_unref0(self->spin_width);
 	g_object_unref0(self->spin_corners);
 	g_object_unref0(self->font_selector);
@@ -84,32 +83,29 @@ static void vala_panel_configure_dialog_finalize(GObject *obj)
 	G_OBJECT_CLASS(vala_panel_toplevel_config_parent_class)->finalize(obj);
 }
 
-static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data)
+static void on_monitors_changed(GtkComboBox *box, void *data)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
-	int panel_gravity, monitor;
+	int panel_gravity, monitor, request_mon;
 	g_object_get(self->_toplevel,
 	             VALA_PANEL_KEY_MONITOR,
 	             &monitor,
 	             VALA_PANEL_KEY_GRAVITY,
 	             &panel_gravity,
 	             NULL);
-	g_autoptr(GVariant) st = g_action_get_state(G_ACTION(act));
-	int state              = g_variant_get_int32(st);
+
 	/* change monitor */
-	int request_mon = g_variant_get_int32(param);
-	g_autofree char *str =
-	    request_mon < 0 ? g_strdup(_("All")) : g_strdup_printf(_("%d"), request_mon + 1);
+	GtkTreeIter iter;
+	gtk_combo_box_get_active_iter(box, &iter);
+	gtk_tree_model_get(self->store_monitors, &iter, &request_mon, NULL);
 	ValaPanelPlatform *pf = vala_panel_toplevel_get_current_platform();
 	if (vala_panel_platform_edge_available(pf,
 	                                       GTK_WINDOW(self->_toplevel),
 	                                       panel_gravity,
-	                                       request_mon) ||
-	    (state < -1))
+	                                       request_mon))
 	{
 		g_object_set(self->_toplevel, VALA_PANEL_KEY_MONITOR, request_mon, NULL);
-		g_simple_action_set_state(act, param);
-		gtk_button_set_label(GTK_BUTTON(self->monitors_button), str);
+		gtk_combo_box_set_active(box, request_mon + 1);
 	}
 }
 static void background_color_connector(GtkColorButton *colorb, void *data)
@@ -146,32 +142,24 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	g_autoptr(GSimpleActionGroup) conf = g_simple_action_group_new();
 	vala_panel_apply_window_icon(GTK_WINDOW(self));
 	/* monitors */
-	gtk_button_set_relief(GTK_BUTTON(self->monitors_button), GTK_RELIEF_NONE);
 	int monitors       = 0;
 	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self->_toplevel));
 	if (screen != NULL)
 		monitors = gdk_display_get_n_monitors(screen);
 	g_assert(monitors >= 1);
-	g_autoptr(GMenu) menu = g_menu_new();
-	g_menu_append(menu, _("All"), "conf.configure-monitors(-1)");
 	for (int i = 0; i < monitors; i++)
 	{
-		char tmp[1024];
-		char str_num[5];
-		sprintf(tmp, "conf.configure-monitors(%d)", i);
-		sprintf(str_num, "%d", i + 1);
-		g_menu_append(menu, str_num, tmp);
+		GtkTreeIter iter;
+		gtk_list_store_insert_with_values(self->store_monitors,
+		                                  &iter,
+		                                  0,
+		                                  i,
+		                                  1,
+		                                  gdk_monitor_get_model(
+		                                      gdk_display_get_monitor(screen, i)),
+		                                  NULL);
 	}
-	gtk_menu_button_set_menu_model(self->monitors_button, G_MENU_MODEL(menu));
-	gtk_menu_button_set_use_popover(self->monitors_button, true);
-	g_action_map_add_action_entries(G_ACTION_MAP(conf),
-	                                entries_monitor,
-	                                G_N_ELEMENTS(entries_monitor),
-	                                self);
-	int mon;
-	g_object_get(self->_toplevel, VALA_PANEL_KEY_MONITOR, &mon, NULL);
-	g_autoptr(GVariant) v = g_variant_new_int32(mon);
-	g_action_group_change_action_state(G_ACTION_GROUP(conf), "configure-monitors", v);
+	on_monitors_changed(self->monitors_box, self);
 
 	/* size */
 	g_object_bind_property(self->_toplevel,
@@ -330,10 +318,10 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/lib/pref.ui");
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
-	                                          "monitors-button",
+	                                          "combo-monitors",
 	                                          FALSE,
 	                                          G_STRUCT_OFFSET(ValaPanelToplevelConfig,
-	                                                          monitors_button));
+	                                                          monitors_box));
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
 	                                          "spin-iconsize",
 	                                          FALSE,
@@ -404,9 +392,17 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	                                          FALSE,
 	                                          G_STRUCT_OFFSET(ValaPanelToplevelConfig,
 	                                                          prefs_stack));
-	//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
-	//    "on_configure_plugin",
-	//    G_CALLBACK(_vala_panel_configure_dialog_on_configure_plugin_gtk_button_clicked));
+	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
+	                                          "liststore-monitor",
+	                                          FALSE,
+	                                          G_STRUCT_OFFSET(ValaPanelToplevelConfig,
+	                                                          store_monitors));
+	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	                                             "on_monitor_changed",
+	                                             G_CALLBACK(on_monitors_changed));
+	//        gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
+	//        "on_configure_plugin",
+	//        G_CALLBACK(_vala_panel_configure_dialog_on_configure_plugin_gtk_button_clicked));
 	//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
 	//    "on_add_plugin",
 	//    G_CALLBACK(_vala_panel_configure_dialog_on_add_plugin_gtk_button_clicked));
