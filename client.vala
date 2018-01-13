@@ -167,6 +167,17 @@ namespace DBusMenu
             if (need_update)
                 Idle.add(request_layout_update);
         }
+        public void handle_item_event(int item_id, string event_id, Variant? data, uint timestamp)
+        {
+            try
+            {
+                if (iface is Iface)
+                    iface.event(item_id,event_id,data ?? new Variant.int32(0),timestamp);
+            } catch (Error e)
+            {
+                stderr.printf("Error handling event:%s\n",e.message);
+            }
+        }
         private async void request_properties(int id)
         {
             Variant props;

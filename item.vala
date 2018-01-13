@@ -123,15 +123,7 @@ namespace DBusMenu
         }
         public void handle_event(string event_id, Variant? data, uint timestamp)
         {
-            try
-            {
-                unowned Iface iface = client.iface;
-                if (iface is Iface)
-                    iface.event(this.id,event_id,data ?? new Variant.int32(0),timestamp);
-            } catch (Error e)
-            {
-                stderr.printf("Error handling event:%s\n",e.message);
-            }
+            client.handle_item_event(this.id,event_id,data,timestamp);
         }
         public void request_about_to_show()
         {
