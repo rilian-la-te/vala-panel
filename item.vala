@@ -125,7 +125,9 @@ namespace DBusMenu
         {
             try
             {
-                client.iface.event(this.id,event_id,data ?? new Variant.int32(0),timestamp);
+                unowned Iface iface = client.iface;
+                if (iface is Iface)
+                    iface.event(this.id,event_id,data ?? new Variant.int32(0),timestamp);
             } catch (Error e)
             {
                 stderr.printf("Error handling event:%s\n",e.message);
