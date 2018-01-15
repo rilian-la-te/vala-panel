@@ -43,13 +43,13 @@ namespace MenuMaker
     public const string ATTRIBUTE_DND_SOURCE;
     [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_TOOLTIP")]
     public const string ATTRIBUTE_TOOLTIP;
-    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_id")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_id")]
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_uri")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_uri")]
     public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher.h",cname="activate_menu_launch_command")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_command")]
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_launch")]
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
     [CCode (cheader_filename="launcher.h",cname="vala_panel_launch_with_context")]
     public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
