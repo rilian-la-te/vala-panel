@@ -16,16 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "runner.h"
-#include "boxed-wrapper.h"
-#include "glistmodel-filter.h"
-#include "info-data.h"
-#include "lib/css.h"
-#include "lib/definitions.h"
-#include "lib/launcher.h"
 #include <gio/gdesktopappinfo.h>
 #include <stdbool.h>
 #include <string.h>
+
+#include "config.h"
+
+#include "runner.h"
+#include "util-gtk.h"
 
 #define MAX_SEARCH_RESULTS 30
 
@@ -122,7 +120,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			launch = false;
 		if (!launch)
 		{
-			g_object_unref0(app_info);
+			g_clear_pointer(&app_info, g_object_unref);
 			g_autoptr(GError) err = NULL;
 			app_info              = g_app_info_create_from_commandline(
                             gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
@@ -331,14 +329,14 @@ static void vala_panel_runner_destroy(GtkWidget *obj)
 	    G_TYPE_CHECK_INSTANCE_CAST(obj, vala_panel_runner_get_type(), ValaPanelRunner);
 	gtk_window_set_application((GtkWindow *)self, NULL);
 	g_cancellable_cancel(self->cancellable);
-	g_object_unref0(self->cancellable);
-	g_object_unref0(self->task);
-	gtk_widget_destroy0(self->main_entry);
-	gtk_widget_destroy0(self->bottom_revealer);
-	gtk_widget_destroy0(self->app_box);
-	gtk_widget_destroy0(self->terminal_button);
-	g_object_unref0(self->model);
-	g_object_unref0(self->filter);
+	g_clear_pointer(&self->cancellable, g_object_unref);
+	g_clear_pointer(&self->task, g_object_unref);
+	g_clear_pointer(&self->main_entry, gtk_widget_destroy);
+	g_clear_pointer(&self->bottom_revealer, gtk_widget_destroy);
+	g_clear_pointer(&self->app_box, gtk_widget_destroy);
+	g_clear_pointer(&self->terminal_button, gtk_widget_destroy);
+	g_clear_pointer(&self->model, g_object_unref);
+	g_clear_pointer(&self->filter, g_object_unref);
 	GTK_WIDGET_CLASS(vala_panel_runner_parent_class)->destroy(obj);
 }
 

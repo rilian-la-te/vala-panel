@@ -1,4 +1,6 @@
 #include "applet-engine-module.h"
+#include "config.h"
+#include "util.h"
 #include <gmodule.h>
 
 struct _ValaPanelAppletEngineIfaceModule

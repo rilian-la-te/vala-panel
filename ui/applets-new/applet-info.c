@@ -1,5 +1,5 @@
 #include "applet-info.h"
-#include "lib/definitions.h"
+#include "definitions.h"
 
 #define G_SETTINGS_ENABLE_BACKEND
 #include <gio/gsettingsbackend.h>

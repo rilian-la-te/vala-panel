@@ -1,6 +1,6 @@
 #include "panel-layout.h"
-#include "lib/applets-new/applet-api.h"
-#include "lib/settings-manager.h"
+#include "applet-api.h"
+#include "settings-manager.h"
 
 struct _ValaPanelAppletLayout
 {

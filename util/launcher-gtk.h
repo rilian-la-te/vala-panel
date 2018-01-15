@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LAUNCHER_H
-#define LAUNCHER_H
+#ifndef LAUNCHER_GTK_H
+#define LAUNCHER_GTK_H
 
 #include <gdk/gdk.h>
 #include <gio/gdesktopappinfo.h>
@@ -25,9 +25,6 @@
 #include <stdbool.h>
 
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent);
-bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris);
-GAppInfo *vala_panel_get_default_for_uri(const char *uri);
-void child_spawn_func(void *data);
 void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data);
 void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data);
 void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpointer user_data);

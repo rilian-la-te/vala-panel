@@ -19,11 +19,7 @@
 #include "config.h"
 
 #include "application.h"
-#include "lib/css.h"
-#include "lib/definitions.h"
-#include "lib/launcher.h"
-#include "lib/misc.h"
-#include "lib/panel-platform.h"
+#include "server.h"
 #include "vala-panel-compat.h"
 #include "vala-panel-platform-standalone-x11.h"
 
@@ -465,6 +461,8 @@ static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplicatio
 	g_autofree char *file = gtk_file_chooser_get_filename(self);
 	g_object_set(app, VALA_PANEL_KEY_CSS, file, NULL);
 }
+
+/* TODO: Move activate_menu to hidden toplevel interface, it is not X11-specific */
 
 static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 {

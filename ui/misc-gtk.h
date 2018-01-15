@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MISC_H
-#define MISC_H
+#ifndef MISC_GTK_H
+#define MISC_GTK_H
 
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -34,12 +34,8 @@ void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label
                                   ValaPanelToplevel *top);
 void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
 void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value);
-void vala_panel_add_prop_as_action(GActionMap *map, const char *prop);
-void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop);
 void vala_panel_apply_window_icon(GtkWindow *win);
 int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon);
-void vala_panel_reset_schema(GSettings *settings);
-void vala_panel_reset_schema_with_children(GSettings *settings);
 void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error);
 bool vala_panel_generate_confirmation_dialog(GtkWindow *parent, const char *error);
 G_END_DECLS

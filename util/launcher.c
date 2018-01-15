@@ -31,13 +31,6 @@ void child_spawn_func(void *data)
 	setpgid(0, getpgid(getppid()));
 }
 
-bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
-{
-	g_autoptr(GAppLaunchContext) cxt = G_APP_LAUNCH_CONTEXT(
-	    gdk_display_get_app_launch_context(gtk_widget_get_display(parent)));
-	return vala_panel_launch_with_context(app_info, cxt, uris);
-}
-
 bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris)
 {
 	g_autoptr(GError) err = NULL;
@@ -71,39 +64,4 @@ GAppInfo *vala_panel_get_default_for_uri(const char *uri)
 		app_info              = g_file_query_default_handler(file, NULL, NULL);
 	}
 	return app_info;
-}
-
-void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data)
-{
-	const gchar *id                 = g_variant_get_string(param, NULL);
-	g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new(id);
-	GtkApplication *app             = GTK_APPLICATION(user_data);
-	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, NULL, GTK_WIDGET(window));
-}
-
-void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data)
-{
-	const char *uri                 = g_variant_get_string(param, NULL);
-	g_autoptr(GList) uris           = g_list_append(NULL, (gpointer)uri);
-	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(vala_panel_get_default_for_uri(uri));
-	GtkApplication *app             = GTK_APPLICATION(user_data);
-	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, uris, GTK_WIDGET(window));
-}
-
-void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpointer user_data)
-{
-	g_autoptr(GError) err           = NULL;
-	const char *commandline         = g_variant_get_string(param, NULL);
-	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(
-	    g_app_info_create_from_commandline(commandline,
-	                                       NULL,
-	                                       G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION,
-	                                       &err));
-	if (err)
-		g_warning("%s\n", err->message);
-	GtkApplication *app = GTK_APPLICATION(user_data);
-	GtkWidget *window   = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }

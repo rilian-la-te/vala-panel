@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "applet-manager.h"
-#include "lib/misc.h"
+#include "util.h"
 
 G_BEGIN_DECLS
 

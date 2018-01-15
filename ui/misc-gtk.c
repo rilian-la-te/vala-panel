@@ -22,6 +22,7 @@
 
 #include "css.h"
 #include "definitions.h"
+#include "misc-gtk.h"
 #include "misc.h"
 #include "toplevel.h"
 
@@ -130,19 +131,6 @@ void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value)
 	gtk_button_set_label(GTK_BUTTON(b), str);
 }
 
-void vala_panel_add_prop_as_action(GActionMap *map, const char *prop)
-{
-	g_autoptr(GAction) action = G_ACTION(g_property_action_new(prop, map, prop));
-	g_action_map_add_action(map, action);
-}
-
-void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop)
-{
-	vala_panel_bind_gsettings(map, settings, prop);
-	g_autoptr(GAction) action = G_ACTION(g_settings_create_action(settings, prop));
-	g_action_map_add_action(map, action);
-}
-
 int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 {
 	int mons = gdk_display_get_n_monitors(disp);
@@ -152,29 +140,6 @@ int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 			return i;
 	}
 	return -1;
-}
-
-void vala_panel_reset_schema(GSettings *settings)
-{
-	g_autoptr(GSettingsSchema) schema = NULL;
-	g_object_get(settings, "settings-schema", &schema, NULL);
-	g_auto(GStrv) keys = g_settings_schema_list_keys(schema);
-	for (int i = 0; keys[i]; i++)
-		g_settings_reset(settings, keys[i]);
-}
-
-void vala_panel_reset_schema_with_children(GSettings *settings)
-{
-	g_settings_delay(settings);
-	vala_panel_reset_schema(settings);
-	g_auto(GStrv) children = g_settings_list_children(settings);
-	for (int i = 0; children[i]; i++)
-	{
-		g_autoptr(GSettings) child = g_settings_get_child(settings, children[i]);
-		vala_panel_reset_schema(child);
-	}
-	g_settings_apply(settings);
-	g_settings_sync();
 }
 
 void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error)

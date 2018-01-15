@@ -1,6 +1,6 @@
 #ifndef APPLETSPRIVATE_H
 #define APPLETSPRIVATE_H
-#include "lib/applets-new/applet-api.h"
+#include "applet-api.h"
 
 GSList *vala_panel_applet_engine_iface_get_available_types(ValaPanelAppletEngineIface *self);
 ValaPanelAppletInfo *vala_panel_applet_engine_iface_get_applet_info_for_type(

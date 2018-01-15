@@ -1,9 +1,8 @@
 #ifndef APPLETENGINEMODULE_H
 #define APPLETENGINEMODULE_H
 
-#include "lib/applets-new/applet-api.h"
-#include "lib/config.h"
-#include "lib/definitions.h"
+#include "applet-api.h"
+#include "definitions.h"
 #include <glib-object.h>
 #include <stdbool.h>
 

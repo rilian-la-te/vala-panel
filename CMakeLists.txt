@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.8)
-cmake_policy (VERSION 2.8)
+cmake_minimum_required (VERSION 3.3)
+cmake_policy (VERSION 3.3)
 project (vala-panel C)
 enable_testing ()
 include(GNUInstallDirs)
@@ -72,7 +72,7 @@ endif(RPMTools_FOUND)
 
 add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Configuration
-configure_file (${CMAKE_SOURCE_DIR}/lib/config.h.in ${CMAKE_BINARY_DIR}/lib/config.h)
+configure_file (${CMAKE_SOURCE_DIR}/util/config.h.in ${CMAKE_BINARY_DIR}/config.h)
 configure_file (${CMAKE_SOURCE_DIR}/${APPNAME}.pc.cmake ${CMAKE_BINARY_DIR}/${APPNAME}.pc)
 
 # Some definitions
@@ -86,46 +86,29 @@ include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 #add_definitions(-w) #Suppress all GCC warnings
-add_definitions(-Wall -Wno-unused # Vala loves to create variables
-#		-pedantic
-		-Wno-ignored-qualifiers
-		-Wno-incompatible-pointer-types
-		-Wno-missing-field-initializers
-		-Wno-discarded-qualifiers
-		-Wno-sign-compare
-                -Wextra
-                -fstack-protector -fstack-protector-all
+add_definitions(-Wall -Wextra
+                -Wno-unused
+                -Wno-unused-parameter# Vala loves to create variables
+               #-pedantic
+                -Wno-ignored-qualifiers
+                -Wno-incompatible-pointer-types
+                -Wno-missing-field-initializers
+                -Wno-discarded-qualifiers
+                -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
-
-pkg_check_modules (A
-        gtk+-3.0>=3.22)
-
-pkg_check_modules (B
-  glib-2.0>=2.50)
-
-pkg_check_modules (C
-  gio-2.0>=2.50
-)
+find_package(GLib REQUIRED COMPONENTS goblect gio gmodule gthread VERSION 2.50)
+find_package(GTK3 REQUIRED VERSION 3.22)
 
 pkg_check_modules (GLIB_OLD QUIET
   gio-2.0<=2.52
 )
 
-pkg_check_modules (D
-  gio-unix-2.0>=2.50)
-
-pkg_check_modules (E
-  gthread-2.0>=2.50)
-
-pkg_check_modules (F
+pkg_check_modules (PEAS
   libpeas-1.0>=1.14)
 
-pkg_check_modules (G
-  libpeas-gtk-1.0>=1.14)
-
-pkg_check_modules (H
-  gmodule-2.0>=2.50)
+set(CORE_LIBRARIES ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES} ${GTK3_LIBRARIES} ${PEAS_LIBRARIES})
+set(CORE_INCLUDE_DIRS ${GLIB_INCLUDE_DIRS} ${GTK_INCLUDE_DIRS} ${PEAS_INCLUDE_DIRS})
 
 pkg_check_modules (CORE REQUIRED QUIET
   gtk+-3.0>=3.22
@@ -164,8 +147,10 @@ include_directories(${CMAKE_BINARY_DIR}/lib)
 set(TARGET_GLIB ${GLIB_VERSION_MAJOR}.${GLIB_VERSION_MINOR})
 
 ADD_SUBDIRECTORY(po)
-ADD_SUBDIRECTORY(lib)
-ADD_SUBDIRECTORY(app)
+ADD_SUBDIRECTORY(util)
 ADD_SUBDIRECTORY(runner)
+add_subdirectory(dbusmenu)
+ADD_SUBDIRECTORY(ui)
+ADD_SUBDIRECTORY(app)
 ADD_SUBDIRECTORY(applets)
 ADD_SUBDIRECTORY(data)

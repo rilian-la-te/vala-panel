@@ -1,7 +1,7 @@
 #include "applet-manager.h"
+#include "applet-api.h"
 #include "applet-engine-module.h"
-#include "lib/applets-new/applet-api.h"
-#include "lib/definitions.h"
+#include "definitions.h"
 #include "private.h"
 
 #define PLUGIN_SETTINGS_SCHEMA_BASE "org.valapanel.toplevel.%s"

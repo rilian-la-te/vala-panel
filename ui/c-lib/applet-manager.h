@@ -1,11 +1,11 @@
 #ifndef APPLETMANAGER_C
 #define APPLETMANAGER_C
 
-#include "lib/config.h"
+#include "config.h"
 
+#include "applet-api.h"
 #include "applet-engine-module.h"
-#include "lib/applets-new/applet-api.h"
-#include "lib/panel-platform.h"
+#include "panel-platform.h"
 #include <glib-object.h>
 
 G_BEGIN_DECLS

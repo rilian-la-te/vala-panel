@@ -24,7 +24,8 @@
 
 #include <gtk/gtk.h>
 
-#include "lib/css.h"
+#include "util-gtk.h"
+#include "util.h"
 #include "xfce-arrow-button.h"
 
 /**

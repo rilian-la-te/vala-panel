@@ -2,5 +2,5 @@
 	path = cmake
 	url = https://github.com/rilian-la-te/cmake-vala.git
 [submodule "lib/dbusmenu"]
-	path = lib/dbusmenu
+	path = dbusmenu
 	url = https://github.com/rilian-la-te/vala-dbusmenu

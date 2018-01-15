@@ -17,11 +17,9 @@
  */
 
 #include "runner-app.h"
-#include "lib/config.h"
-#include "lib/definitions.h"
+#include "config.h"
 #include "runner.h"
-#include <locale.h>
-
+#include "util.h"
 #include <locale.h>
 
 struct _ValaPanelRunApplication
@@ -52,7 +50,7 @@ static void vala_panel_run_application_activate(GApplication *application)
 
 static void vala_panel_run_application_finalize(GObject *app)
 {
-	gtk_widget_destroy0(VALA_PANEL_RUN_APPLICATION(app)->run_dialog);
+	g_clear_pointer(&VALA_PANEL_RUN_APPLICATION(app)->run_dialog, gtk_widget_destroy);
 	(*G_OBJECT_CLASS(vala_panel_run_application_parent_class)->finalize)(app);
 }
 static void vala_panel_run_application_init(ValaPanelRunApplication *self)

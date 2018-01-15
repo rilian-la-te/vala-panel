@@ -18,7 +18,6 @@
 
 #include "glistmodel-filter.h"
 #include "boxed-wrapper.h"
-#include "info-data.h"
 
 struct _ValaPanelListModelFilter
 {

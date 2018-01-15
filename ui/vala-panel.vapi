@@ -151,13 +151,13 @@ namespace ValaPanel {
 		[NoAccessorMethod]
 		public int width { get; internal set; }
 	}
-	[CCode (cheader_filename = "misc.h")]
+	[CCode (cheader_filename = "misc-gtk.h")]
 	public static void setup_icon (Gtk.Image img, GLib.Icon icon, ValaPanel.Toplevel? top = null, int size = -1);
-	[CCode (cheader_filename = "misc.h")]
+	[CCode (cheader_filename = "misc-gtk.h")]
 	public static void setup_icon_button (Gtk.Button btn, GLib.Icon? icon = null, string? label = null, ValaPanel.Toplevel? top = null);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
     public static void apply_window_icon(Window w);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
 	public static int monitor_num_from_mon(Gdk.Display display, Gdk.Monitor monitor);
     [CCode (cheader_filename="misc.h")]
     public static void reset_schema(GLib.Settings settings);
@@ -167,13 +167,13 @@ namespace ValaPanel {
     public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
     [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="definitions.h")]
     public static void settings_bind(Object map, GLib.Settings settings, string prop);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
     public static void setup_button(Button b, Image? img = null, string? label = null);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
     public static void setup_label(Label label, string text, bool bold, double factor);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
     public static void scale_button_set_range(ScaleButton b, int lower, int upper);
-    [CCode (cheader_filename="misc.h")]
+    [CCode (cheader_filename="misc-gtk.h")]
     public static void scale_button_set_value_labeled(ScaleButton b, int val);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation orient_from_gravity(Gravity gravity);

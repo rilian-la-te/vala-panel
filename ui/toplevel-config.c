@@ -18,6 +18,7 @@
 
 #include "toplevel-config.h"
 #include "definitions.h"
+#include "misc-gtk.h"
 #include "misc.h"
 #include "toplevel.h"
 

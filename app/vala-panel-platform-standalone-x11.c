@@ -19,11 +19,9 @@
 #include "config.h"
 
 #include "applet-widget.h"
+#include "definitions.h"
 #include "gio/gsettingsbackend.h"
-#include "lib/definitions.h"
-#include "lib/settings-manager.h"
-//#include "lib/toplevel.h"
-#include "vala-panel-compat.h"
+#include "server.h"
 #include "vala-panel-platform-standalone-x11.h"
 
 struct _ValaPanelPlatformX11
