@@ -158,8 +158,6 @@ static void client_delete(TrayPlugin *tr, TrayClient *tc, gboolean unlink, gbool
 			gtk_widget_destroy(tc->socket);
 		if (GTK_IS_CONTAINER(tr->plugin))
 			gtk_container_remove(GTK_CONTAINER(tr->plugin), widget);
-		if (GTK_IS_WIDGET(widget))
-			gtk_widget_destroy(widget);
 	}
 
 	/* Deallocate the client structure. */
