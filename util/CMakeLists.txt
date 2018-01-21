@@ -51,13 +51,15 @@ target_include_directories(util PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLU
 
 set_target_properties (util PROPERTIES
     VERSION ${VERSION}
-    SOVERSION ${SOVERSION})
+    SOVERSION ${SOVERSION}
+    POSITION_INDEPENDENT_CODE ON)
 
 add_library (util-gtk STATIC
     ${UTIL_GTK_SOURCES}
     ${UTIL_GTK_HEADERS}
     ${GLIB_RESOURCES_LIB}
 )
+set_property(TARGET util-gtk PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_dependencies(util-gtk util)
 target_link_libraries (util-gtk util ${GTK3_LIBRARIES} ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES})
 target_include_directories(util-gtk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util)
