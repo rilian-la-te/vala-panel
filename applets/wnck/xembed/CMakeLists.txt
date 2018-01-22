@@ -11,7 +11,7 @@ GENERATE_HEADER
     xembed-internal
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_SOURCE_DIR}/lib
+    --vapidir=${CMAKE_SOURCE_DIR}/ui
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
     --target-glib=2.50
     --thread
@@ -28,7 +28,7 @@ PACKAGES
     gdk-x11-3.0
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_SOURCE_DIR}/lib
+    --vapidir=${CMAKE_SOURCE_DIR}/ui
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
     --target-glib=2.50
     --thread
