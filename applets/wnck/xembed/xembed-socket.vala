@@ -90,14 +90,14 @@ namespace XEmbed
             string? name = null;
             var display = this.get_display() as Gdk.X11.Display;
             var req_type = Gdk.X11.get_xatom_by_name_for_display(display,type_name);
-            Gdk.error_trap_push();
+            display.error_trap_push();
             var result = display.get_xdisplay().get_window_property(window,
                                                                     Gdk.X11.get_xatom_by_name_for_display(display,prop_name),
                                                                     0,long.MAX, false, req_type,
                                                                     out type, out format, out nitems,
                                                                     out bytes_after, out val_void);
             val = (string)val_void;
-            if (Gdk.error_trap_pop() != 0 || result != 0 || val == null)
+            if (display.error_trap_pop() != 0 || result != 0 || val == null)
                 return null;
             /* check the returned data */
             if (type == req_type && format == 8 && nitems > 0 && val.validate((ssize_t)nitems))
