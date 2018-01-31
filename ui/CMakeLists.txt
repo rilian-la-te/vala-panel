@@ -79,7 +79,6 @@ add_library (${LIBNAME} SHARED
     ${LIBVALAPANEL_C_SOURCES}
     ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
-    $<TARGET_OBJECTS:vala-dbusmenu-o>
     definitions.h
 )
 

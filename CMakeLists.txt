@@ -97,7 +97,7 @@ add_definitions(-Wall -Wextra
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
-find_package(GLib REQUIRED COMPONENTS goblect gio gmodule gthread VERSION 2.50)
+find_package(GLib REQUIRED COMPONENTS goblect gio gio-unix gmodule gthread VERSION 2.50)
 find_package(GTK3 REQUIRED VERSION 3.22)
 
 pkg_check_modules (GLIB_OLD QUIET
@@ -149,7 +149,6 @@ set(TARGET_GLIB ${GLIB_VERSION_MAJOR}.${GLIB_VERSION_MINOR})
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(util)
 ADD_SUBDIRECTORY(runner)
-add_subdirectory(dbusmenu)
 ADD_SUBDIRECTORY(ui)
 ADD_SUBDIRECTORY(app)
 ADD_SUBDIRECTORY(applets)
