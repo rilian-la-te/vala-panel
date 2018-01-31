@@ -131,7 +131,7 @@ void stop_ui(ValaPanelToplevel *self)
 		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
 	if (self->initialized)
 	{
-		gdk_flush();
+		gdk_display_flush(gtk_widget_get_display(GTK_WIDGET(self)));
 		self->initialized = false;
 	}
 	GtkWidget *ch = gtk_bin_get_child(GTK_BIN(self));
