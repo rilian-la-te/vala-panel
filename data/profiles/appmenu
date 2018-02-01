@@ -23,7 +23,7 @@ is-menu-bar=false
 
 [appmenu-valapanel]
 toplevel-id='appmenu'
-plugin-type='appmenu-valapanel'
+plugin-type='appmenu'
 position=1
 
 [separator]
