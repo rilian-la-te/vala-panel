@@ -30,7 +30,7 @@
       <default>['applications']</default>
     </key>
   </schema>
-  <schema id="org.valapanel.toplevel.monitors">
+  <schema id="org.valapanel.monitors">
     <key name="display-cpu-monitor" type="b">
       <default>true</default>
     </key>
