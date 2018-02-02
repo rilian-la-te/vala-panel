@@ -96,7 +96,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				g_autofree char *str = g_settings_get_string(settings, key);
 				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
 				SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
-				data->key        = key;
+				data->key        = g_strdup(key);
 				data->settings   = settings;
 				g_signal_connect(entry,
 				                 "file-set",
@@ -132,7 +132,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				g_signal_connect(btn,
 				                 "file-set",
 				                 G_CALLBACK(set_file_response),
-				                 &data);
+				                 data);
 				g_signal_connect_swapped(dlg_vbox,
 				                         "destroy",
 				                         G_CALLBACK(g_free),
