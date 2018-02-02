@@ -4,12 +4,11 @@
 # ideal <05281253@bjtu.edu.cn>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: lxpanel 0.3.8.1\n"
+"Project-Id-Version: vala-panel 0.3.73\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 13:56+0300\n"
-"PO-Revision-Date: 2014-08-21 02:30+0000\n"
-"Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2017-12-19 22:09+0300\n"
+"PO-Revision-Date: 2018-02-02 21:13+0800\n"
+"Last-Translator: Wei Cui <ghostplant@qq.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,1917 +17,763 @@ msgstr ""
 "X-Generator: Pootle 2.6.0-rc1\n"
 "X-POOTLE-MTIME: 1408588234.000000\n"
 
-#. { "configure", N_("Preferences"), configure },
-#: ../src/configurator.c:50 ../src/gtk-run.c:373 ../plugins/menu.c:749
-msgid "Run"
-msgstr "运行"
-
-#: ../src/configurator.c:51 ../plugins/menu.c:750
-msgid "Restart"
-msgstr "重新启动"
-
-#: ../src/configurator.c:52 ../plugins/menu.c:751
-msgid "Logout"
-msgstr "注销"
-
-#: ../src/configurator.c:558
-msgid "Currently loaded plugins"
-msgstr "当前加载的插件"
-
-#: ../src/configurator.c:567
-msgid "Stretch"
-msgstr "拉伸"
-
-#: ../src/configurator.c:689
-msgid "Add plugin to panel"
-msgstr "向面板添加插件"
-
-#: ../src/configurator.c:717
-msgid "Available plugins"
-msgstr "可用插件"
-
-#: ../src/configurator.c:1255
-msgid "Logout command is not set"
-msgstr "注销命令尚未设置"
-
-#: ../src/configurator.c:1323
-msgid "Select a directory"
-msgstr "选择目录"
-
-#: ../src/configurator.c:1323 ../src/configurator.c:1441
+#: ../lib/generic-config-dialog.c:94 ../lib/generic-config-dialog.c:117
 msgid "Select a file"
 msgstr "选择文件"
 
-#: ../src/configurator.c:1468
-msgid "_Browse"
-msgstr "浏览(_B)"
-
-#: ../src/panel.c:926
-msgid "There is no room for another panel. All the edges are taken."
-msgstr "没有空间再放面板了。所有边都占用了。"
-
-#: ../src/panel.c:951
-msgid ""
-"Really delete this panel?\n"
-"<b>Warning: This can not be recovered.</b>"
-msgstr ""
-"真的要删除这个面板吗？\n"
-"<b>警告：这个动作无法复原。</b>"
-
-#: ../src/panel.c:953
-msgid "Confirm"
-msgstr "确认"
-
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../src/panel.c:988
-msgid "translator-credits"
-msgstr ""
-"Wylmer Wang <wantinghard@gmail.com>\n"
-"ideal <05281253@bjtu.edu.cn>"
-
-#: ../src/panel.c:993
-msgid "LXPanel"
-msgstr "LXPanel"
-
-#: ../src/panel.c:1011
-msgid "Copyright (C) 2008-2014"
-msgstr "版权所有 (C) 2008-2014"
-
-#: ../src/panel.c:1012
-msgid "Desktop panel for LXDE project"
-msgstr "LXDE 项目的桌面面板"
-
-#: ../src/panel.c:1054
-#, c-format
-msgid "\"%s\" Settings"
-msgstr "“%s”设置"
-
-#: ../src/panel.c:1074
-msgid "Add / Remove Panel Items"
-msgstr "添加/删除面板项"
-
-#: ../src/panel.c:1082
-#, c-format
-msgid "Remove \"%s\" From Panel"
-msgstr "从面板中删除“%s”"
-
-#: ../src/panel.c:1094
-msgid "Panel Settings"
-msgstr "面板设置"
-
-#: ../src/panel.c:1100
-msgid "Create New Panel"
-msgstr "创建新面板"
-
-#: ../src/panel.c:1106
-msgid "Delete This Panel"
-msgstr "删除此面板"
-
-#: ../src/panel.c:1117
-msgid "About"
-msgstr "关于"
-
-#: ../src/panel.c:1124
-msgid "Panel"
-msgstr "面板"
-
-#: ../src/panel.c:1309 ../src/panel.c:1317 ../data/ui/panel-pref.glade.h:22
-msgid "Height in px:"
-msgstr "高度："
-
-#: ../src/panel.c:1310 ../src/panel.c:1316 ../data/ui/panel-pref.glade.h:21
-msgid "Width:"
-msgstr "宽度："
-
-#: ../src/panel.c:1311 ../data/ui/panel-pref.glade.h:13
-msgid "Left"
-msgstr "左"
-
-#: ../src/panel.c:1312 ../data/ui/panel-pref.glade.h:14
-msgid "Right"
-msgstr "右"
-
-#: ../src/panel.c:1318 ../data/ui/panel-pref.glade.h:12
-msgid "Top"
-msgstr "上"
-
-#: ../src/panel.c:1319 ../data/ui/panel-pref.glade.h:11
-msgid "Bottom"
-msgstr "下"
-
-#: ../src/panel.c:1609
-#, c-format
-msgid "lxpanel %s - lightweight GTK2+ panel for UNIX desktops\n"
-msgstr "lxpanel %s - UNIX 桌面的轻量级 GTK2+ 面板\n"
-
-#: ../src/panel.c:1610
-#, c-format
-msgid "Command line options:\n"
-msgstr "命令行选项：\n"
-
-#: ../src/panel.c:1611
-#, c-format
-msgid " --help      -- print this help and exit\n"
-msgstr " --help      -- 显示此帮助并退出\n"
-
-#: ../src/panel.c:1612
-#, c-format
-msgid " --version   -- print version and exit\n"
-msgstr " --version   -- 显示版本信息并退出\n"
-
-#. g_print(_(" --log <number> -- set log level 0-5. 0 - none 5 - chatty\n"));
-#. g_print(_(" --configure -- launch configuration utility\n"));
-#: ../src/panel.c:1615
-#, c-format
-msgid " --profile name -- use specified profile\n"
-msgstr " --profile 名称 -- 使用指定的配置文件\n"
-
-#: ../src/panel.c:1617
-#, c-format
-msgid " -h  -- same as --help\n"
-msgstr " -h  -- 和 --help 作用相同\n"
-
-#: ../src/panel.c:1618
-#, c-format
-msgid " -p  -- same as --profile\n"
-msgstr " -p  -- 和 --profile 作用相同\n"
-
-#: ../src/panel.c:1619
-#, c-format
-msgid " -v  -- same as --version\n"
-msgstr " -v  -- 和 --version 作用相同\n"
-
-#. g_print(_(" -C  -- same as --configure\n"));
-#: ../src/panel.c:1621
-#, c-format
-msgid ""
-"\n"
-"Visit http://lxde.org/ for detail.\n"
-"\n"
-msgstr ""
-"\n"
-"请访问 http://lxde.org/ 了解详细信息\n"
-"\n"
-
-#: ../src/plugin.c:388
-msgid "No file manager is configured."
-msgstr "没有配置文件管理器。"
-
-#: ../src/gtk-run.c:387
-msgid "Enter the command you want to execute:"
-msgstr "输入您要想执行的命令："
-
-#. vim: set sw=4 et sts=4 ts=4 :
-#: ../data/ui/launchtaskbar.glade.h:1 ../plugins/launchtaskbar.c:3475
-msgid "Application Launch and Task Bar"
-msgstr "应用启动和任务栏"
-
-#. Launchtaskbar mode: launchbar, taskbar, or combined
-#: ../data/ui/launchtaskbar.glade.h:3
-msgid "<b>Mode:</b>"
-msgstr "<b>模式：</b>"
-
-#: ../data/ui/launchtaskbar.glade.h:4
-msgid "Launchers"
-msgstr "启动器"
-
-#: ../data/ui/launchtaskbar.glade.h:5
-msgid "<b>Launchbar</b>"
-msgstr "<b>启动栏</b>"
-
-#: ../data/ui/launchtaskbar.glade.h:6
-msgid "Show tooltips"
-msgstr "显示工具提示"
-
-#: ../data/ui/launchtaskbar.glade.h:7
-msgid "Icons only"
-msgstr "只显示图标"
-
-#: ../data/ui/launchtaskbar.glade.h:8
-msgid "Flat buttons"
-msgstr "平面按钮"
-
-#: ../data/ui/launchtaskbar.glade.h:9
-msgid "Show windows from all desktops"
-msgstr "显示来自全部桌面的窗口"
-
-#: ../data/ui/launchtaskbar.glade.h:10
-msgid "Only show windows on the same monitor as the task bar"
-msgstr "只显示任务栏所在显示器上的窗口"
-
-#: ../data/ui/launchtaskbar.glade.h:11
-msgid "Use mouse wheel"
-msgstr "使用鼠标滚轮"
-
-#: ../data/ui/launchtaskbar.glade.h:12
-msgid "Flash when there is any window requiring attention"
-msgstr "当有窗口要求用户注意时，闪烁面板"
-
-#: ../data/ui/launchtaskbar.glade.h:13
-msgid "Combine multiple application windows into a single button"
-msgstr "将应用程序的多个窗口组合到单个按钮中"
-
-#: ../data/ui/launchtaskbar.glade.h:14
-msgid "Maximum width of task button"
-msgstr "任务按钮的最大宽度"
-
-#: ../data/ui/launchtaskbar.glade.h:15
-msgid "Spacing"
-msgstr "间距"
-
-#: ../data/ui/launchtaskbar.glade.h:16
-msgid "<b>Taskbar</b>"
-msgstr "<b>任务栏</b>"
-
-#: ../data/ui/launchtaskbar.glade.h:17
-msgid "Only Application Launch Bar"
-msgstr "仅应用快速启动栏"
-
-#: ../data/ui/launchtaskbar.glade.h:18
-msgid "Only Task Bar (Window List)"
-msgstr "仅任务栏 (窗口列表)"
-
-#: ../data/ui/launchtaskbar.glade.h:19
-msgid "Integrated Application Launch Bar and Task Bar"
-msgstr "集成的应用快速启动栏和任务栏"
-
-#: ../data/ui/netstatus.glade.h:1
-msgid "<b>Connection</b>"
-msgstr "<b>连接</b>"
-
-#: ../data/ui/netstatus.glade.h:2
-msgid "Status:"
-msgstr "状态："
-
-#: ../data/ui/netstatus.glade.h:3
-msgid "_Name:"
-msgstr "名称(_N)："
-
-#: ../data/ui/netstatus.glade.h:4
-msgid "<b>Activity</b>"
-msgstr "<b>活动</b>"
-
-#: ../data/ui/netstatus.glade.h:5
-msgid "Received:"
-msgstr "接收："
-
-#: ../data/ui/netstatus.glade.h:6
-msgid "Sent:"
-msgstr "发送："
-
-#: ../data/ui/netstatus.glade.h:7
-msgid "<b>Signal Strength</b>"
-msgstr "<b>信号强度</b>"
-
-#: ../data/ui/netstatus.glade.h:9
-#, no-c-format
-msgid "0%"
-msgstr "0%"
-
-#: ../data/ui/netstatus.glade.h:10
-msgid "General"
-msgstr "常规"
-
-#: ../data/ui/netstatus.glade.h:11
-msgid "<b>Internet Protocol (IPv4)</b>"
-msgstr "<b>网络协议 (IPv4)</b>"
-
-#: ../data/ui/netstatus.glade.h:12
-msgid "Address:"
-msgstr "地址："
-
-#: ../data/ui/netstatus.glade.h:13
-msgid "Destination:"
-msgstr "目的地："
-
-#: ../data/ui/netstatus.glade.h:14 ../plugins/netstat/netstat.c:360
-#: ../plugins/netstat/netstat.c:371
-msgid "Broadcast:"
-msgstr "广播地址："
-
-#: ../data/ui/netstatus.glade.h:15
-msgid "Subnet Mask:"
-msgstr "子网掩码："
-
-#: ../data/ui/netstatus.glade.h:16
-msgid "<b>Internet Protocol (IPv6)</b>"
-msgstr "<b>网络协议 (IPv6)</b>"
-
-#: ../data/ui/netstatus.glade.h:17
-msgid "Scope:"
-msgstr "范围："
-
-#: ../data/ui/netstatus.glade.h:18
-msgid "<b>Network Device</b>"
-msgstr "<b>网络设备</b>"
-
-#: ../data/ui/netstatus.glade.h:19
-msgid "Type:"
-msgstr "类型："
-
-#: ../data/ui/netstatus.glade.h:20
-msgid "Support"
-msgstr "支持"
-
-#: ../data/ui/netstatus.glade.h:21
-msgid "Con_figure"
-msgstr "设置(_F)"
-
-#: ../data/ui/panel-pref.glade.h:1
-msgid "Dynamic"
-msgstr "动态"
-
-#: ../data/ui/panel-pref.glade.h:2
-msgid "Pixels"
-msgstr "像素"
-
-#: ../data/ui/panel-pref.glade.h:4
-#, no-c-format
-msgid "% Percent"
-msgstr "百分比"
-
-#: ../data/ui/panel-pref.glade.h:5
-msgid "None"
-msgstr "无"
-
-#: ../data/ui/panel-pref.glade.h:6
-msgid "Err"
-msgstr "错误"
-
-#: ../data/ui/panel-pref.glade.h:7
-msgid "Warn"
-msgstr "警告"
-
-#: ../data/ui/panel-pref.glade.h:8
-msgid "Info"
-msgstr "信息"
-
-#: ../data/ui/panel-pref.glade.h:9
-msgid "All"
-msgstr "全部"
-
-#: ../data/ui/panel-pref.glade.h:10
-msgid "Panel Preferences"
-msgstr "面板首选项"
-
-#: ../data/ui/panel-pref.glade.h:15
-msgid "Edge:"
-msgstr "边缘："
-
-#: ../data/ui/panel-pref.glade.h:16
-msgid "Center"
-msgstr "居中"
-
-#: ../data/ui/panel-pref.glade.h:17
-msgid "Alignment:"
-msgstr "排列方式："
-
-#: ../data/ui/panel-pref.glade.h:18
-msgid "Margin in px:"
-msgstr "边距："
-
-#: ../data/ui/panel-pref.glade.h:19
-msgid "Monitor:"
-msgstr "显示器："
-
-#: ../data/ui/panel-pref.glade.h:20
-msgid "<b>Position</b>"
-msgstr "<b>位置</b>"
-
-#: ../data/ui/panel-pref.glade.h:23
-msgid "Icon size in px:"
-msgstr "图标大小："
-
-#: ../data/ui/panel-pref.glade.h:24
-msgid "<b>Size</b>"
-msgstr "<b>大小</b>"
-
-#: ../data/ui/panel-pref.glade.h:25
-msgid "Geometry"
-msgstr "几何形状"
-
-#: ../data/ui/panel-pref.glade.h:26
-msgid "System theme"
-msgstr "统主题"
-
-#: ../data/ui/panel-pref.glade.h:27
-msgid "Solid color (with opacity)"
-msgstr "颜色填充(带透明度)"
-
-#: ../data/ui/panel-pref.glade.h:28 ../plugins/xkb/xkb-plugin.c:1447
-msgid "Image"
-msgstr "图标"
-
-#: ../data/ui/panel-pref.glade.h:29
-msgid "Select an image file"
-msgstr "选择图像文件"
-
-#: ../data/ui/panel-pref.glade.h:30
-msgid "<b>Background</b>"
-msgstr "<b>背景</b>"
-
-#: ../data/ui/panel-pref.glade.h:31
-msgid "Custom color"
-msgstr "自定义色彩"
-
-#: ../data/ui/panel-pref.glade.h:32 ../plugins/space.c:88
-#: ../plugins/batt/batt.c:651
-msgid "Size"
-msgstr "大小"
-
-#: ../data/ui/panel-pref.glade.h:33
-msgid "<b>Font</b>"
-msgstr "<b>字体</b>"
-
-#: ../data/ui/panel-pref.glade.h:34
-msgid "Appearance"
-msgstr "外观"
-
-#: ../data/ui/panel-pref.glade.h:35
-msgid "Panel Applets"
-msgstr "面板小程序"
-
-#: ../data/ui/panel-pref.glade.h:36
-msgid "Logout Command:"
-msgstr "注销命令："
-
-#: ../data/ui/panel-pref.glade.h:37
-msgid "Terminal Emulator:"
-msgstr "终端仿真器："
-
-#: ../data/ui/panel-pref.glade.h:38
-msgid "File Manager:"
-msgstr "文件管理器："
-
-#: ../data/ui/panel-pref.glade.h:39
-msgid "<b>Set Preferred Applications</b>"
-msgstr "<b>设置首选应用程序</b>"
-
-#: ../data/ui/panel-pref.glade.h:40
-msgid "Make window managers treat the panel as dock"
-msgstr "让窗口管理器把面板当成 Dock 处理"
-
-#: ../data/ui/panel-pref.glade.h:41
-msgid "Reserve space, and not covered by maximized windows"
-msgstr "保留空间，不被最大化窗口覆盖"
-
-#: ../data/ui/panel-pref.glade.h:42
-msgid "<b>Properties</b>"
-msgstr "<b>属性</b>"
-
-#: ../data/ui/panel-pref.glade.h:43
-msgid "Minimize panel when not in use"
-msgstr "不使用时最小化面板"
-
-#: ../data/ui/panel-pref.glade.h:44
-msgid "Size when minimized"
-msgstr "最小化时的大小"
-
-#: ../data/ui/panel-pref.glade.h:45
-msgid "pixels"
-msgstr "像素"
-
-#: ../data/ui/panel-pref.glade.h:46
-msgid "<b>Automatic hiding</b>"
-msgstr "<b>自动隐藏</b>"
-
-#: ../data/ui/panel-pref.glade.h:47
-msgid "Log level"
-msgstr "日志记录级别"
-
-#: ../data/ui/panel-pref.glade.h:48
-msgid "<b>Log level</b>"
-msgstr "<b>日志记录级别</b>"
-
-#: ../data/ui/panel-pref.glade.h:49
-msgid "Advanced"
-msgstr "高级"
-
-#: ../plugins/cpu/cpu.c:281
-msgid "CPU Usage Monitor"
-msgstr "CPU 监视器"
-
-#: ../plugins/cpu/cpu.c:282 ../plugins/monitors/monitors.c:700
-msgid "Display CPU usage"
-msgstr "显示 CPU 使用情况"
-
-#: ../plugins/deskno/deskno.c:174 ../plugins/deskno/deskno.c:194
-msgid "Desktop Number / Workspace Name"
-msgstr "桌面编号 / 工作区名称"
-
-#: ../plugins/deskno/deskno.c:176 ../plugins/dclock.c:426
-msgid "Bold font"
-msgstr "粗体字型"
-
-#: ../plugins/deskno/deskno.c:177
-msgid "Display desktop names"
-msgstr "显示桌面名称"
-
-#: ../plugins/deskno/deskno.c:195
-msgid "Display workspace number, by cmeury@users.sf.net"
-msgstr "显示工作区编号，由 cmeury@users.sf.net 撰写"
-
-#: ../plugins/launchtaskbar.c:1418 ../plugins/launchtaskbar.c:3445
-msgid "Application Launch Bar"
-msgstr "快速启动栏"
-
-#: ../plugins/launchtaskbar.c:1421 ../plugins/launchtaskbar.c:3456
-msgid "Task Bar (Window List)"
-msgstr "任务面板 (窗口清单)"
-
-#: ../plugins/launchtaskbar.c:2445
-msgid "_Close all windows"
-msgstr "关闭所有窗口(_C)"
-
-#. Add Raise menu item.
-#: ../plugins/launchtaskbar.c:3304
-msgid "_Raise"
-msgstr "提升(_R)"
-
-#. Add Restore menu item.
-#: ../plugins/launchtaskbar.c:3309
-msgid "R_estore"
-msgstr "还原(_E)"
-
-#. Add Maximize menu item.
-#: ../plugins/launchtaskbar.c:3314
-msgid "Ma_ximize"
-msgstr "最大化(_X)"
-
-#. Add Iconify menu item.
-#: ../plugins/launchtaskbar.c:3319
-msgid "Ico_nify"
-msgstr "最小化(_N)"
-
-#: ../plugins/launchtaskbar.c:3338
-#, c-format
-msgid "Workspace _%d"
-msgstr "工作区 _%d"
-
-#: ../plugins/launchtaskbar.c:3343
-#, c-format
-msgid "Workspace %d"
-msgstr "工作区 %d"
-
-#. Add "move to all workspaces" item.  This causes the window to be visible no matter what desktop is active.
-#: ../plugins/launchtaskbar.c:3359
-msgid "_All workspaces"
-msgstr "全部工作区(_A)"
-
-#. Add Move to Workspace menu item as a submenu.
-#: ../plugins/launchtaskbar.c:3365
-msgid "_Move to Workspace"
-msgstr "移动到工作区(_M)"
-
-#. Add Close menu item.  By popular demand, we place this menu item closest to the cursor.
-#: ../plugins/launchtaskbar.c:3371
-msgid "_Close Window"
-msgstr "关闭窗口(_C)"
-
-#: ../plugins/launchtaskbar.c:3373
-msgid "A_dd to Launcher"
-msgstr "添加到启动器(_D)"
-
-#: ../plugins/launchtaskbar.c:3374
-msgid "Rem_ove from Launcher"
-msgstr "从启动器中移除(_O)"
-
-#: ../plugins/launchtaskbar.c:3375
-msgid "_New Instance"
-msgstr "新建实例(_N)"
-
-#: ../plugins/launchtaskbar.c:3446
-msgid "Bar with buttons to launch application"
-msgstr "用以快速启动应用程序的工具栏"
-
-#: ../plugins/launchtaskbar.c:3457
-msgid ""
-"Taskbar shows all opened windows and allow to iconify them, shade or get "
-"focus"
-msgstr "面板显示所有开启的窗口，并让能窗口最小化、折叠、或取得焦点"
-
-#: ../plugins/launchtaskbar.c:3476
-msgid "Bar with buttons to launch application and/or show all opened windows"
-msgstr "带按钮的工具栏，用来启动应用程序和/或显示所有打开的窗口"
-
-#: ../plugins/dclock.c:420 ../plugins/dclock.c:440
-msgid "Digital Clock"
-msgstr "数字时钟"
-
-#: ../plugins/dclock.c:422
-msgid "Clock Format"
-msgstr "时钟格式"
-
-#: ../plugins/dclock.c:423
-msgid "Tooltip Format"
-msgstr "工具提示格式"
-
-#: ../plugins/dclock.c:424
-#, c-format
-msgid "Format codes: man 3 strftime; %n for line break"
-msgstr "格式代码：man 3 strftime; %n 代表换行"
-
-#: ../plugins/dclock.c:425
-msgid "Action when clicked (default: display calendar)"
-msgstr "单击时的动作(默认：显示日历)"
-
-#: ../plugins/dclock.c:427
-msgid "Tooltip only"
-msgstr "只有工具提示"
-
-#: ../plugins/dclock.c:428
-msgid "Center text"
-msgstr "居中文本"
-
-#: ../plugins/dclock.c:441
-msgid "Display digital clock and tooltip"
-msgstr "显示数字时钟和工具提示"
-
-#: ../plugins/menu.c:390
-msgid "Add to desktop"
-msgstr "添加到菜单"
-
-#: ../plugins/menu.c:397
-msgid "Properties"
-msgstr "属性"
-
-#: ../plugins/menu.c:1020 ../plugins/menu.c:1033
-msgid "Menu"
-msgstr "菜单"
-
-#: ../plugins/menu.c:1021 ../plugins/dirmenu.c:358
-msgid "Icon"
-msgstr "图标"
-
-#: ../plugins/menu.c:1034
-msgid "Application Menu"
-msgstr "应用程序菜单"
-
-#: ../plugins/separator.c:68
-msgid "Separator"
-msgstr "---分隔线---"
-
-#: ../plugins/separator.c:69
-msgid "Add a separator to the panel"
-msgstr "在面板上增加分隔线"
-
-#: ../plugins/pager.c:92
-msgid "Sorry, there was no window manager configuration program found."
-msgstr "抱歉，没有找到窗口管理器配置程序。"
-
-#: ../plugins/pager.c:143 ../plugins/pager.c:159
-msgid "Desktop Pager"
-msgstr "切换桌面"
-
-#: ../plugins/pager.c:144 ../plugins/pager.c:160
-msgid "Simple pager plugin"
-msgstr "简易的桌面切换插件"
-
-#: ../plugins/space.c:86 ../plugins/space.c:95
-msgid "Spacer"
-msgstr "间距"
-
-#: ../plugins/space.c:96
-msgid "Allocate space"
-msgstr "分配空间"
-
-#: ../plugins/tray.c:679
-msgid "System Tray"
-msgstr "系统托盘"
-
-#: ../plugins/tray.c:680
-msgid "System tray"
-msgstr "系统托盘"
-
-#: ../plugins/xkb/xkb-plugin.c:401
-msgid "New session is required for this option to take effect"
-msgstr "此选项在新会话中才会生效"
-
-#. dialog
-#: ../plugins/xkb/xkb-plugin.c:582
-msgid "Select Keyboard Model"
-msgstr "选择键盘型号"
-
-#: ../plugins/xkb/xkb-plugin.c:606 ../plugins/xkb/xkb-plugin.c:735
-#: ../plugins/xkb/xkb-plugin.c:913
-msgid "Description"
-msgstr "描述"
-
-#: ../plugins/xkb/xkb-plugin.c:611 ../plugins/xkb/xkb-plugin.c:742
-msgid "Id"
-msgstr "Id"
-
-#. dialog
-#: ../plugins/xkb/xkb-plugin.c:706
-msgid "Select Layout Change Type"
-msgstr "选择布局更改类型"
-
-#. dialog
-#: ../plugins/xkb/xkb-plugin.c:879
-msgid "Add Keyboard Layout"
-msgstr "添加键盘布局"
-
-#: ../plugins/xkb/xkb-plugin.c:903 ../plugins/xkb/xkb-plugin.c:1294
-msgid "Flag"
-msgstr "标志"
-
-#: ../plugins/xkb/xkb-plugin.c:908 ../plugins/xkb/xkb-plugin.c:1298
-msgid "Layout"
-msgstr "布局"
-
-#: ../plugins/xkb/xkb-plugin.c:1204 ../plugins/xkb/xkb-plugin.c:1536
-msgid "Keyboard Layout Handler"
-msgstr "键盘布局调控器"
-
-#: ../plugins/xkb/xkb-plugin.c:1227
-msgid "Keyboard Model"
-msgstr "键盘型号"
-
-#: ../plugins/xkb/xkb-plugin.c:1248
-msgid "Keyboard Layouts"
-msgstr "键盘布局"
-
-#: ../plugins/xkb/xkb-plugin.c:1302
-msgid "Variant"
-msgstr "变体"
-
-#: ../plugins/xkb/xkb-plugin.c:1311
-msgid "Change Layout Option"
-msgstr "更改布局选项"
-
-#: ../plugins/xkb/xkb-plugin.c:1331
-msgid "Advanced setxkbmap Options"
-msgstr "高级 setxkbmap 选项"
-
-#: ../plugins/xkb/xkb-plugin.c:1352
-msgid "Do _not reset existing options"
-msgstr "不重置已有的选项(_N)"
-
-#: ../plugins/xkb/xkb-plugin.c:1357
-msgid "Keep _system layouts"
-msgstr "保持系统布局(_S)"
-
-#: ../plugins/xkb/xkb-plugin.c:1366
-msgid "Per Window Settings"
-msgstr "按窗口设置"
-
-#: ../plugins/xkb/xkb-plugin.c:1378
-msgid "_Remember layout for each window"
-msgstr "记住各窗口的布局(_R)"
-
-#: ../plugins/xkb/xkb-plugin.c:1387
-msgid "Show Layout as"
-msgstr "将布局显示为"
-
-#: ../plugins/xkb/xkb-plugin.c:1448
-msgid "Custom Image"
-msgstr "自定义图像"
-
-#: ../plugins/xkb/xkb-plugin.c:1449
-msgid "Text"
-msgstr "文本"
-
-#: ../plugins/xkb/xkb-plugin.c:1475
-msgid "Panel Icon Size"
-msgstr "面板图标大小"
-
-#: ../plugins/xkb/xkb-plugin.c:1537
-msgid "Handle keyboard layouts"
-msgstr "调控键盘布局"
-
-#: ../plugins/wincmd.c:189
-msgid "Left click to iconify all windows.  Middle click to shade them."
-msgstr "按左键最小化所有窗口。  中键卷起所有窗口。"
-
-#: ../plugins/wincmd.c:223 ../plugins/wincmd.c:241
-msgid "Minimize All Windows"
-msgstr "最小化所有窗口"
-
-#: ../plugins/wincmd.c:225
-msgid "Alternately iconify/shade and raise"
-msgstr "交替最小化/卷起和提升"
-
-#: ../plugins/wincmd.c:242
-msgid ""
-"Sends commands to all desktop windows.\n"
-"Supported commands are 1) iconify and 2) shade"
-msgstr ""
-"发送命令给所有桌面窗口\n"
-"支持的命令  1) 最小化  2) 卷起"
-
-#: ../plugins/dirmenu.c:205
-msgid "Open in _Terminal"
-msgstr "在终端中打开(_T)"
-
-#: ../plugins/dirmenu.c:354 ../plugins/dirmenu.c:370
-msgid "Directory Menu"
-msgstr "目录菜单"
-
-#: ../plugins/dirmenu.c:356
-msgid "Directory"
-msgstr "目录"
-
-#: ../plugins/dirmenu.c:357
-msgid "Label"
-msgstr "标签"
-
-#: ../plugins/dirmenu.c:371
-msgid "Browse directory tree via menu (Author = PCMan)"
-msgstr "使用菜单浏览目录 (作者：PCMan)"
-
-#: ../plugins/thermal/thermal.c:521 ../plugins/thermal/thermal.c:539
-msgid "Temperature Monitor"
-msgstr "温度监视器"
-
-#: ../plugins/thermal/thermal.c:523
-msgid "Normal color"
-msgstr "正常颜色"
-
-#: ../plugins/thermal/thermal.c:524
-msgid "Warning1 color"
-msgstr "警告1 颜色"
-
-#: ../plugins/thermal/thermal.c:525
-msgid "Warning2 color"
-msgstr "警告2 颜色"
-
-#: ../plugins/thermal/thermal.c:526
-msgid "Automatic sensor location"
-msgstr "自动定位传感器"
-
-#: ../plugins/thermal/thermal.c:527
-msgid "Sensor"
-msgstr "传感器"
-
-#: ../plugins/thermal/thermal.c:528
-msgid "Automatic temperature levels"
-msgstr "自动确定温度级别"
-
-#: ../plugins/thermal/thermal.c:529
-msgid "Warning1 temperature"
-msgstr "警告1 温度"
-
-#: ../plugins/thermal/thermal.c:530
-msgid "Warning2 temperature"
-msgstr "警告2 温度"
-
-#: ../plugins/thermal/thermal.c:540
-msgid "Display system temperature"
-msgstr "显示系统温度"
-
-#: ../plugins/cpufreq/cpufreq.c:325
-#, c-format
-msgid ""
-"Frequency: %d MHz\n"
-"Governor: %s"
-msgstr ""
-"频率：%d MHz\n"
-"调速器：%s"
-
-#: ../plugins/cpufreq/cpufreq.c:408
-msgid "CPUFreq frontend"
-msgstr "CPUFreq 前端"
-
-#: ../plugins/cpufreq/cpufreq.c:409
-msgid "Display CPU frequency and allow to change governors and frequency"
-msgstr "显示 CPU 频率，并可以更改调速器和频率"
-
-#. FIXME: display current level in tooltip. ex: "Volume Control: 80%"
-#. Display current level in tooltip.
-#: ../plugins/volume/volume.c:278 ../plugins/volumealsa/volumealsa.c:353
-#: ../plugins/volumealsa/volumealsa.c:537
-msgid "Volume control"
-msgstr "音量控制"
-
-#: ../plugins/volume/volume.c:286 ../plugins/volumealsa/volumealsa.c:641
-msgid "Volume Control"
-msgstr "音量控制"
-
-#. Create a frame as the child of the viewport.
-#: ../plugins/volume/volume-impl.c:109 ../plugins/volumealsa/volumealsa.c:491
-msgid "Volume"
-msgstr "音量"
-
-#. Create a check button as the child of the vertical box.
-#: ../plugins/volumealsa/volumealsa.c:510
-msgid "Mute"
-msgstr "静音"
-
-#: ../plugins/volumealsa/volumealsa.c:623
-msgid ""
-"Error, you need to install an application to configure the sound "
-"(pavucontrol, alsamixer ...)"
-msgstr "错误，您需要安装配置声音的应用程序(如 pavucontrol、alsamixer...)"
-
-#: ../plugins/volumealsa/volumealsa.c:642
-msgid "Display and control volume for ALSA"
-msgstr "显示和控制 ALSA 音量"
-
-#: ../plugins/netstat/netstat.c:178
-msgid "<Hidden Access Point>"
-msgstr "<隐藏的无线存取点>"
-
-#: ../plugins/netstat/netstat.c:211
-msgid "Wireless Networks not found in range"
-msgstr "范围内找不到无线网络"
-
-#. Repair
-#: ../plugins/netstat/netstat.c:245
-msgid "Repair"
-msgstr "修复"
-
-#. interface down
-#: ../plugins/netstat/netstat.c:250
-msgid "Disable"
-msgstr "停用"
-
-#: ../plugins/netstat/netstat.c:340
-msgid "Wireless Connection has no connectivity"
-msgstr "无线连接无法连接"
-
-#: ../plugins/netstat/netstat.c:342
-msgid "Network cable is plugged out"
-msgstr "网线已拔出"
-
-#: ../plugins/netstat/netstat.c:344
-msgid "Connection has limited or no connectivity"
-msgstr "连接受限或无法连接"
-
-#: ../plugins/netstat/netstat.c:348 ../plugins/netstat/netstat.c:359
-#: ../plugins/netstat/netstat.c:370
-msgid "IP Address:"
-msgstr "IP 地址："
-
-#: ../plugins/netstat/netstat.c:349
-msgid "Remote IP:"
-msgstr "远端 IP 地址："
-
-#: ../plugins/netstat/netstat.c:350 ../plugins/netstat/netstat.c:361
-#: ../plugins/netstat/netstat.c:372
-msgid "Netmask:"
-msgstr "子网掩码："
-
-#: ../plugins/netstat/netstat.c:351 ../plugins/netstat/netstat.c:363
-#: ../plugins/netstat/netstat.c:374
-msgid "Activity"
-msgstr "活动"
-
-#: ../plugins/netstat/netstat.c:351 ../plugins/netstat/netstat.c:363
-#: ../plugins/netstat/netstat.c:374
-msgid "Sent"
-msgstr "已传送"
-
-#: ../plugins/netstat/netstat.c:351 ../plugins/netstat/netstat.c:363
-#: ../plugins/netstat/netstat.c:374
-msgid "Received"
-msgstr "已接收"
-
-#: ../plugins/netstat/netstat.c:352 ../plugins/netstat/netstat.c:364
-#: ../plugins/netstat/netstat.c:375
-msgid "bytes"
-msgstr "字节"
-
-#: ../plugins/netstat/netstat.c:353 ../plugins/netstat/netstat.c:365
-#: ../plugins/netstat/netstat.c:376
-msgid "packets"
-msgstr "数据包"
-
-#: ../plugins/netstat/netstat.c:356 ../plugins/netstatus/netstatus-iface.c:173
-msgid "Wireless"
-msgstr "无线网络"
-
-#: ../plugins/netstat/netstat.c:358
-msgid "Protocol:"
-msgstr "通讯协议："
-
-#: ../plugins/netstat/netstat.c:362 ../plugins/netstat/netstat.c:373
-msgid "HW Address:"
-msgstr "硬件地址："
-
-#: ../plugins/netstat/netstat.c:484
-msgid "Manage Networks"
-msgstr "管理网络"
-
-#: ../plugins/netstat/netstat.c:485
-msgid "Monitor and Manage networks"
-msgstr "监视和管理网络"
-
-#. create dialog
-#: ../plugins/netstat/passwd_gui.c:87
-msgid "Setting Encryption Key"
-msgstr "设置加密密钥"
-
-#: ../plugins/netstat/passwd_gui.c:98
-msgid ""
-"This wireless network was encrypted.\n"
-"You must have the encryption key."
-msgstr ""
-"这是经过加密的无线网络连接。\n"
-"你必须要有加密密钥。"
-
-#: ../plugins/netstat/passwd_gui.c:103
-msgid "Encryption Key:"
-msgstr "加密密钥："
-
-#: ../plugins/netstatus/netstatus.c:152 ../plugins/netstatus/netstatus.c:164
-msgid "Network Status Monitor"
-msgstr "网络状态监视器"
-
-#: ../plugins/netstatus/netstatus.c:154
-msgid "Interface to monitor"
-msgstr "要监控的接口"
-
-#: ../plugins/netstatus/netstatus.c:155
-msgid "Config tool"
-msgstr "设置工具"
-
-#: ../plugins/netstatus/netstatus.c:165
-msgid "Monitor network status"
-msgstr "监视网络状态"
-
-#: ../plugins/netstatus/netstatus-dialog.c:52
-#: ../plugins/netstatus/netstatus-dialog.c:313
-msgid "Unknown"
-msgstr "未知"
-
-#: ../plugins/netstatus/netstatus-dialog.c:117
-msgid "Connection Properties"
-msgstr "连接属性"
-
-#: ../plugins/netstatus/netstatus-dialog.c:123
-#, c-format
-msgid "Connection Properties: %s"
-msgstr "连接属性 %s"
-
-#: ../plugins/netstatus/netstatus-dialog.c:136
-#, c-format
-msgid "%lu packet"
-msgid_plural "%lu packets"
-msgstr[0] "%lu 个数据包"
-
-#: ../plugins/netstatus/netstatus-dialog.c:397
-#, c-format
-msgid ""
-"There was an error displaying help:\n"
-"%s"
-msgstr ""
-"显示说明时发生错误：\n"
-"%s"
-
-#: ../plugins/netstatus/netstatus-icon.c:379
-#, c-format
-msgid "Network Connection: %s"
-msgstr "网络连接：%s"
-
-#: ../plugins/netstatus/netstatus-icon.c:384
-msgid "Network Connection"
-msgstr "网络连接"
-
-#: ../plugins/netstatus/netstatus-icon.c:824
-msgid "Interface"
-msgstr "接口"
-
-#: ../plugins/netstatus/netstatus-icon.c:825
-msgid "The current interface the icon is monitoring."
-msgstr "目前正在监控的接口"
-
-#: ../plugins/netstatus/netstatus-icon.c:832
-msgid "Orientation"
-msgstr "方向"
-
-#: ../plugins/netstatus/netstatus-icon.c:833
-msgid "The orientation of the tray."
-msgstr "系统列的方向。"
-
-#: ../plugins/netstatus/netstatus-icon.c:841
-msgid "Tooltips Enabled"
-msgstr "显示工具提示"
-
-#: ../plugins/netstatus/netstatus-icon.c:842
-msgid "Whether or not the icon's tooltips are enabled."
-msgstr "是否使用图标的工具提示。"
-
-#: ../plugins/netstatus/netstatus-icon.c:849
-msgid "Show Signal"
-msgstr "显示信号"
-
-#: ../plugins/netstatus/netstatus-icon.c:850
-msgid "Whether or not the signal strength should be displayed."
-msgstr "是否显示信号强度"
-
-#: ../plugins/netstatus/netstatus-icon.c:959
-#, c-format
-msgid ""
-"Please contact your system administrator to resolve the following problem:\n"
-"\n"
-"%s"
-msgstr ""
-"请联络你的系统管理员解决下列问题：\n"
-"\n"
-"%s"
-
-#: ../plugins/netstatus/netstatus-iface.c:148
-msgid "Name"
-msgstr "名称"
-
-#: ../plugins/netstatus/netstatus-iface.c:149
-msgid "The interface name"
-msgstr "接口名称"
-
-#: ../plugins/netstatus/netstatus-iface.c:156
-#: ../plugins/weather/weatherwidget.c:2085
-msgid "State"
-msgstr "状态"
-
-#: ../plugins/netstatus/netstatus-iface.c:157
-msgid "The interface state"
-msgstr "接口状态"
-
-#: ../plugins/netstatus/netstatus-iface.c:165
-msgid "Stats"
-msgstr "状态"
-
-#: ../plugins/netstatus/netstatus-iface.c:166
-msgid "The interface packets/bytes statistics"
-msgstr "网络接口数据包/字节数统计"
-
-#: ../plugins/netstatus/netstatus-iface.c:174
-msgid "Whether the interface is a wireless interface"
-msgstr "是否为无线网络接口"
-
-#: ../plugins/netstatus/netstatus-iface.c:181
-msgid "Signal"
-msgstr "信号"
-
-#: ../plugins/netstatus/netstatus-iface.c:182
-msgid "Wireless signal strength percentage"
-msgstr "无线信号强度百分比"
-
-#: ../plugins/netstatus/netstatus-iface.c:191
-#: ../plugins/netstatus/netstatus-util.c:167
+#: ../lib/generic-config-dialog.c:194
+msgid "_Close"
+msgstr "关闭（_C）"
+
+#: ../lib/misc.c:192 ../lib/misc.c:208 ../lib/toplevel.c:435
+#: ../applets/core/launchbar/launchbar-config.vala:211
 msgid "Error"
 msgstr "错误"
 
-#: ../plugins/netstatus/netstatus-iface.c:192
-msgid "The current error condition"
-msgstr "当前的错误状态"
+#: ../lib/toplevel.c:433
+msgid "There is no room for another panel. All the edges are taken."
+msgstr "没有额外空间创建新面板，所有边缘已经被使用。"
 
-#: ../plugins/netstatus/netstatus-iface.c:440
-#: ../plugins/netstatus/netstatus-iface.c:1205
+#: ../lib/toplevel.c:459
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning:This can not be recovered.</b>"
+msgstr "是否确认删除此面板？\n"
+"<b>警告：本操作不可撤销。</b>"
+
+#: ../lib/toplevel.c:462
+msgid "Confirm"
+msgstr "确认"
+
+#: ../app/application.c:34
+msgid "Run command on already opened panel"
+msgstr "在已打开的面板上运行命令"
+
+#: ../app/application.c:75
+msgid "Print version and exit"
+msgstr "显示版本并退出"
+
+#: ../app/application.c:76
+msgid "Use specified profile"
+msgstr "使用自定义配置文件"
+
+#: ../app/application.c:76
+msgid "profile"
+msgstr "配置文件"
+
+#: ../app/application.c:77
+msgid "cmd"
+msgstr "命令"
+
+#: ../app/application.c:228
 #, c-format
-msgid "Unable to open socket: %s"
-msgstr "无法打开套接字：%s"
+msgid "%s - Version %s\n"
+msgstr "%s - 版本 %s\n"
 
-#: ../plugins/netstatus/netstatus-iface.c:502
-#: ../plugins/netstatus/netstatus-iface.c:1231
-#, c-format
-msgid "SIOCGIFFLAGS error: %s"
-msgstr "SIOCGIFFLAGS 错误：%s"
-
-#: ../plugins/netstatus/netstatus-iface.c:879
-msgid "AMPR NET/ROM"
-msgstr "AMPR NET/ROM"
-
-#: ../plugins/netstatus/netstatus-iface.c:882
-msgid "Ethernet"
-msgstr "以太网"
-
-#: ../plugins/netstatus/netstatus-iface.c:888
-msgid "AMPR AX.25"
-msgstr "AMPR AX.25"
-
-#: ../plugins/netstatus/netstatus-iface.c:897
-#: ../plugins/netstatus/netstatus-iface.c:1017
-msgid "16/4 Mbps Token Ring"
-msgstr "16/4 Mbps 令牌环网"
-
-#: ../plugins/netstatus/netstatus-iface.c:900
-msgid "ARCnet"
-msgstr "ARCnet"
-
-#: ../plugins/netstatus/netstatus-iface.c:906
-msgid "Frame Relay DLCI"
-msgstr "帧中继 DLCI"
-
-#: ../plugins/netstatus/netstatus-iface.c:912
-msgid "Metricom Starmode IP"
-msgstr "Metricom Starmode IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:915
-msgid "Serial Line IP"
-msgstr "串行线 IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:918
-msgid "VJ Serial Line IP"
-msgstr "VJ 串行线 IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:921
-msgid "6-bit Serial Line IP"
-msgstr "6 位串行线 IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:924
-msgid "VJ 6-bit Serial Line IP"
-msgstr "VJ 6 位串行线 IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:930
-msgid "Adaptive Serial Line IP"
-msgstr "自适应串行线 IP"
-
-#: ../plugins/netstatus/netstatus-iface.c:933
-msgid "AMPR ROSE"
-msgstr "AMPR ROSE"
-
-#: ../plugins/netstatus/netstatus-iface.c:936
-msgid "Generic X.25"
-msgstr "通用 X.25"
-
-#: ../plugins/netstatus/netstatus-iface.c:939
-msgid "Point-to-Point Protocol"
-msgstr "点对点协议"
-
-#: ../plugins/netstatus/netstatus-iface.c:945
-msgid "(Cisco)-HDLC"
-msgstr "(思科)-HDLC"
-
-#: ../plugins/netstatus/netstatus-iface.c:948
-msgid "LAPB"
-msgstr "LAPB"
-
-#: ../plugins/netstatus/netstatus-iface.c:957
-msgid "IPIP Tunnel"
-msgstr "IPIP 隧道"
-
-#: ../plugins/netstatus/netstatus-iface.c:963
-msgid "Frame Relay Access Device"
-msgstr "帧中继访问设备"
-
-#: ../plugins/netstatus/netstatus-iface.c:969
-msgid "Local Loopback"
-msgstr "本地环回"
-
-#: ../plugins/netstatus/netstatus-iface.c:975
-msgid "Fiber Distributed Data Interface"
-msgstr "光纤分布式数据接口"
-
-#: ../plugins/netstatus/netstatus-iface.c:981
-msgid "IPv6-in-IPv4"
-msgstr "IPv6-in-IPv4"
-
-#: ../plugins/netstatus/netstatus-iface.c:993
-msgid "HIPPI"
-msgstr "HIPPI"
-
-#: ../plugins/netstatus/netstatus-iface.c:996
-msgid "Ash"
-msgstr "Ash"
-
-#: ../plugins/netstatus/netstatus-iface.c:999
-msgid "Econet"
-msgstr "Econet"
-
-#: ../plugins/netstatus/netstatus-iface.c:1002
-msgid "IrLAP"
-msgstr "IrLAP"
-
-#: ../plugins/netstatus/netstatus-iface.c:1163
-#, c-format
-msgid "SIOCGIFCONF error: %s"
-msgstr "SIOCGIFCONF 错误：%s"
-
-#: ../plugins/netstatus/netstatus-iface.c:1256
-#, c-format
-msgid "No network devices found"
-msgstr "没有找到网络设备"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:180
-#, c-format
-msgid "Cannot open /proc/net/dev: %s"
-msgstr "无法打开 /proc/net/dev：%s"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:185
-msgid "Could not parse /proc/net/dev. No data."
-msgstr "无法解析 /proc/net/dev。无数据。"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:190
-msgid "Could not parse /proc/net/dev. Unknown format."
-msgstr "无法解析 /proc/net/dev。未知格式。"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:205
-#: ../plugins/netstatus/netstatus-sysdeps.c:332
-#, c-format
-msgid "Could not parse interface name from '%s'"
-msgstr "无法从“%s”中解析接口名称"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:218
-#: ../plugins/netstatus/netstatus-sysdeps.c:647
+#: ../app/application.c:259
 #, c-format
 msgid ""
-"Could not parse interface statistics from '%s'. prx_idx = %d; ptx_idx = %d; "
-"brx_idx = %d; btx_idx = %d;"
-msgstr "无法从“%s”中解析接口统计。prx_idx = %d；ptx_idx = %d；brx_idx = %d；btx_idx = %d；"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:312
-msgid "Could not parse /proc/net/wireless. No data."
-msgstr "无法解析 /prc/net/wireless。无数据。"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:316
-msgid "Could not parse /proc/net/wireless. Unknown format."
-msgstr "无法解析 /prc/net/wireless。未知格式。"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:343
-#, c-format
-msgid "Could not parse wireless details from '%s'. link_idx = %d;"
-msgstr "无法从“%s”中解析无线细节。link_idx = %d；"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:416
-#, c-format
-msgid "Could not connect to interface, '%s'"
-msgstr "无法连接到接口，“%s”"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:422
-#, c-format
-msgid "Could not send ioctl to interface, '%s'"
-msgstr "无法向接口发送 ioctl，“%s”"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:600
-#, c-format
-msgid "Could not parse command line '%s': %s"
-msgstr "无法解析命令行“%s”：%s"
-
-#: ../plugins/netstatus/netstatus-sysdeps.c:637
-msgid "Could not parse 'netstat' output. Unknown format"
-msgstr "无法解析“netstat”输出。未知格式"
-
-#: ../plugins/netstatus/netstatus-util.c:152
-msgid "Disconnected"
-msgstr "断开"
-
-#: ../plugins/netstatus/netstatus-util.c:155
-msgid "Idle"
-msgstr "空闲"
-
-#: ../plugins/netstatus/netstatus-util.c:158
-msgid "Sending"
-msgstr "发送"
-
-#: ../plugins/netstatus/netstatus-util.c:161
-msgid "Receiving"
-msgstr "接收"
-
-#: ../plugins/netstatus/netstatus-util.c:164
-msgid "Sending/Receiving"
-msgstr "发送/接受"
-
-#: ../plugins/batt/batt.c:151
-#, c-format
-msgid "Battery: %d%% charged, %d:%02d until full"
-msgstr "电池：剩余电量 %d%%，充满还需 %d:%02d"
-
-#: ../plugins/batt/batt.c:162
-#, c-format
-msgid "Battery: %d%% charged, %d:%02d left"
-msgstr "电池：剩余电量 %d%%，剩余可用时间 %d:%02d"
-
-#: ../plugins/batt/batt.c:168
-#, c-format
-msgid "Battery: %d%% charged"
-msgstr "电池：剩余电量 %d%%"
-
-#: ../plugins/batt/batt.c:178
-#, c-format
-msgid ""
-"\n"
-"%sEnergy full design:\t\t%5d mWh"
+"%s: invalid command - %s. Doing nothing.\n"
+"Valid commands: %s\n"
 msgstr ""
-"\n"
-"%s满电设计值：\t\t%5d mWh"
+"%s： 非法命令 - %s。 取消操作。\n"
+"合法命令： %s\n"
 
-#: ../plugins/batt/batt.c:180
-#, c-format
-msgid ""
-"\n"
-"%sEnergy full:\t\t\t%5d mWh"
-msgstr ""
-"\n"
-"%s满电：\t\t\t%5d mWh"
+#: ../app/application.c:515
+msgid "No panel with this name found.\n"
+msgstr "没有找到该名称的面板。\n"
 
-#: ../plugins/batt/batt.c:182
-#, c-format
-msgid ""
-"\n"
-"%sEnergy now:\t\t\t%5d mWh"
-msgstr ""
-"\n"
-"%s当前电量：\t\t\t%5d mWh"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3294
+msgid "Mi_nimize All"
+msgstr "最小化所有窗口（_n）"
 
-#: ../plugins/batt/batt.c:184
-#, c-format
-msgid ""
-"\n"
-"%sPower now:\t\t\t%5d mW"
-msgstr ""
-"\n"
-"%s当前功率：\t\t\t%5d mW"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3302
+msgid "Un_minimize All"
+msgstr "撤销最小化所有窗口（_m）"
 
-#: ../plugins/batt/batt.c:187
-#, c-format
-msgid ""
-"\n"
-"%sCharge full design:\t%5d mAh"
-msgstr ""
-"\n"
-"%s充满电设计值：\t%5d mAh"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3310
+msgid "Ma_ximize All"
+msgstr "最大化所有窗口（_x）"
 
-#: ../plugins/batt/batt.c:189
-#, c-format
-msgid ""
-"\n"
-"%sCharge full:\t\t\t%5d mAh"
-msgstr ""
-"\n"
-"%s充满：\t\t\t%5d mAh"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3318
+msgid "_Unmaximize All"
+msgstr "撤销最大化所有窗口（_U）"
 
-#: ../plugins/batt/batt.c:191
-#, c-format
-msgid ""
-"\n"
-"%sCharge now:\t\t\t%5d mAh"
-msgstr ""
-"\n"
-"%s当前充电：\t\t\t%5d mAh"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3330
+msgid "_Close All"
+msgstr "关闭所有窗口（_C）"
 
-#: ../plugins/batt/batt.c:193
-#, c-format
-msgid ""
-"\n"
-"%sCurrent now:\t\t\t%5d mA"
-msgstr ""
-"\n"
-"%s当前电流：\t\t\t%5d mA"
+#: ../lib/configurator.vala:88 ../lib/configurator.vala:145
+msgid "All"
+msgstr "所有"
 
-#: ../plugins/batt/batt.c:196
-#, c-format
-msgid ""
-"\n"
-"%sCurrent Voltage:\t\t%.3lf V"
-msgstr ""
-"\n"
-"%s当前电压：\t\t%.3lf V"
+#: ../lib/configurator.vala:145
+msgid "%d"
+msgstr "%d"
 
-#: ../plugins/batt/batt.c:234
-msgid "No batteries found"
-msgstr "没有电池"
+#: ../lib/configurator.vala:218
+msgid "Currently loaded plugins"
+msgstr "当前已加载组件"
 
-#: ../plugins/batt/batt.c:640 ../plugins/batt/batt.c:661
-msgid "Battery Monitor"
-msgstr "电池电量显示"
+#: ../lib/configurator.vala:227
+msgid "Stretch"
+msgstr "拉伸"
 
-#: ../plugins/batt/batt.c:642
-msgid "Hide if there is no battery"
-msgstr "没有电池时隐藏"
+#: ../lib/configurator.vala:287
+msgid "Available plugins"
+msgstr "可用组件"
 
-#: ../plugins/batt/batt.c:643
-msgid "Alarm command"
-msgstr "发出警告时要运行的命令"
+#: ../applets/core/clock/clock.vala:100
+msgid "Clock Format"
+msgstr "时钟格式"
 
-#: ../plugins/batt/batt.c:644
-msgid "Alarm time (minutes left)"
-msgstr "电池剩余时间低于此数值时警告 (分钟)"
+#: ../applets/core/clock/clock.vala:101
+msgid "Tooltip Format"
+msgstr "提示框格式"
 
-#: ../plugins/batt/batt.c:645
-msgid "Background color"
-msgstr "背景颜色"
+#: ../applets/core/clock/clock.vala:102
+msgid "Format codes: man 3 strftime; %n for line break"
+msgstr "格式代码：man 3 strftime; %n 代表换行"
 
-#: ../plugins/batt/batt.c:646
-msgid "Charging color 1"
-msgstr "充电显示颜色 1"
+#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:67
+msgid "Bold font"
+msgstr "加粗"
 
-#: ../plugins/batt/batt.c:647
-msgid "Charging color 2"
-msgstr "充电显示颜色 2"
+#: ../applets/core/dirmenu/dirmenu.vala:143
+msgid "_Open"
+msgstr "打开（_O）"
 
-#: ../plugins/batt/batt.c:648
-msgid "Discharging color 1"
-msgstr "放电显示颜色 1"
+#: ../applets/core/dirmenu/dirmenu.vala:150
+msgid "Open in _Terminal"
+msgstr "在终端中打开（_T）"
 
-#: ../plugins/batt/batt.c:649
-msgid "Discharging color 2"
-msgstr "放电显示颜色 2"
+#: ../applets/core/dirmenu/dirmenu.vala:194
+msgid "Directory"
+msgstr "目录"
 
-#: ../plugins/batt/batt.c:650
-msgid "Border width"
-msgstr "边框宽度"
+#: ../applets/core/dirmenu/dirmenu.vala:195
+msgid "Label"
+msgstr "标签"
 
-#: ../plugins/batt/batt.c:652
-msgid "Show Extended Information"
-msgstr "显示更多信息"
+#: ../applets/core/dirmenu/dirmenu.vala:196
+#: ../applets/core/menumodel/menumodel.vala:115
+#: ../applets/core/launchbar/config.ui:135
+msgid "Icon"
+msgstr "图标"
 
-#: ../plugins/batt/batt.c:662
-msgid "Display battery status using ACPI"
-msgstr "通过 ACPI 显示电池状态"
-
-#: ../plugins/kbled/kbled.c:228 ../plugins/kbled/kbled.c:259
+#: ../applets/core/kbled/kbled.vala:71
+#: ../applets/core/kbled/kbled.desktop.plugin.in:4
 msgid "Keyboard LED"
 msgstr "键盘指示灯"
 
-#: ../plugins/kbled/kbled.c:230
+#: ../applets/core/kbled/kbled.vala:73
 msgid "Show CapsLock"
 msgstr "显示 CapsLock"
 
-#: ../plugins/kbled/kbled.c:231
+#: ../applets/core/kbled/kbled.vala:74
 msgid "Show NumLock"
 msgstr "显示 NumLock"
 
-#: ../plugins/kbled/kbled.c:232
-msgid "Show ScrollLock"
-msgstr "显示 ScrollLock"
+#: ../applets/core/launchbar/launchbar-button.vala:46
+msgid "Bootstrap"
+msgstr "引导程序"
 
-#: ../plugins/kbled/kbled.c:260
-msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
-msgstr "显示 CapsLock、NumLock、及 ScrollLock 键的状态"
+#: ../applets/core/launchbar/launchbar-config.vala:68
+msgid "Quicklaunch already contains this URI.\n"
+msgstr "快速启动栏已经包含此 URI。\n"
 
-#. A label to allow for click through
-#: ../plugins/indicator/indicator.c:689
-msgid "No Indicators"
-msgstr "无指示器"
+#: ../applets/core/launchbar/launchbar-config.vala:91
+msgid "Quicklaunch already contains this application.\n"
+msgstr "快速启动栏已经包含这个应用程序。\n"
 
-#: ../plugins/indicator/indicator.c:863 ../plugins/indicator/indicator.c:881
-msgid "Indicator applets"
-msgstr "指示器小程序"
+#: ../applets/core/launchbar/launchbar-config.vala:155
+msgid ""
+"Failed to add directory content.\n"
+" Adding current directory as launcher."
+msgstr ""
+"添加目录内容失败。\n"
+" 添加当前目录为其启动器。"
 
-#: ../plugins/indicator/indicator.c:865
-msgid "Indicator Applications"
-msgstr "指示器应用程序"
+#: ../applets/core/menumodel/menu-maker.vala:100
+msgid "Home"
+msgstr "主目录"
 
-#: ../plugins/indicator/indicator.c:866
-msgid "Clock Indicator"
-msgstr "时钟指示器"
+#: ../applets/core/menumodel/menu-maker.vala:111
+msgid "Desktop"
+msgstr "桌面"
 
-#: ../plugins/indicator/indicator.c:867
-msgid "Messaging Menu"
-msgstr "消息菜单"
+#: ../applets/core/menumodel/menu-maker.vala:128
+msgid "Search..."
+msgstr "搜索..."
 
-#: ../plugins/indicator/indicator.c:868
-msgid "Network Menu"
-msgstr "网络菜单"
+#: ../applets/core/menumodel/menu-maker.vala:156
+msgid "Control center"
+msgstr "控制中心"
 
-#: ../plugins/indicator/indicator.c:869
-msgid "Session Menu"
-msgstr "会话菜单"
+#: ../applets/core/menumodel/menu-maker.vala:175
+#: ../applets/core/launchbar/config.ui:38
+msgid "Applications"
+msgstr "应用程序"
 
-#: ../plugins/indicator/indicator.c:870
-msgid "Sound Menu"
-msgstr "声音菜单"
+#: ../applets/core/menumodel/menu-maker.vala:179
+#: ../applets/core/menumodel/menu-maker.vala:187
+msgid "Places"
+msgstr "位置"
 
-#: ../plugins/indicator/indicator.c:882
-msgid "Add indicator applets to the panel"
-msgstr "将指示器小程序添加到面板"
+#: ../applets/core/menumodel/menu-maker.vala:180
+#: ../applets/core/menumodel/system-menus.ui:40
+msgid "System"
+msgstr "系统工具"
 
-#: ../plugins/monitors/monitors.c:269
-#, c-format
+#: ../applets/core/menumodel/menu-maker.vala:184
+#: ../data/desktop/org.valapanel.application.desktop.in:4
+msgid "Vala Panel"
+msgstr ""
+
+#: ../applets/core/menumodel/menumodel.vala:111
+msgid ""
+"If internal menu is enabled, menu file will not be used, predefeined menu "
+"will be used instead."
+msgstr ""
+"如果使用内部菜单，则菜单文件将会被预定义菜单替代使用。"
+
+#: ../applets/core/menumodel/menumodel.vala:112
+msgid "Is internal menu"
+msgstr "是否为内部菜单"
+
+#: ../applets/core/menumodel/menumodel.vala:113
+msgid "Is system menu (can be keybound)"
+msgstr "是否为系统菜单（可绑定按键）"
+
+#: ../applets/core/menumodel/menumodel.vala:114
+msgid "Is Menubar"
+msgstr "是否为主菜单"
+
+#: ../applets/core/menumodel/menumodel.vala:116
+msgid "Caption (for button only)"
+msgstr "标题（仅用于按钮）"
+
+#: ../applets/core/menumodel/menumodel.vala:117
+msgid "Menu file name"
+msgstr "菜单文件名称"
+
+#: ../applets/core/separator/separator.vala:64 ../lib/pref.ui:566
+msgid "Size"
+msgstr "大小"
+
+#: ../applets/core/separator/separator.vala:65
+msgid "Visible separator"
+msgstr "可见分割符"
+
+#: ../applets/drawing/monitors/monitors.vala:250
 msgid "CPU usage: %.2f%%"
-msgstr "CPU 使用：%.2f%%"
+msgstr "CPU 使用率：%.2f%%"
 
-#: ../plugins/monitors/monitors.c:366
-#, c-format
+#: ../applets/drawing/monitors/monitors.vala:338
 msgid "RAM usage: %.1fMB (%.2f%%)"
-msgstr "内存使用：%.1fMB (%.2f%%)"
+msgstr "内存使用率：%.1fMB (%.2f%%)"
 
-#: ../plugins/monitors/monitors.c:698 ../plugins/monitors/monitors.c:783
-msgid "Resource monitors"
-msgstr "资源监视器"
+#: ../applets/drawing/monitors/monitors.vala:397
+msgid "Display CPU usage"
+msgstr "显示 CPU 使用率"
 
-#: ../plugins/monitors/monitors.c:701
+#: ../applets/drawing/monitors/monitors.vala:398
 msgid "CPU color"
 msgstr "CPU 颜色"
 
-#: ../plugins/monitors/monitors.c:702
+#: ../applets/drawing/monitors/monitors.vala:399
 msgid "Display RAM usage"
-msgstr "显示内存使用情况"
+msgstr "显示内存使用率"
 
-#: ../plugins/monitors/monitors.c:703
+#: ../applets/drawing/monitors/monitors.vala:400
 msgid "RAM color"
 msgstr "内存颜色"
 
-#: ../plugins/monitors/monitors.c:704
-msgid "Action when clicked (default: lxtask)"
-msgstr "单击时的动作(默认：lxtask)"
+#: ../applets/drawing/monitors/monitors.vala:401
+msgid "Action when clicked"
+msgstr "点击时动作"
 
-#: ../plugins/monitors/monitors.c:784
-msgid "Display monitors (CPU, RAM)"
-msgstr "显示监视器(CPU，内存)"
+#: ../applets/wnck/deskno/deskno.vala:68
+msgid "Display desktop names"
+msgstr "显示桌面名称"
 
-#: ../plugins/weather/weatherwidget.c:50
-msgid "[N/A]"
-msgstr "[不可用]"
+#: ../applets/wnck/icontasks/buttons.vala:92
+msgid "Pin to panel"
+msgstr "添加到面板"
 
-#: ../plugins/weather/weatherwidget.c:796
-msgid "Enter New Location"
-msgstr "输入新位置"
+#: ../applets/wnck/icontasks/buttons.vala:93
+#: ../applets/wnck/icontasks/buttons.vala:449
+msgid "Unpin from panel"
+msgstr "从面板中删除"
 
-#: ../plugins/weather/weatherwidget.c:810
-msgid "_New Location:"
-msgstr "新位置(_N)："
+#: ../applets/wnck/pager/pager.vala:95
+msgid "Workspaces..."
+msgstr "工作区..."
 
-#: ../plugins/weather/weatherwidget.c:821
-msgid ""
-"Enter the:\n"
-"- city, or\n"
-"- city and state/country, or\n"
-"- postal code\n"
-"for which to retrieve the weather forecast."
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:81
+#: ../applets/wnck/tasklist/tasklist.vala:97
+msgid "Show windows from all desktops"
+msgstr "显示所有桌面的窗口"
+
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:82
+#: ../applets/wnck/tasklist/tasklist.vala:98
+msgid "Show window`s workspace on unminimize"
+msgstr "显示非最小化的窗口工作区"
+
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:83
+#: ../applets/wnck/tasklist/tasklist.vala:99
+msgid "Close windows on middle click"
+msgstr "鼠标中键点击关闭所有窗口"
+
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:84
+#: ../applets/wnck/tasklist/tasklist.vala:100
+msgid "Group windows when needed"
+msgstr "按需分组窗口"
+
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:85
+msgid "Show task labels"
+msgstr "显示任务标签"
+
+#: ../applets/wnck/tasklist/tasklist.vala:101
+msgid "Ungrouped buttons limit"
+msgstr "取消分组数量限制"
+
+#: ../applets/wnck/tasklist/tasklist.vala:102
+msgid "Unexpanded size limit"
+msgstr "取消展开数量限制"
+
+#: ../applets/wnck/wincmd/wincmd.vala:87
+msgid "Alternately iconify/shade and raise"
+msgstr "交替显示/隐藏与卷起"
+
+#: ../lib/panel-menus.ui:6
+msgid "Configure applet..."
+msgstr "配置组件"
+
+#: ../lib/panel-menus.ui:11
+msgid "Remove applet"
+msgstr "删除组件"
+
+#: ../lib/panel-menus.ui:18
+msgid "Panel Items..."
+msgstr "添加/删除组件"
+
+#: ../lib/panel-menus.ui:25
+msgid "Panel Settings..."
+msgstr "面板设置"
+
+#: ../lib/panel-menus.ui:30
+msgid "New Panel"
+msgstr "新建面板"
+
+#: ../lib/panel-menus.ui:34
+msgid "Remove this Panel"
+msgstr "删除该面板"
+
+#: ../lib/panel-menus.ui:40
+msgid "Application Settings"
+msgstr "更改组件选项"
+
+#: ../lib/panel-menus.ui:44
+msgid "About"
+msgstr "关于"
+
+#: ../lib/pref.ui:41
+msgid "Panel preferences"
+msgstr "面板首选项"
+
+#: ../lib/pref.ui:94
+msgid "Edge:"
+msgstr "边缘："
+
+#: ../lib/pref.ui:109
+msgid "Monitor:"
+msgstr "显示："
+
+#: ../lib/pref.ui:121
+msgid "Advanced properties"
+msgstr "高级属性"
+
+#: ../lib/pref.ui:138
+msgid "Count as dock:"
+msgstr "作为停靠栏："
+
+#: ../lib/pref.ui:150
+msgid "Reserve space:"
+msgstr "占据空间："
+
+#: ../lib/pref.ui:186
+msgid "Placement properties"
+msgstr "放置属性"
+
+#: ../lib/pref.ui:423
+msgid "Position"
+msgstr "位置"
+
+#: ../lib/pref.ui:449
+msgid "Icon size in px:"
+msgstr "图标大小（px）："
+
+#: ../lib/pref.ui:461
+msgid "Height in px:"
+msgstr "高度（px）："
+
+#: ../lib/pref.ui:486
+msgid "Width:"
+msgstr "宽度："
+
+#: ../lib/pref.ui:510
+msgid "Size properties"
+msgstr "大小属性"
+
+#: ../lib/pref.ui:527
+msgid "Automatic hide panel"
+msgstr "自动隐藏面板"
+
+#: ../lib/pref.ui:556
+msgid "Autohide:"
+msgstr "自动隐藏："
+
+#: ../lib/pref.ui:582
+msgid "Foreground color:"
+msgstr "前景色："
+
+#: ../lib/pref.ui:594
+msgid "Background image:"
+msgstr "背景图片："
+
+#: ../lib/pref.ui:606
+msgid "Background color:"
+msgstr "背景色："
+
+#: ../lib/pref.ui:618
+msgid "Font:"
+msgstr "字体："
+
+#: ../lib/pref.ui:630
+msgid "Round corners size:"
+msgstr "圆角大小："
+
+#: ../lib/pref.ui:706
+msgid "Select background color"
+msgstr "选择背景色"
+
+#: ../lib/pref.ui:720
+msgid "Select foreground color"
+msgstr "选择前景色"
+
+#: ../lib/pref.ui:733
+msgid "Select an Image"
+msgstr "选择图片"
+
+#: ../lib/pref.ui:752
+msgid "Select panel font"
+msgstr "选择面板字体"
+
+#: ../lib/pref.ui:764
+msgid "Size only"
+msgstr "仅大小"
+
+#: ../lib/pref.ui:789
+msgid "Appearance"
+msgstr "外观"
+
+#: ../lib/pref.ui:969
+msgid "Plugins"
+msgstr "组件"
+
+#: ../app/app-about.ui:11
+msgid "Simple GTK+ desktop panel. "
+msgstr "简单的 GTK+ 桌面面板"
+
+#: ../app/app-about.ui:13
+msgid "https://vala-panel.github.io"
+msgstr "https://vala-panel.github.io"
+
+#. Replace this string by your names, one name per line.
+#: ../app/app-about.ui:29
+msgid "translator-credits"
 msgstr ""
-"请输入：\n"
-"- 城市，或\n"
-"- 城市和州省/国家，或\n"
-"- 邮政编码\n"
-"来获取天气预报。"
 
-#: ../plugins/weather/weatherwidget.c:858
-#: ../plugins/weather/weatherwidget.c:991
-msgid "You must specify a location."
-msgstr "您必须指定一个位置。"
+#: ../app/app-pref.ui:8
+msgid "Application preferences"
+msgstr "应用首选项"
 
-#: ../plugins/weather/weatherwidget.c:905
-#, c-format
-msgid "Location '%s' not found!"
-msgstr "找不到“%s”这个地方！"
+#: ../app/app-pref.ui:52
+msgid "Logout manager..."
+msgstr "注销管理..."
 
-#: ../plugins/weather/weatherwidget.c:1063
-msgid "Preferences"
-msgstr "首选项"
+#: ../app/app-pref.ui:68
+msgid "Shutdown application..."
+msgstr "关闭应用程序..."
 
-#: ../plugins/weather/weatherwidget.c:1069
-msgid "Refresh"
-msgstr "刷新"
+#: ../app/app-pref.ui:82
+msgid "Preferred Applications:"
+msgstr "偏好应用程序："
 
-#: ../plugins/weather/weatherwidget.c:1075
-msgid "Quit"
-msgstr "退出"
+#: ../app/app-pref.ui:108
+msgid "Use dark theme"
+msgstr "使用 dark 主题"
 
-#: ../plugins/weather/weatherwidget.c:1236
-msgid "Weather Preferences"
-msgstr "天气首选项"
+#: ../app/app-pref.ui:129
+msgid "Use custom CSS"
+msgstr "使用自定义样式"
 
-#: ../plugins/weather/weatherwidget.c:1250
-msgid "Current Location"
-msgstr "当前位置"
+#: ../app/app-pref.ui:148
+msgid "Select a CSS File"
+msgstr "选择样式文件"
 
-#: ../plugins/weather/weatherwidget.c:1254
-#: ../plugins/weather/weatherwidget.c:1529
-msgid "None configured"
-msgstr "未配置"
+#: ../app/app-pref.ui:170
+msgid "Widget Style"
+msgstr "窗体风格"
 
-#: ../plugins/weather/weatherwidget.c:1256
-#: ../plugins/weather/weatherwidget.c:1526
-msgid "_Set"
-msgstr "设置(_S)"
+#: ../applets/core/launchbar/config.ui:33
+msgid "Add launcher from installed applications"
+msgstr "添加现有应用到启动器"
 
-#: ../plugins/weather/weatherwidget.c:1277
-msgid "Display"
-msgstr "显示"
+#: ../applets/core/launchbar/config.ui:63
+msgid "Add all displayed files"
+msgstr "添加所有显示的文件"
 
-#: ../plugins/weather/weatherwidget.c:1281
-msgid "Name:"
-msgstr "名称："
+#: ../applets/core/launchbar/config.ui:80
+msgid "Files"
+msgstr "文件"
 
-#: ../plugins/weather/weatherwidget.c:1285
-msgid "Units:"
-msgstr "单位："
+#: ../applets/core/launchbar/config.ui:148
+msgid "Name"
+msgstr "名称"
 
-#: ../plugins/weather/weatherwidget.c:1289
-msgid "_Metric (°C)"
-msgstr "公制(_M)(°C)"
+#: ../applets/core/menumodel/system-menus.ui:5
+msgid "Audio and Video"
+msgstr "影音"
 
-#: ../plugins/weather/weatherwidget.c:1291
-msgid "_English (°F)"
-msgstr "英制(_E)(°F)"
+#: ../applets/core/menumodel/system-menus.ui:10
+msgid "Education"
+msgstr "教育"
 
-#: ../plugins/weather/weatherwidget.c:1326
-msgid "Forecast"
-msgstr "预报"
+#: ../applets/core/menumodel/system-menus.ui:15
+msgid "Game"
+msgstr "游戏"
 
-#: ../plugins/weather/weatherwidget.c:1330
-msgid "Updates:"
-msgstr "更新："
+#: ../applets/core/menumodel/system-menus.ui:20
+msgid "Graphics"
+msgstr "图形"
 
-#: ../plugins/weather/weatherwidget.c:1334
-msgid "Ma_nual"
-msgstr "手动(_N)"
+#: ../applets/core/menumodel/system-menus.ui:25
+#: ../applets/core/menumodel/system-menus.ui:81
+msgid "Network"
+msgstr "互联网"
 
-#: ../plugins/weather/weatherwidget.c:1338
-msgid "_Automatic, every"
-msgstr "自动，每隔(_A)"
+#: ../applets/core/menumodel/system-menus.ui:30
+msgid "Office"
+msgstr "办公"
 
-#: ../plugins/weather/weatherwidget.c:1359
-msgid "minutes"
-msgstr "分钟"
+#: ../applets/core/menumodel/system-menus.ui:35
+msgid "Settings"
+msgstr "系统设置"
 
-#: ../plugins/weather/weatherwidget.c:1368
-msgid "Source:"
-msgstr "源："
+#: ../applets/core/menumodel/system-menus.ui:45
+msgid "Utility"
+msgstr "附件"
 
-#: ../plugins/weather/weatherwidget.c:1482
-msgid "C_hange"
-msgstr "更改(_H)"
+#: ../applets/core/menumodel/system-menus.ui:50
+msgid "Development"
+msgstr "开发"
 
-#. Both are available
-#: ../plugins/weather/weatherwidget.c:1570
-#, c-format
-msgid "Current Conditions for %s"
-msgstr "%s 的当前状况"
+#: ../applets/core/menumodel/system-menus.ui:55
+msgid "Other"
+msgstr "其他"
 
-#: ../plugins/weather/weatherwidget.c:1594
-msgid "Location:"
-msgstr "位置："
+#: ../applets/core/menumodel/system-menus.ui:65
+msgid "Computer"
+msgstr "计算机"
 
-#: ../plugins/weather/weatherwidget.c:1617
-msgid "Last updated:"
-msgstr "上次更新于："
+#: ../applets/core/menumodel/system-menus.ui:72
+msgid "Trash"
+msgstr "回收站"
 
-#: ../plugins/weather/weatherwidget.c:1644
-msgid "Feels like:"
-msgstr "体感："
+#: ../applets/core/menumodel/system-menus.ui:88
+msgid "Connect to server..."
+msgstr "链接到服务器..."
 
-#: ../plugins/weather/weatherwidget.c:1669
-msgid "Humidity:"
-msgstr "湿度："
+#: ../applets/core/menumodel/system-menus.ui:97
+msgid "Recent documents"
+msgstr "最近使用"
 
-#: ../plugins/weather/weatherwidget.c:1696
-msgid "Pressure:"
-msgstr "气压："
+#: ../applets/core/menumodel/system-menus.ui:109
+msgid "Run"
+msgstr "运行"
 
-#: ../plugins/weather/weatherwidget.c:1723
-msgid "Visibility:"
-msgstr "能见度："
+#: ../applets/core/menumodel/system-menus.ui:116
+msgid "Log Out..."
+msgstr "注销用户..."
 
-#: ../plugins/weather/weatherwidget.c:1751
-msgid "Wind:"
-msgstr "风："
+#: ../applets/core/menumodel/system-menus.ui:121
+msgid "Shut down..."
+msgstr "关机"
 
-#: ../plugins/weather/weatherwidget.c:1774
-msgid "Sunrise:"
-msgstr "日出："
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:7
+msgid ""
+"Vala Panel is GTK+ 3 desktop panel. It is based on Vala and LXPanel ideas. "
+"It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is completely "
+"rewritten in Vala. It offers same functionality as LXPanel, but:"
+msgstr ""
+"Vala Panel 是一个 GTK+ 3 桌面面板，它基于 Vala 与 LXPanel 的设计思想。 "
+"它是 LXPanel 0.1.0 版本的分支版本，但从 0.2.0 开始完全使用 Vala 重写。 "
+"它提供等同于 LXPanel 的功能，但是："
 
-#: ../plugins/weather/weatherwidget.c:1797
-msgid "Sunset:"
-msgstr "日落："
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:11
+msgid "It has slightly more memory usage."
+msgstr "它会占用更多内存使用。"
 
-#: ../plugins/weather/weatherwidget.c:1903
-#: ../plugins/weather/weatherwidget.c:2239
-#, c-format
-msgid "Forecast for %s unavailable."
-msgstr "没有 %s 的天气预报。"
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:12
+msgid ""
+"X11 dependency is stripped from panel core (but it is not tested on another "
+"display servers, such as Wayland or Mir, right now)."
+msgstr ""
+"X11 依赖已经从面板核心部分接触（但目前尚未在其他显示服务框架测试，例如：Wayland, Mir）"
 
-#: ../plugins/weather/weatherwidget.c:1912
-#: ../plugins/weather/weatherwidget.c:2244
-#, c-format, c-format
-msgid "Location not set."
-msgstr "尚未设置位置。"
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:14
+msgid ""
+"Some of former LXPanel plugins is separate binaries now and lives in another "
+"packages (Example is volume applet)."
+msgstr ""
+"一些早期 LXPanel 组件已经被拆分为独立的二进制应用并包含与其他软件包中（例如声音组件）"
 
-#: ../plugins/weather/weatherwidget.c:1929
-#, c-format
-msgid "Searching for '%s'..."
-msgstr "正在搜索“%s”..."
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
+msgid "Konstantin"
+msgstr ""
 
-#: ../plugins/weather/weatherwidget.c:2055
-#, c-format
-msgid "Location matches for '%s'"
-msgstr "与“%s”匹配的位置"
+#: ../applets/core/clock/clock.desktop.plugin.in:3
+msgid "Clock"
+msgstr "时钟"
 
-#: ../plugins/weather/weatherwidget.c:2075
-msgid "City"
-msgstr "城市"
+#: ../applets/core/clock/clock.desktop.plugin.in:4
+msgid "Digital clock with calendar"
+msgstr "数字时钟与日历"
 
-#: ../plugins/weather/weatherwidget.c:2095
-msgid "Country"
-msgstr "国家"
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
+msgid "Directory menu"
+msgstr "目录菜单"
 
-#. make it nice and pretty
-#: ../plugins/weather/weatherwidget.c:2226
-#, fuzzy
-msgid "Currently in "
-msgstr "当前加载的插件"
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:5
+msgid "This menu shows filesystem hierarchy, started from given dir."
+msgstr "本菜单展示从给定的目录开始的文件系统层次。"
 
-#: ../plugins/weather/weatherwidget.c:2228
-msgid "Today: "
-msgstr "今天："
+#: ../applets/core/kbled/kbled.desktop.plugin.in:5
+msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
+msgstr "用于大小写、数字、滚动锁定键的组件"
 
-#: ../plugins/weather/weatherwidget.c:2229
-msgid "Tomorrow: "
-msgstr "明天："
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
+msgid "Quickstart"
+msgstr "快速启动栏"
 
-#: ../plugins/weather/weather.c:307
-#, fuzzy
-msgid "Weather Plugin"
-msgstr "WNCKpager 工作区插件"
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:5
+msgid "Container for application launchers."
+msgstr "应用程序启动容器"
 
-#: ../plugins/weather/weather.c:308
-msgid "Show weather conditions for a location."
-msgstr "显示某个地方的天气状况。"
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
+msgid "Applications Menu"
+msgstr "主菜单"
 
-#, c-format
-#~ msgid " --log <number> -- set log level 0-5. 0 - none 5 - chatty\n"
-#~ msgstr " --log <数值>   -- 设置日志级别 (0-5)。0 - 无, 5 - 全部\n"
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
+msgid "Applications or custom menu in GMenuModel format."
+msgstr "主面板的应用组件集合"
 
-#, c-format
-#~ msgid "Format codes: man 3 strftime; \\%n for line break"
-#~ msgstr "格式代码：man 3 strftime；\\%n 代表换行"
+#: ../applets/core/separator/separator.desktop.plugin.in:4
+msgid "Separator"
+msgstr "分割符"
 
-#~ msgid "Normal"
-#~ msgstr "普通"
+#: ../applets/core/separator/separator.desktop.plugin.in:5
+msgid "Draws separator and makes space on panel"
+msgstr "在面板绘制分割符并占用空间"
 
-#~ msgid "Warning1"
-#~ msgstr "警告1"
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+msgid "CPU Graph"
+msgstr "CPU 监视器"
 
-#~ msgid "Warning2"
-#~ msgstr "警告2"
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:5
+msgid "Draws CPU graph on panel."
+msgstr "在面板绘制 CPU 监视器"
 
-#~ msgid "Warning1 Temperature"
-#~ msgstr "警告1 温度"
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+msgid "Monitors Graph"
+msgstr "系统监视器"
 
-#~ msgid "Warning2 Temperature"
-#~ msgstr "警告2 温度"
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
+msgid "Draws monitors graph on panel (for CPU and RAM)."
+msgstr "在面板为 CPU 与内存绘制系统监视器。"
 
-#, fuzzy
-#~ msgid "Copyright (C) 2008-2013"
-#~ msgstr "版权 (C) 2008-2011"
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
+msgid "Window Buttons"
+msgstr "窗口按钮"
 
-#~ msgid "Display Image and Tooltip"
-#~ msgstr "显示图标及工具提示"
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:5
+msgid "Shows window buttons (such as minimize, maximize and close)."
+msgstr "显示窗口按钮（如最小化，最大化与关闭）。"
 
-#~ msgid ""
-#~ "Error, you need to install an application to configure the sound "
-#~ "(pavucontol, alsamixer ...)"
-#~ msgstr "错误，您需要安装配置声音的应用程序(如 pavucontol、alsamixer...)"
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
+msgid "Desktop Number"
+msgstr "工作区"
 
-#, c-format
-#~ msgid "Failed to launch time configuration tool: %s"
-#~ msgstr "调用时间配置工具失败：%s"
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:5
+msgid "Shows desktop name or number. Switch on click."
+msgstr "显示桌面名称与数字，点击切换。"
 
-#~ msgid "Model"
-#~ msgstr "型号"
+#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:4
+#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:5
+msgid "Icon Task List"
+msgstr "图标任务列表"
 
-#~ msgid "WNCKPager"
-#~ msgstr "WNCKPager"
+#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:9
+msgid "tab-new-symbolic"
+msgstr ""
 
-#~ msgid "<b>Icon</b>"
-#~ msgstr "<b>图标</b>"
+#: ../applets/wnck/pager/pager.desktop.plugin.in:4
+msgid "Pager"
+msgstr "切换工作区"
 
-#~ msgid "Configure Keyboard Layout Switcher"
-#~ msgstr "配置键盘布局切换器"
+#: ../applets/wnck/pager/pager.desktop.plugin.in:5
+msgid "Shows desktops."
+msgstr "显示桌面。"
 
-#~ msgid "image"
-#~ msgstr "图像"
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
+msgid "Tasklist Xfce"
+msgstr "进程任务列表（Xfce）"
 
-#~ msgid "text"
-#~ msgstr "文本"
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:5
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:5
+msgid "Shows opened windows."
+msgstr "显示打开的窗口"
 
-#~ msgid "Per application settings"
-#~ msgstr "每应用程序设置"
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
+msgid "Tasklist"
+msgstr "进程任务列表"
 
-#~ msgid "Default layout:"
-#~ msgstr "默认布局："
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
+msgid "Show Desktop"
+msgstr "显示桌面"
 
-#~ msgid "Available Applications"
-#~ msgstr "可用的应用程序"
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
+msgid "Can shows desktop and shades window."
+msgstr "可以显示与隐藏窗口。"
+
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
+msgid "XEmbed Tray"
+msgstr "通知区域"
+
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:5
+msgid "Old XEmbed-based tray"
+msgstr "旧的通知区域"
+
+#: ../data/desktop/org.valapanel.application.desktop.in:5
+msgid "Desktop Panel"
+msgstr "桌面面板"
+
+#: ../data/desktop/org.valapanel.application.desktop.in:7
+msgid "panel;launcher;menu;tasklist"
+msgstr ""
+
+#: ../data/desktop/org.valapanel.application.desktop.in:9
+msgid "vala-panel"
+msgstr ""
