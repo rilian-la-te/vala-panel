@@ -712,6 +712,8 @@ void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 		gtk_main_iteration();
 	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
 	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
+	while (gtk_events_pending())
+		gtk_main_iteration();
 	g_object_notify(G_OBJECT(self), "orientation");
 }
 /****************************************************
