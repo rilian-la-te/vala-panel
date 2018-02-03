@@ -129,12 +129,6 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	return user_data.toplevels_count;
 }
 
-static void vala_panel_platform_x11_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x,
-                                                   int y)
-{
-	gtk_window_move(top, x, y);
-}
-
 // TODO: Make more readable code without switch
 static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
                                                  PanelGravity gravity, int monitor)
@@ -323,10 +317,9 @@ static void vala_panel_platform_x11_init(ValaPanelPlatformX11 *self)
 
 static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 {
-	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_coords = vala_panel_platform_x11_move_to_coords;
-	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side   = vala_panel_platform_x11_move_to_side;
-	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut   = vala_panel_platform_x11_update_strut;
-	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut      = vala_panel_platform_x11_edge_can_strut;
+	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vala_panel_platform_x11_move_to_side;
+	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vala_panel_platform_x11_update_strut;
+	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vala_panel_platform_x11_edge_can_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->start_panels_from_profile =
 	    vala_panel_platform_x11_start_panels_from_profile;
 	VALA_PANEL_PLATFORM_CLASS(klass)->edge_available = vala_panel_platform_x11_edge_available;

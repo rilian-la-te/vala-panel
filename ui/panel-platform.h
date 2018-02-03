@@ -73,7 +73,6 @@ struct _ValaPanelPlatformClass
 	bool (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
-	void (*move_to_coords)(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
 	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, PanelGravity alloc, int monitor);
 	bool (*edge_available)(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,
 	                       int monitor);
@@ -89,7 +88,6 @@ bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char 
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
 bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
-void vala_panel_platform_move_to_coords(ValaPanelPlatform *f, GtkWindow *top, int x, int y);
 void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGravity alloc,
                                       int monitor);
 bool vala_panel_platform_edge_available(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,

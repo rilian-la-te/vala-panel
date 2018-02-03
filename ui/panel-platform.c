@@ -39,12 +39,6 @@ void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
 		VALA_PANEL_PLATFORM_GET_CLASS(self)->update_strut(self, top);
 }
 
-void vala_panel_platform_move_to_coords(ValaPanelPlatform *self, GtkWindow *top, int x, int y)
-{
-	if (self)
-		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_coords(self, top, x, y);
-}
-
 void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top, PanelGravity alloc,
                                       int monitor)
 {
