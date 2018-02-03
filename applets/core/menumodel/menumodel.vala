@@ -237,10 +237,10 @@ public class Menu: Applet
         {
             if (filename == null)
                 return null;
-            var f = File.new_for_path(filename);
             ret = read_menumodel();
             try {
-                file_monitor = f.monitor_file(FileMonitorFlags.SEND_MOVED|FileMonitorFlags.WATCH_HARD_LINKS);
+                var f = File.new_for_path(filename);
+                file_monitor = f.monitor(FileMonitorFlags.WATCH_MOVES);
             } catch (Error e) {stderr.printf("%s\n",e.message);}
             file_monitor.changed.connect(menumodel_widget_rebuild);
             app_monitor = null;
