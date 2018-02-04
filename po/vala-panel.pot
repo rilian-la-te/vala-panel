@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-04 23:28+0300\n"
+"POT-Creation-Date: 2018-02-04 23:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,42 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../util/info-data.c:65 ../util/info-data.c:66
+#, c-format
+msgid "Run %s"
+msgstr ""
+
+#: ../util/info-data.c:67
+msgid "Run system command"
+msgstr ""
+
+#: ../ui/generic-config-dialog.c:93 ../ui/generic-config-dialog.c:116
+msgid "Select a file"
+msgstr ""
+
+#: ../ui/generic-config-dialog.c:193
+msgid "_Close"
+msgstr ""
+
+#: ../ui/misc-gtk.c:157 ../ui/misc-gtk.c:173 ../ui/toplevel.c:410
+#: ../applets/core/launchbar/launchbar-config.vala:211
+msgid "Error"
+msgstr ""
+
+#: ../ui/toplevel.c:408
+msgid "There is no room for another panel. All the edges are taken."
+msgstr ""
+
+#: ../ui/toplevel.c:434
+msgid ""
+"Really delete this panel?\n"
+"<b>Warning:This can not be recovered.</b>"
+msgstr ""
+
+#: ../ui/toplevel.c:437
+msgid "Confirm"
+msgstr ""
 
 #: ../app/application.c:30
 msgid "Run command on already opened panel"
@@ -71,6 +107,26 @@ msgstr ""
 
 #: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3327
 msgid "_Close All"
+msgstr ""
+
+#: ../ui/configurator.vala:88 ../ui/configurator.vala:145
+msgid "All"
+msgstr ""
+
+#: ../ui/configurator.vala:145
+msgid "%d"
+msgstr ""
+
+#: ../ui/configurator.vala:217
+msgid "Currently loaded plugins"
+msgstr ""
+
+#: ../ui/configurator.vala:226
+msgid "Stretch"
+msgstr ""
+
+#: ../ui/configurator.vala:286
+msgid "Available plugins"
 msgstr ""
 
 #: ../applets/core/clock/clock.vala:100
@@ -142,10 +198,6 @@ msgid ""
 " Adding current directory as launcher."
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar-config.vala:211
-msgid "Error"
-msgstr ""
-
 #: ../applets/core/menumodel/menu-maker.vala:100
 msgid "Home"
 msgstr ""
@@ -208,7 +260,8 @@ msgstr ""
 msgid "Menu file name"
 msgstr ""
 
-#: ../applets/core/separator/separator.vala:64 ../data/ui/pref.ui:567
+#: ../applets/core/separator/separator.vala:64 ../ui/pref.ui:566
+#: ../data/ui/pref.ui:567
 msgid "Size"
 msgstr ""
 
@@ -297,6 +350,110 @@ msgstr ""
 msgid "Alternately iconify/shade and raise"
 msgstr ""
 
+#: ../ui/pref.ui:41 ../data/ui/pref.ui:55
+msgid "Panel preferences"
+msgstr ""
+
+#: ../ui/pref.ui:94 ../data/ui/pref.ui:108
+msgid "Edge:"
+msgstr ""
+
+#: ../ui/pref.ui:109 ../data/ui/pref.ui:123
+msgid "Monitor:"
+msgstr ""
+
+#: ../ui/pref.ui:121 ../data/ui/pref.ui:135
+msgid "Advanced properties"
+msgstr ""
+
+#: ../ui/pref.ui:138 ../data/ui/pref.ui:152
+msgid "Count as dock:"
+msgstr ""
+
+#: ../ui/pref.ui:150 ../data/ui/pref.ui:164
+msgid "Reserve space:"
+msgstr ""
+
+#: ../ui/pref.ui:186 ../data/ui/pref.ui:200
+msgid "Placement properties"
+msgstr ""
+
+#: ../ui/pref.ui:423 ../data/ui/pref.ui:424
+msgid "Position"
+msgstr ""
+
+#: ../ui/pref.ui:449 ../data/ui/pref.ui:450
+msgid "Icon size in px:"
+msgstr ""
+
+#: ../ui/pref.ui:461 ../data/ui/pref.ui:462
+msgid "Height in px:"
+msgstr ""
+
+#: ../ui/pref.ui:486 ../data/ui/pref.ui:487
+msgid "Width:"
+msgstr ""
+
+#: ../ui/pref.ui:510 ../data/ui/pref.ui:511
+msgid "Size properties"
+msgstr ""
+
+#: ../ui/pref.ui:527 ../data/ui/pref.ui:528
+msgid "Automatic hide panel"
+msgstr ""
+
+#: ../ui/pref.ui:556 ../data/ui/pref.ui:557
+msgid "Autohide:"
+msgstr ""
+
+#: ../ui/pref.ui:582 ../data/ui/pref.ui:583
+msgid "Foreground color:"
+msgstr ""
+
+#: ../ui/pref.ui:594 ../data/ui/pref.ui:595
+msgid "Background image:"
+msgstr ""
+
+#: ../ui/pref.ui:606 ../data/ui/pref.ui:607
+msgid "Background color:"
+msgstr ""
+
+#: ../ui/pref.ui:618 ../data/ui/pref.ui:619
+msgid "Font:"
+msgstr ""
+
+#: ../ui/pref.ui:630 ../data/ui/pref.ui:631
+msgid "Round corners size:"
+msgstr ""
+
+#: ../ui/pref.ui:706 ../data/ui/pref.ui:707
+msgid "Select background color"
+msgstr ""
+
+#: ../ui/pref.ui:720 ../data/ui/pref.ui:721
+msgid "Select foreground color"
+msgstr ""
+
+#: ../ui/pref.ui:733 ../data/ui/pref.ui:734
+msgid "Select an Image"
+msgstr ""
+
+#: ../ui/pref.ui:752 ../data/ui/pref.ui:753
+msgid "Select panel font"
+msgstr ""
+
+#: ../ui/pref.ui:764 ../data/ui/pref.ui:765
+msgid "Size only"
+msgstr ""
+
+#: ../ui/pref.ui:789 ../data/ui/pref.ui:790
+msgid "Appearance"
+msgstr ""
+
+#: ../ui/pref.ui:969 ../data/ui/pref.ui:946
+msgid "Plugins"
+msgstr ""
+
 #: ../app/app-about.ui:11
 msgid "Simple GTK+ desktop panel. "
 msgstr ""
@@ -376,110 +533,6 @@ msgstr ""
 
 #: ../data/ui/pref.ui:48
 msgid "Primary monitor"
-msgstr ""
-
-#: ../data/ui/pref.ui:55
-msgid "Panel preferences"
-msgstr ""
-
-#: ../data/ui/pref.ui:108
-msgid "Edge:"
-msgstr ""
-
-#: ../data/ui/pref.ui:123
-msgid "Monitor:"
-msgstr ""
-
-#: ../data/ui/pref.ui:135
-msgid "Advanced properties"
-msgstr ""
-
-#: ../data/ui/pref.ui:152
-msgid "Count as dock:"
-msgstr ""
-
-#: ../data/ui/pref.ui:164
-msgid "Reserve space:"
-msgstr ""
-
-#: ../data/ui/pref.ui:200
-msgid "Placement properties"
-msgstr ""
-
-#: ../data/ui/pref.ui:424
-msgid "Position"
-msgstr ""
-
-#: ../data/ui/pref.ui:450
-msgid "Icon size in px:"
-msgstr ""
-
-#: ../data/ui/pref.ui:462
-msgid "Height in px:"
-msgstr ""
-
-#: ../data/ui/pref.ui:487
-msgid "Width:"
-msgstr ""
-
-#: ../data/ui/pref.ui:511
-msgid "Size properties"
-msgstr ""
-
-#: ../data/ui/pref.ui:528
-msgid "Automatic hide panel"
-msgstr ""
-
-#: ../data/ui/pref.ui:557
-msgid "Autohide:"
-msgstr ""
-
-#: ../data/ui/pref.ui:583
-msgid "Foreground color:"
-msgstr ""
-
-#: ../data/ui/pref.ui:595
-msgid "Background image:"
-msgstr ""
-
-#: ../data/ui/pref.ui:607
-msgid "Background color:"
-msgstr ""
-
-#: ../data/ui/pref.ui:619
-msgid "Font:"
-msgstr ""
-
-#: ../data/ui/pref.ui:631
-msgid "Round corners size:"
-msgstr ""
-
-#: ../data/ui/pref.ui:707
-msgid "Select background color"
-msgstr ""
-
-#: ../data/ui/pref.ui:721
-msgid "Select foreground color"
-msgstr ""
-
-#: ../data/ui/pref.ui:734
-msgid "Select an Image"
-msgstr ""
-
-#: ../data/ui/pref.ui:753
-msgid "Select panel font"
-msgstr ""
-
-#: ../data/ui/pref.ui:765
-msgid "Size only"
-msgstr ""
-
-#: ../data/ui/pref.ui:790
-msgid "Appearance"
-msgstr ""
-
-#: ../data/ui/pref.ui:946
-msgid "Plugins"
 msgstr ""
 
 #: ../applets/core/launchbar/config.ui:33
