@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-19 22:09+0300\n"
+"POT-Creation-Date: 2018-02-04 23:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,107 +17,60 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/generic-config-dialog.c:94 ../lib/generic-config-dialog.c:117
-msgid "Select a file"
-msgstr ""
-
-#: ../lib/generic-config-dialog.c:194
-msgid "_Close"
-msgstr ""
-
-#: ../lib/misc.c:192 ../lib/misc.c:208 ../lib/toplevel.c:435
-#: ../applets/core/launchbar/launchbar-config.vala:211
-msgid "Error"
-msgstr ""
-
-#: ../lib/toplevel.c:433
-msgid "There is no room for another panel. All the edges are taken."
-msgstr ""
-
-#: ../lib/toplevel.c:459
-msgid ""
-"Really delete this panel?\n"
-"<b>Warning:This can not be recovered.</b>"
-msgstr ""
-
-#: ../lib/toplevel.c:462
-msgid "Confirm"
-msgstr ""
-
-#: ../app/application.c:34
+#: ../app/application.c:30
 msgid "Run command on already opened panel"
 msgstr ""
 
-#: ../app/application.c:75
+#: ../app/application.c:71
 msgid "Print version and exit"
 msgstr ""
 
-#: ../app/application.c:76
+#: ../app/application.c:72
 msgid "Use specified profile"
 msgstr ""
 
-#: ../app/application.c:76
+#: ../app/application.c:72
 msgid "profile"
 msgstr ""
 
-#: ../app/application.c:77
+#: ../app/application.c:73
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.c:228
+#: ../app/application.c:225
 #, c-format
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.c:259
+#: ../app/application.c:256
 #, c-format
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
 msgstr ""
 
-#: ../app/application.c:515
+#: ../app/application.c:511
 msgid "No panel with this name found.\n"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3294
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3291
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3302
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3299
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3310
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3307
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3318
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3315
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3330
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3327
 msgid "_Close All"
-msgstr ""
-
-#: ../lib/configurator.vala:88 ../lib/configurator.vala:145
-msgid "All"
-msgstr ""
-
-#: ../lib/configurator.vala:145
-msgid "%d"
-msgstr ""
-
-#: ../lib/configurator.vala:218
-msgid "Currently loaded plugins"
-msgstr ""
-
-#: ../lib/configurator.vala:227
-msgid "Stretch"
-msgstr ""
-
-#: ../lib/configurator.vala:287
-msgid "Available plugins"
 msgstr ""
 
 #: ../applets/core/clock/clock.vala:100
@@ -189,6 +142,10 @@ msgid ""
 " Adding current directory as launcher."
 msgstr ""
 
+#: ../applets/core/launchbar/launchbar-config.vala:211
+msgid "Error"
+msgstr ""
+
 #: ../applets/core/menumodel/menu-maker.vala:100
 msgid "Home"
 msgstr ""
@@ -251,7 +208,7 @@ msgstr ""
 msgid "Menu file name"
 msgstr ""
 
-#: ../applets/core/separator/separator.vala:64 ../lib/pref.ui:566
+#: ../applets/core/separator/separator.vala:64 ../data/ui/pref.ui:567
 msgid "Size"
 msgstr ""
 
@@ -340,142 +297,6 @@ msgstr ""
 msgid "Alternately iconify/shade and raise"
 msgstr ""
 
-#: ../lib/panel-menus.ui:6
-msgid "Configure applet..."
-msgstr ""
-
-#: ../lib/panel-menus.ui:11
-msgid "Remove applet"
-msgstr ""
-
-#: ../lib/panel-menus.ui:18
-msgid "Panel Items..."
-msgstr ""
-
-#: ../lib/panel-menus.ui:25
-msgid "Panel Settings..."
-msgstr ""
-
-#: ../lib/panel-menus.ui:30
-msgid "New Panel"
-msgstr ""
-
-#: ../lib/panel-menus.ui:34
-msgid "Remove this Panel"
-msgstr ""
-
-#: ../lib/panel-menus.ui:40
-msgid "Application Settings"
-msgstr ""
-
-#: ../lib/panel-menus.ui:44
-msgid "About"
-msgstr ""
-
-#: ../lib/pref.ui:41
-msgid "Panel preferences"
-msgstr ""
-
-#: ../lib/pref.ui:94
-msgid "Edge:"
-msgstr ""
-
-#: ../lib/pref.ui:109
-msgid "Monitor:"
-msgstr ""
-
-#: ../lib/pref.ui:121
-msgid "Advanced properties"
-msgstr ""
-
-#: ../lib/pref.ui:138
-msgid "Count as dock:"
-msgstr ""
-
-#: ../lib/pref.ui:150
-msgid "Reserve space:"
-msgstr ""
-
-#: ../lib/pref.ui:186
-msgid "Placement properties"
-msgstr ""
-
-#: ../lib/pref.ui:423
-msgid "Position"
-msgstr ""
-
-#: ../lib/pref.ui:449
-msgid "Icon size in px:"
-msgstr ""
-
-#: ../lib/pref.ui:461
-msgid "Height in px:"
-msgstr ""
-
-#: ../lib/pref.ui:486
-msgid "Width:"
-msgstr ""
-
-#: ../lib/pref.ui:510
-msgid "Size properties"
-msgstr ""
-
-#: ../lib/pref.ui:527
-msgid "Automatic hide panel"
-msgstr ""
-
-#: ../lib/pref.ui:556
-msgid "Autohide:"
-msgstr ""
-
-#: ../lib/pref.ui:582
-msgid "Foreground color:"
-msgstr ""
-
-#: ../lib/pref.ui:594
-msgid "Background image:"
-msgstr ""
-
-#: ../lib/pref.ui:606
-msgid "Background color:"
-msgstr ""
-
-#: ../lib/pref.ui:618
-msgid "Font:"
-msgstr ""
-
-#: ../lib/pref.ui:630
-msgid "Round corners size:"
-msgstr ""
-
-#: ../lib/pref.ui:706
-msgid "Select background color"
-msgstr ""
-
-#: ../lib/pref.ui:720
-msgid "Select foreground color"
-msgstr ""
-
-#: ../lib/pref.ui:733
-msgid "Select an Image"
-msgstr ""
-
-#: ../lib/pref.ui:752
-msgid "Select panel font"
-msgstr ""
-
-#: ../lib/pref.ui:764
-msgid "Size only"
-msgstr ""
-
-#: ../lib/pref.ui:789
-msgid "Appearance"
-msgstr ""
-
-#: ../lib/pref.ui:969
-msgid "Plugins"
-msgstr ""
-
 #: ../app/app-about.ui:11
 msgid "Simple GTK+ desktop panel. "
 msgstr ""
@@ -519,6 +340,146 @@ msgstr ""
 
 #: ../app/app-pref.ui:170
 msgid "Widget Style"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:6
+msgid "Configure applet..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:11
+msgid "Remove applet"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:18
+msgid "Panel Items..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:25
+msgid "Panel Settings..."
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:30
+msgid "New Panel"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:34
+msgid "Remove this Panel"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:40
+msgid "Application Settings"
+msgstr ""
+
+#: ../data/ui/panel-menus.ui:44
+msgid "About"
+msgstr ""
+
+#: ../data/ui/pref.ui:48
+msgid "Primary monitor"
+msgstr ""
+
+#: ../data/ui/pref.ui:55
+msgid "Panel preferences"
+msgstr ""
+
+#: ../data/ui/pref.ui:108
+msgid "Edge:"
+msgstr ""
+
+#: ../data/ui/pref.ui:123
+msgid "Monitor:"
+msgstr ""
+
+#: ../data/ui/pref.ui:135
+msgid "Advanced properties"
+msgstr ""
+
+#: ../data/ui/pref.ui:152
+msgid "Count as dock:"
+msgstr ""
+
+#: ../data/ui/pref.ui:164
+msgid "Reserve space:"
+msgstr ""
+
+#: ../data/ui/pref.ui:200
+msgid "Placement properties"
+msgstr ""
+
+#: ../data/ui/pref.ui:424
+msgid "Position"
+msgstr ""
+
+#: ../data/ui/pref.ui:450
+msgid "Icon size in px:"
+msgstr ""
+
+#: ../data/ui/pref.ui:462
+msgid "Height in px:"
+msgstr ""
+
+#: ../data/ui/pref.ui:487
+msgid "Width:"
+msgstr ""
+
+#: ../data/ui/pref.ui:511
+msgid "Size properties"
+msgstr ""
+
+#: ../data/ui/pref.ui:528
+msgid "Automatic hide panel"
+msgstr ""
+
+#: ../data/ui/pref.ui:557
+msgid "Autohide:"
+msgstr ""
+
+#: ../data/ui/pref.ui:583
+msgid "Foreground color:"
+msgstr ""
+
+#: ../data/ui/pref.ui:595
+msgid "Background image:"
+msgstr ""
+
+#: ../data/ui/pref.ui:607
+msgid "Background color:"
+msgstr ""
+
+#: ../data/ui/pref.ui:619
+msgid "Font:"
+msgstr ""
+
+#: ../data/ui/pref.ui:631
+msgid "Round corners size:"
+msgstr ""
+
+#: ../data/ui/pref.ui:707
+msgid "Select background color"
+msgstr ""
+
+#: ../data/ui/pref.ui:721
+msgid "Select foreground color"
+msgstr ""
+
+#: ../data/ui/pref.ui:734
+msgid "Select an Image"
+msgstr ""
+
+#: ../data/ui/pref.ui:753
+msgid "Select panel font"
+msgstr ""
+
+#: ../data/ui/pref.ui:765
+msgid "Size only"
+msgstr ""
+
+#: ../data/ui/pref.ui:790
+msgid "Appearance"
+msgstr ""
+
+#: ../data/ui/pref.ui:946
+msgid "Plugins"
 msgstr ""
 
 #: ../applets/core/launchbar/config.ui:33
