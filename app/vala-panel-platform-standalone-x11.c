@@ -31,9 +31,6 @@ struct _ValaPanelPlatformX11
 	char *profile;
 };
 
-static uint mon_handler    = 0;
-static uint mon_rm_handler = 0;
-
 #define g_key_file_load_from_config(f, p)                                                          \
 	g_key_file_load_from_file(f,                                                               \
 	                          _user_config_file_name(GETTEXT_PACKAGE, p, NULL),                \
