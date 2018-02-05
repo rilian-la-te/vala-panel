@@ -1,5 +1,5 @@
 project(xfce4-sntray-plugin C)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 cmake_policy (VERSION 2.8)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
@@ -60,6 +60,7 @@ configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/c
 add_subdirectory(po)
 add_subdirectory(data)
 add_subdirectory(src)
+add_subdirectory(xembedsniproxy)
 
 # Add 'make dist' command for creating release tarball
 set (CPACK_PACKAGE_VERSION ${VERSION})
