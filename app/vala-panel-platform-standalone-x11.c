@@ -79,7 +79,7 @@ static void predicate_func(const char *key, ValaPanelUnitSettings *value, DataSt
  * Positioning
  *********************************************************************************************/
 
-static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
+static void monitor_added_removed_cb(GdkDisplay *scr, GdkMonitor *unused, void *data)
 {
 	GtkApplication *app = (GtkApplication *)data;
 	int mons            = gdk_display_get_n_monitors(scr);
@@ -104,6 +104,11 @@ static void monitors_changed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 		}
 	}
 }
+static void monitors_changed_cb(GdkScreen *scr, void *data)
+{
+	GdkDisplay *disp = gdk_screen_get_display(scr);
+	monitor_added_removed_cb(disp, NULL, data);
+}
 
 static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform *obj,
                                                               GtkApplication *app,
@@ -116,16 +121,18 @@ static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform 
 	user_data.obj             = obj;
 	user_data.toplevels_count = 0;
 	g_hash_table_foreach(core->all_units, (GHFunc)predicate_func, &user_data);
-	if (mon_handler == 0)
-		mon_handler = g_signal_connect(gdk_display_get_default(),
-		                               "monitor-added",
-		                               G_CALLBACK(monitors_changed_cb),
-		                               pl->app);
-	if (mon_rm_handler == 0)
-		mon_rm_handler = g_signal_connect(gdk_display_get_default(),
-		                                  "monitor-removed",
-		                                  G_CALLBACK(monitors_changed_cb),
-		                                  pl->app);
+	g_signal_connect(gdk_display_get_default(),
+	                 "monitor-added",
+	                 G_CALLBACK(monitor_added_removed_cb),
+	                 pl->app);
+	g_signal_connect(gdk_display_get_default(),
+	                 "monitor-removed",
+	                 G_CALLBACK(monitor_added_removed_cb),
+	                 pl->app);
+	g_signal_connect(gdk_display_get_default_screen(gdk_screen_get_default()),
+	                 "monitors-changed",
+	                 G_CALLBACK(monitors_changed_cb),
+	                 pl->app);
 	return user_data.toplevels_count;
 }
 
@@ -307,6 +314,10 @@ static bool vala_panel_platform_x11_edge_available(ValaPanelPlatform *self, GtkW
 static void vala_panel_platform_x11_finalize(GObject *obj)
 {
 	ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
+	g_signal_handlers_disconnect_by_data(gdk_display_get_default(), self->app);
+	g_signal_handlers_disconnect_by_data(gdk_display_get_default_screen(
+	                                         gdk_display_get_default()),
+	                                     self->app);
 	g_free(self->profile);
 	(*G_OBJECT_CLASS(vala_panel_platform_x11_parent_class)->finalize)(obj);
 }
