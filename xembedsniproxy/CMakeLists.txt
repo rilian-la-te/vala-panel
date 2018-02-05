@@ -1,5 +1,5 @@
 find_package(XCB
-    REQUIRED COMPONENTS
+    COMPONENTS
         XCB
         XFIXES
         DAMAGE
