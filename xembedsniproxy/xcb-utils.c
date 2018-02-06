@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2017 <davidedmundson@kde.org> David Edmundson
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ */
+
 #include "xcb-utils.h"
 
 #include <X11/Xlib-xcb.h>
@@ -13,6 +32,7 @@ xcb_atom_t a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
 xcb_atom_t a_NET_SYSTEM_TRAY_OPCODE;
 xcb_atom_t a_NET_SYSTEM_TRAY_MESSAGE_DATA;
 xcb_atom_t a_NET_SYSTEM_TRAY_ORIENTATION;
+xcb_atom_t a_NET_SYSTEM_TRAY_VISUAL;
 xcb_atom_t a_MANAGER;
 
 enum
@@ -23,6 +43,7 @@ enum
 	I_NET_SYSTEM_TRAY_OPCODE,
 	I_NET_SYSTEM_TRAY_MESSAGE_DATA,
 	I_NET_SYSTEM_TRAY_ORIENTATION,
+	I_NET_SYSTEM_TRAY_VISUAL,
 	I_MANAGER,
 	N_ATOMS
 };
@@ -37,6 +58,7 @@ void resolve_atoms(xcb_connection_t *con)
 	atom_names[I_NET_SYSTEM_TRAY_OPCODE]            = "_NET_SYSTEM_TRAY_OPCODE";
 	atom_names[I_NET_SYSTEM_TRAY_MESSAGE_DATA]      = "_NET_SYSTEM_TRAY_MESSAGE_DATA";
 	atom_names[I_NET_SYSTEM_TRAY_ORIENTATION]       = "_NET_SYSTEM_TRAY_ORIENTATION";
+	atom_names[I_NET_SYSTEM_TRAY_VISUAL]            = "_NET_SYSTEM_TRAY_VISUAL";
 	atom_names[I_MANAGER]                           = "MANAGER";
 	xcb_atom_t atoms[N_ATOMS];
 	for (int i = 0; i < N_ATOMS; i++)
@@ -63,6 +85,7 @@ void resolve_atoms(xcb_connection_t *con)
 	a_NET_SYSTEM_TRAY_OPCODE            = atoms[I_NET_SYSTEM_TRAY_OPCODE];
 	a_NET_SYSTEM_TRAY_MESSAGE_DATA      = atoms[I_NET_SYSTEM_TRAY_MESSAGE_DATA];
 	a_NET_SYSTEM_TRAY_ORIENTATION       = atoms[I_NET_SYSTEM_TRAY_ORIENTATION];
+	a_NET_SYSTEM_TRAY_VISUAL            = atoms[I_NET_SYSTEM_TRAY_VISUAL];
 	a_MANAGER                           = atoms[I_MANAGER];
 	return;
 }
@@ -79,9 +102,62 @@ xcb_screen_t *xcb_screen_of_display(xcb_connection_t *c, int screen)
 	return NULL;
 }
 
+xcb_connection_t *gdk_x11_get_default_xcb_connection()
+{
+	return gdk_x11_display_get_xcb_connection(gdk_display_get_default());
+}
+
 xcb_connection_t *gdk_x11_display_get_xcb_connection(GdkX11Display *display)
 {
 	Display *xd           = GDK_DISPLAY_XDISPLAY(display);
 	xcb_connection_t *con = XGetXCBConnection(xd);
 	return con;
+}
+
+void gdk_x11_display_set_composited_for_xcb_window(GdkX11Display *display, xcb_window_t win,
+                                                   bool composited)
+{
+	xcb_connection_t *c       = gdk_x11_display_get_xcb_connection(display);
+	xcb_screen_t *screen      = xcb_setup_roots_iterator(xcb_get_setup(c)).data;
+	xcb_visualid_t trayVisual = screen->root_visual;
+	if (composited)
+	{
+		xcb_depth_iterator_t depth_iterator = xcb_screen_allowed_depths_iterator(screen);
+		xcb_depth_t *depth                  = NULL;
+
+		while (depth_iterator.rem)
+		{
+			if (depth_iterator.data->depth == 32)
+			{
+				depth = depth_iterator.data;
+				break;
+			}
+			xcb_depth_next(&depth_iterator);
+		}
+
+		if (depth)
+		{
+			xcb_visualtype_iterator_t visualtype_iterator =
+			    xcb_depth_visuals_iterator(depth);
+			while (visualtype_iterator.rem)
+			{
+				xcb_visualtype_t *visualtype = visualtype_iterator.data;
+				if (visualtype->_class == XCB_VISUAL_CLASS_TRUE_COLOR)
+				{
+					trayVisual = visualtype->visual_id;
+					break;
+				}
+				xcb_visualtype_next(&visualtype_iterator);
+			}
+		}
+	}
+
+	xcb_change_property(c,
+	                    XCB_PROP_MODE_REPLACE,
+	                    win,
+	                    a_NET_SYSTEM_TRAY_VISUAL,
+	                    XCB_ATOM_VISUALID,
+	                    32,
+	                    1,
+	                    &trayVisual);
 }
