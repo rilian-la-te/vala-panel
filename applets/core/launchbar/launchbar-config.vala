@@ -51,6 +51,7 @@ namespace LaunchBar
             launchbar.settings.changed[BUTTONS].connect(check_widgets_from_ids);
             var popover = new Popover(button_add);
             popover.add(box_popover);
+            this.set_size_request(800,400);
             popover.set_size_request(760,360);
             button_add.popover = popover;
             box_popover.show();
