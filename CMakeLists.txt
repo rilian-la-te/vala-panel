@@ -13,6 +13,7 @@ set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 include(GitVersion)
 determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake/vala)
 include(FallbackVersion)
+include(Format)
 
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 add_definitions(-Wall -Wextra
@@ -25,7 +26,7 @@ add_definitions(-Wall -Wextra
                 -Wno-discarded-qualifiers
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
-pkg_check_modules(GTK+ REQUIRED gtk+-3.0>=3.22)
+find_package(GTK3 REQUIRED VERSION 3.22)
 
 include(CMakeDependentOption)
 
