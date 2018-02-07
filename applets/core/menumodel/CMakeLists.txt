@@ -10,6 +10,7 @@ OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_SOURCE_DIR}/ui
     --vapidir=${CMAKE_BINARY_DIR}/vapi
+    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
     --target-glib=2.44
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
     --thread
@@ -27,7 +28,7 @@ glib_compile_resources(RESOURCES
 set (LIBS ${CORE_LIBRARIES} -lm)
 set (LIB_PATHS ${CORE_LIBRARY_DIRS})
 link_directories (${LIB_PATHS})
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}

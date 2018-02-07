@@ -113,6 +113,32 @@ void append_all_sections(GMenu *menu1, GMenuModel *menu2)
 			g_menu_append_section(menu1, label, link);
 	}
 }
+static void copy_attribute(gpointer key, gpointer value, gpointer user_data)
+{
+	GMenuItem *item = G_MENU_ITEM(user_data);
+	g_menu_item_set_attribute_value(item, (const char *)key, (GVariant *)value);
+}
+static void copy_link(gpointer key, gpointer value, gpointer user_data)
+{
+	GMenuItem *item = G_MENU_ITEM(user_data);
+	g_menu_item_set_link(item, (const char *)key, G_MENU_MODEL(value));
+}
+void copy_model_items(GMenu *dst, GMenuModel *src)
+{
+	g_menu_remove_all(dst);
+	for (int i = 0; i < g_menu_model_get_n_items(src); i++)
+	{
+		GHashTable *attributes = NULL;
+		GHashTable *links      = NULL;
+		G_MENU_MODEL_GET_CLASS(src)->get_item_attributes(src, i, &attributes);
+		G_MENU_MODEL_GET_CLASS(src)->get_item_links(src, i, &links);
+		g_autoptr(GMenuItem) item = g_menu_item_new(NULL, NULL);
+		g_hash_table_foreach(attributes, copy_attribute, item);
+		g_hash_table_foreach(links, copy_link, item);
+		g_menu_append_item(dst, item);
+	}
+}
+
 static void apply_menu_dnd(GtkMenuItem *item, GMenuModel *section, int model_item)
 {
 	// Make the this widget a DnD source.
@@ -150,9 +176,9 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 				apply_menu_properties(gtk_container_get_children(
 				                          GTK_CONTAINER(menuw)),
 				                      link_menu);
-            if (is_section)
+			if (is_section)
 			{
-                jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
+				jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
 				apply_menu_properties(l, link_menu);
 			}
 			g_object_unref(link_menu);
@@ -178,7 +204,7 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 		}
 		l       = g_list_nth(l, jumplen);
 		jumplen = 1;
-        if (l == NULL)
-            break;
+		if (l == NULL)
+			break;
 	}
 }

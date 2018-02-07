@@ -27,5 +27,6 @@
 
 void apply_menu_properties(GList *w, GMenuModel *menu);
 void append_all_sections(GMenu *menu1, GMenuModel *menu2);
+void copy_model_items(GMenu *dst, GMenuModel *src);
 
 #endif // MENUMAKER_H

@@ -57,6 +57,8 @@ namespace MenuMaker
     public static AppInfo get_default_for_uri(string uri);
     [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
+    [CCode (cheader_filename="menu-maker.h",cname="copy_model_items")]
+    public static void copy_model_items(GLib.Menu menu1, GLib.MenuModel menu2);
     [CCode (cheader_filename="menu-maker.h",cname="apply_menu_properties")]
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu);
 }

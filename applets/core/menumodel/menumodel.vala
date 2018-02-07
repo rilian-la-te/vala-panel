@@ -279,11 +279,11 @@ public class Menu: Applet
         {
             case InternalMenu.APPLICATIONS:
                 section = MenuMaker.create_applications_menu(false);
-                int_menu.append_section(null,section);
+                MenuMaker.copy_model_items(int_menu,section);
                 break;
             case InternalMenu.SETTINGS:
                 section = MenuMaker.create_applications_menu(true);
-                int_menu.append_section(null,section);
+                MenuMaker.copy_model_items(int_menu,section);
                 break;
         }
     }
