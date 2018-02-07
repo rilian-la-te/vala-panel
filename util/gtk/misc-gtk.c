@@ -82,7 +82,7 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 	gtk_image_set_from_gicon(img, icon, GTK_ICON_SIZE_INVALID);
 	if (top != NULL)
 		g_object_bind_property(top,
-                               "icon-size",
+		                       "icon-size",
 		                       img,
 		                       "pixel-size",
 		                       G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -90,8 +90,7 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 		gtk_image_set_pixel_size(img, size);
 }
 
-void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label,
-                                  GObject *top)
+void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top)
 {
 	css_apply_from_resource(btn, "/org/vala-panel/lib/style.css", "-panel-icon-button");
 	css_toggle_class(btn, GTK_STYLE_CLASS_BUTTON, true);
