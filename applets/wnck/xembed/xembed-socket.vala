@@ -16,7 +16,6 @@ namespace XEmbed
             Object(uint_window: window);
             this.set_has_window(true);
             this.notify.connect((pspec)=>{
-                if(pspec.name == "icon-size" || pspec.name == "height")
                     this.queue_resize();
             });
             //GTK 3.22 temporary dirty hack (we do not know about updates of plug)
