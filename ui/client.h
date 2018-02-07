@@ -24,10 +24,8 @@
 G_BEGIN_DECLS
 
 #include <applet-widget-api.h>
-#include <generic-config-dialog.h>
-#include <launcher-gtk.h>
-#include <menu-maker.h>
 #include <misc-gtk.h>
+#include <util-gtk.h>
 #include <util.h>
 
 G_END_DECLS

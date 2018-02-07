@@ -18,7 +18,6 @@
 
 #include "toplevel.h"
 #include "definitions.h"
-#include "misc-gtk.h"
 #include "util-gtk.h"
 #include "vala-panel-enums.h"
 

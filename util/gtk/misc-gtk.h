@@ -23,15 +23,13 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-#include "toplevel.h"
-
 G_BEGIN_DECLS
 
 void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor);
 void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label);
-void vala_panel_setup_icon(GtkImage *img, GIcon *icon, ValaPanelToplevel *top, int size);
+void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size);
 void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label,
-                                  ValaPanelToplevel *top);
+                                  GObject *top);
 void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
 void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value);
 void vala_panel_apply_window_icon(GtkWindow *win);

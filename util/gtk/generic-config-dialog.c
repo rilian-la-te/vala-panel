@@ -17,7 +17,9 @@
  */
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <stdarg.h>
+#include <stdbool.h>
 
 #include "generic-config-dialog.h"
 #include "misc-gtk.h"

@@ -144,18 +144,20 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 		GMenuModel *link_menu         = NULL;
 		while (g_menu_link_iter_get_next(iter, &str, &link_menu))
 		{
-			has_section = has_section || !(strcmp(str, G_MENU_LINK_SECTION));
-			has_submenu = has_submenu || !(strcmp(str, G_MENU_LINK_SUBMENU));
-			if (menuw != NULL && has_submenu)
+			bool is_section = !(strcmp(str, G_MENU_LINK_SECTION));
+			bool is_submenu = !(strcmp(str, G_MENU_LINK_SUBMENU));
+			if (menuw != NULL && is_submenu)
 				apply_menu_properties(gtk_container_get_children(
 				                          GTK_CONTAINER(menuw)),
 				                      link_menu);
-			else if (has_section)
+            if (is_section)
 			{
-				jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
+                jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
 				apply_menu_properties(l, link_menu);
 			}
 			g_object_unref(link_menu);
+			has_section = has_section || is_section;
+			has_submenu = has_submenu || is_submenu;
 		}
 		GVariant *val = NULL;
 		g_autoptr(GMenuAttributeIter) attr_iter =
@@ -174,8 +176,9 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 				apply_menu_dnd(GTK_MENU_ITEM(l->data), menu, i);
 			g_variant_unref(val);
 		}
-		l = g_list_nth(l, jumplen);
-		if (l == NULL)
-			break;
+		l       = g_list_nth(l, jumplen);
+		jumplen = 1;
+        if (l == NULL)
+            break;
 	}
 }

@@ -21,6 +21,7 @@ target_include_directories(${APPNAME} PRIVATE
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/ui
     ${CMAKE_SOURCE_DIR}/util
+    ${CMAKE_SOURCE_DIR}/util/gtk
     ${CMAKE_BINARY_DIR}/ui)
 
 install (TARGETS ${APPNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)

@@ -24,7 +24,6 @@
 G_BEGIN_DECLS
 
 #include <definitions.h>
-#include <generic-config-dialog.h>
 #include <panel-platform.h>
 #include <settings-manager.h>
 #include <toplevel.h>

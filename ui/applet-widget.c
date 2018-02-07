@@ -1,5 +1,5 @@
 #include "applet-widget.h"
-#include "css.h"
+#include "util-gtk.h"
 #include "definitions.h"
 #include "toplevel.h"
 #include "vala-panel-compat.h"

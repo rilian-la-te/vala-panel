@@ -3,7 +3,6 @@ add_subdirectory(c-lib)
 include(GLibHelpers)
 set(ENUM_FILES
         panel-platform.h
-        generic-config-dialog.h
         settings-manager.c
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
@@ -16,19 +15,13 @@ set(LIBVALAPANEL_HEADERS
     server.h
     applet-widget-api.h
     applet-widget.h
-    misc-gtk.h
-    menu-maker.h
-    generic-config-dialog.h
     settings-manager.h
     panel-platform.h
     toplevel.h
     toplevel-config.h
     ${ENUMSH})
 set(LIBVALAPANEL_C_SOURCES
-    misc-gtk.c
-    menu-maker.c
     toplevel-config.c
-    generic-config-dialog.c
     settings-manager.c
     panel-platform.c
     applet-widget.c
@@ -83,7 +76,7 @@ add_library (${LIBNAME} SHARED
 )
 
 target_link_libraries (${LIBNAME} ${LIBS} util util-gtk)
-target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+target_include_directories(${LIBNAME} PRIVATE ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/util/gtk)
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

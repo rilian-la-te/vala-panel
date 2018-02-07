@@ -21,10 +21,8 @@
 #include <string.h>
 
 #include "css.h"
-#include "definitions.h"
 #include "misc-gtk.h"
 #include "misc.h"
-#include "toplevel.h"
 
 static void set_widget_align(GtkWidget *user_data, gpointer data)
 {
@@ -79,12 +77,12 @@ void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 	gtk_button_set_relief(b, GTK_RELIEF_NONE);
 }
 
-void vala_panel_setup_icon(GtkImage *img, GIcon *icon, ValaPanelToplevel *top, int size)
+void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 {
 	gtk_image_set_from_gicon(img, icon, GTK_ICON_SIZE_INVALID);
 	if (top != NULL)
 		g_object_bind_property(top,
-		                       VALA_PANEL_KEY_ICON_SIZE,
+                               "icon-size",
 		                       img,
 		                       "pixel-size",
 		                       G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -93,7 +91,7 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, ValaPanelToplevel *top, i
 }
 
 void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label,
-                                  ValaPanelToplevel *top)
+                                  GObject *top)
 {
 	css_apply_from_resource(btn, "/org/vala-panel/lib/style.css", "-panel-icon-button");
 	css_toggle_class(btn, GTK_STYLE_CLASS_BUTTON, true);

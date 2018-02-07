@@ -14,17 +14,6 @@ set(UTIL_SOURCES
     misc.c
     info-data.c
     launcher.c)
-
-set(UTIL_GTK_HEADERS
-    css.h
-    util-gtk.h
-    launcher-gtk.h
-    )
-
-set(UTIL_GTK_SOURCES
-    css.c
-    launcher-gtk.c)
-
 INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
     list(APPEND LIBVALAPANEL_C_SOURCES
@@ -54,21 +43,7 @@ set_target_properties (util PROPERTIES
     SOVERSION ${SOVERSION}
     POSITION_INDEPENDENT_CODE ON)
 
-add_library (util-gtk STATIC
-    ${UTIL_GTK_SOURCES}
-    ${UTIL_GTK_HEADERS}
-    ${GLIB_RESOURCES_LIB}
-)
-set_property(TARGET util-gtk PROPERTY POSITION_INDEPENDENT_CODE ON)
-add_dependencies(util-gtk util)
-target_link_libraries (util-gtk util ${GTK3_LIBRARIES} ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES})
-target_include_directories(util-gtk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util)
-
-set_target_properties (util-gtk PROPERTIES
-    VERSION ${VERSION}
-    SOVERSION ${SOVERSION}
-    POSITION_INDEPENDENT_CODE ON)
+add_subdirectory(gtk)
 
 install (FILES ${UTIL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)
-install (FILES ${UTIL_GTK_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)
 

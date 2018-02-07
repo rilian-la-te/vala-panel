@@ -18,8 +18,7 @@
 
 #include "toplevel-config.h"
 #include "definitions.h"
-#include "misc-gtk.h"
-#include "misc.h"
+#include "util-gtk.h"
 #include "toplevel.h"
 
 struct _ValaPanelToplevelConfig
