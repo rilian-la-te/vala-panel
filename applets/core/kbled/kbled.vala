@@ -58,7 +58,7 @@ public class Kbled: Applet
         settings.bind(NUM_ON,num,"visible",SettingsBindFlags.GET);
         widget.add(num);
         widget.foreach((w)=>{w.get_style_context().remove_class("grid-child");});
-        keymap = Gdk.Keymap.get_default();
+        keymap = Gdk.Keymap.get_for_display(this.get_display());
         keymap.state_changed.connect(on_state_changed);
         on_state_changed();
         toplevel.notify["panel-gravity"].connect((o,a)=> {
@@ -66,10 +66,9 @@ public class Kbled: Applet
         });
         show_all();
     }
-    public Dialog get_config_dialog()
+    public override Widget get_settings_ui()
     {
-        Dialog dlg = Configurator.generic_config_dlg(_("Keyboard LED"),
-                            toplevel, this.settings,
+        Widget dlg = Configurator.generic_config_widget(this.settings,
                             _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
                             _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
         dlg.set_size_request(200, -1);  /* Improve geometry */
