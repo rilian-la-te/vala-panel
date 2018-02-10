@@ -1,13 +1,12 @@
 project(xfce4-sntray-plugin C)
-cmake_minimum_required(VERSION 2.8.12)
-cmake_policy (VERSION 2.8)
+cmake_minimum_required(VERSION 3.3)
+cmake_policy (VERSION 3.3)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
 include(ValaPrecompile)
-include(GResource)
 include(GNUInstallDirs)
 
-find_package(Vala)
+find_package(Vala 0.32 REQUIRED)
 find_package(PkgConfig)
 set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 include(GitVersion)
@@ -23,11 +22,12 @@ add_definitions(-Wall -Wextra
                 -Wno-ignored-qualifiers
                 -Wno-incompatible-pointer-types
                 -Wno-missing-field-initializers
-                -Wno-discarded-qualifiers
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
-find_package(GTK3 REQUIRED VERSION 3.22)
-
+find_package (PkgConfig)
+find_package(GLIB2 2.50 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
+include(GLibProgramHandlers)
+find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
 include(CMakeDependentOption)
 
 #set build options

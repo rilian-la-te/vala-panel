@@ -31,14 +31,13 @@ set(VALA_FILES_CORE
     GENERATE_VAPI
         vala-panel-sntray
     )
-    INCLUDE(GResource)
     glib_compile_resources(RESOURCES
         source
             sntray.gresource.xml
     )
 add_library(sntray-core STATIC ${VALA_C_CORE} $<TARGET_OBJECTS:vala-dbusmenu-o>)
-target_include_directories(sntray-core PRIVATE ${GTK3_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR}/dbusmenu)
-target_link_libraries (sntray-core ${GTK3_LIBRARIES} m)
+target_include_directories(sntray-core PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/dbusmenu)
+target_link_libraries (sntray-core GLIB2::GIO_UNIX GTK3::GTK GTK3::GDK m)
 add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
 #################
 # Xfce Panel part
@@ -67,8 +66,8 @@ if (ENABLE_XFCE)
         ${VALA_C_XFCE}
         ${RESOURCES}
     )
-    include_directories(${GTK3_INCLUDE_DIRS} ${XFCE_INCLUDE_DIRS})
-    target_link_libraries(sntray-xfce ${GTK3_LIBRARIES} ${XFCE_LIBRARIES} -lm sntray-core)
+    include_directories(${XFCE_INCLUDE_DIRS})
+    target_link_libraries(sntray-xfce ${XFCE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
     # Install plugin stuffs
@@ -103,8 +102,8 @@ if (ENABLE_VALAPANEL)
         ${VALA_C_VALAPANEL}
         ${RESOURCES}
     )
-    include_directories(${GTK3_INCLUDE_DIRS} ${VALAPANEL_INCLUDE_DIRS})
-    target_link_libraries(sntray-valapanel ${GTK3_LIBRARIES} ${VALAPANEL_LIBRARIES} -lm sntray-core)
+    include_directories(${VALAPANEL_INCLUDE_DIRS})
+    target_link_libraries(sntray-valapanel ${VALAPANEL_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
 
     # Install plugin stuffs
@@ -136,8 +135,8 @@ if (ENABLE_BUDGIE)
         ${VALA_C_BUDGIE}
         ${RESOURCES}
     )
-    include_directories(${GTK3_INCLUDE_DIRS} ${BUDGIE_INCLUDE_DIRS})
-    target_link_libraries(sntray-budgie ${GTK3_LIBRARIES} ${BUDGIE_LIBRARIES} -lm sntray-core)
+    include_directories(${BUDGIE_INCLUDE_DIRS})
+    target_link_libraries(sntray-budgie ${BUDGIE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
     # Install plugin stuffs
@@ -172,8 +171,8 @@ if (ENABLE_MATE)
 	${RESOURCES}
     )
     add_dependencies(sntray-mate sntray-core)
-    include_directories(${GTK3_INCLUDE_DIRS} ${MATE_INCLUDE_DIRS})
-    target_link_libraries(sntray-mate ${GTK3_LIBRARIES} ${MATE_LIBRARIES} -lm sntray-core)
+    include_directories(${MATE_INCLUDE_DIRS})
+    target_link_libraries(sntray-mate ${MATE_LIBRARIES} -lm sntray-core)
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
 
     # Install plugin stuffs
