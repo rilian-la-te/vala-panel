@@ -1,5 +1,4 @@
-include(GResource)
-include(GLibHelpers)
+include(GLibProgramHandlers)
 add_glib_marshal(MARSHALS MARSHALH "applet-api-marshal" g_cclosure_user_marshal)
 add_library(applet-api-new SHARED
         applet-info.c

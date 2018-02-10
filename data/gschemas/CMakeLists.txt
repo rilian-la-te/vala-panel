@@ -1,4 +1,4 @@
-include(GSettings)
+include(GLibProgramHandlers)
 add_schema("org.valapanel.gschema.xml" "bin")
 add_schema("org.valapanel.toplevel.gschema.xml" "bin")
 add_schema("org.valapanel.builtin.gschema.xml" "plugins-base")

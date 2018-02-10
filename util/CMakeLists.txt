@@ -14,7 +14,6 @@ set(UTIL_SOURCES
     misc.c
     info-data.c
     launcher.c)
-INCLUDE(GResource)
 if(GLIB_OLD_FOUND)
     list(APPEND LIBVALAPANEL_C_SOURCES
         guuid.c
@@ -35,7 +34,7 @@ add_library (util STATIC
     ${GLIB_RESOURCES_LIB}
 )
 
-target_link_libraries (util ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES})
+target_link_libraries (util GLIB2::GIO_UNIX)
 target_include_directories(util PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util)
 
 set_target_properties (util PROPERTIES

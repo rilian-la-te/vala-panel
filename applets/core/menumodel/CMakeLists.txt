@@ -18,7 +18,7 @@ OPTIONS
 #####
 # Plugin Library
 #####
-INCLUDE(GResource)
+INCLUDE(GLibProgramHandlers)
 glib_compile_resources(RESOURCES
     source
         ${PLUGIN_NAME}.gresource.xml

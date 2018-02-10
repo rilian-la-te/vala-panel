@@ -79,9 +79,7 @@ configure_file (${CMAKE_SOURCE_DIR}/${APPNAME}.pc.cmake ${CMAKE_BINARY_DIR}/${AP
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 
 # Vala
-find_package (Vala REQUIRED)
-include (ValaVersion)
-ensure_vala_version ("0.34" MINIMUM)
+find_package (Vala 0.34 REQUIRED)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
@@ -96,17 +94,20 @@ add_definitions(-Wall -Wextra
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
-find_package(GLib REQUIRED COMPONENTS goblect gio gio-unix gmodule gthread VERSION 2.50)
-find_package(GTK3 REQUIRED VERSION 3.22)
+find_package(GLIB2 2.50 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
+include(GLibProgramHandlers)
+message(${GLIB2_COMPILE_RESOURCES_EXECUTABLE})
+find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
+find_package(GTK 2.24 REQUIRED COMPONENTS GDK X11)
 
-pkg_check_modules (GLIB_OLD QUIET
-  gio-2.0<=2.52
-)
+if(GLIB2_VERSION VERSION_LESS 2.52)
+    set(GLIB_OLD_FOUND TRUE)
+endif()
 
 pkg_check_modules (PEAS
   libpeas-1.0>=1.14)
 
-set(CORE_LIBRARIES ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES} ${GTK3_LIBRARIES} ${PEAS_LIBRARIES})
+set(CORE_LIBRARIES ${GLIB2_LIBRARIES} ${GTK3_LIBRARIES} ${PEAS_LIBRARIES})
 set(CORE_INCLUDE_DIRS ${GLIB_INCLUDE_DIRS} ${GTK_INCLUDE_DIRS} ${PEAS_INCLUDE_DIRS})
 
 pkg_check_modules (CORE REQUIRED QUIET

@@ -1,4 +1,3 @@
-include(GLibHelpers)
 set(ENUM_FILES
         generic-config-dialog.h
         )
@@ -27,7 +26,7 @@ add_library (util-gtk STATIC
 )
 set_property(TARGET util-gtk PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_dependencies(util-gtk util)
-target_link_libraries (util-gtk util ${GTK3_LIBRARIES} ${GLIB_LIBRARIES} ${GLIB_GIO_LIBRARIES} ${GLIB_GOBJECT_LIBRARIES} ${GLIB_GMODULE_LIBRARIES} ${GLIB_GTHREAD_LIBRARIES})
+target_link_libraries (util-gtk util GTK3::GTK GLIB2::GIO_UNIX)
 target_include_directories(util-gtk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util ${CMAKE_SOURCE_DIR}/util)
 
 set_target_properties (util-gtk PROPERTIES
