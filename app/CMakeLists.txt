@@ -12,7 +12,7 @@ set(APP_SOURCES
 	vala-panel-platform-standalone-x11.h
         application.c application.h)
 add_executable(${APPNAME}  ${APP_SOURCES} )
-target_link_libraries (${APPNAME} ${LIBNAME} GLIB2::GIO_UNIX GTK3::GTK)
+target_link_libraries (${APPNAME} ${LIBNAME})
 target_include_directories(${APPNAME} PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}

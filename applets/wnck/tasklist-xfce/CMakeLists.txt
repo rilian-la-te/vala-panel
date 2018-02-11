@@ -21,14 +21,6 @@ OPTIONS
 #####
 
 # Build library for plugin
-set (LIBS ${CORE_LIBRARIES} ${WNCK_LIBRARIES} -lm)
-set (LIB_PATHS ${CORE_LIBRARY_DIRS} ${WNCK_LIBRARY_DIRS})
-set (LIB_CFLAGS ${CORE_CFLAGS} ${WNCK_CFLAGS})
-link_directories (${LIB_PATHS})
-add_definitions(-DWNCK_I_KNOW_THIS_IS_UNSTABLE)
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
-
-
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
     tasklist-widget.c
@@ -38,8 +30,8 @@ add_library (${PLUGIN_NAME} MODULE
     ${RESOURCES}
 )
 
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
-target_include_directories (${PLUGIN_NAME} PRIVATE ${CORE_INCLUDE_DIRS} ${WNCK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries (${PLUGIN_NAME} WNCK::WNCK valapanel)
+target_include_directories (${PLUGIN_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

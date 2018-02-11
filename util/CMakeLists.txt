@@ -34,7 +34,7 @@ add_library (util STATIC
     ${GLIB_RESOURCES_LIB}
 )
 
-target_link_libraries (util GLIB2::GIO_UNIX)
+target_link_libraries (util GLIB2::GIO_UNIX GLIB2::GOBJECT)
 target_include_directories(util PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util)
 
 set_target_properties (util PROPERTIES

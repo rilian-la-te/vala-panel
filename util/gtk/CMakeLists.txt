@@ -25,8 +25,7 @@ add_library (util-gtk STATIC
     ${GLIB_RESOURCES_LIB}
 )
 set_property(TARGET util-gtk PROPERTY POSITION_INDEPENDENT_CODE ON)
-add_dependencies(util-gtk util)
-target_link_libraries (util-gtk util GTK3::GTK GLIB2::GIO_UNIX)
+target_link_libraries (util-gtk util GTK3::GTK GTK3::GDK)
 target_include_directories(util-gtk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/util ${CMAKE_SOURCE_DIR}/util)
 
 set_target_properties (util-gtk PROPERTIES

@@ -5,10 +5,6 @@ set(ENUM_FILES
         settings-manager.c
         )
 add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
-option(ENABLE_NEW_INTERFACE "Enable new interface function" OFF)
-if (ENABLE_NEW_INTERFACE)
-    set(NEW_DEFINE -D NEW)
-endif()
 set(LIBVALAPANEL_HEADERS
     client.h
     server.h
@@ -57,10 +53,6 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 #####
 
 # Build library for plugins and application
-set (LIBS ${PEAS_LIBRARIES} -lm)
-set (LIB_PATHS ${CORE_LIBRARY_DIRS})
-link_directories (${LIB_PATHS})
-
 set (LIB_FILES ${VALA_C})
 add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi)
 add_library (${LIBNAME} SHARED
@@ -71,8 +63,8 @@ add_library (${LIBNAME} SHARED
     definitions.h
 )
 
-target_link_libraries (${LIBNAME} GLIB2::GIO_UNIX GTK3::GTK ${LIBS} util util-gtk)
-target_include_directories(${LIBNAME} PRIVATE ${PEAS_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/util; ${CMAKE_SOURCE_DIR}/ui ${CMAKE_SOURCE_DIR}/util/gtk)
+target_link_libraries (${LIBNAME} PEAS::PEAS util-gtk)
+target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/util; ${CMAKE_SOURCE_DIR}/ui ${CMAKE_SOURCE_DIR}/util/gtk)
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

@@ -18,17 +18,12 @@ OPTIONS
 #####
 
 # Build library for plugin
-set (LIBS ${CORE_LIBRARIES} -lm)
-set (LIB_PATHS ${CORE_LIBRARY_DIRS})
-link_directories (${LIB_PATHS})
-
 add_library (${PLUGIN_NAME} MODULE
     ${VALA_C}
     ${RESOURCES}
 )
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
-target_link_libraries (${PLUGIN_NAME} ${LIBS} valapanel)
+target_link_libraries (${PLUGIN_NAME} valapanel)
 add_custom_target(vala-ide-${PLUGIN_NAME} SOURCES ${VALA_FILES})
 
 # Install plugin stuffs

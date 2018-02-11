@@ -1,6 +1,6 @@
 include(CMakeDependentOption)
-pkg_check_modules(WNCK libwnck-3.0)
-pkg_check_modules(X11 x11 xcomposite xdamage xfixes gdk-x11-3.0)
+find_package(WNCK 3.4.8)
+find_package(X11 COMPONENTS X11 Xcomposite Xdamage Xrender Xfixes)
 cmake_dependent_option(ENABLE_X11 "Enables X11 system tray" ON
     "X11_FOUND" OFF)
 cmake_dependent_option(ENABLE_WNCK "Enables wnck-related plugins, like taskbar and pager" ON
