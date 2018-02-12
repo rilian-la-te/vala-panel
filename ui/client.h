@@ -24,9 +24,9 @@
 G_BEGIN_DECLS
 
 #include <applet-widget-api.h>
-#include <vala-panel-compat.h>
 #include <definitions.h>
 #include <util-gtk.h>
+#include <vala-panel-compat.h>
 
 G_END_DECLS
 
