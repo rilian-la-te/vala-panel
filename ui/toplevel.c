@@ -59,6 +59,7 @@ enum
 	VALA_PANEL_TOPLEVEL_BACKGROUND_COLOR,
 	VALA_PANEL_TOPLEVEL_FOREGROUND_COLOR,
 	VALA_PANEL_TOPLEVEL_ICON_SIZE,
+	VALA_PANEL_TOPLEVEL_USE_TOOLBAR_APPEARANCE,
 	VALA_PANEL_TOPLEVEL_BACKGROUND_FILE,
 	VALA_PANEL_TOPLEVEL_PANEL_GRAVITY,
 	VALA_PANEL_TOPLEVEL_ORIENTATION,
@@ -90,6 +91,7 @@ struct _ValaPanelToplevel
 	bool use_background_file;
 	bool use_font;
 	bool font_size_only;
+	bool use_toolbar_appearance;
 	uint round_corners_size;
 	PanelIconSizeHints icon_size_hints;
 	GdkRGBA background_color;
@@ -280,6 +282,9 @@ static void setup(ValaPanelToplevel *self, bool use_internal_values)
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->default_settings,
 	                                   VALA_PANEL_KEY_USE_BACKGROUND_FILE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->settings->default_settings,
+	                                   VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE);
 	g_action_map_add_action_entries(G_ACTION_MAP(self),
 	                                panel_entries,
 	                                G_N_ELEMENTS(panel_entries),
@@ -538,6 +543,9 @@ G_GNUC_INTERNAL void update_appearance(ValaPanelToplevel *self)
 	css_toggle_class(GTK_WIDGET(self),
 	                 "-vala-panel-foreground-color",
 	                 self->use_foreground_color);
+	css_toggle_class(GTK_WIDGET(self),
+	                 GTK_STYLE_CLASS_PRIMARY_TOOLBAR,
+	                 self->use_toolbar_appearance);
 }
 
 static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *app,
@@ -800,6 +808,9 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 	case VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY:
 		g_value_set_boolean(value, self->font_size_only);
 		break;
+	case VALA_PANEL_TOPLEVEL_USE_TOOLBAR_APPEARANCE:
+		g_value_set_boolean(value, self->use_toolbar_appearance);
+		break;
 	case VALA_PANEL_TOPLEVEL_FONT_SIZE:
 		g_value_set_int(value, pango_font_description_get_size(desc));
 		break;
@@ -893,6 +904,10 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 	case VALA_PANEL_TOPLEVEL_FONT_SIZE_ONLY:
 		self->font_size_only       = g_value_get_boolean(value);
 		appearance_update_required = true;
+		break;
+	case VALA_PANEL_TOPLEVEL_USE_TOOLBAR_APPEARANCE:
+		self->use_toolbar_appearance = g_value_get_boolean(value);
+		appearance_update_required   = true;
 		break;
 	case VALA_PANEL_TOPLEVEL_FONT_SIZE:
 		pango_font_description_set_size(desc, g_value_get_int(value));
@@ -1102,6 +1117,17 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	        g_param_spec_boolean("font-size-only",
 	                             "font-size-only",
 	                             "font-size-only",
+	                             FALSE,
+	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                 G_PARAM_WRITABLE));
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(parent),
+	    VALA_PANEL_TOPLEVEL_USE_TOOLBAR_APPEARANCE,
+	    vala_panel_toplevel_properties[VALA_PANEL_TOPLEVEL_USE_TOOLBAR_APPEARANCE] =
+	        g_param_spec_boolean(VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
+	                             VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
+	                             VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
 	                             FALSE,
 	                             G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
 	                                 G_PARAM_STATIC_BLURB | G_PARAM_READABLE |

@@ -87,5 +87,6 @@
 #define VALA_PANEL_KEY_USE_FONT "use-font"
 #define VALA_PANEL_KEY_FONT_SIZE_ONLY "font-size-only"
 #define VALA_PANEL_KEY_USE_BACKGROUND_FILE "use-background-file"
+#define VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE "use-toolbar-appearance"
 
 #endif // CONSTANTS_H

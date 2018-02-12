@@ -83,6 +83,9 @@
     <key name="use-background-file" type="b">
       <default>false</default>
     </key>
+    <key name="use-toolbar-appearance" type="b">
+      <default>true</default>
+    </key>
     <key name="use-font" type="b">
       <default>false</default>
     </key>
