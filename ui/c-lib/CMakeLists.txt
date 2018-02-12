@@ -10,12 +10,8 @@ add_library(cvalapanel SHARED
     applet-manager.c
     applet-engine-module.c
     private.h)
-set (LIBS ${CORE_LIBRARIES} -lm)
-set (LIB_PATHS ${CORE_LIBRARY_DIRS})
-link_directories (${LIB_PATHS})
-target_link_libraries (cvalapanel ${LIBS} ${LIBNAME})
+target_link_libraries (cvalapanel GLIB2::GOBJECT GLIB2::GIO_UNIX GTK3::GDK GTK3::GTK)
 target_include_directories(cvalapanel PRIVATE
-    ${CORE_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
