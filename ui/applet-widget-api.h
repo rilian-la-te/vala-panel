@@ -2,7 +2,7 @@
 #define APPLETWIDGETAPI_H
 
 #include "applet-widget.h"
-#include "vala-panel-compat.h"
+#include "toplevel.h"
 
 #define vala_panel_applet_new(t, s, n) vala_panel_applet_construct(VALA_PANEL_TYPE_APPLET, t, s, n)
 gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
