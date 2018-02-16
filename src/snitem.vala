@@ -52,13 +52,9 @@ namespace StatusNotifier
             unowned StyleContext context = this.get_style_context();
             this.reset_style();
             var provider = new Gtk.CssProvider();
-            File ruri = File.new_for_uri("resource://org/vala-panel/sntray/style.css");
-            try
-            {
-                provider.load_from_file(ruri);
-                context.add_provider(provider,STYLE_PROVIDER_PRIORITY_APPLICATION);
-                context.add_class("-panel-launch-button");
-            } catch (GLib.Error e) {/* Errors cannot thrown there*/}
+            provider.load_from_resource("/org/vala-panel/sntray/style.css");
+            context.add_provider(provider,STYLE_PROVIDER_PRIORITY_APPLICATION);
+            context.add_class("-panel-launch-button");
             try
             {
                 init_proxy.begin();
