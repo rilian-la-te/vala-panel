@@ -113,14 +113,22 @@
     </section>
     <section>
         <item>
+          <attribute name="label" translatable="yes">Lock screen...</attribute>
+          <attribute name="icon">system-lock-screen</attribute>
+          <attribute name="action">app.lock</attribute>
+          <attribute name="hidden-when">action-disabled</attribute>
+        </item>
+        <item>
           <attribute name="label" translatable="yes">Log Out...</attribute>
           <attribute name="icon">system-log-out</attribute>
           <attribute name="action">app.logout</attribute>
+          <attribute name="hidden-when">action-disabled</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Shut down...</attribute>
           <attribute name="icon">system-shutdown</attribute>
           <attribute name="action">app.shutdown</attribute>
+          <attribute name="hidden-when">action-disabled</attribute>
         </item>
     </section>
   </menu>

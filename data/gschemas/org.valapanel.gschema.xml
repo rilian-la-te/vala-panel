@@ -9,6 +9,9 @@
     <key name="css" type="s">
       <default>""</default>
     </key>
+    <key name="lock-command" type="s">
+      <default>"dm-tool lock"</default>
+    </key>
     <key name="run-command" type="s">
       <default>"vala-panel-runner"</default>
     </key>
