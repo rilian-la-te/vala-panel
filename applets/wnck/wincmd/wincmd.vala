@@ -151,7 +151,7 @@ public class Wincmd: Applet
     }
     protected override bool button_release_event(Gdk.EventButton e)
     {
-        if (e.button == 2)
+        if (e.button == 2 && middle_button_command != Command.NONE)
         {
             execute_command(middle_button_command);
             return true;
