@@ -5,9 +5,7 @@ project (vala-dbusmenu C)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Vala
-find_package (Vala REQUIRED)
-include (ValaVersion)
-ensure_vala_version ("0.24" MINIMUM)
+find_package (Vala 0.24 REQUIRED)
 include (ValaPrecompile)
 
 add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
