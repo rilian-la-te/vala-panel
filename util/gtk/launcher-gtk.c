@@ -53,10 +53,7 @@ void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpoint
 	g_autoptr(GError) err           = NULL;
 	const char *commandline         = g_variant_get_string(param, NULL);
 	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(
-	    g_app_info_create_from_commandline(commandline,
-	                                       NULL,
-	                                       G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION,
-	                                       &err));
+	    g_app_info_create_from_commandline(commandline, NULL, G_APP_INFO_CREATE_NONE, &err));
 	if (err)
 		g_warning("%s\n", err->message);
 	GtkApplication *app = GTK_APPLICATION(user_data);
