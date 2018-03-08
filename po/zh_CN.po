@@ -396,7 +396,7 @@ msgstr "高级属性"
 
 #: ../lib/pref.ui:138
 msgid "Count as dock:"
-msgstr "作为停靠栏："
+msgstr "记为边栏："
 
 #: ../lib/pref.ui:150
 msgid "Reserve space:"
@@ -412,7 +412,7 @@ msgstr "位置"
 
 #: ../lib/pref.ui:449
 msgid "Icon size in px:"
-msgstr "图标大小（px）："
+msgstr "图标（px）："
 
 #: ../lib/pref.ui:461
 msgid "Height in px:"
@@ -420,7 +420,7 @@ msgstr "高度（px）："
 
 #: ../lib/pref.ui:486
 msgid "Width:"
-msgstr "宽度："
+msgstr "宽度（px）："
 
 #: ../lib/pref.ui:510
 msgid "Size properties"
@@ -440,7 +440,7 @@ msgstr "前景色："
 
 #: ../lib/pref.ui:594
 msgid "Background image:"
-msgstr "背景图片："
+msgstr "背景图："
 
 #: ../lib/pref.ui:606
 msgid "Background color:"
@@ -452,7 +452,7 @@ msgstr "字体："
 
 #: ../lib/pref.ui:630
 msgid "Round corners size:"
-msgstr "圆角大小："
+msgstr "圆角："
 
 #: ../lib/pref.ui:706
 msgid "Select background color"
@@ -570,7 +570,7 @@ msgstr "办公"
 
 #: ../applets/core/menumodel/system-menus.ui:35
 msgid "Settings"
-msgstr "系统设置"
+msgstr "首选项"
 
 #: ../applets/core/menumodel/system-menus.ui:45
 msgid "Utility"
@@ -678,7 +678,7 @@ msgstr "主菜单"
 
 #: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
 msgid "Applications or custom menu in GMenuModel format."
-msgstr "主面板的应用组件集合"
+msgstr "经典风格的应用程序菜单"
 
 #: ../applets/core/separator/separator.desktop.plugin.in:4
 msgid "Separator"
@@ -777,3 +777,7 @@ msgstr ""
 #: ../data/desktop/org.valapanel.application.desktop.in:9
 msgid "vala-panel"
 msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:116
+msgid "Lock screen..."
+msgstr "锁定屏幕..."
