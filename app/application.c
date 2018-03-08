@@ -577,30 +577,27 @@ static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data
 static void activate_run(GSimpleAction *simple, GVariant *param, gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
-	g_autoptr(GVariant) par   = g_variant_new_string(app->run_command);
-	activate_menu_launch_command(NULL, par, app);
+	system(app->run_command);
 }
 
 static void activate_lock(GSimpleAction *simple, GVariant *param, gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
-	g_autoptr(GVariant) par   = g_variant_new_string(app->lock_command);
-	activate_menu_launch_command(NULL, par, app);
+	system(app->lock_command);
 }
 
 static void activate_logout(GSimpleAction *simple, GVariant *param, gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
-	g_autoptr(GVariant) par   = g_variant_new_string(app->logout_command);
-	activate_menu_launch_command(NULL, par, app);
+	system(app->logout_command);
 }
 
 static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
-	g_autoptr(GVariant) par   = g_variant_new_string(app->shutdown_command);
-	activate_menu_launch_command(NULL, par, app);
+	system(app->shutdown_command);
 }
+
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data)
 {
 	ValaPanelApplication *app = (ValaPanelApplication *)data;
