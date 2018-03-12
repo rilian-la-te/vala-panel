@@ -67,7 +67,7 @@ if (ENABLE_XFCE)
         ${RESOURCES}
     )
     include_directories(${XFCE_INCLUDE_DIRS})
-    target_link_libraries(sntray-xfce ${XFCE_LIBRARIES} -lm sntray-core)
+    target_link_libraries(sntray-xfce ${XFCE_LIBRARIES} sntray-core)
     add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
     # Install plugin stuffs
@@ -103,7 +103,7 @@ if (ENABLE_VALAPANEL)
         ${RESOURCES}
     )
     include_directories(${VALAPANEL_INCLUDE_DIRS})
-    target_link_libraries(sntray-valapanel ${VALAPANEL_LIBRARIES} -lm sntray-core)
+    target_link_libraries(sntray-valapanel ${VALAPANEL_LIBRARIES} sntray-core)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
 
     # Install plugin stuffs
@@ -136,7 +136,7 @@ if (ENABLE_BUDGIE)
         ${RESOURCES}
     )
     include_directories(${BUDGIE_INCLUDE_DIRS})
-    target_link_libraries(sntray-budgie ${BUDGIE_LIBRARIES} -lm sntray-core)
+    target_link_libraries(sntray-budgie ${BUDGIE_LIBRARIES} sntray-core)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
     # Install plugin stuffs
@@ -172,7 +172,7 @@ if (ENABLE_MATE)
     )
     add_dependencies(sntray-mate sntray-core)
     include_directories(${MATE_INCLUDE_DIRS})
-    target_link_libraries(sntray-mate ${MATE_LIBRARIES} -lm sntray-core)
+    target_link_libraries(sntray-mate sntray-core ${MATE_LIBRARIES})
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
 
     # Install plugin stuffs
