@@ -62,7 +62,7 @@ if (ENABLE_XFCE)
     #####
     # Plugin Library
     #####
-    add_library (sntray-xfce SHARED
+    add_library (sntray-xfce MODULE
         ${VALA_C_XFCE}
         ${RESOURCES}
     )
@@ -98,7 +98,7 @@ if (ENABLE_VALAPANEL)
     #####
     # Plugin Library
     #####
-    add_library (sntray-valapanel SHARED
+    add_library (sntray-valapanel MODULE
         ${VALA_C_VALAPANEL}
         ${RESOURCES}
     )
@@ -131,7 +131,7 @@ if (ENABLE_BUDGIE)
     #####
     # Plugin Library
     #####
-    add_library (sntray-budgie SHARED
+    add_library (sntray-budgie MODULE
         ${VALA_C_BUDGIE}
         ${RESOURCES}
     )
