@@ -353,24 +353,7 @@ namespace StatusNotifier
                 Gdk.Pixbuf? pixbuf = null;
                 foreach (var pixmap in pixmaps)
                 {
-                    uint[] new_bytes = (uint[]) pixmap.bytes;
-                    for (int i = 0; i < new_bytes.length; i++) {
-                        new_bytes[i] = new_bytes[i].to_big_endian();
-                    }
-
-                    pixmap.bytes = (uint8[]) new_bytes;
-                    for (int i = 0; i < pixmap.bytes.length; i = i+4) {
-                        uint8 red = pixmap.bytes[i];
-                        pixmap.bytes[i] = pixmap.bytes[i+2];
-                        pixmap.bytes[i+2] = red;
-                    }
-                    pixbuf = new Gdk.Pixbuf.from_data(pixmap.bytes,
-                                                Gdk.Colorspace.RGB,
-                                                true,
-                                                8,
-                                                pixmap.width,
-                                                pixmap.height,
-                                                Cairo.Format.ARGB32.stride_for_width(pixmap.width));
+                    pixbuf = pixmap.gicon() as Gdk.Pixbuf;
                     if (pixmap.height >= icon_size && pixmap.width >= icon_size)
                         break;
                 }
@@ -379,28 +362,6 @@ namespace StatusNotifier
                 }
                 return pixbuf;
             }
-            return null;
-        }
-        private Icon? find_file_icon(string? icon_name, string? path)
-        {
-            if (path == null || path.length == 0)
-                return null;
-            try
-            {
-                var dir = Dir.open(path);
-                for (var ch = dir.read_name(); ch!= null; ch = dir.read_name())
-                {
-                    var f = File.new_for_path(path+"/"+ch);
-                    if (ch[0:ch.last_index_of(".")] == icon_name)
-                        return new FileIcon(f);
-                    var t = f.query_file_type(FileQueryInfoFlags.NONE);
-                    Icon? ret = null;
-                    if (t == FileType.DIRECTORY)
-                        ret = find_file_icon(icon_name,path+"/"+ch);
-                    if (ret != null)
-                        return ret;
-                }
-            } catch (Error e) {stderr.printf("%s\n",e.message);}
             return null;
         }
         private void iface_new_tooltip_cb()

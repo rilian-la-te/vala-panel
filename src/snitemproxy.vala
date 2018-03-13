@@ -51,14 +51,63 @@ namespace StatusNotifier
 	    int width;
 	    int height;
 	    uint8[] bytes;
-	}
+        public GLib.Icon? gicon()
+        {
+            uint[] new_bytes = (uint[]) this.bytes;
+            for (int i = 0; i < new_bytes.length; i++) {
+                new_bytes[i] = new_bytes[i].to_big_endian();
+            }
 
-	public struct ToolTip
+            this.bytes = (uint8[]) new_bytes;
+            for (int i = 0; i < this.bytes.length; i = i+4) {
+                uint8 red = this.bytes[i];
+                this.bytes[i] = this.bytes[i+2];
+                this.bytes[i+2] = red;
+            }
+            return  new Gdk.Pixbuf.from_data(this.bytes,
+                                        Gdk.Colorspace.RGB,
+                                        true,
+                                        8,
+                                        this.width,
+                                        this.height,
+                                        Cairo.Format.ARGB32.stride_for_width(this.width));
+        }
+	}
+    public struct ToolTip
 	{
 	    string icon_name;
 	    IconPixmap[] pixmap;
 	    string title;
 	    string description;
+        public ToolTip.from_variant(Variant variant)
+        {
+            variant.get_child(0, "s", &this.icon_name);
+            this.pixmap = unbox_pixmaps(variant.get_child_value(1));
+            variant.get_child(2, "s", &this.title);
+            variant.get_child(3, "s", &this.description);
+        }
+        public static IconPixmap[] unbox_pixmaps(Variant variant)
+        {
+            IconPixmap[] pixmaps = { };
+            VariantIter pixmap_iterator = variant.iterator();
+            Variant pixmap_variant = pixmap_iterator.next_value();
+            while (pixmap_variant != null)
+            {
+                var pixmap = IconPixmap();
+                pixmap_variant.get_child(0, "i", &pixmap.width);
+                pixmap_variant.get_child(1, "i", &pixmap.height);
+                Variant bytes_variant = pixmap_variant.get_child_value(2);
+                uint8[] bytes = { };
+                VariantIter bytes_iterator = bytes_variant.iterator();
+                uint8 byte = 0;
+                while (bytes_iterator.next("y", &byte))
+                    bytes += byte;
+                pixmap.bytes = bytes;
+                pixmaps += pixmap;
+                pixmap_variant = pixmap_iterator.next_value();
+            }
+            return pixmaps;
+        }
 	}
 	[DBus (name = "org.kde.StatusNotifierItem")]
 	private interface ItemIface : Object

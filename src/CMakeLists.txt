@@ -14,6 +14,7 @@ set(VALA_FILES_CORE
 	snconfig.vala
 	snitemproxy.vala
 	qrichtextparser.vala
+        utils.vala
         ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
     vala_precompile(VALA_C_CORE sntray-core
