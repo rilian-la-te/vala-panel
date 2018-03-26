@@ -33,8 +33,8 @@ namespace StatusNotifier
         public abstract bool is_status_notifier_host_registered {get;}
         public abstract int protocol_version {get;}
         /* Public methods */
-        public abstract void register_status_notifier_item(string service) throws IOError;
-        public abstract void register_status_notifier_host(string service) throws IOError;
+        public abstract void register_status_notifier_item(string service) throws Error;
+        public abstract void register_status_notifier_host(string service) throws Error;
     }
     [DBus (name = "org.kde.StatusNotifierWatcher")]
     public class Watcher : Object
@@ -91,7 +91,7 @@ namespace StatusNotifier
             status_notifier_item_registered(id);
             this.notify_property("registered-status-notifier-items");
         }
-        public void register_status_notifier_host(string service) throws IOError
+        public void register_status_notifier_host(string service) throws Error
         {
             /* FIXME: Hosts management untested with non-ValaPanel hosts*/
             hosts.insert(service,Bus.watch_name(BusType.SESSION,service,GLib.BusNameWatcherFlags.NONE,

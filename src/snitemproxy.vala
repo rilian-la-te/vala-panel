@@ -137,11 +137,11 @@ namespace StatusNotifier
 		/* Tooltip */
 		public abstract ToolTip tool_tip {owned get;}
 		/* Methods */
-		public abstract void context_menu(int x, int y) throws IOError;
-		public abstract void activate(int x, int y) throws IOError;
-		public abstract void secondary_activate(int x, int y) throws IOError;
-		public abstract void scroll(int delta, string orientation) throws IOError;
-		public abstract void x_ayatana_secondary_activate(uint32 timestamp) throws IOError;
+		public abstract void context_menu(int x, int y) throws Error;
+		public abstract void activate(int x, int y) throws Error;
+		public abstract void secondary_activate(int x, int y) throws Error;
+		public abstract void scroll(int delta, string orientation) throws Error;
+		public abstract void x_ayatana_secondary_activate(uint32 timestamp) throws Error;
 		/* Signals */
 		public abstract signal void new_title();
 		public abstract signal void new_icon();
