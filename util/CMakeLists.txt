@@ -15,7 +15,7 @@ set(UTIL_SOURCES
     info-data.c
     launcher.c)
 if(GLIB_OLD_FOUND)
-    list(APPEND LIBVALAPANEL_C_SOURCES
+    list(APPEND UTIL_SOURCES
         guuid.c
         guuid.h)
 endif()
