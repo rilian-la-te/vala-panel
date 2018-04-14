@@ -57,5 +57,18 @@ target_link_libraries(xembedsniproxy
     ${GTK3_LIBRARIES}
 )
 
+add_executable(xcb-tray xcbtray.c)
+
+target_include_directories(xcb-tray PRIVATE
+    ${XCB_INCLUDE_DIRS}
+    ${X11_XCB_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+target_link_libraries(xcb-tray
+    ${XCB_LIBRARIES}
+)
+
+
 install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXEC_DIR}/vala-panel )
 install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
