@@ -20,9 +20,10 @@
 #include "application.h"
 #include "config.h"
 #include "xcb-utils.h"
+#include "gwater-xcb.h"
 
 #include <glib/gi18n-lib.h>
-#include <gtk/gtkx.h>
+#include <gio/gio.h>
 #include <inttypes.h>
 #include <locale.h>
 #include <stdbool.h>
@@ -33,8 +34,9 @@
 
 struct _XEmbedSNIApplication
 {
-	GtkApplication parent;
+    GApplication parent;
 	uint8_t damageEventBase;
+    GWaterXcbSource* src;
 	xcb_window_t selection;
 	GHashTable *damageWatches;
 	GHashTable *proxies;
@@ -76,14 +78,14 @@ bool xembed_sni_application_add_damage_watch(XEmbedSNIApplication *self, xcb_win
 {
 	g_debug("adding damage watch for  %u\n", client);
 
-	xcb_connection_t *c = gdk_x11_get_default_xcb_connection();
+    xcb_connection_t *c = g_water_xcb_source_get_connection(self->src);
 	const xcb_get_window_attributes_cookie_t attribsCookie =
 	    xcb_get_window_attributes_unchecked(c, client);
 
 	const xcb_window_t damageId = xcb_generate_id(c);
 	g_hash_table_insert(self->damageWatches,
-	                    GDK_XID_TO_POINTER(client),
-	                    GDK_XID_TO_POINTER(damageId));
+                        GUINT_TO_POINTER(client),
+                        GUINT_TO_POINTER(damageId));
 	xcb_damage_create(c, damageId, client, XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
 
 	g_autofree xcb_generic_error_t *error = NULL;
@@ -119,14 +121,14 @@ static void xembed_sni_application_dock(XEmbedSNIApplication *self, xcb_window_t
 {
 	g_debug("trying to dock window %u\n", winId);
 
-	if (g_hash_table_contains(self->proxies, GDK_XID_TO_POINTER(winId)))
+    if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(winId)))
 	{
 		return;
 	}
 
 	if (xembed_sni_application_add_damage_watch(self, winId))
 	{
-		//        g_hash_table_insert(self->proxies,GDK_XID_TO_POINTER(winID),);
+        //        g_hash_table_insert(self->proxies,GUINT_TO_POINTER(winID),);
 		//        m_proxies[winId] = new SNIProxy(winId, this);
 	}
 }
@@ -135,67 +137,74 @@ static void xembed_sni_application_undock(XEmbedSNIApplication *self, xcb_window
 {
 	g_debug("trying to undock window %u\n", winId);
 
-	if (g_hash_table_contains(self->proxies, GDK_XID_TO_POINTER(winId)))
+    if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(winId)))
 	{
 		return;
 	}
-	g_hash_table_remove(self->proxies, GDK_XID_TO_POINTER(winId));
+    g_hash_table_remove(self->proxies, GUINT_TO_POINTER(winId));
+}
+
+/*XCB event filter*/
+
+static bool xcb_event_filter(xcb_generic_event_t* event, XEmbedSNIApplication* self)
+{
+
 }
 
 /* GDK event filter. */
-static GdkFilterReturn xembed_sni_event_filter(XEvent *xev, GdkEvent *event,
-                                               XEmbedSNIApplication *self)
-{
-	// Try to convert XEvent to xcb_event_t
-	xcb_generic_event_t *ev = (xcb_generic_event_t *)xev;
-	//    xcb_connection_t *con      = gdk_x11_get_default_xcb_connection();
-	const uint8_t responseType = ev->response_type;
-	if (responseType == XCB_CLIENT_MESSAGE)
-	{
-		const xcb_client_message_event_t *ce = (xcb_client_message_event_t *)ev;
-		if (ce->type == a_NET_SYSTEM_TRAY_OPCODE)
-		{
-			switch (ce->data.data32[1])
-			{
-			case SYSTEM_TRAY_REQUEST_DOCK:
-				xembed_sni_application_dock(self, ce->data.data32[2]);
-				return GDK_FILTER_REMOVE;
-			}
-		}
-	}
-	else if (responseType == XCB_UNMAP_NOTIFY)
-	{
-		const xcb_window_t unmappedWId = ((xcb_unmap_notify_event_t *)ev)->window;
-		if (g_hash_table_contains(self->proxies, GDK_XID_TO_POINTER(unmappedWId)))
-		{
-			xembed_sni_application_undock(self, unmappedWId);
-		}
-	}
-	else if (responseType == XCB_DESTROY_NOTIFY)
-	{
-		const xcb_window_t destroyedWId = ((xcb_destroy_notify_event_t *)ev)->window;
-		if (g_hash_table_contains(self->proxies, GDK_XID_TO_POINTER(destroyedWId)))
-		{
-			xembed_sni_application_undock(self, destroyedWId);
-		}
-	}
-	else if (responseType == self->damageEventBase + XCB_DAMAGE_NOTIFY)
-	{
-		const xcb_window_t damagedWId = ((xcb_damage_notify_event_t *)ev)->drawable;
-		GObject *sniProxy =
-		    G_OBJECT(g_hash_table_lookup(self->proxies, GDK_XID_TO_POINTER(damagedWId)));
-		if (sniProxy)
-		{
-			//            sniProx->update();
-			xcb_damage_subtract(gdk_x11_get_default_xcb_connection(),
-			                    GDK_POINTER_TO_XID(
-			                        g_hash_table_lookup(self->damageWatches,
-			                                            GDK_XID_TO_POINTER(
-			                                                damagedWId))),
-			                    XCB_NONE,
-			                    XCB_NONE);
-		}
-	}
+//static GdkFilterReturn xembed_sni_event_filter(XEvent *xev, GdkEvent *event,
+//                                               XEmbedSNIApplication *self)
+//{
+//	// Try to convert XEvent to xcb_event_t
+//	xcb_generic_event_t *ev = (xcb_generic_event_t *)xev;
+//	//    xcb_connection_t *con      = gdk_x11_get_default_xcb_connection();
+//	const uint8_t responseType = ev->response_type;
+//	if (responseType == XCB_CLIENT_MESSAGE)
+//	{
+//		const xcb_client_message_event_t *ce = (xcb_client_message_event_t *)ev;
+//		if (ce->type == a_NET_SYSTEM_TRAY_OPCODE)
+//		{
+//			switch (ce->data.data32[1])
+//			{
+//			case SYSTEM_TRAY_REQUEST_DOCK:
+//				xembed_sni_application_dock(self, ce->data.data32[2]);
+//				return GDK_FILTER_REMOVE;
+//			}
+//		}
+//	}
+//	else if (responseType == XCB_UNMAP_NOTIFY)
+//	{
+//		const xcb_window_t unmappedWId = ((xcb_unmap_notify_event_t *)ev)->window;
+//		if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(unmappedWId)))
+//		{
+//			xembed_sni_application_undock(self, unmappedWId);
+//		}
+//	}
+//	else if (responseType == XCB_DESTROY_NOTIFY)
+//	{
+//		const xcb_window_t destroyedWId = ((xcb_destroy_notify_event_t *)ev)->window;
+//		if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(destroyedWId)))
+//		{
+//			xembed_sni_application_undock(self, destroyedWId);
+//		}
+//	}
+//	else if (responseType == self->damageEventBase + XCB_DAMAGE_NOTIFY)
+//	{
+//		const xcb_window_t damagedWId = ((xcb_damage_notify_event_t *)ev)->drawable;
+//		GObject *sniProxy =
+//		    G_OBJECT(g_hash_table_lookup(self->proxies, GUINT_TO_POINTER(damagedWId)));
+//		if (sniProxy)
+//		{
+//			//            sniProx->update();
+//			xcb_damage_subtract(gdk_x11_get_default_xcb_connection(),
+//			                    GDK_POINTER_TO_XID(
+//			                        g_hash_table_lookup(self->damageWatches,
+//			                                            GUINT_TO_POINTER(
+//			                                                damagedWId))),
+//			                    XCB_NONE,
+//			                    XCB_NONE);
+//		}
+//	}
 
 	//    if (xev->type == DestroyNotify)
 	//    {
@@ -259,13 +268,12 @@ static GdkFilterReturn xembed_sni_event_filter(XEvent *xev, GdkEvent *event,
 	//        tray_unmanage_selection(tr);
 	//    }
 
-	return GDK_FILTER_CONTINUE;
-}
+//	return GDK_FILTER_CONTINUE;
+//}
 
 static void claim_systray_selection(XEmbedSNIApplication *self)
 {
-	GdkDisplay *display   = gdk_display_get_default();
-	xcb_connection_t *con = gdk_x11_display_get_xcb_connection(display);
+    xcb_connection_t *con = g_water_xcb_source_get_connection(self->src);
 	g_autofree char *selection_atom_name =
 	    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", gdk_x11_get_default_screen());
 	xcb_atom_t selection_atom =
@@ -387,19 +395,17 @@ static void xembed_sni_application_startup(GApplication *base)
 	XEmbedSNIApplication *self = XEMBED_SNI_APPLICATION(base);
 	G_APPLICATION_CLASS(xembed_sni_application_parent_class)
 	    ->startup((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(self,
-	                                                         gtk_application_get_type(),
-	                                                         GtkApplication));
+                                                             g_application_get_type(),
+                                                             GApplication));
 	g_application_mark_busy((GApplication *)self);
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 	// We only support X11
-	GdkDisplay *display = gdk_display_get_default();
-	if (!GDK_IS_X11_DISPLAY(display))
-		g_application_quit(base);
+    self->src = g_water_xcb_source_new(g_main_context_default(),"0",0,(GWaterXcbEventCallback)xcb_event_filter,self,NULL);
 	g_application_hold(base);
-	xcb_connection_t *con = gdk_x11_display_get_xcb_connection(display);
+    xcb_connection_t *con = g_water_xcb_source_get_connection(self->src);
 	xcb_prefetch_extension_data(con, &xcb_damage_id);
 	const xcb_query_extension_reply_t *reply = xcb_get_extension_data(con, &xcb_damage_id);
 	if (reply->present)
@@ -418,18 +424,18 @@ static void xembed_sni_application_startup(GApplication *base)
 	resolve_atoms(con);
 	claim_systray_selection(self);
 	/* Add GDK event filter. */
-	gdk_window_add_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
+//	gdk_window_add_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
 }
 
 static void xembed_sni_application_shutdown(GApplication *base)
 {
 	XEmbedSNIApplication *self = XEMBED_SNI_APPLICATION(base);
-	gdk_window_remove_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
+//	gdk_window_remove_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
 	release_systray_selection(self);
 	G_APPLICATION_CLASS(xembed_sni_application_parent_class)
 	    ->shutdown((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(base,
-	                                                          gtk_application_get_type(),
-	                                                          GtkApplication));
+                                                              g_application_get_type(),
+                                                              GApplication));
 }
 
 static gint xembed_sni_app_handle_local_options(GApplication *application, GVariantDict *options)

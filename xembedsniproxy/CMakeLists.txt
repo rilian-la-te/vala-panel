@@ -38,6 +38,8 @@ set(XEMBED_SNI_PROXY_SOURCES
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
     xtestsender.c
     xtestsender.h
+    gwater-xcb.c
+    gwater-xcb.h
  )
 
 add_executable(xembedsniproxy ${XEMBED_SNI_PROXY_SOURCES})
@@ -57,7 +59,7 @@ target_link_libraries(xembedsniproxy
     ${GTK3_LIBRARIES}
 )
 
-add_executable(xcb-tray xcbtray.c)
+add_executable(xcb-tray xcb-tray.c gwater-xcb.c gwater-xcb.h)
 
 target_include_directories(xcb-tray PRIVATE
     ${XCB_INCLUDE_DIRS}
@@ -67,6 +69,7 @@ target_include_directories(xcb-tray PRIVATE
 
 target_link_libraries(xcb-tray
     ${XCB_LIBRARIES}
+    GLIB2::GIO_UNIX
 )
 
 

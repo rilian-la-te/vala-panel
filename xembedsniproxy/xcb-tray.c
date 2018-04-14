@@ -1,4 +1,3 @@
-#include <X11/Xlib-xcb.h>
 #include <xcb/xcb_atom.h>
 #include <xcb/xcb_event.h>
 #include <xcb/xcb_aux.h>
@@ -18,7 +17,6 @@ void event_handle(xcb_generic_event_t *);
 void update_systray(unsigned int, unsigned int);
 char *get_atom_name(xcb_atom_t);
 
-Display 		*display;
 xcb_connection_t	*conn;
 xcb_window_t		 bar_id;
 xcb_pixmap_t		 bar_buffer;
