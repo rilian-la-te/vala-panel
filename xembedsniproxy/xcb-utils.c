@@ -102,22 +102,9 @@ xcb_screen_t *xcb_screen_of_display(xcb_connection_t *c, int screen)
 	return NULL;
 }
 
-xcb_connection_t *gdk_x11_get_default_xcb_connection()
+void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *c, xcb_window_t win,
+                                                  bool composited)
 {
-	return gdk_x11_display_get_xcb_connection(gdk_display_get_default());
-}
-
-xcb_connection_t *gdk_x11_display_get_xcb_connection(GdkX11Display *display)
-{
-	Display *xd           = GDK_DISPLAY_XDISPLAY(display);
-	xcb_connection_t *con = XGetXCBConnection(xd);
-	return con;
-}
-
-void gdk_x11_display_set_composited_for_xcb_window(GdkX11Display *display, xcb_window_t win,
-                                                   bool composited)
-{
-	xcb_connection_t *c       = gdk_x11_display_get_xcb_connection(display);
 	xcb_screen_t *screen      = xcb_setup_roots_iterator(xcb_get_setup(c)).data;
 	xcb_visualid_t trayVisual = screen->root_visual;
 	if (composited)
@@ -160,4 +147,8 @@ void gdk_x11_display_set_composited_for_xcb_window(GdkX11Display *display, xcb_w
 	                    32,
 	                    1,
 	                    &trayVisual);
+}
+
+xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_nate)
+{
 }

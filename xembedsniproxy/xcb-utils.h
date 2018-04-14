@@ -44,10 +44,9 @@ extern xcb_atom_t a_MANAGER;
 #define SYSTEM_TRAY_ORIENTATION_VERT 1
 
 void resolve_atoms(xcb_connection_t *con);
-//xcb_connection_t *gdk_x11_get_default_xcb_connection();
-//xcb_connection_t *gdk_x11_display_get_xcb_connection(GdkX11Display *display);
-void gdk_x11_display_set_composited_for_xcb_window(GdkX11Display *display, xcb_window_t win,
-                                                   bool composited);
+void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *display, xcb_window_t win,
+                                                  bool composited);
 xcb_screen_t *xcb_screen_of_display(xcb_connection_t *c, int screen);
+xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_nate);
 
 #endif // XCBUTILS_H
