@@ -25,7 +25,8 @@
 
 G_BEGIN_DECLS
 
-typedef enum {
+typedef enum
+{
 	CONF_STR,
 	CONF_INT,
 	CONF_BOOL,

@@ -188,7 +188,8 @@ struct _XfceTasklist
 	gint n_windows;
 };
 
-typedef enum {
+typedef enum
+{
 	CHILD_TYPE_WINDOW,
 	CHILD_TYPE_GROUP,
 	CHILD_TYPE_OVERFLOW_MENU,
@@ -2677,8 +2678,9 @@ static gboolean xfce_tasklist_button_button_release_event(GtkWidget *button, Gdk
 	gtk_widget_get_allocation(button, &allocation);
 
 	/* only respond to in-button events */
-	if (event->type == GDK_BUTTON_RELEASE &&
-	    !(event->x == 0 && event->y == 0) /* 0,0 = outside the widget in Gtk */
+	if (event->type == GDK_BUTTON_RELEASE && !(event->x == 0 && event->y == 0) /* 0,0 = outside
+	                                                                              the widget in
+	                                                                              Gtk */
 	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
