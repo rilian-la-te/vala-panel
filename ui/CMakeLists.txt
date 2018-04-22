@@ -23,7 +23,6 @@ set(LIBVALAPANEL_C_SOURCES
     toplevel.c
     ${ENUMSC})
 set(VALA_FILES
-	configurator.vala
 	applet-holder.vala
 	panel-layout.vala
 	)

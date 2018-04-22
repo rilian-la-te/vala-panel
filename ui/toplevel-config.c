@@ -21,28 +21,6 @@
 #include "toplevel.h"
 #include "util-gtk.h"
 
-struct _ValaPanelToplevelConfig
-{
-	GtkDialog parent_instance;
-	GtkStack *prefs_stack;
-	ValaPanelToplevel *_toplevel;
-	GtkComboBox *monitors_box;
-	GtkSpinButton *spin_iconsize;
-	GtkSpinButton *spin_height;
-	GtkSpinButton *spin_width;
-	GtkSpinButton *spin_corners;
-	GtkFontButton *font_selector;
-	GtkBox *font_box;
-	GtkColorButton *color_background;
-	GtkColorButton *color_foreground;
-	GtkFileChooserButton *file_background;
-	GtkTreeView *plugin_list;
-	GtkLabel *plugin_desc;
-	GtkButton *adding_button;
-	GtkButton *configure_button;
-	GtkListStore *store_monitors;
-};
-
 G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIALOG);
 
 enum

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.2 -->
+<!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkAdjustment" id="adjustment-corners">
@@ -234,6 +234,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'west-up'</property>
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
@@ -246,6 +247,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'west-center'</property>
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
@@ -258,6 +260,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'west-down'</property>
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
@@ -270,6 +273,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'north-left'</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -282,6 +286,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'north-center'</property>
                           </object>
                           <packing>
                             <property name="left_attach">2</property>
@@ -294,6 +299,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'north-right'</property>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -306,6 +312,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'south-left'</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -318,6 +325,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'south-center'</property>
                           </object>
                           <packing>
                             <property name="left_attach">2</property>
@@ -330,6 +338,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'south-right'</property>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -342,6 +351,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'east-down'</property>
                           </object>
                           <packing>
                             <property name="left_attach">4</property>
@@ -354,6 +364,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'east-center'</property>
                           </object>
                           <packing>
                             <property name="left_attach">4</property>
@@ -366,6 +377,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="action_name">win.panel-gravity</property>
+                            <property name="action_target">'east-up'</property>
                           </object>
                           <packing>
                             <property name="left_attach">4</property>
@@ -811,67 +823,46 @@
                     <property name="can_focus">False</property>
                     <property name="spacing">2</property>
                     <child>
-                      <object class="GtkScrolledWindow" id="scrolledwindow1">
+                      <object class="GtkBox" id="vbox5">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">never</property>
-                        <property name="shadow_type">in</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkViewport" id="vp1">
+                          <object class="GtkScrolledWindow" id="scrolledwindow1">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">never</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkTreeView" id="view-plugins">
+                              <object class="GtkTreeView" id="plugin-list">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="model">treestore-plugins</property>
-                                <property name="search_column">1</property>
-                                <property name="level_indentation">1</property>
-                                <property name="tooltip_column">4</property>
+                                <property name="rules_hint">True</property>
                                 <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
-                                </child>
-                                <child>
-                                  <object class="GtkTreeViewColumn" id="column-icon">
-                                    <property name="title" translatable="yes">Icon</property>
-                                    <property name="sort_column_id">0</property>
-                                    <child>
-                                      <object class="GtkCellRendererPixbuf" id="pixbuf-icon"/>
-                                      <attributes>
-                                        <attribute name="icon-name">0</attribute>
-                                      </attributes>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkTreeViewColumn" id="column-name">
-                                    <property name="resizable">True</property>
-                                    <property name="title" translatable="yes">Name</property>
-                                    <property name="sort_column_id">1</property>
-                                    <child>
-                                      <object class="GtkCellRendererText" id="text-name"/>
-                                      <attributes>
-                                        <attribute name="text">1</attribute>
-                                      </attributes>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkTreeViewColumn" id="column-expand">
-                                    <property name="title" translatable="yes">Expand</property>
-                                    <property name="sort_indicator">True</property>
-                                    <property name="sort_column_id">3</property>
-                                    <child>
-                                      <object class="GtkCellRendererToggle" id="toggle-expand"/>
-                                      <attributes>
-                                        <attribute name="active">3</attribute>
-                                      </attributes>
-                                    </child>
-                                  </object>
+                                  <object class="GtkTreeSelection" id="treeview-selection"/>
                                 </child>
                               </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="plugin-desc">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="selectable">True</property>
+                            <property name="ellipsize">end</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>
@@ -1021,9 +1012,6 @@
           </packing>
         </child>
       </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </template>
 </interface>

@@ -18,6 +18,7 @@
 
 #include "toplevel.h"
 #include "definitions.h"
+#include "toplevel-config.h"
 #include "util-gtk.h"
 #include "vala-panel-enums.h"
 
@@ -102,7 +103,7 @@ struct _ValaPanelToplevel
 	int height;
 	int width;
 	PanelGravity gravity;
-	ConfigureDialog *pref_dialog;
+	ValaPanelToplevelConfig *pref_dialog;
 	GtkMenu *context_menu;
 	char *font;
 };
@@ -352,7 +353,8 @@ void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
 {
 	if (self->pref_dialog == NULL)
-		self->pref_dialog = vala_panel_configure_dialog_new(self);
+		self->pref_dialog =
+		    g_object_new(vala_panel_toplevel_config_get_type(), "toplevel", self, NULL);
 	gtk_stack_set_visible_child_name(self->pref_dialog->prefs_stack, page);
 	gtk_window_present(self->pref_dialog);
 	g_signal_connect_swapped(self->pref_dialog,
