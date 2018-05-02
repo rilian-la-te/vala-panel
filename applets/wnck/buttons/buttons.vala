@@ -29,10 +29,10 @@ public class ButtonsApplet : AppletPlugin, Peas.ExtensionBase
 }
 public class Buttons: Applet
 {
-    Button minimize;
-    Button maximize;
-    Button close;
-    Box box;
+    Button? minimize = null;
+    Button? maximize = null;
+    Button? close = null;
+    Box box = new Box(Orientation.HORIZONTAL,0);
     ulong handler;
     ulong state;
     public Buttons(ValaPanel.Toplevel toplevel,
@@ -49,7 +49,6 @@ public class Buttons: Applet
             else
                 image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
         });
-        box = new Box(Orientation.HORIZONTAL,0);
         var gtksettings = this.get_settings();
         gtksettings.notify["gtk-decoration-layout"].connect(()=>{
             update_window_buttons(gtksettings.gtk_decoration_layout);
@@ -63,7 +62,12 @@ public class Buttons: Applet
         var window = Wnck.Screen.get_default().get_active_window();
         if (window == null)
         {
-            minimize.sensitive = maximize.sensitive = close.sensitive = false;
+            if(minimize != null)
+                minimize.sensitive = false;
+            if(maximize != null)
+                maximize.sensitive = false;
+            if(close != null)
+                close.sensitive = false;
             return;
         }
         var actions = window.get_actions();
