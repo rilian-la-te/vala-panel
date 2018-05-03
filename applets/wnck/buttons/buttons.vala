@@ -62,11 +62,11 @@ public class Buttons: Applet
         var window = Wnck.Screen.get_default().get_active_window();
         if (window == null)
         {
-            if(minimize != null)
+            if(minimize != null && minimize is Button)
                 minimize.sensitive = false;
-            if(maximize != null)
+            if(maximize != null && maximize is Button)
                 maximize.sensitive = false;
-            if(close != null)
+            if(close != null && close is Button)
                 close.sensitive = false;
             return;
         }
