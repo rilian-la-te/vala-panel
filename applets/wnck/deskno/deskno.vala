@@ -53,9 +53,8 @@ public class Deskno: Applet
         this.notify.connect((pspec)=>{
             name_update();
         });
-        screen_handler = Wnck.Screen.get_default().active_workspace_changed.connect(()=>{
-            name_update();
-        });
+        screen_handler = Wnck.Screen.get_default().active_workspace_changed.connect(name_update);
+        screen_handler = Wnck.Screen.get_default().window_manager_changed.connect(name_update);
         name_update();
         this.add(label);
         this.show_all();
