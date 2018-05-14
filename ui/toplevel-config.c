@@ -20,9 +20,14 @@
 #include "definitions.h"
 #include "toplevel.h"
 #include "util-gtk.h"
+#include "vala-panel-compat.h"
 
 G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIALOG);
 
+#define COLUMN_ICON 0
+#define COLUMN_NAME 1
+#define COLUMN_EXPAND 2
+#define COLUMN_DATA 3
 enum
 {
 	TOPLEVEL_PROPERTY,
@@ -271,6 +276,64 @@ static void vala_panel_toplevel_config_set_property(GObject *object, guint prope
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
+}
+
+extern ValaPanelAppletHolder *vala_panel_layout_holder;
+static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
+	GtkTreeIter it;
+	GtkTreeModel *model;
+	ValaPanelApplet *pl;
+	if (gtk_tree_selection_get_selected(tree_sel, &model, &it))
+	{
+		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
+		ValaPanelAppletPlugin *apl =
+		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
+		                                        pl,
+		                                        vala_panel_toplevel_get_core_settings());
+		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
+		char *desc              = peas_plugin_info_get_description(pl_info);
+		//        plugin_desc.set_text(_(desc) );
+		//        configure_button.set_sensitive(pl.is_configurable());
+	}
+}
+// private void on_plugin_expand_toggled(string path)
+//{
+//    TreeIter it;
+//    TreePath tp = new TreePath.from_string( path );
+//    var model = plugin_list.get_model();
+//    if( model.get_iter(out it, tp) )
+//    {
+//        Applet pl;
+//        bool expand;
+//        model.get(it, Column.DATA, out pl, Column.EXPAND, out expand, -1 );
+//        if
+//        (Layout.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
+//        {
+//            expand = !expand;
+//            (model as Gtk.ListStore).set(it,Column.EXPAND,expand,-1);
+//            unowned UnitSettings s = toplevel.layout.get_applet_settings(pl);
+//            s.default_settings.set_boolean(Key.EXPAND,expand);
+//        }
+//    }
+//}
+static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, GtkTreeModel *model,
+                              GtkTreeIter *iter, void *data)
+{
+	/* Set the control visible depending on whether stretch is available for the plugin.
+	 * The g_object_set method is touchy about its parameter, so we can't pass the boolean
+	 * directly. */
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
+	ValaPanelApplet *pl;
+	gtk_tree_model_get(model, iter, COLUMN_DATA, &pl, -1);
+	ValaPanelAppletPlugin *apl =
+	    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
+	                                        pl,
+	                                        vala_panel_toplevel_get_core_settings());
+	PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
+	char *ext = peas_plugin_info_get_external_data(apl, VALA_PANEL_DATA_EXPANDABLE);
+	gtk_cell_renderer_set_visible(renderer, ext != NULL);
 }
 
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)

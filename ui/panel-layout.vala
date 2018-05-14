@@ -26,7 +26,7 @@ namespace ValaPanel
     public class Layout : Gtk.Box
     {
         private static unowned CoreSettings core_settings = null;
-        internal static AppletHolder holder = null;
+        public static AppletHolder holder = null;
         public string toplevel_id {get; construct;}
         public Layout(ValaPanel.Toplevel top, Gtk.Orientation orient, int spacing)
         {
