@@ -128,7 +128,7 @@ namespace ValaPanel
         {
             return this.get_children();
         }
-        internal unowned UnitSettings get_applet_settings(Applet pl)
+        public unowned UnitSettings get_applet_settings(Applet pl)
         {
             return core_settings.get_by_uuid(pl.uuid);
         }

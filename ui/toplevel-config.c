@@ -28,6 +28,8 @@ G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIAL
 #define COLUMN_NAME 1
 #define COLUMN_EXPAND 2
 #define COLUMN_DATA 3
+extern ValaPanelAppletHolder *vala_panel_layout_holder;
+
 enum
 {
 	TOPLEVEL_PROPERTY,
@@ -278,7 +280,6 @@ static void vala_panel_toplevel_config_set_property(GObject *object, guint prope
 	}
 }
 
-extern ValaPanelAppletHolder *vala_panel_layout_holder;
 static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
@@ -293,31 +294,42 @@ static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
 		                                        pl,
 		                                        vala_panel_toplevel_get_core_settings());
 		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-		char *desc              = peas_plugin_info_get_description(pl_info);
-		//        plugin_desc.set_text(_(desc) );
-		//        configure_button.set_sensitive(pl.is_configurable());
+		const char *desc        = peas_plugin_info_get_description(pl_info);
+		gtk_label_set_text(self->plugin_desc, desc);
+		gtk_widget_set_sensitive(self->configure_button,
+		                         vala_panel_applet_is_configurable(pl));
 	}
 }
-// private void on_plugin_expand_toggled(string path)
-//{
-//    TreeIter it;
-//    TreePath tp = new TreePath.from_string( path );
-//    var model = plugin_list.get_model();
-//    if( model.get_iter(out it, tp) )
-//    {
-//        Applet pl;
-//        bool expand;
-//        model.get(it, Column.DATA, out pl, Column.EXPAND, out expand, -1 );
-//        if
-//        (Layout.holder.get_plugin(pl,Toplevel.core_settings).plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-//        {
-//            expand = !expand;
-//            (model as Gtk.ListStore).set(it,Column.EXPAND,expand,-1);
-//            unowned UnitSettings s = toplevel.layout.get_applet_settings(pl);
-//            s.default_settings.set_boolean(Key.EXPAND,expand);
-//        }
-//    }
-//}
+static void on_plugin_expand_toggled(const char *path, void *data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
+	GtkTreeIter it;
+	g_autoptr(GtkTreePath) tp = gtk_tree_path_new_from_string(path);
+	GtkTreeModel *model       = gtk_tree_view_get_model(self->plugin_list);
+	if (gtk_tree_model_get_iter(model, &it, tp))
+	{
+		ValaPanelApplet *pl;
+		bool expand;
+		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, COLUMN_EXPAND, &expand, -1);
+		ValaPanelAppletPlugin *apl =
+		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
+		                                        pl,
+		                                        vala_panel_toplevel_get_core_settings());
+		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
+		const char *expandable =
+		    peas_plugin_info_get_external_data(pl_info, VALA_PANEL_DATA_EXPANDABLE);
+		if (expandable != NULL)
+		{
+			expand = !expand;
+			gtk_list_store_set(model, &it, COLUMN_EXPAND, expand, -1);
+			ValaPanelUnitSettings *s =
+			    vala_panel_layout_get_applet_settings(vala_panel_toplevel_get_layout(
+			                                              self->_toplevel),
+			                                          pl);
+			g_settings_set_boolean(s->default_settings, VALA_PANEL_KEY_EXPAND, expand);
+		}
+	}
+}
 static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, GtkTreeModel *model,
                               GtkTreeIter *iter, void *data)
 {
