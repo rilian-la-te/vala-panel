@@ -348,6 +348,43 @@ static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, 
 	gtk_cell_renderer_set_visible(renderer, ext != NULL);
 }
 
+static void update_plugin_list_model(ValaPanelToplevelConfig *self)
+{
+	GtkTreeIter it;
+	GtkListStore *list = gtk_list_store_new(4,
+	                                        G_TYPE_STRING,
+	                                        G_TYPE_STRING,
+	                                        G_TYPE_BOOLEAN,
+	                                        VALA_PANEL_TYPE_APPLET);
+	GList *plugins =
+	    vala_panel_layout_get_applets_list(vala_panel_toplevel_get_layout(self->_toplevel));
+	for (GList *l = plugins; l != NULL; l = g_list_next(l))
+	{
+		ValaPanelApplet *w = VALA_PANEL_APPLET(l->data);
+		bool expand        = gtk_widget_get_hexpand(w) && gtk_widget_get_vexpand(w);
+		gtk_list_store_append(list, &it);
+		ValaPanelAppletPlugin *apl =
+		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
+		                                        w,
+		                                        vala_panel_toplevel_get_core_settings());
+		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
+		const char *name        = peas_plugin_info_get_name(pl_info);
+		const char *icon        = peas_plugin_info_get_icon_name(pl_info);
+		gtk_list_store_set(list,
+		                   &it,
+		                   COLUMN_ICON,
+		                   icon,
+		                   COLUMN_NAME,
+		                   _(name),
+		                   COLUMN_EXPAND,
+		                   expand,
+		                   COLUMN_DATA,
+		                   w,
+		                   -1);
+	}
+	gtk_tree_view_set_model(self->plugin_list, list);
+}
+
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 {
 	vala_panel_toplevel_config_parent_class = g_type_class_peek_parent(klass);
