@@ -37,6 +37,7 @@ enum
 };
 static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
+static void init_plugin_list(ValaPanelToplevelConfig *self);
 
 static void vala_panel_toplevel_config_init(ValaPanelToplevelConfig *self)
 {
@@ -235,7 +236,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
 	/* plugin list */
-	//    init_plugin_list();
+	init_plugin_list(self);
 	gtk_widget_insert_action_group(self, "conf", conf);
 	gtk_widget_insert_action_group(self, "win", self->_toplevel);
 	gtk_widget_insert_action_group(self, "app", gtk_window_get_application(self->_toplevel));
@@ -383,6 +384,71 @@ static void update_plugin_list_model(ValaPanelToplevelConfig *self)
 		                   -1);
 	}
 	gtk_tree_view_set_model(self->plugin_list, list);
+}
+
+static void on_plugin_list_row_activated(GtkTreeView *tree_view, GtkTreePath *path,
+                                         GtkTreeViewColumn *column, gpointer user_data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(user_data);
+	GtkTreeSelection *tree_sel    = gtk_tree_view_get_selection(tree_view);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	ValaPanelApplet *pl;
+	if (!gtk_tree_selection_get_selected(tree_sel, &model, &iter))
+		return;
+	gtk_tree_model_get(model, &iter, COLUMN_DATA, &pl, -1);
+	if (vala_panel_applet_is_configurable(pl))
+		vala_panel_applet_show_config_dialog(pl);
+}
+
+static void init_plugin_list(ValaPanelToplevelConfig *self)
+{
+	GtkTreeIter it;
+	GtkCellRenderer *textrender = gtk_cell_renderer_pixbuf_new();
+	GtkTreeViewColumn *col =
+	    gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
+	                                             textrender,
+	                                             "icon-name",
+	                                             COLUMN_ICON,
+	                                             NULL);
+	gtk_tree_view_column_set_expand(col, true);
+	gtk_tree_view_append_column(self->plugin_list, col);
+	g_object_unref(col);
+	g_object_unref(textrender);
+	textrender = gtk_cell_renderer_text_new();
+	col        = gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
+                                                       textrender,
+                                                       "text",
+                                                       COLUMN_NAME,
+                                                       NULL);
+	gtk_tree_view_column_set_expand(col, true);
+	gtk_tree_view_append_column(self->plugin_list, col);
+	g_object_unref(col);
+	g_object_unref(textrender);
+	GtkCellRendererToggle *render = gtk_cell_renderer_toggle_new();
+	gtk_cell_renderer_toggle_set_activatable(render, true);
+	g_signal_connect(render, "toggled", G_CALLBACK(on_plugin_expand_toggled), self);
+	col = gtk_tree_view_column_new_with_attributes(_("Stretch"),
+	                                               render,
+	                                               "active",
+	                                               COLUMN_EXPAND,
+	                                               NULL);
+	gtk_tree_view_column_set_expand(col, true);
+	gtk_tree_view_column_set_cell_data_func(col, render, on_stretch_render, self, NULL);
+	gtk_tree_view_append_column(self->plugin_list, col);
+	g_object_unref(col);
+	g_object_unref(render);
+	update_plugin_list_model(self);
+	g_signal_connect(self->plugin_list,
+	                 "row-activated",
+	                 G_CALLBACK(on_plugin_list_row_activated),
+	                 self);
+	GtkTreeModel *list         = gtk_tree_view_get_model(self->plugin_list);
+	GtkTreeSelection *tree_sel = gtk_tree_view_get_selection(self->plugin_list);
+	gtk_tree_selection_set_mode(tree_sel, GTK_SELECTION_BROWSE);
+	g_signal_connect(tree_sel, "changed", G_CALLBACK(on_sel_plugin_changed), self);
+	if (gtk_tree_model_get_iter_first(list, &it))
+		gtk_tree_selection_select_iter(tree_sel, &it);
 }
 
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
