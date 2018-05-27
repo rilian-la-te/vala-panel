@@ -55,7 +55,7 @@ namespace ValaPanel
                     holder.load_applet(pl);
             }
         }
-        internal void add_applet(string type)
+        public void add_applet(string type)
         {
             unowned UnitSettings s = core_settings.add_unit_settings(type,false);
             s.default_settings.set_string(Key.NAME,type);
@@ -84,7 +84,7 @@ namespace ValaPanel
                 place_applet(applet_plugin,pl);
         }
 
-        internal void place_applet(AppletPlugin applet_plugin, UnitSettings s)
+        public void place_applet(AppletPlugin applet_plugin, UnitSettings s)
         {
             var aw = applet_plugin.get_applet_widget(this.get_parent().get_parent() as ValaPanel.Toplevel,s.custom_settings,s.uuid);
             unowned Applet applet = aw;
@@ -109,7 +109,7 @@ namespace ValaPanel
             applet.destroy();
             core_settings.remove_unit_settings_full(s.uuid, true);
         }
-        internal void applet_destroyed(string uuid)
+        public void applet_destroyed(string uuid)
         {
             unowned UnitSettings s = core_settings.get_by_uuid(uuid);
             var name = s.default_settings.get_string(Key.NAME);
@@ -132,13 +132,13 @@ namespace ValaPanel
         {
             return core_settings.get_by_uuid(pl.uuid);
         }
-        internal uint get_applet_position(Applet pl)
+        public uint get_applet_position(Applet pl)
         {
             int res;
             this.child_get(pl,"position",out res, null);
             return (uint)res;
         }
-        internal void set_applet_position(Applet pl, int pos)
+        public void set_applet_position(Applet pl, int pos)
         {
             this.reorder_child(pl,pos);
         }

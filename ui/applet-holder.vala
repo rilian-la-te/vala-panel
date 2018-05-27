@@ -125,7 +125,7 @@ namespace ValaPanel
             return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
                                         .default_settings.get_string(Key.NAME))).plugin;
         }
-        internal unowned List<Peas.PluginInfo> get_all_types()
+        public unowned List<Peas.PluginInfo> get_all_types()
         {
             return engine.get_plugin_list();
         }
