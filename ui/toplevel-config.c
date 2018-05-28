@@ -467,7 +467,7 @@ static int sort_by_name(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, voi
 {
 	char *str_a, *str_b;
 	gtk_tree_model_get(model, a, 0, &str_a, -1);
-    gtk_tree_model_get(model, b, 0, &str_b, -1);
+	gtk_tree_model_get(model, b, 0, &str_b, -1);
 	int ret = g_utf8_collate(str_a, str_b);
 	g_free(str_a);
 	g_free(str_b);
@@ -570,6 +570,27 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 	gtk_scrolled_window_set_min_content_width(scroll, 320);
 	gtk_scrolled_window_set_min_content_height(scroll, 200);
 	gtk_widget_show_all(dlg);
+}
+
+static void on_remove_plugin(GtkButton *btn, void *user_data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(user_data);
+	GtkTreeIter it;
+	GtkTreeModel *model;
+	GtkTreeSelection *tree_sel = gtk_tree_view_get_selection(self->plugin_list);
+	ValaPanelApplet *pl;
+	if (gtk_tree_selection_get_selected(tree_sel, &model, &it))
+	{
+		GtkTreePath *tree_path = gtk_tree_model_get_path(model, &it);
+		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
+		if (gtk_tree_path_get_indices(tree_path)[0] >=
+		    gtk_tree_model_iter_n_children(model, NULL))
+			gtk_tree_path_prev(tree_path);
+		gtk_list_store_remove(GTK_LIST_STORE(model), &it);
+		gtk_tree_selection_select_path(tree_sel, tree_path);
+		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
+		vala_panel_layout_remove_applet(layout, pl);
+	}
 }
 
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
@@ -683,9 +704,9 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "on_add_plugin",
 	                                             G_CALLBACK(on_add_plugin));
-	//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
-	//    "on_remove_plugin",
-	//    G_CALLBACK(_vala_panel_configure_dialog_on_remove_plugin_gtk_button_clicked));
+	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	                                             "on_remove_plugin",
+	                                             G_CALLBACK(on_remove_plugin));
 	//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
 	//    "on_moveup_plugin",
 	//    G_CALLBACK(_vala_panel_configure_dialog_on_moveup_plugin_gtk_button_clicked));
