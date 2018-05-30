@@ -625,6 +625,36 @@ static void on_moveup_plugin(GtkButton *btn, void *user_data)
 	} while (gtk_tree_model_iter_next(model, &it));
 }
 
+static void on_movedown_plugin(GtkButton *btn, void *user_data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(user_data);
+	GtkTreeIter it, next;
+	GtkTreeModel *model        = gtk_tree_view_get_model(self->plugin_list);
+	GtkTreeSelection *tree_sel = gtk_tree_view_get_selection(self->plugin_list);
+	if (!gtk_tree_selection_iter_is_selected(tree_sel, &it))
+		return;
+	next = it;
+	if (!gtk_tree_model_iter_next(model, &it))
+		return;
+
+	if (gtk_tree_selection_iter_is_selected(tree_sel, &it))
+	{
+		ValaPanelApplet *pl;
+		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
+		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
+		gtk_list_store_move_after(GTK_LIST_STORE(model), &it, &next);
+
+		uint i = vala_panel_layout_get_applet_position(layout, pl);
+		/* reorder in config, 0 is Global */
+		i = i > 0 ? i : 0;
+
+		/* reorder in panel */
+		vala_panel_layout_set_applet_position(layout, pl, (int)i + 1);
+		update_widget_position_keys(self);
+		return;
+	}
+}
+
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 {
 	vala_panel_toplevel_config_parent_class = g_type_class_peek_parent(klass);
@@ -742,7 +772,7 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "on_moveup_plugin",
 	                                             G_CALLBACK(on_moveup_plugin));
-	//    gtk_widget_class_bind_template_callback_full (GTK_WIDGET_CLASS (klass),
-	//    "on_movedown_plugin",
-	//    G_CALLBACK(_vala_panel_configure_dialog_on_movedown_plugin_gtk_button_clicked));
+	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	                                             "on_movedown_plugin",
+	                                             G_CALLBACK(on_movedown_plugin));
 }
