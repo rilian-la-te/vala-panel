@@ -32,6 +32,7 @@ extern ValaPanelAppletHolder *vala_panel_layout_holder;
 
 enum
 {
+	DUMMY_PROPERTY,
 	TOPLEVEL_PROPERTY,
 	NUM_PROPERTIES
 };
@@ -83,7 +84,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	/* change monitor */
 	GtkTreeIter iter;
 	gtk_combo_box_get_active_iter(box, &iter);
-	gtk_tree_model_get(self->store_monitors, &iter, &request_mon, NULL);
+	gtk_tree_model_get(GTK_TREE_MODEL(self->store_monitors), &iter, 0, &request_mon, -1);
 	ValaPanelPlatform *pf = vala_panel_toplevel_get_current_platform();
 	if (vala_panel_platform_edge_available(pf,
 	                                       GTK_WINDOW(self->_toplevel),
@@ -136,14 +137,15 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	for (int i = 0; i < monitors; i++)
 	{
 		GtkTreeIter iter;
-		gtk_list_store_insert_with_values(self->store_monitors,
-		                                  &iter,
-		                                  0,
-		                                  i,
-		                                  1,
-		                                  gdk_monitor_get_model(
-		                                      gdk_display_get_monitor(screen, i)),
-		                                  NULL);
+		gtk_list_store_append(self->store_monitors, &iter);
+		gtk_list_store_set(self->store_monitors,
+		                   &iter,
+		                   0,
+		                   i,
+		                   1,
+		                   gdk_monitor_get_model(gdk_display_get_monitor(screen, i)),
+		                   -1);
+		gtk_combo_box_set_active_iter(self->monitors_box, &iter);
 	}
 	on_monitors_changed(self->monitors_box, self);
 
@@ -204,7 +206,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                       self->file_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
-	g_signal_connect(self->color_background,
+	g_signal_connect(self->file_background,
 	                 "file-set",
 	                 G_CALLBACK(background_file_connector),
 	                 self->_toplevel);
