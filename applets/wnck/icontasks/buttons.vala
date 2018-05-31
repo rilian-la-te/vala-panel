@@ -27,6 +27,22 @@ public class ButtonWrapper : Gtk.Revealer
 {
     unowned IconButton? button;
 
+    public Gtk.Orientation orient {
+        set {
+            if (value == Gtk.Orientation.VERTICAL) {
+                this.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN);
+            } else {
+                this.set_transition_type(Gtk.RevealerTransitionType.SLIDE_RIGHT);
+            }
+        }
+        get {
+            if (this.get_transition_type() == Gtk.RevealerTransitionType.SLIDE_DOWN) {
+                return Gtk.Orientation.VERTICAL;
+            }
+            return Gtk.Orientation.HORIZONTAL;
+        }
+    }
+
     public ButtonWrapper(IconButton? button)
     {
         this.button = button;
@@ -45,7 +61,11 @@ public class ButtonWrapper : Gtk.Revealer
             return;
         }
 
-        this.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT);
+        if (this.orient == Gtk.Orientation.HORIZONTAL) {
+            this.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT);
+        } else {
+            this.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP);
+        }
         this.notify["child-revealed"].connect_after(()=> {
             this.destroy();
         });
@@ -78,6 +98,7 @@ public class IconButton : Gtk.ToggleButton
     unowned Settings? settings;
 
     public int panel_size = 10;
+    public Gtk.Orientation orient = Gtk.Orientation.HORIZONTAL;
 
     protected Gdk.AppLaunchContext launch_context;
 
@@ -108,37 +129,43 @@ public class IconButton : Gtk.ToggleButton
             }
         });
 
-        if (ainfo != null) {
-            // Desktop app actions =)
-            unowned string[] actions = ainfo.list_actions();
-            if (actions.length == 0) {
-                return;
-            }
-            sep = new Gtk.SeparatorMenuItem();
-            menu.append(sep);
-            sep.show_all();
-            foreach (var action in actions) {
-                var display_name = ainfo.get_action_name(action);
-                var item = new Gtk.MenuItem.with_label(display_name);
-                item.set_data("__aname", action);
-                item.activate.connect(()=> {
-                    string? act = item.get_data("__aname");
-                    if (act == null) {
-                        return;
-                    }
-                    // Never know.
-                    if (ainfo == null) {
-                        return;
-                    }
-                    launch_context.set_screen(get_screen());
-                    launch_context.set_timestamp(Gdk.CURRENT_TIME);
-                    ainfo.launch_action(act, launch_context);
-                });
-                item.show_all();
-                menu.append(item);
-            }
-        }
+        this.update_app_actions(menu);
         this.update_icon();
+    }
+
+    // Insert app actions at the foot of a given menu
+    public void update_app_actions(Gtk.Menu? menu)
+    {
+        if (ainfo == null) {
+            return;
+        }
+        unowned string[] actions = ainfo.list_actions();
+        if (actions.length == 0) {
+            return;
+        }
+        var sep = new Gtk.SeparatorMenuItem();
+        menu.append(sep);
+        sep.show_all();
+        foreach (var action in actions) {
+            var display_name = ainfo.get_action_name(action);
+            var item = new Gtk.MenuItem.with_label(display_name);
+            item.set_data("__aname", action);
+            item.activate.connect(()=> {
+                string? act = item.get_data("__aname");
+                if (act == null) {
+                    return;
+                }
+                // Never know.
+                if (ainfo == null) {
+                    return;
+                }
+                launch_context.set_screen(get_screen());
+                launch_context.set_timestamp(Gdk.CURRENT_TIME);
+                ainfo.launch_action(act, launch_context);
+            });
+            item.show_all();
+            menu.append(item);
+        }
     }
 
     public void update_from_window()
@@ -260,6 +287,7 @@ public class IconButton : Gtk.ToggleButton
         this.settings = settings;
         this.helper = helper;
         this.launch_context = get_display().get_app_launch_context();
+
         image = new Gtk.Image();
         image.pixel_size = size;
         icon_size = size;
@@ -290,9 +318,12 @@ public class IconButton : Gtk.ToggleButton
             });
         }
 
+
         // Replace styling with our own
         PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-icon-button");
         PanelCSS.apply_with_class(this,"",Gtk.STYLE_CLASS_BUTTON,true);
+        size_allocate.connect(on_size_allocate);
+
         update_from_window();
 
         // Handle clicking, etc.
@@ -307,8 +338,23 @@ public class IconButton : Gtk.ToggleButton
     public override void get_preferred_width(out int min, out int nat)
     {
         int norm = (int) ((double)panel_size * 1.1);
+        if (orient == Gtk.Orientation.VERTICAL) {
+            norm = panel_size;
+        }
         min = norm;
         nat = norm;
+    }
+
+    public override void get_preferred_height(out int min, out int nat)
+    {
+        if (orient == Gtk.Orientation.VERTICAL) {
+            min = nat = (int) ((double)panel_size * 0.95);
+            return;
+        }
+        int m, n;
+        base.get_preferred_height(out m, out n);
+        min = m;
+        nat = n;
     }
 
 
@@ -358,19 +404,12 @@ public class IconButton : Gtk.ToggleButton
             aicon = ainfo.get_icon();
         }
 
-        if (this.helper.has_derpy_icon(window) && aicon != null) {
+        if (aicon != null) {
             image.set_from_gicon(aicon, Gtk.IconSize.INVALID);
         } else {
-            if (window.get_icon_is_fallback()) {
-                if (ainfo != null && ainfo.get_icon() != null) {
-                    image.set_from_gicon(ainfo.get_icon(), Gtk.IconSize.INVALID);
-                } else {
-                    image.set_from_pixbuf(window.get_icon());
-                }
-            } else {
-                image.set_from_pixbuf(window.get_icon());
-            }
+            image.set_from_pixbuf(window.get_icon());
         }
+
         image.pixel_size = icon_size;
         queue_resize();
     }
@@ -449,6 +488,8 @@ public class PinnedIconButton : IconButton
         var item = new Gtk.MenuItem.with_label(_("Unpin from panel"));
         alt_menu.add(item);
         item.show_all();
+
+        this.update_app_actions(alt_menu);
 
         item.activate.connect(()=> {
             DesktopHelper.set_pinned(settings, this.app_info, false);
@@ -529,9 +570,14 @@ public class PinnedIconButton : IconButton
                 return true;
             }
             /* Launch ourselves. */
-            launch_context.set_screen(get_screen());
-            launch_context.set_timestamp(event.time);
-            MenuMaker.launch_with_context(app_info,launch_context,null);
+            try {
+                launch_context.set_screen(get_screen());
+                launch_context.set_timestamp(event.time);
+                MenuMaker.launch_with_context(app_info,launch_context,null);
+            } catch (Error e) {
+                /* Animate a UFAILED image? */
+                message(e.message);
+            }
             return base.on_button_release(event);
         } else {
             return base.on_button_release(event);
@@ -551,6 +597,7 @@ public class PinnedIconButton : IconButton
     public void reset()
     {
         image.set_from_gicon(app_info.get_icon(), Gtk.IconSize.INVALID);
+        image.set_pixel_size(this.icon_size);
         set_tooltip_text(app_info.get_display_name());
         get_style_context().remove_class("running");
         set_active(false);

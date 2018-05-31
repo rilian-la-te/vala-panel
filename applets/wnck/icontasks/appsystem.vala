@@ -1,14 +1,3 @@
-/*
- * This file is part of budgie-desktop
- *
- * Copyright © 2014-2016 Ikey Doherty <ikey@solus-project.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- */
-
 public class AppSystem : GLib.Object
 {
 
@@ -17,11 +6,14 @@ public class AppSystem : GLib.Object
     HashTable<string?,DesktopAppInfo?> desktops = null;
     /* Mapping of based TryExec to desktop ID */
     HashTable<string?,string?> exec_cache = null;
+    HashTable<int64?, string?> pid_cache = null;
     AppInfoMonitor? monitor = null;
 
-    string[]? derpers;
-
     bool invalidated = false;
+
+    private GLib.DBusConnection bus;
+
+    public signal void app_launched(string desktop_file);
 
     public AppSystem()
     {
@@ -33,21 +25,24 @@ public class AppSystem : GLib.Object
         simpletons["code"] = "vscode";
         simpletons["psppire"] = "pspp";
         simpletons["gnome-twitch"] = "com.vinszent.gnometwitch";
+        simpletons["anoise.py"] = "anoise";
 
-        derpers = new string[] {
-            "atom",
-            "calibre-gui",
-            "dia",
-            "freeorion",
-            "fbreader",
-            "google-chrome",
-            "hexchat",
-            "pale moon",
-            "spotify",
-            "steam",
-            "telegram",
-            "zim",
-        };
+        pid_cache = new HashTable<int64?,string?>(str_hash, str_equal);
+
+        GLib.Bus.@get.begin(GLib.BusType.SESSION, null, (obj, res) => {
+            try {
+                bus = GLib.Bus.@get.end(res);
+                bus.signal_subscribe(null,
+                                     "org.gtk.gio.DesktopAppInfo",
+                                     "Launched",
+                                     "/org/gtk/gio/DesktopAppInfo",
+                                     null,
+                                     0,
+                                     this.signal_received);
+            } catch (GLib.IOError e) {
+                warning(e.message);
+            }
+        });
 
         monitor = AppInfoMonitor.get();
         monitor.changed.connect(()=> {
@@ -61,21 +56,25 @@ public class AppSystem : GLib.Object
         reload_ids();
     }
 
-    /**
-     * Determine if the app is forbidden from changing its icon through
-     * the icon-changed signal
-     */
-    public bool has_derpy_icon(Wnck.Window? window)
+    private void signal_received(GLib.DBusConnection connection,
+                                 string sender,
+                                 string object_path,
+                                 string interface_name,
+                                 string signal_name,
+                                 GLib.Variant parameters)
     {
-        string? iname = window.get_class_instance_name();
-        if (iname == null) {
-            return false;
+        GLib.Variant desktop_variant;
+        int64 pid;
+
+        parameters.get("(@aysxas@a{sv})", out desktop_variant, null, out pid, null, null);
+
+        string desktop_file = desktop_variant.get_bytestring();
+        if (desktop_file == "" || pid == 0) {
+            return;
         }
-        iname = iname.down();
-        if (iname in this.derpers) {
-            return true;
-        }
-        return false;
+
+        pid_cache.insert(pid, desktop_file);
+        app_launched(desktop_file);
     }
 
     /**
@@ -134,9 +133,12 @@ public class AppSystem : GLib.Object
     public DesktopAppInfo? query_window(Wnck.Window? window)
     {
         ulong xid = window.get_xid();
+        int64 pid = window.get_pid();
+
         if (window == null) {
             return null;
         }
+
         string? cls_name = window.get_class_instance_name();
         string? grp_name = window.get_class_group_name();
 
@@ -160,6 +162,13 @@ public class AppSystem : GLib.Object
             if (dname in this.desktops) {
                 return this.desktops[dname];
             }
+        }
+
+        /* See if the pid associated with the window is in our pid cache */
+        if (pid in pid_cache) {
+            string filename = pid_cache[pid];
+            GLib.DesktopAppInfo? info = new GLib.DesktopAppInfo.from_filename(filename);
+            return info;
         }
 
         /* Next, attempt to get the application based on the GtkApplication ID */

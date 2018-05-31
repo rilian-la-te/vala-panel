@@ -42,6 +42,7 @@ public class Pager: Applet
         widget.set_show_all(true);
         widget.set_display_mode(Wnck.PagerDisplayMode.CONTENT);
         widget.set_shadow_type(Gtk.ShadowType.IN);
+        //widget.set_wrap_on_scroll(true);
         widget.set_size_request(0,0);
         this.add(widget);
         toplevel.notify.connect((pspec)=>{
