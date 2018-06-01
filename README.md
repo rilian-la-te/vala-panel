@@ -30,7 +30,7 @@ TODO
  * [x] Made PanelManager (done as Platform)
 
 *TODO for 0.5.0*
- * [ ] Drop libpeas in favor to applets-new.
+ * [ ] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
  * [ ] Be prepared for GTK4
  * [ ] Replace XEmbed to proxy and move it to extras
 
