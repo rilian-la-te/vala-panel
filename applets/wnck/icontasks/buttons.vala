@@ -569,15 +569,9 @@ public class PinnedIconButton : IconButton
             if (event.button != 1) {
                 return true;
             }
-            /* Launch ourselves. */
-            try {
-                launch_context.set_screen(get_screen());
-                launch_context.set_timestamp(event.time);
-                MenuMaker.launch_with_context(app_info,launch_context,null);
-            } catch (Error e) {
-                /* Animate a UFAILED image? */
-                message(e.message);
-            }
+            launch_context.set_screen(get_screen());
+            launch_context.set_timestamp(event.time);
+            MenuMaker.launch_with_context(app_info,launch_context,null);
             return base.on_button_release(event);
         } else {
             return base.on_button_release(event);
