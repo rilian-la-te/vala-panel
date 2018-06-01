@@ -85,6 +85,7 @@ public class IconTasklistApplet : ValaPanel.Applet
     protected HashTable<string?,PinnedIconButton?> pin_buttons;
     protected int icon_size = 32;
     protected AppSystem? helper;
+    protected Gtk.Orientation orient = Gtk.Orientation.HORIZONTAL;
 
     private unowned IconButton? active_button;
     protected void window_opened(Wnck.Window window)
@@ -259,8 +260,8 @@ public class IconTasklistApplet : ValaPanel.Applet
             while (iter.next(out btn_key, out val)) {
                 val.icon_size = icon_size;
                 val.panel_size = panel_size;
-                val.orient = toplevel.orientation;
-                (val.get_parent() as ButtonWrapper).orient = toplevel.orientation;
+                val.orient = this.orient;
+                (val.get_parent() as ButtonWrapper).orient = this.orient;
                 val.update_icon();
             }
 
@@ -268,8 +269,8 @@ public class IconTasklistApplet : ValaPanel.Applet
             while (iter2.next(out str_key, out pin_val)) {
                 pin_val.icon_size = icon_size;
                 pin_val.panel_size = panel_size;
-                val.orient = toplevel.orientation;
-                (val.get_parent() as ButtonWrapper).orient = toplevel.orientation;
+                pin_val.orient = this.orient;
+                (pin_val.get_parent() as ButtonWrapper).orient = this.orient;
                 pin_val.update_icon();
             }
             return false;
@@ -303,6 +304,7 @@ public class IconTasklistApplet : ValaPanel.Applet
         widget.set_orientation(orientation);
         main_layout.set_orientation(orientation);
         pinned.set_orientation(orientation);
+        this. orient = orientation;
         set_icons_size();
         this.queue_resize();
     }
@@ -370,8 +372,8 @@ public class IconTasklistApplet : ValaPanel.Applet
 
             (pin_buttons[launchers[i]].get_parent() as ButtonWrapper).get_allocation(out alloc);
 
-            if ((toplevel.orientation == Gtk.Orientation.HORIZONTAL && x <= (alloc.x + (alloc.width / 2) - main_layout_allocation.x)) ||
-                (toplevel.orientation == Gtk.Orientation.VERTICAL && y <= (alloc.y + (alloc.height / 2) - main_layout_allocation.y))) {
+            if ((this.orient == Gtk.Orientation.HORIZONTAL && x <= (alloc.x + (alloc.width / 2) - main_layout_allocation.x)) ||
+                (this.orient == Gtk.Orientation.VERTICAL && y <= (alloc.y + (alloc.height / 2) - main_layout_allocation.y))) {
 
                 // Check if launcher is being moved left to the same position as it currently is
                 if(launchers[i] == app_id) {
@@ -421,9 +423,9 @@ public class IconTasklistApplet : ValaPanel.Applet
                 continue;
             }
             var button = new PinnedIconButton(settings, info, icon_size, this.helper, panel_size);
-            button.orient = toplevel.orientation;
+            button.orient = this.orient;
             var button_wrap = new ButtonWrapper(button);
-            button_wrap.orient = toplevel.orientation;
+            button_wrap.orient = this.orient;
             pin_buttons[desktopfile] = button;
             pinned.pack_start(button_wrap, false, false, 0);
 
@@ -468,13 +470,13 @@ public class IconTasklistApplet : ValaPanel.Applet
             } else {
                 /* We need to move this fella.. */
                 IconButton b2 = new IconButton(settings, btn.window, icon_size, (owned)btn.app_info, this.helper, panel_size);
-                b2.orient = toplevel.orientation;
+                b2.orient = this.orient;
                 var button_wrap = new ButtonWrapper(b2);
 
                 (btn.get_parent() as ButtonWrapper).gracefully_die();
                 widget.pack_start(button_wrap, false, false, 0);
                 buttons[b2.window]  = b2;
-                button_wrap.orient = toplevel.orientation;
+                button_wrap.orient = this.orient;
                 button_wrap.set_reveal_child(true);
             }
             removals += key_name;
