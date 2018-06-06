@@ -210,7 +210,8 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                 "file-set",
 	                 G_CALLBACK(background_file_connector),
 	                 self->_toplevel);
-	g_free0(file);
+	//    if(file)
+	//        g_free0(file);
 	/* foregorund */
 	g_object_get(self->_toplevel, VALA_PANEL_KEY_FOREGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
@@ -347,7 +348,7 @@ static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, 
 	                                        pl,
 	                                        vala_panel_toplevel_get_core_settings());
 	PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-	char *ext = peas_plugin_info_get_external_data(apl, VALA_PANEL_DATA_EXPANDABLE);
+	const char *ext = peas_plugin_info_get_external_data(pl_info, VALA_PANEL_DATA_EXPANDABLE);
 	gtk_cell_renderer_set_visible(renderer, ext != NULL);
 }
 
@@ -408,24 +409,20 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	GtkTreeIter it;
 	GtkCellRenderer *textrender = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col      = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          textrender,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  textrender,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
-	g_object_unref(col);
-	g_object_unref(textrender);
 	textrender = gtk_cell_renderer_text_new();
 	col        = gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
-                                                       textrender,
-                                                       "text",
-                                                       COLUMN_NAME,
-                                                       NULL);
+	                                               textrender,
+	                                               "text",
+	                                               COLUMN_NAME,
+	                                               NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
-	g_object_unref(col);
-	g_object_unref(textrender);
 	GtkCellRendererToggle *render = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_activatable(render, true);
 	g_signal_connect(render, "toggled", G_CALLBACK(on_plugin_expand_toggled), self);
@@ -437,8 +434,6 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_column_set_cell_data_func(col, render, on_stretch_render, self, NULL);
 	gtk_tree_view_append_column(self->plugin_list, col);
-	g_object_unref(col);
-	g_object_unref(render);
 	update_plugin_list_model(self);
 	g_signal_connect(self->plugin_list,
 	                 "row-activated",
@@ -522,23 +517,19 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 
 	GtkCellRenderer *render = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col  = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          render,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  render,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 
 	gtk_tree_view_append_column(view, col);
-	g_object_unref(render);
-	g_object_unref(col);
 	render = gtk_cell_renderer_text_new();
 	col    = gtk_tree_view_column_new_with_attributes(_("Available plugins"),
-                                                       render,
-                                                       "text",
-                                                       1,
-                                                       NULL);
+	                                               render,
+	                                               "text",
+	                                               1,
+	                                               NULL);
 	gtk_tree_view_append_column(view, col);
-	g_object_unref(render);
-	g_object_unref(col);
 
 	GtkListStore *list = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
