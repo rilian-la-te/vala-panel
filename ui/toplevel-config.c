@@ -494,7 +494,7 @@ static void on_add_plugin_row_activated(GtkTreeView *tree_view, GtkTreePath *pat
 	if (gtk_tree_selection_get_selected(sel, &model, &it))
 	{
 		g_autofree char *type;
-		gtk_tree_model_get(model, &it, 1, &type, -1);
+		gtk_tree_model_get(model, &it, 2, &type, -1);
 		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
 		vala_panel_layout_add_applet(layout, type);
 		vala_panel_layout_update_applet_positions(layout);
@@ -622,30 +622,24 @@ static void on_movedown_plugin(GtkButton *btn, void *user_data)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(user_data);
 	GtkTreeIter it, next;
-	GtkTreeModel *model        = gtk_tree_view_get_model(self->plugin_list);
+	GtkTreeModel *model;
 	GtkTreeSelection *tree_sel = gtk_tree_view_get_selection(self->plugin_list);
-	if (!gtk_tree_selection_iter_is_selected(tree_sel, &it))
+	if (!gtk_tree_selection_get_selected(tree_sel, &model, &it))
 		return;
 	next = it;
-	if (!gtk_tree_model_iter_next(model, &it))
+	if (!gtk_tree_model_iter_next(model, &next))
 		return;
 
-	if (gtk_tree_selection_iter_is_selected(tree_sel, &it))
-	{
-		ValaPanelApplet *pl;
-		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
-		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
-		gtk_list_store_move_after(GTK_LIST_STORE(model), &it, &next);
+	ValaPanelApplet *pl;
+	ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
+	gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
+	gtk_list_store_move_after(GTK_LIST_STORE(model), &it, &next);
 
-		uint i = vala_panel_layout_get_applet_position(layout, pl);
-		/* reorder in config, 0 is Global */
-		i = i > 0 ? i : 0;
-
-		/* reorder in panel */
-		vala_panel_layout_set_applet_position(layout, pl, (int)i + 1);
-		update_widget_position_keys(self);
-		return;
-	}
+	uint i = vala_panel_layout_get_applet_position(layout, pl);
+	/* reorder in panel */
+	vala_panel_layout_set_applet_position(layout, pl, (int)i + 1);
+	update_widget_position_keys(self);
+	return;
 }
 
 static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
