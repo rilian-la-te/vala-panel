@@ -35,7 +35,7 @@ bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext
 {
 	g_autoptr(GError) err = NULL;
 	if (app_info == NULL)
-	    return false;
+		return false;
 	bool ret = g_desktop_app_info_launch_uris_as_manager(G_DESKTOP_APP_INFO(app_info),
 	                                                     uris,
 	                                                     cxt,

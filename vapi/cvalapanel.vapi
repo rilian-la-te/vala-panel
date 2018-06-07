@@ -217,7 +217,7 @@ namespace ValaPanel
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
     [Compact]
     [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_core_settings_get_type()")]
-    internal class CoreSettings
+    public class CoreSettings
     {
         internal HashTable<string,UnitSettings> all_units;
         internal GLib.SettingsBackend backend;

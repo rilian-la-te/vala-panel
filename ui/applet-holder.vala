@@ -30,8 +30,8 @@ namespace ValaPanel
     }
     namespace Data
     {
-        internal const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
-        internal const string EXPANDABLE = "ValaPanel-Expandable";
+        public const string ONE_PER_SYSTEM = "ValaPanel-OnePerSystem";
+        public const string EXPANDABLE = "ValaPanel-Expandable";
     }
     public class AppletHolder: Object
     {
@@ -90,7 +90,10 @@ namespace ValaPanel
             string name = s.default_settings.get_string(Key.NAME);
             var pl = applet_ref(name);
             if (pl != null)
+            {
                 applet_ready_to_place(pl,s);
+                return;
+            }
             // Got this far we actually need to load the underlying plugin
             unowned Peas.PluginInfo? plugin = null;
 
@@ -120,12 +123,12 @@ namespace ValaPanel
                 engine.try_unload_plugin(info);
             }
         }
-        internal unowned AppletPlugin get_plugin(Applet pl, CoreSettings core_settings)
+        public unowned AppletPlugin get_plugin(Applet pl, CoreSettings core_settings)
         {
             return loaded_types.lookup((core_settings.get_by_uuid(pl.uuid)
                                         .default_settings.get_string(Key.NAME))).plugin;
         }
-        internal unowned List<Peas.PluginInfo> get_all_types()
+        public unowned List<Peas.PluginInfo> get_all_types()
         {
             return engine.get_plugin_list();
         }

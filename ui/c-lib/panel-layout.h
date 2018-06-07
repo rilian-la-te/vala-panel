@@ -10,7 +10,8 @@
 
 G_BEGIN_DECLS
 
-typedef enum {
+typedef enum
+{
 	PACK_START  = 0,
 	PACK_CENTER = 2,
 	PACK_END    = 1,

@@ -19,6 +19,7 @@
 #ifndef TOPLEVELCONFIG_H
 #define TOPLEVELCONFIG_H
 
+#include "toplevel.h"
 #include <glib-object.h>
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -27,6 +28,28 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, VALA_PANEL,
                      TOPLEVEL_CONFIG, GtkDialog)
+
+struct _ValaPanelToplevelConfig
+{
+	GtkDialog parent_instance;
+	GtkStack *prefs_stack;
+	ValaPanelToplevel *_toplevel;
+	GtkComboBox *monitors_box;
+	GtkSpinButton *spin_iconsize;
+	GtkSpinButton *spin_height;
+	GtkSpinButton *spin_width;
+	GtkSpinButton *spin_corners;
+	GtkFontButton *font_selector;
+	GtkBox *font_box;
+	GtkColorButton *color_background;
+	GtkColorButton *color_foreground;
+	GtkFileChooserButton *file_background;
+	GtkTreeView *plugin_list;
+	GtkLabel *plugin_desc;
+	GtkButton *adding_button;
+	GtkButton *configure_button;
+	GtkListStore *store_monitors;
+};
 
 G_END_DECLS
 

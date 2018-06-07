@@ -43,7 +43,7 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
                                            const char *uid);
 
 #define vala_panel_toplevel_get_layout(self)                                                       \
-	VALA_PANEL_LAYOUT(gtk_bin_get_child(gtk_bin_get_child(GTK_BIN(self))))
+	VALA_PANEL_LAYOUT(gtk_bin_get_child(GTK_BIN(gtk_bin_get_child(GTK_BIN(self)))))
 
 void start_ui(ValaPanelToplevel *self);
 void stop_ui(ValaPanelToplevel *self);
