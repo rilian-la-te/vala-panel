@@ -497,7 +497,7 @@ static void on_add_plugin_row_activated(GtkTreeView *tree_view, GtkTreePath *pat
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree_view);
 	if (gtk_tree_selection_get_selected(sel, &model, &it))
 	{
-		g_autofree char *type;
+		const char *type;
 		gtk_tree_model_get(model, &it, 2, &type, -1);
 		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
 		vala_panel_layout_add_applet(layout, type);
@@ -539,8 +539,7 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
-	g_autoptr(GList) all_types =
-	    vala_panel_applet_holder_get_all_types(vala_panel_layout_holder);
+	GList *all_types = vala_panel_applet_holder_get_all_types(vala_panel_layout_holder);
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
 		const char *once =
