@@ -145,8 +145,12 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 		                   1,
 		                   gdk_monitor_get_model(gdk_display_get_monitor(screen, i)),
 		                   -1);
-		gtk_combo_box_set_active_iter(self->monitors_box, &iter);
 	}
+	int true_monitor;
+	g_object_get(self->_toplevel, VALA_PANEL_KEY_MONITOR, &true_monitor, NULL);
+
+	gtk_combo_box_set_active(self->monitors_box, true_monitor + 1);
+	/* update monitor */
 	on_monitors_changed(self->monitors_box, self);
 
 	/* size */
