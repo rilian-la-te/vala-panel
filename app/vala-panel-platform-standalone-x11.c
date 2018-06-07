@@ -261,6 +261,7 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	GdkDisplay *screen   = gtk_widget_get_display(GTK_WIDGET(top));
 	GdkMonitor *mon      = monitor < 0 ? gdk_display_get_primary_monitor(screen)
 	                              : gdk_display_get_monitor(screen, monitor);
+	int scale_factor = gdk_monitor_get_scale_factor(mon);
 	gdk_monitor_get_geometry(mon, &primary_monitor_rect);
 	/*
 	strut-left strut-right strut-top strut-bottom
@@ -277,24 +278,28 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	switch (edge)
 	{
 	case GTK_POS_TOP:
-		struts[2] = primary_monitor_rect.y + panel_size;
-		struts[8] = primary_monitor_rect.x;
-		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len);
+		struts[2] = (primary_monitor_rect.y + panel_size) * scale_factor;
+		struts[8] = (primary_monitor_rect.x) * scale_factor;
+		struts[9] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len) *
+		            scale_factor;
 		break;
 	case GTK_POS_LEFT:
-		struts[0] = panel_size;
-		struts[4] = primary_monitor_rect.y;
-		struts[5] = primary_monitor_rect.y + primary_monitor_rect.height / 100 * len;
+		struts[0] = panel_size * scale_factor;
+		struts[4] = primary_monitor_rect.y * scale_factor;
+		struts[5] = (primary_monitor_rect.y + primary_monitor_rect.height / 100 * len) *
+		            scale_factor;
 		break;
 	case GTK_POS_RIGHT:
-		struts[1] = panel_size;
-		struts[6] = primary_monitor_rect.y;
-		struts[7] = primary_monitor_rect.y + primary_monitor_rect.height / 100 * len;
+		struts[1] = panel_size * scale_factor;
+		struts[6] = primary_monitor_rect.y * scale_factor;
+		struts[7] = (primary_monitor_rect.y + primary_monitor_rect.height / 100 * len) *
+		            scale_factor;
 		break;
 	case GTK_POS_BOTTOM:
-		struts[3]  = primary_monitor_rect.y + panel_size;
-		struts[10] = primary_monitor_rect.x;
-		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len);
+		struts[3]  = (primary_monitor_rect.y + panel_size) * scale_factor;
+		struts[10] = primary_monitor_rect.x * scale_factor;
+		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len) *
+		             scale_factor;
 		break;
 	}
 	GdkAtom atom     = gdk_atom_intern_static_string("_NET_WM_STRUT_PARTIAL");
