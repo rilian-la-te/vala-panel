@@ -90,7 +90,10 @@ namespace ValaPanel
             string name = s.default_settings.get_string(Key.NAME);
             var pl = applet_ref(name);
             if (pl != null)
+            {
                 applet_ready_to_place(pl,s);
+                return;
+            }
             // Got this far we actually need to load the underlying plugin
             unowned Peas.PluginInfo? plugin = null;
 
