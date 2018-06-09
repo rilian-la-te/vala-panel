@@ -13,7 +13,7 @@
 #define VALA_PANEL_APPLET_INFO_HELP_URI "HelpURI"
 #define VALA_PANEL_APPLET_INFO_LICENSE "License"
 #define VALA_PANEL_APPLET_INFO_VERSION "Version"
-#define VALA_PANEL_APPLET_INFO_ONE_PER_SYSTEM "OnePerSystem"
+#define VALA_PANEL_APPLET_INFO_EXCLUSIVE "Exclusive"
 #define VALA_PANEL_APPLET_INFO_EXPANDABLE "Expandable"
 
 struct _ValaPanelAppletInfo
@@ -27,7 +27,7 @@ struct _ValaPanelAppletInfo
 	char *help_uri;
 	GtkLicense license;
 	char *version;
-	bool one_per_system;
+	bool exclusive;
 	bool expandable;
 };
 
@@ -89,19 +89,19 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	                            NULL);
 	ret->license =
 	    tmp != NULL ? vala_panel_applet_info_get_license_from_name(tmp) : GTK_LICENSE_LGPL_3_0;
-	tmp                 = g_key_file_get_string(file,
+	tmp             = g_key_file_get_string(file,
                                     VALA_PANEL_APPLET_GROUP,
                                     VALA_PANEL_APPLET_INFO_VERSION,
                                     NULL);
-	ret->version        = tmp != NULL ? tmp : g_strdup(VERSION);
-	ret->one_per_system = g_key_file_get_boolean(file,
-	                                             VALA_PANEL_APPLET_GROUP,
-	                                             VALA_PANEL_APPLET_INFO_ONE_PER_SYSTEM,
-	                                             NULL);
-	ret->expandable     = g_key_file_get_boolean(file,
-                                                 VALA_PANEL_APPLET_GROUP,
-                                                 VALA_PANEL_APPLET_INFO_EXPANDABLE,
-                                                 NULL);
+	ret->version    = tmp != NULL ? tmp : g_strdup(VERSION);
+	ret->exclusive  = g_key_file_get_boolean(file,
+                                                VALA_PANEL_APPLET_GROUP,
+                                                VALA_PANEL_APPLET_INFO_EXCLUSIVE,
+                                                NULL);
+	ret->expandable = g_key_file_get_boolean(file,
+	                                         VALA_PANEL_APPLET_GROUP,
+	                                         VALA_PANEL_APPLET_INFO_EXPANDABLE,
+	                                         NULL);
 	return ret;
 }
 
@@ -122,12 +122,12 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	}
 	else
 		ret->authors = NULL;
-	ret->website        = g_strdup(ainfo->website);
-	ret->help_uri       = g_strdup(ainfo->help_uri);
-	ret->license        = ainfo->license;
-	ret->version        = g_strdup(ainfo->version);
-	ret->one_per_system = ainfo->one_per_system;
-	ret->expandable     = ainfo->expandable;
+	ret->website    = g_strdup(ainfo->website);
+	ret->help_uri   = g_strdup(ainfo->help_uri);
+	ret->license    = ainfo->license;
+	ret->version    = g_strdup(ainfo->version);
+	ret->exclusive  = ainfo->exclusive;
+	ret->expandable = ainfo->expandable;
 	return ret;
 }
 
@@ -203,10 +203,10 @@ const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info)
 	return ainfo->version;
 }
 
-bool vala_panel_applet_info_get_one_per_system(ValaPanelAppletInfo *info)
+bool vala_panel_applet_info_get_exclusive(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
-	return ainfo->one_per_system;
+	return ainfo->exclusive;
 }
 
 bool vala_panel_applet_info_get_expandable(ValaPanelAppletInfo *info)
