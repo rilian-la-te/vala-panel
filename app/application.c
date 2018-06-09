@@ -204,7 +204,8 @@ static void vala_panel_application_shutdown(GApplication *base)
 	{
 		g_autoptr(GError) err = NULL;
 		char cwd[1024];
-		getcwd(cwd, 1024);
+		char *tmp;
+		tmp                = getcwd(cwd, 1024);
 		const char *argv[] = { GETTEXT_PACKAGE,
 			               "-p",
 			               VALA_PANEL_APPLICATION(base)->profile,
