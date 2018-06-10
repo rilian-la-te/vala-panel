@@ -55,6 +55,21 @@ static void vala_panel_applet_manager_scan_plugin_list(ValaPanelAppletManager *s
 	}
 }
 
+ValaPanelAppletPlugin *applet_ref(ValaPanelAppletManager *self, const char *name)
+{
+	if (g_hash_table_contains(self->applet_info_table, name))
+	{
+		AppletInfoData *data =
+		    (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, name);
+		if (data != NULL)
+		{
+			data->count += 1;
+			return data->plugin;
+		}
+	}
+	return NULL;
+}
+
 static void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 {
 	self->applet_info_table =
