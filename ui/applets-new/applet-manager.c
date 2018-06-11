@@ -55,7 +55,8 @@ static void vala_panel_applet_manager_scan_plugin_list(ValaPanelAppletManager *s
 	}
 }
 
-ValaPanelAppletPlugin *applet_ref(ValaPanelAppletManager *self, const char *name)
+ValaPanelAppletPlugin *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
+                                                            const char *name)
 {
 	if (g_hash_table_contains(self->applet_info_table, name))
 	{
@@ -64,6 +65,22 @@ ValaPanelAppletPlugin *applet_ref(ValaPanelAppletManager *self, const char *name
 		if (data != NULL)
 		{
 			data->count += 1;
+			return data->plugin;
+		}
+	}
+	return NULL;
+}
+
+ValaPanelAppletPlugin *vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self,
+                                                              const char *name)
+{
+	if (g_hash_table_contains(self->applet_info_table, name))
+	{
+		AppletInfoData *data =
+		    (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, name);
+		if (data != NULL && data->count > 0)
+		{
+			data->count -= 1;
 			return data->plugin;
 		}
 	}

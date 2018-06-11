@@ -11,7 +11,10 @@ G_DECLARE_FINAL_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, VALA_PAN
 
 ValaPanelAppletManager *vala_panel_applet_manager_new();
 
-ValaPanelAppletPlugin *applet_ref(ValaPanelAppletManager *self, const char *name);
+ValaPanelAppletPlugin *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
+                                                            const char *name);
+ValaPanelAppletPlugin *vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self,
+                                                              const char *name);
 
 G_END_DECLS
 
