@@ -110,3 +110,8 @@ static void vala_panel_applet_manager_class_init(ValaPanelAppletManagerClass *kl
 	applet_point = g_io_extension_point_register(VALA_PANEL_APPLET_EXTENSION_POINT);
 	g_io_extension_point_set_required_type(applet_point, vala_panel_applet_plugin_get_type());
 }
+
+ValaPanelAppletManager *vala_panel_applet_manager_new()
+{
+	return VALA_PANEL_APPLET_MANAGER(g_object_new(vala_panel_applet_manager_get_type(), NULL));
+}
