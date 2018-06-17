@@ -35,6 +35,7 @@ G_DECLARE_FINAL_TYPE(ValaPanelToplevel, vala_panel_toplevel, VALA_PANEL, TOPLEVE
 #define VALA_PANEL_TYPE_TOPLEVEL vala_panel_toplevel_get_type()
 
 ValaPanelCoreSettings *vala_panel_toplevel_get_core_settings();
+const char *vala_panel_toplevel_get_uuid(ValaPanelToplevel *self);
 bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self);
 void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self);
 G_GNUC_INTERNAL ValaPanelPlatform *vala_panel_toplevel_get_current_platform();

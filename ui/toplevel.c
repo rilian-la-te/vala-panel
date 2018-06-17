@@ -776,6 +776,15 @@ static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
 		ah_hide(self);
 }
 
+/*
+ * Setters and getters
+ */
+
+const char *vala_panel_toplevel_get_uuid(ValaPanelToplevel *self)
+{
+	return self->uuid;
+}
+
 static void vala_panel_toplevel_get_property(GObject *object, guint property_id, GValue *value,
                                              GParamSpec *pspec)
 {
