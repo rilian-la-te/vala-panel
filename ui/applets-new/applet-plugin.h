@@ -20,6 +20,10 @@ struct _ValaPanelAppletPluginClass
 	                                      const char *uuid);
 };
 
+ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugin *self,
+                                                            ValaPanelToplevel *top,
+                                                            GSettings *settings, const char *uuid);
+
 G_END_DECLS
 
 #endif // APPLETPLUGIN_H
