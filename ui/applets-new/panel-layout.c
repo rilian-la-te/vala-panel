@@ -76,12 +76,11 @@ static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
 		vala_panel_core_settings_remove_unit_settings(core_settings, uuid);
 }
 
-void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self,
-                                           ValaPanelAppletPlugin *applet_plugin,
+void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, AppletInfoData *data,
                                            ValaPanelUnitSettings *s)
 {
 	ValaPanelApplet *applet =
-	    vala_panel_applet_plugin_get_applet_widget(applet_plugin,
+	    vala_panel_applet_plugin_get_applet_widget(data->plugin,
 	                                               VALA_PANEL_TOPLEVEL(gtk_widget_get_toplevel(
 	                                                   GTK_WIDGET(self))),
 	                                               s->custom_settings,
@@ -89,10 +88,14 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self,
 	int position = g_settings_get_int(s->default_settings, VALA_PANEL_KEY_POSITION);
 	gtk_box_pack_start(self, applet, false, true, 0);
 	gtk_box_reorder_child(self, applet, position);
-	//    if (applet_plugin.plugin_info.get_external_data(Data.EXPANDABLE)!=null)
-	//    {
-	//        s.default_settings.bind(Key.EXPAND,applet,"hexpand",GLib.SettingsBindFlags.GET);
-	//        applet.bind_property("hexpand",applet,"vexpand",BindingFlags.SYNC_CREATE);
-	//    }
+	if (vala_panel_applet_info_is_expandable(data->info))
+	{
+		g_settings_bind(s->default_settings,
+		                VALA_PANEL_KEY_EXPAND,
+		                applet,
+		                "hexpand",
+		                G_SETTINGS_BIND_GET);
+		g_object_bind_property(applet, "hexpand", applet, "vexpand", G_BINDING_SYNC_CREATE);
+	}
 	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
 }

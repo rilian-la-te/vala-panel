@@ -19,10 +19,9 @@ typedef struct
 
 ValaPanelAppletManager *vala_panel_applet_manager_new();
 
-ValaPanelAppletPlugin *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
-                                                            const char *name);
-ValaPanelAppletPlugin *vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self,
-                                                              const char *name);
+AppletInfoData *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
+                                                     const char *name);
+void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name);
 ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
                                                             ValaPanelApplet *pl,
                                                             ValaPanelCoreSettings *core_settings);

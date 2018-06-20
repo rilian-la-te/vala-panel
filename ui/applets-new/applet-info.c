@@ -203,13 +203,13 @@ const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info)
 	return ainfo->version;
 }
 
-bool vala_panel_applet_info_get_exclusive(ValaPanelAppletInfo *info)
+bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->exclusive;
 }
 
-bool vala_panel_applet_info_get_expandable(ValaPanelAppletInfo *info)
+bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->expandable;

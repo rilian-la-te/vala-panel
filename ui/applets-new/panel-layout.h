@@ -27,8 +27,7 @@ ValaPanelAppletLayout *vala_panel_applet_layout_construct(GType object_type, Val
                                                           GtkOrientation orient, gint spacing);
 void vala_panel_applet_layout_init_applets(ValaPanelAppletLayout *self);
 void vala_panel_applet_layout_add_applet(ValaPanelAppletLayout *self, const gchar *type);
-void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self,
-                                           ValaPanelAppletPlugin *applet_plugin,
+void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, AppletInfoData *data,
                                            ValaPanelUnitSettings *s);
 void vala_panel_applet_layout_remove_applet(ValaPanelAppletLayout *self, ValaPanelApplet *applet);
 void vala_panel_applet_layout_applet_destroyed(ValaPanelAppletLayout *self, const gchar *uuid);

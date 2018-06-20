@@ -22,8 +22,8 @@ const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_help_uri(ValaPanelAppletInfo *info);
 GtkLicense vala_panel_applet_info_get_license(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info);
-bool vala_panel_applet_info_get_exclusive(ValaPanelAppletInfo *info);
-bool vala_panel_applet_info_get_expandable(ValaPanelAppletInfo *info);
+bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info);
+bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info);
 
 G_END_DECLS
 

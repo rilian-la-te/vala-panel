@@ -48,8 +48,7 @@ static void vala_panel_applet_manager_scan_plugin_list(ValaPanelAppletManager *s
 	}
 }
 
-ValaPanelAppletPlugin *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
-                                                            const char *name)
+AppletInfoData *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self, const char *name)
 {
 	if (g_hash_table_contains(self->applet_info_table, name))
 	{
@@ -58,14 +57,13 @@ ValaPanelAppletPlugin *vala_panel_applet_manager_applet_ref(ValaPanelAppletManag
 		if (data != NULL)
 		{
 			data->count += 1;
-			return data->plugin;
+			return data;
 		}
 	}
 	return NULL;
 }
 
-ValaPanelAppletPlugin *vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self,
-                                                              const char *name)
+void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name)
 {
 	if (g_hash_table_contains(self->applet_info_table, name))
 	{
@@ -74,10 +72,10 @@ ValaPanelAppletPlugin *vala_panel_applet_manager_applet_unref(ValaPanelAppletMan
 		if (data != NULL && data->count > 0)
 		{
 			data->count -= 1;
-			return data->plugin;
+			return;
 		}
 	}
-	return NULL;
+	return;
 }
 
 ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
