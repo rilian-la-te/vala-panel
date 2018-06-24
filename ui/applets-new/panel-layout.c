@@ -99,3 +99,10 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, AppletIn
 	}
 	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
 }
+
+void vala_panel_applet_layout_applet_destroyed(ValaPanelAppletLayout *self, const char *uuid)
+{
+	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
+	g_autofree char *name    = g_settings_get_string(s->default_settings, VALA_PANEL_KEY_NAME);
+	vala_panel_applet_manager_applet_unref(manager, name);
+}
