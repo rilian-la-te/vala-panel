@@ -106,3 +106,16 @@ void vala_panel_applet_layout_applet_destroyed(ValaPanelAppletLayout *self, cons
 	g_autofree char *name    = g_settings_get_string(s->default_settings, VALA_PANEL_KEY_NAME);
 	vala_panel_applet_manager_applet_unref(manager, name);
 }
+
+void vala_panel_applet_layout_remove_applet(ValaPanelAppletLayout *self, ValaPanelApplet *applet)
+{
+	const char *uuid         = vala_panel_applet_get_uuid(applet);
+	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
+	gtk_widget_destroy(GTK_WIDGET(applet));
+	vala_panel_core_settings_remove_unit_settings_full(core_settings, uuid, true);
+}
+
+const char *vala_panel_applet_layout_get_toplevel_id(ValaPanelAppletLayout *self)
+{
+	return self->toplevel_id;
+}

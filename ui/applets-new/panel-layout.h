@@ -39,7 +39,7 @@ guint vala_panel_applet_layout_get_applet_position(ValaPanelAppletLayout *self,
                                                    ValaPanelApplet *pl);
 void vala_panel_applet_layout_set_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl,
                                                   gint pos);
-const gchar *vala_panel_applet_layout_get_toplevel_id(ValaPanelAppletLayout *self);
+const char *vala_panel_applet_layout_get_toplevel_id(ValaPanelAppletLayout *self);
 
 G_END_DECLS
 
