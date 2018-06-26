@@ -119,3 +119,14 @@ const char *vala_panel_applet_layout_get_toplevel_id(ValaPanelAppletLayout *self
 {
 	return self->toplevel_id;
 }
+
+GList *vala_panel_applet_layout_get_applets_list(ValaPanelAppletLayout *self)
+{
+	return gtk_container_get_children(GTK_CONTAINER(self));
+}
+
+ValaPanelUnitSettings *vala_panel_applet_layout_get_applet_settings(ValaPanelApplet *pl)
+{
+	const char *uuid = vala_panel_applet_get_uuid(pl);
+	return vala_panel_core_settings_get_by_uuid(core_settings, uuid);
+}

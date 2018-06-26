@@ -33,8 +33,7 @@ void vala_panel_applet_layout_remove_applet(ValaPanelAppletLayout *self, ValaPan
 void vala_panel_applet_layout_applet_destroyed(ValaPanelAppletLayout *self, const char *uuid);
 void vala_panel_applet_layout_update_applet_positions(ValaPanelAppletLayout *self);
 GList *vala_panel_applet_layout_get_applets_list(ValaPanelAppletLayout *self);
-ValaPanelUnitSettings *vala_panel_applet_layout_get_applet_settings(ValaPanelAppletLayout *self,
-                                                                    ValaPanelApplet *pl);
+ValaPanelUnitSettings *vala_panel_applet_layout_get_applet_settings(ValaPanelApplet *pl);
 guint vala_panel_applet_layout_get_applet_position(ValaPanelAppletLayout *self,
                                                    ValaPanelApplet *pl);
 void vala_panel_applet_layout_set_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl,
