@@ -130,3 +130,16 @@ ValaPanelUnitSettings *vala_panel_applet_layout_get_applet_settings(ValaPanelApp
 	const char *uuid = vala_panel_applet_get_uuid(pl);
 	return vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 }
+
+void vala_panel_applet_layout_update_applet_positions(ValaPanelAppletLayout *self)
+{
+	GList *children = gtk_container_get_children(GTK_CONTAINER(self));
+	for (GList *l = children; l != NULL; l = l->next)
+	{
+		ValaPanelUnitSettings *settings =
+		    vala_panel_applet_layout_get_applet_settings(VALA_PANEL_APPLET(l->data));
+		uint idx = g_settings_get_uint(settings->default_settings, VALA_PANEL_KEY_POSITION);
+		gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(l->data), (int)idx);
+	}
+	g_list_free(children);
+}
