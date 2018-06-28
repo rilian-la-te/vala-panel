@@ -143,3 +143,16 @@ void vala_panel_applet_layout_update_applet_positions(ValaPanelAppletLayout *sel
 	}
 	g_list_free(children);
 }
+
+uint vala_panel_applet_layout_get_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl)
+{
+	int res;
+	gtk_container_child_get(GTK_CONTAINER(self), GTK_WIDGET(pl), "position", &res, NULL);
+	return (uint)res;
+}
+
+void vala_panel_applet_layout_set_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl,
+                                                  int pos)
+{
+	gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(pl), pos);
+}
