@@ -2,7 +2,6 @@
 #include "definitions.h"
 #include "toplevel.h"
 #include "util-gtk.h"
-#include "vala-panel-compat.h"
 
 typedef struct
 {

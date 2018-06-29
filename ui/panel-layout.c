@@ -4,46 +4,45 @@
 ValaPanelCoreSettings *core_settings;
 ValaPanelAppletManager *manager;
 
-struct _ValaPanelAppletLayout
+struct _ValaPanelLayout
 {
 	GtkBox __parent__;
 	const char *toplevel_id;
 };
 
-G_DEFINE_TYPE(ValaPanelAppletLayout, vala_panel_applet_layout, GTK_TYPE_BOX)
+G_DEFINE_TYPE(ValaPanelLayout, vala_panel_layout, GTK_TYPE_BOX)
 
-static void vala_panel_applet_layout_init(ValaPanelAppletLayout *self)
+static void vala_panel_layout_init(ValaPanelLayout *self)
 {
 }
 
-static void vala_panel_applet_layout_class_init(ValaPanelAppletLayoutClass *klass)
+static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 {
 	manager       = vala_panel_applet_manager_new();
 	core_settings = vala_panel_toplevel_get_core_settings();
 }
 
-ValaPanelAppletLayout *vala_panel_applet_layout_new(ValaPanelToplevel *top, GtkOrientation orient,
-                                                    int spacing)
+ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation orient, int spacing)
 {
-	return VALA_PANEL_APPLET_LAYOUT(g_object_new(vala_panel_applet_layout_get_type(),
-	                                             "orientation",
-	                                             orient,
-	                                             "spacing",
-	                                             spacing,
-	                                             "baseline-position",
-	                                             GTK_BASELINE_POSITION_CENTER,
-	                                             "border-width",
-	                                             0,
-	                                             "hexpand",
-	                                             true,
-	                                             "vexpand",
-	                                             true,
-	                                             "toplevel-id",
-	                                             vala_panel_toplevel_get_uuid(top),
-	                                             NULL));
+	return VALA_PANEL_LAYOUT(g_object_new(vala_panel_layout_get_type(),
+	                                      "orientation",
+	                                      orient,
+	                                      "spacing",
+	                                      spacing,
+	                                      "baseline-position",
+	                                      GTK_BASELINE_POSITION_CENTER,
+	                                      "border-width",
+	                                      0,
+	                                      "hexpand",
+	                                      true,
+	                                      "vexpand",
+	                                      true,
+	                                      "toplevel-id",
+	                                      vala_panel_toplevel_get_uuid(top),
+	                                      NULL));
 }
 
-void vala_panel_applet_layout_init_applets(ValaPanelAppletLayout *self)
+void vala_panel_layout_init_applets(ValaPanelLayout *self)
 {
 	g_auto(GStrv) core_units =
 	    g_settings_get_strv(core_settings->core_settings, VALA_PANEL_CORE_UNITS);
@@ -59,25 +58,25 @@ void vala_panel_applet_layout_init_applets(ValaPanelAppletLayout *self)
 			g_autofree char *name =
 			    g_settings_get_string(pl->default_settings, VALA_PANEL_KEY_NAME);
 			if (!g_strcmp0(id, self->toplevel_id))
-				vala_panel_applet_layout_place_applet(
+				vala_panel_layout_place_applet(
 				    self, vala_panel_applet_manager_applet_ref(manager, name), pl);
 		}
 	}
-	vala_panel_applet_layout_update_applet_positions(self);
+	vala_panel_layout_update_applet_positions(self);
 	return;
 }
 
 static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
 {
-	ValaPanelAppletLayout *layout = VALA_PANEL_APPLET_LAYOUT(data);
-	const char *uuid              = vala_panel_applet_get_uuid(self);
-	vala_panel_applet_layout_applet_destroyed(layout, uuid);
+	ValaPanelLayout *layout = VALA_PANEL_LAYOUT(data);
+	const char *uuid        = vala_panel_applet_get_uuid(self);
+	vala_panel_layout_applet_destroyed(layout, uuid);
 	if (gtk_widget_in_destruction(GTK_WIDGET(layout)))
 		vala_panel_core_settings_remove_unit_settings(core_settings, uuid);
 }
 
-void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, AppletInfoData *data,
-                                           ValaPanelUnitSettings *s)
+void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
+                                    ValaPanelUnitSettings *s)
 {
 	ValaPanelApplet *applet =
 	    vala_panel_applet_plugin_get_applet_widget(data->plugin,
@@ -100,14 +99,14 @@ void vala_panel_applet_layout_place_applet(ValaPanelAppletLayout *self, AppletIn
 	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
 }
 
-void vala_panel_applet_layout_applet_destroyed(ValaPanelAppletLayout *self, const char *uuid)
+void vala_panel_layout_applet_destroyed(ValaPanelLayout *self, const char *uuid)
 {
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 	g_autofree char *name    = g_settings_get_string(s->default_settings, VALA_PANEL_KEY_NAME);
 	vala_panel_applet_manager_applet_unref(manager, name);
 }
 
-void vala_panel_applet_layout_remove_applet(ValaPanelAppletLayout *self, ValaPanelApplet *applet)
+void vala_panel_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet)
 {
 	const char *uuid         = vala_panel_applet_get_uuid(applet);
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
@@ -115,44 +114,48 @@ void vala_panel_applet_layout_remove_applet(ValaPanelAppletLayout *self, ValaPan
 	vala_panel_core_settings_remove_unit_settings_full(core_settings, uuid, true);
 }
 
-const char *vala_panel_applet_layout_get_toplevel_id(ValaPanelAppletLayout *self)
+const char *vala_panel_layout_get_toplevel_id(ValaPanelLayout *self)
 {
 	return self->toplevel_id;
 }
 
-GList *vala_panel_applet_layout_get_applets_list(ValaPanelAppletLayout *self)
+GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self)
 {
 	return gtk_container_get_children(GTK_CONTAINER(self));
 }
 
-ValaPanelUnitSettings *vala_panel_applet_layout_get_applet_settings(ValaPanelApplet *pl)
+ValaPanelUnitSettings *vala_panel_layout_get_applet_settings(ValaPanelApplet *pl)
 {
 	const char *uuid = vala_panel_applet_get_uuid(pl);
 	return vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 }
 
-void vala_panel_applet_layout_update_applet_positions(ValaPanelAppletLayout *self)
+void vala_panel_layout_update_applet_positions(ValaPanelLayout *self)
 {
 	GList *children = gtk_container_get_children(GTK_CONTAINER(self));
 	for (GList *l = children; l != NULL; l = l->next)
 	{
 		ValaPanelUnitSettings *settings =
-		    vala_panel_applet_layout_get_applet_settings(VALA_PANEL_APPLET(l->data));
+		    vala_panel_layout_get_applet_settings(VALA_PANEL_APPLET(l->data));
 		uint idx = g_settings_get_uint(settings->default_settings, VALA_PANEL_KEY_POSITION);
 		gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(l->data), (int)idx);
 	}
 	g_list_free(children);
 }
 
-uint vala_panel_applet_layout_get_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl)
+uint vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl)
 {
 	int res;
 	gtk_container_child_get(GTK_CONTAINER(self), GTK_WIDGET(pl), "position", &res, NULL);
 	return (uint)res;
 }
 
-void vala_panel_applet_layout_set_applet_position(ValaPanelAppletLayout *self, ValaPanelApplet *pl,
-                                                  int pos)
+void vala_panel_layout_set_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl, int pos)
 {
 	gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(pl), pos);
+}
+
+ValaPanelAppletManager *vala_panel_layout_get_manager()
+{
+	return manager;
 }

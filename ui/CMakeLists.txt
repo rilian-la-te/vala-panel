@@ -1,5 +1,3 @@
-add_subdirectory(applets-new)
-add_subdirectory(c-lib)
 set(ENUM_FILES
         panel-platform.h
         settings-manager.c
@@ -14,6 +12,10 @@ set(LIBVALAPANEL_HEADERS
     panel-platform.h
     toplevel.h
     toplevel-config.h
+    applet-plugin.h
+    applet-info.h
+    applet-manager.h
+    panel-layout.h
     ${ENUMSH})
 set(LIBVALAPANEL_C_SOURCES
     toplevel-config.c
@@ -21,26 +23,11 @@ set(LIBVALAPANEL_C_SOURCES
     panel-platform.c
     applet-widget.c
     toplevel.c
+    applet-plugin.c
+    applet-info.c
+    applet-manager.c
+    panel-layout.c
     ${ENUMSC})
-set(VALA_FILES
-	applet-holder.vala
-	panel-layout.vala
-	)
-vala_precompile(VALA_C ${LIBNAME}
-    ${VALA_FILES}
-PACKAGES
-    ${CORE_PACKAGES}
-    cvalapanel
-OPTIONS
-    --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_BINARY_DIR}/vapi
-    --target-glib=2.50
-    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/libvalapanel.gresource.xml
-    --thread
-    ${NEW_DEFINE}
-GENERATE_HEADER
-    ${APPNAME}-compat
-)
 
 glib_compile_resources(GLIB_RESOURCES_LIB
     source
@@ -55,15 +42,14 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 set (LIB_FILES ${VALA_C})
 add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi)
 add_library (${LIBNAME} SHARED
-    ${LIB_FILES}
     ${LIBVALAPANEL_C_SOURCES}
     ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
     definitions.h
 )
 
-target_link_libraries (${LIBNAME} PEAS::PEAS util-gtk)
-target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/util; ${CMAKE_SOURCE_DIR}/ui ${CMAKE_SOURCE_DIR}/util/gtk)
+target_link_libraries (${LIBNAME} util-gtk)
+target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/util; ${CMAKE_SOURCE_DIR}/ui ${CMAKE_SOURCE_DIR}/util/gtk ${CMAKE_BINARY_DIR}/ui)
 
 set_target_properties (${LIBNAME} PROPERTIES
     VERSION ${VERSION}

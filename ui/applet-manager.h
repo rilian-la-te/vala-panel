@@ -25,6 +25,8 @@ void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const 
 ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
                                                             ValaPanelApplet *pl,
                                                             ValaPanelCoreSettings *core_settings);
+ValaPanelAppletInfo *vala_panel_applet_manager_get_plugin_info(
+    ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
 GList *vala_panel_applet_manager_get_all_types(ValaPanelAppletManager *self);
 
 G_END_DECLS

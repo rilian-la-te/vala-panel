@@ -78,17 +78,31 @@ void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const 
 	return;
 }
 
-ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
-                                                            ValaPanelApplet *pl,
-                                                            ValaPanelCoreSettings *core_settings)
+static AppletInfoData *vala_panel_applet_manager_get_info_data(ValaPanelAppletManager *self,
+                                                               ValaPanelApplet *pl,
+                                                               ValaPanelCoreSettings *core_settings)
 {
-	ValaPanelAppletPlugin *ret;
 	ValaPanelUnitSettings *settings =
 	    vala_panel_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
 	g_autofree char *str =
 	    g_settings_get_string(settings->default_settings, VALA_PANEL_KEY_NAME);
-	AppletInfoData *data = (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, str);
+	return (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, str);
+}
+
+ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
+                                                            ValaPanelApplet *pl,
+                                                            ValaPanelCoreSettings *core_settings)
+{
+	AppletInfoData *data = vala_panel_applet_manager_get_info_data(self, pl, core_settings);
 	return data->plugin;
+}
+
+ValaPanelAppletInfo *vala_panel_applet_manager_get_plugin_info(ValaPanelAppletManager *self,
+                                                               ValaPanelApplet *pl,
+                                                               ValaPanelCoreSettings *core_settings)
+{
+	AppletInfoData *data = vala_panel_applet_manager_get_info_data(self, pl, core_settings);
+	return data->info;
 }
 
 GList *vala_panel_applet_manager_get_all_types(ValaPanelAppletManager *self)

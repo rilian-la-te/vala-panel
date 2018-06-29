@@ -17,10 +17,12 @@
  */
 
 #include "toplevel-config.h"
+#include "applet-manager.h"
+#include "applet-plugin.h"
 #include "definitions.h"
+#include "panel-layout.h"
 #include "toplevel.h"
 #include "util-gtk.h"
-#include "vala-panel-compat.h"
 
 G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIALOG);
 
@@ -28,7 +30,6 @@ G_DEFINE_TYPE(ValaPanelToplevelConfig, vala_panel_toplevel_config, GTK_TYPE_DIAL
 #define COLUMN_NAME 1
 #define COLUMN_EXPAND 2
 #define COLUMN_DATA 3
-extern ValaPanelAppletHolder *vala_panel_layout_holder;
 
 enum
 {
@@ -297,12 +298,9 @@ static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
 	if (gtk_tree_selection_get_selected(tree_sel, &model, &it))
 	{
 		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
-		ValaPanelAppletPlugin *apl =
-		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
-		                                        pl,
-		                                        vala_panel_toplevel_get_core_settings());
-		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-		const char *desc        = peas_plugin_info_get_description(pl_info);
+		ValaPanelAppletInfo *apl = vala_panel_applet_manager_get_plugin_info(
+		    vala_panel_layout_get_manager(), pl, vala_panel_toplevel_get_core_settings());
+		const char *desc = vala_panel_applet_info_get_description(apl);
 		gtk_label_set_text(self->plugin_desc, desc);
 		gtk_widget_set_sensitive(self->configure_button,
 		                         vala_panel_applet_is_configurable(pl));
@@ -319,21 +317,13 @@ static void on_plugin_expand_toggled(const char *path, void *data)
 		ValaPanelApplet *pl;
 		bool expand;
 		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, COLUMN_EXPAND, &expand, -1);
-		ValaPanelAppletPlugin *apl =
-		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
-		                                        pl,
-		                                        vala_panel_toplevel_get_core_settings());
-		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-		const char *expandable =
-		    peas_plugin_info_get_external_data(pl_info, VALA_PANEL_DATA_EXPANDABLE);
-		if (expandable != NULL)
+		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_plugin_info(
+		    vala_panel_layout_get_manager(), pl, vala_panel_toplevel_get_core_settings());
+		if (vala_panel_applet_info_is_expandable(pl_info))
 		{
 			expand = !expand;
 			gtk_list_store_set(model, &it, COLUMN_EXPAND, expand, -1);
-			ValaPanelUnitSettings *s =
-			    vala_panel_layout_get_applet_settings(vala_panel_toplevel_get_layout(
-			                                              self->_toplevel),
-			                                          pl);
+			ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(pl);
 			g_settings_set_boolean(s->default_settings, VALA_PANEL_KEY_EXPAND, expand);
 		}
 	}
@@ -347,13 +337,11 @@ static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, 
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
 	ValaPanelApplet *pl;
 	gtk_tree_model_get(model, iter, COLUMN_DATA, &pl, -1);
-	ValaPanelAppletPlugin *apl =
-	    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
-	                                        pl,
-	                                        vala_panel_toplevel_get_core_settings());
-	PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-	const char *ext = peas_plugin_info_get_external_data(pl_info, VALA_PANEL_DATA_EXPANDABLE);
-	gtk_cell_renderer_set_visible(renderer, ext != NULL);
+	ValaPanelAppletInfo *pl_info =
+	    vala_panel_applet_manager_get_plugin_info(vala_panel_layout_get_manager(),
+	                                              pl,
+	                                              vala_panel_toplevel_get_core_settings());
+	gtk_cell_renderer_set_visible(renderer, vala_panel_applet_info_is_expandable(pl_info));
 }
 
 static void update_plugin_list_model(ValaPanelToplevelConfig *self)
@@ -371,13 +359,10 @@ static void update_plugin_list_model(ValaPanelToplevelConfig *self)
 		ValaPanelApplet *w = VALA_PANEL_APPLET(l->data);
 		bool expand        = gtk_widget_get_hexpand(w) && gtk_widget_get_vexpand(w);
 		gtk_list_store_append(list, &it);
-		ValaPanelAppletPlugin *apl =
-		    vala_panel_applet_holder_get_plugin(vala_panel_layout_holder,
-		                                        w,
-		                                        vala_panel_toplevel_get_core_settings());
-		PeasPluginInfo *pl_info = peas_extension_base_get_plugin_info(apl);
-		const char *name        = peas_plugin_info_get_name(pl_info);
-		const char *icon        = peas_plugin_info_get_icon_name(pl_info);
+		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_plugin_info(
+		    vala_panel_layout_get_manager(), w, vala_panel_toplevel_get_core_settings());
+		const char *name = vala_panel_applet_info_get_name(pl_info);
+		const char *icon = vala_panel_applet_info_get_icon_name(pl_info);
 		gtk_list_store_set(list,
 		                   &it,
 		                   COLUMN_ICON,
@@ -413,18 +398,18 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	GtkTreeIter it;
 	GtkCellRenderer *textrender = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col      = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          textrender,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  textrender,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	textrender = gtk_cell_renderer_text_new();
 	col        = gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
-                                                       textrender,
-                                                       "text",
-                                                       COLUMN_NAME,
-                                                       NULL);
+	                                               textrender,
+	                                               "text",
+	                                               COLUMN_NAME,
+	                                               NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	GtkCellRendererToggle *render = gtk_cell_renderer_toggle_new();
@@ -483,7 +468,7 @@ static void update_widget_position_keys(ValaPanelToplevelConfig *self)
 	{
 		ValaPanelApplet *applet  = VALA_PANEL_APPLET(l->data);
 		uint idx                 = vala_panel_layout_get_applet_position(layout, applet);
-		ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(layout, applet);
+		ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(applet);
 		g_settings_set_uint(s->default_settings, VALA_PANEL_KEY_POSITION, idx);
 	}
 }
@@ -521,37 +506,36 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 
 	GtkCellRenderer *render = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col  = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          render,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  render,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 
 	gtk_tree_view_append_column(view, col);
 	render = gtk_cell_renderer_text_new();
 	col    = gtk_tree_view_column_new_with_attributes(_("Available plugins"),
-                                                       render,
-                                                       "text",
-                                                       1,
-                                                       NULL);
+	                                               render,
+	                                               "text",
+	                                               1,
+	                                               NULL);
 	gtk_tree_view_append_column(view, col);
 
 	GtkListStore *list = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
-	GList *all_types = vala_panel_applet_holder_get_all_types(vala_panel_layout_holder);
+	GList *all_types = vala_panel_applet_manager_get_all_types(vala_panel_layout_get_manager());
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
-		const char *once =
-		    peas_plugin_info_get_external_data(l->data, VALA_PANEL_DATA_ONE_PER_SYSTEM);
-		if (once == NULL || !peas_plugin_info_is_loaded(l->data))
+		AppletInfoData *d = (AppletInfoData *)l->data;
+		if (!vala_panel_applet_info_is_exclusive(d->info) || (d->count < 1))
 		{
 			GtkTreeIter it;
 			gtk_list_store_append(list, &it);
 			/* it is safe to put classes data here - they will be valid until restart */
-			const char *icon_name   = peas_plugin_info_get_icon_name(l->data);
-			const char *name        = _(peas_plugin_info_get_name(l->data));
-			const char *module_name = peas_plugin_info_get_module_name(l->data);
+			const char *icon_name   = vala_panel_applet_info_get_icon_name(l->data);
+			const char *name        = _(vala_panel_applet_info_get_name(l->data));
+			const char *module_name = vala_panel_applet_info_get_module_name(l->data);
 
 			gtk_list_store_set(list, &it, 0, icon_name, 1, name, 2, module_name, -1);
 		}
