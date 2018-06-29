@@ -19,9 +19,9 @@
 using ValaPanel;
 using Gtk;
 using XEmbed;
-public class XEmbedApplet : AppletPlugin, Peas.ExtensionBase
+public class XEmbedApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -56,9 +56,14 @@ public class XEmbedTray: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_xembed_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(XEmbedApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(XEmbedApplet),"xembed",10);
+}
+
+public void g_io_xembed_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

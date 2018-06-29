@@ -27,9 +27,9 @@ public const TargetEntry[] MENU_TARGETS = {
 
 namespace LaunchBar
 {
-    public class AppletImpl : AppletPlugin, Peas.ExtensionBase
+    public class AppletImpl : AppletPlugin
     {
-        public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+        public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                         GLib.Settings? settings,
                                         string number)
         {
@@ -276,9 +276,14 @@ namespace LaunchBar
 }
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_launchbar_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(LaunchBar.AppletImpl));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.AppletImpl),"launchbar",10);
+}
+
+public void g_io_launchbar_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

@@ -18,9 +18,9 @@
 
 using ValaPanel;
 using Gtk;
-public class ClockApplet : AppletPlugin, Peas.ExtensionBase
+public class ClockApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -274,9 +274,14 @@ public class Clock: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_clock_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(ClockApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(ClockApplet),"clock",10);
+}
+
+public void g_io_clock_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }
