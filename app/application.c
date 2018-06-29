@@ -19,8 +19,8 @@
 #include "config.h"
 
 #include "application.h"
+#include "panel-layout.h"
 #include "server.h"
-#include "vala-panel-compat.h"
 #include "vala-panel-platform-standalone-x11.h"
 
 #include <glib/gi18n.h>
