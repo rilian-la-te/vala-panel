@@ -203,7 +203,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	             VALA_PANEL_KEY_USE_BACKGROUND_FILE,
 	             &use_background_file,
 	             NULL);
-	if (file)
+	if (file != NULL)
 		gtk_file_chooser_set_filename(self->file_background, file);
 	gtk_widget_set_sensitive(self->file_background, use_background_file);
 	g_object_bind_property(self->_toplevel,

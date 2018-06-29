@@ -20,7 +20,7 @@
 
 #include <glib/gi18n.h>
 
-#define VALA_PANEL_APPLET_GROUP "Applet"
+#define VALA_PANEL_APPLET_GROUP "Plugin"
 
 #define VALA_PANEL_APPLET_INFO_NAME "Name"
 #define VALA_PANEL_APPLET_INFO_DESCRIPTION "Description"
@@ -60,7 +60,7 @@ static GtkLicense vala_panel_applet_info_get_license_from_name(const char *licen
 ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 {
 	g_autoptr(GKeyFile) file      = g_key_file_new();
-	g_autofree char *desktop_name = g_strdup_printf(PLUGINS_DATA "/%s.desktop", extension_name);
+	g_autofree char *desktop_name = g_strdup_printf(PLUGINS_DATA "/%s.plugin", extension_name);
 	g_autoptr(GError) err         = NULL;
 	bool loaded =
 	    g_key_file_load_from_file(file, desktop_name, G_KEY_FILE_KEEP_TRANSLATIONS, &err);

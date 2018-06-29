@@ -16,10 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "panel-layout.h"
+#include "definitions.h"
 #include "settings-manager.h"
 
 ValaPanelCoreSettings *core_settings;
 ValaPanelAppletManager *manager;
+
+enum
+{
+	VALA_PANEL_LAYOUT_DUMMY,
+	VALA_PANEL_LAYOUT_TOPLEVEL_ID,
+	VALA_PANEL_LAYOUT_LAST
+};
+static GParamSpec *vala_panel_layout_properties[VALA_PANEL_LAYOUT_LAST];
 
 struct _ValaPanelLayout
 {
@@ -28,16 +37,6 @@ struct _ValaPanelLayout
 };
 
 G_DEFINE_TYPE(ValaPanelLayout, vala_panel_layout, GTK_TYPE_BOX)
-
-static void vala_panel_layout_init(ValaPanelLayout *self)
-{
-}
-
-static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
-{
-	manager       = vala_panel_applet_manager_new();
-	core_settings = vala_panel_toplevel_get_core_settings();
-}
 
 ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation orient, int spacing)
 {
@@ -95,13 +94,15 @@ static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
 void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
                                     ValaPanelUnitSettings *s)
 {
+	if (data == NULL)
+		return;
 	ValaPanelApplet *applet =
 	    vala_panel_applet_plugin_get_applet_widget(data->plugin,
 	                                               VALA_PANEL_TOPLEVEL(gtk_widget_get_toplevel(
 	                                                   GTK_WIDGET(self))),
 	                                               s->custom_settings,
 	                                               s->uuid);
-	int position = g_settings_get_int(s->default_settings, VALA_PANEL_KEY_POSITION);
+	int position = g_settings_get_uint(s->default_settings, VALA_PANEL_KEY_POSITION);
 	gtk_box_pack_start(self, applet, false, true, 0);
 	gtk_box_reorder_child(self, applet, position);
 	if (vala_panel_applet_info_is_expandable(data->info))
@@ -188,4 +189,57 @@ void vala_panel_layout_add_applet(ValaPanelLayout *self, const gchar *type)
 	                               vala_panel_applet_manager_applet_ref(manager, type),
 	                               s);
 	vala_panel_layout_update_applet_positions(self);
+}
+
+static void vala_panel_layout_set_property(GObject *object, guint property_id, const GValue *value,
+                                           GParamSpec *pspec)
+{
+	ValaPanelLayout *self = VALA_PANEL_LAYOUT(object);
+	switch (property_id)
+	{
+	case VALA_PANEL_LAYOUT_TOPLEVEL_ID:
+		g_free0(self->toplevel_id);
+		self->toplevel_id = g_value_dup_string(value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+static void vala_panel_layout_get_property(GObject *object, guint property_id, GValue *value,
+                                           GParamSpec *pspec)
+{
+	ValaPanelLayout *self = VALA_PANEL_LAYOUT(object);
+	switch (property_id)
+	{
+	case VALA_PANEL_LAYOUT_TOPLEVEL_ID:
+		g_value_set_string(value, self->toplevel_id);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+		break;
+	}
+}
+
+static void vala_panel_layout_init(ValaPanelLayout *self)
+{
+}
+
+static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
+{
+	manager                             = vala_panel_applet_manager_new();
+	core_settings                       = vala_panel_toplevel_get_core_settings();
+	G_OBJECT_CLASS(klass)->set_property = vala_panel_layout_set_property;
+	G_OBJECT_CLASS(klass)->get_property = vala_panel_layout_get_property;
+	g_object_class_install_property(
+	    G_OBJECT_CLASS(klass),
+	    VALA_PANEL_LAYOUT_TOPLEVEL_ID,
+	    vala_panel_layout_properties[VALA_PANEL_LAYOUT_TOPLEVEL_ID] =
+	        g_param_spec_string("toplevel-id",
+	                            "toplevel-id",
+	                            "toplevel-ids",
+	                            NULL,
+	                            G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE |
+	                                G_PARAM_CONSTRUCT_ONLY));
 }

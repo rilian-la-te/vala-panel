@@ -35,8 +35,9 @@ G_DECLARE_DERIVABLE_TYPE(ValaPanelAppletPlugin, vala_panel_applet_plugin, VALA_P
 
 struct _ValaPanelAppletPluginClass
 {
-	ValaPanelApplet *(*get_applet_widget)(ValaPanelToplevel *top, GSettings *settings,
-	                                      const char *uuid);
+	GObjectClass parent_class;
+	ValaPanelApplet *(*get_applet_widget)(ValaPanelAppletPlugin *dummy, ValaPanelToplevel *top,
+	                                      GSettings *settings, const char *uuid);
 };
 
 ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugin *self,

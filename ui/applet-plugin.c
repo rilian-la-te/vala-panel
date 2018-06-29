@@ -32,7 +32,8 @@ ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugi
                                                             GSettings *settings, const char *uuid)
 {
 	if (self)
-		return VALA_PANEL_APPLET_PLUGIN_GET_CLASS(self)->get_applet_widget(top,
+		return VALA_PANEL_APPLET_PLUGIN_GET_CLASS(self)->get_applet_widget(self,
+		                                                                   top,
 		                                                                   settings,
 		                                                                   uuid);
 	return NULL;

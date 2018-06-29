@@ -42,6 +42,7 @@ GIOExtensionPoint *applet_point = NULL;
 
 struct _ValaPanelAppletManager
 {
+	GObject parent;
 	GHashTable *applet_info_table;
 };
 
