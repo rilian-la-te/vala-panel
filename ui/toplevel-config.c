@@ -524,6 +524,7 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
+	vala_panel_applet_manager_reload_applets(vala_panel_layout_get_manager());
 	GList *all_types = vala_panel_applet_manager_get_all_types(vala_panel_layout_get_manager());
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
@@ -533,13 +534,14 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 			GtkTreeIter it;
 			gtk_list_store_append(list, &it);
 			/* it is safe to put classes data here - they will be valid until restart */
-			const char *icon_name   = vala_panel_applet_info_get_icon_name(l->data);
-			const char *name        = _(vala_panel_applet_info_get_name(l->data));
-			const char *module_name = vala_panel_applet_info_get_module_name(l->data);
+			const char *icon_name   = vala_panel_applet_info_get_icon_name(d->info);
+			const char *name        = _(vala_panel_applet_info_get_name(d->info));
+			const char *module_name = vala_panel_applet_info_get_module_name(d->info);
 
 			gtk_list_store_set(list, &it, 0, icon_name, 1, name, 2, module_name, -1);
 		}
 	}
+	g_list_free(all_types);
 	gtk_tree_sortable_set_default_sort_func(list, sort_by_name, self, NULL);
 	gtk_tree_sortable_set_sort_column_id(list,
 	                                     GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,

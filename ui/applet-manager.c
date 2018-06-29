@@ -44,13 +44,14 @@ struct _ValaPanelAppletManager
 {
 	GObject parent;
 	GHashTable *applet_info_table;
+	GIOModuleScope *scope;
 };
 
 G_DEFINE_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, G_TYPE_OBJECT)
 
 void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self)
 {
-	g_io_modules_scan_all_in_directory(PLUGINS_DIRECTORY);
+	g_io_modules_scan_all_in_directory_with_scope(PLUGINS_DIRECTORY, self->scope);
 	GList *loaded_applets = g_io_extension_point_get_extensions(applet_point);
 	for (GList *i = loaded_applets; i != NULL; i = g_list_next(i))
 	{
@@ -128,10 +129,18 @@ GList *vala_panel_applet_manager_get_all_types(ValaPanelAppletManager *self)
 	return g_hash_table_get_values(self->applet_info_table);
 }
 
+static void vala_panel_applet_manager_finalize(GObject *data)
+{
+	ValaPanelAppletManager *self = VALA_PANEL_APPLET_MANAGER(data);
+	g_hash_table_unref(self->applet_info_table);
+	g_io_module_scope_free(self->scope);
+}
+
 static void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 {
 	self->applet_info_table =
 	    g_hash_table_new_full(g_str_hash, g_str_equal, g_free, applet_info_data_free);
+	self->scope = g_io_module_scope_new(G_IO_MODULE_SCOPE_BLOCK_DUPLICATES);
 	vala_panel_applet_manager_reload_applets(self);
 }
 
@@ -139,6 +148,7 @@ static void vala_panel_applet_manager_class_init(ValaPanelAppletManagerClass *kl
 {
 	applet_point = g_io_extension_point_register(VALA_PANEL_APPLET_EXTENSION_POINT);
 	g_io_extension_point_set_required_type(applet_point, vala_panel_applet_plugin_get_type());
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_applet_manager_finalize;
 }
 
 ValaPanelAppletManager *vala_panel_applet_manager_new()
