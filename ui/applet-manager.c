@@ -30,7 +30,7 @@ struct _ValaPanelAppletManager
 
 G_DEFINE_TYPE(ValaPanelAppletManager, vala_panel_applet_manager, G_TYPE_OBJECT)
 
-static void vala_panel_applet_manager_scan_plugin_list(ValaPanelAppletManager *self)
+void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self)
 {
 	g_io_modules_scan_all_in_directory(PLUGINS_DIRECTORY);
 	GList *loaded_applets = g_io_extension_point_get_extensions(applet_point);
@@ -114,7 +114,7 @@ static void vala_panel_applet_manager_init(ValaPanelAppletManager *self)
 {
 	self->applet_info_table =
 	    g_hash_table_new_full(g_str_hash, g_str_equal, g_free, applet_info_data_free);
-	vala_panel_applet_manager_scan_plugin_list(self);
+	vala_panel_applet_manager_reload_applets(self);
 }
 
 static void vala_panel_applet_manager_class_init(ValaPanelAppletManagerClass *klass)

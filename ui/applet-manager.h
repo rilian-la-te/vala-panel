@@ -27,6 +27,7 @@ ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManag
                                                             ValaPanelCoreSettings *core_settings);
 ValaPanelAppletInfo *vala_panel_applet_manager_get_plugin_info(
     ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
+void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self);
 GList *vala_panel_applet_manager_get_all_types(ValaPanelAppletManager *self);
 
 G_END_DECLS

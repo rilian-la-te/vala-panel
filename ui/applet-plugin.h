@@ -14,6 +14,8 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE(ValaPanelAppletPlugin, vala_panel_applet_plugin, VALA_PANEL, APPLET_PLUGIN,
                          GObject)
 
+#define VALA_PANEL_TYPE_APPLET_PLUGIN vala_panel_applet_plugin_get_type()
+
 struct _ValaPanelAppletPluginClass
 {
 	ValaPanelApplet *(*get_applet_widget)(ValaPanelToplevel *top, GSettings *settings,
@@ -23,6 +25,8 @@ struct _ValaPanelAppletPluginClass
 ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugin *self,
                                                             ValaPanelToplevel *top,
                                                             GSettings *settings, const char *uuid);
+
+ValaPanelAppletPlugin *vala_panel_applet_plugin_construct(GType type);
 
 G_END_DECLS
 

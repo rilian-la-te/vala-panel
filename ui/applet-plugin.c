@@ -20,3 +20,8 @@ ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugi
 		                                                                   uuid);
 	return NULL;
 }
+
+ValaPanelAppletPlugin *vala_panel_applet_plugin_construct(GType type)
+{
+	return VALA_PANEL_APPLET_PLUGIN(g_object_new(type, NULL));
+}

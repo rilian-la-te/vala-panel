@@ -159,3 +159,16 @@ ValaPanelAppletManager *vala_panel_layout_get_manager()
 {
 	return manager;
 }
+
+void vala_panel_layout_add_applet(ValaPanelLayout *self, const gchar *type)
+{
+	ValaPanelUnitSettings *s =
+	    vala_panel_core_settings_add_unit_settings(core_settings, type, false);
+	g_settings_set_string(s->default_settings, VALA_PANEL_KEY_NAME, type);
+	g_settings_set_string(s->default_settings, VALA_PANEL_TOPLEVEL_ID, self->toplevel_id);
+	vala_panel_applet_manager_reload_applets(manager);
+	vala_panel_layout_place_applet(self,
+	                               vala_panel_applet_manager_applet_ref(manager, type),
+	                               s);
+	vala_panel_layout_update_applet_positions(self);
+}
