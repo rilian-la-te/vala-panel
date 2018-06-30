@@ -10,7 +10,7 @@ TODO
  * [x] Write Vala Panel Plugin wrapper for LXTray from simple-panel (it is less buggy) (0.2) (done in XEmbed plugin)
  * [x] Make global menus from Unity Appindicator (rewrite it on Vala but without Ubuntu deps) (0.3) (see https://gitlab.com/vala-panel-project/vala-panel-appmenu)
  * [x] Write a window buttons applet (0.3)
- * [ ] Going to C again (0.4.X)
+ * [X] Going to C again (0.4.X)
  * [ ] Write Notification Center Applet (0.6)
  * [ ] Wayland support, make compositor and complete Wayland support(1.0)
  * [ ] Taskbar DBus library for compositor (1.0)
@@ -31,7 +31,7 @@ TODO
  It seems 0.4.0 as done, so, release it for now.
 
 *TODO for 0.5.0*
- * [ ] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
+ * [X] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
  * [ ] Be prepared for GTK4
  * [ ] Replace XEmbed to proxy and move it to extras
  * [ ] Made pack-type useful
@@ -48,12 +48,11 @@ Dependencies:
 *Core:*
  * GLib (>= 2.50.0)
  * GTK3 (>= 3.22.0)
- * libpeas-1.0 (>= 1.14.0)
- * valac
  
 *Plugins:*
  * libwnck (>= 3.4.7)
  * libX11
+ * valac
 
 Lastly, always set `-DCMAKE_INSTALL_PREXIX=/usr` when using cmake. Otherwise you
 won't be able to start the panel on most distros.
