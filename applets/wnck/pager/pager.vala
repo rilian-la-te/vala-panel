@@ -18,9 +18,9 @@
 
 using ValaPanel;
 using Gtk;
-public class PagerApplet : AppletPlugin, Peas.ExtensionBase
+public class PagerApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -98,9 +98,14 @@ public class Pager: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_pager_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(PagerApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(PagerApplet),"pager",10);
+}
+
+public void g_io_pager_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

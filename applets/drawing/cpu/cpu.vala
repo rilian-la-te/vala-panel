@@ -19,9 +19,9 @@
 using ValaPanel;
 using Gtk;
 using Cairo;
-public class CpuApplet : AppletPlugin, Peas.ExtensionBase
+public class CpuApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -219,9 +219,14 @@ public class Cpu: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_cpu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(CpuApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(CpuApplet),"cpu",10);
+}
+
+public void g_io_cpu_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

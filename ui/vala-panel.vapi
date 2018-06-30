@@ -82,12 +82,15 @@ namespace ValaPanel {
         TRIM,
         EXTERNAL
     }
-	[CCode (cheader_filename = "vala-panel-compat.h")]
-	public interface AppletPlugin : Peas.ExtensionBase {
+    [CCode (cheader_filename = "applet-plugin.h")]
+	public abstract class AppletPlugin : GLib.Object {
+		public AppletPlugin();
 		public abstract ValaPanel.Applet get_applet_widget (ValaPanel.Toplevel toplevel, GLib.Settings? settings, string number);
 	}
 	[CCode (cheader_filename = "applet-widget.h")]
 	public abstract class Applet : Gtk.Bin {
+		[CCode (cheader_filename = "applet-plugin.h")]
+		public const string EXTENSION_POINT;
 		[CCode (cheader_filename = "applet-widget-api.h")]
 		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
 		public void init_background ();

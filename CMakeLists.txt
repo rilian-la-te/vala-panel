@@ -94,22 +94,15 @@ add_definitions(-Wall -Wextra
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
 find_package (PkgConfig)
-find_package(GLIB2 2.50 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
+find_package(GLIB2 2.56 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
 include(GLibProgramHandlers)
 find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
-find_package(PEAS 1.14 REQUIRED COMPONENTS PEAS)
-
-if(${GLIB2_VERSION} VERSION_LESS 2.52)
-    set(GLIB_OLD_FOUND TRUE)
-endif()
 
 set(CORE_PACKAGES
   gtk+-3.0
   glib-2.0
   gio-2.0
   gio-unix-2.0
-  libpeas-1.0
-  libpeas-gtk-1.0
   gmodule-2.0
   gio-addons-2.0
   posix)
