@@ -1,6 +1,4 @@
 [Plugin]
-Module=separator
 Name=Separator
 Description=Draws separator and makes space on panel
-X-ValaPanel-Expandable=true
-X-ValaPanel-Configurable=true
+Expandable=true

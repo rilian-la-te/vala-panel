@@ -1,6 +1,4 @@
 [Plugin]
-Module=tasklist-xfce
 Name=Tasklist Xfce
 Description=Shows opened windows.
-X-ValaPanel-Expandable=true
-X-ValaPanel-Configurable=true
+Expandable=true
