@@ -1,5 +1,5 @@
 <schemalist>
-  <schema id="org.valapanel.toplevel.sntray-valapanel">
+  <schema id="org.valapanel.sntray">
     <key name="indicator-size" type="i">
       <range min="16" max="48"/>
       <default>22</default>

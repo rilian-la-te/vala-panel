@@ -37,7 +37,7 @@ namespace StatusNotifier
 
         var layout = new ItemBox();
         var widget = layout;
-        var settings = MatePanel.AppletSettings.new(applet,"org.valapanel.toplevel.sntray-valapanel");
+        var settings = MatePanel.AppletSettings.new(applet,"org.valapanel.sntray");
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.DEFAULT);

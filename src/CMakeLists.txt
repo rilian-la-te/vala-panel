@@ -81,12 +81,17 @@ endif()
 #################
 set(VALA_FILES_VALAPANEL vala-panel-sntray-applet.vala)
 if (ENABLE_VALAPANEL)
+    if(NEW_IFACE)
+        set(PLUGIN_PACKAGE "")
+    else()
+        set(PLUGIN_PACKAGE libpeas-1.0)
+    endif()
     vala_precompile(VALA_C_VALAPANEL sntray-valapanel
 	    ${VALA_FILES_VALAPANEL}
     PACKAGES
         gtk+-3.0
         vala-panel-sntray
-        libpeas-1.0
+        ${PLUGIN_PACKAGE}
         vala-panel
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi

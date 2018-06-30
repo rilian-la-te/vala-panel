@@ -20,6 +20,17 @@ using GLib;
 using ValaPanel;
 using StatusNotifier;
 
+#if NEW
+public class SNApplet : AppletPlugin
+{
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+                                    GLib.Settings? settings,
+                                    string number)
+    {
+        return new SNTray(toplevel,settings,number);
+    }
+}
+#else
 public class SNApplet : AppletPlugin, Peas.ExtensionBase
 {
     public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
@@ -29,6 +40,7 @@ public class SNApplet : AppletPlugin, Peas.ExtensionBase
         return new SNTray(toplevel,settings,number);
     }
 }
+#endif
 public class SNTray: Applet
 {
     unowned ItemBox widget;
@@ -90,6 +102,19 @@ public class SNTray: Applet
     }
 } // End class
 
+#if NEW
+[ModuleInit]
+public void g_io_sntray_valapanel_load(GLib.TypeModule module)
+{
+    // boilerplate - all modules need this
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SNApplet),"sntray",10);
+}
+public void g_io_sntray_valapanel_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
+}
+#else
 [ModuleInit]
 public void peas_register_types(TypeModule module)
 {
@@ -97,3 +122,4 @@ public void peas_register_types(TypeModule module)
     var objmodule = module as Peas.ObjectModule;
     objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(SNApplet));
 }
+#endif

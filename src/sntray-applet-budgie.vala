@@ -48,7 +48,7 @@ public class SNTray: Budgie.Applet
 		Object(uuid: uuid);
         var layout = new ItemBox();
         widget = layout;
-		settings_schema = "org.valapanel.toplevel.sntray-valapanel";
+		settings_schema = "org.valapanel.sntray";
 		settings_prefix = "/com/solus-project/budgie-panel/instance/sntray";
 		settings = get_applet_settings(uuid);
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
