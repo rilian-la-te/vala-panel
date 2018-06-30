@@ -1,6 +1,3 @@
 [submodule "cmake/vala"]
 	path = cmake/vala
 	url = https://gitlab.com/vala-panel-project/cmake-vala.git
-[submodule "src/dbusmenu"]
-	path = src/dbusmenu
-	url = https://gitlab.com/vala-panel-project/vala-dbusmenu.git
