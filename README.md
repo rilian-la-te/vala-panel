@@ -46,7 +46,7 @@ Dependencies:
 ---
 
 *Core:*
- * GLib (>= 2.50.0)
+ * GLib (>= 2.56.0)
  * GTK3 (>= 3.22.0)
  
 *Plugins:*
