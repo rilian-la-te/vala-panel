@@ -18,9 +18,9 @@
 
 using ValaPanel;
 using Gtk;
-public class WincmdApplet : AppletPlugin, Peas.ExtensionBase
+public class WincmdApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -161,9 +161,14 @@ public class Wincmd: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_wincmd_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(WincmdApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(WincmdApplet),"wincmd",10);
+}
+
+public void g_io_wincmd_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

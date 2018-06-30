@@ -31,11 +31,11 @@
 #include <gdk/gdkx.h>
 #endif
 
+#include "applet-widget-api.h"
 #include "definitions.h"
 #include "tasklist-widget.h"
 #include "util-gtk.h"
 #include "util.h"
-#include "vala-panel-compat.h"
 #include "xfce-arrow-button.h"
 
 #define DEFAULT_BUTTON_SIZE (25)

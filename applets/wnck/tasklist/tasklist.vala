@@ -18,9 +18,9 @@
 
 using ValaPanel;
 using Gtk;
-public class TasklistApplet : AppletPlugin, Peas.ExtensionBase
+public class TasklistApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -104,9 +104,14 @@ public class Tasklist: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_tasklist_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(TasklistApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(TasklistApplet),"tasklist",10);
+}
+
+public void g_io_tasklist_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

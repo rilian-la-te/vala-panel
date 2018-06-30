@@ -19,9 +19,9 @@
 using ValaPanel;
 using Gtk;
 using Cairo;
-public class MonitorsApplet : AppletPlugin, Peas.ExtensionBase
+public class MonitorsApplet : AppletPlugin
 {
-    public Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -444,9 +444,14 @@ public class Monitors: Applet
 } // End class
 
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_monitors_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(MonitorsApplet));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MonitorsApplet),"monitors",10);
+}
+
+public void g_io_monitors_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }

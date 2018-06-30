@@ -1,8 +1,8 @@
 #include "applet-widget.h"
 #include "definitions.h"
+#include "panel-layout.h"
 #include "toplevel.h"
 #include "util-gtk.h"
-#include "vala-panel-compat.h"
 
 typedef struct
 {

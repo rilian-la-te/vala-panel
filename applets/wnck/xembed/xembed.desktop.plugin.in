@@ -1,5 +1,4 @@
 [Plugin]
-Module=xembed
 Name=XEmbed Tray
 Description=Old XEmbed-based tray
-X-ValaPanel-OnePerSystem=true;
+Exclusive=true

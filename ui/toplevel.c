@@ -18,11 +18,10 @@
 
 #include "toplevel.h"
 #include "definitions.h"
+#include "panel-layout.h"
 #include "toplevel-config.h"
 #include "util-gtk.h"
 #include "vala-panel-enums.h"
-
-#include "vala-panel-compat.h"
 
 #include <glib.h>
 #include <math.h>

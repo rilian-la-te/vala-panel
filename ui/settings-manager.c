@@ -25,10 +25,6 @@
 #include "panel-platform.h"
 #include "settings-manager.h"
 
-#ifndef G252
-#include "guuid.h"
-#endif
-
 ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *settings,
                                                     const char *name, const char *uuid,
                                                     bool is_toplevel)

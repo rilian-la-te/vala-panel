@@ -9,9 +9,9 @@
  * (at your option) any later version.
  */
 
-public class IconTasklist : ValaPanel.AppletPlugin, Peas.ExtensionBase
+public class IconTasklist : ValaPanel.AppletPlugin
 {
-    public ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
+    public override ValaPanel.Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -500,11 +500,15 @@ public class IconTasklistApplet : ValaPanel.Applet
     }
 } // End class
 
-
 [ModuleInit]
-public void peas_register_types(TypeModule module)
+public void g_io_icontasks_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    var objmodule = module as Peas.ObjectModule;
-    objmodule.register_extension_type(typeof(ValaPanel.AppletPlugin), typeof(IconTasklist));
+    module.use();
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(IconTasklist),"icontasks",10);
+}
+
+public void g_io_icontasks_unload(GLib.IOModule module)
+{
+    // boilerplate - all modules need this
 }
