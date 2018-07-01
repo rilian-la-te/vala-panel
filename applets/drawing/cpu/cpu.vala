@@ -35,10 +35,10 @@ public class Cpu: Applet
     /* User, nice, system, idle */
     private struct cpu_stat
     {
-        int64 u;
-        int64 n;
-        int64 s;
-        int64 i;
+        uint64 u;
+        uint64 n;
+        uint64 s;
+        uint64 i;
     }
     private Gdk.RGBA foreground_color;
     private Cairo.Surface surface;
@@ -117,7 +117,7 @@ public class Cpu: Applet
             Posix.FILE stat = Posix.FILE.open("/proc/stat", "r");
             if (stat == null)
                 return true;
-            int fscanf_result = stat.scanf("cpu %li %li %li %li", out cpu.u, out cpu.n, out cpu.s, out cpu.i);
+            int fscanf_result = stat.scanf("cpu %lu %lu %lu %lu", out cpu.u, out cpu.n, out cpu.s, out cpu.i);
             /* Ensure that fscanf succeeded. */
             if (fscanf_result == 4)
             {
@@ -129,7 +129,7 @@ public class Cpu: Applet
                 cpu_delta.i = cpu.i - previous_cpu_stat.i;
 
                 /* Copy current to previous. */
-                previous_cpu_stat = cpu;
+                Posix.memcpy(&previous_cpu_stat, &cpu, sizeof(cpu_stat));
 
                 /* Compute user+nice+system as a fraction of total.
                  * Introduce this sample to ring buffer, increment and wrap ring buffer cursor. */
