@@ -192,10 +192,10 @@ internal class Monitor
 internal class CpuMonitor : Monitor
 {
     private struct cpu_stat{
-        int64 u;
-        int64 n;
-        int64 s;
-        int64 i;
+        uint64 u;
+        uint64 n;
+        uint64 s;
+        uint64 i;
     }
     internal CpuMonitor(Monitors plugin, string color)
     {
@@ -214,7 +214,7 @@ internal class CpuMonitor : Monitor
             Posix.FILE stat = Posix.FILE.open("/proc/stat", "r");
             if (stat == null)
                 return true;
-            int fscanf_result = stat.scanf("cpu %li %li %li %li",
+            int fscanf_result = stat.scanf("cpu %lu %lu %lu %lu",
                                         out cpu.u, out cpu.n, out cpu.s, out cpu.i);
             /* Ensure that fscanf succeeded. */
             if (fscanf_result == 4)
