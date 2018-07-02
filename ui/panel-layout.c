@@ -34,6 +34,12 @@ struct _ValaPanelLayout
 {
 	GtkBox __parent__;
 	const char *toplevel_id;
+	uint left_applets;
+	uint center_applets;
+	uint right_applets;
+	GtkWidget *left_box;
+	GtkWidget *center_box;
+	GtkWidget *right_box;
 };
 
 G_DEFINE_TYPE(ValaPanelLayout, vala_panel_layout, GTK_TYPE_BOX)
