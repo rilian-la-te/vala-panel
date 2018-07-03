@@ -103,6 +103,7 @@ public class Cpu: Applet
                 drawing_cursor = 0;
         }
         cr.status();
+        cr = null;
         /* Redraw pixmap. */
         da.queue_draw();
     }
