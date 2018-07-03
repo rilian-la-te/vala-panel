@@ -39,8 +39,7 @@ glib_compile_resources(GLIB_RESOURCES_LIB
 #####
 
 # Build library for plugins and application
-set (LIB_FILES ${VALA_C})
-add_custom_target(vala-ide-lib SOURCES ${VALA_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi)
+add_custom_target(vala-ide-lib SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${APPNAME}.vapi)
 add_library (${LIBNAME} SHARED
     ${LIBVALAPANEL_C_SOURCES}
     ${LIBVALAPANEL_HEADERS}
