@@ -99,7 +99,7 @@ internal class Monitor
                              * the buffer */
                             int nvalues = pixmap_width - ring_cursor;
                             Posix.memcpy((void*)new_stats, (void*)stats, ring_cursor * sizeof (double));
-                            Posix.memcpy((void*)new_stats[nvalues:new_stats.length], (void*)stats[ring_cursor:stats.length], nvalues * sizeof(double));
+                            Posix.memcpy((void*)&new_stats[nvalues], (void*)&stats[ring_cursor], nvalues * sizeof(double));
                         }
                         /* New allocation is smaller, but still larger than the ring
                          * buffer cursor */
@@ -109,7 +109,7 @@ internal class Monitor
                              * the new buffer and the ring cursor */
                             int nvalues = new_pixmap_width - ring_cursor;
                             Posix.memcpy((void*)new_stats, (void*)stats, ring_cursor * sizeof (double));
-                            Posix.memcpy((void*)new_stats[ring_cursor:new_stats.length],(void*)stats[pixmap_width-nvalues:stats.length], nvalues * sizeof(double));
+                            Posix.memcpy((void*)&new_stats[ring_cursor],(void*)&stats[pixmap_width-nvalues], nvalues * sizeof(double));
                         }
                         /* New allocation is smaller, and also smaller than the ring
                          * buffer cursor.  Discard all oldest samples following the ring
@@ -117,7 +117,7 @@ internal class Monitor
                          * buffer. */
                         else
                         {
-                            Posix.memcpy((void*)new_stats,(void*)stats[ring_cursor - new_pixmap_width:stats.length],new_pixmap_width * sizeof(double));
+                            Posix.memcpy((void*)new_stats,(void*)&stats[ring_cursor - new_pixmap_width],new_pixmap_width * sizeof(double));
                         }
                     }
                     stats = new_stats;
@@ -173,6 +173,7 @@ internal class Monitor
             cr.stroke();
         }
         cr.status();
+        cr = null;
         /* Redraw pixmap */
         da.queue_draw();
     }
