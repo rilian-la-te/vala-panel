@@ -92,6 +92,8 @@ void xfce_tasklist_set_show_wireframes(XfceTasklist *tasklist, bool show_wirefra
 
 void xfce_tasklist_set_grouping(XfceTasklist *tasklist, XfceTasklistGrouping grouping);
 
+void xfce_tasklist_set_label_decorations(XfceTasklist *tasklist, bool label_decorations);
+
 void xfce_tasklist_update_edge(XfceTasklist *tasklist, GtkPositionType edge);
 
 G_END_DECLS
