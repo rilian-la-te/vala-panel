@@ -73,9 +73,8 @@ enum
 };
 
 static void balloon_message_display(TrayPlugin *tr, BalloonMessage *msg);
-static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, gboolean all_ids,
-                                              long id);
-static void balloon_message_remove(TrayPlugin *tr, Window window, gboolean all_ids, long id);
+static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, bool all_ids, long id);
+static void balloon_message_remove(TrayPlugin *tr, Window window, bool all_ids, long id);
 static void tray_unmanage_selection(TrayPlugin *tr);
 static void resolve_atoms()
 {
@@ -123,7 +122,7 @@ static TrayClient *client_lookup(TrayPlugin *tr, Window window)
 }
 
 /* Delete a client. */
-static void client_delete(TrayPlugin *tr, TrayClient *tc, gboolean unlink, gboolean remove)
+static void client_delete(TrayPlugin *tr, TrayClient *tc, bool unlink, bool remove)
 {
 	// client_print(tr, '-', tc, NULL);
 
@@ -175,7 +174,7 @@ static void balloon_message_free(BalloonMessage *message)
 
 /* General code to deactivate a message and optionally display the next.
  * This is used in three scenarios: balloon clicked, timeout expired, destructor. */
-static void balloon_message_advance(TrayPlugin *tr, gboolean destroy_timer, gboolean display_next)
+static void balloon_message_advance(TrayPlugin *tr, bool destroy_timer, bool display_next)
 {
 	/* Remove the message from the queue. */
 	BalloonMessage *msg = tr->messages;
@@ -201,15 +200,14 @@ static void balloon_message_advance(TrayPlugin *tr, gboolean destroy_timer, gboo
 }
 
 /* Handler for "button-press-event" from balloon message popup menu item. */
-static gboolean balloon_message_activate_event(GtkWidget *widget, GdkEventButton *event,
-                                               TrayPlugin *tr)
+static bool balloon_message_activate_event(GtkWidget *widget, GdkEventButton *event, TrayPlugin *tr)
 {
 	balloon_message_advance(tr, TRUE, TRUE);
 	return TRUE;
 }
 
 /* Timer expiration for balloon message. */
-static gboolean balloon_message_timeout(TrayPlugin *tr)
+static bool balloon_message_timeout(TrayPlugin *tr)
 {
 	if (!g_source_is_destroyed(g_main_current_source()))
 		balloon_message_advance(tr, FALSE, TRUE);
@@ -322,8 +320,7 @@ static void balloon_message_queue(TrayPlugin *tr, BalloonMessage *msg)
 /* Remove an incomplete message from the queue, selected by window and optionally also client's ID.
  * Used in two scenarios: client issues CANCEL (ID significant), client plug removed (ID don't
  * care). */
-static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, gboolean all_ids,
-                                              long id)
+static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, bool all_ids, long id)
 {
 	BalloonMessage *msg_pred = NULL;
 	BalloonMessage *msg      = tr->incomplete_messages;
@@ -352,7 +349,7 @@ static void balloon_incomplete_message_remove(TrayPlugin *tr, Window window, gbo
 /* Remove a message from the message queue, selected by window and optionally also client's ID.
  * Used in two scenarios: client issues CANCEL (ID significant), client plug removed (ID don't
  * care). */
-static void balloon_message_remove(TrayPlugin *tr, Window window, gboolean all_ids, long id)
+static void balloon_message_remove(TrayPlugin *tr, Window window, bool all_ids, long id)
 {
 	BalloonMessage *msg_pred = NULL;
 	BalloonMessage *msg_head = tr->messages;

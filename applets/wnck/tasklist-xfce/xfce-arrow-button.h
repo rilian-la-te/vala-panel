@@ -43,8 +43,8 @@ GtkWidget *xfce_arrow_button_new(GtkArrowType arrow_type) G_GNUC_MALLOC G_GNUC_W
 GtkArrowType xfce_arrow_button_get_arrow_type(XfceArrowButton *button);
 void xfce_arrow_button_set_arrow_type(XfceArrowButton *button, GtkArrowType arrow_type);
 
-gboolean xfce_arrow_button_get_blinking(XfceArrowButton *button);
-void xfce_arrow_button_set_blinking(XfceArrowButton *button, gboolean blinking);
+bool xfce_arrow_button_get_blinking(XfceArrowButton *button);
+void xfce_arrow_button_set_blinking(XfceArrowButton *button, bool blinking);
 
 G_END_DECLS
 

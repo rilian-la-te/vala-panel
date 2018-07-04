@@ -60,7 +60,7 @@ static void xfce_arrow_button_set_property(GObject *object, guint prop_id, const
 static void xfce_arrow_button_get_property(GObject *object, guint prop_id, GValue *value,
                                            GParamSpec *pspec);
 static void xfce_arrow_button_finalize(GObject *object);
-static gboolean xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr);
+static bool xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr);
 static void xfce_arrow_button_get_preferred_width(GtkWidget *widget, gint *minimum_width,
                                                   gint *natural_width);
 static void xfce_arrow_button_get_preferred_height(GtkWidget *widget, gint *minimum_height,
@@ -190,7 +190,7 @@ static void xfce_arrow_button_finalize(GObject *object)
 	(*G_OBJECT_CLASS(xfce_arrow_button_parent_class)->finalize)(object);
 }
 
-static gboolean xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
+static bool xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
 {
 	XfceArrowButton *button = XFCE_ARROW_BUTTON(widget);
 	GtkWidget *child;
@@ -463,7 +463,7 @@ void xfce_arrow_button_set_arrow_type(XfceArrowButton *button, GtkArrowType arro
  *
  * Since: 4.8
  **/
-gboolean xfce_arrow_button_get_blinking(XfceArrowButton *button)
+bool xfce_arrow_button_get_blinking(XfceArrowButton *button)
 {
 	XfceArrowButtonPrivate *priv =
 	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
@@ -480,7 +480,7 @@ gboolean xfce_arrow_button_get_blinking(XfceArrowButton *button)
  *
  * Since: 4.8
  **/
-void xfce_arrow_button_set_blinking(XfceArrowButton *button, gboolean blinking)
+void xfce_arrow_button_set_blinking(XfceArrowButton *button, bool blinking)
 {
 	g_return_if_fail(XFCE_IS_ARROW_BUTTON(button));
 	XfceArrowButtonPrivate *priv =
