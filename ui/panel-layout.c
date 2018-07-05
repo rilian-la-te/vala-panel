@@ -160,21 +160,42 @@ void vala_panel_layout_update_applet_positions(ValaPanelLayout *self)
 		ValaPanelUnitSettings *settings =
 		    vala_panel_layout_get_applet_settings(VALA_PANEL_APPLET(l->data));
 		uint idx = g_settings_get_uint(settings->default_settings, VALA_PANEL_KEY_POSITION);
-		gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(l->data), (int)idx);
+		ValaPanelAppletPackType type =
+		    (ValaPanelAppletPackType)g_settings_get_enum(settings->default_settings,
+		                                                 VALA_PANEL_KEY_PACK);
+		gtk_box_reorder_child(type != PACK_CENTER ? GTK_BOX(self)
+		                                          : GTK_BOX(self->center_box),
+		                      GTK_WIDGET(l->data),
+		                      (int)idx);
 	}
 	g_list_free(children);
 }
 
 uint vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl)
 {
+	const char *uuid         = vala_panel_applet_get_uuid(pl);
+	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
+	ValaPanelAppletPackType type =
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
 	int res;
-	gtk_container_child_get(GTK_CONTAINER(self), GTK_WIDGET(pl), "position", &res, NULL);
+	gtk_container_child_get(type != PACK_CENTER ? GTK_CONTAINER(self)
+	                                            : GTK_CONTAINER(self->center_box),
+	                        GTK_WIDGET(pl),
+	                        "position",
+	                        &res,
+	                        NULL);
 	return (uint)res;
 }
 
 void vala_panel_layout_set_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl, int pos)
 {
-	gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(pl), pos);
+	const char *uuid         = vala_panel_applet_get_uuid(pl);
+	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
+	ValaPanelAppletPackType type =
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
+	gtk_box_reorder_child(type != PACK_CENTER ? GTK_BOX(self) : GTK_BOX(self->center_box),
+	                      GTK_WIDGET(pl),
+	                      pos);
 }
 
 ValaPanelAppletManager *vala_panel_layout_get_manager()
