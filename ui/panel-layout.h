@@ -33,7 +33,7 @@ typedef enum
 	PACK_START  = 0,
 	PACK_CENTER = 2,
 	PACK_END    = 1,
-} ValaPanelAppletPackType;
+} PanelAppletPackType;
 
 G_DECLARE_FINAL_TYPE(ValaPanelLayout, vala_panel_layout, VALA_PANEL, LAYOUT, GtkBox)
 
