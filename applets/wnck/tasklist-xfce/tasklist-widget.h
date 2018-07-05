@@ -78,19 +78,21 @@ void xfce_tasklist_set_nrows(XfceTasklist *tasklist, gint nrows);
 
 void xfce_tasklist_update_monitor_geometry(XfceTasklist *tasklist);
 
-void xfce_tasklist_set_include_all_workspaces(XfceTasklist *tasklist, gboolean all_workspaces);
+void xfce_tasklist_set_include_all_workspaces(XfceTasklist *tasklist, bool all_workspaces);
 
-void xfce_tasklist_set_include_all_monitors(XfceTasklist *tasklist, gboolean all_monitors);
+void xfce_tasklist_set_include_all_monitors(XfceTasklist *tasklist, bool all_monitors);
 
 void xfce_tasklist_set_button_relief(XfceTasklist *tasklist, GtkReliefStyle button_relief);
 
-void xfce_tasklist_set_show_labels(XfceTasklist *tasklist, gboolean show_labels);
+void xfce_tasklist_set_show_labels(XfceTasklist *tasklist, bool show_labels);
 
-void xfce_tasklist_set_show_only_minimized(XfceTasklist *tasklist, gboolean only_minimized);
+void xfce_tasklist_set_show_only_minimized(XfceTasklist *tasklist, bool only_minimized);
 
-void xfce_tasklist_set_show_wireframes(XfceTasklist *tasklist, gboolean show_wireframes);
+void xfce_tasklist_set_show_wireframes(XfceTasklist *tasklist, bool show_wireframes);
 
 void xfce_tasklist_set_grouping(XfceTasklist *tasklist, XfceTasklistGrouping grouping);
+
+void xfce_tasklist_set_label_decorations(XfceTasklist *tasklist, bool label_decorations);
 
 void xfce_tasklist_update_edge(XfceTasklist *tasklist, GtkPositionType edge);
 

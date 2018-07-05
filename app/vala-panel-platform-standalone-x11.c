@@ -230,7 +230,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 
 static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	gboolean strut_set = false;
+	bool strut_set = false;
 	g_object_get(top, VALA_PANEL_KEY_STRUT, &strut_set, NULL);
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return false;
@@ -372,8 +372,8 @@ static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vala_panel_platform_x11_move_to_side;
 	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vala_panel_platform_x11_update_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vala_panel_platform_x11_edge_can_strut;
-	VALA_PANEL_PLATFORM_CLASS(klass)->start_panels_from_profile =
-	    vala_panel_platform_x11_start_panels_from_profile;
+	VALA_PANEL_PLATFORM_CLASS(klass)
+	    ->start_panels_from_profile = vala_panel_platform_x11_start_panels_from_profile;
 	VALA_PANEL_PLATFORM_CLASS(klass)->edge_available = vala_panel_platform_x11_edge_available;
 	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_platform_x11_finalize;
 }
