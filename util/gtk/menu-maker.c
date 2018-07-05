@@ -173,9 +173,11 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 			bool is_section = !(strcmp(str, G_MENU_LINK_SECTION));
 			bool is_submenu = !(strcmp(str, G_MENU_LINK_SUBMENU));
 			if (menuw != NULL && is_submenu)
-				apply_menu_properties(gtk_container_get_children(
-				                          GTK_CONTAINER(menuw)),
-				                      link_menu);
+			{
+				g_autoptr(GList) children =
+				    gtk_container_get_children(GTK_CONTAINER(menuw));
+				apply_menu_properties(children, link_menu);
+			}
 			if (is_section)
 			{
 				jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
