@@ -10,6 +10,7 @@ G_BEGIN_DECLS
 
 #define VALA_PANEL_APPLET_ACTION_MENU "menu"
 #define VALA_PANEL_APPLET_ACTION_CONFIGURE "configure"
+#define VALA_PANEL_APPLET_ACTION_REMOVE "remove"
 
 G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vala_panel_applet, VALA_PANEL, APPLET, GtkBin)
 #define VALA_PANEL_TYPE_APPLET vala_panel_applet_get_type()

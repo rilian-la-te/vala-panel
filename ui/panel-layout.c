@@ -260,11 +260,11 @@ static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 	    G_OBJECT_CLASS(klass),
 	    VALA_PANEL_LAYOUT_TOPLEVEL_ID,
 	    vala_panel_layout_properties[VALA_PANEL_LAYOUT_TOPLEVEL_ID] =
-	        g_param_spec_string("toplevel-id",
-	                            "toplevel-id",
-	                            "toplevel-ids",
+	        g_param_spec_string(VALA_PANEL_TOPLEVEL_ID,
+	                            VALA_PANEL_TOPLEVEL_ID,
+	                            VALA_PANEL_TOPLEVEL_ID,
 	                            NULL,
-	                            G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-	                                G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE |
-	                                G_PARAM_CONSTRUCT_ONLY));
+	                            (GParamFlags)(G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
+	                                          G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
