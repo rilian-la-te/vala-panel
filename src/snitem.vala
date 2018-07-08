@@ -240,7 +240,7 @@ namespace StatusNotifier
             /*FIXME: MenuModel support */
             if (client == null && remote_menu_model == null)
             {
-                use_menumodel = !DBusMenu.GtkClient.check(object_name,iface.menu);
+                use_menumodel = !ValaDBusMenu.GtkClient.check(object_name,iface.menu);
                 if (use_menumodel)
                 {
                     try
@@ -253,7 +253,7 @@ namespace StatusNotifier
                 }
                 else
                 {
-                    client = new DBusMenu.GtkClient(object_name,iface.menu);
+                    client = new ValaDBusMenu.GtkClient(object_name,iface.menu);
                     client.attach_to_menu(menu);
                 }
             }
@@ -423,7 +423,7 @@ namespace StatusNotifier
         string accessible_desc;
         string icon_theme_path;
         bool use_menumodel;
-        DBusMenu.GtkClient? client;
+        ValaDBusMenu.GtkClient? client;
         MenuModel remote_menu_model;
         GLib.ActionGroup remote_action_group;
         Gtk.Menu menu;

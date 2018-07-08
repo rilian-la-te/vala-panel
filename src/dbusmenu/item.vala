@@ -1,6 +1,6 @@
 using GLib;
 
-namespace DBusMenu
+namespace ValaDBusMenu
 {
     public class Item : Object
     {
@@ -123,12 +123,12 @@ namespace DBusMenu
         }
         public void handle_event(string event_id, Variant? data, uint timestamp)
         {
-            if (client is DBusMenu.Client)
+            if (client is ValaDBusMenu.Client)
                 client.handle_item_event(this.id,event_id,data,timestamp);
         }
         public void request_about_to_show()
         {
-            if (client is DBusMenu.Client)
+            if (client is ValaDBusMenu.Client)
                 client.request_about_to_show(this.id);
         }
     }

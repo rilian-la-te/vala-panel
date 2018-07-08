@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.mate.panel.applet.SNTrayAppletFactory
-Exec=@CMAKE_INSTALL_FULL_LIBEXECDIR@/mate-panel/sntray-mate

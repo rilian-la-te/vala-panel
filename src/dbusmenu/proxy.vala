@@ -1,6 +1,6 @@
 using GLib;
 
-namespace DBusMenu
+namespace ValaDBusMenu
 {
     [DBus (use_string_marshalling = true)]
     public enum Status

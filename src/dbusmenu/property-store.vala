@@ -1,6 +1,6 @@
 using GLib;
 
-namespace DBusMenu
+namespace ValaDBusMenu
 {
     [Compact]
     private class PropertyStore

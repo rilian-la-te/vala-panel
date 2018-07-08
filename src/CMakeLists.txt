@@ -67,8 +67,7 @@ if (ENABLE_XFCE)
         ${VALA_C_XFCE}
         ${RESOURCES}
     )
-    include_directories(${XFCE_INCLUDE_DIRS})
-    target_link_libraries(sntray-xfce  sntray-core ${XFCE_LIBRARIES})
+    target_link_libraries(sntray-xfce  sntray-core PkgConfig::XFCE)
     add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
     # Install plugin stuffs
@@ -108,8 +107,7 @@ if (ENABLE_VALAPANEL)
         ${VALA_C_VALAPANEL}
         ${RESOURCES}
     )
-    include_directories(${VALAPANEL_INCLUDE_DIRS})
-    target_link_libraries(sntray-valapanel sntray-core ${VALAPANEL_LIBRARIES})
+    target_link_libraries(sntray-valapanel sntray-core PkgConfig::VALAPANEL)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
 
     # Install plugin stuffs
@@ -141,8 +139,7 @@ if (ENABLE_BUDGIE)
         ${VALA_C_BUDGIE}
         ${RESOURCES}
     )
-    include_directories(${BUDGIE_INCLUDE_DIRS})
-    target_link_libraries(sntray-budgie sntray-core ${BUDGIE_LIBRARIES})
+    target_link_libraries(sntray-budgie sntray-core PkgConfig::BUDGIE)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
     # Install plugin stuffs
@@ -172,15 +169,14 @@ if (ENABLE_MATE)
     #####
     # Plugin Library
     #####
-    add_executable (sntray-mate
-	${VALA_C_MATE}
+    add_library (sntray-mate MODULE
+        ${VALA_C_MATE}
 	${RESOURCES}
     )
     add_dependencies(sntray-mate sntray-core)
-    include_directories(${MATE_INCLUDE_DIRS})
-    target_link_libraries(sntray-mate sntray-core ${MATE_LIBRARIES})
+    target_link_libraries(sntray-mate sntray-core PkgConfig::MATE)
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})
 
     # Install plugin stuffs
-    install(TARGETS sntray-mate DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/mate-panel)
+    install(TARGETS sntray-mate DESTINATION ${CMAKE_INSTALL_LIBDIR}/mate-panel)
 endif()

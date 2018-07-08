@@ -1,7 +1,7 @@
 using GLib;
 using Gtk;
 
-namespace DBusMenu
+namespace ValaDBusMenu
 {
     public interface GtkItemIface : Object
     {

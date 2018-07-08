@@ -1,12 +1,12 @@
 project(xfce4-sntray-plugin C)
-cmake_minimum_required(VERSION 3.3)
-cmake_policy (VERSION 3.3)
+cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+cmake_policy (VERSION 3.6)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
 include(ValaPrecompile)
 include(GNUInstallDirs)
 
-find_package(Vala 0.32 REQUIRED)
+find_package(Vala 0.36 REQUIRED)
 find_package(PkgConfig)
 set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
 include(GitVersion)
@@ -31,18 +31,18 @@ find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
 include(CMakeDependentOption)
 
 #set build options
-pkg_check_modules(XFCE libxfce4panel-2.0 libxfconf-0)
+pkg_check_modules(XFCE libxfce4panel-2.0 libxfconf-0 IMPORTED_TARGET)
 cmake_dependent_option(ENABLE_XFCE "Enable Xfce Panel Integration" ON
     "XFCE_FOUND" OFF)
 
-pkg_check_modules(MATE libmatepanelapplet-4.0)
+pkg_check_modules(MATE libmatepanelapplet-4.0>=1.20 IMPORTED_TARGET)
 cmake_dependent_option(ENABLE_MATE "Enable mate-panel Integration" ON
     "MATE_FOUND" OFF)
 
-pkg_check_modules(PEAS libpeas-1.0)
-pkg_check_modules(VALAPANEL vala-panel)
+pkg_check_modules(PEAS libpeas-1.0 IMPORTED_TARGET)
+pkg_check_modules(VALAPANEL vala-panel IMPORTED_TARGET)
 pkg_check_modules(VP_NEW vala-panel>=0.4.50 QUIET)
-pkg_check_modules(BUDGIE budgie-1.0)
+pkg_check_modules(BUDGIE budgie-1.0 IMPORTED_TARGET)
 
 cmake_dependent_option(ENABLE_VALAPANEL "Enable Vala Panel Integration" ON
     "VALAPANEL_FOUND" OFF)

@@ -88,11 +88,7 @@ namespace StatusNotifier
                     string inner_id;
                     store.get(iter, COLUMN_ID, out inner_id);
                     if (id == inner_id)
-#if VALA_0_36
                         store.remove(ref iter);
-#else
-                        store.remove(iter);
-#endif
                 }
             });
             build_stores();
