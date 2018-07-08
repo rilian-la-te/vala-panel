@@ -69,15 +69,19 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	if (!loaded || err)
 		return NULL;
 	struct _ValaPanelAppletInfo *ret = g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
-	char *tmp =
-	    g_key_file_get_string(file, VALA_PANEL_APPLET_GROUP, VALA_PANEL_APPLET_INFO_NAME, NULL);
-	ret->module_name = g_strdup(extension_name);
-	ret->name        = tmp != NULL ? tmp : g_strdup(_("Applet"));
-	tmp              = g_key_file_get_string(file,
-                                    VALA_PANEL_APPLET_GROUP,
-                                    VALA_PANEL_APPLET_INFO_DESCRIPTION,
-                                    NULL);
-	ret->description = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
+	char *tmp                        = g_key_file_get_locale_string(file,
+                                                 VALA_PANEL_APPLET_GROUP,
+                                                 VALA_PANEL_APPLET_INFO_NAME,
+                                                 NULL,
+                                                 NULL);
+	ret->module_name                 = g_strdup(extension_name);
+	ret->name                        = tmp != NULL ? tmp : g_strdup(_("Applet"));
+	tmp                              = g_key_file_get_locale_string(file,
+                                           VALA_PANEL_APPLET_GROUP,
+                                           VALA_PANEL_APPLET_INFO_DESCRIPTION,
+                                           NULL,
+                                           NULL);
+	ret->description                 = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
 	tmp =
 	    g_key_file_get_string(file, VALA_PANEL_APPLET_GROUP, VALA_PANEL_APPLET_INFO_ICON, NULL);
 	ret->icon_name = tmp != NULL ? tmp : g_strdup("software-update-available");
@@ -94,10 +98,11 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
                                     NULL);
 	ret->website =
 	    tmp != NULL ? tmp : g_strdup("https://gitlab.com/vala-panel-project/vala-panel");
-	tmp = g_key_file_get_string(file,
-	                            VALA_PANEL_APPLET_GROUP,
-	                            VALA_PANEL_APPLET_INFO_HELP_URI,
-	                            NULL);
+	tmp = g_key_file_get_locale_string(file,
+	                                   VALA_PANEL_APPLET_GROUP,
+	                                   VALA_PANEL_APPLET_INFO_HELP_URI,
+	                                   NULL,
+	                                   NULL);
 	ret->help_uri =
 	    tmp != NULL ? tmp
 	                : g_strdup("https://gitlab.com/vala-panel-project/vala-panel/wikis/home");
