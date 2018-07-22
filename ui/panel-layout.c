@@ -106,9 +106,18 @@ void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
 	                                                   GTK_WIDGET(self))),
 	                                               s->custom_settings,
 	                                               s->uuid);
-	int position = g_settings_get_uint(s->default_settings, VALA_PANEL_KEY_POSITION);
-	gtk_box_pack_start(self, applet, false, true, 0);
-	gtk_box_reorder_child(self, applet, position);
+	int position = (int)g_settings_get_uint(s->default_settings, VALA_PANEL_KEY_POSITION);
+	ValaPanelAppletPackType pack =
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
+	if (pack == PACK_END)
+		gtk_box_pack_end(GTK_BOX(self), GTK_WIDGET(applet), false, true, 0);
+	else
+		gtk_box_pack_start(pack == PACK_CENTER ? GTK_BOX(self->center_box) : GTK_BOX(self),
+		                   GTK_WIDGET(applet),
+		                   false,
+		                   true,
+		                   0);
+	gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(applet), position);
 	if (vala_panel_applet_info_is_expandable(data->info))
 	{
 		g_settings_bind(s->default_settings,
