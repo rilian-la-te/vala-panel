@@ -568,8 +568,8 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 	                                                          "uuid",
 	                                                          uid,
 	                                                          NULL));
-	ret->mon     = mon;
-	ret->gravity = edge;
+	ret->mon               = mon;
+	ret->gravity           = edge;
 	setup(ret, true);
 	return ret;
 }
@@ -947,7 +947,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XS;
 		else
 			self->icon_size_hints = XXS;
-		appearance_update_required    = true;
+		appearance_update_required = true;
 		break;
 	case PROP_BG_FILE:
 		g_free0(self->background_file);
@@ -963,7 +963,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
 		if (-1 <= g_value_get_int(value))
-			self->mon        = g_value_get_int(value);
+			self->mon = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
 	case PROP_DOCK:

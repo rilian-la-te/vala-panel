@@ -47,7 +47,8 @@ typedef struct
 	char *uuid;
 } ValaPanelUnitSettings;
 
-typedef enum {
+typedef enum
+{
 	TOPLEVEL = 0,
 	APPLET   = 1,
 } ValaPanelType;
