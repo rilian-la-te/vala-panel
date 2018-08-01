@@ -190,8 +190,7 @@ struct _XfceTasklist
 	gint n_windows;
 };
 
-typedef enum
-{
+typedef enum {
 	CHILD_TYPE_WINDOW,
 	CHILD_TYPE_GROUP,
 	CHILD_TYPE_OVERFLOW_MENU,
@@ -1111,7 +1110,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 					 * with counting the windows... */
 					if (cols < 1)
 						cols = 1;
-					w = area_width / cols--;
+					w            = area_width / cols--;
 					if (tasklist->max_button_length > 0 &&
 					    w > tasklist->max_button_length)
 						w = tasklist->max_button_length;
@@ -2049,7 +2048,7 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 	gtk_widget_set_parent(child->button, GTK_WIDGET(tasklist));
 	gtk_button_set_relief(GTK_BUTTON(child->button), tasklist->button_relief);
 	gtk_widget_add_events(GTK_WIDGET(child->button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
-	g_object_get(xfce_tasklist_get_toplevel(tasklist), VALA_PANEL_KEY_GRAVITY, &edge, NULL);
+	g_object_get(xfce_tasklist_get_toplevel(tasklist), VP_KEY_GRAVITY, &edge, NULL);
 	g_autofree char *css =
 	    css_generate_flat_button(child->button, vala_panel_edge_from_gravity(edge));
 	css_add_css_to_widget(child->button, css);
@@ -2417,7 +2416,7 @@ static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistCh
 	if (tasklist->minimized_icon_lucency == 0)
 		return;
 	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist)),
-	             VALA_PANEL_KEY_ICON_SIZE,
+	             VP_KEY_ICON_SIZE,
 	             &icon_size,
 	             NULL);
 
@@ -2739,7 +2738,8 @@ static bool xfce_tasklist_button_button_release_event(GtkWidget *button, GdkEven
 	if (event->type == GDK_BUTTON_RELEASE && !(event->x == 0 && event->y == 0) /* 0,0 = outside
 	                                                                              the widget in
 	                                                                              Gtk */
-	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
+	    &&
+	    event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
 		if (event->button == 1)
@@ -3101,10 +3101,13 @@ static void xfce_tasklist_button_drag_data_received(GtkWidget *button, GdkDragCo
 	{
 		child = li->data;
 
-		if (sibling != li                 /* drop on end previous button */
-		    && child != child2            /* drop on the same button */
-		    && g_list_next(li) != sibling /* drop start of next button */
-		    && child->window != NULL && wnck_window_get_xid(child->window) == xid)
+		if (sibling != li /* drop on end previous button */
+		    &&
+		    child != child2 /* drop on the same button */
+		    &&
+		    g_list_next(li) != sibling /* drop start of next button */
+		    &&
+		    child->window != NULL && wnck_window_get_xid(child->window) == xid)
 		{
 			/* swap items */
 			tasklist->windows = g_list_delete_link(tasklist->windows, li);
@@ -3509,7 +3512,7 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
 		return;
 
 	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(group_child->tasklist)),
-	             VALA_PANEL_KEY_ICON_SIZE,
+	             VP_KEY_ICON_SIZE,
 	             &icon_size,
 	             NULL);
 

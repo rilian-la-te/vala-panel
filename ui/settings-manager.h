@@ -40,15 +40,14 @@ typedef struct
 
 typedef struct
 {
-	GSettings *type_settings;
-	GSettings *default_settings;
-	GSettings *custom_settings;
+	GSettings *type;
+	GSettings *common;
+	GSettings *custom;
 	char *schema_elem;
 	char *uuid;
 } ValaPanelUnitSettings;
 
-typedef enum
-{
+typedef enum {
 	TOPLEVEL = 0,
 	APPLET   = 1,
 } ValaPanelType;

@@ -76,9 +76,9 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
 	int panel_gravity, monitor, request_mon;
 	g_object_get(self->_toplevel,
-	             VALA_PANEL_KEY_MONITOR,
+	             VP_KEY_MONITOR,
 	             &monitor,
-	             VALA_PANEL_KEY_GRAVITY,
+	             VP_KEY_GRAVITY,
 	             &panel_gravity,
 	             NULL);
 
@@ -92,7 +92,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	                                       panel_gravity,
 	                                       request_mon))
 	{
-		g_object_set(self->_toplevel, VALA_PANEL_KEY_MONITOR, request_mon, NULL);
+		g_object_set(self->_toplevel, VP_KEY_MONITOR, request_mon, NULL);
 		gtk_combo_box_set_active(box, request_mon + 1);
 	}
 }
@@ -101,7 +101,7 @@ static void background_color_connector(GtkColorButton *colorb, void *data)
 	GdkRGBA color;
 	gtk_color_chooser_get_rgba(colorb, &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
-	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_BACKGROUND_COLOR, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_COLOR, chr_str, NULL);
 }
 
 static void foreground_color_connector(GtkColorButton *colorb, void *data)
@@ -109,12 +109,12 @@ static void foreground_color_connector(GtkColorButton *colorb, void *data)
 	GdkRGBA color;
 	gtk_color_chooser_get_rgba(colorb, &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
-	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_FOREGROUND_COLOR, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VP_KEY_FOREGROUND_COLOR, chr_str, NULL);
 }
 static void background_file_connector(GtkFileChooser *colorb, void *data)
 {
 	g_autofree char *chr_str = gtk_file_chooser_get_filename(colorb);
-	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_BACKGROUND_FILE, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_FILE, chr_str, NULL);
 }
 static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_construct_properties,
                                                         GObjectConstructParam *construct_properties)
@@ -148,7 +148,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 		                   -1);
 	}
 	int true_monitor;
-	g_object_get(self->_toplevel, VALA_PANEL_KEY_MONITOR, &true_monitor, NULL);
+	g_object_get(self->_toplevel, VP_KEY_MONITOR, &true_monitor, NULL);
 
 	gtk_combo_box_set_active(self->monitors_box, true_monitor + 1);
 	/* update monitor */
@@ -156,33 +156,33 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 
 	/* size */
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_WIDTH,
+	                       VP_KEY_WIDTH,
 	                       self->spin_width,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_DYNAMIC,
+	                       VP_KEY_DYNAMIC,
 	                       self->spin_width,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_INVERT_BOOLEAN);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_HEIGHT,
+	                       VP_KEY_HEIGHT,
 	                       self->spin_height,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_ICON_SIZE,
+	                       VP_KEY_ICON_SIZE,
 	                       self->spin_iconsize,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_CORNER_RADIUS,
+	                       VP_KEY_CORNER_RADIUS,
 	                       self->spin_corners,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	/* background */
 	char scol[120];
-	g_object_get(self->_toplevel, VALA_PANEL_KEY_BACKGROUND_COLOR, &scol, NULL);
+	g_object_get(self->_toplevel, VP_KEY_BACKGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(self->color_background), &color);
 	gtk_button_set_relief(GTK_BUTTON(self->color_background), GTK_RELIEF_NONE);
@@ -191,23 +191,23 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                 G_CALLBACK(background_color_connector),
 	                 self->_toplevel);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_USE_BACKGROUND_COLOR,
+	                       VP_KEY_USE_BACKGROUND_COLOR,
 	                       self->color_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
 	char *file = NULL;
 	bool use_background_file;
 	g_object_get(self->_toplevel,
-	             VALA_PANEL_KEY_BACKGROUND_FILE,
+	             VP_KEY_BACKGROUND_FILE,
 	             &file,
-	             VALA_PANEL_KEY_USE_BACKGROUND_FILE,
+	             VP_KEY_USE_BACKGROUND_FILE,
 	             &use_background_file,
 	             NULL);
 	if (use_background_file && file != NULL)
 		gtk_file_chooser_set_filename(self->file_background, file);
 	gtk_widget_set_sensitive(self->file_background, use_background_file);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_USE_BACKGROUND_FILE,
+	                       VP_KEY_USE_BACKGROUND_FILE,
 	                       self->file_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
@@ -218,7 +218,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	//    if(file)
 	//        g_free0(file);
 	/* foregorund */
-	g_object_get(self->_toplevel, VALA_PANEL_KEY_FOREGROUND_COLOR, &scol, NULL);
+	g_object_get(self->_toplevel, VP_KEY_FOREGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(self->color_foreground), &color);
 	gtk_button_set_relief(GTK_BUTTON(self->color_foreground), GTK_RELIEF_NONE);
@@ -227,19 +227,19 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                 G_CALLBACK(foreground_color_connector),
 	                 self->_toplevel);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_USE_FOREGROUND_COLOR,
+	                       VP_KEY_USE_FOREGROUND_COLOR,
 	                       self->color_foreground,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
 	/* fonts */
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_FONT,
+	                       VP_KEY_FONT,
 	                       self->font_selector,
 	                       "font",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	gtk_button_set_relief(GTK_BUTTON(self->font_selector), GTK_RELIEF_NONE);
 	g_object_bind_property(self->_toplevel,
-	                       VALA_PANEL_KEY_USE_FONT,
+	                       VP_KEY_USE_FONT,
 	                       self->font_box,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
@@ -324,7 +324,7 @@ static void on_plugin_expand_toggled(const char *path, void *data)
 			expand = !expand;
 			gtk_list_store_set(model, &it, COLUMN_EXPAND, expand, -1);
 			ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(pl);
-			g_settings_set_boolean(s->default_settings, VALA_PANEL_KEY_EXPAND, expand);
+			g_settings_set_boolean(s->common, VP_KEY_EXPAND, expand);
 		}
 	}
 }
@@ -398,18 +398,18 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	GtkTreeIter it;
 	GtkCellRenderer *textrender = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col      = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          textrender,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  textrender,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	textrender = gtk_cell_renderer_text_new();
 	col        = gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
-                                                       textrender,
-                                                       "text",
-                                                       COLUMN_NAME,
-                                                       NULL);
+	                                               textrender,
+	                                               "text",
+	                                               COLUMN_NAME,
+	                                               NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	GtkCellRendererToggle *render = gtk_cell_renderer_toggle_new();
@@ -469,7 +469,7 @@ static void update_widget_position_keys(ValaPanelToplevelConfig *self)
 		ValaPanelApplet *applet  = VALA_PANEL_APPLET(l->data);
 		uint idx                 = vala_panel_layout_get_applet_position(layout, applet);
 		ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(applet);
-		g_settings_set_uint(s->default_settings, VALA_PANEL_KEY_POSITION, idx);
+		g_settings_set_uint(s->common, VP_KEY_POSITION, idx);
 	}
 }
 
@@ -506,18 +506,18 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 
 	GtkCellRenderer *render = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col  = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          render,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  render,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 
 	gtk_tree_view_append_column(view, col);
 	render = gtk_cell_renderer_text_new();
 	col    = gtk_tree_view_column_new_with_attributes(_("Available plugins"),
-                                                       render,
-                                                       "text",
-                                                       1,
-                                                       NULL);
+	                                               render,
+	                                               "text",
+	                                               1,
+	                                               NULL);
 	gtk_tree_view_append_column(view, col);
 
 	GtkListStore *list = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -639,9 +639,9 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	G_OBJECT_CLASS(klass)->constructor      = vala_panel_configure_dialog_constructor;
 	G_OBJECT_CLASS(klass)->finalize         = vala_panel_configure_dialog_finalize;
 	vala_panel_toplevel_config_properties[TOPLEVEL_PROPERTY] =
-	    g_param_spec_object(VALA_PANEL_KEY_TOPLEVEL,
-	                        VALA_PANEL_KEY_TOPLEVEL,
-	                        VALA_PANEL_KEY_TOPLEVEL,
+	    g_param_spec_object(VP_KEY_TOPLEVEL,
+	                        VP_KEY_TOPLEVEL,
+	                        VP_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
 	                        (GParamFlags)(G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
 	                                      G_PARAM_STATIC_BLURB | G_PARAM_READABLE |

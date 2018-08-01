@@ -74,9 +74,8 @@ void vala_panel_layout_init_applets(ValaPanelLayout *self)
 		if (!vala_panel_unit_settings_is_toplevel(pl))
 		{
 			g_autofree char *id =
-			    g_settings_get_string(pl->default_settings, VALA_PANEL_TOPLEVEL_ID);
-			g_autofree char *name =
-			    g_settings_get_string(pl->default_settings, VALA_PANEL_KEY_NAME);
+			    g_settings_get_string(pl->common, VALA_PANEL_TOPLEVEL_ID);
+			g_autofree char *name = g_settings_get_string(pl->common, VP_KEY_NAME);
 			if (!g_strcmp0(id, self->toplevel_id))
 				vala_panel_layout_place_applet(
 				    self, vala_panel_applet_manager_applet_ref(manager, name), pl);
@@ -104,11 +103,11 @@ void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
 	    vala_panel_applet_plugin_get_applet_widget(data->plugin,
 	                                               VALA_PANEL_TOPLEVEL(gtk_widget_get_toplevel(
 	                                                   GTK_WIDGET(self))),
-	                                               s->custom_settings,
+	                                               s->custom,
 	                                               s->uuid);
-	int position = (int)g_settings_get_uint(s->default_settings, VALA_PANEL_KEY_POSITION);
+	int position = (int)g_settings_get_uint(s->common, VP_KEY_POSITION);
 	ValaPanelAppletPackType pack =
-	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->common, VP_KEY_PACK);
 	if (pack == PACK_END)
 		gtk_box_pack_end(GTK_BOX(self), GTK_WIDGET(applet), false, true, 0);
 	else
@@ -120,11 +119,7 @@ void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
 	gtk_box_reorder_child(GTK_BOX(self), GTK_WIDGET(applet), position);
 	if (vala_panel_applet_info_is_expandable(data->info))
 	{
-		g_settings_bind(s->default_settings,
-		                VALA_PANEL_KEY_EXPAND,
-		                applet,
-		                "hexpand",
-		                G_SETTINGS_BIND_GET);
+		g_settings_bind(s->common, VP_KEY_EXPAND, applet, "hexpand", G_SETTINGS_BIND_GET);
 		g_object_bind_property(applet, "hexpand", applet, "vexpand", G_BINDING_SYNC_CREATE);
 	}
 	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
@@ -133,7 +128,7 @@ void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
 void vala_panel_layout_applet_destroyed(ValaPanelLayout *self, const char *uuid)
 {
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
-	g_autofree char *name    = g_settings_get_string(s->default_settings, VALA_PANEL_KEY_NAME);
+	g_autofree char *name    = g_settings_get_string(s->common, VP_KEY_NAME);
 	vala_panel_applet_manager_applet_unref(manager, name);
 }
 
@@ -168,10 +163,9 @@ void vala_panel_layout_update_applet_positions(ValaPanelLayout *self)
 	{
 		ValaPanelUnitSettings *settings =
 		    vala_panel_layout_get_applet_settings(VALA_PANEL_APPLET(l->data));
-		uint idx = g_settings_get_uint(settings->default_settings, VALA_PANEL_KEY_POSITION);
+		uint idx = g_settings_get_uint(settings->common, VP_KEY_POSITION);
 		ValaPanelAppletPackType type =
-		    (ValaPanelAppletPackType)g_settings_get_enum(settings->default_settings,
-		                                                 VALA_PANEL_KEY_PACK);
+		    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VP_KEY_PACK);
 		gtk_box_reorder_child(type != PACK_CENTER ? GTK_BOX(self)
 		                                          : GTK_BOX(self->center_box),
 		                      GTK_WIDGET(l->data),
@@ -185,7 +179,7 @@ uint vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApple
 	const char *uuid         = vala_panel_applet_get_uuid(pl);
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 	ValaPanelAppletPackType type =
-	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->common, VP_KEY_PACK);
 	int res;
 	gtk_container_child_get(type != PACK_CENTER ? GTK_CONTAINER(self)
 	                                            : GTK_CONTAINER(self->center_box),
@@ -201,7 +195,7 @@ void vala_panel_layout_set_applet_position(ValaPanelLayout *self, ValaPanelApple
 	const char *uuid         = vala_panel_applet_get_uuid(pl);
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 	ValaPanelAppletPackType type =
-	    (ValaPanelAppletPackType)g_settings_get_enum(s->default_settings, VALA_PANEL_KEY_PACK);
+	    (ValaPanelAppletPackType)g_settings_get_enum(s->common, VP_KEY_PACK);
 	gtk_box_reorder_child(type != PACK_CENTER ? GTK_BOX(self) : GTK_BOX(self->center_box),
 	                      GTK_WIDGET(pl),
 	                      pos);
@@ -216,8 +210,8 @@ void vala_panel_layout_add_applet(ValaPanelLayout *self, const gchar *type)
 {
 	ValaPanelUnitSettings *s =
 	    vala_panel_core_settings_add_unit_settings(core_settings, type, false);
-	g_settings_set_string(s->default_settings, VALA_PANEL_KEY_NAME, type);
-	g_settings_set_string(s->default_settings, VALA_PANEL_TOPLEVEL_ID, self->toplevel_id);
+	g_settings_set_string(s->common, VP_KEY_NAME, type);
+	g_settings_set_string(s->common, VALA_PANEL_TOPLEVEL_ID, self->toplevel_id);
 	vala_panel_applet_manager_reload_applets(manager);
 	vala_panel_layout_place_applet(self,
 	                               vala_panel_applet_manager_applet_ref(manager, type),

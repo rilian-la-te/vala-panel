@@ -30,14 +30,14 @@
 #define COMMAND_DES_TR N_("Run command on already opened panel")
 #define DEFAULT_PROFILE "default"
 
-#define VALA_PANEL_KEY_LOCK "lock-command"
-#define VALA_PANEL_KEY_RUN "run-command"
-#define VALA_PANEL_KEY_LOGOUT "logout-command"
-#define VALA_PANEL_KEY_SHUTDOWN "shutdown-command"
-#define VALA_PANEL_KEY_TERMINAL "terminal-command"
-#define VALA_PANEL_KEY_DARK "is-dark"
-#define VALA_PANEL_KEY_CUSTOM "is-custom"
-#define VALA_PANEL_KEY_CSS "css"
+#define VP_KEY_LOCK "lock-command"
+#define VP_KEY_RUN "run-command"
+#define VP_KEY_LOGOUT "logout-command"
+#define VP_KEY_SHUTDOWN "shutdown-command"
+#define VP_KEY_TERMINAL "terminal-command"
+#define VP_KEY_DARK "is-dark"
+#define VP_KEY_CUSTOM "is-custom"
+#define VP_KEY_CSS "css"
 
 struct _ValaPanelApplication
 {
@@ -302,14 +302,14 @@ static bool load_settings(ValaPanelApplication *app)
 	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_BASE_SCHEMA,
 	                                                   config_backend,
 	                                                   VALA_PANEL_OBJECT_PATH);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_LOCK);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_RUN);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_LOGOUT);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_SHUTDOWN);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_TERMINAL);
-	vala_panel_bind_gsettings(app, app->config, VALA_PANEL_KEY_CSS);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_DARK);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VALA_PANEL_KEY_CUSTOM);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_LOCK);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_RUN);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_LOGOUT);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_SHUTDOWN);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_TERMINAL);
+	vala_panel_bind_gsettings(app, app->config, VP_KEY_CSS);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_DARK);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_CUSTOM);
 	return true;
 }
 
@@ -475,7 +475,7 @@ static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *
 static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplication *app)
 {
 	g_autofree char *file = gtk_file_chooser_get_filename(self);
-	g_object_set(app, VALA_PANEL_KEY_CSS, file, NULL);
+	g_object_set(app, VP_KEY_CSS, file, NULL);
 }
 
 /* TODO: Move activate_menu to hidden toplevel interface, it is not X11-specific */
@@ -494,7 +494,7 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 			for (GList *il = applets; il != NULL; il = il->next)
 			{
 				GSimpleActionGroup *grp;
-				g_object_get(il->data, VALA_PANEL_KEY_ACTION_GROUP, &grp, NULL);
+				g_object_get(il->data, VP_KEY_ACTION_GROUP, &grp, NULL);
 				if (g_action_group_get_action_enabled(
 				        grp, VALA_PANEL_APPLET_ACTION_MENU))
 				{
@@ -518,7 +518,7 @@ static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, g
 	{
 		if (VALA_PANEL_IS_TOPLEVEL(l->data))
 		{
-			g_object_get(l->data, VALA_PANEL_KEY_UUID, &name, NULL);
+			g_object_get(l->data, VP_KEY_UUID, &name, NULL);
 			if (!g_strcmp0(name, g_variant_get_string(param, NULL)))
 			{
 				vala_panel_toplevel_configure(l->data, "position");
@@ -543,17 +543,13 @@ static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointe
 	pref_dialog = GTK_DIALOG(gtk_builder_get_object(builder, "app-pref"));
 	gtk_application_add_window(GTK_APPLICATION(self), GTK_WINDOW(pref_dialog));
 	GObject *w = gtk_builder_get_object(builder, "logout");
-	g_settings_bind(self->config, VALA_PANEL_KEY_LOGOUT, w, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(self->config, VP_KEY_LOGOUT, w, "text", G_SETTINGS_BIND_DEFAULT);
 	w = gtk_builder_get_object(builder, "lock");
-	g_settings_bind(self->config, VALA_PANEL_KEY_LOCK, w, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(self->config, VP_KEY_LOCK, w, "text", G_SETTINGS_BIND_DEFAULT);
 	w = gtk_builder_get_object(builder, "shutdown");
-	g_settings_bind(self->config, VALA_PANEL_KEY_SHUTDOWN, w, "text", G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(self->config, VP_KEY_SHUTDOWN, w, "text", G_SETTINGS_BIND_DEFAULT);
 	w = gtk_builder_get_object(builder, "css-chooser");
-	g_settings_bind(self->config,
-	                VALA_PANEL_KEY_CUSTOM,
-	                w,
-	                "sensitive",
-	                G_SETTINGS_BIND_DEFAULT);
+	g_settings_bind(self->config, VP_KEY_CUSTOM, w, "sensitive", G_SETTINGS_BIND_DEFAULT);
 	GtkFileChooserButton *f = GTK_FILE_CHOOSER_BUTTON(w);
 	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(f), self->css);
 	g_signal_connect(f, "file-set", G_CALLBACK(file_chooser_helper), self);
@@ -640,9 +636,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_RUN_COMMAND,
-	                                g_param_spec_string(VALA_PANEL_KEY_RUN,
-	                                                    VALA_PANEL_KEY_RUN,
-	                                                    VALA_PANEL_KEY_RUN,
+	                                g_param_spec_string(VP_KEY_RUN,
+	                                                    VP_KEY_RUN,
+	                                                    VP_KEY_RUN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -651,9 +647,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_TERMINAL_COMMAND,
-	                                g_param_spec_string(VALA_PANEL_KEY_TERMINAL,
-	                                                    VALA_PANEL_KEY_TERMINAL,
-	                                                    VALA_PANEL_KEY_TERMINAL,
+	                                g_param_spec_string(VP_KEY_TERMINAL,
+	                                                    VP_KEY_TERMINAL,
+	                                                    VP_KEY_TERMINAL,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -662,9 +658,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_LOCK_COMMAND,
-	                                g_param_spec_string(VALA_PANEL_KEY_LOCK,
-	                                                    VALA_PANEL_KEY_LOCK,
-	                                                    VALA_PANEL_KEY_LOCK,
+	                                g_param_spec_string(VP_KEY_LOCK,
+	                                                    VP_KEY_LOCK,
+	                                                    VP_KEY_LOCK,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -673,9 +669,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_LOGOUT_COMMAND,
-	                                g_param_spec_string(VALA_PANEL_KEY_LOGOUT,
-	                                                    VALA_PANEL_KEY_LOGOUT,
-	                                                    VALA_PANEL_KEY_LOGOUT,
+	                                g_param_spec_string(VP_KEY_LOGOUT,
+	                                                    VP_KEY_LOGOUT,
+	                                                    VP_KEY_LOGOUT,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -684,9 +680,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_SHUTDOWN_COMMAND,
-	                                g_param_spec_string(VALA_PANEL_KEY_SHUTDOWN,
-	                                                    VALA_PANEL_KEY_SHUTDOWN,
-	                                                    VALA_PANEL_KEY_SHUTDOWN,
+	                                g_param_spec_string(VP_KEY_SHUTDOWN,
+	                                                    VP_KEY_SHUTDOWN,
+	                                                    VP_KEY_SHUTDOWN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |
@@ -695,9 +691,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_DARK,
-	                                g_param_spec_boolean(VALA_PANEL_KEY_DARK,
-	                                                     VALA_PANEL_KEY_DARK,
-	                                                     VALA_PANEL_KEY_DARK,
+	                                g_param_spec_boolean(VP_KEY_DARK,
+	                                                     VP_KEY_DARK,
+	                                                     VP_KEY_DARK,
 	                                                     false,
 	                                                     G_PARAM_STATIC_NAME |
 	                                                         G_PARAM_STATIC_NICK |
@@ -706,9 +702,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_CUSTOM,
-	                                g_param_spec_boolean(VALA_PANEL_KEY_CUSTOM,
-	                                                     VALA_PANEL_KEY_CUSTOM,
-	                                                     VALA_PANEL_KEY_CUSTOM,
+	                                g_param_spec_boolean(VP_KEY_CUSTOM,
+	                                                     VP_KEY_CUSTOM,
+	                                                     VP_KEY_CUSTOM,
 	                                                     false,
 	                                                     G_PARAM_STATIC_NAME |
 	                                                         G_PARAM_STATIC_NICK |
@@ -717,9 +713,9 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_CSS,
-	                                g_param_spec_string(VALA_PANEL_KEY_CSS,
-	                                                    VALA_PANEL_KEY_CSS,
-	                                                    VALA_PANEL_KEY_CSS,
+	                                g_param_spec_string(VP_KEY_CSS,
+	                                                    VP_KEY_CSS,
+	                                                    VP_KEY_CSS,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_NAME |
 	                                                        G_PARAM_STATIC_NICK |

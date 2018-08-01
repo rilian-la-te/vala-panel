@@ -186,26 +186,6 @@ namespace ValaPanel {
     public static Gtk.PositionType edge_from_gravity(Gravity gravity);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
-    [Compact]
-    [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_core_settings_get_type()")]
-    public class CoreSettings
-    {
-        public static string get_uuid();
-        public CoreSettings(string schema, string path, string root, GLib.SettingsBackend backend);
-        public unowned UnitSettings add_unit_settings(string name, bool is_toplevel);
-        public unowned UnitSettings add_unit_settings_full(string name, string uuid, bool is_toplevel);
-        public void remove_unit_settings(string name);
-        public void remove_unit_settings_full(string name, bool destroy);
-        public unowned UnitSettings get_by_uuid(string uuid);
-    }
-    [Compact]
-    [CCode (cheader_filename="settings-manager.h",copy_function="g_boxed_copy",free_function="g_boxed_free",type_id="vala_panel_unit_settings_get_type()")]
-    public class UnitSettings
-    {
-        internal GLib.Settings custom_settings;
-        internal string uuid;
-		internal bool is_toplevel();
-    }
     [CCode(cname="PanelGravity", cprefix="", cheader_filename = "panel-platform.h")]
 	public enum Gravity
 	{
@@ -230,7 +210,6 @@ namespace ValaPanel {
         public bool start_panels_from_profile(Gtk.Application app,string *profile);
         internal void init_settings(GLib.SettingsBackend backend);
         internal void init_settings_full(string schema,string path, GLib.SettingsBackend backend);
-        internal unowned CoreSettings get_settings();
         public long can_strut(Gtk.Window top);
         public void update_strut(Gtk.Window top);
         public void move_to_coords(Gtk.Window top, int x, int y);
@@ -238,7 +217,7 @@ namespace ValaPanel {
 		public bool edge_available(Gtk.Window top, Gravity gravity, int monitor);
     }
 }
-[CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
+[CCode (cheader_filename = "constants.h", cprefix = "VP_KEY_",lower_case_cprefix="VP_KEY_")]
 namespace ValaPanel.Key
 {
     public const string GRAVITY;

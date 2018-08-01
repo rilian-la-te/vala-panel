@@ -33,20 +33,19 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 	created_settings->uuid                  = g_strdup(uuid);
 	g_autofree gchar *path =
 	    g_strdup_printf("%s%s/", settings->root_path, created_settings->uuid);
-	created_settings->type_settings =
+	created_settings->type =
 	    g_settings_new_with_backend_and_path(VALA_PANEL_OBJECT_SCHEMA, settings->backend, path);
-	g_settings_set_enum(created_settings->type_settings,
+	g_settings_set_enum(created_settings->type,
 	                    VALA_PANEL_OBJECT_TYPE,
 	                    is_toplevel ? TOPLEVEL : APPLET);
-	created_settings->default_settings =
+	created_settings->common =
 	    g_settings_new_with_backend_and_path(is_toplevel ? VALA_PANEL_TOPLEVEL_SCHEMA
 	                                                     : VALA_PANEL_PLUGIN_SCHEMA,
 	                                         settings->backend,
 	                                         path);
 	g_autofree char *tname = is_toplevel ? g_strdup("toplevel") : g_strdup(name);
 	if (tname == NULL)
-		tname =
-		    g_settings_get_string(created_settings->default_settings, VALA_PANEL_KEY_NAME);
+		tname = g_settings_get_string(created_settings->common, VP_KEY_NAME);
 	created_settings->schema_elem = g_strdup(tname);
 	g_autofree gchar *id =
 	    g_strdup_printf("%s.%s", settings->root_schema, created_settings->schema_elem);
@@ -54,10 +53,10 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 	GSettingsSchemaSource *source     = g_settings_schema_source_get_default();
 	g_autoptr(GSettingsSchema) schema = g_settings_schema_source_lookup(source, id, true);
 	if (schema != NULL)
-		created_settings->custom_settings =
+		created_settings->custom =
 		    g_settings_new_with_backend_and_path(id, settings->backend, path);
 	else
-		created_settings->custom_settings = NULL;
+		created_settings->custom = NULL;
 	return created_settings;
 }
 
@@ -66,12 +65,11 @@ static ValaPanelUnitSettings *vala_panel_unit_settings_copy(ValaPanelUnitSetting
 	ValaPanelUnitSettings *created_settings = g_slice_new0(ValaPanelUnitSettings);
 	created_settings->uuid                  = g_strdup(source->uuid);
 	created_settings->schema_elem           = g_strdup(source->schema_elem);
-	created_settings->default_settings = G_SETTINGS(g_object_ref(source->default_settings));
-	created_settings->type_settings    = G_SETTINGS(g_object_ref(source->type_settings));
-	created_settings->custom_settings  = NULL;
-	if (source->custom_settings)
-		created_settings->custom_settings =
-		    G_SETTINGS(g_object_ref(source->custom_settings));
+	created_settings->common                = G_SETTINGS(g_object_ref(source->common));
+	created_settings->type                  = G_SETTINGS(g_object_ref(source->type));
+	created_settings->custom                = NULL;
+	if (source->custom)
+		created_settings->custom = G_SETTINGS(g_object_ref(source->custom));
 	return created_settings;
 }
 
@@ -79,9 +77,9 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
 		return;
-	g_object_unref0(settings->custom_settings);
-	g_object_unref0(settings->default_settings);
-	g_object_unref0(settings->type_settings);
+	g_object_unref0(settings->custom);
+	g_object_unref0(settings->common);
+	g_object_unref0(settings->type);
 	g_free0(settings->schema_elem);
 	g_slice_free(ValaPanelUnitSettings, settings);
 }
@@ -92,7 +90,7 @@ G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vala_panel_unit_settings, vala_panel_
 bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings)
 {
 	g_autofree char *id;
-	g_object_get(settings->default_settings, "schema-id", &id, NULL);
+	g_object_get(settings->common, "schema-id", &id, NULL);
 	return !g_strcmp0(id, VALA_PANEL_TOPLEVEL_SCHEMA);
 }
 
@@ -185,10 +183,10 @@ void vala_panel_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *s
 	{
 		ValaPanelUnitSettings *removing_unit =
 		    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
-		vala_panel_reset_schema_with_children(removing_unit->default_settings);
-		vala_panel_reset_schema_with_children(removing_unit->type_settings);
-		if (removing_unit->custom_settings != NULL)
-			vala_panel_reset_schema_with_children(removing_unit->custom_settings);
+		vala_panel_reset_schema_with_children(removing_unit->common);
+		vala_panel_reset_schema_with_children(removing_unit->type);
+		if (removing_unit->custom != NULL)
+			vala_panel_reset_schema_with_children(removing_unit->custom);
 	}
 	g_hash_table_remove(settings->all_units, name);
 	if (destroy)
