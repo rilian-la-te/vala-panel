@@ -32,7 +32,45 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 	return names;
 }
 
-//var refreshPropertyOnProxy = function(proxy, property_name) {
+G_GNUC_INTERNAL char *get_unique_bus_name(GDBusConnection *bus, const char *name)
+{
+	g_autoptr(GError) error = NULL;
+
+	if (name && name[0] == ':')
+		return g_strdup(name);
+
+	if (!bus)
+	{
+		bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
+		if (bus == NULL)
+		{
+			g_warning("Unable to connect to dbus: %s", error->message);
+			return NULL;
+		}
+	}
+
+	g_autoptr(GVariant) var_name = g_variant_new_string(name);
+	g_autoptr(GVariant) ret      = g_dbus_connection_call_sync(bus,
+                                                              "org.freedesktop.DBus",
+                                                              "/org/freedesktop/DBus",
+                                                              "org.freedesktop.DBus",
+                                                              "GetNameOwner",
+                                                              var_name,
+                                                              G_VARIANT_TYPE("s"),
+                                                              G_DBUS_CALL_FLAGS_NONE,
+                                                              -1,
+                                                              NULL,
+                                                              &error);
+	if (ret == NULL)
+	{
+		g_warning("Unable to query dbus: %s", error->message);
+		return NULL;
+	}
+	char *unique = g_variant_dup_string(ret, NULL);
+	return unique;
+}
+
+// var refreshPropertyOnProxy = function(proxy, property_name) {
 //    proxy.g_connection.call(proxy.g_name,
 //                            proxy.g_object_path,
 //                            'org.freedesktop.DBus.Properties',
@@ -51,15 +89,17 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 //                                    // synthesize a property changed event
 //                                    let changed_obj = {}
 //                                    changed_obj[property_name] = value_variant
-//                                    proxy.emit('g-properties-changed', GLib.Variant.new('a{sv}', changed_obj), [])
+//                                    proxy.emit('g-properties-changed', GLib.Variant.new('a{sv}',
+//                                    changed_obj), [])
 //                                } catch (e) {
 //                                    // the property may not even exist, silently ignore it
-//                                    //Logger.debug("While refreshing property "+property_name+": "+e)
+//                                    //Logger.debug("While refreshing property "+property_name+":
+//                                    "+e)
 //                                }
 //                            })
 //}
 
-//var getUniqueBusNameSync = function(bus, name) {
+// var getUniqueBusNameSync = function(bus, name) {
 //    if (name[0] == ':')
 //        return name;
 
@@ -74,7 +114,7 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 //    return unique;
 //}
 
-//var traverseBusNames = function(bus, cancellable, callback) {
+// var traverseBusNames = function(bus, cancellable, callback) {
 //    if (typeof bus === "undefined" || !bus)
 //        bus = Gio.DBus.session;
 
@@ -101,7 +141,8 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 //            });
 //}
 
-//var introspectBusObject = function(bus, name, cancellable, filterFunction, targetCallback, path) {
+// var introspectBusObject = function(bus, name, cancellable, filterFunction, targetCallback, path)
+// {
 //    if (typeof path === "undefined" || !path)
 //        path = "/";
 
@@ -117,7 +158,8 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 //                let introspection = bus.call_finish(task).deep_unpack().toString();
 //                let node_info = Gio.DBusNodeInfo.new_for_xml(introspection);
 
-//                if ((typeof filterFunction === "function" && filterFunction(node_info) === true) ||
+//                if ((typeof filterFunction === "function" && filterFunction(node_info) === true)
+//                ||
 //                    typeof filterFunction === "undefined" || !filterFunction) {
 //                    targetCallback(name, path);
 //                }
@@ -133,7 +175,7 @@ G_GNUC_INTERNAL GVariant *take_names_from_dbus()
 //            });
 //}
 
-//var dbusNodeImplementsInterfaces = function(node_info, interfaces) {
+// var dbusNodeImplementsInterfaces = function(node_info, interfaces) {
 //    if (!(node_info instanceof Gio.DBusNodeInfo) || !Array.isArray(interfaces))
 //        return false;
 

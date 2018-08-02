@@ -36,7 +36,7 @@ set(VALA_FILES_CORE
         source
             sntray.gresource.xml
     )
-add_library(sntray-core STATIC ${VALA_C_CORE} $<TARGET_OBJECTS:vala-dbusmenu-o>)
+add_library(sntray-core STATIC ${VALA_C_CORE} dbus-utils.c $<TARGET_OBJECTS:vala-dbusmenu-o>)
 target_include_directories(sntray-core PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/dbusmenu)
 target_link_libraries (sntray-core GLIB2::GIO_UNIX GTK3::GDK GTK3::GTK m)
 add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
