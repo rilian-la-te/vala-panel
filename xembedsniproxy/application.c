@@ -257,7 +257,7 @@ static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *s
 	//             * This should not happen. */
 	//            tray_unmanage_selection(tr);
 	//        }
-    return GDK_FILTER_CONTINUE;
+	return GDK_FILTER_CONTINUE;
 }
 
 /* GDK event filter. */
