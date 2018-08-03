@@ -70,6 +70,39 @@ G_GNUC_INTERNAL char *get_unique_bus_name(GDBusConnection *bus, const char *name
 	return unique;
 }
 
+void refresh_property_on_proxy_sync(GDBusProxy *proxy, const char *prop_name)
+{
+	GVariantBuilder b;
+	g_variant_builder_init(&b, "(ss)");
+	g_variant_builder_add(&b, "(ss)", g_dbus_proxy_get_interface_name(proxy), prop_name);
+	g_autoptr(GVariant) ins = g_variant_builder_end(&b);
+
+	g_autoptr(GVariant) var = g_dbus_connection_call_sync(g_dbus_proxy_get_connection(proxy),
+	                                                      g_dbus_proxy_get_name(proxy),
+	                                                      g_dbus_proxy_get_object_path(proxy),
+	                                                      "org.freedesktop.DBus.Properties",
+	                                                      "Get",
+	                                                      ins,
+	                                                      "v",
+	                                                      G_DBUS_CALL_FLAGS_NONE,
+	                                                      500,
+	                                                      NULL,
+	                                                      NULL);
+	g_autoptr(GVariant) val_var = g_variant_get_child_value(var, 0);
+	g_dbus_proxy_set_cached_property(proxy, prop_name, val_var);
+	GVariantDict dict;
+	g_variant_dict_init(&dict, NULL);
+	g_variant_dict_insert_value(&dict, prop_name, val_var);
+	g_autoptr(GVariant) em = g_variant_dict_end(&dict);
+	g_dbus_connection_emit_signal(g_dbus_proxy_get_connection(proxy),
+	                              NULL,
+	                              g_dbus_proxy_get_object_path(proxy),
+	                              g_dbus_proxy_get_interface_name(proxy),
+	                              "g-properties-changed",
+	                              em,
+	                              NULL);
+}
+
 // var refreshPropertyOnProxy = function(proxy, property_name) {
 //    proxy.g_connection.call(proxy.g_name,
 //                            proxy.g_object_path,
