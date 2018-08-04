@@ -6,6 +6,7 @@ add_glib_enumtypes(ENUMSC ENUMSH vala-panel-enums ${ENUM_FILES})
 set(LIBVALAPANEL_HEADERS
     client.h
     server.h
+    definitions.h
     applet-widget-api.h
     applet-widget.h
     settings-manager.h
