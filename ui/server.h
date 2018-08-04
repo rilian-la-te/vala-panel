@@ -23,11 +23,11 @@
 
 G_BEGIN_DECLS
 
-#include <definitions.h>
-#include <panel-platform.h>
-#include <settings-manager.h>
-#include <toplevel.h>
-#include <util-gtk.h>
+#include "definitions.h"
+#include "panel-platform.h"
+#include "settings-manager.h"
+#include "toplevel.h"
+#include "util-gtk.h"
 
 G_END_DECLS
 
