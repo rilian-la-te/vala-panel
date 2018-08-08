@@ -104,13 +104,13 @@ public class SNTray: Applet
 
 #if NEW
 [ModuleInit]
-public void g_io_sntray_valapanel_load(GLib.TypeModule module)
+public void g_io_sntray_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SNApplet),"sntray",10);
 }
-public void g_io_sntray_valapanel_unload(GLib.IOModule module)
+public void g_io_sntray_unload(GLib.IOModule module)
 {
     // boilerplate - all modules need this
 }
