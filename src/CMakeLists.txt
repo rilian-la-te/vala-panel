@@ -109,6 +109,8 @@ if (ENABLE_VALAPANEL)
     )
     target_link_libraries(sntray-valapanel sntray-core PkgConfig::VALAPANEL)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
+    set_target_properties(sntray-valapanel PROPERTIES
+        OUTPUT_NAME sntray)
 
     # Install plugin stuffs
     install(TARGETS sntray-valapanel DESTINATION ${CMAKE_INSTALL_LIBDIR}/vala-panel/applets)
