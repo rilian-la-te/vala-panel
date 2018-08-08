@@ -75,5 +75,5 @@ target_link_libraries(xcb-tray
 )
 
 
-install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXEC_DIR}/vala-panel )
+install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/vala-panel )
 install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
