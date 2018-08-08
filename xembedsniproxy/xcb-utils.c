@@ -24,6 +24,8 @@
 
 #include "xcb-utils.h"
 
+#include <xcb/xcb_atom.h>
+
 /* X11 data types */
 xcb_atom_t a_UTF8_STRING;
 xcb_atom_t a_XROOTPMAP_ID;
@@ -149,6 +151,34 @@ void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *c, xcb_windo
 	                    &trayVisual);
 }
 
-xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_nate)
+xcb_screen_t *xcb_get_screen_for_connection(xcb_connection_t *connection, int screen_num)
 {
+	xcb_screen_t *screen       = NULL;
+	xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(connection));
+	for (; iter.rem; --screen_num, xcb_screen_next(&iter))
+		if (screen_num == 0)
+		{
+			screen = iter.data;
+			break;
+		}
+	return screen;
+}
+
+xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_name)
+{
+	xcb_intern_atom_cookie_t atom_q;
+	xcb_intern_atom_reply_t *atom_r;
+
+	g_autofree char *true_atom_name = xcb_atom_name_by_screen(atom_name, 0);
+	if (!true_atom_name)
+		g_warning("error getting %s atom name", atom_name);
+
+	atom_q =
+	    xcb_intern_atom_unchecked(connection, false, strlen(true_atom_name), true_atom_name);
+
+	atom_r = xcb_intern_atom_reply(connection, atom_q, NULL);
+	if (!atom_r)
+		g_warning("error getting %s atom", true_atom_name);
+
+	return atom_r->atom;
 }
