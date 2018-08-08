@@ -49,14 +49,16 @@ set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 target_include_directories(xembedsniproxy PRIVATE
     ${XCB_INCLUDE_DIRS}
     ${X11_XCB_INCLUDE_DIRS}
-    ${GTK3_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(xembedsniproxy
     ${XCB_LIBRARIES}
     ${X11_XCB_LIBRARIES}
-    ${GTK3_LIBRARIES}
+    GLIB2::GOBJECT
+    GLIB2::GIO_UNIX
+    GTK3::GDK
+    GTK3::GTK
 )
 
 add_executable(xcb-tray xcb-tray.c gwater-xcb.c gwater-xcb.h)
