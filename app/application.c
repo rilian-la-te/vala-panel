@@ -28,6 +28,7 @@
 #include <stdbool.h>
 
 #define COMMAND_DES_TR N_("Run command on already opened panel")
+#define REMOTE_DES_TR N_("Run remote command on panel applet")
 #define DEFAULT_PROFILE "default"
 
 #define VP_KEY_LOCK "lock-command"
@@ -74,6 +75,7 @@ static const GOptionEntry entries[] =
     { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
       { "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, N_("Use specified profile"), N_("profile") },
       { "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
+      { "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
       { NULL } };
 
 static const GActionEntry vala_panel_application_app_entries[10] = {
@@ -237,9 +239,10 @@ static gint vala_panel_app_handle_local_options(GApplication *application, GVari
 static int vala_panel_app_command_line(GApplication *application,
                                        GApplicationCommandLine *commandline)
 {
-	g_autofree gchar *profile_name = NULL;
-	g_autofree gchar *ccommand     = NULL;
-	GVariantDict *options          = g_application_command_line_get_options_dict(commandline);
+	g_autofree char *profile_name = NULL;
+	g_autofree char *ccommand     = NULL;
+	g_auto(GStrv) cremote         = NULL;
+	GVariantDict *options         = g_application_command_line_get_options_dict(commandline);
 	if (g_variant_dict_lookup(options, "profile", "s", &profile_name))
 		g_object_set(G_OBJECT(application), "profile", profile_name, NULL);
 	if (g_variant_dict_lookup(options, "command", "s", &ccommand))
@@ -264,6 +267,47 @@ static int vala_panel_app_command_line(GApplication *application,
 			    ccommand,
 			    list);
 		}
+	}
+	if (g_variant_dict_lookup(options, "command", "as", &cremote))
+	{
+		if (g_strv_length(cremote) != 2)
+		{
+			g_autofree gchar *list = g_strjoinv(" ", cremote);
+			g_application_command_line_printerr(
+			    commandline,
+			    _("%s: invalid remote command - %s. Remote commands should have "
+			      "exactly 2 arguments\n"),
+			    g_get_application_name(),
+			    list);
+		}
+		char *uuid          = cremote[0];
+		char *command_name  = cremote[1];
+		GtkApplication *app = GTK_APPLICATION(application);
+		GList *windows      = gtk_application_get_windows(app);
+		for (GList *l = windows; l != NULL; l = l->next)
+		{
+			if (VALA_PANEL_IS_TOPLEVEL(l->data))
+			{
+				ValaPanelLayout *layout =
+				    vala_panel_toplevel_get_layout(VALA_PANEL_TOPLEVEL(l->data));
+				GList *applets = vala_panel_layout_get_applets_list(layout);
+				for (GList *il = applets; il != NULL; il = il->next)
+				{
+					const char *gotten_uuid =
+					    vala_panel_applet_get_uuid(VALA_PANEL_APPLET(il->data));
+					if (!g_strcmp0(uuid, gotten_uuid))
+					{
+						ValaPanelAppletClass *klass =
+						    VALA_PANEL_APPLET_CLASS(
+						        G_OBJECT_GET_CLASS(G_OBJECT(il->data)));
+						klass->remote_command(VALA_PANEL_APPLET(il->data),
+						                      command_name);
+					}
+				}
+				//            g_list_free(applets);
+			}
+		}
+		//    g_list_free(windows);
 	}
 	g_application_activate(application);
 	return 0;

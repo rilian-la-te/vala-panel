@@ -100,6 +100,7 @@ namespace ValaPanel {
 		public virtual Widget get_settings_ui();
 		[CCode (instance_pos = 2.1)]
 		public virtual void show_menu(GLib.Action act, Variant? param);
+		public virtual void remote_command(string name);
 		public Gtk.Widget background_widget { get; set; }
 		public GLib.Settings? settings { get; construct; }
 		public SimpleActionGroup action_group { get; }
