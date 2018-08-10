@@ -8,7 +8,7 @@
 
 G_BEGIN_DECLS
 
-#define VALA_PANEL_APPLET_ACTION_MENU "menu"
+#define VALA_PANEL_APPLET_ACTION_REMOTE "remote"
 #define VALA_PANEL_APPLET_ACTION_CONFIGURE "configure"
 #define VALA_PANEL_APPLET_ACTION_REMOVE "remove"
 
@@ -18,13 +18,13 @@ G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vala_panel_applet, VALA_PANEL, APPLET,
 struct _ValaPanelAppletClass
 {
 	GtkBinClass parent_class;
-	void (*show_menu)(GAction *act, GVariant *param, gpointer *self);
-	void (*remote_command)(ValaPanelApplet *self, const char *command);
+	bool (*remote_command)(ValaPanelApplet *self, const char *command);
 	GtkWidget *(*get_settings_ui)(ValaPanelApplet *self);
 	void (*update_context_menu)(ValaPanelApplet *self, GMenu *parent_menu);
 	gpointer padding[12];
 };
 
+bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command);
 bool vala_panel_applet_is_configurable(ValaPanelApplet *self);
 void vala_panel_applet_init_background(ValaPanelApplet *self);
 void vala_panel_applet_show_config_dialog(ValaPanelApplet *self);

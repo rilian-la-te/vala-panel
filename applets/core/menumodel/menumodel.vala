@@ -63,7 +63,7 @@ public class Menu: Applet
     {
          base(toplevel,settings,number);
          (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
-         (this.action_group.lookup_action(AppletAction.MENU) as SimpleAction).set_enabled(true);
+         (this.action_group.lookup_action(AppletAction.REMOTE) as SimpleAction).set_enabled(true);
          button = null;
          settings.bind(Key.IS_SYSTEM_MENU,this,"system",SettingsBindFlags.GET);
          settings.bind(Key.IS_MENU_BAR,this,"bar",SettingsBindFlags.GET);
@@ -116,11 +116,14 @@ public class Menu: Applet
                                       _("Caption (for button only)"), Key.CAPTION, GenericConfigType.STR,
                                       _("Menu file name"), Key.MODEL_FILE, GenericConfigType.FILE_ENTRY);
     }
-    [CCode (instance_pos=2.1)]
-    public override void show_menu(GLib.Action act, Variant? param)
+    public override bool remote_command(string command_name)
     {
-        if (system && show_system_menu_idle == 0)
+        if (command_name == "menu" && system && show_system_menu_idle == 0)
+        {
             Timeout.add(200,show_menu_int);
+            return true;
+        }
+        return false;
     }
     public bool show_menu_int()
     {

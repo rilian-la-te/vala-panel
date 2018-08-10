@@ -23,11 +23,11 @@ static inline void destroy_dialog(GtkDialog *p, gpointer user_data)
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelApplet, vala_panel_applet, GTK_TYPE_BIN)
 
 static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self);
-static void activate_menu(GSimpleAction *act, GVariant *param, gpointer self);
+static void activate_remote(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 
 static const GActionEntry entries[] =
-    { { VALA_PANEL_APPLET_ACTION_MENU, activate_menu, NULL, NULL, NULL },
+    { { VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
       { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
       { VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL } };
 
@@ -48,7 +48,8 @@ static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer
 {
 	ValaPanelApplet *self =
 	    G_TYPE_CHECK_INSTANCE_CAST(_sender, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
+	ValaPanelAppletPrivate *p =
+	    (ValaPanelAppletPrivate *)vala_panel_applet_get_instance_private(self);
 	if (b->button == 3 && ((b->state & gtk_accelerator_get_default_mod_mask()) == 0))
 	{
 		GtkMenu *m = vala_panel_toplevel_get_plugin_menu(p->toplevel, self);
@@ -110,6 +111,12 @@ void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 	}
 	gtk_window_present(p->dialog);
 }
+bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command)
+{
+	if (VALA_PANEL_APPLET_GET_CLASS(self)->remote_command)
+		return VALA_PANEL_APPLET_GET_CLASS(self)->remote_command(self, command);
+	return false;
+}
 bool vala_panel_applet_is_configurable(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
@@ -119,9 +126,10 @@ static void activate_configure(GSimpleAction *act, GVariant *param, gpointer sel
 {
 	vala_panel_applet_show_config_dialog(VALA_PANEL_APPLET(self));
 }
-static void activate_menu(GSimpleAction *act, GVariant *param, gpointer self)
+static void activate_remote(GSimpleAction *act, GVariant *param, gpointer obj)
 {
-	VALA_PANEL_APPLET_GET_CLASS(self)->show_menu(act, param, self);
+	const char *command = g_variant_get_string(param, NULL);
+	vala_panel_applet_remote_command(VALA_PANEL_APPLET(obj), command);
 }
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 {
@@ -363,7 +371,7 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	    vala_panel_applet_update_context_menu_private;
 	((GtkWidgetClass *)klass)->parent_set =
 	    (void (*)(GtkWidget *, GtkWidget *))vala_panel_applet_parent_set;
-	((ValaPanelAppletClass *)klass)->show_menu = NULL;
+	((ValaPanelAppletClass *)klass)->remote_command = NULL;
 	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
 	    vala_panel_applet_get_preferred_height_for_width;
 	((GtkWidgetClass *)klass)->get_preferred_width_for_height =

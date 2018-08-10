@@ -268,7 +268,7 @@ static int vala_panel_app_command_line(GApplication *application,
 			    list);
 		}
 	}
-	if (g_variant_dict_lookup(options, "command", "as", &cremote))
+	if (g_variant_dict_lookup(options, "remote-command", "as", &cremote))
 	{
 		if (g_strv_length(cremote) != 2)
 		{
@@ -296,13 +296,9 @@ static int vala_panel_app_command_line(GApplication *application,
 					const char *gotten_uuid =
 					    vala_panel_applet_get_uuid(VALA_PANEL_APPLET(il->data));
 					if (!g_strcmp0(uuid, gotten_uuid))
-					{
-						ValaPanelAppletClass *klass =
-						    VALA_PANEL_APPLET_CLASS(
-						        G_OBJECT_GET_CLASS(G_OBJECT(il->data)));
-						klass->remote_command(VALA_PANEL_APPLET(il->data),
-						                      command_name);
-					}
+						vala_panel_applet_remote_command(VALA_PANEL_APPLET(
+						                                     il->data),
+						                                 command_name);
 				}
 				//            g_list_free(applets);
 			}
@@ -537,15 +533,10 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 			GList *applets = vala_panel_layout_get_applets_list(layout);
 			for (GList *il = applets; il != NULL; il = il->next)
 			{
-				GSimpleActionGroup *grp;
-				g_object_get(il->data, VP_KEY_ACTION_GROUP, &grp, NULL);
-				if (g_action_group_get_action_enabled(
-				        grp, VALA_PANEL_APPLET_ACTION_MENU))
-				{
-					g_action_group_activate_action(
-					    grp, VALA_PANEL_APPLET_ACTION_MENU, NULL);
+				ValaPanelApplet *applet = VALA_PANEL_APPLET(il->data);
+				bool success = vala_panel_applet_remote_command(applet, "menu");
+				if (success)
 					break;
-				}
 			}
 			//            g_list_free(applets);
 		}
