@@ -310,8 +310,23 @@ static void vala_panel_layout_get_property(GObject *object, guint property_id, G
 	}
 }
 
+static void vala_panel_layout_destroy(GtkWidget *obj)
+{
+	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
+	gtk_widget_destroy(self->center_box);
+	GTK_WIDGET_CLASS(vala_panel_layout_parent_class)->destroy(GTK_WIDGET(self));
+}
+
 static void vala_panel_layout_init(ValaPanelLayout *self)
 {
+	self->center_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	g_object_bind_property(self,
+	                       "orientation",
+	                       self->center_box,
+	                       "orientation",
+	                       G_BINDING_SYNC_CREATE);
+	//    gtk_container_add(GTK_CONTAINER(self),self->center_box);
+	//    gtk_box_set_center_widget(GTK_BOX(self),self->center_box);
 }
 
 static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
@@ -320,6 +335,7 @@ static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 	core_settings                       = vala_panel_toplevel_get_core_settings();
 	G_OBJECT_CLASS(klass)->set_property = vala_panel_layout_set_property;
 	G_OBJECT_CLASS(klass)->get_property = vala_panel_layout_get_property;
+	GTK_WIDGET_CLASS(klass)->destroy    = vala_panel_layout_destroy;
 	g_object_class_install_property(
 	    G_OBJECT_CLASS(klass),
 	    VALA_PANEL_LAYOUT_TOPLEVEL_ID,
