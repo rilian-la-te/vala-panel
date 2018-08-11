@@ -255,10 +255,11 @@ static void vala_panel_applet_init(ValaPanelApplet *self)
 	p->grp                    = g_simple_action_group_new();
 	p->settings               = NULL;
 	g_action_map_add_action_entries(G_ACTION_MAP(p->grp), entries, G_N_ELEMENTS(entries), self);
-	GSimpleAction *cnf =
-	    G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(p->grp), "configure"));
+	GSimpleAction *cnf = G_SIMPLE_ACTION(
+	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_CONFIGURE));
 	g_simple_action_set_enabled(cnf, false);
-	cnf = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(p->grp), "menu"));
+	cnf = G_SIMPLE_ACTION(
+	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_REMOTE));
 	g_simple_action_set_enabled(cnf, false);
 }
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self)
