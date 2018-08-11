@@ -325,8 +325,8 @@ static void on_entry_cancelled(GtkSearchEntry *row, ValaPanelRunner *self)
 
 static void vala_panel_runner_destroy(GtkWidget *obj)
 {
-	ValaPanelRunner *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj, vala_panel_runner_get_type(), ValaPanelRunner);
+	ValaPanelRunner *self = VALA_PANEL_RUNNER(obj);
+
 	gtk_window_set_application((GtkWindow *)self, NULL);
 	g_cancellable_cancel(self->cancellable);
 	g_clear_pointer(&self->cancellable, g_object_unref);

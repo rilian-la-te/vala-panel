@@ -166,10 +166,7 @@ static void vala_panel_application_init(ValaPanelApplication *self)
 static void vala_panel_application_startup(GApplication *base)
 {
 	ValaPanelApplication *self = (ValaPanelApplication *)base;
-	G_APPLICATION_CLASS(vala_panel_application_parent_class)
-	    ->startup((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(self,
-	                                                         gtk_application_get_type(),
-	                                                         GtkApplication));
+	G_APPLICATION_CLASS(vala_panel_application_parent_class)->startup(base);
 	g_application_mark_busy((GApplication *)self);
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
@@ -198,10 +195,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 		gtk_window_set_application(w, NULL);
 		gtk_widget_destroy(GTK_WIDGET(w));
 	}
-	G_APPLICATION_CLASS(vala_panel_application_parent_class)
-	    ->shutdown((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(base,
-	                                                          gtk_application_get_type(),
-	                                                          GtkApplication));
+	G_APPLICATION_CLASS(vala_panel_application_parent_class)->shutdown(base);
 	if (VALA_PANEL_APPLICATION(base)->restart)
 	{
 		g_autoptr(GError) err = NULL;
