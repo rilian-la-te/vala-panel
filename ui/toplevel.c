@@ -145,10 +145,7 @@ static void vala_panel_toplevel_destroy(GtkWidget *base)
 	ValaPanelToplevel *self;
 	self = (ValaPanelToplevel *)base;
 	stop_ui(self);
-	GTK_WIDGET_CLASS(vala_panel_toplevel_parent_class)
-	    ->destroy((GtkWidget *)G_TYPE_CHECK_INSTANCE_CAST(self,
-	                                                      gtk_application_window_get_type(),
-	                                                      GtkApplicationWindow));
+	GTK_WIDGET_CLASS(vala_panel_toplevel_parent_class)->destroy(GTK_WIDGET(self));
 }
 
 static void vala_panel_toplevel_finalize(GObject *obj)
