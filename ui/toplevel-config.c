@@ -48,10 +48,7 @@ static void vala_panel_toplevel_config_init(ValaPanelToplevelConfig *self)
 
 static void vala_panel_configure_dialog_finalize(GObject *obj)
 {
-	ValaPanelToplevelConfig *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(obj,
-	                                  vala_panel_toplevel_config_get_type(),
-	                                  ValaPanelToplevelConfig);
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(obj);
 	g_object_unref0(self->monitors_box);
 	g_object_unref0(self->spin_iconsize);
 	g_object_unref0(self->spin_height);
@@ -122,10 +119,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	GObjectClass *parent_class = G_OBJECT_CLASS(vala_panel_toplevel_config_parent_class);
 	GObject *obj =
 	    parent_class->constructor(type, n_construct_properties, construct_properties);
-	ValaPanelToplevelConfig *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj,
-	                               vala_panel_toplevel_config_get_type(),
-	                               ValaPanelToplevelConfig);
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(obj);
 	GdkRGBA color;
 	g_autoptr(GSimpleActionGroup) conf = g_simple_action_group_new();
 	vala_panel_apply_window_icon(GTK_WINDOW(self));
@@ -254,10 +248,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 static void vala_panel_toplevel_config_get_property(GObject *object, guint property_id,
                                                     GValue *value, GParamSpec *pspec)
 {
-	ValaPanelToplevelConfig *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(object,
-	                                  vala_panel_toplevel_config_get_type(),
-	                                  ValaPanelToplevelConfig);
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(object);
 	switch (property_id)
 	{
 	case TOPLEVEL_PROPERTY:
@@ -272,16 +263,11 @@ static void vala_panel_toplevel_config_get_property(GObject *object, guint prope
 static void vala_panel_toplevel_config_set_property(GObject *object, guint property_id,
                                                     const GValue *value, GParamSpec *pspec)
 {
-	ValaPanelToplevelConfig *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(object,
-	                                  vala_panel_toplevel_config_get_type(),
-	                                  ValaPanelToplevelConfig);
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(object);
 	switch (property_id)
 	{
 	case TOPLEVEL_PROPERTY:
-		self->_toplevel = G_TYPE_CHECK_INSTANCE_CAST(g_value_get_object(value),
-		                                             VALA_PANEL_TYPE_TOPLEVEL,
-		                                             ValaPanelToplevel);
+		self->_toplevel = VALA_PANEL_TOPLEVEL(g_value_get_object(value));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);

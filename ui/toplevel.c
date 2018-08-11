@@ -150,8 +150,7 @@ static void vala_panel_toplevel_destroy(GtkWidget *base)
 
 static void vala_panel_toplevel_finalize(GObject *obj)
 {
-	ValaPanelToplevel *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_TOPLEVEL, ValaPanelToplevel);
+	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
 	g_object_unref0(self->context_menu);
 	g_object_unref0(self->pref_dialog);
 	g_free0(self->uuid);
@@ -776,8 +775,7 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 	ValaPanelToplevel *self    = VALA_PANEL_TOPLEVEL(object);
 	PangoFontDescription *desc = pango_font_description_from_string(self->font);
 	char *str = NULL, *str2 = NULL;
-	self =
-	    G_TYPE_CHECK_INSTANCE_CAST(object, vala_panel_toplevel_get_type(), ValaPanelToplevel);
+
 	switch (property_id)
 	{
 	case PROP_UUID:
@@ -865,8 +863,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 	uint icon_size_value       = 24;
 	int mons                   = 1;
 	PangoFontDescription *desc = pango_font_description_from_string(self->font);
-	self =
-	    G_TYPE_CHECK_INSTANCE_CAST(object, vala_panel_toplevel_get_type(), ValaPanelToplevel);
+
 	switch (property_id)
 	{
 	case PROP_UUID:

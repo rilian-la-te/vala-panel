@@ -46,8 +46,7 @@ static GParamSpec *pspecs[VALA_PANEL_APPLET_ALL];
 
 static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
 {
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(_sender, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self = VALA_PANEL_APPLET(_sender);
 	ValaPanelAppletPrivate *p =
 	    (ValaPanelAppletPrivate *)vala_panel_applet_get_instance_private(self);
 	if (b->button == 3 && ((b->state & gtk_accelerator_get_default_mod_mask()) == 0))
@@ -75,8 +74,7 @@ static GObject *vala_panel_applet_constructor(GType type, guint n_construct_prop
 	GObjectClass *parent_class = G_OBJECT_CLASS(vala_panel_applet_parent_class);
 	GObject *obj =
 	    parent_class->constructor(type, n_construct_properties, construct_properties);
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	gtk_widget_set_has_window((GtkWidget *)self, false);
 	gtk_widget_insert_action_group(self, "applet", p->grp);
@@ -133,8 +131,7 @@ static void activate_remote(GSimpleAction *act, GVariant *param, gpointer obj)
 }
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 {
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
@@ -164,22 +161,10 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
 	{
 		if (orient == GTK_ORIENTATION_HORIZONTAL)
 			GTK_WIDGET_CLASS(vala_panel_applet_parent_class)
-			    ->get_preferred_width_for_height(
-			        (GtkWidget *)G_TYPE_CHECK_INSTANCE_CAST(self,
-			                                                gtk_bin_get_type(),
-			                                                GtkBin),
-			        for_size,
-			        min,
-			        nat);
+			    ->get_preferred_width_for_height(GTK_WIDGET(self), for_size, min, nat);
 		else
 			GTK_WIDGET_CLASS(vala_panel_applet_parent_class)
-			    ->get_preferred_height_for_width(
-			        (GtkWidget *)G_TYPE_CHECK_INSTANCE_CAST(self,
-			                                                gtk_bin_get_type(),
-			                                                GtkBin),
-			        for_size,
-			        min,
-			        nat);
+			    ->get_preferred_height_for_width(GTK_WIDGET(self), for_size, min, nat);
 	}
 	*base_min = *base_nat = -1;
 }
@@ -204,8 +189,7 @@ static void vala_panel_applet_get_preferred_width_for_height(GtkWidget *self, in
 }
 GtkSizeRequestMode vala_panel_applet_get_request_mode(GtkWidget *obj)
 {
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	GtkOrientation pos;
 	g_object_get(p->toplevel, VP_KEY_ORIENTATION, &pos, NULL);
@@ -299,8 +283,7 @@ const char *vala_panel_applet_get_action_group(ValaPanelApplet *self)
 static void vala_panel_applet_get_property(GObject *object, guint property_id, GValue *value,
                                            GParamSpec *pspec)
 {
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(object);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	switch (property_id)
 	{
@@ -329,7 +312,7 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
                                            GParamSpec *pspec)
 {
 	ValaPanelApplet *self;
-	self = G_TYPE_CHECK_INSTANCE_CAST(object, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	self                      = VALA_PANEL_APPLET(object);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	switch (property_id)
 	{
@@ -359,8 +342,7 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
 
 static void vala_panel_applet_finalize(GObject *obj)
 {
-	ValaPanelApplet *self =
-	    G_TYPE_CHECK_INSTANCE_CAST(obj, VALA_PANEL_TYPE_APPLET, ValaPanelApplet);
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	g_object_unref0(p->grp);
 	g_free0(p->uuid);
