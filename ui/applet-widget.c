@@ -46,20 +46,7 @@ static GParamSpec *pspecs[VALA_PANEL_APPLET_ALL];
 
 static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
 {
-	ValaPanelApplet *self = VALA_PANEL_APPLET(_sender);
-	ValaPanelAppletPrivate *p =
-	    (ValaPanelAppletPrivate *)vala_panel_applet_get_instance_private(self);
-	if (b->button == 3 && ((b->state & gtk_accelerator_get_default_mod_mask()) == 0))
-	{
-		GtkMenu *m = vala_panel_toplevel_get_plugin_menu(p->toplevel, self);
-		gtk_menu_popup_at_widget(m,
-		                         GTK_WIDGET(self),
-		                         GDK_GRAVITY_NORTH,
-		                         GDK_GRAVITY_NORTH,
-		                         (GdkEvent *)b);
-		return true;
-	}
-	return false;
+	return vala_panel_toplevel_release_event_helper(_sender, b, obj);
 }
 
 gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
@@ -78,7 +65,10 @@ static GObject *vala_panel_applet_constructor(GType type, guint n_construct_prop
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	gtk_widget_set_has_window((GtkWidget *)self, false);
 	gtk_widget_insert_action_group(self, "applet", p->grp);
-	g_signal_connect(self, "button-release-event", G_CALLBACK(release_event_helper), NULL);
+	g_signal_connect(self,
+	                 "button-release-event",
+	                 G_CALLBACK(release_event_helper),
+	                 p->toplevel);
 	return G_OBJECT(self);
 }
 

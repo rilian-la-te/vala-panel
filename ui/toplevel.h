@@ -49,7 +49,8 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 void start_ui(ValaPanelToplevel *self);
 void stop_ui(ValaPanelToplevel *self);
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
-GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl);
+G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *b,
+                                                              gpointer obj);
 void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self);
 
 G_END_DECLS

@@ -103,7 +103,6 @@ struct _ValaPanelToplevel
 	int width;
 	PanelGravity gravity;
 	ValaPanelToplevelConfig *pref_dialog;
-	GtkMenu *context_menu;
 	char *font;
 };
 
@@ -151,7 +150,6 @@ static void vala_panel_toplevel_destroy(GtkWidget *base)
 static void vala_panel_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
-	g_object_unref0(self->context_menu);
 	g_object_unref0(self->pref_dialog);
 	g_free0(self->uuid);
 	g_object_unref0(self->provider);
@@ -284,7 +282,7 @@ static void setup(ValaPanelToplevel *self, bool use_internal_values)
 /**************************************************************************************
  *                                     Menus stuff
  **************************************************************************************/
-GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl)
+static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl)
 {
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/lib/menus.ui");
@@ -294,38 +292,38 @@ GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelA
 		GMenu *gmenusection = G_MENU(gtk_builder_get_object(builder, "plugin-section"));
 		vala_panel_applet_update_context_menu(pl, gmenusection);
 	}
-	gtk_widget_destroy0(self->context_menu);
-	self->context_menu = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(gmenu)));
+	GtkMenu *context_menu = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(gmenu)));
 	if (pl != NULL)
-		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(pl), NULL);
+		gtk_menu_attach_to_widget(context_menu, GTK_WIDGET(pl), NULL);
 	else
-		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(self), NULL);
-	gtk_widget_show_all(GTK_WIDGET(self->context_menu));
-	return self->context_menu;
+		gtk_menu_attach_to_widget(context_menu, GTK_WIDGET(self), NULL);
+	gtk_widget_show_all(GTK_WIDGET(context_menu));
+	return context_menu;
+}
+
+bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e, gpointer obj)
+{
+	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
+	ValaPanelApplet *pl     = NULL;
+	if (VALA_PANEL_IS_APPLET(_sender))
+		pl = VALA_PANEL_APPLET(_sender);
+	if (e->button == 3)
+	{
+		GtkMenu *menu = vala_panel_toplevel_get_plugin_menu(self, pl);
+		gtk_menu_popup_at_widget(menu,
+		                         GTK_WIDGET(_sender),
+		                         GDK_GRAVITY_NORTH,
+		                         GDK_GRAVITY_NORTH,
+		                         (GdkEvent *)e);
+		g_signal_connect(menu, "hide", G_CALLBACK(gtk_widget_destroy), menu);
+		return true;
+	}
+	return false;
 }
 
 static bool button_release_event(GtkWidget *w, GdkEventButton *e)
 {
-	ValaPanelToplevel *self = (ValaPanelToplevel *)w;
-	if (e->button == 3)
-	{
-		if (self->context_menu == NULL)
-		{
-			GtkMenu *menu = vala_panel_toplevel_get_plugin_menu(self, NULL);
-			gtk_menu_popup_at_widget(menu,
-			                         self,
-			                         GDK_GRAVITY_NORTH,
-			                         GDK_GRAVITY_NORTH,
-			                         e);
-			return true;
-		}
-		else
-		{
-			gtk_widget_destroy0(self->context_menu);
-			return true;
-		}
-	}
-	return false;
+	return vala_panel_toplevel_release_event_helper(w, e, w);
 }
 
 /**************************************************************************************
