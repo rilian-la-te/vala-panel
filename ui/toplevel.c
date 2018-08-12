@@ -534,36 +534,41 @@ G_GNUC_INTERNAL void update_appearance(ValaPanelToplevel *self)
 	                 self->use_toolbar_appearance);
 }
 
+static ValaPanelToplevel *vala_panel_toplevel_create_window(GtkApplication *app, const char *uuid)
+{
+	return VALA_PANEL_TOPLEVEL(g_object_new(vala_panel_toplevel_get_type(),
+	                                        "border-width",
+	                                        0,
+	                                        "decorated",
+	                                        false,
+	                                        "name",
+	                                        "ValaPanel",
+	                                        "resizable",
+	                                        false,
+	                                        "title",
+	                                        "ValaPanel",
+	                                        "type-hint",
+	                                        GDK_WINDOW_TYPE_HINT_DOCK,
+	                                        "window-position",
+	                                        GTK_WIN_POS_NONE,
+	                                        "skip-taskbar-hint",
+	                                        true,
+	                                        "skip-pager-hint",
+	                                        true,
+	                                        "accept-focus",
+	                                        false,
+	                                        "application",
+	                                        app,
+	                                        "uuid",
+	                                        uuid,
+	                                        NULL));
+}
+
 static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *app,
                                                                 const char *uid, int mon,
                                                                 PanelGravity edge)
 {
-	ValaPanelToplevel *ret = VALA_PANEL_TOPLEVEL(g_object_new(vala_panel_toplevel_get_type(),
-	                                                          "border-width",
-	                                                          0,
-	                                                          "decorated",
-	                                                          false,
-	                                                          "name",
-	                                                          "ValaPanel",
-	                                                          "resizable",
-	                                                          false,
-	                                                          "title",
-	                                                          "ValaPanel",
-	                                                          "type-hint",
-	                                                          GDK_WINDOW_TYPE_HINT_DOCK,
-	                                                          "window-position",
-	                                                          GTK_WIN_POS_NONE,
-	                                                          "skip-taskbar-hint",
-	                                                          true,
-	                                                          "skip-pager-hint",
-	                                                          true,
-	                                                          "accept-focus",
-	                                                          false,
-	                                                          "application",
-	                                                          app,
-	                                                          "uuid",
-	                                                          uid,
-	                                                          NULL));
+	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	ret->mon               = mon;
 	ret->gravity           = edge;
 	setup(ret, true);
@@ -581,36 +586,9 @@ static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const 
 ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
                                            const char *uid)
 {
-	ValaPanelToplevel *ret = VALA_PANEL_TOPLEVEL(g_object_new(vala_panel_toplevel_get_type(),
-	                                                          "border-width",
-	                                                          0,
-	                                                          "decorated",
-	                                                          false,
-	                                                          "name",
-	                                                          "ValaPanel",
-	                                                          "resizable",
-	                                                          false,
-	                                                          "title",
-	                                                          "ValaPanel",
-	                                                          "type-hint",
-	                                                          GDK_WINDOW_TYPE_HINT_DOCK,
-	                                                          "window-position",
-	                                                          GTK_WIN_POS_NONE,
-	                                                          "skip-taskbar-hint",
-	                                                          true,
-	                                                          "skip-pager-hint",
-	                                                          true,
-	                                                          "accept-focus",
-	                                                          false,
-	                                                          "application",
-	                                                          app,
-	                                                          "uuid",
-	                                                          uid,
-	                                                          NULL));
+	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	if (platform == NULL)
-	{
 		platform = plt;
-	}
 	setup(ret, false);
 	return ret;
 }
