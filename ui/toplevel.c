@@ -103,6 +103,7 @@ struct _ValaPanelToplevel
 	int width;
 	PanelGravity gravity;
 	ValaPanelToplevelConfig *pref_dialog;
+	GtkMenu *context_menu;
 	char *font;
 };
 
@@ -150,7 +151,8 @@ static void vala_panel_toplevel_destroy(GtkWidget *base)
 static void vala_panel_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
-	g_object_unref0(self->pref_dialog);
+	gtk_widget_destroy0(self->context_menu);
+	gtk_widget_destroy0(self->pref_dialog);
 	g_free0(self->uuid);
 	g_object_unref0(self->provider);
 	g_free0(self->font);
@@ -292,13 +294,14 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 		GMenu *gmenusection = G_MENU(gtk_builder_get_object(builder, "plugin-section"));
 		vala_panel_applet_update_context_menu(pl, gmenusection);
 	}
-	GtkMenu *context_menu = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(gmenu)));
+	gtk_widget_destroy0(self->context_menu);
+	self->context_menu = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(gmenu)));
 	if (pl != NULL)
-		gtk_menu_attach_to_widget(context_menu, GTK_WIDGET(pl), NULL);
+		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(pl), NULL);
 	else
-		gtk_menu_attach_to_widget(context_menu, GTK_WIDGET(self), NULL);
-	gtk_widget_show_all(GTK_WIDGET(context_menu));
-	return context_menu;
+		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(self), NULL);
+	gtk_widget_show_all(GTK_WIDGET(self->context_menu));
+	return self->context_menu;
 }
 
 bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e, gpointer obj)
@@ -315,7 +318,6 @@ bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton
 		                         GDK_GRAVITY_NORTH,
 		                         GDK_GRAVITY_NORTH,
 		                         (GdkEvent *)e);
-		g_signal_connect(menu, "hide", G_CALLBACK(gtk_widget_destroy), menu);
 		return true;
 	}
 	return false;
@@ -917,7 +919,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XS;
 		else
 			self->icon_size_hints = XXS;
-		appearance_update_required = true;
+		appearance_update_required    = true;
 		break;
 	case PROP_BG_FILE:
 		g_free0(self->background_file);
@@ -933,7 +935,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
 		if (-1 <= g_value_get_int(value))
-			self->mon = g_value_get_int(value);
+			self->mon        = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
 	case PROP_DOCK:
@@ -977,6 +979,7 @@ void vala_panel_toplevel_init(ValaPanelToplevel *self)
 		gtk_widget_set_visual(self, visual);
 	self->font            = g_strdup("");
 	self->background_file = g_strdup("");
+	self->context_menu    = NULL;
 }
 
 void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
