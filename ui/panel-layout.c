@@ -42,6 +42,8 @@ struct _ValaPanelLayout
 
 G_DEFINE_TYPE(ValaPanelLayout, vala_panel_layout, GTK_TYPE_BOX)
 
+void vala_panel_layout_update_applet_positions(ValaPanelLayout *self);
+
 ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation orient, int spacing)
 {
 	return VALA_PANEL_LAYOUT(g_object_new(vala_panel_layout_get_type(),
@@ -138,6 +140,7 @@ void vala_panel_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *app
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
 	gtk_widget_destroy(GTK_WIDGET(applet));
 	vala_panel_core_settings_remove_unit_settings_full(core_settings, uuid, true);
+	vala_panel_layout_update_applet_positions(self);
 }
 
 const char *vala_panel_layout_get_toplevel_id(ValaPanelLayout *self)
