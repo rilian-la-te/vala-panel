@@ -302,7 +302,7 @@ static void on_plugin_expand_toggled(GtkCellRendererToggle *render, const char *
 	{
 		ValaPanelApplet *pl;
 		bool expand;
-		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, COLUMN_EXPAND, &expand, -1);
+		gtk_tree_model_get(model, &it, COLUMN_EXPAND, &expand, COLUMN_DATA, &pl, -1);
 		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_plugin_info(
 		    vala_panel_layout_get_manager(), pl, vala_panel_toplevel_get_core_settings());
 		if (vala_panel_applet_info_is_expandable(pl_info))
