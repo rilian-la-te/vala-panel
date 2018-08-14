@@ -292,7 +292,7 @@ static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
 		                         vala_panel_applet_is_configurable(pl));
 	}
 }
-static void on_plugin_expand_toggled(const char *path, void *data)
+static void on_plugin_expand_toggled(GtkCellRendererToggle *render, const char *path, void *data)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
 	GtkTreeIter it;
