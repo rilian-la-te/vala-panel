@@ -1,7 +1,6 @@
 set(UTIL_HEADERS
     boxed-wrapper.h
     glistmodel-filter.h
-    ${CMAKE_BINARY_DIR}/config.h
     constants.h
     misc.h
     info-data.h
@@ -31,6 +30,7 @@ endif()
 add_library (util STATIC
     ${UTIL_SOURCES}
     ${UTIL_HEADERS}
+    ${CMAKE_BINARY_DIR}/config.h
     ${GLIB_RESOURCES_LIB}
 )
 
@@ -45,4 +45,6 @@ set_target_properties (util PROPERTIES
 add_subdirectory(gtk)
 
 install (FILES ${UTIL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)
+install (FILES ${CMAKE_BINARY_DIR}/config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ RENAME vala-panel-configuration.h COMPONENT dev)
+
 
