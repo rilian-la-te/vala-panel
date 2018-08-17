@@ -145,7 +145,7 @@ if (ENABLE_BUDGIE)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
     # Install plugin stuffs
-    install(TARGETS sntray-budgie DESTINATION ${CMAKE_INSTALL_LIBDIR}/budgie-desktop/plugins)
+    install(TARGETS sntray-budgie DESTINATION ${CMAKE_INSTALL_LIBDIR}/budgie-desktop/plugins/budgie-sntray-plugin)
 endif()
 
 #################
