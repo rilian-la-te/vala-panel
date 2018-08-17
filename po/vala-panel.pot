@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-04 23:31+0300\n"
+"POT-Creation-Date: 2018-08-17 15:34+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../util/gtk/generic-config-dialog.c:95
+#: ../util/gtk/generic-config-dialog.c:118
+msgid "Select a file"
+msgstr ""
+
+#: ../util/gtk/generic-config-dialog.c:195
+msgid "_Close"
+msgstr ""
+
+#: ../util/gtk/misc-gtk.c:154 ../util/gtk/misc-gtk.c:170 ../ui/toplevel.c:402
+#: ../applets/core/launchbar/launchbar-config.vala:212
+msgid "Error"
+msgstr ""
 
 #: ../util/info-data.c:65 ../util/info-data.c:66
 #, c-format
@@ -26,30 +40,44 @@ msgstr ""
 msgid "Run system command"
 msgstr ""
 
-#: ../ui/generic-config-dialog.c:93 ../ui/generic-config-dialog.c:116
-msgid "Select a file"
+#: ../ui/applet-info.c:78
+msgid "Applet"
 msgstr ""
 
-#: ../ui/generic-config-dialog.c:193
-msgid "_Close"
+#: ../ui/applet-info.c:84
+msgid "Vala Panel Applet"
 msgstr ""
 
-#: ../ui/misc-gtk.c:157 ../ui/misc-gtk.c:173 ../ui/toplevel.c:410
-#: ../applets/core/launchbar/launchbar-config.vala:211
-msgid "Error"
+#: ../ui/toplevel-config.c:386 ../ui/toplevel-config.c:494
+#: ../applets/core/dirmenu/dirmenu.vala:196
+#: ../applets/core/menumodel/menumodel.vala:115
+#: ../applets/core/launchbar/config.ui:135
+msgid "Icon"
 msgstr ""
 
-#: ../ui/toplevel.c:408
+#: ../ui/toplevel-config.c:394
+msgid "Currently loaded plugins"
+msgstr ""
+
+#: ../ui/toplevel-config.c:404
+msgid "Stretch"
+msgstr ""
+
+#: ../ui/toplevel-config.c:502
+msgid "Available plugins"
+msgstr ""
+
+#: ../ui/toplevel.c:400
 msgid "There is no room for another panel. All the edges are taken."
 msgstr ""
 
-#: ../ui/toplevel.c:434
+#: ../ui/toplevel.c:426
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning:This can not be recovered.</b>"
 msgstr ""
 
-#: ../ui/toplevel.c:437
+#: ../ui/toplevel.c:429
 msgid "Confirm"
 msgstr ""
 
@@ -57,76 +85,67 @@ msgstr ""
 msgid "Run command on already opened panel"
 msgstr ""
 
-#: ../app/application.c:71
+#: ../app/application.c:31
+msgid "Run remote command on panel applet"
+msgstr ""
+
+#: ../app/application.c:75
 msgid "Print version and exit"
 msgstr ""
 
-#: ../app/application.c:72
+#: ../app/application.c:76
 msgid "Use specified profile"
 msgstr ""
 
-#: ../app/application.c:72
+#: ../app/application.c:76
 msgid "profile"
 msgstr ""
 
-#: ../app/application.c:73
+#: ../app/application.c:77 ../app/application.c:78
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.c:225
+#: ../app/application.c:227
 #, c-format
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.c:256
+#: ../app/application.c:259
 #, c-format
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
 msgstr ""
 
-#: ../app/application.c:511
+#: ../app/application.c:272
+#, c-format
+msgid ""
+"%s: invalid remote command - %s. Remote commands should have exactly 2 "
+"arguments\n"
+msgstr ""
+
+#: ../app/application.c:556
 msgid "No panel with this name found.\n"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3291
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3347
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3299
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3355
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3307
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3363
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3315
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3371
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3327
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3383
 msgid "_Close All"
-msgstr ""
-
-#: ../ui/configurator.vala:88 ../ui/configurator.vala:145
-msgid "All"
-msgstr ""
-
-#: ../ui/configurator.vala:145
-msgid "%d"
-msgstr ""
-
-#: ../ui/configurator.vala:217
-msgid "Currently loaded plugins"
-msgstr ""
-
-#: ../ui/configurator.vala:226
-msgid "Stretch"
-msgstr ""
-
-#: ../ui/configurator.vala:286
-msgid "Available plugins"
 msgstr ""
 
 #: ../applets/core/clock/clock.vala:100
@@ -141,7 +160,7 @@ msgstr ""
 msgid "Format codes: man 3 strftime; %n for line break"
 msgstr ""
 
-#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:67
+#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:66
 msgid "Bold font"
 msgstr ""
 
@@ -161,22 +180,11 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:196
-#: ../applets/core/menumodel/menumodel.vala:115
-#: ../applets/core/launchbar/config.ui:135
-msgid "Icon"
-msgstr ""
-
-#: ../applets/core/kbled/kbled.vala:71
-#: ../applets/core/kbled/kbled.desktop.plugin.in:4
-msgid "Keyboard LED"
-msgstr ""
-
-#: ../applets/core/kbled/kbled.vala:73
+#: ../applets/core/kbled/kbled.vala:72
 msgid "Show CapsLock"
 msgstr ""
 
-#: ../applets/core/kbled/kbled.vala:74
+#: ../applets/core/kbled/kbled.vala:73
 msgid "Show NumLock"
 msgstr ""
 
@@ -184,15 +192,15 @@ msgstr ""
 msgid "Bootstrap"
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar-config.vala:68
+#: ../applets/core/launchbar/launchbar-config.vala:69
 msgid "Quicklaunch already contains this URI.\n"
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar-config.vala:91
+#: ../applets/core/launchbar/launchbar-config.vala:92
 msgid "Quicklaunch already contains this application.\n"
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar-config.vala:155
+#: ../applets/core/launchbar/launchbar-config.vala:156
 msgid ""
 "Failed to add directory content.\n"
 " Adding current directory as launcher."
@@ -261,7 +269,7 @@ msgid "Menu file name"
 msgstr ""
 
 #: ../applets/core/separator/separator.vala:64 ../ui/pref.ui:566
-#: ../data/ui/pref.ui:567
+#: ../data/ui/pref.ui:563
 msgid "Size"
 msgstr ""
 
@@ -269,48 +277,48 @@ msgstr ""
 msgid "Visible separator"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:250
+#: ../applets/drawing/monitors/monitors.vala:251
 msgid "CPU usage: %.2f%%"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:338
+#: ../applets/drawing/monitors/monitors.vala:339
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:397
+#: ../applets/drawing/monitors/monitors.vala:398
 msgid "Display CPU usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:398
+#: ../applets/drawing/monitors/monitors.vala:399
 msgid "CPU color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:399
+#: ../applets/drawing/monitors/monitors.vala:400
 msgid "Display RAM usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:400
+#: ../applets/drawing/monitors/monitors.vala:401
 msgid "RAM color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:401
+#: ../applets/drawing/monitors/monitors.vala:402
 msgid "Action when clicked"
 msgstr ""
 
-#: ../applets/wnck/deskno/deskno.vala:68
+#: ../applets/wnck/deskno/deskno.vala:67
 msgid "Display desktop names"
 msgstr ""
 
-#: ../applets/wnck/icontasks/buttons.vala:92
+#: ../applets/wnck/icontasks/buttons.vala:113
 msgid "Pin to panel"
 msgstr ""
 
-#: ../applets/wnck/icontasks/buttons.vala:93
-#: ../applets/wnck/icontasks/buttons.vala:449
+#: ../applets/wnck/icontasks/buttons.vala:114
+#: ../applets/wnck/icontasks/buttons.vala:488
 msgid "Unpin from panel"
 msgstr ""
 
-#: ../applets/wnck/pager/pager.vala:95
+#: ../applets/wnck/pager/pager.vala:96
 msgid "Workspaces..."
 msgstr ""
 
@@ -354,103 +362,103 @@ msgstr ""
 msgid "Panel preferences"
 msgstr ""
 
-#: ../ui/pref.ui:94 ../data/ui/pref.ui:108
+#: ../ui/pref.ui:94 ../data/ui/pref.ui:111
 msgid "Edge:"
 msgstr ""
 
-#: ../ui/pref.ui:109 ../data/ui/pref.ui:123
+#: ../ui/pref.ui:109 ../data/ui/pref.ui:126
 msgid "Monitor:"
 msgstr ""
 
-#: ../ui/pref.ui:121 ../data/ui/pref.ui:135
+#: ../ui/pref.ui:121 ../data/ui/pref.ui:138
 msgid "Advanced properties"
 msgstr ""
 
-#: ../ui/pref.ui:138 ../data/ui/pref.ui:152
+#: ../ui/pref.ui:138 ../data/ui/pref.ui:155
 msgid "Count as dock:"
 msgstr ""
 
-#: ../ui/pref.ui:150 ../data/ui/pref.ui:164
+#: ../ui/pref.ui:150
 msgid "Reserve space:"
 msgstr ""
 
-#: ../ui/pref.ui:186 ../data/ui/pref.ui:200
+#: ../ui/pref.ui:186 ../data/ui/pref.ui:179
 msgid "Placement properties"
 msgstr ""
 
-#: ../ui/pref.ui:423 ../data/ui/pref.ui:424
+#: ../ui/pref.ui:423 ../data/ui/pref.ui:420
 msgid "Position"
 msgstr ""
 
-#: ../ui/pref.ui:449 ../data/ui/pref.ui:450
+#: ../ui/pref.ui:449 ../data/ui/pref.ui:446
 msgid "Icon size in px:"
 msgstr ""
 
-#: ../ui/pref.ui:461 ../data/ui/pref.ui:462
+#: ../ui/pref.ui:461 ../data/ui/pref.ui:458
 msgid "Height in px:"
 msgstr ""
 
-#: ../ui/pref.ui:486 ../data/ui/pref.ui:487
+#: ../ui/pref.ui:486 ../data/ui/pref.ui:483
 msgid "Width:"
 msgstr ""
 
-#: ../ui/pref.ui:510 ../data/ui/pref.ui:511
+#: ../ui/pref.ui:510 ../data/ui/pref.ui:507
 msgid "Size properties"
 msgstr ""
 
-#: ../ui/pref.ui:527 ../data/ui/pref.ui:528
+#: ../ui/pref.ui:527 ../data/ui/pref.ui:524
 msgid "Automatic hide panel"
 msgstr ""
 
-#: ../ui/pref.ui:556 ../data/ui/pref.ui:557
+#: ../ui/pref.ui:556 ../data/ui/pref.ui:553
 msgid "Autohide:"
 msgstr ""
 
-#: ../ui/pref.ui:582 ../data/ui/pref.ui:583
+#: ../ui/pref.ui:582 ../data/ui/pref.ui:579
 msgid "Foreground color:"
 msgstr ""
 
-#: ../ui/pref.ui:594 ../data/ui/pref.ui:595
+#: ../ui/pref.ui:594 ../data/ui/pref.ui:591
 msgid "Background image:"
 msgstr ""
 
-#: ../ui/pref.ui:606 ../data/ui/pref.ui:607
+#: ../ui/pref.ui:606 ../data/ui/pref.ui:603
 msgid "Background color:"
 msgstr ""
 
-#: ../ui/pref.ui:618 ../data/ui/pref.ui:619
+#: ../ui/pref.ui:618 ../data/ui/pref.ui:615
 msgid "Font:"
 msgstr ""
 
-#: ../ui/pref.ui:630 ../data/ui/pref.ui:631
+#: ../ui/pref.ui:630 ../data/ui/pref.ui:627
 msgid "Round corners size:"
 msgstr ""
 
-#: ../ui/pref.ui:706 ../data/ui/pref.ui:707
+#: ../ui/pref.ui:706 ../data/ui/pref.ui:703
 msgid "Select background color"
 msgstr ""
 
-#: ../ui/pref.ui:720 ../data/ui/pref.ui:721
+#: ../ui/pref.ui:720 ../data/ui/pref.ui:717
 msgid "Select foreground color"
 msgstr ""
 
-#: ../ui/pref.ui:733 ../data/ui/pref.ui:734
+#: ../ui/pref.ui:733 ../data/ui/pref.ui:730
 msgid "Select an Image"
 msgstr ""
 
-#: ../ui/pref.ui:752 ../data/ui/pref.ui:753
+#: ../ui/pref.ui:752 ../data/ui/pref.ui:749
 msgid "Select panel font"
 msgstr ""
 
-#: ../ui/pref.ui:764 ../data/ui/pref.ui:765
+#: ../ui/pref.ui:764 ../data/ui/pref.ui:761
 msgid "Size only"
 msgstr ""
 
-#: ../ui/pref.ui:789 ../data/ui/pref.ui:790
+#: ../ui/pref.ui:789 ../data/ui/pref.ui:807
 msgid "Appearance"
 msgstr ""
 
-#: ../ui/pref.ui:969 ../data/ui/pref.ui:946
+#: ../ui/pref.ui:969 ../data/ui/pref.ui:987
 msgid "Plugins"
 msgstr ""
 
@@ -472,31 +480,43 @@ msgid "Application preferences"
 msgstr ""
 
 #: ../app/app-pref.ui:52
-msgid "Logout manager..."
+msgid "Lock screen command..."
 msgstr ""
 
 #: ../app/app-pref.ui:68
+msgid "Logout manager..."
+msgstr ""
+
+#: ../app/app-pref.ui:84
 msgid "Shutdown application..."
 msgstr ""
 
-#: ../app/app-pref.ui:82
+#: ../app/app-pref.ui:98
 msgid "Preferred Applications:"
 msgstr ""
 
-#: ../app/app-pref.ui:108
+#: ../app/app-pref.ui:124
 msgid "Use dark theme"
 msgstr ""
 
-#: ../app/app-pref.ui:129
+#: ../app/app-pref.ui:145
 msgid "Use custom CSS"
 msgstr ""
 
-#: ../app/app-pref.ui:148
+#: ../app/app-pref.ui:164
 msgid "Select a CSS File"
 msgstr ""
 
-#: ../app/app-pref.ui:170
+#: ../app/app-pref.ui:186
 msgid "Widget Style"
+msgstr ""
+
+#: ../data/ui/new-plugin.ui:25
+msgid "Plugin Name"
+msgstr ""
+
+#: ../data/ui/new-plugin.ui:37
+msgid "Plugin Description"
 msgstr ""
 
 #: ../data/ui/panel-menus.ui:6
@@ -532,7 +552,11 @@ msgid "About"
 msgstr ""
 
 #: ../data/ui/pref.ui:48
-msgid "Primary monitor"
+msgid "Primary"
+msgstr ""
+
+#: ../data/ui/pref.ui:785
+msgid "Use toolbar appearance:"
 msgstr ""
 
 #: ../applets/core/launchbar/config.ui:33
@@ -613,10 +637,14 @@ msgid "Run"
 msgstr ""
 
 #: ../applets/core/menumodel/system-menus.ui:116
+msgid "Lock screen..."
+msgstr ""
+
+#: ../applets/core/menumodel/system-menus.ui:122
 msgid "Log Out..."
 msgstr ""
 
-#: ../applets/core/menumodel/system-menus.ui:121
+#: ../applets/core/menumodel/system-menus.ui:128
 msgid "Shut down..."
 msgstr ""
 
@@ -643,10 +671,6 @@ msgid ""
 "packages (Example is volume applet)."
 msgstr ""
 
-#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
-msgid "Konstantin"
-msgstr ""
-
 #: ../applets/core/clock/clock.desktop.plugin.in:3
 msgid "Clock"
 msgstr ""
@@ -655,71 +679,75 @@ msgstr ""
 msgid "Digital clock with calendar"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:3
 msgid "Directory menu"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:5
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
 msgid "This menu shows filesystem hierarchy, started from given dir."
 msgstr ""
 
-#: ../applets/core/kbled/kbled.desktop.plugin.in:5
+#: ../applets/core/kbled/kbled.desktop.plugin.in:3
+msgid "Keyboard LED"
+msgstr ""
+
+#: ../applets/core/kbled/kbled.desktop.plugin.in:4
 msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:3
 msgid "Quickstart"
 msgstr ""
 
-#: ../applets/core/launchbar/launchbar.desktop.plugin.in:5
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
 msgid "Container for application launchers."
 msgstr ""
 
-#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:3
 msgid "Applications Menu"
 msgstr ""
 
-#: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
 msgid "Applications or custom menu in GMenuModel format."
 msgstr ""
 
-#: ../applets/core/separator/separator.desktop.plugin.in:4
+#: ../applets/core/separator/separator.desktop.plugin.in:3
 msgid "Separator"
 msgstr ""
 
-#: ../applets/core/separator/separator.desktop.plugin.in:5
+#: ../applets/core/separator/separator.desktop.plugin.in:4
 msgid "Draws separator and makes space on panel"
 msgstr ""
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:3
 msgid "CPU Graph"
 msgstr ""
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:5
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
 msgid "Draws CPU graph on panel."
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:3
 msgid "Monitors Graph"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
 msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr ""
 
-#: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:3
 msgid "Window Buttons"
 msgstr ""
 
-#: ../applets/wnck/buttons/buttons.desktop.plugin.in:5
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
 msgid "Shows window buttons (such as minimize, maximize and close)."
 msgstr ""
 
-#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:3
 msgid "Desktop Number"
 msgstr ""
 
-#: ../applets/wnck/deskno/deskno.desktop.plugin.in:5
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
 msgid "Shows desktop name or number. Switch on click."
 msgstr ""
 
@@ -732,40 +760,40 @@ msgstr ""
 msgid "tab-new-symbolic"
 msgstr ""
 
-#: ../applets/wnck/pager/pager.desktop.plugin.in:4
+#: ../applets/wnck/pager/pager.desktop.plugin.in:3
 msgid "Pager"
 msgstr ""
 
-#: ../applets/wnck/pager/pager.desktop.plugin.in:5
+#: ../applets/wnck/pager/pager.desktop.plugin.in:4
 msgid "Shows desktops."
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:3
 msgid "Tasklist Xfce"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:5
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:5
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
 msgid "Shows opened windows."
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:3
 msgid "Tasklist"
 msgstr ""
 
-#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:3
 msgid "Show Desktop"
 msgstr ""
 
-#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
 msgid "Can shows desktop and shades window."
 msgstr ""
 
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:3
 msgid "XEmbed Tray"
 msgstr ""
 
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:5
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
 msgid "Old XEmbed-based tray"
 msgstr ""
 
