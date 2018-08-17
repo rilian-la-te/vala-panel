@@ -16,23 +16,9 @@ TODO
  * [ ] Taskbar DBus library for compositor (1.0)
  * [x] ~~Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
-*TODO for 0.4.0*
- * [x] Rewrite plugins API and core into C
- * [x] Split Toplevel into 3 objects: positioner, layout and window
-   * [x] Create Platform (abstraction that will handle all positioning)
-   * [x] Allow Platform to be changed and independent form toplevel code
-   * [x] Create X11 platform (with current positioning code)
-   * [x] Introduce gravity-based positioning
-   * [x] Create Layout
-   * [x] Rewrite toplevel into C
-   * [x] Rewrite applet into C
- * [x] Made PanelManager (done as Platform)
-
- It seems 0.4.0 as done, so, release it for now.
-
 *TODO for 0.5.0*
  * [x] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
- * [ ] Implement free applet actions (not only menu)
+ * [x] Implement free applet actions (not only menu)
  * [ ] Be prepared for GTK4
  * [ ] Replace XEmbed to proxy and move it to extras
  * [ ] Made pack-type useful

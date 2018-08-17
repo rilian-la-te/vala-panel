@@ -225,7 +225,7 @@ void vala_panel_applet_update_context_menu_private(ValaPanelApplet *self, GMenu 
 
 static void vala_panel_applet_init(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	p->grp                    = g_simple_action_group_new();
 	p->settings               = NULL;
 	g_action_map_add_action_entries(G_ACTION_MAP(p->grp), entries, G_N_ELEMENTS(entries), self);
@@ -238,36 +238,36 @@ static void vala_panel_applet_init(ValaPanelApplet *self)
 }
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return p->background;
 }
 
 void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	p->background             = w;
 }
 
 ValaPanelToplevel *vala_panel_applet_get_toplevel(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return p->toplevel;
 }
 
 GSettings *vala_panel_applet_get_settings(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return p->settings;
 }
 const char *vala_panel_applet_get_uuid(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return p->uuid;
 }
 
 const char *vala_panel_applet_get_action_group(ValaPanelApplet *self)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
+	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return p->grp;
 }
 static void vala_panel_applet_get_property(GObject *object, guint property_id, GValue *value,
