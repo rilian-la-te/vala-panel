@@ -65,7 +65,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	bool loaded =
 	    g_key_file_load_from_file(file, desktop_name, G_KEY_FILE_KEEP_TRANSLATIONS, &err);
 	if (err)
-		g_critical("%s\n", err->message);
+		g_critical("%s: %s\n", desktop_name, err->message);
 	if (!loaded || err)
 		return NULL;
 	struct _ValaPanelAppletInfo *ret = g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
