@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-19 22:09+0300\n"
-"PO-Revision-Date: 2017-12-19 22:12+0300\n"
+"POT-Creation-Date: 2018-08-17 15:34+0300\n"
+"PO-Revision-Date: 2018-08-17 15:47+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,31 +16,64 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
-#: ../lib/generic-config-dialog.c:94 ../lib/generic-config-dialog.c:117
+#: ../util/gtk/generic-config-dialog.c:95
+#: ../util/gtk/generic-config-dialog.c:118
 msgid "Select a file"
 msgstr "Выбрать файл"
 
-#: ../lib/generic-config-dialog.c:194
+#: ../util/gtk/generic-config-dialog.c:195
 msgid "_Close"
 msgstr "_Закрыть"
 
-#: ../lib/misc.c:192 ../lib/misc.c:208 ../lib/toplevel.c:435
-#: ../applets/core/launchbar/launchbar-config.vala:211
+#: ../util/gtk/misc-gtk.c:154 ../util/gtk/misc-gtk.c:170 ../ui/toplevel.c:402
+#: ../applets/core/launchbar/launchbar-config.vala:212
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../lib/toplevel.c:433
+#: ../util/info-data.c:65 ../util/info-data.c:66
+#, c-format
+msgid "Run %s"
+msgstr "Выполнить %s"
+
+#: ../util/info-data.c:67
+msgid "Run system command"
+msgstr "Выполнить системную команду"
+
+#: ../ui/applet-info.c:78
+msgid "Applet"
+msgstr "Апплет"
+
+#: ../ui/applet-info.c:84
+msgid "Vala Panel Applet"
+msgstr "Апплет Vala Panel"
+
+#: ../ui/toplevel-config.c:386 ../ui/toplevel-config.c:494
+#: ../applets/core/dirmenu/dirmenu.vala:196
+#: ../applets/core/menumodel/menumodel.vala:115
+#: ../applets/core/launchbar/config.ui:135
+msgid "Icon"
+msgstr "Значок"
+
+#: ../ui/toplevel-config.c:394
+msgid "Currently loaded plugins"
+msgstr "Загруженные модули"
+
+#: ../ui/toplevel-config.c:404
+msgid "Stretch"
+msgstr "Растянуть"
+
+#: ../ui/toplevel-config.c:502
+msgid "Available plugins"
+msgstr "Доступные модули"
+
+#: ../ui/toplevel.c:400
 msgid "There is no room for another panel. All the edges are taken."
 msgstr "Нет места для новой панели. Все стороны экрана заняты."
 
-#: ../lib/toplevel.c:459
-#, fuzzy
-#| msgid ""
-#| "Really delete this panel?\n"
-#| "<b>Warning: This can not be recovered.</b>"
+#: ../ui/toplevel.c:426
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning:This can not be recovered.</b>"
@@ -48,13 +81,17 @@ msgstr ""
 "Вы точно хотите удалить панель?\n"
 "<b>Внимание: это необратимая операция.</b>"
 
-#: ../lib/toplevel.c:462
+#: ../ui/toplevel.c:429
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: ../app/application.c:34
+#: ../app/application.c:30
 msgid "Run command on already opened panel"
 msgstr "Выполнить команду на открытом приложении"
+
+#: ../app/application.c:31
+msgid "Run remote command on panel applet"
+msgstr "Выполнить удаленную команду апплета панели"
 
 #: ../app/application.c:75
 msgid "Print version and exit"
@@ -68,11 +105,11 @@ msgstr "Использовать специфичный профиль"
 msgid "profile"
 msgstr "профиль"
 
-#: ../app/application.c:77
+#: ../app/application.c:77 ../app/application.c:78
 msgid "cmd"
 msgstr "cmd"
 
-#: ../app/application.c:228
+#: ../app/application.c:227
 #, c-format
 msgid "%s - Version %s\n"
 msgstr "%s - Версия %s\n"
@@ -86,53 +123,38 @@ msgstr ""
 "%s: неверная команда - %s. Ничего не выполнено.\n"
 "Список команд: %s\n"
 
-#: ../app/application.c:515
+#: ../app/application.c:272
+#, c-format
+msgid ""
+"%s: invalid remote command - %s. Remote commands should have exactly 2 "
+"arguments\n"
+msgstr ""
+"%s: неверная удаленная команда - %s. Удаленная команда должна иметь ровно 2 "
+"аргумента\n"
+
+#: ../app/application.c:556
 msgid "No panel with this name found.\n"
 msgstr "Не найдено панели с таким именем.\n"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3294
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3347
 msgid "Mi_nimize All"
 msgstr "_Свернуть все окна"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3302
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3355
 msgid "Un_minimize All"
 msgstr "_Развернуть свернутое"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3310
-#, fuzzy
-#| msgid "Ma_ximize"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3363
 msgid "Ma_ximize All"
 msgstr "_На весь экран"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3318
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3371
 msgid "_Unmaximize All"
 msgstr "_Уменьшить все"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3330
-#, fuzzy
-#| msgid "_Close"
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3383
 msgid "_Close All"
 msgstr "_Закрыть"
-
-#: ../lib/configurator.vala:88 ../lib/configurator.vala:145
-msgid "All"
-msgstr "Все"
-
-#: ../lib/configurator.vala:145
-msgid "%d"
-msgstr "%d"
-
-#: ../lib/configurator.vala:218
-msgid "Currently loaded plugins"
-msgstr "Загруженные модули"
-
-#: ../lib/configurator.vala:227
-msgid "Stretch"
-msgstr "Растянуть"
-
-#: ../lib/configurator.vala:287
-msgid "Available plugins"
-msgstr "Доступные модули"
 
 #: ../applets/core/clock/clock.vala:100
 msgid "Clock Format"
@@ -147,7 +169,7 @@ msgid "Format codes: man 3 strftime; %n for line break"
 msgstr ""
 "Справка о форматах: man 3 strftime; для разделителя строки используется %n."
 
-#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:67
+#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:66
 msgid "Bold font"
 msgstr "Жирный шрифт"
 
@@ -167,22 +189,11 @@ msgstr "Корень"
 msgid "Label"
 msgstr "Метка"
 
-#: ../applets/core/dirmenu/dirmenu.vala:196
-#: ../applets/core/menumodel/menumodel.vala:115
-#: ../applets/core/launchbar/config.ui:135
-msgid "Icon"
-msgstr "Значок"
-
-#: ../applets/core/kbled/kbled.vala:71
-#: ../applets/core/kbled/kbled.desktop.plugin.in:4
-msgid "Keyboard LED"
-msgstr "Клавиатурный индикатор"
-
-#: ../applets/core/kbled/kbled.vala:73
+#: ../applets/core/kbled/kbled.vala:72
 msgid "Show CapsLock"
 msgstr "Показать CapsLock"
 
-#: ../applets/core/kbled/kbled.vala:74
+#: ../applets/core/kbled/kbled.vala:73
 msgid "Show NumLock"
 msgstr "Показать NumLock"
 
@@ -190,15 +201,15 @@ msgstr "Показать NumLock"
 msgid "Bootstrap"
 msgstr "Стартовая кнопка"
 
-#: ../applets/core/launchbar/launchbar-config.vala:68
+#: ../applets/core/launchbar/launchbar-config.vala:69
 msgid "Quicklaunch already contains this URI.\n"
 msgstr "Панель запуска уже содержит этот адрес.\n"
 
-#: ../applets/core/launchbar/launchbar-config.vala:91
+#: ../applets/core/launchbar/launchbar-config.vala:92
 msgid "Quicklaunch already contains this application.\n"
 msgstr "На этом апплете уже есть такое приложение.\n"
 
-#: ../applets/core/launchbar/launchbar-config.vala:155
+#: ../applets/core/launchbar/launchbar-config.vala:156
 msgid ""
 "Failed to add directory content.\n"
 " Adding current directory as launcher."
@@ -270,7 +281,8 @@ msgstr "Название (только для кнопки)"
 msgid "Menu file name"
 msgstr "Имя файла меню"
 
-#: ../applets/core/separator/separator.vala:64 ../lib/pref.ui:566
+#: ../applets/core/separator/separator.vala:64 ../ui/pref.ui:566
+#: ../data/ui/pref.ui:563
 msgid "Size"
 msgstr "Размер"
 
@@ -278,52 +290,48 @@ msgstr "Размер"
 msgid "Visible separator"
 msgstr "Показывать разделитель"
 
-#: ../applets/drawing/monitors/monitors.vala:250
+#: ../applets/drawing/monitors/monitors.vala:251
 msgid "CPU usage: %.2f%%"
 msgstr "Загрузка ЦП: %.2f%%"
 
-#: ../applets/drawing/monitors/monitors.vala:338
+#: ../applets/drawing/monitors/monitors.vala:339
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr "Использовано ОЗУ: %.1fМб (%.2f%%)"
 
-#: ../applets/drawing/monitors/monitors.vala:397
+#: ../applets/drawing/monitors/monitors.vala:398
 msgid "Display CPU usage"
 msgstr "Показывает загрузку процессора"
 
-#: ../applets/drawing/monitors/monitors.vala:398
+#: ../applets/drawing/monitors/monitors.vala:399
 msgid "CPU color"
 msgstr "Цвет ЦПУ"
 
-#: ../applets/drawing/monitors/monitors.vala:399
+#: ../applets/drawing/monitors/monitors.vala:400
 msgid "Display RAM usage"
 msgstr "Показывать использование памяти"
 
-#: ../applets/drawing/monitors/monitors.vala:400
+#: ../applets/drawing/monitors/monitors.vala:401
 msgid "RAM color"
 msgstr "Цвет ОЗУ"
 
-#: ../applets/drawing/monitors/monitors.vala:401
+#: ../applets/drawing/monitors/monitors.vala:402
 msgid "Action when clicked"
 msgstr "Выполняемая команда при щелчке"
 
-#: ../applets/wnck/deskno/deskno.vala:68
+#: ../applets/wnck/deskno/deskno.vala:67
 msgid "Display desktop names"
 msgstr "Отображать имена рабочих столов"
 
-#: ../applets/wnck/icontasks/buttons.vala:92
-#, fuzzy
-#| msgid "Add plugin to panel"
+#: ../applets/wnck/icontasks/buttons.vala:113
 msgid "Pin to panel"
 msgstr "Добавить модуль на панель"
 
-#: ../applets/wnck/icontasks/buttons.vala:93
-#: ../applets/wnck/icontasks/buttons.vala:449
-#, fuzzy
-#| msgid "Add plugin to panel"
+#: ../applets/wnck/icontasks/buttons.vala:114
+#: ../applets/wnck/icontasks/buttons.vala:488
 msgid "Unpin from panel"
 msgstr "Добавить модуль на панель"
 
-#: ../applets/wnck/pager/pager.vala:95
+#: ../applets/wnck/pager/pager.vala:96
 msgid "Workspaces..."
 msgstr "Рабочие столы..."
 
@@ -348,10 +356,8 @@ msgid "Group windows when needed"
 msgstr "Группировать окна при необходимости"
 
 #: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:85
-#, fuzzy
-#| msgid "Show Layout as"
 msgid "Show task labels"
-msgstr "Показывать раскладку как"
+msgstr "Показывать названия задач"
 
 #: ../applets/wnck/tasklist/tasklist.vala:101
 msgid "Ungrouped buttons limit"
@@ -365,139 +371,107 @@ msgstr "Размер апплета"
 msgid "Alternately iconify/shade and raise"
 msgstr "Альтернативно свернуть в значок/скрыть и развернуть"
 
-#: ../lib/panel-menus.ui:6
-msgid "Configure applet..."
-msgstr "Настроить апплет..."
-
-#: ../lib/panel-menus.ui:11
-msgid "Remove applet"
-msgstr "Удалить апплет"
-
-#: ../lib/panel-menus.ui:18
-msgid "Panel Items..."
-msgstr "Апплеты..."
-
-#: ../lib/panel-menus.ui:25
-msgid "Panel Settings..."
-msgstr "Настройка панели.."
-
-#: ../lib/panel-menus.ui:30
-msgid "New Panel"
-msgstr "Новая панель"
-
-#: ../lib/panel-menus.ui:34
-msgid "Remove this Panel"
-msgstr "Удалить эту панель"
-
-#: ../lib/panel-menus.ui:40
-msgid "Application Settings"
-msgstr "Настройки приложения..."
-
-#: ../lib/panel-menus.ui:44
-msgid "About"
-msgstr "О программе..."
-
-#: ../lib/pref.ui:41
+#: ../ui/pref.ui:41 ../data/ui/pref.ui:55
 msgid "Panel preferences"
 msgstr "Настройки панели"
 
-#: ../lib/pref.ui:94
+#: ../ui/pref.ui:94 ../data/ui/pref.ui:111
 msgid "Edge:"
 msgstr "Расположение:"
 
-#: ../lib/pref.ui:109
+#: ../ui/pref.ui:109 ../data/ui/pref.ui:126
 msgid "Monitor:"
 msgstr "Монитор:"
 
-#: ../lib/pref.ui:121
+#: ../ui/pref.ui:121 ../data/ui/pref.ui:138
 msgid "Advanced properties"
 msgstr "Дополнительные настройки"
 
-#: ../lib/pref.ui:138
+#: ../ui/pref.ui:138 ../data/ui/pref.ui:155
 msgid "Count as dock:"
 msgstr "Считать доком:"
 
-#: ../lib/pref.ui:150
+#: ../ui/pref.ui:150
 msgid "Reserve space:"
 msgstr "Выделять место:"
 
-#: ../lib/pref.ui:186
+#: ../ui/pref.ui:186 ../data/ui/pref.ui:179
 msgid "Placement properties"
 msgstr "Настройки размещения"
 
-#: ../lib/pref.ui:423
+#: ../ui/pref.ui:423 ../data/ui/pref.ui:420
 msgid "Position"
 msgstr "Позиция"
 
-#: ../lib/pref.ui:449
+#: ../ui/pref.ui:449 ../data/ui/pref.ui:446
 msgid "Icon size in px:"
 msgstr "Размер значков в px:"
 
-#: ../lib/pref.ui:461
+#: ../ui/pref.ui:461 ../data/ui/pref.ui:458
 msgid "Height in px:"
 msgstr "Толщина в px:"
 
-#: ../lib/pref.ui:486
+#: ../ui/pref.ui:486 ../data/ui/pref.ui:483
 msgid "Width:"
 msgstr "Длина:"
 
-#: ../lib/pref.ui:510
+#: ../ui/pref.ui:510 ../data/ui/pref.ui:507
 msgid "Size properties"
 msgstr "Настройки размера"
 
-#: ../lib/pref.ui:527
+#: ../ui/pref.ui:527 ../data/ui/pref.ui:524
 msgid "Automatic hide panel"
 msgstr "Настройки автоскрытия"
 
-#: ../lib/pref.ui:556
+#: ../ui/pref.ui:556 ../data/ui/pref.ui:553
 msgid "Autohide:"
 msgstr "Автоскрытие:"
 
-#: ../lib/pref.ui:582
+#: ../ui/pref.ui:582 ../data/ui/pref.ui:579
 msgid "Foreground color:"
 msgstr "Цвет шрифта:"
 
-#: ../lib/pref.ui:594
+#: ../ui/pref.ui:594 ../data/ui/pref.ui:591
 msgid "Background image:"
 msgstr "Фоновое изображение:"
 
-#: ../lib/pref.ui:606
+#: ../ui/pref.ui:606 ../data/ui/pref.ui:603
 msgid "Background color:"
 msgstr "Цвет фона:"
 
-#: ../lib/pref.ui:618
+#: ../ui/pref.ui:618 ../data/ui/pref.ui:615
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: ../lib/pref.ui:630
+#: ../ui/pref.ui:630 ../data/ui/pref.ui:627
 msgid "Round corners size:"
 msgstr "Радиус угла:"
 
-#: ../lib/pref.ui:706
+#: ../ui/pref.ui:706 ../data/ui/pref.ui:703
 msgid "Select background color"
 msgstr "Выберите цвет фона"
 
-#: ../lib/pref.ui:720
+#: ../ui/pref.ui:720 ../data/ui/pref.ui:717
 msgid "Select foreground color"
 msgstr "Выберите цвет шрифта"
 
-#: ../lib/pref.ui:733
+#: ../ui/pref.ui:733 ../data/ui/pref.ui:730
 msgid "Select an Image"
 msgstr "Выберите изображение"
 
-#: ../lib/pref.ui:752
+#: ../ui/pref.ui:752 ../data/ui/pref.ui:749
 msgid "Select panel font"
 msgstr "Выберите шрифт панели"
 
-#: ../lib/pref.ui:764
+#: ../ui/pref.ui:764 ../data/ui/pref.ui:761
 msgid "Size only"
 msgstr "Только размер"
 
-#: ../lib/pref.ui:789
+#: ../ui/pref.ui:789 ../data/ui/pref.ui:807
 msgid "Appearance"
 msgstr "Внешний вид"
 
-#: ../lib/pref.ui:969
+#: ../ui/pref.ui:969 ../data/ui/pref.ui:987
 msgid "Plugins"
 msgstr "Модули"
 
@@ -513,41 +487,94 @@ msgstr "https://vala-panel.github.io"
 #: ../app/app-about.ui:29
 msgid "translator-credits"
 msgstr ""
-"переводчикиHsH <hsh@runtu.org>\n"
+"переводчики: \n"
+"HsH <hsh@runtu.org>\n"
 "Alexander Kazancev <kazancas@mandiriva.ru>\n"
-"Athor <ria.freelander@gmail.com>"
+"Константин (Рилиан) <ria.freelander@gmail.com>"
 
 #: ../app/app-pref.ui:8
 msgid "Application preferences"
 msgstr "Настройка приложения"
 
 #: ../app/app-pref.ui:52
+msgid "Lock screen command..."
+msgstr "Команда блокировки экрана..."
+
+#: ../app/app-pref.ui:68
 msgid "Logout manager..."
 msgstr "Команда выхода из системы..."
 
-#: ../app/app-pref.ui:68
+#: ../app/app-pref.ui:84
 msgid "Shutdown application..."
 msgstr "Команда завершения работы..."
 
-#: ../app/app-pref.ui:82
+#: ../app/app-pref.ui:98
 msgid "Preferred Applications:"
 msgstr "Предпочитаемые приложения:"
 
-#: ../app/app-pref.ui:108
+#: ../app/app-pref.ui:124
 msgid "Use dark theme"
 msgstr "Использовать темный вариант"
 
-#: ../app/app-pref.ui:129
+#: ../app/app-pref.ui:145
 msgid "Use custom CSS"
 msgstr "Использовать выбранный CSS"
 
-#: ../app/app-pref.ui:148
+#: ../app/app-pref.ui:164
 msgid "Select a CSS File"
 msgstr "Выберите тему в формате CSS."
 
-#: ../app/app-pref.ui:170
+#: ../app/app-pref.ui:186
 msgid "Widget Style"
 msgstr "Стиль виджетов"
+
+#: ../data/ui/new-plugin.ui:25
+msgid "Plugin Name"
+msgstr "Название модуля"
+
+#: ../data/ui/new-plugin.ui:37
+msgid "Plugin Description"
+msgstr "Описание модуля"
+
+#: ../data/ui/panel-menus.ui:6
+msgid "Configure applet..."
+msgstr "Настроить апплет..."
+
+#: ../data/ui/panel-menus.ui:11
+msgid "Remove applet"
+msgstr "Удалить апплет"
+
+#: ../data/ui/panel-menus.ui:18
+msgid "Panel Items..."
+msgstr "Апплеты..."
+
+#: ../data/ui/panel-menus.ui:25
+msgid "Panel Settings..."
+msgstr "Настройка панели.."
+
+#: ../data/ui/panel-menus.ui:30
+msgid "New Panel"
+msgstr "Новая панель"
+
+#: ../data/ui/panel-menus.ui:34
+msgid "Remove this Panel"
+msgstr "Удалить эту панель"
+
+#: ../data/ui/panel-menus.ui:40
+msgid "Application Settings"
+msgstr "Настройки приложения..."
+
+#: ../data/ui/panel-menus.ui:44
+msgid "About"
+msgstr "О программе..."
+
+#: ../data/ui/pref.ui:48
+msgid "Primary"
+msgstr "Основной"
+
+#: ../data/ui/pref.ui:785
+msgid "Use toolbar appearance:"
+msgstr "Использовать тему панели инструментов:"
 
 #: ../applets/core/launchbar/config.ui:33
 msgid "Add launcher from installed applications"
@@ -627,10 +654,14 @@ msgid "Run"
 msgstr "Выполнить"
 
 #: ../applets/core/menumodel/system-menus.ui:116
+msgid "Lock screen..."
+msgstr "Блокировать экран..."
+
+#: ../applets/core/menumodel/system-menus.ui:122
 msgid "Log Out..."
 msgstr "Выход из системы..."
 
-#: ../applets/core/menumodel/system-menus.ui:121
+#: ../applets/core/menumodel/system-menus.ui:128
 msgid "Shut down..."
 msgstr "Завершение работы..."
 
@@ -640,26 +671,30 @@ msgid ""
 "It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is completely "
 "rewritten in Vala. It offers same functionality as LXPanel, but:"
 msgstr ""
+"Vala Panel - это панель рабочего стола, написанная на GTK+. Она написана с "
+"использованием Vala и идей LXPanel, До версии 0.2.0 она была форком LXPanel, "
+"затем с нуля переписана на Vala. Она имеет ту же функциональность, что и "
+"LXPanel, но:"
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:11
 msgid "It has slightly more memory usage."
-msgstr ""
+msgstr "Она потребляет немного больше памяти."
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:12
 msgid ""
 "X11 dependency is stripped from panel core (but it is not tested on another "
 "display servers, such as Wayland or Mir, right now)."
 msgstr ""
+"Зависимость от X11 убрана из основного кода панели (но панель не "
+"тестировалась с альтернативными серверами, такими как Mir или Wayland)"
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:14
 msgid ""
 "Some of former LXPanel plugins is separate binaries now and lives in another "
 "packages (Example is volume applet)."
 msgstr ""
-
-#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
-msgid "Konstantin"
-msgstr ""
+"Некоторые из бывших плагинов LXPanel теперь являются отдельными исполняемыми "
+"файлами и находятся в отдельном пакете (например, апплет громкости)"
 
 #: ../applets/core/clock/clock.desktop.plugin.in:3
 msgid "Clock"
@@ -669,71 +704,75 @@ msgstr "Часы"
 msgid "Digital clock with calendar"
 msgstr "Цифровые часы с календарем"
 
-#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:3
 msgid "Directory menu"
 msgstr "Меню папки"
 
-#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:5
+#: ../applets/core/dirmenu/dirmenu.desktop.plugin.in:4
 msgid "This menu shows filesystem hierarchy, started from given dir."
 msgstr "Показывает всю иерарахию папок с корнем в данной папке."
 
-#: ../applets/core/kbled/kbled.desktop.plugin.in:5
+#: ../applets/core/kbled/kbled.desktop.plugin.in:3
+msgid "Keyboard LED"
+msgstr "Клавиатурный индикатор"
+
+#: ../applets/core/kbled/kbled.desktop.plugin.in:4
 msgid "Indicators for CapsLock, NumLock, and ScrollLock keys"
 msgstr "Индикаторы клавиш CapsLock, NumLock и ScrollLock"
 
-#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:3
 msgid "Quickstart"
 msgstr "Быстрый запуск"
 
-#: ../applets/core/launchbar/launchbar.desktop.plugin.in:5
+#: ../applets/core/launchbar/launchbar.desktop.plugin.in:4
 msgid "Container for application launchers."
 msgstr "Содержит значки быстрого запуска"
 
-#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:3
 msgid "Applications Menu"
 msgstr "Меню"
 
-#: ../applets/core/menumodel/menumodel.desktop.plugin.in:5
+#: ../applets/core/menumodel/menumodel.desktop.plugin.in:4
 msgid "Applications or custom menu in GMenuModel format."
 msgstr "Меню приложений или любой файл в формате GMenuModel"
 
-#: ../applets/core/separator/separator.desktop.plugin.in:4
+#: ../applets/core/separator/separator.desktop.plugin.in:3
 msgid "Separator"
 msgstr "Разделитель"
 
-#: ../applets/core/separator/separator.desktop.plugin.in:5
+#: ../applets/core/separator/separator.desktop.plugin.in:4
 msgid "Draws separator and makes space on panel"
 msgstr "Рисует разделители и занимает размер"
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:3
 msgid "CPU Graph"
 msgstr "График процессора"
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:5
+#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
 msgid "Draws CPU graph on panel."
 msgstr "Рисует график загрузки процессора на панели"
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:3
 msgid "Monitors Graph"
 msgstr "Графики мониторинга"
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:5
+#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
 msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr "Рисует графики используемых ресурсов на панели (для CPU и RAM)."
 
-#: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:3
 msgid "Window Buttons"
 msgstr "Кнопки окна"
 
-#: ../applets/wnck/buttons/buttons.desktop.plugin.in:5
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
 msgid "Shows window buttons (such as minimize, maximize and close)."
 msgstr "Показывает кнопки окна (такие как свернуть, развернуть и закрыть)"
 
-#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:3
 msgid "Desktop Number"
 msgstr "Номер рабочего стола"
 
-#: ../applets/wnck/deskno/deskno.desktop.plugin.in:5
+#: ../applets/wnck/deskno/deskno.desktop.plugin.in:4
 msgid "Shows desktop name or number. Switch on click."
 msgstr "Показывает имя или номер рабочего стола. Переключает по щелчку мыши"
 
@@ -746,58 +785,60 @@ msgstr "Панель задач в виде иконок"
 msgid "tab-new-symbolic"
 msgstr "tab-new-symbolic"
 
-#: ../applets/wnck/pager/pager.desktop.plugin.in:4
+#: ../applets/wnck/pager/pager.desktop.plugin.in:3
 msgid "Pager"
 msgstr "Переключатель рабочих столов"
 
-#: ../applets/wnck/pager/pager.desktop.plugin.in:5
+#: ../applets/wnck/pager/pager.desktop.plugin.in:4
 msgid "Shows desktops."
 msgstr "Показывает рабочие столы"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:3
 msgid "Tasklist Xfce"
 msgstr "Панель задач XFCE"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:5
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:5
+#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
 msgid "Shows opened windows."
 msgstr "Показывает открытые приложения"
 
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
+#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:3
 msgid "Tasklist"
 msgstr "Панель задач"
 
-#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:3
 msgid "Show Desktop"
 msgstr "Показать рабочий стол"
 
-#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:5
+#: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
 msgid "Can shows desktop and shades window."
 msgstr "Может сворачивать все окна в заголовок или на панель задач."
 
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:3
 msgid "XEmbed Tray"
 msgstr "Трей XEmbed"
 
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:5
+#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
 msgid "Old XEmbed-based tray"
 msgstr "Устаревший трей XEmbed"
 
 #: ../data/desktop/org.valapanel.application.desktop.in:5
-#, fuzzy
-#| msgid "Desktop Pager"
 msgid "Desktop Panel"
-msgstr "Переключатель рабочих мест"
+msgstr "Панель рабочего стола"
 
 #: ../data/desktop/org.valapanel.application.desktop.in:7
 msgid "panel;launcher;menu;tasklist"
 msgstr "panel;launcher;menu;tasklist"
 
 #: ../data/desktop/org.valapanel.application.desktop.in:9
-#, fuzzy
-#| msgid "Vala Panel"
 msgid "vala-panel"
 msgstr "Vala Panel"
+
+#~ msgid "All"
+#~ msgstr "Все"
+
+#~ msgid "%d"
+#~ msgstr "%d"
 
 #~ msgid "_Browse"
 #~ msgstr "_Обзор"
