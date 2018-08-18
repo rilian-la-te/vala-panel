@@ -43,7 +43,6 @@ typedef struct
 	GSettings *type;
 	GSettings *common;
 	GSettings *custom;
-	char *schema_elem;
 	char *uuid;
 } ValaPanelUnitSettings;
 
