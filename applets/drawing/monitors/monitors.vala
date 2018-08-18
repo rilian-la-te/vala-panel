@@ -449,7 +449,7 @@ public void g_io_monitors_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MonitorsApplet),"monitors",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MonitorsApplet),"org.valapanel.monitors",10);
 }
 
 public void g_io_monitors_unload(GLib.IOModule module)
