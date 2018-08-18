@@ -42,10 +42,10 @@ struct _ValaPanelAppletInfo
 	char **authors;
 	char *website;
 	char *help_uri;
-	GtkLicense license;
 	char *version;
 	bool exclusive;
 	bool expandable;
+	GtkLicense license;
 };
 
 static GtkLicense vala_panel_applet_info_get_license_from_name(const char *license_name)
@@ -68,20 +68,21 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 		g_critical("%s: %s\n", desktop_name, err->message);
 	if (!loaded || err)
 		return NULL;
-	struct _ValaPanelAppletInfo *ret = g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
-	char *tmp                        = g_key_file_get_locale_string(file,
+	struct _ValaPanelAppletInfo *ret =
+	    (struct _ValaPanelAppletInfo *)g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
+	char *tmp        = g_key_file_get_locale_string(file,
                                                  VALA_PANEL_APPLET_GROUP,
                                                  VALA_PANEL_APPLET_INFO_NAME,
                                                  NULL,
                                                  NULL);
-	ret->module_name                 = g_strdup(extension_name);
-	ret->name                        = tmp != NULL ? tmp : g_strdup(_("Applet"));
-	tmp                              = g_key_file_get_locale_string(file,
+	ret->module_name = g_strdup(extension_name);
+	ret->name        = tmp != NULL ? tmp : g_strdup(_("Applet"));
+	tmp              = g_key_file_get_locale_string(file,
                                            VALA_PANEL_APPLET_GROUP,
                                            VALA_PANEL_APPLET_INFO_DESCRIPTION,
                                            NULL,
                                            NULL);
-	ret->description                 = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
+	ret->description = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
 	tmp =
 	    g_key_file_get_string(file, VALA_PANEL_APPLET_GROUP, VALA_PANEL_APPLET_INFO_ICON, NULL);
 	ret->icon_name = tmp != NULL ? tmp : g_strdup("package-x-generic");
@@ -91,11 +92,13 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	                                            VALA_PANEL_APPLET_INFO_AUTHORS,
 	                                            NULL,
 	                                            NULL);
-	ret->authors   = tmp_list;
-	tmp            = g_key_file_get_string(file,
-                                    VALA_PANEL_APPLET_GROUP,
-                                    VALA_PANEL_APPLET_INFO_WEBSITE,
-                                    NULL);
+	ret->authors   = tmp_list != NULL
+	                   ? tmp_list
+	                   : g_strsplit("Konstantin <ria.freelander@gmail.com>;", ";", 0);
+	tmp = g_key_file_get_string(file,
+	                            VALA_PANEL_APPLET_GROUP,
+	                            VALA_PANEL_APPLET_INFO_WEBSITE,
+	                            NULL);
 	ret->website =
 	    tmp != NULL ? tmp : g_strdup("https://gitlab.com/vala-panel-project/vala-panel");
 	tmp = g_key_file_get_locale_string(file,
@@ -157,15 +160,14 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 void vala_panel_applet_info_free(void *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = (struct _ValaPanelAppletInfo *)info;
-	g_free(ainfo->module_name);
-	g_free(ainfo->name);
-	g_free(ainfo->description);
-	g_free(ainfo->icon_name);
-	if (ainfo->authors)
-		g_strfreev(ainfo->authors);
-	g_free(ainfo->website);
-	g_free(ainfo->help_uri);
-	g_free(ainfo->version);
+	g_clear_pointer(&ainfo->module_name, g_free);
+	g_clear_pointer(&ainfo->name, g_free);
+	g_clear_pointer(&ainfo->description, g_free);
+	g_clear_pointer(&ainfo->icon_name, g_free);
+	g_clear_pointer(&ainfo->authors, g_strfreev);
+	g_clear_pointer(&ainfo->website, g_free);
+	g_clear_pointer(&ainfo->help_uri, g_free);
+	g_clear_pointer(&ainfo->version, g_free);
 	g_slice_free(struct _ValaPanelAppletInfo, info);
 }
 
@@ -236,4 +238,25 @@ bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->expandable;
+}
+
+void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
+{
+	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
+	g_autoptr(GtkBuilder) builder =
+	    gtk_builder_new_from_resource("/org/vala-panel/lib/about.ui");
+	GtkAboutDialog *d =
+	    GTK_ABOUT_DIALOG(gtk_builder_get_object(builder, "valapanel-plugin-about"));
+	gtk_about_dialog_set_program_name(d, ainfo->name);
+	gtk_about_dialog_set_comments(d, ainfo->description);
+	gtk_about_dialog_set_logo_icon_name(d, ainfo->icon_name);
+	gtk_about_dialog_set_license_type(d, ainfo->license);
+	gtk_about_dialog_set_authors(d, (const char **)ainfo->authors);
+	gtk_about_dialog_set_website(d, ainfo->website);
+	gtk_about_dialog_set_version(d, ainfo->version);
+	gtk_window_set_position(GTK_WINDOW(d), GTK_WIN_POS_CENTER);
+	gtk_window_present(GTK_WINDOW(d));
+	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
 }

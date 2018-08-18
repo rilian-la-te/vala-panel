@@ -3,6 +3,7 @@
 <gresources>
   <gresource prefix="/org/vala-panel/lib">
     <file compressed="true" alias="pref.ui" preprocess="xml-stripblanks">../data/ui/pref.ui</file>
+    <file compressed="true" alias="about.ui" preprocess="xml-stripblanks">../data/ui/plugin-about.ui</file>
     <file compressed="true" alias="menus.ui" preprocess="xml-stripblanks">../data/ui/panel-menus.ui</file>
     <file compressed="true" alias="panel.svg">../data/images/panel.svg</file>
     <file compressed="true" alias="panel.png">../data/images/panel.png</file>

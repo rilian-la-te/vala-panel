@@ -25,10 +25,12 @@ G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelApplet, vala_panel_applet, GTK_TYPE_BIN)
 static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_remote(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
+static void activate_about(GSimpleAction *act, GVariant *param, gpointer self);
 
 static const GActionEntry entries[] =
     { { VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
       { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
+      { VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
       { VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL } };
 
 enum
@@ -118,6 +120,15 @@ static void activate_remote(GSimpleAction *act, GVariant *param, gpointer obj)
 {
 	const char *command = g_variant_get_string(param, NULL);
 	vala_panel_applet_remote_command(VALA_PANEL_APPLET(obj), command);
+}
+static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
+{
+	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
+	ValaPanelAppletInfo *pl_info =
+	    vala_panel_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
+	                                              self,
+	                                              vala_panel_toplevel_get_core_settings());
+	vala_panel_applet_info_show_about_dialog(pl_info);
 }
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 {

@@ -42,7 +42,7 @@ void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const 
 ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
                                                             ValaPanelApplet *pl,
                                                             ValaPanelCoreSettings *core_settings);
-ValaPanelAppletInfo *vala_panel_applet_manager_get_plugin_info(
+ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info(
     ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
 void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self);
 GList *vala_panel_applet_manager_get_all_types(ValaPanelAppletManager *self);

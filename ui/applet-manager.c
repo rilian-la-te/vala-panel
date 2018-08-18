@@ -128,7 +128,7 @@ ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManag
 	return data->plugin;
 }
 
-ValaPanelAppletInfo *vala_panel_applet_manager_get_plugin_info(ValaPanelAppletManager *self,
+ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info(ValaPanelAppletManager *self,
                                                                ValaPanelApplet *pl,
                                                                ValaPanelCoreSettings *core_settings)
 {

@@ -42,6 +42,8 @@ const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info);
 bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info);
 bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info);
 
+void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info);
+
 G_END_DECLS
 
 #endif // APPLETINFO_H

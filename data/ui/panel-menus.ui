@@ -8,6 +8,11 @@
           <attribute name='hidden-when'>action-missing</attribute>
         </item>
         <item>
+          <attribute name="label" translatable="yes">About applet...</attribute>
+          <attribute name="action">applet.about</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+        <item>
           <attribute name="label" translatable="yes">Remove applet</attribute>
           <attribute name="action">applet.remove</attribute>
           <attribute name='hidden-when'>action-missing</attribute>
