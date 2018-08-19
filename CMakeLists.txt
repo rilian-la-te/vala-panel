@@ -66,8 +66,8 @@ cmake_dependent_option(ENABLE_BUDGIE "Enable budgie-desktop plugin" ON
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
 
-add_subdirectory(po)
 add_subdirectory(data)
+add_subdirectory(po)
 add_subdirectory(src)
 #add_subdirectory(xembedsniproxy)
 
