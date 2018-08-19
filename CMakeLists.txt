@@ -1,18 +1,26 @@
 project(xfce4-sntray-plugin C)
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 cmake_policy (VERSION 3.6)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
-include(ValaPrecompile)
 include(GNUInstallDirs)
 
-find_package(Vala 0.36 REQUIRED)
 find_package(PkgConfig)
 set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
+if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/VCMSubmodule.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/VCMSubmodule.cmake)
+    use_vcm(${CMAKE_SOURCE_DIR}/cmake)
+else()
+    find_package(VCM REQUIRED NO_MODULE)
+    list(APPEND CMAKE_MODULE_PATH ${VCM_MODULE_PATH})
+endif()
 include(GitVersion)
-determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake/vala)
-include(FallbackVersion)
+determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/FallbackVersion.cmake)
 include(Format)
+
+find_package(Vala 0.36 REQUIRED)
+include(ValaPrecompile)
+
 
 add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 add_definitions(-Wall -Wextra
