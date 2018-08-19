@@ -7,7 +7,6 @@ namespace PanelConfig {
 	public const string GETTEXT_PACKAGE;
 	public const string INSTALL_PREFIX;
 	public const string LOCALE_DIR;
-	public const string PKGDATADIR;
 	public const string PLUGINS_DATA;
 	public const string PLUGINS_DIRECTORY;
 	public const string RELEASE_NAME;
