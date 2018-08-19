@@ -2,7 +2,6 @@
 # DBusMenu
 #####
 add_subdirectory(dbusmenu)
-add_definitions(-fPIC)
 #####
 # Core Parts (GResource, definitions)
 #####
@@ -36,9 +35,12 @@ set(VALA_FILES_CORE
         source
             sntray.gresource.xml
     )
+
 add_library(sntray-core STATIC ${VALA_C_CORE} dbus-utils.c $<TARGET_OBJECTS:vala-dbusmenu-o>)
 target_include_directories(sntray-core PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/dbusmenu)
 target_link_libraries (sntray-core GLIB2::GIO_UNIX GTK3::GDK GTK3::GTK m)
+set_target_properties(sntray-core PROPERTIES
+    POSITION_INDEPENDENT_CODE ON)	# Compile this object code position independent.
 add_custom_target(sntray-core-ide SOURCES ${VALA_FILES_DBUSMENU} ${VALA_FILES_CORE})
 #################
 # Xfce Panel part
