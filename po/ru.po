@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-17 15:34+0300\n"
-"PO-Revision-Date: 2018-08-17 15:47+0300\n"
+"POT-Creation-Date: 2018-08-19 03:02+0300\n"
+"PO-Revision-Date: 2018-08-19 03:02+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: ../util/gtk/generic-config-dialog.c:95
@@ -42,15 +42,15 @@ msgstr "Выполнить %s"
 msgid "Run system command"
 msgstr "Выполнить системную команду"
 
-#: ../ui/applet-info.c:78
+#: ../ui/applet-info.c:79
 msgid "Applet"
 msgstr "Апплет"
 
-#: ../ui/applet-info.c:84
+#: ../ui/applet-info.c:85
 msgid "Vala Panel Applet"
 msgstr "Апплет Vala Panel"
 
-#: ../ui/toplevel-config.c:386 ../ui/toplevel-config.c:494
+#: ../ui/toplevel-config.c:386 ../ui/toplevel-config.c:511
 #: ../applets/core/dirmenu/dirmenu.vala:196
 #: ../applets/core/menumodel/menumodel.vala:115
 #: ../applets/core/launchbar/config.ui:135
@@ -65,7 +65,7 @@ msgstr "Загруженные модули"
 msgid "Stretch"
 msgstr "Растянуть"
 
-#: ../ui/toplevel-config.c:502
+#: ../ui/toplevel-config.c:519
 msgid "Available plugins"
 msgstr "Доступные модули"
 
@@ -281,8 +281,7 @@ msgstr "Название (только для кнопки)"
 msgid "Menu file name"
 msgstr "Имя файла меню"
 
-#: ../applets/core/separator/separator.vala:64 ../ui/pref.ui:566
-#: ../data/ui/pref.ui:563
+#: ../applets/core/separator/separator.vala:64 ../data/ui/pref.ui:563
 msgid "Size"
 msgstr "Размер"
 
@@ -371,120 +370,18 @@ msgstr "Размер апплета"
 msgid "Alternately iconify/shade and raise"
 msgstr "Альтернативно свернуть в значок/скрыть и развернуть"
 
-#: ../ui/pref.ui:41 ../data/ui/pref.ui:55
-msgid "Panel preferences"
-msgstr "Настройки панели"
-
-#: ../ui/pref.ui:94 ../data/ui/pref.ui:111
-msgid "Edge:"
-msgstr "Расположение:"
-
-#: ../ui/pref.ui:109 ../data/ui/pref.ui:126
-msgid "Monitor:"
-msgstr "Монитор:"
-
-#: ../ui/pref.ui:121 ../data/ui/pref.ui:138
-msgid "Advanced properties"
-msgstr "Дополнительные настройки"
-
-#: ../ui/pref.ui:138 ../data/ui/pref.ui:155
-msgid "Count as dock:"
-msgstr "Считать доком:"
-
-#: ../ui/pref.ui:150
-msgid "Reserve space:"
-msgstr "Выделять место:"
-
-#: ../ui/pref.ui:186 ../data/ui/pref.ui:179
-msgid "Placement properties"
-msgstr "Настройки размещения"
-
-#: ../ui/pref.ui:423 ../data/ui/pref.ui:420
-msgid "Position"
-msgstr "Позиция"
-
-#: ../ui/pref.ui:449 ../data/ui/pref.ui:446
-msgid "Icon size in px:"
-msgstr "Размер значков в px:"
-
-#: ../ui/pref.ui:461 ../data/ui/pref.ui:458
-msgid "Height in px:"
-msgstr "Толщина в px:"
-
-#: ../ui/pref.ui:486 ../data/ui/pref.ui:483
-msgid "Width:"
-msgstr "Длина:"
-
-#: ../ui/pref.ui:510 ../data/ui/pref.ui:507
-msgid "Size properties"
-msgstr "Настройки размера"
-
-#: ../ui/pref.ui:527 ../data/ui/pref.ui:524
-msgid "Automatic hide panel"
-msgstr "Настройки автоскрытия"
-
-#: ../ui/pref.ui:556 ../data/ui/pref.ui:553
-msgid "Autohide:"
-msgstr "Автоскрытие:"
-
-#: ../ui/pref.ui:582 ../data/ui/pref.ui:579
-msgid "Foreground color:"
-msgstr "Цвет шрифта:"
-
-#: ../ui/pref.ui:594 ../data/ui/pref.ui:591
-msgid "Background image:"
-msgstr "Фоновое изображение:"
-
-#: ../ui/pref.ui:606 ../data/ui/pref.ui:603
-msgid "Background color:"
-msgstr "Цвет фона:"
-
-#: ../ui/pref.ui:618 ../data/ui/pref.ui:615
-msgid "Font:"
-msgstr "Шрифт:"
-
-#: ../ui/pref.ui:630 ../data/ui/pref.ui:627
-msgid "Round corners size:"
-msgstr "Радиус угла:"
-
-#: ../ui/pref.ui:706 ../data/ui/pref.ui:703
-msgid "Select background color"
-msgstr "Выберите цвет фона"
-
-#: ../ui/pref.ui:720 ../data/ui/pref.ui:717
-msgid "Select foreground color"
-msgstr "Выберите цвет шрифта"
-
-#: ../ui/pref.ui:733 ../data/ui/pref.ui:730
-msgid "Select an Image"
-msgstr "Выберите изображение"
-
-#: ../ui/pref.ui:752 ../data/ui/pref.ui:749
-msgid "Select panel font"
-msgstr "Выберите шрифт панели"
-
-#: ../ui/pref.ui:764 ../data/ui/pref.ui:761
-msgid "Size only"
-msgstr "Только размер"
-
-#: ../ui/pref.ui:789 ../data/ui/pref.ui:807
-msgid "Appearance"
-msgstr "Внешний вид"
-
-#: ../ui/pref.ui:969 ../data/ui/pref.ui:987
-msgid "Plugins"
-msgstr "Модули"
-
 #: ../app/app-about.ui:11
 msgid "Simple GTK+ desktop panel. "
 msgstr "Панель для рабочего стола на GTK+"
 
 #: ../app/app-about.ui:13
-msgid "https://vala-panel.github.io"
-msgstr "https://vala-panel.github.io"
+#, fuzzy
+#| msgid "Vala Panel Applet"
+msgid "ValaPanel website"
+msgstr "Апплет Vala Panel"
 
 #. Replace this string by your names, one name per line.
-#: ../app/app-about.ui:29
+#: ../app/app-about.ui:29 ../data/ui/plugin-about.ui:10
 msgid "translator-credits"
 msgstr ""
 "переводчики: \n"
@@ -541,30 +438,34 @@ msgid "Configure applet..."
 msgstr "Настроить апплет..."
 
 #: ../data/ui/panel-menus.ui:11
+msgid "About applet..."
+msgstr "Об апплете..."
+
+#: ../data/ui/panel-menus.ui:16
 msgid "Remove applet"
 msgstr "Удалить апплет"
 
-#: ../data/ui/panel-menus.ui:18
+#: ../data/ui/panel-menus.ui:23
 msgid "Panel Items..."
 msgstr "Апплеты..."
 
-#: ../data/ui/panel-menus.ui:25
+#: ../data/ui/panel-menus.ui:30
 msgid "Panel Settings..."
 msgstr "Настройка панели.."
 
-#: ../data/ui/panel-menus.ui:30
+#: ../data/ui/panel-menus.ui:35
 msgid "New Panel"
 msgstr "Новая панель"
 
-#: ../data/ui/panel-menus.ui:34
+#: ../data/ui/panel-menus.ui:39
 msgid "Remove this Panel"
 msgstr "Удалить эту панель"
 
-#: ../data/ui/panel-menus.ui:40
+#: ../data/ui/panel-menus.ui:45
 msgid "Application Settings"
 msgstr "Настройки приложения..."
 
-#: ../data/ui/panel-menus.ui:44
+#: ../data/ui/panel-menus.ui:49
 msgid "About"
 msgstr "О программе..."
 
@@ -572,9 +473,109 @@ msgstr "О программе..."
 msgid "Primary"
 msgstr "Основной"
 
+#: ../data/ui/pref.ui:55
+msgid "Panel preferences"
+msgstr "Настройки панели"
+
+#: ../data/ui/pref.ui:111
+msgid "Edge:"
+msgstr "Расположение:"
+
+#: ../data/ui/pref.ui:126
+msgid "Monitor:"
+msgstr "Монитор:"
+
+#: ../data/ui/pref.ui:138
+msgid "Advanced properties"
+msgstr "Дополнительные настройки"
+
+#: ../data/ui/pref.ui:155
+msgid "Count as dock:"
+msgstr "Считать доком:"
+
+#: ../data/ui/pref.ui:179
+msgid "Placement properties"
+msgstr "Настройки размещения"
+
+#: ../data/ui/pref.ui:420
+msgid "Position"
+msgstr "Позиция"
+
+#: ../data/ui/pref.ui:446
+msgid "Icon size in px:"
+msgstr "Размер значков в px:"
+
+#: ../data/ui/pref.ui:458
+msgid "Height in px:"
+msgstr "Толщина в px:"
+
+#: ../data/ui/pref.ui:483
+msgid "Width:"
+msgstr "Длина:"
+
+#: ../data/ui/pref.ui:507
+msgid "Size properties"
+msgstr "Настройки размера"
+
+#: ../data/ui/pref.ui:524
+msgid "Automatic hide panel"
+msgstr "Настройки автоскрытия"
+
+#: ../data/ui/pref.ui:553
+msgid "Autohide:"
+msgstr "Автоскрытие:"
+
+#: ../data/ui/pref.ui:579
+msgid "Foreground color:"
+msgstr "Цвет шрифта:"
+
+#: ../data/ui/pref.ui:591
+msgid "Background image:"
+msgstr "Фоновое изображение:"
+
+#: ../data/ui/pref.ui:603
+msgid "Background color:"
+msgstr "Цвет фона:"
+
+#: ../data/ui/pref.ui:615
+msgid "Font:"
+msgstr "Шрифт:"
+
+#: ../data/ui/pref.ui:627
+msgid "Round corners size:"
+msgstr "Радиус угла:"
+
+#: ../data/ui/pref.ui:703
+msgid "Select background color"
+msgstr "Выберите цвет фона"
+
+#: ../data/ui/pref.ui:717
+msgid "Select foreground color"
+msgstr "Выберите цвет шрифта"
+
+#: ../data/ui/pref.ui:730
+msgid "Select an Image"
+msgstr "Выберите изображение"
+
+#: ../data/ui/pref.ui:749
+msgid "Select panel font"
+msgstr "Выберите шрифт панели"
+
+#: ../data/ui/pref.ui:761
+msgid "Size only"
+msgstr "Только размер"
+
 #: ../data/ui/pref.ui:785
 msgid "Use toolbar appearance:"
 msgstr "Использовать тему панели инструментов:"
+
+#: ../data/ui/pref.ui:807
+msgid "Appearance"
+msgstr "Внешний вид"
+
+#: ../data/ui/pref.ui:1008
+msgid "Plugins"
+msgstr "Модули"
 
 #: ../applets/core/launchbar/config.ui:33
 msgid "Add launcher from installed applications"
@@ -696,6 +697,10 @@ msgstr ""
 "Некоторые из бывших плагинов LXPanel теперь являются отдельными исполняемыми "
 "файлами и находятся в отдельном пакете (например, апплет громкости)"
 
+#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
+msgid "Konstantin"
+msgstr ""
+
 #: ../applets/core/clock/clock.desktop.plugin.in:3
 msgid "Clock"
 msgstr "Часы"
@@ -744,19 +749,19 @@ msgstr "Разделитель"
 msgid "Draws separator and makes space on panel"
 msgstr "Рисует разделители и занимает размер"
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:3
+#: ../applets/drawing/cpu/org.valapanel.cpu.desktop.plugin.in:3
 msgid "CPU Graph"
 msgstr "График процессора"
 
-#: ../applets/drawing/cpu/cpu.desktop.plugin.in:4
+#: ../applets/drawing/cpu/org.valapanel.cpu.desktop.plugin.in:4
 msgid "Draws CPU graph on panel."
 msgstr "Рисует график загрузки процессора на панели"
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:3
+#: ../applets/drawing/monitors/org.valapanel.monitors.desktop.plugin.in:3
 msgid "Monitors Graph"
 msgstr "Графики мониторинга"
 
-#: ../applets/drawing/monitors/monitors.desktop.plugin.in:4
+#: ../applets/drawing/monitors/org.valapanel.monitors.desktop.plugin.in:4
 msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr "Рисует графики используемых ресурсов на панели (для CPU и RAM)."
 
@@ -833,6 +838,12 @@ msgstr "panel;launcher;menu;tasklist"
 #: ../data/desktop/org.valapanel.application.desktop.in:9
 msgid "vala-panel"
 msgstr "Vala Panel"
+
+#~ msgid "Reserve space:"
+#~ msgstr "Выделять место:"
+
+#~ msgid "https://vala-panel.github.io"
+#~ msgstr "https://vala-panel.github.io"
 
 #~ msgid "All"
 #~ msgstr "Все"
