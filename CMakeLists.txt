@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 
 find_package(Vala 0.36 REQUIRED)
 find_package(PkgConfig)
-set (GETTEXT_PACKAGE "xfce4-sntray-plugin")
+set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 include(GitVersion)
 determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake/vala)
 include(FallbackVersion)
