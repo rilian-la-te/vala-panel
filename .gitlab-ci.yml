@@ -16,3 +16,9 @@ build:
   script:
    - cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja
+   - ninja install
+   - ninja dist
+  artifacts:
+    paths:
+    - "vala-panel*.tar.xz"
+    expire_in: 1 week
