@@ -7,9 +7,9 @@ before_script:
   - export CCACHE_DIR=${PWD}/_ccache
   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja xfce4-panel mate-panel budgie-desktop gobject-introspection
   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd ..
+  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
   - git clone https://gitlab.com/vala-panel-project/vala-panel.git
-  - cd vala-panel && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd ..
+  - cd vala-panel && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf vala-panel
 cache:
   paths:
     - _ccache/
