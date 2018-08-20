@@ -22,5 +22,5 @@ build:
    - ninja dist
    artifacts:
     paths:
-    - "build/xfce4-sntray-plugin*.tar.xz"
+      - "build/xfce4-sntray-plugin*.tar.xz"
     expire_in: 1 week
