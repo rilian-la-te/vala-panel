@@ -224,7 +224,7 @@ public void g_io_cpu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(CpuApplet),"cpu",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(CpuApplet),"org.valapanel.cpu",10);
 }
 
 public void g_io_cpu_unload(GLib.IOModule module)

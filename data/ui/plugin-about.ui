@@ -2,33 +2,12 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
-  <object class="GtkAboutDialog" id="valapanel-about">
+  <object class="GtkAboutDialog" id="valapanel-plugin-about">
     <property name="can_focus">False</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">panel.svg</property>
     <property name="type_hint">normal</property>
-    <property name="program_name">Vala Panel</property>
-    <property name="comments" translatable="yes">Simple GTK+ desktop panel. </property>
-    <property name="website">https://gitlab.com/vala-panel-project/vala-panel</property>
-    <property name="website_label" translatable="yes">ValaPanel website</property>
-    <property name="authors">LXDE:
-Hong Jen Yee (PCMan) &lt;pcman.tw@gmail.com&gt;,
-Jim Huang &lt;jserv.tw@gmail.com&gt;,
-Greg McNew &lt;gmcnew@gmail.com&gt; (battery plugin),
-Fred Chien &lt;cfsghost@gmail.com&gt;,
-Daniel Kesler &lt;kesler.daniel@gmail.com&gt;,
-Juergen Hoetzel &lt;juergen@archlinux.org&gt;,
-Marty Jack &lt;martyj19@comcast.net&gt;,
-Martin Bagge &lt;brother@bsnet.se&gt;,
-Andriy Grytsenko &lt;andrej@rep.kiev.ua&gt;,
-Giuseppe Penone &lt;giuspen@gmail.com&gt;,
-Piotr Sipika &lt;piotr.sipika@gmail.com&gt;.
-
-Vala Panel:
-Konstantin Pugin &lt;ria.freelander@gmail.com&gt;</property>
     <property name="translator_credits" translatable="yes" comments="Replace this string by your names, one name per line.">translator-credits</property>
-    <property name="logo">panel.png</property>
-    <property name="license_type">lgpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
         <property name="can_focus">False</property>

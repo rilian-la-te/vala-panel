@@ -284,7 +284,7 @@ static void on_sel_plugin_changed(GtkTreeSelection *tree_sel, void *data)
 	if (gtk_tree_selection_get_selected(tree_sel, &model, &it))
 	{
 		gtk_tree_model_get(model, &it, COLUMN_DATA, &pl, -1);
-		ValaPanelAppletInfo *apl = vala_panel_applet_manager_get_plugin_info(
+		ValaPanelAppletInfo *apl = vala_panel_applet_manager_get_applet_info(
 		    vala_panel_layout_get_manager(), pl, vala_panel_toplevel_get_core_settings());
 		const char *desc = vala_panel_applet_info_get_description(apl);
 		gtk_label_set_text(self->plugin_desc, desc);
@@ -303,7 +303,7 @@ static void on_plugin_expand_toggled(GtkCellRendererToggle *render, const char *
 		ValaPanelApplet *pl;
 		bool expand;
 		gtk_tree_model_get(model, &it, COLUMN_EXPAND, &expand, COLUMN_DATA, &pl, -1);
-		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_plugin_info(
+		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_applet_info(
 		    vala_panel_layout_get_manager(), pl, vala_panel_toplevel_get_core_settings());
 		if (vala_panel_applet_info_is_expandable(pl_info))
 		{
@@ -324,7 +324,7 @@ static void on_stretch_render(GtkCellLayout *layout, GtkCellRenderer *renderer, 
 	ValaPanelApplet *pl;
 	gtk_tree_model_get(model, iter, COLUMN_DATA, &pl, -1);
 	ValaPanelAppletInfo *pl_info =
-	    vala_panel_applet_manager_get_plugin_info(vala_panel_layout_get_manager(),
+	    vala_panel_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
 	                                              pl,
 	                                              vala_panel_toplevel_get_core_settings());
 	gtk_cell_renderer_set_visible(renderer, vala_panel_applet_info_is_expandable(pl_info));
@@ -345,7 +345,7 @@ static void update_plugin_list_model(ValaPanelToplevelConfig *self)
 		ValaPanelApplet *w = VALA_PANEL_APPLET(l->data);
 		bool expand        = gtk_widget_get_hexpand(w) && gtk_widget_get_vexpand(w);
 		gtk_list_store_append(list, &it);
-		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_plugin_info(
+		ValaPanelAppletInfo *pl_info = vala_panel_applet_manager_get_applet_info(
 		    vala_panel_layout_get_manager(), w, vala_panel_toplevel_get_core_settings());
 		const char *name = vala_panel_applet_info_get_name(pl_info);
 		const char *icon = vala_panel_applet_info_get_icon_name(pl_info);
@@ -420,6 +420,23 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	g_signal_connect(tree_sel, "changed", G_CALLBACK(on_sel_plugin_changed), self);
 	if (gtk_tree_model_get_iter_first(list, &it))
 		gtk_tree_selection_select_iter(tree_sel, &it);
+}
+
+static void on_about_plugin(GtkButton *btn, void *data)
+{
+	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
+	GtkTreeSelection *tree_sel    = gtk_tree_view_get_selection(self->plugin_list);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	ValaPanelApplet *pl;
+	if (!gtk_tree_selection_get_selected(tree_sel, &model, &iter))
+		return;
+	gtk_tree_model_get(model, &iter, COLUMN_DATA, &pl, -1);
+	ValaPanelAppletInfo *info =
+	    vala_panel_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
+	                                              pl,
+	                                              vala_panel_toplevel_get_core_settings());
+	vala_panel_applet_info_show_about_dialog(info);
 }
 
 static void on_configure_plugin(GtkButton *btn, void *data)
@@ -723,6 +740,9 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "on_configure_plugin",
 	                                             G_CALLBACK(on_configure_plugin));
+	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	                                             "on_about_plugin",
+	                                             G_CALLBACK(on_about_plugin));
 	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
 	                                             "on_add_plugin",
 	                                             G_CALLBACK(on_add_plugin));

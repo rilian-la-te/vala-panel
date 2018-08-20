@@ -5,14 +5,11 @@ using Gtk;
 namespace PanelConfig {
 	public const string DATADIR;
 	public const string GETTEXT_PACKAGE;
-	public const string INSTALL_PREFIX;
 	public const string LOCALE_DIR;
-	public const string PKGDATADIR;
 	public const string PLUGINS_DATA;
 	public const string PLUGINS_DIRECTORY;
 	public const string RELEASE_NAME;
 	public const string VERSION;
-	public const string VERSION_INFO;
 }
 [CCode (cheader_filename = "generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
 namespace ValaPanel.Configurator
