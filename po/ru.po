@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-19 03:02+0300\n"
-"PO-Revision-Date: 2018-08-19 03:02+0300\n"
+"PO-Revision-Date: 2018-08-20 16:50+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: ../util/gtk/generic-config-dialog.c:95
@@ -323,12 +323,12 @@ msgstr "Отображать имена рабочих столов"
 
 #: ../applets/wnck/icontasks/buttons.vala:113
 msgid "Pin to panel"
-msgstr "Добавить модуль на панель"
+msgstr "Добавить на панель"
 
 #: ../applets/wnck/icontasks/buttons.vala:114
 #: ../applets/wnck/icontasks/buttons.vala:488
 msgid "Unpin from panel"
-msgstr "Добавить модуль на панель"
+msgstr "Удалить с панели"
 
 #: ../applets/wnck/pager/pager.vala:96
 msgid "Workspaces..."
@@ -375,10 +375,8 @@ msgid "Simple GTK+ desktop panel. "
 msgstr "Панель для рабочего стола на GTK+"
 
 #: ../app/app-about.ui:13
-#, fuzzy
-#| msgid "Vala Panel Applet"
 msgid "ValaPanel website"
-msgstr "Апплет Vala Panel"
+msgstr "Сайт Vala Panel"
 
 #. Replace this string by your names, one name per line.
 #: ../app/app-about.ui:29 ../data/ui/plugin-about.ui:10
