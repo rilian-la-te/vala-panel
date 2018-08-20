@@ -47,4 +47,4 @@ add_subdirectory(gtk)
 install (FILES ${UTIL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ COMPONENT dev)
 install (FILES ${CMAKE_BINARY_DIR}/config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vala-panel/ RENAME vala-panel-configuration.h COMPONENT dev)
 
-
+add_feature_info(Toplevel ON "ValaPanel utility library")

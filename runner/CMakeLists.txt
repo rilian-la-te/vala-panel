@@ -15,7 +15,7 @@ glib_compile_resources(GLIB_RESOURCES_APP
 # Executable
 #####
 
-add_feature_info(Runner ON "Panel run dialog")
+add_feature_info(Runner ON "Simple run dialog based on ValaPanel library")
 
 add_executable(${APPNAME}-runner
 	${GLIB_RESOURCES_APP}

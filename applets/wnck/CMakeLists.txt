@@ -19,3 +19,6 @@ endif()
 if (ENABLE_X11)
     add_subdirectory(xembed)
 endif()
+
+add_feature_info(WnckApplets ENABLE_WNCK "ValaPanel libwnck applets (tasklists,pager)")
+add_feature_info(Xembed ENABLE_X11 "XEmbed-based system tray (deprecated)")

@@ -6,6 +6,10 @@ glib_compile_resources(GLIB_RESOURCES_APP
 #####
 # Executable
 #####
+
+add_feature_info(Application ON "ValaPanel main application")
+add_feature_info(PlatformX11 ON "ValaPanel X11 backend")
+
 set(APP_SOURCES
         ${GLIB_RESOURCES_APP}
 	vala-panel-platform-standalone-x11.c
