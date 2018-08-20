@@ -1,19 +1,23 @@
 image: pritunl/archlinux
+
 stages:
   - build
+
 before_script:
   - mkdir -p _ccache
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/_ccache
-  - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
-  - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
+
 cache:
   paths:
     - _ccache/
-build:
+
+build-main:
   stage: build
   script:
+   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
+   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
+   - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
    - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja
    - ninja install
