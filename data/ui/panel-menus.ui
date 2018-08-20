@@ -22,7 +22,7 @@
         <item>
           <attribute name="label" translatable="yes">Panel Items...</attribute>
           <attribute name="action">win.panel-settings</attribute>
-          <attribute name="target">plugins</attribute>
+          <attribute name="target">applets</attribute>
         </item>
     </section>
     <section>

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 03:02+0300\n"
-"PO-Revision-Date: 2018-08-20 16:50+0300\n"
+"POT-Creation-Date: 2018-08-20 17:48+0300\n"
+"PO-Revision-Date: 2018-08-20 17:48+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -572,8 +572,8 @@ msgid "Appearance"
 msgstr "Внешний вид"
 
 #: ../data/ui/pref.ui:1008
-msgid "Plugins"
-msgstr "Модули"
+msgid "Applets"
+msgstr "Апплеты"
 
 #: ../applets/core/launchbar/config.ui:33
 msgid "Add launcher from installed applications"
@@ -694,10 +694,6 @@ msgid ""
 msgstr ""
 "Некоторые из бывших плагинов LXPanel теперь являются отдельными исполняемыми "
 "файлами и находятся в отдельном пакете (например, апплет громкости)"
-
-#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
-msgid "Konstantin"
-msgstr ""
 
 #: ../applets/core/clock/clock.desktop.plugin.in:3
 msgid "Clock"
@@ -836,6 +832,12 @@ msgstr "panel;launcher;menu;tasklist"
 #: ../data/desktop/org.valapanel.application.desktop.in:9
 msgid "vala-panel"
 msgstr "Vala Panel"
+
+#~ msgid "Plugins"
+#~ msgstr "Модули"
+
+#~ msgid "Konstantin"
+#~ msgstr "Константин"
 
 #~ msgid "Reserve space:"
 #~ msgstr "Выделять место:"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 03:02+0300\n"
+"POT-Creation-Date: 2018-08-20 17:47+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -555,7 +555,7 @@ msgid "Appearance"
 msgstr ""
 
 #: ../data/ui/pref.ui:1008
-msgid "Plugins"
+msgid "Applets"
 msgstr ""
 
 #: ../applets/core/launchbar/config.ui:33
@@ -668,10 +668,6 @@ msgstr ""
 msgid ""
 "Some of former LXPanel plugins is separate binaries now and lives in another "
 "packages (Example is volume applet)."
-msgstr ""
-
-#: ../data/desktop/org.valapanel.application.appdata.xml.in:30
-msgid "Konstantin"
 msgstr ""
 
 #: ../applets/core/clock/clock.desktop.plugin.in:3

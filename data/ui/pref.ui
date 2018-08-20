@@ -1004,8 +1004,8 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="name">plugins</property>
-                    <property name="title" translatable="yes">Plugins</property>
+                    <property name="name">applets</property>
+                    <property name="title" translatable="yes">Applets</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
