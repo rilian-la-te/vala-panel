@@ -4,7 +4,6 @@ cmake_policy (VERSION 3.6)
 
 include(GNUInstallDirs)
 
-find_package(PkgConfig)
 set (GETTEXT_PACKAGE ${CMAKE_PROJECT_NAME})
 if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/VCMSubmodule.cmake)
     include(${CMAKE_SOURCE_DIR}/cmake/VCMSubmodule.cmake)
@@ -18,6 +17,10 @@ determine_fallback_version(${CMAKE_SOURCE_DIR}/cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FallbackVersion.cmake)
 include(Format)
 
+find_package (PkgConfig)
+find_package(GLIB2 2.50 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
+include(GLibProgramHandlers)
+find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
 find_package(Vala 0.36 REQUIRED)
 include(ValaPrecompile)
 
@@ -32,22 +35,21 @@ add_definitions(-Wall -Wextra
                 -Wno-missing-field-initializers
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
-find_package (PkgConfig)
-find_package(GLIB2 2.50 REQUIRED COMPONENTS GOBJECT GIO GIO_UNIX GMODULE GTHREAD CODEGEN MKENUMS GENMARSHAL COMPILE_SCHEMAS COMPILE_RESOURCES)
-include(GLibProgramHandlers)
-find_package(GTK 3.22 REQUIRED COMPONENTS GDK X11 WAYLAND)
 include(CMakeDependentOption)
+include(FeatureSummary)
 
 #set build options
 pkg_check_modules(XFCE libxfce4panel-2.0 libxfconf-0 IMPORTED_TARGET)
 cmake_dependent_option(ENABLE_XFCE "Enable Xfce Panel Integration" ON
     "XFCE_FOUND" OFF)
+add_feature_info(Xfce ENABLE_XFCE "Xfce Panel Integration")
 
 pkg_check_modules(MATE libmatepanelapplet-4.0>=1.20 IMPORTED_TARGET)
 cmake_dependent_option(ENABLE_MATE "Enable mate-panel Integration" ON
     "MATE_FOUND" OFF)
+add_feature_info(MATE ENABLE_MATE "MATE Panel Integration")
 
-pkg_check_modules(PEAS libpeas-1.0 IMPORTED_TARGET)
+find_package(PEAS 1.14 COMPONENTS PEAS)
 pkg_check_modules(VALAPANEL vala-panel IMPORTED_TARGET)
 pkg_check_modules(VP_NEW vala-panel>=0.4.50 QUIET)
 pkg_check_modules(BUDGIE budgie-1.0 IMPORTED_TARGET)
@@ -55,13 +57,16 @@ pkg_check_modules(BUDGIE budgie-1.0 IMPORTED_TARGET)
 cmake_dependent_option(ENABLE_VALAPANEL "Enable Vala Panel Integration" ON
     "VALAPANEL_FOUND" OFF)
 if (VP_NEW_FOUND)
-    message("Using 0.5 ValaPanelApplet api")
+    add_feature_info(ValaPanel ENABLE_VALAPANEL "Vala Panel Integration - 0.5.x")
     set(NEW_DEFINE -D NEW)
     set(NEW_IFACE ON)
+else()
+    add_feature_info(ValaPanel ENABLE_VALAPANEL "Vala Panel Integration - 0.4.x")
 endif()
 
 cmake_dependent_option(ENABLE_BUDGIE "Enable budgie-desktop plugin" ON
     "BUDGIE_FOUND; PEAS_FOUND" OFF)
+add_feature_info(Budgie ENABLE_BUDGIE "Budgie Desktop Integration")
 
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
@@ -85,3 +90,5 @@ include (UseRPMTools)
 if (RPMTools_FOUND)
    RPMTools_ADD_RPM_TARGETS(package ${CMAKE_SOURCE_DIR}/rpm/xfce4-sntray-plugin.spec.in)
 endif(RPMTools_FOUND)
+
+feature_summary(WHAT ALL)
