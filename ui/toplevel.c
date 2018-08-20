@@ -300,7 +300,7 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(pl), NULL);
 	else
 		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(self), NULL);
-	gtk_widget_show_all(GTK_WIDGET(self->context_menu));
+	gtk_widget_show(GTK_WIDGET(self->context_menu));
 	return self->context_menu;
 }
 
@@ -412,7 +412,7 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 	                               new_mon,
 	                               (PanelGravity)3 * new_edge);
 	//        new_toplevel.configure("position");
-	gtk_widget_show_all(GTK_WIDGET(new_toplevel));
+	gtk_widget_show(GTK_WIDGET(new_toplevel));
 	gtk_widget_queue_resize(GTK_WIDGET(new_toplevel));
 }
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data)
@@ -919,7 +919,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XS;
 		else
 			self->icon_size_hints = XXS;
-		appearance_update_required = true;
+		appearance_update_required    = true;
 		break;
 	case PROP_BG_FILE:
 		g_free0(self->background_file);
@@ -935,7 +935,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
 		if (-1 <= g_value_get_int(value))
-			self->mon = g_value_get_int(value);
+			self->mon        = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
 	case PROP_DOCK:

@@ -71,7 +71,8 @@ public class Cpu: Applet
             da.set_size_request(toplevel.height > 40 ? toplevel.height : 40, toplevel.height);
         });
         /* Show the widget.  Connect a timer to refresh the statistics. */
-        this.show_all();
+        da.show();
+        this.show();
         timer = Timeout.add(1500, cpu_update);
     }
     private void redraw_pixmap()

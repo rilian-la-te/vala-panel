@@ -384,18 +384,18 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	GtkTreeIter it;
 	GtkCellRenderer *textrender = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col      = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          textrender,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  textrender,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	textrender = gtk_cell_renderer_text_new();
 	col        = gtk_tree_view_column_new_with_attributes(_("Currently loaded plugins"),
-                                                       textrender,
-                                                       "text",
-                                                       COLUMN_NAME,
-                                                       NULL);
+	                                               textrender,
+	                                               "text",
+	                                               COLUMN_NAME,
+	                                               NULL);
 	gtk_tree_view_column_set_expand(col, true);
 	gtk_tree_view_append_column(self->plugin_list, col);
 	GtkCellRendererToggle *render = gtk_cell_renderer_toggle_new();
@@ -502,25 +502,27 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 	gtk_scrolled_window_set_shadow_type(scroll, GTK_SHADOW_IN);
 	gtk_scrolled_window_set_policy(scroll, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_container_add(dlg, scroll);
+	gtk_widget_show(scroll);
 	GtkTreeView *view = gtk_tree_view_new();
 	gtk_container_add(scroll, view);
+	gtk_widget_show(view);
 	GtkTreeSelection *tree_sel = gtk_tree_view_get_selection(view);
 	gtk_tree_selection_set_mode(tree_sel, GTK_SELECTION_BROWSE);
 
 	GtkCellRenderer *render = gtk_cell_renderer_pixbuf_new();
 	GtkTreeViewColumn *col  = gtk_tree_view_column_new_with_attributes(_("Icon"),
-                                                                          render,
-                                                                          "icon-name",
-                                                                          COLUMN_ICON,
-                                                                          NULL);
+	                                                                  render,
+	                                                                  "icon-name",
+	                                                                  COLUMN_ICON,
+	                                                                  NULL);
 
 	gtk_tree_view_append_column(view, col);
 	render = gtk_cell_renderer_text_new();
 	col    = gtk_tree_view_column_new_with_attributes(_("Available plugins"),
-                                                       render,
-                                                       "text",
-                                                       1,
-                                                       NULL);
+	                                               render,
+	                                               "text",
+	                                               1,
+	                                               NULL);
 	gtk_tree_view_append_column(view, col);
 
 	GtkListStore *list = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -554,7 +556,7 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 	g_signal_connect(view, "row-activated", G_CALLBACK(on_add_plugin_row_activated), self);
 	gtk_scrolled_window_set_min_content_width(scroll, 320);
 	gtk_scrolled_window_set_min_content_height(scroll, 200);
-	gtk_widget_show_all(dlg);
+	gtk_widget_show(dlg);
 }
 
 static void on_remove_plugin(GtkButton *btn, void *user_data)

@@ -51,7 +51,8 @@ public class ButtonWrapper : Gtk.Revealer
 
         this.add(button);
         this.set_reveal_child(false);
-        this.show_all();
+        button.show();
+        this.show();
     }
 
     public void gracefully_die()
@@ -145,7 +146,7 @@ public class IconButton : Gtk.ToggleButton
         }
         var sep = new Gtk.SeparatorMenuItem();
         menu.append(sep);
-        sep.show_all();
+        sep.show();
         foreach (var action in actions) {
             var display_name = ainfo.get_action_name(action);
             var item = new Gtk.MenuItem.with_label(display_name);
@@ -163,7 +164,7 @@ public class IconButton : Gtk.ToggleButton
                 launch_context.set_timestamp(Gdk.CURRENT_TIME);
                 ainfo.launch_action(act, launch_context);
             });
-            item.show_all();
+            item.show();
             menu.append(item);
         }
     }
@@ -487,7 +488,7 @@ public class PinnedIconButton : IconButton
         alt_menu = new Gtk.Menu();
         var item = new Gtk.MenuItem.with_label(_("Unpin from panel"));
         alt_menu.add(item);
-        item.show_all();
+        item.show();
 
         this.update_app_actions(alt_menu);
 

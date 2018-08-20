@@ -76,7 +76,8 @@ namespace LaunchBar
                 lb.launch();
                 layout.unselect_child(lb);
             });
-            show_all();
+            layout.show();
+            this.show();
         }
         protected override Widget get_settings_ui()
         {
@@ -179,6 +180,7 @@ namespace LaunchBar
                             btn = new LaunchBar.Button(info,id,type);
                         toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                         layout.add(btn);
+                        btn.show();
                     }
                 }
             }
@@ -188,8 +190,9 @@ namespace LaunchBar
                 var btn = new LaunchBar.Button(null,null,ButtonType.BOOTSTRAP);
                 toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                 layout.add(btn);
+                btn.show();
             }
-            layout.show_all();
+            layout.show();
         }
         private ButtonType load_button_info(string str_pretend, out AppInfo info, out string content_type)
         {

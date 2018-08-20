@@ -66,6 +66,7 @@ GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 	gtk_image_set_pixel_size(image, 48);
 	gtk_widget_set_margin_start(GTK_WIDGET(image), 8);
 	gtk_box_pack_start(box, GTK_WIDGET(image), false, false, 0);
+	gtk_widget_show(GTK_WIDGET(image));
 	GtkLabel *label = GTK_LABEL(gtk_label_new(data->name_markup));
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(label)), "dim-label");
 	gtk_label_set_line_wrap(label, true);
@@ -75,6 +76,7 @@ GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 	gtk_label_set_max_width_chars(label, 60);
 	gtk_widget_set_halign(GTK_WIDGET(label), GTK_ALIGN_START);
 	gtk_box_pack_start(box, GTK_WIDGET(label), false, false, 0);
+	gtk_widget_show(GTK_WIDGET(label));
 	gtk_widget_set_hexpand(GTK_WIDGET(box), false);
 	gtk_widget_set_vexpand(GTK_WIDGET(box), false);
 	gtk_widget_set_halign(GTK_WIDGET(box), GTK_ALIGN_START);
@@ -82,7 +84,7 @@ GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 	gtk_widget_set_tooltip_text(GTK_WIDGET(box), data->disp_name);
 	gtk_widget_set_margin_top(GTK_WIDGET(box), 3);
 	gtk_widget_set_margin_bottom(GTK_WIDGET(box), 3);
-	gtk_widget_show_all(GTK_WIDGET(box));
+	gtk_widget_show(GTK_WIDGET(box));
 	return GTK_WIDGET(box);
 }
 
@@ -123,12 +125,12 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			g_clear_pointer(&app_info, g_object_unref);
 			g_autoptr(GError) err = NULL;
 			app_info              = g_app_info_create_from_commandline(
-                            gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
-                            NULL,
-                            gtk_toggle_button_get_active(self->terminal_button)
-                                ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-                                : G_APP_INFO_CREATE_NONE,
-                            &err);
+			    gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
+			    NULL,
+			    gtk_toggle_button_get_active(self->terminal_button)
+			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+			        : G_APP_INFO_CREATE_NONE,
+			    &err);
 			if (err)
 			{
 				g_error_free(err);

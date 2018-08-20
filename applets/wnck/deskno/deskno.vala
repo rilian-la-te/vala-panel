@@ -57,7 +57,8 @@ public class Deskno: Applet
         screen_handler = Wnck.Screen.get_default().window_manager_changed.connect(name_update);
         name_update();
         this.add(label);
-        this.show_all();
+        label.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

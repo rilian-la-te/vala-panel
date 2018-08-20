@@ -153,14 +153,13 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				break;
 			}
 			case CONF_EXTERNAL:
-				if (GTK_IS_WIDGET(entry))
-					gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
-				else
+				if (!GTK_IS_WIDGET(entry))
 					g_critical("value for CONF_EXTERNAL is not a GtkWidget");
 				break;
 			}
 		if (entry)
 		{
+			gtk_widget_show(entry);
 			if ((type == CONF_BOOL) || (type == CONF_TRIM))
 				gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
 			else
@@ -169,10 +168,11 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				gtk_box_pack_start(hbox, GTK_WIDGET(label), false, false, 2);
 				gtk_box_pack_start(hbox, entry, true, true, 2);
 				gtk_box_pack_start(dlg_vbox, GTK_WIDGET(hbox), false, false, 2);
+				gtk_widget_show(hbox);
 			}
 		}
 	}
-	gtk_widget_show_all(GTK_WIDGET(dlg_vbox));
+	gtk_widget_show(GTK_WIDGET(dlg_vbox));
 	return GTK_WIDGET(dlg_vbox);
 }
 
@@ -189,12 +189,12 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 {
 	va_list l;
 	va_start(l, settings);
-	GtkDialog *dlg   = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
-                                                                parent,
-                                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                                _("_Close"),
-                                                                GTK_RESPONSE_CLOSE,
-                                                                NULL));
+	GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
+	                                                        parent,
+	                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                                        _("_Close"),
+	                                                        GTK_RESPONSE_CLOSE,
+	                                                        NULL));
 	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	GtkWidget *settings_widget = generic_config_widget_internal(settings, l);

@@ -55,7 +55,7 @@ namespace LaunchBar
             popover.set_size_request(760,360);
             button_add.popover = popover;
             box_popover.show();
-            this.show_all();
+            this.show();
         }
         private void add_uri(string uri, bool show_err = true)
         {

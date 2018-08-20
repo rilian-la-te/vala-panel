@@ -67,7 +67,8 @@ public class Dirmenu: Applet
                 button.set_popup(create_menu(dir_path,false));
         });
         this.add(button);
-        this.show_all();
+        button.show();
+        this.show();
     }
     private Icon set_icon(){
         Icon? icon = null;
@@ -164,7 +165,7 @@ public class Dirmenu: Applet
         }
 
         /* Show the menu and return. */
-        menu.show_all();
+        menu.show();
         return menu;
     }
     private void launch_terminal(string dir)

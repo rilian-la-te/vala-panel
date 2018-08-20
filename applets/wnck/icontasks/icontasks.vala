@@ -219,7 +219,9 @@ public class IconTasklistApplet : ValaPanel.Applet
         toplevel.bind_property("orientation",main_layout,"orientation",BindingFlags.SYNC_CREATE);
         toplevel.bind_property("orientation",pinned,"orientation",BindingFlags.SYNC_CREATE);
         toplevel.bind_property("orientation",widget,"orientation",BindingFlags.SYNC_CREATE);
-        show_all();
+        main_layout.show();
+        widget.show();
+        this.show();
 
         settings.changed.connect(on_settings_change);
 
@@ -241,8 +243,6 @@ public class IconTasklistApplet : ValaPanel.Applet
         pinned.drag_data_received.connect(on_drag_data_received);
 
         get_style_context().add_class("icon-tasklist");
-
-        show_all();
     }
 
     void set_icons_size()

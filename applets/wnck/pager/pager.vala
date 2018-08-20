@@ -50,7 +50,8 @@ public class Pager: Applet
                 on_params_change_callback();
         });
         on_params_change_callback();
-        this.show_all();
+        widget.show();
+        this.show();
     }
     private void on_params_change_callback()
     {

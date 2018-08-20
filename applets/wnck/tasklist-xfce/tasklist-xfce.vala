@@ -73,7 +73,8 @@ public class TasklistXFCE: Applet
 //        widget.set_size(settings.get_int(KEY_UNEXPANDED_LIMIT));
         widget.update_edge(edge_from_gravity(toplevel.panel_gravity));
         widget.set_orientation(toplevel.orientation);
-        this.show_all();
+        widget.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

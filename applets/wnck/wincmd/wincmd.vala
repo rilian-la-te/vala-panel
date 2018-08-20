@@ -79,7 +79,9 @@ public class Wincmd: Applet
             update_icon();
         });
         this.add(button);
-        this.show_all();
+        image.show();
+        button.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

@@ -190,8 +190,7 @@ struct _XfceTasklist
 	gint n_windows;
 };
 
-typedef enum
-{
+typedef enum {
 	CHILD_TYPE_WINDOW,
 	CHILD_TYPE_GROUP,
 	CHILD_TYPE_OVERFLOW_MENU,
@@ -1111,7 +1110,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 					 * with counting the windows... */
 					if (cols < 1)
 						cols = 1;
-					w = area_width / cols--;
+					w            = area_width / cols--;
 					if (tasklist->max_button_length > 0 &&
 					    w > tasklist->max_button_length)
 						w = tasklist->max_button_length;
@@ -2739,7 +2738,8 @@ static bool xfce_tasklist_button_button_release_event(GtkWidget *button, GdkEven
 	if (event->type == GDK_BUTTON_RELEASE && !(event->x == 0 && event->y == 0) /* 0,0 = outside
 	                                                                              the widget in
 	                                                                              Gtk */
-	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
+	    &&
+	    event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
 		if (event->button == 1)
@@ -2820,6 +2820,7 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 
 	gtk_label_set_max_width_chars(GTK_LABEL(label), tasklist->menu_max_width_chars);
 	gtk_label_set_ellipsize(GTK_LABEL(label), tasklist->ellipsize_mode);
+	gtk_widget_show(label);
 	image = gtk_image_new();
 	gtk_box_pack_start(GTK_BOX(tmp), image, false, true, 0);
 	gtk_image_set_pixel_size(GTK_IMAGE(image), GTK_ICON_SIZE_MENU);
@@ -2829,7 +2830,7 @@ static GtkWidget *xfce_tasklist_button_proxy_menu_item(XfceTasklistChild *child,
 	                       "pixbuf",
 	                       G_BINDING_SYNC_CREATE);
 	gtk_widget_show(image);
-	gtk_widget_show_all(tmp);
+	gtk_widget_show(tmp);
 	if (allow_wireframe)
 	{
 		g_object_ref(G_OBJECT(child->window));
@@ -3101,10 +3102,13 @@ static void xfce_tasklist_button_drag_data_received(GtkWidget *button, GdkDragCo
 	{
 		child = li->data;
 
-		if (sibling != li                 /* drop on end previous button */
-		    && child != child2            /* drop on the same button */
-		    && g_list_next(li) != sibling /* drop start of next button */
-		    && child->window != NULL && wnck_window_get_xid(child->window) == xid)
+		if (sibling != li /* drop on end previous button */
+		    &&
+		    child != child2 /* drop on the same button */
+		    &&
+		    g_list_next(li) != sibling /* drop start of next button */
+		    &&
+		    child->window != NULL && wnck_window_get_xid(child->window) == xid)
 		{
 			/* swap items */
 			tasklist->windows = g_list_delete_link(tasklist->windows, li);

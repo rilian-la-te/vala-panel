@@ -68,7 +68,8 @@ public class Tasklist: Applet
         widget.set_grouping(settings.get_boolean(KEY_GROUPING) ? Wnck.TasklistGroupingType.ALWAYS_GROUP : Wnck.TasklistGroupingType.AUTO_GROUP);
         widget.set_middle_click_close(settings.get_boolean(KEY_MIDDLE_CLICK_CLOSE));
         widget.set_grouping_limit(settings.get_int(KEY_GROUPING_LIMIT));
-        this.show_all();
+        widget.show();
+        this.show();
     }
     private void measure(Orientation orient, int for_size, out int min, out int nat, out int base_min, out int base_nat)
     {

@@ -76,7 +76,8 @@ public class Menu: Applet
          this.add(button);
          unowned Gtk.Settings gtksettings = this.get_settings();
          gtksettings.gtk_shell_shows_menubar = false;
-         this.show_all();
+         button.show();
+         this.show();
          settings.changed.connect((key)=>{
              if ((key == Key.IS_INTERNAL_MENU)
                  || (key == Key.MODEL_FILE && !intern)
@@ -178,7 +179,7 @@ public class Menu: Applet
         var menuw = new Gtk.Menu.from_model(menu);
         int_menu = menuw;
         MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
-        int_menu.show_all();
+        int_menu.show();
         int_menu.attach_to_widget(menubutton,null);
         menubutton.toggled.connect(()=>{
             if(menubutton.active && !int_menu.visible)

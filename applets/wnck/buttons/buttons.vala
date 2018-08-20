@@ -48,6 +48,7 @@ public class Buttons: Applet
                 image.set_from_icon_name("window-restore-symbolic",IconSize.MENU);
             else
                 image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
+            image.show();
         });
         var gtksettings = this.get_settings();
         gtksettings.notify["gtk-decoration-layout"].connect(()=>{
@@ -55,7 +56,8 @@ public class Buttons: Applet
         });
         update_window_buttons(gtksettings.gtk_decoration_layout);
         this.add(box);
-        this.show_all();
+        box.show();
+        this.show();
     }
     private void update_buttons_sensitivity(Wnck.Window? prev = null)
     {
@@ -129,7 +131,7 @@ public class Buttons: Applet
                     button.get_style_context().add_class("minimize");
                     setup_window_button(button,new ThemedIcon.with_default_fallbacks("window-minimize-symbolic"),null,this.toplevel);
                     button.can_focus = false;
-                    button.show_all();
+                    button.show();
                     button.clicked.connect(()=>{
                         Wnck.Screen.get_default().get_active_window().minimize();
                     });
@@ -149,7 +151,7 @@ public class Buttons: Applet
                     var icon = new ThemedIcon.with_default_fallbacks(max ? "window-restore-symbolic" :"window-maximize-symbolic");
                     setup_window_button(button,icon,null,this.toplevel);
                     button.can_focus = false;
-                    button.show_all();
+                    button.show();
                     button.clicked.connect(()=>{
                         var win = Wnck.Screen.get_default().get_active_window();
                         if (win.is_maximized())
@@ -171,7 +173,7 @@ public class Buttons: Applet
                     button.get_style_context().add_class("close");
                     setup_window_button(button,new ThemedIcon.with_default_fallbacks("window-close-symbolic"),null,this.toplevel);
                     button.can_focus = false;
-                    button.show_all();
+                    button.show();
                     button.clicked.connect(()=>{
                         Wnck.Screen.get_default().get_active_window().close(get_current_event_time());
                     });
@@ -193,6 +195,7 @@ public class Buttons: Applet
         {
             img = new Image.from_gicon(icon,IconSize.INVALID);
             setup_icon(img,icon,top);
+            img.show();
         }
         setup_button(btn, img, label);
         btn.set_border_width(0);

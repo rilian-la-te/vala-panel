@@ -64,7 +64,8 @@ public class Kbled: Applet
         toplevel.notify["panel-gravity"].connect((o,a)=> {
             widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
-        show_all();
+        widget.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

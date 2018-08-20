@@ -390,7 +390,8 @@ public class Monitors: Applet
         });
         this.destroy.connect(()=>{Source.remove(timer);});
         this.add(box);
-        this.show_all();
+        box.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

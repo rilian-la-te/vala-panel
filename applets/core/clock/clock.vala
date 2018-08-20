@@ -64,7 +64,7 @@ public class Clock: Applet
             if (clock.get_active())
             {
                 calendar = create_calendar();
-                calendar.show_all();
+                calendar.show();
             }
             else
             {
@@ -92,7 +92,7 @@ public class Clock: Applet
         });
         clock.show();
         this.add(clock);
-        this.show_all();
+        this.show();
     }
     public override Widget get_settings_ui()
     {
@@ -187,7 +187,7 @@ public class Clock: Applet
         win.set_type_hint(Gdk.WindowTypeHint.UTILITY);
         win.set_transient_for(this.toplevel);
         win.set_attached_to(this);
-        calendar.show_all();
+        calendar.show();
         set_popup_position(win);
         /* Return the widget. */
         return win;
