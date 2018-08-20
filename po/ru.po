@@ -328,7 +328,7 @@ msgstr "Добавить модуль на панель"
 #: ../applets/wnck/icontasks/buttons.vala:114
 #: ../applets/wnck/icontasks/buttons.vala:488
 msgid "Unpin from panel"
-msgstr "Добавить модуль на панель"
+msgstr "Убрать модуль из панели"
 
 #: ../applets/wnck/pager/pager.vala:96
 msgid "Workspaces..."
@@ -337,7 +337,7 @@ msgstr "Рабочие столы..."
 #: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:81
 #: ../applets/wnck/tasklist/tasklist.vala:97
 msgid "Show windows from all desktops"
-msgstr "Показывать окна всех рабочих мест"
+msgstr "Показывать окна всех рабочих столов"
 
 #: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:82
 #: ../applets/wnck/tasklist/tasklist.vala:98
@@ -375,10 +375,8 @@ msgid "Simple GTK+ desktop panel. "
 msgstr "Панель для рабочего стола на GTK+"
 
 #: ../app/app-about.ui:13
-#, fuzzy
-#| msgid "Vala Panel Applet"
 msgid "ValaPanel website"
-msgstr "Апплет Vala Panel"
+msgstr "Сайт Vala Panel"
 
 #. Replace this string by your names, one name per line.
 #: ../app/app-about.ui:29 ../data/ui/plugin-about.ui:10
