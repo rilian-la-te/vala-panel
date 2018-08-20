@@ -24,10 +24,13 @@ namespace ValaDBusMenu
             var new_scale = new Scale(Orientation.HORIZONTAL,adj);
             scale = new_scale;
             scale.hexpand = true;
+            primary.show();
+            scale.show();
             box.add(primary);
             box.add(scale);
             this.add(box);
-            this.show_all();
+            box.show();
+            this.show();
             this.init();
             item.property_changed.connect(on_prop_changed_cb);
             item.removing.connect(()=>{this.destroy();});

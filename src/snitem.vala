@@ -68,9 +68,12 @@ namespace StatusNotifier
             image = new Image();
             box.add(image);
             image.valign = Align.CENTER;
+            image.show();
             box.add(label);
             label.valign = Align.CENTER;
+            label.show();
             ebox.add(box);
+            box.show();
             this.add(ebox);
             ebox.add_events(Gdk.EventMask.SCROLL_MASK);
             ebox.scroll_event.connect((e)=>{
@@ -129,7 +132,7 @@ namespace StatusNotifier
                     get_applet().bind_property(USE_LABELS,label,"visible",BindingFlags.SYNC_CREATE);
                 }
             });
-            ebox.show_all();
+            ebox.show();
         }
         private async void init_proxy() throws Error
         {

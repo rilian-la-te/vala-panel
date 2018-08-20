@@ -60,8 +60,9 @@ namespace StatusNotifier
             widget.orientation = get_orientation(orient);
         });
         widget.orientation = get_orientation(applet.orient);
+        widget.show();
         applet.add(widget);
-        applet.show_all();
+        applet.show();
         var action_group = new Gtk.ActionGroup ("SNTrayApplet Menu Actions");
         action_group.set_translation_domain (Config.GETTEXT_PACKAGE);
         Gtk.Action a = new Gtk.Action("SNTrayPreferences",N_("_Preferences"),null,Gtk.Stock.PREFERENCES);

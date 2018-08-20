@@ -31,6 +31,9 @@ namespace ValaDBusMenu
             accel_label = label;
             box.pack_start(image,false,false,2);
             box.add(accel_label);
+            accel_label.show();
+            image.show();
+            box.show();
             this.add(box);
             this.show_all();
             this.init();

@@ -10,7 +10,7 @@ namespace ValaDBusMenu
         public GtkSeparatorItem(Item item)
         {
             this.item = item;
-            this.show_all();
+            this.show();
             this.init();
             item.property_changed.connect(on_prop_changed_cb);
             item.removing.connect(()=>{this.destroy();});

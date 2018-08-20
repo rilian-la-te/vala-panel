@@ -72,7 +72,8 @@ public class SNTray: Applet
             layout.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         });
         this.add(layout);
-        show_all();
+        layout.show();
+        this.show();
     }
     public override Widget get_settings_ui()
     {

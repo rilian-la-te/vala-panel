@@ -61,7 +61,7 @@ public class StatusNotifierPlugin : Xfce.PanelPlugin {
             }
         });
         this.shrink = true;
-        widget.show_all();
+        widget.show();
     }
     public override void configure_plugin()
     {
