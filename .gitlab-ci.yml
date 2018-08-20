@@ -16,5 +16,12 @@ cache:
 build:
   stage: build
   script:
+   - mkdir build && cd build
    - cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja
+   - ninja install
+   - ninja dist
+   artifacts:
+    paths:
+    - "build/xfce4-sntray-plugin*.tar.xz"
+    expire_in: 1 week
