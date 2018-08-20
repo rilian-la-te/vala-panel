@@ -24,6 +24,7 @@ build:
 release:
   stage: deploy
   script:
+   - cd build
    - ninja install
    - ninja dist
   artifacts:
