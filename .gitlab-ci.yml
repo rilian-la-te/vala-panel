@@ -7,7 +7,7 @@ before_script:
   - export CCACHE_DIR=${PWD}/_ccache
   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr && make install && cd ..
+  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd ..
 cache:
   paths:
     - _ccache/
