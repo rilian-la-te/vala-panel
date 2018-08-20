@@ -293,6 +293,7 @@ public class IconButton : Gtk.ToggleButton
         image.pixel_size = size;
         icon_size = size;
         this.panel_size = panel_size;
+        image.show();
         add(image);
 
         this.window = window;
