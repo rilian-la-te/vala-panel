@@ -7,18 +7,18 @@ before_script:
   - export CCACHE_DIR=${PWD}/_ccache
   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd ..
+  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
 cache:
   paths:
     - _ccache/
 build:
   stage: build
   script:
-   - cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja
+   - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja
    - ninja install
    - ninja dist
   artifacts:
     paths:
-    - "vala-panel*.tar.xz"
+    - "build/vala-panel*.tar.xz"
     expire_in: 1 week
