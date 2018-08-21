@@ -210,17 +210,18 @@ public class IconTasklistApplet : ValaPanel.Applet
         pinned = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 4);
         pinned.get_style_context().add_class("pinned");
         main_layout.pack_start(pinned, false, false, 0);
+        pinned.show();
 
         widget = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 4);
         widget.get_style_context().add_class("unpinned");
         main_layout.pack_start(widget, false, false, 0);
+        widget.show();
 
         add(main_layout);
         toplevel.bind_property("orientation",main_layout,"orientation",BindingFlags.SYNC_CREATE);
         toplevel.bind_property("orientation",pinned,"orientation",BindingFlags.SYNC_CREATE);
         toplevel.bind_property("orientation",widget,"orientation",BindingFlags.SYNC_CREATE);
         main_layout.show();
-        widget.show();
         this.show();
 
         settings.changed.connect(on_settings_change);
