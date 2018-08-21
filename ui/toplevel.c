@@ -690,7 +690,7 @@ void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 /****************************************************
  *         autohide : new version                   *
  ****************************************************/
-static bool timeout_func(ValaPanelToplevel *self)
+static int timeout_func(ValaPanelToplevel *self)
 {
 	if (self->autohide && self->ah_state == AH_WAITING)
 	{
