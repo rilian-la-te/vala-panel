@@ -45,7 +45,8 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 		const char *name = va_arg(l, const char *);
 		if (!name)
 			break;
-		GtkLabel *label        = GTK_LABEL(gtk_label_new(name));
+		GtkLabel *label = GTK_LABEL(gtk_label_new(name));
+		gtk_widget_show(label);
 		GtkWidget *entry       = NULL;
 		void *arg              = va_arg(l, void *);
 		const char *key        = NULL;
