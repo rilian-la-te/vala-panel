@@ -347,7 +347,6 @@ static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 	                            VALA_PANEL_TOPLEVEL_ID,
 	                            VALA_PANEL_TOPLEVEL_ID,
 	                            NULL,
-	                            (GParamFlags)(G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-	                                          G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                            (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
 	                                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }

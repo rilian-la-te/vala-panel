@@ -658,9 +658,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    "profile",
 	                                                    "profile",
 	                                                    "default",
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -669,9 +668,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_RUN,
 	                                                    VP_KEY_RUN,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -680,9 +678,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_TERMINAL,
 	                                                    VP_KEY_TERMINAL,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -691,9 +688,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_LOCK,
 	                                                    VP_KEY_LOCK,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -702,9 +698,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_LOGOUT,
 	                                                    VP_KEY_LOGOUT,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -713,9 +708,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_SHUTDOWN,
 	                                                    VP_KEY_SHUTDOWN,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -724,9 +718,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                     VP_KEY_DARK,
 	                                                     VP_KEY_DARK,
 	                                                     false,
-	                                                     G_PARAM_STATIC_NAME |
-	                                                         G_PARAM_STATIC_NICK |
-	                                                         G_PARAM_STATIC_BLURB |
+
+	                                                     G_PARAM_STATIC_STRINGS |
 	                                                         G_PARAM_READABLE |
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -735,9 +728,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                     VP_KEY_CUSTOM,
 	                                                     VP_KEY_CUSTOM,
 	                                                     false,
-	                                                     G_PARAM_STATIC_NAME |
-	                                                         G_PARAM_STATIC_NICK |
-	                                                         G_PARAM_STATIC_BLURB |
+
+	                                                     G_PARAM_STATIC_STRINGS |
 	                                                         G_PARAM_READABLE |
 	                                                         G_PARAM_WRITABLE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
@@ -746,9 +738,8 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_CSS,
 	                                                    VP_KEY_CSS,
 	                                                    NULL,
-	                                                    G_PARAM_STATIC_NAME |
-	                                                        G_PARAM_STATIC_NICK |
-	                                                        G_PARAM_STATIC_BLURB |
+
+	                                                    G_PARAM_STATIC_STRINGS |
 	                                                        G_PARAM_READABLE |
 	                                                        G_PARAM_WRITABLE));
 }

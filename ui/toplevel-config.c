@@ -648,8 +648,7 @@ static void vala_panel_toplevel_config_class_init(ValaPanelToplevelConfigClass *
 	                        VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
-	                        (GParamFlags)(G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-	                                      G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
 	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                TOPLEVEL_PROPERTY,
