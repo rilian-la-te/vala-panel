@@ -74,7 +74,7 @@ configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/c
 add_subdirectory(data)
 add_subdirectory(po)
 add_subdirectory(src)
-#add_subdirectory(xembedsniproxy)
+add_subdirectory(xembedsniproxy)
 
 # Add 'make dist' command for creating release tarball
 set (CPACK_PACKAGE_VERSION ${VERSION})

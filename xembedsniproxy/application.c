@@ -144,7 +144,10 @@ static void xembed_sni_application_undock(XEmbedSNIApplication *self, xcb_window
 	g_hash_table_remove(self->proxies, GUINT_TO_POINTER(winId));
 }
 
-/*XCB event filter*/
+/*XCB event filter
+ * TODO: Baloon messages
+ * TODO: Any strange tray types
+ */
 
 static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *self)
 {
@@ -159,7 +162,31 @@ static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *s
 			case SYSTEM_TRAY_REQUEST_DOCK:
 				xembed_sni_application_dock(self, ce->data.data32[2]);
 				//                    return GDK_FILTER_REMOVE;
+				break;
+			case SYSTEM_TRAY_BEGIN_MESSAGE:
+				/* If a Begin Message event. look up the tray icon and execute it.
+				 */
+				//                balloon_message_begin_event(tr,
+				//                (XClientMessageEvent *)xev); return
+				//                GDK_FILTER_REMOVE;
+				break;
+
+			case SYSTEM_TRAY_CANCEL_MESSAGE:
+				/* If a Cancel Message event. look up the tray icon and execute it.
+				 */
+				//                balloon_message_cancel_event(tr,
+				//                (XClientMessageEvent *)xev); return
+				//                GDK_FILTER_REMOVE;
+				break;
 			}
+		}
+
+		else if (ce->type == a_NET_SYSTEM_TRAY_MESSAGE_DATA)
+		{
+			/* Client message of type _NET_SYSTEM_TRAY_MESSAGE_DATA.
+			 * Look up the tray icon and execute it. */
+			//            balloon_message_data_event(tr, (XClientMessageEvent *)xev);
+			//            return GDK_FILTER_REMOVE;
 		}
 	}
 	else if (responseType == XCB_UNMAP_NOTIFY)
@@ -172,6 +199,10 @@ static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *s
 	}
 	else if (responseType == XCB_DESTROY_NOTIFY)
 	{
+		/* Look for DestroyNotify events on tray icon windows and update state.
+		 * We do it this way rather than with a "plug_removed" event because delivery
+		 * of plug_removed events is observed to be unreliable if the client
+		 * disconnects within less than 10 ms. */
 		const xcb_window_t destroyedWId = ((xcb_destroy_notify_event_t *)event)->window;
 		if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(destroyedWId)))
 		{
@@ -195,190 +226,18 @@ static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *s
 		}
 	}
 
-	//        if (event->type == DestroyNotify)
-	//        {
-	//            /* Look for DestroyNotify events on tray icon windows and update state.
-	//             * We do it this way rather than with a "plug_removed" event because delivery
-	//             * of plug_removed events is observed to be unreliable if the client
-	//             * disconnects within less than 10 ms. */
-	//            XDestroyWindowEvent *xev_destroy = (XDestroyWindowEvent *)xev;
-	//            TrayClient *tc                   = client_lookup(tr, xev_destroy->window);
-	//            if (tc != NULL)
-	//                client_delete(tr, tc, TRUE, TRUE);
-	//        }
-
-	//        else if (xev->type == ClientMessage)
-	//        {
-	//            if (xev->xclient.message_type == a_NET_SYSTEM_TRAY_OPCODE)
-	//            {
-	//                /* Client message of type _NET_SYSTEM_TRAY_OPCODE.
-	//                 * Dispatch on the request. */
-	//                switch (xev->xclient.data.l[1])
-	//                {
-	//                case SYSTEM_TRAY_REQUEST_DOCK:
-	//                    /* If a Request Dock event on the invisible window, which is holding
-	//                     * the manager selection, execute it. */
-	//                    if (xev->xclient.window == tr->invisible_window)
-	//                    {
-	//                        trayclient_request_dock(tr, (XClientMessageEvent *)xev);
-	//                        return GDK_FILTER_REMOVE;
-	//                    }
-	//                    break;
-
-	//                case SYSTEM_TRAY_BEGIN_MESSAGE:
-	//                    /* If a Begin Message event. look up the tray icon and execute it.
-	//                     */
-	//                    balloon_message_begin_event(tr, (XClientMessageEvent *)xev);
-	//                    return GDK_FILTER_REMOVE;
-
-	//                case SYSTEM_TRAY_CANCEL_MESSAGE:
-	//                    /* If a Cancel Message event. look up the tray icon and execute it.
-	//                     */
-	//                    balloon_message_cancel_event(tr, (XClientMessageEvent *)xev);
-	//                    return GDK_FILTER_REMOVE;
-	//                }
-	//            }
-
-	//            else if (xev->xclient.message_type == a_NET_SYSTEM_TRAY_MESSAGE_DATA)
-	//            {
-	//                /* Client message of type _NET_SYSTEM_TRAY_MESSAGE_DATA.
-	//                 * Look up the tray icon and execute it. */
-	//                balloon_message_data_event(tr, (XClientMessageEvent *)xev);
-	//                return GDK_FILTER_REMOVE;
-	//            }
-	//        }
-
-	//        else if ((xev->type == SelectionClear) && (xev->xclient.window ==
-	//        tr->invisible_window))
-	//        {
-	//            /* Look for SelectionClear events on the invisible window, which is holding
-	//            the
-	//             * manager selection.
-	//             * This should not happen. */
-	//            tray_unmanage_selection(tr);
-	//        }
-	return GDK_FILTER_CONTINUE;
+	else if (responseType == XCB_SELECTION_CLEAR)
+	{
+		const xcb_window_t damagedWId = ((xcb_selection_clear_event_t *)event)->owner;
+		/* Look for SelectionClear events on the invisible window, which is holding
+		the
+		 * manager selection.
+		 * This should not happen. */
+		if (damagedWId == self->selection)
+			g_application_quit(G_APPLICATION(self));
+	}
+	return G_SOURCE_CONTINUE;
 }
-
-/* GDK event filter. */
-// static GdkFilterReturn xembed_sni_event_filter(XEvent *xev, GdkEvent *event,
-//                                               XEmbedSNIApplication *self)
-//{
-//	// Try to convert XEvent to xcb_event_t
-//	xcb_generic_event_t *ev = (xcb_generic_event_t *)xev;
-//	//    xcb_connection_t *con      = gdk_x11_get_default_xcb_connection();
-//	const uint8_t responseType = ev->response_type;
-//	if (responseType == XCB_CLIENT_MESSAGE)
-//	{
-//		const xcb_client_message_event_t *ce = (xcb_client_message_event_t *)ev;
-//		if (ce->type == a_NET_SYSTEM_TRAY_OPCODE)
-//		{
-//			switch (ce->data.data32[1])
-//			{
-//			case SYSTEM_TRAY_REQUEST_DOCK:
-//				xembed_sni_application_dock(self, ce->data.data32[2]);
-//				return GDK_FILTER_REMOVE;
-//			}
-//		}
-//	}
-//	else if (responseType == XCB_UNMAP_NOTIFY)
-//	{
-//		const xcb_window_t unmappedWId = ((xcb_unmap_notify_event_t *)ev)->window;
-//		if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(unmappedWId)))
-//		{
-//			xembed_sni_application_undock(self, unmappedWId);
-//		}
-//	}
-//	else if (responseType == XCB_DESTROY_NOTIFY)
-//	{
-//		const xcb_window_t destroyedWId = ((xcb_destroy_notify_event_t *)ev)->window;
-//		if (g_hash_table_contains(self->proxies, GUINT_TO_POINTER(destroyedWId)))
-//		{
-//			xembed_sni_application_undock(self, destroyedWId);
-//		}
-//	}
-//	else if (responseType == self->damageEventBase + XCB_DAMAGE_NOTIFY)
-//	{
-//		const xcb_window_t damagedWId = ((xcb_damage_notify_event_t *)ev)->drawable;
-//		GObject *sniProxy =
-//		    G_OBJECT(g_hash_table_lookup(self->proxies, GUINT_TO_POINTER(damagedWId)));
-//		if (sniProxy)
-//		{
-//			//            sniProx->update();
-//			xcb_damage_subtract(gdk_x11_get_default_xcb_connection(),
-//			                    GDK_POINTER_TO_XID(
-//			                        g_hash_table_lookup(self->damageWatches,
-//			                                            GUINT_TO_POINTER(
-//			                                                damagedWId))),
-//			                    XCB_NONE,
-//			                    XCB_NONE);
-//		}
-//	}
-
-//    if (xev->type == DestroyNotify)
-//    {
-//        /* Look for DestroyNotify events on tray icon windows and update state.
-//         * We do it this way rather than with a "plug_removed" event because delivery
-//         * of plug_removed events is observed to be unreliable if the client
-//         * disconnects within less than 10 ms. */
-//        XDestroyWindowEvent *xev_destroy = (XDestroyWindowEvent *)xev;
-//        TrayClient *tc                   = client_lookup(tr, xev_destroy->window);
-//        if (tc != NULL)
-//            client_delete(tr, tc, TRUE, TRUE);
-//    }
-
-//    else if (xev->type == ClientMessage)
-//    {
-//        if (xev->xclient.message_type == a_NET_SYSTEM_TRAY_OPCODE)
-//        {
-//            /* Client message of type _NET_SYSTEM_TRAY_OPCODE.
-//             * Dispatch on the request. */
-//            switch (xev->xclient.data.l[1])
-//            {
-//            case SYSTEM_TRAY_REQUEST_DOCK:
-//                /* If a Request Dock event on the invisible window, which is holding
-//                 * the manager selection, execute it. */
-//                if (xev->xclient.window == tr->invisible_window)
-//                {
-//                    trayclient_request_dock(tr, (XClientMessageEvent *)xev);
-//                    return GDK_FILTER_REMOVE;
-//                }
-//                break;
-
-//            case SYSTEM_TRAY_BEGIN_MESSAGE:
-//                /* If a Begin Message event. look up the tray icon and execute it.
-//                 */
-//                balloon_message_begin_event(tr, (XClientMessageEvent *)xev);
-//                return GDK_FILTER_REMOVE;
-
-//            case SYSTEM_TRAY_CANCEL_MESSAGE:
-//                /* If a Cancel Message event. look up the tray icon and execute it.
-//                 */
-//                balloon_message_cancel_event(tr, (XClientMessageEvent *)xev);
-//                return GDK_FILTER_REMOVE;
-//            }
-//        }
-
-//        else if (xev->xclient.message_type == a_NET_SYSTEM_TRAY_MESSAGE_DATA)
-//        {
-//            /* Client message of type _NET_SYSTEM_TRAY_MESSAGE_DATA.
-//             * Look up the tray icon and execute it. */
-//            balloon_message_data_event(tr, (XClientMessageEvent *)xev);
-//            return GDK_FILTER_REMOVE;
-//        }
-//    }
-
-//    else if ((xev->type == SelectionClear) && (xev->xclient.window ==
-//    tr->invisible_window))
-//    {
-//        /* Look for SelectionClear events on the invisible window, which is holding the
-//         * manager selection.
-//         * This should not happen. */
-//        tray_unmanage_selection(tr);
-//    }
-
-//	return GDK_FILTER_CONTINUE;
-//}
 
 static void claim_systray_selection(XEmbedSNIApplication *self)
 {
@@ -512,10 +371,11 @@ static void xembed_sni_application_startup(GApplication *base)
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+	int screen = 0;
 	// We only support X11
 	self->src = g_water_xcb_source_new(g_main_context_default(),
 	                                   "0",
-	                                   0,
+	                                   &screen,
 	                                   (GWaterXcbEventCallback)xcb_event_filter,
 	                                   self,
 	                                   NULL);

@@ -82,7 +82,7 @@ void clientmessage(xcb_client_message_event_t *e)
 	       t_client->cid);
 	free(name);
 
-	if (!e->data.data32[1] == SYSTEM_TRAY_REQUEST_DOCK &&
+	if (!(e->data.data32[1] == SYSTEM_TRAY_REQUEST_DOCK) &&
 	    !(e->type == ewmh[_NET_SYSTEM_TRAY_OPCODE].atom && e->format == 32))
 		return;
 

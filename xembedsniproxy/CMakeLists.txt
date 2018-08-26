@@ -1,33 +1,41 @@
-find_package(XCB
-    COMPONENTS
-        AUX
-        XCB
-        XFIXES
-        DAMAGE
-        COMPOSITE
-        RANDR
-        SHM
-        UTIL
-        IMAGE
-        XTEST
-        ICCCM
-)
+pkg_check_modules(XCB
+    xcb-atom
+    xcb-aux
+    xcb-composite
+    xcb-damage
+    xcb-dpms
+    xcb-dri2
+    xcb-dri3
+    xcb-event
+    xcb-ewmh
+    xcb-glx
+    xcb-icccm
+    xcb-image
+    xcb-keysyms
+    xcb
+    xcb-present
+    xcb-proto
+    xcb-randr
+    xcb-record
+    xcb-render
+    xcb-renderutil
+    xcb-res
+    xcb-screensaver
+    xcb-shape
+    xcb-shm
+    xcb-sync
+    xcb-util
+    xcb-xf86dri
+    xcb-xfixes
+    xcb-xinerama
+    xcb-xinput
+    xcb-xkb
+    xcb-xtest
+    xcb-xvmc
+    xcb-xv
+    IMPORTED_TARGET)
+pkg_check_modules(X11_XCB x11-xcb IMPORTED_TARGET)
 
-set(XCB_LIBS
-    XCB::AUX
-    XCB::XCB
-    XCB::XFIXES
-    XCB::DAMAGE
-    XCB::COMPOSITE
-    XCB::RANDR
-    XCB::SHM
-    XCB::UTIL
-    XCB::IMAGE
-    XCB::XTEST
-    XCB::ICCCM
-)
-
-find_package(X11_XCB)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(XEMBED_SNI_PROXY_SOURCES
@@ -42,38 +50,31 @@ set(XEMBED_SNI_PROXY_SOURCES
     gwater-xcb.h
  )
 
-add_executable(xembedsniproxy ${XEMBED_SNI_PROXY_SOURCES})
+if(XCB_FOUND AND X11_XCB_FOUND)
 
-set_package_properties(XCB PROPERTIES TYPE REQUIRED)
+    add_executable(xembedsniproxy ${XEMBED_SNI_PROXY_SOURCES})
 
-target_include_directories(xembedsniproxy PRIVATE
-    ${XCB_INCLUDE_DIRS}
-    ${X11_XCB_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-target_link_libraries(xembedsniproxy
-    ${XCB_LIBRARIES}
-    ${X11_XCB_LIBRARIES}
-    GLIB2::GOBJECT
-    GLIB2::GIO_UNIX
-    GTK3::GDK
-    GTK3::GTK
-)
+    target_link_libraries(xembedsniproxy
+        PkgConfig::XCB
+        PkgConfig::X11_XCB
+        GLIB2::GOBJECT
+        GLIB2::GIO_UNIX
+        GTK3::GDK
+        GTK3::GTK
+    )
 
-add_executable(xcb-tray xcb-tray.c gwater-xcb.c gwater-xcb.h)
-
-target_include_directories(xcb-tray PRIVATE
-    ${XCB_INCLUDE_DIRS}
-    ${X11_XCB_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-target_link_libraries(xcb-tray
-    ${XCB_LIBRARIES}
-    GLIB2::GIO_UNIX
-)
+    add_executable(xcb-tray xcb-tray.c gwater-xcb.c gwater-xcb.h)
 
 
-install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/vala-panel )
-install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
+    target_link_libraries(xcb-tray
+        PkgConfig::XCB
+        GLIB2::GIO_UNIX
+    )
+
+
+    install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/vala-panel )
+    install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+endif()
