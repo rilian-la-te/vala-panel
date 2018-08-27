@@ -1268,7 +1268,7 @@ static bool xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event)
 		scrolling_direction = GDK_SCROLL_RIGHT;
 	else
 	{
-		g_debug("tasklist-xfce: scrolling event with no delta happend");
+        g_debug("tasklist-xfce: scrolling event with no delta happened");
 		return TRUE;
 	}
 
