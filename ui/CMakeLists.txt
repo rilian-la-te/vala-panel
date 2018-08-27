@@ -15,7 +15,6 @@ set(LIBVALAPANEL_HEADERS
     toplevel-config.h
     applet-plugin.h
     applet-info.h
-    applet-manager.h
     panel-layout.h
     ${ENUMSH})
 set(LIBVALAPANEL_C_SOURCES
