@@ -88,7 +88,7 @@ all-desktops=false
 
 [cpu]
 toplevel-id='toplevel1'
-plugin-type='cpu'
+plugin-type='org.valapanel.cpu'
 position=9
 
 [xembed]
