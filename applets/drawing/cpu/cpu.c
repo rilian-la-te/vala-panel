@@ -261,7 +261,7 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 	gtk_widget_add_events(da,
 	                      GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 	                          GDK_BUTTON_MOTION_MASK);
-	gtk_widget_set_size_request(da, 40, PANEL_HEIGHT_DEFAULT);
+	on_height_change(toplevel, NULL, da);
 	gtk_container_add(GTK_CONTAINER(c), da);
 	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(toplevel));
 	GtkStateFlags flags      = gtk_widget_get_state_flags(GTK_WIDGET(toplevel));
