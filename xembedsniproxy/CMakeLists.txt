@@ -28,7 +28,6 @@ pkg_check_modules(XCB
     xcb-xf86dri
     xcb-xfixes
     xcb-xinerama
-    xcb-xinput
     xcb-xkb
     xcb-xtest
     xcb-xvmc
