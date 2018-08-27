@@ -661,8 +661,7 @@ static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 	           ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
 	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
-
-void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
+static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *self)
 {
 	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self));
 	GdkRectangle marea = { 0 };
@@ -677,6 +676,11 @@ void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
 	while (gtk_events_pending())
 		gtk_main_iteration();
+}
+
+void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
+{
+	vala_panel_toplevel_update_geometry_no_orient(self);
 	g_object_notify(G_OBJECT(self), "orientation");
 }
 /****************************************************
@@ -688,8 +692,8 @@ static int timeout_func(ValaPanelToplevel *self)
 	{
 		css_toggle_class(GTK_WIDGET(self), "-panel-transparent", true);
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
+		vala_panel_toplevel_update_geometry_no_orient(self);
 		self->ah_state = AH_HIDDEN;
-		gtk_widget_queue_resize(GTK_WIDGET(self));
 	}
 	return false;
 }
@@ -697,8 +701,8 @@ static int timeout_func(ValaPanelToplevel *self)
 static void ah_show(ValaPanelToplevel *self)
 {
 	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
-	gtk_widget_queue_resize(GTK_WIDGET(self));
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
+	vala_panel_toplevel_update_geometry_no_orient(self);
 	self->ah_state = AH_VISIBLE;
 }
 
