@@ -123,6 +123,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	GdkRGBA color;
 	g_autoptr(GSimpleActionGroup) conf = g_simple_action_group_new();
 	vala_panel_apply_window_icon(GTK_WINDOW(self));
+	gtk_window_set_transient_for(self, self->_toplevel);
 	/* monitors */
 	int monitors       = 0;
 	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self->_toplevel));
