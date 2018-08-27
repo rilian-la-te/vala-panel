@@ -95,6 +95,7 @@ namespace LaunchBar
                 this.get_style_context().remove_class("-panel-launch-button-selected");
                 return Gdk.EVENT_PROPAGATE;
             });
+            img.show();
             ebox.show();
             drag_source_set(this,Gdk.ModifierType.BUTTON2_MASK,MENU_TARGETS,Gdk.DragAction.MOVE);
             drag_source_set_icon_gicon(this,icon);
@@ -125,6 +126,7 @@ namespace LaunchBar
             });
             ebox.add(img);
             this.add(ebox);
+            this.show();
         }
         internal void launch()
         {
