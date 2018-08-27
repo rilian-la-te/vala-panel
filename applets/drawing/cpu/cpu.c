@@ -101,7 +101,7 @@ static void redraw_pixmap(CpuApplet *c)
 }
 
 /* Periodic timer callback. */
-static bool cpu_update(CpuApplet *c)
+static int cpu_update(CpuApplet *c)
 {
 	if (g_source_is_destroyed(g_main_current_source()))
 		return false;
@@ -142,7 +142,7 @@ static bool cpu_update(CpuApplet *c)
 			redraw_pixmap(c);
 		}
 	}
-	return true;
+	return G_SOURCE_CONTINUE;
 }
 
 /* Handler for configure_event on drawing area. */
