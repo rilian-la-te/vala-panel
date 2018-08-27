@@ -1,37 +1,12 @@
 pkg_check_modules(XCB
     xcb-atom
-    xcb-aux
-    xcb-composite
     xcb-damage
-    xcb-dpms
-    xcb-dri2
-    xcb-dri3
-    xcb-event
-    xcb-ewmh
-    xcb-glx
     xcb-icccm
-    xcb-image
-    xcb-keysyms
     xcb
-    xcb-present
     xcb-proto
     xcb-randr
-    xcb-record
-    xcb-render
-    xcb-renderutil
-    xcb-res
-    xcb-screensaver
-    xcb-shape
-    xcb-shm
-    xcb-sync
     xcb-util
-    xcb-xf86dri
-    xcb-xfixes
-    xcb-xinerama
-    xcb-xkb
     xcb-xtest
-    xcb-xvmc
-    xcb-xv
     IMPORTED_TARGET)
 pkg_check_modules(X11_XCB x11-xcb IMPORTED_TARGET)
 
