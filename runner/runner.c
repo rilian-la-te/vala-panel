@@ -252,6 +252,8 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 	for (int i = 0; dirs[i] != NULL && (!g_cancellable_is_cancelled(cancellable)); i++)
 	{
 		GDir *gdir       = g_dir_open(dirs[i], 0, NULL);
+        if(!gdir)
+            continue;
 		const char *name = NULL;
 		while (!g_cancellable_is_cancelled(cancellable) &&
 		       (name = g_dir_read_name(gdir)) != NULL)

@@ -7,4 +7,5 @@ add_translations_catalog("vala-panel"
     ../data/ui
     ../data/desktop
     ../applets
+    ../runner
 )

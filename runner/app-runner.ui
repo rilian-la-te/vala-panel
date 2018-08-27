@@ -10,7 +10,6 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
-    <property name="destroy_with_parent">True</property>
     <property name="icon_name">vala-panel</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
