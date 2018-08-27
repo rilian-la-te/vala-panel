@@ -317,7 +317,7 @@ struct _CpuPlugin
 	ValaPanelAppletPlugin parent;
 };
 
-G_DEFINE_DYNAMIC_TYPE(CpuApplet, cpu_plugin, vala_panel_applet_plugin_get_type())
+G_DEFINE_DYNAMIC_TYPE(CpuPlugin, cpu_plugin, vala_panel_applet_plugin_get_type())
 
 static ValaPanelApplet *cpu_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
                                                      ValaPanelToplevel *toplevel,
@@ -334,16 +334,16 @@ CpuApplet *cpu_plugin_new(GType object_type)
 	return VALA_PANEL_CPU_PLUGIN(vala_panel_applet_plugin_construct(cpu_applet_get_type()));
 }
 
-static void cpu_plugin_class_init(CpuAppletClass *klass)
+static void cpu_plugin_class_init(CpuPluginClass *klass)
 {
 	((ValaPanelAppletPluginClass *)klass)->get_applet_widget = cpu_plugin_get_applet_widget;
 }
 
-static void cpu_plugin_init(CpuApplet *self)
+static void cpu_plugin_init(CpuPlugin *self)
 {
 }
 
-static void cpu_plugin_class_finalize(CpuAppletClass *klass)
+static void cpu_plugin_class_finalize(CpuPluginClass *klass)
 {
 }
 
