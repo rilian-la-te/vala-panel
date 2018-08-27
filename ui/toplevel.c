@@ -200,7 +200,8 @@ void start_ui(ValaPanelToplevel *self)
 	gtk_window_stick(GTK_WINDOW(self));
 	vala_panel_layout_update_applet_positions(self->layout);
 	gtk_window_present(GTK_WINDOW(self));
-	self->autohide = g_settings_get_boolean(self->settings->common, VP_KEY_AUTOHIDE);
+	bool autohide = g_settings_get_boolean(self->settings->common, VP_KEY_AUTOHIDE);
+	g_object_set(self, VP_KEY_AUTOHIDE, autohide, NULL);
 	vala_panel_toplevel_update_geometry(self);
 	self->initialized = true;
 }
@@ -669,15 +670,6 @@ void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
 	else if (self->mon < gdk_display_get_n_monitors(screen))
 		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
-	int effective_height =
-	    vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
-	        ? self->height
-	        : (self->width / 100) * marea.height - marea.y;
-	int effective_width =
-	    vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
-	        ? (self->width / 100) * marea.width - marea.x
-	        : self->height;
-	gtk_widget_set_size_request(GTK_WIDGET(self), effective_width, effective_height);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
 		gtk_main_iteration();
@@ -697,6 +689,7 @@ static int timeout_func(ValaPanelToplevel *self)
 		css_toggle_class(GTK_WIDGET(self), "-panel-transparent", true);
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
 		self->ah_state = AH_HIDDEN;
+		gtk_widget_queue_resize(GTK_WIDGET(self));
 	}
 	return false;
 }
@@ -704,6 +697,7 @@ static int timeout_func(ValaPanelToplevel *self)
 static void ah_show(ValaPanelToplevel *self)
 {
 	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
+	gtk_widget_queue_resize(GTK_WIDGET(self));
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	self->ah_state = AH_VISIBLE;
 }
