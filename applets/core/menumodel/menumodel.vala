@@ -207,6 +207,8 @@ public class Menu: Applet
         this.background_widget = this;
         if (int_menu != null)
         {
+            if(button != null)
+                int_menu.detach();
             int_menu.destroy();
             int_menu = null;
         }
