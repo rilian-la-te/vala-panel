@@ -1,0 +1,5 @@
+file(STRINGS org.kde.StatusNotifierWatcher.xml XML_RAW)
+string(CONCAT WATCHER_XML ${XML_RAW})
+file(STRINGS org.kde.StatusNotifierItem.xml PRIVATE_RAW)
+string(CONCAT ITEM_XML ${PRIVATE_RAW})
+configure_file(interfaces.h.in interfaces.h ESCAPE_QUOTES)
