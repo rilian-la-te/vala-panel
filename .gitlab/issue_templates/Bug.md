@@ -1,9 +1,9 @@
 ### Prerequisites
 
 * [ ] Are you running the latest version?
-* [ ] Did you check the debugging guide?
+* [ ] Did you check the GDB debugging guide?
 * [ ] Are you reporting to the correct repository?
-	
+    * [ ] If it is a global menu issue, report to [vala-panel-appmenu](https://gitlab.com/vala-panel-project/vala-panel-appmenu)
 
 ### Description
 
