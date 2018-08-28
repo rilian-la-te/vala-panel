@@ -22,10 +22,10 @@ set(XEMBED_SNI_PROXY_SOURCES
     xtestsender.h
     gwater-xcb.c
     gwater-xcb.h
- )
+)
 
 if(XCB_FOUND AND X11_XCB_FOUND)
-    add_subdirectory(data)
+    add_subdirectory(statusnotifier)
     add_executable(xembedsniproxy ${XEMBED_SNI_PROXY_SOURCES})
 
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
