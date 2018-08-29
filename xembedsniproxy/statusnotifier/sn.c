@@ -56,21 +56,13 @@ enum
 
 typedef struct
 {
-    char *id;
+	char *id;
 	StatusNotifierCategory category;
-    char *title;
+	char *title;
 	StatusNotifierStatus status;
-	struct
-	{
-		bool has_pixbuf;
-		union {
-            char *icon_name;
-			GdkPixbuf *pixbuf;
-		};
-	} icon[SN_ICONS_NUM];
-    char *attention_movie_name;
-    char *tooltip_title;
-    char *tooltip_body;
+	GdkPixbuf *icon[SN_ICONS_NUM];
+	char *tooltip_title;
+	char *tooltip_body;
 	u_int32_t window_id;
 	bool item_is_menu;
 
@@ -102,6 +94,12 @@ static void status_notifier_item_set_property(GObject *object, uint prop_id, con
 static void status_notifier_item_get_property(GObject *object, uint prop_id, GValue *value,
                                               GParamSpec *pspec);
 static void status_notifier_item_finalize(GObject *object);
+
+GdkPixbuf *status_notifier_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon);
+void status_notifier_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon,
+                                          GdkPixbuf *pixbuf);
+
+void status_notifier_item_set_tooltip_title(StatusNotifierItem *sn, const char *title);
 
 G_DEFINE_TYPE_WITH_PRIVATE(StatusNotifierItem, status_notifier_item, G_TYPE_OBJECT)
 
@@ -301,168 +299,12 @@ static void status_notifier_item_init(StatusNotifierItem *sn)
 {
 }
 
-static void status_notifier_item_set_property(GObject *object, uint prop_id, const GValue *value,
-                                              GParamSpec *pspec)
-{
-	StatusNotifierItem *sn = (StatusNotifierItem *)object;
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	switch (prop_id)
-	{
-	case PROP_ID: /* G_PARAM_CONSTRUCT_ONLY */
-		priv->id = g_value_dup_string(value);
-		break;
-	case PROP_TITLE:
-		status_notifier_item_set_title(sn, g_value_get_string(value));
-		break;
-	case PROP_CATEGORY: /* G_PARAM_CONSTRUCT_ONLY */
-		priv->category = g_value_get_enum(value);
-		break;
-	case PROP_STATUS:
-		status_notifier_item_set_status(sn, g_value_get_enum(value));
-		break;
-	case PROP_MAIN_ICON_NAME:
-		status_notifier_item_set_from_icon_name(sn, SN_ICON, g_value_get_string(value));
-		break;
-	case PROP_MAIN_ICON_PIXBUF:
-		status_notifier_item_set_from_pixbuf(sn, SN_ICON, g_value_get_object(value));
-		break;
-	case PROP_OVERLAY_ICON_NAME:
-		status_notifier_item_set_from_icon_name(sn,
-		                                        SN_OVERLAY_ICON,
-		                                        g_value_get_string(value));
-		break;
-	case PROP_OVERLAY_ICON_PIXBUF:
-		status_notifier_item_set_from_pixbuf(sn,
-		                                     SN_OVERLAY_ICON,
-		                                     g_value_get_object(value));
-		break;
-	case PROP_ATTENTION_ICON_NAME:
-		status_notifier_item_set_from_icon_name(sn,
-		                                        SN_ATTENTION_ICON,
-		                                        g_value_get_string(value));
-		break;
-	case PROP_ATTENTION_ICON_PIXBUF:
-		status_notifier_item_set_from_pixbuf(sn,
-		                                     SN_ATTENTION_ICON,
-		                                     g_value_get_object(value));
-		break;
-	case PROP_ATTENTION_MOVIE_NAME:
-		status_notifier_item_set_attention_movie_name(sn, g_value_get_string(value));
-		break;
-	case PROP_TOOLTIP_ICON_NAME:
-		status_notifier_item_set_from_icon_name(sn,
-		                                        SN_TOOLTIP_ICON,
-		                                        g_value_get_string(value));
-		break;
-	case PROP_TOOLTIP_ICON_PIXBUF:
-		status_notifier_item_set_from_pixbuf(sn,
-		                                     SN_TOOLTIP_ICON,
-		                                     g_value_get_object(value));
-		break;
-	case PROP_TOOLTIP_TITLE:
-		status_notifier_item_set_tooltip_title(sn, g_value_get_string(value));
-		break;
-	case PROP_TOOLTIP_BODY:
-		status_notifier_item_set_tooltip_body(sn, g_value_get_string(value));
-		break;
-	case PROP_ITEM_IS_MENU:
-		status_notifier_item_set_item_is_menu(sn, g_value_get_boolean(value));
-		break;
-	case PROP_WINDOW_ID:
-		status_notifier_item_set_window_id(sn, g_value_get_uint(value));
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
-		break;
-	}
-}
-
-static void status_notifier_item_get_property(GObject *object, uint prop_id, GValue *value,
-                                              GParamSpec *pspec)
-{
-	StatusNotifierItem *sn = (StatusNotifierItem *)object;
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	switch (prop_id)
-	{
-	case PROP_ID:
-		g_value_set_string(value, priv->id);
-		break;
-	case PROP_TITLE:
-		g_value_set_string(value, priv->title);
-		break;
-	case PROP_CATEGORY:
-		g_value_set_enum(value, priv->category);
-		break;
-	case PROP_STATUS:
-		g_value_set_enum(value, priv->status);
-		break;
-	case PROP_MAIN_ICON_NAME:
-		g_value_take_string(value, status_notifier_item_get_icon_name(sn, SN_ICON));
-		break;
-	case PROP_MAIN_ICON_PIXBUF:
-		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_ICON));
-		break;
-	case PROP_OVERLAY_ICON_NAME:
-		g_value_take_string(value, status_notifier_item_get_icon_name(sn, SN_OVERLAY_ICON));
-		break;
-	case PROP_OVERLAY_ICON_PIXBUF:
-		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_OVERLAY_ICON));
-		break;
-	case PROP_ATTENTION_ICON_NAME:
-		g_value_take_string(value,
-		                    status_notifier_item_get_icon_name(sn, SN_ATTENTION_ICON));
-		break;
-	case PROP_ATTENTION_ICON_PIXBUF:
-		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_ATTENTION_ICON));
-		break;
-	case PROP_ATTENTION_MOVIE_NAME:
-		g_value_set_string(value, priv->attention_movie_name);
-		break;
-	case PROP_TOOLTIP_ICON_NAME:
-		g_value_take_string(value, status_notifier_item_get_icon_name(sn, SN_TOOLTIP_ICON));
-		break;
-	case PROP_TOOLTIP_ICON_PIXBUF:
-		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_TOOLTIP_ICON));
-		break;
-	case PROP_TOOLTIP_TITLE:
-		g_value_set_string(value, priv->tooltip_title);
-		break;
-	case PROP_TOOLTIP_BODY:
-		g_value_set_string(value, priv->tooltip_body);
-		break;
-	case PROP_ITEM_IS_MENU:
-		g_value_set_boolean(value, priv->item_is_menu);
-		break;
-	case PROP_MENU:
-		g_value_set_object(value, status_notifier_item_get_context_menu(sn));
-		break;
-	case PROP_WINDOW_ID:
-		g_value_set_uint(value, priv->window_id);
-		break;
-	case PROP_STATE:
-		g_value_set_enum(value, priv->state);
-		break;
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
-		break;
-	}
-}
-
 static void free_icon(StatusNotifierItem *sn, StatusNotifierIcon icon)
 {
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
 
-	if (priv->icon[icon].has_pixbuf)
-		g_object_unref(priv->icon[icon].pixbuf);
-	else
-		g_free(priv->icon[icon].icon_name);
-	priv->icon[icon].has_pixbuf = FALSE;
-	priv->icon[icon].icon_name  = NULL;
+	g_object_unref(priv->icon[icon]);
 }
 
 static void dbus_free(StatusNotifierItem *sn)
@@ -513,7 +355,6 @@ static void status_notifier_item_finalize(GObject *object)
 	g_free(priv->title);
 	for (i = 0; i < SN_ICONS_NUM; ++i)
 		free_icon(sn, i);
-	g_free(priv->attention_movie_name);
 	g_free(priv->tooltip_title);
 	g_free(priv->tooltip_body);
 
@@ -526,7 +367,7 @@ static void dbus_notify(StatusNotifierItem *sn, uint prop)
 {
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-    const char *signal;
+	const char *signal;
 
 	if (priv->state != SN_STATE_REGISTERED)
 		return;
@@ -608,22 +449,6 @@ StatusNotifierItem *status_notifier_item_new_from_icon_name(const char *id,
 	                                          NULL);
 }
 
-const char *status_notifier_item_get_id(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return priv->id;
-}
-
-StatusNotifierCategory status_notifier_item_get_category(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), -1);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return priv->category;
-}
-
 void status_notifier_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon,
                                           GdkPixbuf *pixbuf)
 {
@@ -633,37 +458,11 @@ void status_notifier_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifier
 	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
 
 	free_icon(sn, icon);
-	priv->icon[icon].has_pixbuf = TRUE;
-	priv->icon[icon].pixbuf     = g_object_ref(pixbuf);
+	priv->icon[icon] = g_object_ref(pixbuf);
 
 	notify(sn, prop_name_from_icon[icon]);
 	if (icon != SN_TOOLTIP_ICON || priv->tooltip_freeze == 0)
 		dbus_notify(sn, prop_name_from_icon[icon]);
-}
-
-void status_notifier_item_set_from_icon_name(StatusNotifierItem *sn, StatusNotifierIcon icon,
-                                             const char *icon_name)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	free_icon(sn, icon);
-	priv->icon[icon].icon_name = g_strdup(icon_name);
-
-	notify(sn, prop_pixbuf_from_icon[icon]);
-	if (icon != SN_TOOLTIP_ICON || priv->tooltip_freeze == 0)
-		dbus_notify(sn, prop_name_from_icon[icon]);
-}
-
-bool status_notifier_item_has_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), FALSE);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	return priv->icon[icon].has_pixbuf;
 }
 
 GdkPixbuf *status_notifier_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon)
@@ -673,44 +472,7 @@ GdkPixbuf *status_notifier_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifie
 	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
 	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
 
-	if (!priv->icon[icon].has_pixbuf)
-		return NULL;
-
-	return g_object_ref(priv->icon[icon].pixbuf);
-}
-
-char *status_notifier_item_get_icon_name(StatusNotifierItem *sn, StatusNotifierIcon icon)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	if (priv->icon[icon].has_pixbuf)
-		return NULL;
-
-	return g_strdup(priv->icon[icon].icon_name);
-}
-
-void status_notifier_item_set_attention_movie_name(StatusNotifierItem *sn, const char *movie_name)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	g_free(priv->attention_movie_name);
-	priv->attention_movie_name = g_strdup(movie_name);
-
-	notify(sn, PROP_ATTENTION_MOVIE_NAME);
-}
-
-char *status_notifier_item_get_attention_movie_name(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return g_strdup(priv->attention_movie_name);
+	return GDK_PIXBUF(g_object_ref(priv->icon[icon]));
 }
 
 void status_notifier_item_set_title(StatusNotifierItem *sn, const char *title)
@@ -725,14 +487,6 @@ void status_notifier_item_set_title(StatusNotifierItem *sn, const char *title)
 
 	notify(sn, PROP_TITLE);
 	dbus_notify(sn, PROP_TITLE);
-}
-
-char *status_notifier_item_get_title(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return g_strdup(priv->title);
 }
 
 void status_notifier_item_set_status(StatusNotifierItem *sn, StatusNotifierStatus status)
@@ -766,49 +520,6 @@ void status_notifier_item_set_window_id(StatusNotifierItem *sn, u_int32_t window
 	priv->window_id = window_id;
 
 	notify(sn, PROP_WINDOW_ID);
-}
-
-u_int32_t status_notifier_item_get_window_id(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), 0);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return priv->window_id;
-}
-
-void status_notifier_item_freeze_tooltip(StatusNotifierItem *sn)
-{
-	g_return_if_fail(SN_IS_ITEM(sn));
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	++priv->tooltip_freeze;
-}
-
-void status_notifier_item_thaw_tooltip(StatusNotifierItem *sn)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	g_return_if_fail(priv->tooltip_freeze > 0);
-
-	if (--priv->tooltip_freeze == 0)
-		dbus_notify(sn, PROP_TOOLTIP_TITLE);
-}
-
-void status_notifier_item_set_tooltip(StatusNotifierItem *sn, const char *icon_name,
-                                      const char *title, const char *body)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-
-	++priv->tooltip_freeze;
-	status_notifier_item_set_from_icon_name(sn, SN_TOOLTIP_ICON, icon_name);
-	status_notifier_item_set_tooltip_title(sn, title);
-	status_notifier_item_set_tooltip_body(sn, body);
-	status_notifier_item_thaw_tooltip(sn);
 }
 
 void status_notifier_item_set_tooltip_title(StatusNotifierItem *sn, const char *title)
@@ -849,6 +560,19 @@ void status_notifier_item_set_tooltip_body(StatusNotifierItem *sn, const char *b
 		dbus_notify(sn, PROP_TOOLTIP_BODY);
 }
 
+void status_notifier_item_set_tooltip(StatusNotifierItem *sn, GdkPixbuf *icon, const char *title,
+                                      const char *body)
+{
+	StatusNotifierItemPrivate *priv;
+
+	g_return_if_fail(SN_IS_ITEM(sn));
+	priv = (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
+
+	status_notifier_item_set_from_pixbuf(sn, SN_TOOLTIP_ICON, icon);
+	status_notifier_item_set_tooltip_title(sn, title);
+	status_notifier_item_set_tooltip_body(sn, body);
+}
+
 char *status_notifier_item_get_tooltip_body(StatusNotifierItem *sn)
 {
 	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
@@ -876,7 +600,7 @@ static void method_call(GDBusConnection *conn _UNUSED_, const char *sender _UNUS
 	else if (!g_strcmp0(method, "Scroll"))
 	{
 		gint delta, orientation;
-        char *s_orientation;
+		char *s_orientation;
 
 		g_variant_get(params, "(is)", &delta, &s_orientation);
 		if (!g_ascii_strcasecmp(s_orientation, "vertical"))
@@ -913,15 +637,12 @@ static GVariantBuilder *get_builder_for_icon_pixmap(StatusNotifierItem *sn, Stat
 	gint width, height, stride;
 	uint *data;
 
-	if (G_UNLIKELY(!priv->icon[icon].has_pixbuf))
-		return NULL;
-
-	width  = gdk_pixbuf_get_width(priv->icon[icon].pixbuf);
-	height = gdk_pixbuf_get_height(priv->icon[icon].pixbuf);
+	width  = gdk_pixbuf_get_width(priv->icon[icon]);
+	height = gdk_pixbuf_get_height(priv->icon[icon]);
 
 	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
 	cr      = cairo_create(surface);
-	gdk_cairo_set_source_pixbuf(cr, priv->icon[icon].pixbuf, 0, 0);
+	gdk_cairo_set_source_pixbuf(cr, priv->icon[icon], 0, 0);
 	cairo_paint(cr);
 	cairo_destroy(cr);
 
@@ -949,6 +670,139 @@ static GVariantBuilder *get_builder_for_icon_pixmap(StatusNotifierItem *sn, Stat
 	                                                    surface));
 	g_variant_builder_close(builder);
 	return builder;
+}
+
+static void status_notifier_item_set_property(GObject *object, uint prop_id, const GValue *value,
+                                              GParamSpec *pspec)
+{
+	StatusNotifierItem *sn = (StatusNotifierItem *)object;
+	StatusNotifierItemPrivate *priv =
+	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
+
+	switch (prop_id)
+	{
+	case PROP_ID: /* G_PARAM_CONSTRUCT_ONLY */
+		priv->id = g_value_dup_string(value);
+		break;
+	case PROP_TITLE:
+		status_notifier_item_set_title(sn, g_value_get_string(value));
+		break;
+	case PROP_CATEGORY: /* G_PARAM_CONSTRUCT_ONLY */
+		priv->category = g_value_get_enum(value);
+		break;
+	case PROP_STATUS:
+		status_notifier_item_set_status(sn, g_value_get_enum(value));
+		break;
+	case PROP_MAIN_ICON_PIXBUF:
+		status_notifier_item_set_from_pixbuf(sn, SN_ICON, g_value_get_object(value));
+		break;
+	case PROP_OVERLAY_ICON_PIXBUF:
+		status_notifier_item_set_from_pixbuf(sn,
+		                                     SN_OVERLAY_ICON,
+		                                     g_value_get_object(value));
+		break;
+	case PROP_ATTENTION_ICON_PIXBUF:
+		status_notifier_item_set_from_pixbuf(sn,
+		                                     SN_ATTENTION_ICON,
+		                                     g_value_get_object(value));
+		break;
+	case PROP_TOOLTIP_ICON_PIXBUF:
+		status_notifier_item_set_from_pixbuf(sn,
+		                                     SN_TOOLTIP_ICON,
+		                                     g_value_get_object(value));
+		break;
+	case PROP_TOOLTIP_TITLE:
+		status_notifier_item_set_tooltip_title(sn, g_value_get_string(value));
+		break;
+	case PROP_TOOLTIP_BODY:
+		status_notifier_item_set_tooltip_body(sn, g_value_get_string(value));
+		break;
+	case PROP_WINDOW_ID:
+		status_notifier_item_set_window_id(sn, g_value_get_uint(value));
+		break;
+	case PROP_MAIN_ICON_NAME:
+	case PROP_OVERLAY_ICON_NAME:
+	case PROP_ATTENTION_ICON_NAME:
+	case PROP_ATTENTION_MOVIE_NAME:
+	case PROP_TOOLTIP_ICON_NAME:
+	case PROP_ITEM_IS_MENU:
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		break;
+	}
+}
+
+static void status_notifier_item_get_property(GObject *object, uint prop_id, GValue *value,
+                                              GParamSpec *pspec)
+{
+	StatusNotifierItem *sn = (StatusNotifierItem *)object;
+	StatusNotifierItemPrivate *priv =
+	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
+
+	switch (prop_id)
+	{
+	case PROP_ID:
+		g_value_set_string(value, priv->id);
+		break;
+	case PROP_TITLE:
+		g_value_set_string(value, priv->title);
+		break;
+	case PROP_CATEGORY:
+		g_value_set_enum(value, priv->category);
+		break;
+	case PROP_STATUS:
+		g_value_set_enum(value, priv->status);
+		break;
+	case PROP_MAIN_ICON_NAME:
+		g_value_set_static_string(value, "");
+		break;
+	case PROP_MAIN_ICON_PIXBUF:
+		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_ICON));
+		break;
+	case PROP_OVERLAY_ICON_NAME:
+		g_value_set_static_string(value, "");
+		break;
+	case PROP_OVERLAY_ICON_PIXBUF:
+		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_OVERLAY_ICON));
+		break;
+	case PROP_ATTENTION_ICON_NAME:
+		g_value_set_static_string(value, "");
+		break;
+	case PROP_ATTENTION_ICON_PIXBUF:
+		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_ATTENTION_ICON));
+		break;
+	case PROP_ATTENTION_MOVIE_NAME:
+		g_value_set_static_string(value, "");
+		break;
+	case PROP_TOOLTIP_ICON_NAME:
+		g_value_set_static_string(value, "");
+		break;
+	case PROP_TOOLTIP_ICON_PIXBUF:
+		g_value_take_object(value, status_notifier_item_get_pixbuf(sn, SN_TOOLTIP_ICON));
+		break;
+	case PROP_TOOLTIP_TITLE:
+		g_value_set_string(value, priv->tooltip_title);
+		break;
+	case PROP_TOOLTIP_BODY:
+		g_value_set_string(value, priv->tooltip_body);
+		break;
+	case PROP_ITEM_IS_MENU:
+		g_value_set_boolean(value, priv->item_is_menu);
+		break;
+	case PROP_MENU:
+		g_value_set_object(value, NULL);
+		break;
+	case PROP_WINDOW_ID:
+		g_value_set_uint(value, priv->window_id);
+		break;
+	case PROP_STATE:
+		g_value_set_enum(value, priv->state);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		break;
+	}
 }
 
 static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UNUSED_,
@@ -979,52 +833,23 @@ static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UN
 	else if (!g_strcmp0(property, "WindowId"))
 		return g_variant_new("i", priv->window_id);
 	else if (!g_strcmp0(property, "IconName"))
-		return g_variant_new("s",
-		                     (!priv->icon[SN_ICON].has_pixbuf)
-		                         ? ((priv->icon[SN_ICON].icon_name)
-		                                ? priv->icon[SN_ICON].icon_name
-		                                : "")
-		                         : "");
+		return g_variant_new("s", "");
 	else if (!g_strcmp0(property, "IconPixmap"))
 		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_ICON));
 	else if (!g_strcmp0(property, "OverlayIconName"))
-		return g_variant_new("s",
-		                     (!priv->icon[SN_OVERLAY_ICON].has_pixbuf)
-		                         ? ((priv->icon[SN_OVERLAY_ICON].icon_name)
-		                                ? priv->icon[SN_OVERLAY_ICON].icon_name
-		                                : "")
-		                         : "");
+		return g_variant_new("s", "");
 	else if (!g_strcmp0(property, "OverlayIconPixmap"))
 		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_OVERLAY_ICON));
 	else if (!g_strcmp0(property, "AttentionIconName"))
-		return g_variant_new("s",
-		                     (!priv->icon[SN_ATTENTION_ICON].has_pixbuf)
-		                         ? ((priv->icon[SN_ATTENTION_ICON].icon_name)
-		                                ? priv->icon[SN_ATTENTION_ICON].icon_name
-		                                : "")
-		                         : "");
+		return g_variant_new("s", "");
 	else if (!g_strcmp0(property, "AttentionIconPixmap"))
 		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_ATTENTION_ICON));
 	else if (!g_strcmp0(property, "AttentionMovieName"))
-		return g_variant_new("s",
-		                     (priv->attention_movie_name) ? priv->attention_movie_name
-		                                                  : "");
+		return g_variant_new("s", "");
 	else if (!g_strcmp0(property, "ToolTip"))
 	{
 		GVariant *variant;
 		GVariantBuilder *builder;
-
-		if (!priv->icon[SN_TOOLTIP_ICON].has_pixbuf)
-		{
-			variant = g_variant_new("(sa(iiay)ss)",
-			                        (priv->icon[SN_TOOLTIP_ICON].icon_name)
-			                            ? priv->icon[SN_TOOLTIP_ICON].icon_name
-			                            : "",
-			                        NULL,
-			                        (priv->tooltip_title) ? priv->tooltip_title : "",
-			                        (priv->tooltip_body) ? priv->tooltip_body : "");
-			return variant;
-		}
 
 		builder = get_builder_for_icon_pixmap(sn, SN_TOOLTIP_ICON);
 		variant = g_variant_new("(sa(iiay)ss)",
@@ -1037,7 +862,7 @@ static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UN
 		return variant;
 	}
 	else if (!g_strcmp0(property, "ItemIsMenu"))
-		return g_variant_new("b", priv->item_is_menu);
+		return g_variant_new("b", false);
 	else if (!g_strcmp0(property, "Menu"))
 	{
 		return g_variant_new("o", "/NO_DBUSMENU");
@@ -1147,7 +972,7 @@ static void dbus_reg_item(StatusNotifierItem *sn)
 {
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-    char buf[64], *b = buf;
+	char buf[64], *b = buf;
 
 	if (G_UNLIKELY(
 	        g_snprintf(buf, 64, "org.kde.StatusNotifierItem-%u-%u", getpid(), ++uniq_id) >= 64))
@@ -1284,38 +1109,4 @@ void status_notifier_item_register(StatusNotifierItem *sn)
 	                                       watcher_vanished,
 	                                       sn,
 	                                       NULL);
-}
-
-StatusNotifierState status_notifier_item_get_state(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), FALSE);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return priv->state;
-}
-
-void status_notifier_item_set_item_is_menu(StatusNotifierItem *sn, bool is_menu)
-{
-	g_return_if_fail(SN_IS_ITEM(sn));
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	priv->item_is_menu = is_menu;
-}
-
-bool status_notifier_item_get_item_is_menu(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), FALSE);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	return priv->item_is_menu;
-}
-
-bool status_notifier_item_set_context_menu(StatusNotifierItem *sn, GObject *menu)
-{
-	return FALSE;
-}
-
-GObject *status_notifier_item_get_context_menu(StatusNotifierItem *sn)
-{
-	return NULL;
 }

@@ -28,6 +28,7 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <stdbool.h>
+#include <xcb/xcb.h>
 
 G_BEGIN_DECLS
 
@@ -56,7 +57,7 @@ typedef enum
 	SN_ATTENTION_ICON,
 	SN_OVERLAY_ICON,
 	SN_TOOLTIP_ICON,
-    SN_ICONS_NUM /*< skip >*/
+	SN_ICONS_NUM /*< skip >*/
 } StatusNotifierIcon;
 
 typedef enum
@@ -95,43 +96,10 @@ struct _StatusNotifierItemClass
 	               StatusNotifierScrollOrientation orientation);
 };
 
-StatusNotifierItem *status_notifier_item_new_from_pixbuf(const char *id,
-                                                         StatusNotifierCategory category,
-                                                         GdkPixbuf *pixbuf);
-StatusNotifierItem *status_notifier_item_new_from_icon_name(const char *id,
-                                                            StatusNotifierCategory category,
-                                                            const char *icon_name);
-const char *status_notifier_item_get_id(StatusNotifierItem *sn);
-StatusNotifierCategory status_notifier_item_get_category(StatusNotifierItem *sn);
-void status_notifier_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon,
-                                          GdkPixbuf *pixbuf);
-void status_notifier_item_set_from_icon_name(StatusNotifierItem *sn, StatusNotifierIcon icon,
-                                             const char *icon_name);
-bool status_notifier_item_has_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon);
-GdkPixbuf *status_notifier_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon);
-char *status_notifier_item_get_icon_name(StatusNotifierItem *sn, StatusNotifierIcon icon);
-void status_notifier_item_set_attention_movie_name(StatusNotifierItem *sn, const char *movie_name);
-char *status_notifier_item_get_attention_movie_name(StatusNotifierItem *sn);
-void status_notifier_item_set_title(StatusNotifierItem *sn, const char *title);
-char *status_notifier_item_get_title(StatusNotifierItem *sn);
-void status_notifier_item_set_status(StatusNotifierItem *sn, StatusNotifierStatus status);
-StatusNotifierStatus status_notifier_item_get_status(StatusNotifierItem *sn);
-void status_notifier_item_set_window_id(StatusNotifierItem *sn, guint32 window_id);
-guint32 status_notifier_item_get_window_id(StatusNotifierItem *sn);
-void status_notifier_item_freeze_tooltip(StatusNotifierItem *sn);
-void status_notifier_item_thaw_tooltip(StatusNotifierItem *sn);
-void status_notifier_item_set_tooltip(StatusNotifierItem *sn, const char *icon_name,
-                                      const char *title, const char *body);
-void status_notifier_item_set_tooltip_title(StatusNotifierItem *sn, const char *title);
-char *status_notifier_item_get_tooltip_title(StatusNotifierItem *sn);
-void status_notifier_item_set_tooltip_body(StatusNotifierItem *sn, const char *body);
-char *status_notifier_item_get_tooltip_body(StatusNotifierItem *sn);
-void status_notifier_item_register(StatusNotifierItem *sn);
-StatusNotifierState status_notifier_item_get_state(StatusNotifierItem *sn);
-void status_notifier_item_set_item_is_menu(StatusNotifierItem *sn, bool is_menu);
-bool status_notifier_item_get_item_is_menu(StatusNotifierItem *sn);
-bool status_notifier_item_set_context_menu(StatusNotifierItem *sn, GObject *menu);
-GObject *status_notifier_item_get_context_menu(StatusNotifierItem *sn);
+StatusNotifierItem *status_notifier_item_new_from_xcb_widnow(const char *id,
+                                                             StatusNotifierCategory category,
+                                                             xcb_connection_t *conn,
+                                                             xcb_window_t window);
 
 G_END_DECLS
 
