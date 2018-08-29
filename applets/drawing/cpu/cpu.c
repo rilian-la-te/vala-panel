@@ -51,7 +51,7 @@ struct _CpuApplet
 	cpu_stat previous_cpu_stat; /* Previous value of cpu_stat */
 };
 
-#define cpu_applet_from_da(da) VALA_PANEL_CPU_PLUGIN(gtk_widget_get_parent(GTK_WIDGET(da)))
+#define cpu_applet_from_da(da) VALA_PANEL_CPU_APPLET(gtk_widget_get_parent(GTK_WIDGET(da)))
 #define cpu_applet_get_da(p) GTK_DRAWING_AREA(gtk_bin_get_child(GTK_WIDGET(p)))
 
 G_DEFINE_DYNAMIC_TYPE(CpuApplet, cpu_applet, vala_panel_applet_get_type())
@@ -66,6 +66,7 @@ static void redraw_pixmap(CpuApplet *c)
 	gtk_style_context_get(context, flags, "background-color", &background_color, NULL);
 	cairo_set_line_width(cr, 1.0);
 	/* Erase pixmap. */
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	cairo_rectangle(cr, 0, 0, c->pixmap_width, c->pixmap_height);
 	gdk_cairo_set_source_rgba(cr, &background_color);
 	cairo_fill(cr);
@@ -282,17 +283,20 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 }
 
 /* Plugin destructor. */
-static void cpu_applet_finalize(GObject *user_data)
+static void cpu_applet_dispose(GObject *user_data)
 {
 	CpuApplet *c = VALA_PANEL_CPU_APPLET(user_data);
-
 	/* Disconnect the timer. */
-	g_source_remove(c->timer);
+	if (c->timer)
+	{
+		g_source_remove(c->timer);
+		c->timer = 0;
+	}
 
 	/* Deallocate memory. */
-	cairo_surface_destroy(c->pixmap);
-	g_free(c->stats_cpu);
-	g_free(c);
+	g_clear_pointer(&c->pixmap, cairo_surface_destroy);
+	g_clear_pointer(&c->stats_cpu, g_free);
+	G_OBJECT_CLASS(cpu_applet_parent_class)->dispose(user_data);
 }
 
 static void cpu_applet_init(CpuApplet *self)
@@ -301,7 +305,7 @@ static void cpu_applet_init(CpuApplet *self)
 
 static void cpu_applet_class_init(CpuAppletClass *klass)
 {
-	G_OBJECT_CLASS(klass)->finalize = cpu_applet_finalize;
+	G_OBJECT_CLASS(klass)->dispose = cpu_applet_dispose;
 }
 
 static void cpu_applet_class_finalize(CpuAppletClass *klass)

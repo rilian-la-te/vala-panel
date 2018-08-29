@@ -162,6 +162,7 @@ internal class Monitor
         cr.set_line_width(1.0);
         /* Erase pixmap */
         cr.set_source_rgba(0,0,0,0);
+        cr.set_operator(Cairo.Operator.SOURCE);
         cr.paint();
         Gdk.cairo_set_source_rgba(cr, foreground_color);
         for (int i = 0; i < pixmap_width; i++)
