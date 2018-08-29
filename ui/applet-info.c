@@ -75,10 +75,10 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	ret->module_name = g_strdup(extension_name);
 	ret->name        = tmp != NULL ? tmp : g_strdup(_("Applet"));
 	tmp              = g_key_file_get_locale_string(file,
-	                                   APPLET_INFO_GROUP,
-	                                   APPLET_INFO_DESCRIPTION,
-	                                   NULL,
-	                                   NULL);
+                                           APPLET_INFO_GROUP,
+                                           APPLET_INFO_DESCRIPTION,
+                                           NULL,
+                                           NULL);
 	ret->description = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
 	tmp              = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_ICON, NULL);
 	ret->icon_name   = tmp != NULL ? tmp : g_strdup("package-x-generic");
@@ -120,17 +120,17 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	{
 		u_int32_t len = g_strv_length(ainfo->authors);
 		ret->authors  = g_new0(char *, len + 1);
-		for (uint i             = 0; i < len; i++)
+		for (uint i = 0; i < len; i++)
 			ret->authors[i] = g_strdup(ainfo->authors[i]);
 	}
 	else
 		ret->authors = NULL;
-	ret->website         = g_strdup(ainfo->website);
-	ret->help_uri        = g_strdup(ainfo->help_uri);
-	ret->license         = ainfo->license;
-	ret->version         = g_strdup(ainfo->version);
-	ret->exclusive       = ainfo->exclusive;
-	ret->expandable      = ainfo->expandable;
+	ret->website    = g_strdup(ainfo->website);
+	ret->help_uri   = g_strdup(ainfo->help_uri);
+	ret->license    = ainfo->license;
+	ret->version    = g_strdup(ainfo->version);
+	ret->exclusive  = ainfo->exclusive;
+	ret->expandable = ainfo->expandable;
 	return ret;
 }
 

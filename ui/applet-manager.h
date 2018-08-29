@@ -37,11 +37,11 @@ typedef struct
 G_GNUC_INTERNAL ValaPanelAppletManager *vala_panel_applet_manager_new();
 
 G_GNUC_INTERNAL AppletInfoData *vala_panel_applet_manager_applet_ref(ValaPanelAppletManager *self,
-                                                     const char *name);
-G_GNUC_INTERNAL void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name);
-G_GNUC_INTERNAL ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(ValaPanelAppletManager *self,
-                                                            ValaPanelApplet *pl,
-                                                            ValaPanelCoreSettings *core_settings);
+                                                                     const char *name);
+G_GNUC_INTERNAL void vala_panel_applet_manager_applet_unref(ValaPanelAppletManager *self,
+                                                            const char *name);
+G_GNUC_INTERNAL ValaPanelAppletPlugin *vala_panel_applet_manager_get_plugin(
+    ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
 G_GNUC_INTERNAL ValaPanelAppletInfo *vala_panel_applet_manager_get_applet_info(
     ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
 G_GNUC_INTERNAL void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self);

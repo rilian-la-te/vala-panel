@@ -125,12 +125,12 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			g_clear_pointer(&app_info, g_object_unref);
 			g_autoptr(GError) err = NULL;
 			app_info              = g_app_info_create_from_commandline(
-			    gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
-			    NULL,
-			    gtk_toggle_button_get_active(self->terminal_button)
-			        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
-			        : G_APP_INFO_CREATE_NONE,
-			    &err);
+                            gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
+                            NULL,
+                            gtk_toggle_button_get_active(self->terminal_button)
+                                ? G_APP_INFO_CREATE_NEEDS_TERMINAL
+                                : G_APP_INFO_CREATE_NONE,
+                            &err);
 			if (err)
 			{
 				g_error_free(err);
@@ -251,9 +251,9 @@ static void vala_panel_runner_create_data_list(GTask *task, void *source, void *
 	GStrv dirs = g_strsplit(var, ":", 0);
 	for (int i = 0; dirs[i] != NULL && (!g_cancellable_is_cancelled(cancellable)); i++)
 	{
-		GDir *gdir       = g_dir_open(dirs[i], 0, NULL);
-        if(!gdir)
-            continue;
+		GDir *gdir = g_dir_open(dirs[i], 0, NULL);
+		if (!gdir)
+			continue;
 		const char *name = NULL;
 		while (!g_cancellable_is_cancelled(cancellable) &&
 		       (name = g_dir_read_name(gdir)) != NULL)

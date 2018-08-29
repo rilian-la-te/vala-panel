@@ -190,12 +190,12 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
 {
 	va_list l;
 	va_start(l, settings);
-	GtkDialog *dlg = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
-	                                                        parent,
-	                                                        GTK_DIALOG_DESTROY_WITH_PARENT,
-	                                                        _("_Close"),
-	                                                        GTK_RESPONSE_CLOSE,
-	                                                        NULL));
+	GtkDialog *dlg   = GTK_DIALOG(gtk_dialog_new_with_buttons(title,
+                                                                parent,
+                                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                                _("_Close"),
+                                                                GTK_RESPONSE_CLOSE,
+                                                                NULL));
 	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	GtkWidget *settings_widget = generic_config_widget_internal(settings, l);
