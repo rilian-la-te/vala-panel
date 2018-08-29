@@ -398,7 +398,7 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 		    GTK_DIALOG_DESTROY_WITH_PARENT,
 		    GTK_MESSAGE_ERROR,
 		    GTK_BUTTONS_CLOSE,
-		    N_("There is no room for another panel. All the edges are taken."));
+		    _("There is no room for another panel. All the edges are taken."));
 		vala_panel_apply_window_icon(GTK_WINDOW(msg));
 		gtk_window_set_title(GTK_WINDOW(msg), _("Error"));
 		gtk_dialog_run(GTK_DIALOG(msg));
@@ -424,7 +424,7 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 	                                       GTK_DIALOG_MODAL,
 	                                       GTK_MESSAGE_QUESTION,
 	                                       GTK_BUTTONS_OK_CANCEL,
-	                                       N_("Really delete this panel?\n<b>Warning:"
+	                                       _("Really delete this panel?\n<b>Warning:"
 	                                          "This can not be recovered.</b>")));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));

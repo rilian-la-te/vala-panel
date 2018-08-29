@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-27 18:43+0300\n"
+"POT-Creation-Date: 2018-08-29 14:59+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Select a file"
 msgstr ""
 
-#: ../util/gtk/generic-config-dialog.c:196
+#: ../util/gtk/generic-config-dialog.c:198
 msgid "_Close"
 msgstr ""
 
@@ -51,7 +51,7 @@ msgstr ""
 #: ../ui/toplevel-config.c:387 ../ui/toplevel-config.c:514
 #: ../applets/core/dirmenu/dirmenu.vala:197
 #: ../applets/core/menumodel/menumodel.vala:116
-#: ../applets/core/launchbar/config.ui:135
+#: ../applets/core/launchbar/config.ui:134
 msgid "Icon"
 msgstr ""
 
@@ -133,27 +133,27 @@ msgid "CPU Usage Monitor"
 msgstr ""
 
 #: ../applets/drawing/cpu/plugins_cpu_cpu.c:339
-#: ../applets/drawing/monitors/monitors.vala:399
+#: ../applets/drawing/monitors/monitors.vala:400
 msgid "Display CPU usage"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3347
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3348
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3355
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3356
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3363
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3364
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3371
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3372
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3383
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3384
 msgid "_Close All"
 msgstr ""
 
@@ -232,7 +232,7 @@ msgid "Control center"
 msgstr ""
 
 #: ../applets/core/menumodel/menu-maker.vala:175
-#: ../applets/core/launchbar/config.ui:38
+#: ../applets/core/launchbar/config.ui:37
 msgid "Applications"
 msgstr ""
 
@@ -285,27 +285,27 @@ msgstr ""
 msgid "Visible separator"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:251
+#: ../applets/drawing/monitors/monitors.vala:252
 msgid "CPU usage: %.2f%%"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:339
+#: ../applets/drawing/monitors/monitors.vala:340
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:400
+#: ../applets/drawing/monitors/monitors.vala:401
 msgid "CPU color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:401
+#: ../applets/drawing/monitors/monitors.vala:402
 msgid "Display RAM usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:402
+#: ../applets/drawing/monitors/monitors.vala:403
 msgid "RAM color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:403
+#: ../applets/drawing/monitors/monitors.vala:404
 msgid "Action when clicked"
 msgstr ""
 
@@ -563,19 +563,19 @@ msgstr ""
 msgid "Applets"
 msgstr ""
 
-#: ../applets/core/launchbar/config.ui:33
+#: ../applets/core/launchbar/config.ui:32
 msgid "Add launcher from installed applications"
 msgstr ""
 
-#: ../applets/core/launchbar/config.ui:63
+#: ../applets/core/launchbar/config.ui:62
 msgid "Add all displayed files"
 msgstr ""
 
-#: ../applets/core/launchbar/config.ui:80
+#: ../applets/core/launchbar/config.ui:79
 msgid "Files"
 msgstr ""
 
-#: ../applets/core/launchbar/config.ui:148
+#: ../applets/core/launchbar/config.ui:147
 msgid "Name"
 msgstr ""
 
@@ -650,6 +650,10 @@ msgstr ""
 
 #: ../applets/core/menumodel/system-menus.ui:128
 msgid "Shut down..."
+msgstr ""
+
+#: ../runner/app-runner.ui:46
+msgid "Set this if you want to run console program"
 msgstr ""
 
 #: ../runner/app-runner.ui:69

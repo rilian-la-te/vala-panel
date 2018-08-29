@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-27 18:43+0300\n"
-"PO-Revision-Date: 2018-08-27 18:43+0300\n"
+"POT-Creation-Date: 2018-08-29 15:00+0300\n"
+"PO-Revision-Date: 2018-08-29 15:05+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "Select a file"
 msgstr "Выбрать файл"
 
-#: ../util/gtk/generic-config-dialog.c:196
+#: ../util/gtk/generic-config-dialog.c:198
 msgid "_Close"
 msgstr "_Закрыть"
 
@@ -53,7 +53,7 @@ msgstr "Апплет Vala Panel"
 #: ../ui/toplevel-config.c:387 ../ui/toplevel-config.c:514
 #: ../applets/core/dirmenu/dirmenu.vala:197
 #: ../applets/core/menumodel/menumodel.vala:116
-#: ../applets/core/launchbar/config.ui:135
+#: ../applets/core/launchbar/config.ui:134
 msgid "Icon"
 msgstr "Значок"
 
@@ -141,27 +141,27 @@ msgid "CPU Usage Monitor"
 msgstr "Монитор загрузки процессора"
 
 #: ../applets/drawing/cpu/plugins_cpu_cpu.c:339
-#: ../applets/drawing/monitors/monitors.vala:399
+#: ../applets/drawing/monitors/monitors.vala:400
 msgid "Display CPU usage"
 msgstr "Показывает загрузку процессора"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3347
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3348
 msgid "Mi_nimize All"
 msgstr "_Свернуть все окна"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3355
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3356
 msgid "Un_minimize All"
 msgstr "_Развернуть свернутое"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3363
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3364
 msgid "Ma_ximize All"
 msgstr "_На весь экран"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3371
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3372
 msgid "_Unmaximize All"
 msgstr "_Уменьшить все"
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3383
+#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3384
 msgid "_Close All"
 msgstr "_Закрыть"
 
@@ -243,7 +243,7 @@ msgid "Control center"
 msgstr "Центр управления"
 
 #: ../applets/core/menumodel/menu-maker.vala:175
-#: ../applets/core/launchbar/config.ui:38
+#: ../applets/core/launchbar/config.ui:37
 msgid "Applications"
 msgstr "Приложения"
 
@@ -298,27 +298,27 @@ msgstr "Размер"
 msgid "Visible separator"
 msgstr "Показывать разделитель"
 
-#: ../applets/drawing/monitors/monitors.vala:251
+#: ../applets/drawing/monitors/monitors.vala:252
 msgid "CPU usage: %.2f%%"
 msgstr "Загрузка ЦП: %.2f%%"
 
-#: ../applets/drawing/monitors/monitors.vala:339
+#: ../applets/drawing/monitors/monitors.vala:340
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr "Использовано ОЗУ: %.1fМб (%.2f%%)"
 
-#: ../applets/drawing/monitors/monitors.vala:400
+#: ../applets/drawing/monitors/monitors.vala:401
 msgid "CPU color"
 msgstr "Цвет ЦПУ"
 
-#: ../applets/drawing/monitors/monitors.vala:401
+#: ../applets/drawing/monitors/monitors.vala:402
 msgid "Display RAM usage"
 msgstr "Показывать использование памяти"
 
-#: ../applets/drawing/monitors/monitors.vala:402
+#: ../applets/drawing/monitors/monitors.vala:403
 msgid "RAM color"
 msgstr "Цвет ОЗУ"
 
-#: ../applets/drawing/monitors/monitors.vala:403
+#: ../applets/drawing/monitors/monitors.vala:404
 msgid "Action when clicked"
 msgstr "Выполняемая команда при щелчке"
 
@@ -580,19 +580,19 @@ msgstr "Внешний вид"
 msgid "Applets"
 msgstr "Апплеты"
 
-#: ../applets/core/launchbar/config.ui:33
+#: ../applets/core/launchbar/config.ui:32
 msgid "Add launcher from installed applications"
 msgstr "Добавить установленное приложение"
 
-#: ../applets/core/launchbar/config.ui:63
+#: ../applets/core/launchbar/config.ui:62
 msgid "Add all displayed files"
 msgstr "Добавить все показываемые файлы."
 
-#: ../applets/core/launchbar/config.ui:80
+#: ../applets/core/launchbar/config.ui:79
 msgid "Files"
 msgstr "Файлы"
 
-#: ../applets/core/launchbar/config.ui:148
+#: ../applets/core/launchbar/config.ui:147
 msgid "Name"
 msgstr "Имя"
 
@@ -668,6 +668,10 @@ msgstr "Выход из системы..."
 #: ../applets/core/menumodel/system-menus.ui:128
 msgid "Shut down..."
 msgstr "Завершение работы..."
+
+#: ../runner/app-runner.ui:46
+msgid "Set this if you want to run console program"
+msgstr "Включите этот режим для запуска консольных приложений"
 
 #: ../runner/app-runner.ui:69
 msgid "Runnable command name"
@@ -844,7 +848,7 @@ msgstr "panel;launcher;menu;tasklist"
 
 #: ../data/desktop/org.valapanel.application.desktop.in:9
 msgid "vala-panel"
-msgstr "Vala Panel"
+msgstr "vala-panel"
 
 #~ msgid "Plugins"
 #~ msgstr "Модули"
