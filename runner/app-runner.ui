@@ -43,6 +43,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Set this if you want to run console program</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
