@@ -140,6 +140,8 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				                         "destroy",
 				                         G_CALLBACK(g_free),
 				                         data);
+				gtk_widget_show(btn);
+				gtk_widget_show(str_elem);
 				gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
 				gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
 				break;
