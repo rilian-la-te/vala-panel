@@ -211,7 +211,7 @@ static bool configure_event(GtkWidget *widget, GdkEventConfigure *event, CpuAppl
 		c->pixmap_height = new_pixmap_height;
 		if (c->pixmap)
 			cairo_surface_destroy(c->pixmap);
-		c->pixmap = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+		c->pixmap = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
 		                                       c->pixmap_width,
 		                                       c->pixmap_height);
 		/* check_cairo_surface_status(&c->pixmap); */
