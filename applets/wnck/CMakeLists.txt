@@ -6,7 +6,6 @@ cmake_dependent_option(ENABLE_WNCK "Enables wnck-related plugins, like taskbar a
 
 if (ENABLE_WNCK)
     add_subdirectory(tasklist)
-    add_subdirectory(tasklist-xfce)
     add_subdirectory(pager)
     add_subdirectory(deskno)
     add_subdirectory(wincmd)

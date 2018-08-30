@@ -771,7 +771,7 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 			{
 				gtk_widget_get_preferred_size(child->button, NULL, &child_req);
 
-				/* child_height = MAX (child_height, child_req.height); */
+				child_height = MAX(child_height, child_req.height);
 				child_height = MAX(child_height, tasklist->size / tasklist->nrows);
 
 				if (child->type == CHILD_TYPE_GROUP_MENU)
@@ -790,7 +790,8 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 		else
 		{
 			rows = MAX(tasklist->nrows, 1);
-			if (tasklist->show_labels && tasklist->max_button_size > 0)
+			if ((tasklist->show_labels || tasklist->grouping) &&
+			    tasklist->max_button_size > 0)
 			{
 				rows = MAX(rows, tasklist->size / tasklist->max_button_size);
 				child_height = MIN(child_height, tasklist->max_button_size);
@@ -807,7 +808,6 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 			else
 				length = cols * DEFAULT_MIN_BUTTON_LENGTH;
 		}
-
 		/* set the requested sizes */
 		if (natural != NULL)
 			*natural = length > ARROW_BUTTON_SIZE ? length : ARROW_BUTTON_SIZE;
@@ -1874,8 +1874,7 @@ static void xfce_tasklist_update_icon_geometries_destroyed(gpointer data)
 static bool xfce_tasklist_update_monitor_geometry_idle(gpointer data)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(data);
-	GdkScreen *screen;
-	bool geometry_set = false;
+	bool geometry_set      = false;
 	GdkWindow *window;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(tasklist), false);
