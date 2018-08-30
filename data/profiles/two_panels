@@ -31,7 +31,7 @@ size=4
 
 [tlist]
 toplevel-id='toplevel2'
-plugin-type='tasklist'
+plugin-type='org.xfce.tasklist'
 position=2
 is-expanded=true
 

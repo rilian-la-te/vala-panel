@@ -80,7 +80,7 @@ position=7
 
 [tlist]
 toplevel-id='toplevel1'
-plugin-type='tasklist'
+plugin-type='org.xfce.tasklist'
 is-expanded=true
 position=8
 grouped-tasks=true
