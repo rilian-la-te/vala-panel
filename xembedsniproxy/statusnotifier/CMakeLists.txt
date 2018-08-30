@@ -1,6 +1,3 @@
-include(GLibProgramHandlers)
-add_glib_marshal(MARSHALC MARSHALH "closures" g_cclosure_user_marshal)
-
 file(STRINGS org.kde.StatusNotifierWatcher.xml XML_RAW)
 string(CONCAT WATCHER_XML ${XML_RAW})
 file(STRINGS org.kde.StatusNotifierItem.xml PRIVATE_RAW)

@@ -1,7 +1,6 @@
 #include "sn.h"
 #include "../xcb-utils.h"
 #include "../xtestsender.h"
-#include "closures.h"
 #include "interfaces.h"
 #include "sni-enums.h"
 #include <cairo/cairo.h>
