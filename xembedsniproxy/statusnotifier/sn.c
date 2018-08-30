@@ -1,8 +1,11 @@
 #include "sn.h"
+#include "../xcb-utils.h"
+#include "../xtestsender.h"
 #include "closures.h"
 #include "interfaces.h"
 #include "sni-enums.h"
-#include <gdk/gdk.h>
+#include <cairo/cairo.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <unistd.h>
 
 #define _UNUSED_ __attribute__((unused))
@@ -35,10 +38,10 @@ enum
 	NB_PROPS
 };
 
-static uint prop_name_from_icon[SN_ICONS_NUM]   = { PROP_MAIN_ICON_NAME,
-                                                  PROP_ATTENTION_ICON_NAME,
-                                                  PROP_OVERLAY_ICON_NAME,
-                                                  PROP_TOOLTIP_ICON_NAME };
+static uint prop_name_from_icon[SN_ICONS_NUM] = { PROP_MAIN_ICON_NAME,
+	                                          PROP_ATTENTION_ICON_NAME,
+	                                          PROP_OVERLAY_ICON_NAME,
+	                                          PROP_TOOLTIP_ICON_NAME };
 static uint prop_pixbuf_from_icon[SN_ICONS_NUM] = { PROP_MAIN_ICON_PIXBUF,
 	                                            PROP_ATTENTION_ICON_PIXBUF,
 	                                            PROP_OVERLAY_ICON_PIXBUF,
@@ -47,11 +50,13 @@ static uint prop_pixbuf_from_icon[SN_ICONS_NUM] = { PROP_MAIN_ICON_PIXBUF,
 enum
 {
 	SIGNAL_REGISTRATION_FAILED,
-	SIGNAL_CONTEXT_MENU,
-	SIGNAL_ACTIVATE,
-	SIGNAL_SECONDARY_ACTIVATE,
-	SIGNAL_SCROLL,
 	NB_SIGNALS
+};
+
+enum InjectMode
+{
+	INJECT_DIRECT,
+	INJECT_XTEST
 };
 
 typedef struct
@@ -63,7 +68,10 @@ typedef struct
 	GdkPixbuf *icon[SN_ICONS_NUM];
 	char *tooltip_title;
 	char *tooltip_body;
-	u_int32_t window_id;
+	enum InjectMode mode;
+	xcb_window_t window_id;
+	xcb_window_t container_id;
+	xcb_connection_t *conn;
 	bool item_is_menu;
 
 	uint tooltip_freeze;
@@ -196,11 +204,11 @@ static void status_notifier_item_class_init(StatusNotifierItemClass *klass)
 	                                                                     "Title of the tooltip",
 	                                                                     NULL,
 	                                                                     G_PARAM_READWRITE);
-	status_notifier_item_props[PROP_TOOLTIP_BODY]  = g_param_spec_string("tooltip-body",
-                                                                            "tooltip-body",
-                                                                            "Body of the tooltip",
-                                                                            NULL,
-                                                                            G_PARAM_READWRITE);
+	status_notifier_item_props[PROP_TOOLTIP_BODY] = g_param_spec_string("tooltip-body",
+	                                                                    "tooltip-body",
+	                                                                    "Body of the tooltip",
+	                                                                    NULL,
+	                                                                    G_PARAM_READWRITE);
 	status_notifier_item_props[PROP_ITEM_IS_MENU] =
 	    g_param_spec_boolean("item-is-menu",
 	                         "item-is-menu",
@@ -241,57 +249,6 @@ static void status_notifier_item_class_init(StatusNotifierItemClass *klass)
 	                 G_TYPE_NONE,
 	                 1,
 	                 G_TYPE_ERROR);
-	status_notifier_item_signals[SIGNAL_CONTEXT_MENU] =
-	    g_signal_new("context-menu",
-	                 status_notifier_item_get_type(),
-	                 G_SIGNAL_RUN_LAST,
-	                 G_STRUCT_OFFSET(StatusNotifierItemClass, context_menu),
-	                 g_signal_accumulator_true_handled,
-	                 NULL,
-	                 g_cclosure_user_marshal_BOOLEAN__INT_INT,
-	                 G_TYPE_BOOLEAN,
-	                 2,
-	                 G_TYPE_INT,
-	                 G_TYPE_INT);
-
-	status_notifier_item_signals[SIGNAL_ACTIVATE] =
-	    g_signal_new("activate",
-	                 status_notifier_item_get_type(),
-	                 G_SIGNAL_RUN_LAST,
-	                 G_STRUCT_OFFSET(StatusNotifierItemClass, activate),
-	                 g_signal_accumulator_true_handled,
-	                 NULL,
-	                 g_cclosure_user_marshal_BOOLEAN__INT_INT,
-	                 G_TYPE_BOOLEAN,
-	                 2,
-	                 G_TYPE_INT,
-	                 G_TYPE_INT);
-
-	status_notifier_item_signals[SIGNAL_SECONDARY_ACTIVATE] =
-	    g_signal_new("secondary-activate",
-	                 status_notifier_item_get_type(),
-	                 G_SIGNAL_RUN_LAST,
-	                 G_STRUCT_OFFSET(StatusNotifierItemClass, secondary_activate),
-	                 g_signal_accumulator_true_handled,
-	                 NULL,
-	                 g_cclosure_user_marshal_BOOLEAN__INT_INT,
-	                 G_TYPE_BOOLEAN,
-	                 2,
-	                 G_TYPE_INT,
-	                 G_TYPE_INT);
-	status_notifier_item_signals[SIGNAL_SCROLL] =
-	    g_signal_new("scroll",
-	                 status_notifier_item_get_type(),
-	                 G_SIGNAL_RUN_LAST,
-	                 G_STRUCT_OFFSET(StatusNotifierItemClass, scroll),
-	                 g_signal_accumulator_true_handled,
-	                 NULL,
-	                 g_cclosure_user_marshal_BOOLEAN__INT_INT,
-	                 G_TYPE_BOOLEAN,
-	                 2,
-	                 G_TYPE_INT,
-	                 status_notifier_scroll_orientation_get_type());
-
 	g_type_class_add_private(klass, sizeof(StatusNotifierItemPrivate));
 }
 
@@ -581,49 +538,189 @@ char *status_notifier_item_get_tooltip_body(StatusNotifierItem *sn)
 	return g_strdup(priv->tooltip_body);
 }
 
+void status_notifier_item_send_click(StatusNotifierItem *sn, uint8_t mouseButton, int x, int y)
+{
+	// it's best not to look at this code
+	// GTK doesn't like send_events and double checks the mouse position matches where the
+	// window is and is top level
+	// in order to solve this we move the embed container over to where the mouse is then replay
+	// the event using send_event
+	// if patching, test with xchat + xchat context menus
+
+	// note x,y are not actually where the mouse is, but the plasmoid
+	// ideally we should make this match the plasmoid hit area
+
+	g_debug("sn: received click %d with x=%d,y=%d\n", mouseButton, x, y);
+	StatusNotifierItemPrivate *priv =
+	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
+
+	xcb_get_geometry_cookie_t cookieSize = xcb_get_geometry(priv->conn, priv->window_id);
+	g_autofree xcb_get_geometry_reply_t *clientGeom =
+	    xcb_get_geometry_reply(priv->conn, cookieSize, NULL);
+	if (!clientGeom)
+	{
+		return;
+	}
+
+	xcb_query_pointer_cookie_t cookie = xcb_query_pointer(priv->conn, priv->window_id);
+	g_autofree xcb_query_pointer_reply_t *pointer =
+	    xcb_query_pointer_reply(priv->conn, cookie, NULL);
+
+	/*qCDebug(SNIPROXY) << "samescreen" << pointer->same_screen << endl
+	<< "root x*y" << pointer->root_x << pointer->root_y << endl
+	<< "win x*y" << pointer->win_x << pointer->win_y;*/
+
+	// move our window so the mouse is within its geometry
+	uint32_t configVals[2] = { 0, 0 };
+	if (mouseButton >= XCB_BUTTON_INDEX_4)
+	{
+		// scroll event, take pointer position
+		configVals[0] = pointer->root_x;
+		configVals[1] = pointer->root_y;
+	}
+	else
+	{
+		if (pointer->root_x > x + clientGeom->width)
+			configVals[0] = pointer->root_x - clientGeom->width + 1;
+		else
+			configVals[0] = (uint32_t)(x);
+		if (pointer->root_y > y + clientGeom->height)
+			configVals[1] = pointer->root_y - clientGeom->height + 1;
+		else
+			configVals[1] = (uint32_t)(y);
+	}
+	xcb_configure_window(priv->conn,
+	                     priv->container_id,
+	                     XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y,
+	                     configVals);
+
+	// pull window up
+	const uint32_t stackAboveData[] = { XCB_STACK_MODE_ABOVE };
+	xcb_configure_window(priv->conn,
+	                     priv->container_id,
+	                     XCB_CONFIG_WINDOW_STACK_MODE,
+	                     stackAboveData);
+
+	// mouse down
+	if (priv->mode == INJECT_DIRECT)
+	{
+		xcb_button_press_event_t *event = g_malloc0(sizeof(xcb_button_press_event_t));
+		memset(event, 0x00, sizeof(xcb_button_press_event_t));
+		event->response_type = XCB_BUTTON_PRESS;
+		event->event         = priv->window_id;
+		event->time          = xcb_get_timestamp_for_connection(priv->conn);
+		event->same_screen   = 1;
+		event->root          = xcb_get_screen_for_connection(priv->conn, 0)->root;
+		event->root_x        = x;
+		event->root_y        = y;
+		event->event_x       = 0;
+		event->event_y       = 0;
+		event->child         = 0;
+		event->state         = 0;
+		event->detail        = mouseButton;
+
+		xcb_send_event(priv->conn,
+		               false,
+		               priv->window_id,
+		               XCB_EVENT_MASK_BUTTON_PRESS,
+		               (char *)event);
+		g_free(event);
+	}
+	else
+	{
+		sendXTestPressed(priv->conn, mouseButton);
+	}
+
+	// mouse up
+	if (priv->mode == INJECT_DIRECT)
+	{
+		xcb_button_release_event_t *event = g_malloc0(sizeof(xcb_button_release_event_t));
+		memset(event, 0x00, sizeof(xcb_button_release_event_t));
+		event->response_type = XCB_BUTTON_RELEASE;
+		event->event         = priv->window_id;
+		event->time          = xcb_get_timestamp_for_connection(priv->conn);
+		event->same_screen   = 1;
+		event->root          = xcb_get_screen_for_connection(priv->conn, 0)->root;
+		event->root_x        = x;
+		event->root_y        = y;
+		event->event_x       = 0;
+		event->event_y       = 0;
+		event->child         = 0;
+		event->state         = 0;
+		event->detail        = mouseButton;
+
+		xcb_send_event(priv->conn,
+		               false,
+		               priv->window_id,
+		               XCB_EVENT_MASK_BUTTON_RELEASE,
+		               (char *)event);
+		g_free(event);
+	}
+	else
+	{
+		sendXTestReleased(priv->conn, mouseButton);
+	}
+
+#ifndef VISUAL_DEBUG
+	const uint32_t stackBelowData[] = { XCB_STACK_MODE_BELOW };
+	xcb_configure_window(priv->conn,
+	                     priv->container_id,
+	                     XCB_CONFIG_WINDOW_STACK_MODE,
+	                     stackBelowData);
+#endif
+}
+
 static void method_call(GDBusConnection *conn _UNUSED_, const char *sender _UNUSED_,
                         const char *object _UNUSED_, const char *interface _UNUSED_,
                         const char *method, GVariant *params, GDBusMethodInvocation *invocation,
                         gpointer data)
 {
 	StatusNotifierItem *sn = (StatusNotifierItem *)data;
+	StatusNotifierItemPrivate *priv =
+	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
 	uint signal;
 	gint x, y;
 	bool ret;
 
-	if (!g_strcmp0(method, "ContextMenu"))
-		signal = SIGNAL_CONTEXT_MENU;
-	else if (!g_strcmp0(method, "Activate"))
-		signal = SIGNAL_ACTIVATE;
-	else if (!g_strcmp0(method, "SecondaryActivate"))
-		signal = SIGNAL_SECONDARY_ACTIVATE;
-	else if (!g_strcmp0(method, "Scroll"))
+	if (!g_strcmp0(method, "Scroll"))
 	{
 		gint delta, orientation;
 		char *s_orientation;
 
 		g_variant_get(params, "(is)", &delta, &s_orientation);
 		if (!g_ascii_strcasecmp(s_orientation, "vertical"))
-			orientation = SN_SCROLL_ORIENTATION_VERTICAL;
+		{
+			status_notifier_item_send_click(priv->conn,
+			                                delta > 0 ? XCB_BUTTON_INDEX_4
+			                                          : XCB_BUTTON_INDEX_5,
+			                                0,
+			                                0);
+		}
 		else
-			orientation = SN_SCROLL_ORIENTATION_HORIZONTAL;
+		{
+			status_notifier_item_send_click(priv->conn, delta > 0 ? 6 : 7, 0, 0);
+		}
 		g_free(s_orientation);
-
-		g_signal_emit(sn,
-		              status_notifier_item_signals[SIGNAL_SCROLL],
-		              0,
-		              delta,
-		              orientation,
-		              &ret);
-		g_dbus_method_invocation_return_value(invocation, NULL);
 		return;
+	}
+	else if (!g_strcmp0(method, "ContextMenu"))
+	{
+		g_variant_get(params, "(ii)", &x, &y);
+		status_notifier_item_send_click(priv->conn, XCB_BUTTON_INDEX_3, x, y);
+	}
+	else if (!g_strcmp0(method, "Activate"))
+	{
+		g_variant_get(params, "(ii)", &x, &y);
+		status_notifier_item_send_click(priv->conn, XCB_BUTTON_INDEX_1, x, y);
+	}
+	else if (!g_strcmp0(method, "SecondaryActivate"))
+	{
+		g_variant_get(params, "(ii)", &x, &y);
+		status_notifier_item_send_click(priv->conn, XCB_BUTTON_INDEX_2, x, y);
 	}
 	else
 		/* should never happen */
 		g_return_if_reached();
-
-	g_variant_get(params, "(ii)", &x, &y);
-	g_signal_emit(sn, status_notifier_item_signals[signal], 0, x, y, &ret);
 	g_dbus_method_invocation_return_value(invocation, NULL);
 }
 
@@ -653,7 +750,7 @@ static GVariantBuilder *get_builder_for_icon_pixmap(StatusNotifierItem *sn, Stat
 	uint i, max;
 
 	max = (uint)(stride * height) / sizeof(uint);
-	for (i = 0; i < max; ++i)
+	for (i          = 0; i < max; ++i)
 		data[i] = GUINT_TO_BE(data[i]);
 #endif
 
@@ -817,11 +914,7 @@ static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UN
 		return g_variant_new("s", priv->id);
 	else if (!g_strcmp0(property, "Category"))
 	{
-		const char *const *s_category[] = { "ApplicationStatus",
-			                            "Communications",
-			                            "SystemServices",
-			                            "Hardware" };
-		return g_variant_new("s", s_category[priv->category]);
+		return g_variant_new("s", "ApplicationStatus");
 	}
 	else if (!g_strcmp0(property, "Title"))
 		return g_variant_new("s", (priv->title) ? priv->title : "");
@@ -892,9 +985,9 @@ static void bus_acquired(GDBusConnection *conn, const char *name _UNUSED_, gpoin
 	StatusNotifierItem *sn = (StatusNotifierItem *)data;
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)status_notifier_item_get_instance_private(sn);
-	GDBusInterfaceVTable interface_vtable = { .method_call  = method_call,
-		                                  .get_property = get_prop,
-		                                  .set_property = NULL };
+	GDBusInterfaceVTable interface_vtable = {.method_call  = method_call,
+		                                 .get_property = get_prop,
+		                                 .set_property = NULL };
 	GDBusNodeInfo *info;
 
 	info              = g_dbus_node_info_new_for_xml(item_xml, NULL);

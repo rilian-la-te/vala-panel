@@ -35,24 +35,21 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE(StatusNotifierItem, sn_item, SN, ITEM, GObject)
 
 #define SN_ERROR g_quark_from_static_string("StatusNotifier error")
-typedef enum
-{
+typedef enum {
 	SN_ERROR_NO_CONNECTION = 0,
 	SN_ERROR_NO_NAME,
 	SN_ERROR_NO_WATCHER,
 	SN_ERROR_NO_HOST
 } StatusNotifierError;
 
-typedef enum
-{
+typedef enum {
 	SN_STATE_NOT_REGISTERED = 0,
 	SN_STATE_REGISTERING,
 	SN_STATE_REGISTERED,
 	SN_STATE_FAILED
 } StatusNotifierState;
 
-typedef enum
-{
+typedef enum {
 	SN_ICON = 0,
 	SN_ATTENTION_ICON,
 	SN_OVERLAY_ICON,
@@ -60,8 +57,7 @@ typedef enum
 	SN_ICONS_NUM /*< skip >*/
 } StatusNotifierIcon;
 
-typedef enum
-{
+typedef enum {
 	SN_CATEGORY_APPLICATION_STATUS = 0,
 	SN_CATEGORY_COMMUNICATIONS,
 	SN_CATEGORY_SYSTEM_SERVICES,
@@ -69,18 +65,11 @@ typedef enum
 	SN_CATEGORY_OTHER
 } StatusNotifierCategory;
 
-typedef enum
-{
+typedef enum {
 	SN_STATUS_PASSIVE = 0,
 	SN_STATUS_ACTIVE,
 	SN_STATUS_NEEDS_ATTENTION
 } StatusNotifierStatus;
-
-typedef enum
-{
-	SN_SCROLL_ORIENTATION_HORIZONTAL = 0,
-	SN_SCROLL_ORIENTATION_VERTICAL
-} StatusNotifierScrollOrientation;
 
 struct _StatusNotifierItemClass
 {
@@ -88,12 +77,6 @@ struct _StatusNotifierItemClass
 
 	/* signals */
 	void (*registration_failed)(StatusNotifierItem *sn, GError *error);
-
-	bool (*context_menu)(StatusNotifierItem *sn, gint x, gint y);
-	bool (*activate)(StatusNotifierItem *sn, gint x, gint y);
-	bool (*secondary_activate)(StatusNotifierItem *sn, gint x, gint y);
-	bool (*scroll)(StatusNotifierItem *sn, gint delta,
-	               StatusNotifierScrollOrientation orientation);
 };
 
 StatusNotifierItem *status_notifier_item_new_from_xcb_widnow(const char *id,

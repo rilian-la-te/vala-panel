@@ -26,10 +26,13 @@
 
 #include <xcb/xcb_atom.h>
 
+/* X11 temporary atom */
+xcb_atom_t a_CLIP_TEMPORARY;
 /* X11 data types */
 xcb_atom_t a_UTF8_STRING;
 xcb_atom_t a_XROOTPMAP_ID;
 /* SYSTEM TRAY spec */
+xcb_atom_t a_XEMBED;
 xcb_atom_t a_KDE_NET_WM_SYSTEM_TRAY_WINDOW_FOR;
 xcb_atom_t a_NET_SYSTEM_TRAY_OPCODE;
 xcb_atom_t a_NET_SYSTEM_TRAY_MESSAGE_DATA;
@@ -47,6 +50,8 @@ enum
 	I_NET_SYSTEM_TRAY_ORIENTATION,
 	I_NET_SYSTEM_TRAY_VISUAL,
 	I_MANAGER,
+	I_CLIP_TEMPORARY,
+	I_XEMBED,
 	N_ATOMS
 };
 
@@ -62,6 +67,8 @@ void resolve_atoms(xcb_connection_t *con)
 	atom_names[I_NET_SYSTEM_TRAY_ORIENTATION]       = "_NET_SYSTEM_TRAY_ORIENTATION";
 	atom_names[I_NET_SYSTEM_TRAY_VISUAL]            = "_NET_SYSTEM_TRAY_VISUAL";
 	atom_names[I_MANAGER]                           = "MANAGER";
+	atom_names[I_XEMBED]                            = "_XEMBED";
+	atom_names[I_CLIP_TEMPORARY]                    = "CLIP_TEMPORARY";
 	xcb_atom_t atoms[N_ATOMS];
 	for (int i = 0; i < N_ATOMS; i++)
 	{
@@ -89,19 +96,26 @@ void resolve_atoms(xcb_connection_t *con)
 	a_NET_SYSTEM_TRAY_ORIENTATION       = atoms[I_NET_SYSTEM_TRAY_ORIENTATION];
 	a_NET_SYSTEM_TRAY_VISUAL            = atoms[I_NET_SYSTEM_TRAY_VISUAL];
 	a_MANAGER                           = atoms[I_MANAGER];
+	a_XEMBED                            = atoms[I_XEMBED];
+	a_CLIP_TEMPORARY                    = atoms[I_CLIP_TEMPORARY];
 	return;
 }
 
-xcb_screen_t *xcb_screen_of_display(xcb_connection_t *c, int screen)
+void xembed_message_send(xcb_connection_t *conn, xcb_window_t towin, long message, long d1, long d2,
+                         long d3)
 {
-	xcb_screen_iterator_t iter;
+	xcb_client_message_event_t ev;
 
-	iter = xcb_setup_roots_iterator(xcb_get_setup(c));
-	for (; iter.rem; --screen, xcb_screen_next(&iter))
-		if (screen == 0)
-			return iter.data;
-
-	return NULL;
+	ev.response_type  = XCB_CLIENT_MESSAGE;
+	ev.window         = towin;
+	ev.format         = 32;
+	ev.data.data32[0] = XCB_CURRENT_TIME;
+	ev.data.data32[1] = message;
+	ev.data.data32[2] = d1;
+	ev.data.data32[3] = d2;
+	ev.data.data32[4] = d3;
+	ev.type           = a_XEMBED;
+	xcb_send_event(conn, false, towin, XCB_EVENT_MASK_NO_EVENT, (char *)&ev);
 }
 
 void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *c, xcb_window_t win,
@@ -181,4 +195,39 @@ xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char 
 		g_warning("error getting %s atom", true_atom_name);
 
 	return atom_r->atom;
+}
+
+xcb_timestamp_t xcb_get_timestamp_for_connection(xcb_connection_t *conn)
+{
+	// send a dummy event to myself to get the timestamp from X server.
+	xcb_window_t root_win = xcb_get_screen_for_connection(conn, 0)->root;
+	xcb_change_property(conn,
+	                    XCB_PROP_MODE_APPEND,
+	                    root_win,
+	                    a_CLIP_TEMPORARY,
+	                    XCB_ATOM_INTEGER,
+	                    32,
+	                    0,
+	                    NULL);
+
+	xcb_flush(conn);
+	//    PropertyNotifyEvent checker(root_win, atom(QXcbAtom::CLIP_TEMPORARY));
+
+	xcb_generic_event_t *event = 0;
+	// lets keep this inside a loop to avoid a possible race condition, where
+	// reader thread has not yet had the time to acquire the mutex in order
+	// to add the new set of events to its event queue
+	while (!event)
+	{
+		//        connection()->sync();
+		//        event = checkEvent(checker);
+	}
+
+	xcb_property_notify_event_t *pn = (xcb_property_notify_event_t *)event;
+	xcb_timestamp_t timestamp       = pn->time;
+	g_free(event);
+
+	xcb_delete_property(conn, root_win, a_CLIP_TEMPORARY);
+
+	return timestamp;
 }

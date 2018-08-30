@@ -47,7 +47,10 @@ extern xcb_atom_t a_MANAGER;
 void resolve_atoms(xcb_connection_t *con);
 void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *display, xcb_window_t win,
                                                   bool composited);
-xcb_screen_t *xcb_screen_of_display(xcb_connection_t *c, int screen);
+xcb_screen_t *xcb_get_screen_for_connection(xcb_connection_t *c, int screen);
 xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_nate);
+xcb_timestamp_t xcb_get_timestamp_for_connection(xcb_connection_t *conn);
+void xembed_message_send(xcb_connection_t *conn, xcb_window_t towin, long message, long d1, long d2,
+                         long d3);
 
 #endif // XCBUTILS_H
