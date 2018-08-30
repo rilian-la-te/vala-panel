@@ -26,26 +26,6 @@
       <default>true</default>
     </key>
   </schema>
-  <schema id="org.valapanel.tasklist">
-    <key name="all-desktops" type="b">
-      <default>true</default>
-    </key>
-    <key name="grouped-tasks" type="b">
-      <default>false</default>
-    </key>
-    <key name="grouping-limit" type="i">
-      <default>5</default>
-    </key>
-    <key name="middle-click-close" type="b">
-      <default>false</default>
-    </key>
-    <key name="switch-workspace-on-unminimize" type="b">
-      <default>false</default>
-    </key>
-    <key name="unexpanded-limit" type="i">
-      <default>600</default>
-    </key>
-  </schema>
   <schema id="org.xfce.tasklist">
     <key name="all-desktops" type="b">
       <default>true</default>
