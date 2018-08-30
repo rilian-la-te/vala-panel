@@ -197,6 +197,23 @@ xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char 
 	return atom_r->atom;
 }
 
+static bool check_xcb_event(xcb_generic_event_t *event, xcb_window_t root_win)
+{
+	if (!event)
+		return false;
+	if ((event->response_type & ~0x80) != XCB_PROPERTY_NOTIFY)
+	{
+		return false;
+	}
+	else
+	{
+		xcb_property_notify_event_t *pn = (xcb_property_notify_event_t *)(event);
+		if ((pn->window == root_win) && (pn->atom == a_CLIP_TEMPORARY))
+			return true;
+	}
+	return false;
+}
+
 xcb_timestamp_t xcb_get_timestamp_for_connection(xcb_connection_t *conn)
 {
 	// send a dummy event to myself to get the timestamp from X server.
@@ -211,16 +228,17 @@ xcb_timestamp_t xcb_get_timestamp_for_connection(xcb_connection_t *conn)
 	                    NULL);
 
 	xcb_flush(conn);
-	//    PropertyNotifyEvent checker(root_win, atom(QXcbAtom::CLIP_TEMPORARY));
 
 	xcb_generic_event_t *event = 0;
+	bool check                 = false;
 	// lets keep this inside a loop to avoid a possible race condition, where
 	// reader thread has not yet had the time to acquire the mutex in order
 	// to add the new set of events to its event queue
-	while (!event)
+	while (!event && !check)
 	{
-		//        connection()->sync();
-		//        event = checkEvent(checker);
+		xcb_get_input_focus_cookie_t cookie = xcb_get_input_focus(conn);
+		g_free(xcb_get_input_focus_reply(conn, cookie, NULL));
+		check = check_xcb_event(event, root_win);
 	}
 
 	xcb_property_notify_event_t *pn = (xcb_property_notify_event_t *)event;

@@ -24,6 +24,8 @@
 #include <stdbool.h>
 #include <xcb/xcb.h>
 
+/* X11 temporary atom */
+extern xcb_atom_t a_CLIP_TEMPORARY;
 /* X11 data types */
 extern xcb_atom_t a_UTF8_STRING;
 extern xcb_atom_t a_XROOTPMAP_ID;
@@ -33,6 +35,7 @@ extern xcb_atom_t a_NET_SYSTEM_TRAY_OPCODE;
 extern xcb_atom_t a_NET_SYSTEM_TRAY_MESSAGE_DATA;
 extern xcb_atom_t a_NET_SYSTEM_TRAY_ORIENTATION;
 extern xcb_atom_t a_NET_SYSTEM_TRAY_VISUAL;
+extern xcb_atom_t a_XEMBED;
 extern xcb_atom_t a_MANAGER;
 
 /* SYSTEM TRAY Protocol constants. */

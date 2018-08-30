@@ -2,6 +2,7 @@ pkg_check_modules(XCB
     xcb-atom
     xcb-damage
     xcb-icccm
+    xcb-ewmh
     xcb
     xcb-proto
     xcb-randr
