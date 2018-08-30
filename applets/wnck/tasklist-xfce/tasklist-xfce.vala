@@ -92,7 +92,7 @@ public void g_io_tasklist_xfce_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(TasklistXFCEApplet),"tasklist-xfce",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(TasklistXFCEApplet),"org.xfce.tasklist",10);
 }
 
 public void g_io_tasklist_xfce_unload(GLib.IOModule module)
