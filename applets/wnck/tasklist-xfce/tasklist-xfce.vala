@@ -36,7 +36,6 @@ public class TasklistXFCE: Applet
     private const string KEY_SHOW_LABELS = "show-labels";
     private const string KEY_SWITCH_UNMIN = "switch-workspace-on-unminimize";
     private const string KEY_UNEXPANDED_LIMIT = "unexpanded-limit";
-    internal int unexpanded_limit {get; set;}
     public TasklistXFCE(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
