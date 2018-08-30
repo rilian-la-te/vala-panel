@@ -425,7 +425,7 @@ static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *dat
 	                                       GTK_MESSAGE_QUESTION,
 	                                       GTK_BUTTONS_OK_CANCEL,
 	                                       _("Really delete this panel?\n<b>Warning:"
-	                                          "This can not be recovered.</b>")));
+	                                         "This can not be recovered.</b>")));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
 	bool ok = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);

@@ -186,7 +186,8 @@ struct _XfceTasklist
 	gint n_windows;
 };
 
-typedef enum {
+typedef enum
+{
 	CHILD_TYPE_WINDOW,
 	CHILD_TYPE_GROUP,
 	CHILD_TYPE_OVERFLOW_MENU,
@@ -1088,7 +1089,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 					 * with counting the windows... */
 					if (cols < 1)
 						cols = 1;
-					w            = area_width / cols--;
+					w = area_width / cols--;
 					if (tasklist->max_button_length > 0 &&
 					    w > tasklist->max_button_length)
 						w = tasklist->max_button_length;
@@ -2715,8 +2716,7 @@ static bool xfce_tasklist_button_button_release_event(GtkWidget *button, GdkEven
 	if (event->type == GDK_BUTTON_RELEASE && !(event->x == 0 && event->y == 0) /* 0,0 = outside
 	                                                                              the widget in
 	                                                                              Gtk */
-	    &&
-	    event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
+	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
 		if (event->button == 1)
@@ -3079,13 +3079,10 @@ static void xfce_tasklist_button_drag_data_received(GtkWidget *button, GdkDragCo
 	{
 		child = li->data;
 
-		if (sibling != li /* drop on end previous button */
-		    &&
-		    child != child2 /* drop on the same button */
-		    &&
-		    g_list_next(li) != sibling /* drop start of next button */
-		    &&
-		    child->window != NULL && wnck_window_get_xid(child->window) == xid)
+		if (sibling != li                 /* drop on end previous button */
+		    && child != child2            /* drop on the same button */
+		    && g_list_next(li) != sibling /* drop start of next button */
+		    && child->window != NULL && wnck_window_get_xid(child->window) == xid)
 		{
 			/* swap items */
 			tasklist->windows = g_list_delete_link(tasklist->windows, li);
