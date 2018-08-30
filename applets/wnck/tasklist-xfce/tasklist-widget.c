@@ -73,7 +73,6 @@ enum
 	PROP_SHOW_LABELS,
 	PROP_SHOW_ONLY_MINIMIZED,
 	PROP_SHOW_WIREFRAMES,
-	PROP_SHOW_HANDLE,
 	PROP_SORT_ORDER,
 	PROP_WINDOW_SCROLLING,
 	PROP_WRAP_WINDOWS,
@@ -171,9 +170,6 @@ struct _XfceTasklist
 	/* sorting order of the buttons */
 	XfceTasklistSortOrder sort_order;
 
-	/* dummy properties */
-	guint show_handle : 1;
-
 #ifdef GDK_WINDOWING_X11
 	/* wireframe window */
 	Window wireframe_window;
@@ -190,8 +186,7 @@ struct _XfceTasklist
 	gint n_windows;
 };
 
-typedef enum
-{
+typedef enum {
 	CHILD_TYPE_WINDOW,
 	CHILD_TYPE_GROUP,
 	CHILD_TYPE_OVERFLOW_MENU,
@@ -402,15 +397,6 @@ static void xfce_tasklist_class_init(XfceTasklistClass *klass)
 	                                                         G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class,
-	                                PROP_SHOW_HANDLE,
-	                                g_param_spec_boolean("show-handle",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
-
-	g_object_class_install_property(gobject_class,
 	                                PROP_SORT_ORDER,
 	                                g_param_spec_uint("sort-order",
 	                                                  NULL,
@@ -481,7 +467,7 @@ static void xfce_tasklist_class_init(XfceTasklistClass *klass)
 	//	    gtkwidget_class,
 	//	    g_param_spec_int("min-button-length",
 	//	                     NULL,
-	//	                     "The minumum length of a window button",
+	//	                     "The minimum length of a window button",
 	//	                     1,
 	//	                     G_MAXINT,
 	//	                     DEFAULT_MIN_BUTTON_LENGTH,
@@ -546,7 +532,6 @@ static void xfce_tasklist_init(XfceTasklist *tasklist)
 	tasklist->only_minimized        = false;
 	tasklist->show_labels           = true;
 	tasklist->show_wireframes       = false;
-	tasklist->show_handle           = true;
 	tasklist->all_monitors          = true;
 	tasklist->n_monitors            = 0;
 	tasklist->all_monitors_geometry = NULL;
@@ -630,10 +615,6 @@ static void xfce_tasklist_get_property(GObject *object, guint prop_id, GValue *v
 		g_value_set_boolean(value, tasklist->show_wireframes);
 		break;
 
-	case PROP_SHOW_HANDLE:
-		g_value_set_boolean(value, tasklist->show_handle);
-		break;
-
 	case PROP_SORT_ORDER:
 		g_value_set_uint(value, tasklist->sort_order);
 		break;
@@ -704,10 +685,6 @@ static void xfce_tasklist_set_property(GObject *object, guint prop_id, const GVa
 
 	case PROP_SHOW_WIREFRAMES:
 		xfce_tasklist_set_show_wireframes(tasklist, g_value_get_boolean(value));
-		break;
-
-	case PROP_SHOW_HANDLE:
-		tasklist->show_handle = g_value_get_boolean(value);
 		break;
 
 	case PROP_SORT_ORDER:
@@ -1111,7 +1088,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 					 * with counting the windows... */
 					if (cols < 1)
 						cols = 1;
-					w = area_width / cols--;
+					w            = area_width / cols--;
 					if (tasklist->max_button_length > 0 &&
 					    w > tasklist->max_button_length)
 						w = tasklist->max_button_length;
@@ -2739,7 +2716,8 @@ static bool xfce_tasklist_button_button_release_event(GtkWidget *button, GdkEven
 	if (event->type == GDK_BUTTON_RELEASE && !(event->x == 0 && event->y == 0) /* 0,0 = outside
 	                                                                              the widget in
 	                                                                              Gtk */
-	    && event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
+	    &&
+	    event->x >= 0 && event->x < allocation.width && event->y >= 0 &&
 	    event->y < allocation.height)
 	{
 		if (event->button == 1)
@@ -3102,10 +3080,13 @@ static void xfce_tasklist_button_drag_data_received(GtkWidget *button, GdkDragCo
 	{
 		child = li->data;
 
-		if (sibling != li                 /* drop on end previous button */
-		    && child != child2            /* drop on the same button */
-		    && g_list_next(li) != sibling /* drop start of next button */
-		    && child->window != NULL && wnck_window_get_xid(child->window) == xid)
+		if (sibling != li /* drop on end previous button */
+		    &&
+		    child != child2 /* drop on the same button */
+		    &&
+		    g_list_next(li) != sibling /* drop start of next button */
+		    &&
+		    child->window != NULL && wnck_window_get_xid(child->window) == xid)
 		{
 			/* swap items */
 			tasklist->windows = g_list_delete_link(tasklist->windows, li);
