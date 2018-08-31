@@ -20,27 +20,26 @@
 #include "cpu.h"
 #include "mem.h"
 #include "monitor.h"
+#include "swap.h"
 
 #define DEFAULT_WIDTH 40 /* Pixels               */
 #define UPDATE_PERIOD 1  /* Seconds */
-#define DISPLAY_CPU "display-cpu-monitor"
-#define DISPLAY_RAM "display-ram-monitor"
+
 #define ACTION "click-action"
-#define CPU_CL "cpu-color"
-#define RAM_CL "ram-color"
 
 enum
 {
 	CPU_POS = 0,
 	RAM_POS,
+	SWAP_POS,
 	N_POS
 };
 
 struct _MonitorsApplet
 {
 	ValaPanelApplet _parent_;
-	Monitor *monitors[2];
-	bool displayed_mons[2];
+	Monitor *monitors[N_POS];
+	bool displayed_mons[N_POS];
 	uint timer;
 };
 
@@ -122,6 +121,17 @@ static Monitor *create_monitor_with_pos(MonitorsApplet *self, int pos)
 		                      tooltip_update_mem,
 		                      color);
 	}
+	if (pos == SWAP_POS)
+	{
+		g_autofree char *color =
+		    g_settings_get_string(vala_panel_applet_get_settings(VALA_PANEL_APPLET(self)),
+		                          SWAP_CL);
+		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
+		                      self,
+		                      update_swap,
+		                      tooltip_update_swap,
+		                      color);
+	}
 	return NULL;
 }
 
@@ -164,20 +174,30 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		self->displayed_mons[CPU_POS] = g_settings_get_boolean(settings, DISPLAY_CPU);
 		rebuild_mons(self);
 	}
-	else if (!g_strcmp0(key, DISPLAY_RAM))
-	{
-		self->displayed_mons[RAM_POS] = g_settings_get_boolean(settings, DISPLAY_RAM);
-		rebuild_mons(self);
-	}
 	else if ((!g_strcmp0(key, CPU_CL)) && self->monitors[CPU_POS] != NULL)
 	{
 		g_autofree char *color = g_settings_get_string(settings, CPU_CL);
 		gdk_rgba_parse(&self->monitors[CPU_POS]->foreground_color, color);
 	}
+	else if (!g_strcmp0(key, DISPLAY_RAM))
+	{
+		self->displayed_mons[RAM_POS] = g_settings_get_boolean(settings, DISPLAY_RAM);
+		rebuild_mons(self);
+	}
 	else if ((!g_strcmp0(key, RAM_CL)) && self->monitors[RAM_POS] != NULL)
 	{
 		g_autofree char *color = g_settings_get_string(settings, RAM_CL);
 		gdk_rgba_parse(&self->monitors[RAM_POS]->foreground_color, color);
+	}
+	else if (!g_strcmp0(key, DISPLAY_SWAP))
+	{
+		self->displayed_mons[SWAP_POS] = g_settings_get_boolean(settings, DISPLAY_SWAP);
+		rebuild_mons(self);
+	}
+	else if ((!g_strcmp0(key, SWAP_CL)) && self->monitors[SWAP_POS] != NULL)
+	{
+		g_autofree char *color = g_settings_get_string(settings, SWAP_CL);
+		gdk_rgba_parse(&self->monitors[SWAP_POS]->foreground_color, color);
 	}
 }
 
@@ -194,8 +214,9 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	    true);
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	gtk_box_set_homogeneous(box, true);
-	self->displayed_mons[CPU_POS] = g_settings_get_boolean(settings, DISPLAY_CPU);
-	self->displayed_mons[RAM_POS] = g_settings_get_boolean(settings, DISPLAY_RAM);
+	self->displayed_mons[CPU_POS]  = g_settings_get_boolean(settings, DISPLAY_CPU);
+	self->displayed_mons[RAM_POS]  = g_settings_get_boolean(settings, DISPLAY_RAM);
+	self->displayed_mons[SWAP_POS] = g_settings_get_boolean(settings, DISPLAY_SWAP);
 	if (self->displayed_mons[CPU_POS])
 	{
 		g_autofree char *color = g_settings_get_string(settings, CPU_CL);
@@ -207,6 +228,12 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 		g_autofree char *color = g_settings_get_string(settings, RAM_CL);
 		self->monitors[RAM_POS] =
 		    monitor_create(box, self, update_mem, tooltip_update_mem, color);
+	}
+	if (self->displayed_mons[SWAP_POS])
+	{
+		g_autofree char *color = g_settings_get_string(settings, SWAP_CL);
+		self->monitors[SWAP_POS] =
+		    monitor_create(box, self, update_swap, tooltip_update_swap, color);
 	}
 	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
 	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
@@ -230,6 +257,12 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 	                             CONF_BOOL,
 	                             _("RAM color"),
 	                             RAM_CL,
+	                             CONF_STR,
+	                             _("Display swap usage"),
+	                             DISPLAY_SWAP,
+	                             CONF_BOOL,
+	                             _("Swap color"),
+	                             SWAP_CL,
 	                             CONF_STR,
 	                             _("Action when clicked"),
 	                             ACTION,

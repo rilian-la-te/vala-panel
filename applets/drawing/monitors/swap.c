@@ -26,12 +26,13 @@
 /*
  * Memory monitor functions
  */
-G_GNUC_INTERNAL bool update_mem(Monitor *m)
+G_GNUC_INTERNAL bool update_swap(Monitor *m)
 {
 	char buf[80];
-	long mem_total = 0;
-	long mem_free  = 0;
-	uint readmask  = 0x2 | 0x1;
+	long swap_total  = 0;
+	long swap_free   = 0;
+	long swap_cached = 0;
+	uint readmask    = 0x4 | 0x2 | 0x1;
 	if (m->stats == NULL || m->pixmap == NULL)
 		return true;
 	FILE *meminfo = fopen("/proc/meminfo", "r");
@@ -41,17 +42,21 @@ G_GNUC_INTERNAL bool update_mem(Monitor *m)
 		return false;
 	}
 
-	/* Use new 3.14 MemAvailable spec */
 	while (readmask != 0 && fgets(buf, 80, meminfo) != NULL)
 	{
-		if (sscanf(buf, "MemTotal: %ld kB\n", &mem_total) == 1)
+		if (sscanf(buf, "SwapTotal: %ld kB\n", &swap_total) == 1)
 		{
 			readmask ^= 0x1;
 			continue;
 		}
-		if (sscanf(buf, "MemAvailable: %ld kB\n", &mem_free) == 1)
+		if (sscanf(buf, "SwapFree: %ld kB\n", &swap_free) == 1)
 		{
 			readmask ^= 0x2;
+			continue;
+		}
+		if (sscanf(buf, "SwapCached: %ld kB\n", &swap_cached) == 1)
+		{
+			readmask ^= 0x4;
 			continue;
 		}
 	}
@@ -64,8 +69,15 @@ G_GNUC_INTERNAL bool update_mem(Monitor *m)
 		return false;
 	}
 
-	m->total                 = mem_total;
-	m->stats[m->ring_cursor] = (mem_total - mem_free) / (double)mem_total;
+	m->total = swap_total;
+	/* Adding stats to the buffer:
+	 * It is hard to draw the line, which caches should be counted as free,
+	 * and which not. Pagecaches, dentry, and inode caches are quickly
+	 * filled up again for almost any use case. Hence I would not count
+	 * them as 'free'.
+     * 'swap_cached' definitely counts as 'free' because it is immediately
+	 * released should any application need it. */
+	m->stats[m->ring_cursor] = (swap_total - swap_free - swap_cached) / (double)swap_total;
 
 	m->ring_cursor += 1;
 	if (m->ring_cursor >= m->pixmap_width)
@@ -75,7 +87,7 @@ G_GNUC_INTERNAL bool update_mem(Monitor *m)
 	return true;
 }
 
-G_GNUC_INTERNAL void tooltip_update_mem(Monitor *m)
+G_GNUC_INTERNAL void tooltip_update_swap(Monitor *m)
 {
 	if (m != NULL && m->stats != NULL)
 	{
@@ -83,7 +95,7 @@ G_GNUC_INTERNAL void tooltip_update_mem(Monitor *m)
 		if (m->da != NULL && m->stats != NULL)
 		{
 			g_autofree char *tooltip_txt =
-			    g_strdup_printf(_("RAM usage: %.1fMB (%.2f%%)"),
+			    g_strdup_printf(_("Swap usage: %.1fMB (%.2f%%)"),
 			                    m->stats[ring_pos] * m->total / 1024,
 			                    m->stats[ring_pos] * 100);
 			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
