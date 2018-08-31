@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-29 14:59+0300\n"
+"POT-Creation-Date: 2018-08-31 15:59+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,7 @@ msgid "Select a file"
 msgstr ""
 
 #: ../util/gtk/generic-config-dialog.c:198
+#: ../applets/wnck/tasklist/config.ui:80
 msgid "_Close"
 msgstr ""
 
@@ -133,27 +134,66 @@ msgid "CPU Usage Monitor"
 msgstr ""
 
 #: ../applets/drawing/cpu/plugins_cpu_cpu.c:339
-#: ../applets/drawing/monitors/monitors.vala:400
+#: ../applets/drawing/monitors/monitors.c:249
 msgid "Display CPU usage"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3348
+#: ../applets/drawing/monitors/cpu.c:82
+#, c-format
+msgid "CPU usage: %.2f%%"
+msgstr ""
+
+#: ../applets/drawing/monitors/mem.c:86
+#, c-format
+msgid "RAM usage: %.1fMB (%.2f%%)"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:252
+msgid "CPU color"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:255
+msgid "Display RAM usage"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:258
+msgid "RAM color"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:261
+msgid "Display swap usage"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:264
+msgid "Swap color"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:267
+msgid "Action when clicked"
+msgstr ""
+
+#: ../applets/drawing/monitors/swap.c:98
+#, c-format
+msgid "Swap usage: %.1fMB (%.2f%%)"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist-widget.c:3328
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3356
+#: ../applets/wnck/tasklist/tasklist-widget.c:3336
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3364
+#: ../applets/wnck/tasklist/tasklist-widget.c:3344
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3372
+#: ../applets/wnck/tasklist/tasklist-widget.c:3352
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-widget.c:3384
+#: ../applets/wnck/tasklist/tasklist-widget.c:3364
 msgid "_Close All"
 msgstr ""
 
@@ -285,77 +325,32 @@ msgstr ""
 msgid "Visible separator"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.vala:252
-msgid "CPU usage: %.2f%%"
-msgstr ""
-
-#: ../applets/drawing/monitors/monitors.vala:340
-msgid "RAM usage: %.1fMB (%.2f%%)"
-msgstr ""
-
-#: ../applets/drawing/monitors/monitors.vala:401
-msgid "CPU color"
-msgstr ""
-
-#: ../applets/drawing/monitors/monitors.vala:402
-msgid "Display RAM usage"
-msgstr ""
-
-#: ../applets/drawing/monitors/monitors.vala:403
-msgid "RAM color"
-msgstr ""
-
-#: ../applets/drawing/monitors/monitors.vala:404
-msgid "Action when clicked"
-msgstr ""
-
 #: ../applets/wnck/deskno/deskno.vala:68
 msgid "Display desktop names"
-msgstr ""
-
-#: ../applets/wnck/icontasks/buttons.vala:114
-msgid "Pin to panel"
-msgstr ""
-
-#: ../applets/wnck/icontasks/buttons.vala:115
-#: ../applets/wnck/icontasks/buttons.vala:490
-msgid "Unpin from panel"
 msgstr ""
 
 #: ../applets/wnck/pager/pager.vala:97
 msgid "Workspaces..."
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:82
-#: ../applets/wnck/tasklist/tasklist.vala:98
+#: ../applets/wnck/tasklist/tasklist-xfce.vala:81
 msgid "Show windows from all desktops"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:83
-#: ../applets/wnck/tasklist/tasklist.vala:99
+#: ../applets/wnck/tasklist/tasklist-xfce.vala:82
 msgid "Show window`s workspace on unminimize"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:84
-#: ../applets/wnck/tasklist/tasklist.vala:100
+#: ../applets/wnck/tasklist/tasklist-xfce.vala:83
 msgid "Close windows on middle click"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:85
-#: ../applets/wnck/tasklist/tasklist.vala:101
+#: ../applets/wnck/tasklist/tasklist-xfce.vala:84
 msgid "Group windows when needed"
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.vala:86
+#: ../applets/wnck/tasklist/tasklist-xfce.vala:85
 msgid "Show task labels"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist.vala:102
-msgid "Ungrouped buttons limit"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist.vala:103
-msgid "Unexpanded size limit"
 msgstr ""
 
 #: ../applets/wnck/wincmd/wincmd.vala:89
@@ -555,7 +550,7 @@ msgstr ""
 msgid "Use toolbar appearance:"
 msgstr ""
 
-#: ../data/ui/pref.ui:807
+#: ../data/ui/pref.ui:807 ../applets/wnck/tasklist/config.ui:242
 msgid "Appearance"
 msgstr ""
 
@@ -650,6 +645,115 @@ msgstr ""
 
 #: ../applets/core/menumodel/system-menus.ui:128
 msgid "Shut down..."
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:12
+msgid "Never"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:15
+msgid "Always"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:18
+msgid "When space is limited"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:29
+msgid "Nothing"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:32
+msgid "Close Window"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:35
+msgid "Minimize Window"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:46
+msgid "Timestamp"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:49
+msgid "Group title and timestamp"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:52
+msgid "Window title"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:55
+msgid "Group title and window title"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:58
+msgid "None, allow drag-and-drop"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:64
+#: ../applets/wnck/buttons/buttons.desktop.plugin.in:3
+msgid "Window Buttons"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:95
+msgid "_Help"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:144
+msgid "Show button _labels"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:160
+msgid "Show _flat buttons"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:176
+msgid "Show _handle"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:199
+msgid "Sorting _order:"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:282
+msgid "Window _grouping:"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:327
+msgid "Mi_ddle click action:"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:365
+msgid "Restore minimized windows to current _workspace"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:381
+msgid "D_raw window frame when hovering a button"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:397
+msgid "_Switch windows using the mouse wheel"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:419
+msgid "Behaviour"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:452
+msgid "Show windows from _all workspaces or viewports"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:468
+msgid "Show only _minimized windows"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:484
+msgid "Show windows from all mo_nitors"
+msgstr ""
+
+#: ../applets/wnck/tasklist/config.ui:506
+msgid "Filtering"
 msgstr ""
 
 #: ../runner/app-runner.ui:46
@@ -751,10 +855,6 @@ msgstr ""
 msgid "Draws monitors graph on panel (for CPU and RAM)."
 msgstr ""
 
-#: ../applets/wnck/buttons/buttons.desktop.plugin.in:3
-msgid "Window Buttons"
-msgstr ""
-
 #: ../applets/wnck/buttons/buttons.desktop.plugin.in:4
 msgid "Shows window buttons (such as minimize, maximize and close)."
 msgstr ""
@@ -767,15 +867,6 @@ msgstr ""
 msgid "Shows desktop name or number. Switch on click."
 msgstr ""
 
-#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:4
-#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:5
-msgid "Icon Task List"
-msgstr ""
-
-#: ../applets/wnck/icontasks/icontasks.desktop.plugin.in:9
-msgid "tab-new-symbolic"
-msgstr ""
-
 #: ../applets/wnck/pager/pager.desktop.plugin.in:3
 msgid "Pager"
 msgstr ""
@@ -784,17 +875,12 @@ msgstr ""
 msgid "Shows desktops."
 msgstr ""
 
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:3
-msgid "Tasklist Xfce"
-msgstr ""
-
-#: ../applets/wnck/tasklist-xfce/tasklist-xfce.desktop.plugin.in:4
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:4
-msgid "Shows opened windows."
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist.desktop.plugin.in:3
+#: ../applets/wnck/tasklist/org.xfce.tasklist.desktop.plugin.in:3
 msgid "Tasklist"
+msgstr ""
+
+#: ../applets/wnck/tasklist/org.xfce.tasklist.desktop.plugin.in:4
+msgid "Shows opened windows."
 msgstr ""
 
 #: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:3
@@ -803,14 +889,6 @@ msgstr ""
 
 #: ../applets/wnck/wincmd/wincmd.desktop.plugin.in:4
 msgid "Can shows desktop and shades window."
-msgstr ""
-
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:3
-msgid "XEmbed Tray"
-msgstr ""
-
-#: ../applets/wnck/xembed/xembed.desktop.plugin.in:4
-msgid "Old XEmbed-based tray"
 msgstr ""
 
 #: ../data/desktop/org.valapanel.application.desktop.in:5
