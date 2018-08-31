@@ -233,7 +233,8 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 	                             CONF_STR,
 	                             _("Action when clicked"),
 	                             ACTION,
-	                             CONF_STR);
+	                             CONF_STR,
+	                             NULL);
 }
 
 /* Plugin destructor. */

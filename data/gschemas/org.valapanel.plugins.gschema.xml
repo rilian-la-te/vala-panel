@@ -37,7 +37,7 @@
     <key name="display-ram-monitor" type="b">
       <default>true</default>
     </key>
-    <key name="click-action" type="ms">
+    <key name="click-action" type="s">
       <default>'lxtask'</default>
     </key>
     <key name="cpu-color" type="s">
