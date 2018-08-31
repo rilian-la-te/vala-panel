@@ -52,7 +52,7 @@ struct _CpuApplet
 };
 
 #define cpu_applet_from_da(da) VALA_PANEL_CPU_APPLET(gtk_widget_get_parent(GTK_WIDGET(da)))
-#define cpu_applet_get_da(p) GTK_DRAWING_AREA(gtk_bin_get_child(GTK_WIDGET(p)))
+#define cpu_applet_get_da(p) GTK_DRAWING_AREA(gtk_bin_get_child(GTK_BIN(p)))
 
 G_DEFINE_DYNAMIC_TYPE(CpuApplet, cpu_applet, vala_panel_applet_get_type())
 
