@@ -201,7 +201,8 @@ static bool button_release_event(GtkWidget *widget, GdkEventButton *evt, Monitor
 {
 	g_autoptr(GVariant) var =
 	    g_settings_get_value(vala_panel_applet_get_settings(VALA_PANEL_APPLET(applet)), ACTION);
-	if (evt->button == 1)
+	if (evt->button == 1 &&
+	    g_variant_type_is_subtype_of(g_variant_get_type(var), G_VARIANT_TYPE_STRING))
 	{
 		activate_menu_launch_command(NULL,
 		                             var,
@@ -397,7 +398,7 @@ static void tooltip_update_mem(Monitor *m)
 	if (m != NULL && m->stats != NULL)
 	{
 		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor - 1;
-		if (m->da != NULL)
+		if (m->da != NULL && m->stats != NULL)
 		{
 			g_autofree char *tooltip_txt =
 			    g_strdup_printf(_("RAM usage: %.1fMB (%.2f%%)"),
@@ -447,7 +448,7 @@ static bool monitors_update(void *data)
 	for (int i = 0; i < N_POS; i++)
 	{
 		if (self->monitors[i] != NULL)
-			self->monitors[i]->update(self->monitors[i]);
+			monitor_update(self->monitors[i]);
 	}
 	return true;
 }
