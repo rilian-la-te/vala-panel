@@ -34,6 +34,6 @@ release-main:
   script:
     - pacman -S --noconfirm python3 python-pip
     - pip3 install gitlab_release
-    - python3 -m gitlab_release $PRIVATE_TOKEN build/vala-panel*.tar.xz"
+    - python3 -m gitlab_release $PRIVATE_TOKEN build/vala-panel*.tar.xz
   only:
     - tags
