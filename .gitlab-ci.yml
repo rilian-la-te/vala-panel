@@ -1,5 +1,6 @@
 stages:
   - build
+  - release
 
 before_script:
   - mkdir -p _ccache
@@ -25,3 +26,14 @@ build-main:
     paths:
     - "build/vala-panel*.tar.xz"
     expire_in: 1 week
+
+
+release-main:
+  image: pritunl/archlinux
+  stage: release
+  script:
+    - pacman -S --noconfirm python3
+    - pip3 install gitlab_release
+    - python3 -m gitlab_release $PRIVATE_TOKEN build/vala-panel*.tar.xz"
+  only:
+    - tags
