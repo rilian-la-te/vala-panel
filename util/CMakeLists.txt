@@ -13,15 +13,6 @@ set(UTIL_SOURCES
     misc.c
     info-data.c
     launcher.c)
-if(GLIB_OLD_FOUND)
-    list(APPEND UTIL_SOURCES
-        guuid.c
-        guuid.h)
-endif()
-#glib_compile_resources(GLIB_RESOURCES_LIB
-#    source
-#        libvalapanel.gresource.xml
-#)
 
 #####
 # Core Library
