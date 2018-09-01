@@ -140,12 +140,11 @@ void stop_ui(ValaPanelToplevel *self)
 		gtk_widget_destroy0(ch);
 }
 
-static void vala_panel_toplevel_destroy(GtkWidget *base)
+static void vala_panel_toplevel_destroy(GObject *base)
 {
-	ValaPanelToplevel *self;
-	self = (ValaPanelToplevel *)base;
+	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(base);
 	stop_ui(self);
-	GTK_WIDGET_CLASS(vala_panel_toplevel_parent_class)->destroy(GTK_WIDGET(self));
+	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->dispose(base);
 }
 
 static void vala_panel_toplevel_finalize(GObject *obj)
@@ -154,7 +153,7 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 	gtk_widget_destroy0(self->context_menu);
 	gtk_widget_destroy0(self->pref_dialog);
 	g_free0(self->uuid);
-	g_object_unref0(self->provider);
+	g_clear_object(&self->provider);
 	g_free0(self->font);
 	g_free0(self->background_file);
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
@@ -991,10 +990,10 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
 	GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
 	GTK_WIDGET_CLASS(parent)->get_request_mode               = get_request_mode;
-	GTK_WIDGET_CLASS(parent)->destroy                        = vala_panel_toplevel_destroy;
 	GTK_WIDGET_CLASS(parent)->grab_notify                    = grab_notify;
 	oclass->set_property                                     = vala_panel_toplevel_set_property;
 	oclass->get_property                                     = vala_panel_toplevel_get_property;
+	oclass->dispose                                          = vala_panel_toplevel_destroy;
 	oclass->finalize                                         = vala_panel_toplevel_finalize;
 	pspecs[PROP_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
