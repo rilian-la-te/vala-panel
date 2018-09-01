@@ -75,7 +75,7 @@ G_GNUC_INTERNAL bool update_swap(Monitor *m)
 	 * and which not. Pagecaches, dentry, and inode caches are quickly
 	 * filled up again for almost any use case. Hence I would not count
 	 * them as 'free'.
-     * 'swap_cached' definitely counts as 'free' because it is immediately
+	 * 'swap_cached' definitely counts as 'free' because it is immediately
 	 * released should any application need it. */
 	m->stats[m->ring_cursor] = (swap_total - swap_free - swap_cached) / (double)swap_total;
 
