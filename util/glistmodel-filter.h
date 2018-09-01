@@ -35,7 +35,8 @@ void vala_panel_list_model_filter_set_filter_func(ValaPanelListModelFilter *self
                                                   ValaPanelListModelFilterFunc func,
                                                   gpointer user_data);
 void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self);
-void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self, uint max_results);
+void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self,
+                                                  unsigned int max_results);
 G_END_DECLS
 
 #endif // GLISTMODELFILTER_H

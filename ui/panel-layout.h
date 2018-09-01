@@ -50,7 +50,7 @@ void vala_panel_layout_applets_repack(ValaPanelLayout *self);
 void vala_panel_layout_update_applet_positions(ValaPanelLayout *self);
 GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self);
 ValaPanelUnitSettings *vala_panel_layout_get_applet_settings(ValaPanelApplet *pl);
-uint vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl);
+unsigned int vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl);
 void vala_panel_layout_set_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl, int pos);
 const char *vala_panel_layout_get_toplevel_id(ValaPanelLayout *self);
 ValaPanelAppletManager *vala_panel_layout_get_manager();
