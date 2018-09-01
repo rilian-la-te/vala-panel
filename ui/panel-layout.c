@@ -138,7 +138,7 @@ void vala_panel_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *app
 {
 	g_autofree char *uuid    = g_strdup(vala_panel_applet_get_uuid(applet));
 	ValaPanelUnitSettings *s = vala_panel_core_settings_get_by_uuid(core_settings, uuid);
-	gtk_widget_destroy(GTK_WIDGET(applet));
+	g_clear_pointer(&applet, gtk_widget_destroy);
 	vala_panel_core_settings_remove_unit_settings_full(core_settings, uuid, true);
 	vala_panel_layout_update_applet_positions(self);
 }

@@ -8,6 +8,14 @@ set(PLUGIN_NAME monitors)
 add_library (${PLUGIN_NAME} MODULE
     monitors.h
     monitors.c
+    monitor.h
+    monitor.c
+    cpu.c
+    cpu.h
+    mem.c
+    mem.h
+    swap.c
+    swap.h
 )
 
 target_link_libraries (${PLUGIN_NAME} valapanel)

@@ -34,17 +34,23 @@
     <key name="display-cpu-monitor" type="b">
       <default>true</default>
     </key>
-    <key name="display-ram-monitor" type="b">
-      <default>true</default>
-    </key>
-    <key name="click-action" type="ms">
-      <default>'lxtask'</default>
-    </key>
     <key name="cpu-color" type="s">
       <default>'red'</default>
     </key>
+    <key name="display-ram-monitor" type="b">
+      <default>true</default>
+    </key>
     <key name="ram-color" type="s">
       <default>'green'</default>
+    </key>
+    <key name="display-swap-monitor" type="b">
+      <default>true</default>
+    </key>
+    <key name="swap-color" type="s">
+      <default>'yellow'</default>
+    </key>
+    <key name="click-action" type="s">
+      <default>'lxtask'</default>
     </key>
   </schema>
 </schemalist>
