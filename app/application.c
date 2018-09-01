@@ -129,7 +129,7 @@ static void apply_styling(ValaPanelApplication *app)
 			gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
 			                                             GTK_STYLE_PROVIDER(
 			                                                 app->provider));
-			g_object_unref0(app->provider);
+			g_clear_object(&app->provider);
 		}
 		app->provider = css_apply_from_file_to_app_with_provider_and_priority(
 		    app->css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -388,15 +388,15 @@ void vala_panel_application_activate(GApplication *app)
 static void vala_panel_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
-	g_object_unref0(app->config);
-	g_object_unref0(app->platform);
+	g_clear_object(&app->config);
+	g_clear_object(&app->platform);
 	g_free0(app->css);
 	g_free0(app->terminal_command);
 	g_free0(app->lock_command);
 	g_free0(app->run_command);
 	g_free0(app->logout_command);
 	g_free0(app->shutdown_command);
-	g_object_unref0(app->provider);
+	g_clear_object(&app->provider);
 	g_free(app->profile);
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }

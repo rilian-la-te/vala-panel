@@ -84,9 +84,9 @@ void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
 		return;
-	g_object_unref0(settings->custom);
-	g_object_unref0(settings->common);
-	g_object_unref0(settings->type);
+	g_clear_object(&settings->custom);
+	g_clear_object(&settings->common);
+	g_clear_object(&settings->type);
 	g_slice_free(ValaPanelUnitSettings, settings);
 }
 
@@ -135,8 +135,8 @@ void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 {
 	g_free0(settings->root_path);
 	g_free0(settings->root_schema);
-	g_object_unref0(settings->core_settings);
-	g_object_unref0(settings->backend);
+	g_clear_object(&settings->core_settings);
+	g_clear_object(&settings->backend);
 	g_hash_table_unref(settings->all_units);
 	g_slice_free(ValaPanelCoreSettings, settings);
 }

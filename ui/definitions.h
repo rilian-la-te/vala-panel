@@ -25,7 +25,6 @@
 #include <string.h>
 
 #define gtk_widget_destroy0(x) g_clear_pointer(&x, gtk_widget_destroy)
-#define g_object_unref0(x) g_clear_pointer(&x, g_object_unref)
 #define g_free0(x) g_clear_pointer(&x, g_free)
 
 #define g_value_replace_string(string, value)                                                      \

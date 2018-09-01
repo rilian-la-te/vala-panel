@@ -71,7 +71,7 @@ void vala_panel_applet_manager_reload_applets(ValaPanelAppletManager *self)
 			}
 			else
 			{
-				g_object_unref0(pl);
+				g_clear_object(&pl);
 				if (info)
 					vala_panel_applet_info_free(info);
 				applet_info_data_free(data);

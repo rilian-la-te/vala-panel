@@ -49,22 +49,22 @@ static void vala_panel_toplevel_config_init(ValaPanelToplevelConfig *self)
 static void vala_panel_configure_dialog_finalize(GObject *obj)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(obj);
-	g_object_unref0(self->monitors_box);
-	g_object_unref0(self->spin_iconsize);
-	g_object_unref0(self->spin_height);
-	g_object_unref0(self->store_monitors);
-	g_object_unref0(self->spin_width);
-	g_object_unref0(self->spin_corners);
-	g_object_unref0(self->font_selector);
-	g_object_unref0(self->font_box);
-	g_object_unref0(self->color_background);
-	g_object_unref0(self->color_foreground);
-	g_object_unref0(self->file_background);
-	g_object_unref0(self->plugin_list);
-	g_object_unref0(self->plugin_desc);
-	g_object_unref0(self->adding_button);
-	g_object_unref0(self->configure_button);
-	g_object_unref0(self->prefs_stack);
+	g_clear_object(&self->monitors_box);
+	g_clear_object(&self->spin_iconsize);
+	g_clear_object(&self->spin_height);
+	g_clear_object(&self->store_monitors);
+	g_clear_object(&self->spin_width);
+	g_clear_object(&self->spin_corners);
+	g_clear_object(&self->font_selector);
+	g_clear_object(&self->font_box);
+	g_clear_object(&self->color_background);
+	g_clear_object(&self->color_foreground);
+	g_clear_object(&self->file_background);
+	g_clear_object(&self->plugin_list);
+	g_clear_object(&self->plugin_desc);
+	g_clear_object(&self->adding_button);
+	g_clear_object(&self->configure_button);
+	g_clear_object(&self->prefs_stack);
 	G_OBJECT_CLASS(vala_panel_toplevel_config_parent_class)->finalize(obj);
 }
 
