@@ -85,18 +85,7 @@ static void update_toplevel_geometry_for_all(GdkDisplay *scr, void *data)
 		if (VALA_PANEL_IS_TOPLEVEL(il->data))
 		{
 			ValaPanelToplevel *panel = (ValaPanelToplevel *)il->data;
-			int monitor;
-			g_object_get(panel, VP_KEY_MONITOR, &monitor, NULL);
-			if (monitor < mons && !vala_panel_toplevel_is_initialized(panel) &&
-			    mons > 0)
-				start_ui(panel);
-			else if ((monitor >= mons && vala_panel_toplevel_is_initialized(panel)) ||
-			         mons == 0)
-				stop_ui(panel);
-			else
-			{
-				vala_panel_toplevel_update_geometry(panel);
-			}
+			vala_panel_update_visibility(panel, mons);
 		}
 	}
 }

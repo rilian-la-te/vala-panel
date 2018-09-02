@@ -33,6 +33,7 @@ static ValaPanelPlatform *platform = NULL;
 
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
                                                      PanelGravity e);
+static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self);
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
@@ -121,12 +122,12 @@ inline bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self)
 	return self->initialized;
 }
 
-G_GNUC_INTERNAL inline ValaPanelPlatform *vala_panel_toplevel_get_current_platform()
+G_GNUC_INTERNAL ValaPanelPlatform *vala_panel_toplevel_get_current_platform()
 {
 	return platform;
 }
 
-void stop_ui(ValaPanelToplevel *self)
+static void stop_ui(ValaPanelToplevel *self)
 {
 	if (self->pref_dialog != NULL)
 		gtk_dialog_response(self->pref_dialog, GTK_RESPONSE_CLOSE);
@@ -159,7 +160,7 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
 }
 
-void start_ui(ValaPanelToplevel *self)
+static void start_ui(ValaPanelToplevel *self)
 {
 	css_apply_from_resource(GTK_WIDGET(self),
 	                        "/org/vala-panel/lib/style.css",
@@ -205,7 +206,7 @@ void start_ui(ValaPanelToplevel *self)
 	self->initialized = true;
 }
 
-static void setup(ValaPanelToplevel *self, bool use_internal_values)
+static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 {
 	if (self->settings == NULL)
 	{
@@ -304,7 +305,8 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 	return self->context_menu;
 }
 
-bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e, gpointer obj)
+G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e,
+                                                              gpointer obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
 	ValaPanelApplet *pl     = NULL;
@@ -449,7 +451,7 @@ static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *d
 /**************************************************************************
  * Appearance -------------------------------------------------------------
  **************************************************************************/
-G_GNUC_INTERNAL void update_appearance(ValaPanelToplevel *self)
+static void update_appearance(ValaPanelToplevel *self)
 {
 	if (self->provider)
 		gtk_style_context_remove_provider(gtk_widget_get_style_context(GTK_WIDGET(self)),
@@ -571,7 +573,7 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	ret->mon               = mon;
 	ret->gravity           = edge;
-	setup(ret, true);
+	init_actions(ret, true);
 	return ret;
 }
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
@@ -589,7 +591,7 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	if (platform == NULL)
 		platform = plt;
-	setup(ret, false);
+	init_actions(ret, false);
 	return ret;
 }
 
@@ -677,10 +679,24 @@ static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *sel
 		gtk_main_iteration();
 }
 
-void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
+static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 {
 	vala_panel_toplevel_update_geometry_no_orient(self);
 	g_object_notify(G_OBJECT(self), "orientation");
+}
+
+void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
+{
+	int monitor;
+	g_object_get(panel, VP_KEY_MONITOR, &monitor, NULL);
+	if (monitor < mons && !vala_panel_toplevel_is_initialized(panel) && mons > 0)
+		start_ui(panel);
+	else if ((monitor >= mons && vala_panel_toplevel_is_initialized(panel)) || mons == 0)
+		stop_ui(panel);
+	else
+	{
+		vala_panel_toplevel_update_geometry(panel);
+	}
 }
 /****************************************************
  *         autohide : new version                   *
