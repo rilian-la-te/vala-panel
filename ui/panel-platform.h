@@ -30,8 +30,7 @@ G_BEGIN_DECLS
 
 G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
 
-typedef enum
-{
+typedef enum {
 	NORTH_LEFT   = 0,
 	NORTH_CENTER = 1,
 	NORTH_RIGHT  = 2,
@@ -46,8 +45,7 @@ typedef enum
 	EAST_DOWN    = 11
 } PanelGravity;
 
-typedef enum
-{
+typedef enum {
 	XXS  = 16,
 	XS   = 22,
 	S    = 24,
@@ -57,14 +55,6 @@ typedef enum
 	XXL  = 128,
 	XXXL = 256
 } PanelIconSizeHints;
-
-typedef enum
-{
-	AH_HIDDEN,
-	AH_WAITING,
-	AH_GRAB,
-	AH_VISIBLE,
-} PanelAutohideState;
 
 struct _ValaPanelPlatformClass
 {

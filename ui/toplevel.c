@@ -28,6 +28,12 @@
 #include <stdbool.h>
 
 static const int PERIOD = 200;
+typedef enum {
+	AH_HIDDEN  = 0,
+	AH_WAITING = 1,
+	AH_GRAB    = 2,
+	AH_VISIBLE = 3,
+} PanelAutohideState;
 
 static ValaPanelPlatform *platform = NULL;
 
@@ -715,6 +721,8 @@ static int timeout_func(ValaPanelToplevel *self)
 
 static void ah_show(ValaPanelToplevel *self)
 {
+	if (self->ah_state >= AH_GRAB)
+		return;
 	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	vala_panel_toplevel_update_geometry_no_orient(self);
@@ -723,7 +731,7 @@ static void ah_show(ValaPanelToplevel *self)
 
 static void ah_hide(ValaPanelToplevel *self)
 {
-	if (self->ah_state == AH_GRAB)
+	if (self->ah_state <= AH_GRAB)
 		return;
 	self->ah_state = AH_WAITING;
 	g_timeout_add_full(G_PRIORITY_HIGH, PERIOD, (GSourceFunc)timeout_func, self, NULL);
@@ -739,18 +747,13 @@ static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
 static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
 	ValaPanelToplevel *self = (ValaPanelToplevel *)w;
-	g_print("is_inferior = %d, is_virtual = %d\n",
-	        event->detail == GDK_NOTIFY_INFERIOR,
-	        event->detail == GDK_NOTIFY_VIRTUAL);
-	if (self->autohide &&
-	    (event->detail != GDK_NOTIFY_INFERIOR /*&& event->detail != GDK_NOTIFY_VIRTUAL*/))
+	if (self->autohide && (event->detail != GDK_NOTIFY_INFERIOR))
 		ah_hide(self);
 	return false;
 }
 
 static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
 {
-	g_print("grab_aquired=%d\n", !was_grabbed);
 	if (!was_grabbed)
 		self->ah_state = AH_GRAB;
 	else if (self->autohide)
@@ -1002,6 +1005,7 @@ void vala_panel_toplevel_init(ValaPanelToplevel *self)
 	self->font            = g_strdup("");
 	self->background_file = g_strdup("");
 	self->context_menu    = NULL;
+	self->ah_state        = AH_VISIBLE; // We starts as Visible to init autohide chain properly
 }
 
 void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
