@@ -738,10 +738,10 @@ static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
 	ValaPanelToplevel *self = (ValaPanelToplevel *)w;
 	g_print("is_inferior = %d, is_virtual = %d\n",
-	        event->detail == GDK_NOTIFY_INFERIOR,
-	        event->detail == GDK_NOTIFY_VIRTUAL);
+            event->detail == GDK_NOTIFY_INFERIOR,
+            event->detail == GDK_NOTIFY_VIRTUAL);
 	if (self->autohide &&
-	    (event->detail != GDK_NOTIFY_INFERIOR && event->detail != GDK_NOTIFY_VIRTUAL))
+        (event->detail != GDK_NOTIFY_INFERIOR /*&& event->detail != GDK_NOTIFY_VIRTUAL*/))
 		ah_hide(self);
 	return false;
 }
