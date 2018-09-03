@@ -723,6 +723,8 @@ static void ah_show(ValaPanelToplevel *self)
 
 static void ah_hide(ValaPanelToplevel *self)
 {
+	if (self->ah_state == AH_GRAB)
+		return;
 	self->ah_state = AH_WAITING;
 	g_timeout_add_full(G_PRIORITY_HIGH, PERIOD, (GSourceFunc)timeout_func, self, NULL);
 }
@@ -752,7 +754,10 @@ static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
 	if (!was_grabbed)
 		self->ah_state = AH_GRAB;
 	else if (self->autohide)
+	{
+		self->ah_state = AH_VISIBLE;
 		ah_hide(self);
+	}
 }
 
 /*
