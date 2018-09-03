@@ -724,7 +724,7 @@ static void ah_show(ValaPanelToplevel *self)
 static void ah_hide(ValaPanelToplevel *self)
 {
 	self->ah_state = AH_WAITING;
-	g_timeout_add_full(G_PRIORITY_HIGH,PERIOD, (GSourceFunc)timeout_func, self,NULL);
+	g_timeout_add_full(G_PRIORITY_HIGH, PERIOD, (GSourceFunc)timeout_func, self, NULL);
 }
 
 static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
@@ -737,6 +737,9 @@ static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
 static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
 	ValaPanelToplevel *self = (ValaPanelToplevel *)w;
+	g_print("is_inferior = %d, is_virtual = %d\n",
+	        event->detail == GDK_NOTIFY_INFERIOR,
+	        event->detail == GDK_NOTIFY_VIRTUAL);
 	if (self->autohide &&
 	    (event->detail != GDK_NOTIFY_INFERIOR && event->detail != GDK_NOTIFY_VIRTUAL))
 		ah_hide(self);
@@ -745,6 +748,7 @@ static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 
 static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
 {
+	g_print("grab_aquired=%d\n", !was_grabbed);
 	if (!was_grabbed)
 		self->ah_state = AH_GRAB;
 	else if (self->autohide)
@@ -932,7 +936,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XS;
 		else
 			self->icon_size_hints = XXS;
-		appearance_update_required = true;
+		appearance_update_required    = true;
 		break;
 	case PROP_BG_FILE:
 		g_free0(self->background_file);
@@ -948,7 +952,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
 		if (-1 <= g_value_get_int(value))
-			self->mon = g_value_get_int(value);
+			self->mon        = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
 	case PROP_DOCK:
@@ -1026,14 +1030,14 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                                       0,
 	                                       (GParamFlags)(G_PARAM_STATIC_STRINGS |
 	                                                     G_PARAM_READABLE | G_PARAM_WRITABLE));
-	pspecs[PROP_WIDTH]  = g_param_spec_int(VP_KEY_WIDTH,
-                                              VP_KEY_WIDTH,
-                                              VP_KEY_WIDTH,
-                                              G_MININT,
-                                              G_MAXINT,
-                                              0,
-                                              (GParamFlags)(G_PARAM_STATIC_STRINGS |
-                                                            G_PARAM_READABLE | G_PARAM_WRITABLE));
+	pspecs[PROP_WIDTH] = g_param_spec_int(VP_KEY_WIDTH,
+	                                      VP_KEY_WIDTH,
+	                                      VP_KEY_WIDTH,
+	                                      G_MININT,
+	                                      G_MAXINT,
+	                                      0,
+	                                      (GParamFlags)(G_PARAM_STATIC_STRINGS |
+	                                                    G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	pspecs[PROP_USE_FONT] =
 	    g_param_spec_boolean(VP_KEY_USE_FONT,
