@@ -710,7 +710,7 @@ static int timeout_func(ValaPanelToplevel *self)
 		vala_panel_toplevel_update_geometry_no_orient(self);
 		self->ah_state = AH_HIDDEN;
 	}
-	return false;
+	return G_SOURCE_REMOVE;
 }
 
 static void ah_show(ValaPanelToplevel *self)
@@ -738,10 +738,10 @@ static bool leave_notify_event(GtkWidget *w, GdkEventCrossing *event)
 {
 	ValaPanelToplevel *self = (ValaPanelToplevel *)w;
 	g_print("is_inferior = %d, is_virtual = %d\n",
-            event->detail == GDK_NOTIFY_INFERIOR,
-            event->detail == GDK_NOTIFY_VIRTUAL);
+	        event->detail == GDK_NOTIFY_INFERIOR,
+	        event->detail == GDK_NOTIFY_VIRTUAL);
 	if (self->autohide &&
-        (event->detail != GDK_NOTIFY_INFERIOR /*&& event->detail != GDK_NOTIFY_VIRTUAL*/))
+	    (event->detail != GDK_NOTIFY_INFERIOR /*&& event->detail != GDK_NOTIFY_VIRTUAL*/))
 		ah_hide(self);
 	return false;
 }
