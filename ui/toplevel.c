@@ -724,7 +724,7 @@ static void ah_show(ValaPanelToplevel *self)
 static void ah_hide(ValaPanelToplevel *self)
 {
 	self->ah_state = AH_WAITING;
-	g_timeout_add(PERIOD, (GSourceFunc)timeout_func, self);
+	g_timeout_add_full(G_PRIORITY_HIGH,PERIOD, (GSourceFunc)timeout_func, self,NULL);
 }
 
 static bool enter_notify_event(GtkWidget *w, GdkEventCrossing *event)
