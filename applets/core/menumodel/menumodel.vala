@@ -205,14 +205,14 @@ public class Menu: Applet
     private void menumodel_widget_destroy()
     {
         this.background_widget = this;
-        if (int_menu != null)
+        if (int_menu is Widget)
         {
             if(button != null)
                 int_menu.detach();
             int_menu.destroy();
             int_menu = null;
         }
-        if (button != null)
+        if (button is Widget)
         {
             button.destroy();
             button = null;
