@@ -30,7 +30,7 @@ bool vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_CLASS(self)->can_strut(self, top);
-	return -1;
+	return false;
 }
 
 void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
