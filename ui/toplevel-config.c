@@ -583,7 +583,10 @@ static void listbox_new_applet_row_activated(GtkListBox *box, GtkListBoxRow *row
 static bool listbox_new_filter(GtkListBoxRow *row, void *data)
 {
 	AppletInfoData *d = config_row_get_info_data(row);
-	return !vala_panel_applet_info_is_exclusive(d->info) || (d->count < 1);
+	bool ret          = false;
+	if ((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info))
+		ret = true;
+	return ret;
 }
 
 static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self)
