@@ -55,7 +55,6 @@ static GParamSpec *vala_panel_toplevel_config_properties[NUM_PROPERTIES];
 static void state_configure_monitor(GSimpleAction *act, GVariant *param, void *data);
 static void init_plugin_list(ValaPanelToplevelConfig *self);
 static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self);
-static void update_widget_position_keys(ValaPanelToplevelConfig *self);
 static void on_remove_plugin(GtkButton *btn, void *user_data);
 
 void vala_panel_toplevel_config_select_applet(ValaPanelToplevelConfig *self, const char *uuid)
@@ -543,19 +542,6 @@ static void on_about_plugin(GtkButton *btn, void *data)
 	vala_panel_applet_info_show_about_dialog(info);
 }
 
-static void update_widget_position_keys(ValaPanelToplevelConfig *self)
-{
-	ValaPanelLayout *layout       = vala_panel_toplevel_get_layout(self->_toplevel);
-	g_autoptr(GList) applets_list = vala_panel_layout_get_applets_list(layout);
-	for (GList *l = applets_list; l != NULL; l = g_list_next(l))
-	{
-		ValaPanelApplet *applet  = VALA_PANEL_APPLET(l->data);
-		uint idx                 = vala_panel_layout_get_applet_position(layout, applet);
-		ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(applet);
-		g_settings_set_uint(s->common, VP_KEY_POSITION, idx);
-	}
-}
-
 static int listbox_new_name_sort(GtkListBoxRow *before, GtkListBoxRow *after, void *user_data)
 {
 	AppletInfoData *before_info = before ? config_row_get_info_data(before) : NULL;
@@ -589,11 +575,14 @@ static bool listbox_new_filter(GtkListBoxRow *row, void *data)
 	return ret;
 }
 
-static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self)
+static void available_plugins_reload(ValaPanelToplevelConfig *self)
 {
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
 	vp_applet_manager_reload_applets(vala_panel_layout_get_manager());
+	gtk_container_foreach(GTK_CONTAINER(self->listbox_new_applet),
+	                      (GtkCallback)gtk_widget_destroy,
+	                      NULL);
 	GList *all_types = vp_applet_manager_get_all_types(vala_panel_layout_get_manager());
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
@@ -603,6 +592,11 @@ static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self)
 		gtk_container_add(self->listbox_new_applet, row);
 	}
 	g_list_free(all_types);
+}
+
+static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self)
+{
+	available_plugins_reload(self);
 	gtk_list_box_set_sort_func(self->listbox_new_applet, listbox_new_name_sort, self, NULL);
 	gtk_list_box_set_filter_func(self->listbox_new_applet,
 	                             (GtkListBoxFilterFunc)listbox_new_filter,
@@ -619,6 +613,7 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 		on_plugin_list_row_selected(self->plugin_list, row, self);
 		return;
 	}
+	available_plugins_reload(self);
 	gtk_widget_set_sensitive(self->about_button, false);
 	gtk_widget_set_sensitive(self->up_button, false);
 	gtk_widget_set_sensitive(self->down_button, false);
