@@ -19,9 +19,13 @@ TODO
 *TODO for 0.5.0*
  * [x] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
  * [x] Implement free applet actions (not only menu)
+ * [x] Made pack-type useful
+
+*TODO for 0.6.0*
  * [ ] Be prepared for GTK4
  * [ ] Replace XEmbed to proxy and move it to extras
- * [ ] Made pack-type useful
+ * [ ] Remove all Solus code, rewrite IconTasks
+ * [ ] Implement Layer Shell Wayland backend
 
 *Some notes about realization*
 

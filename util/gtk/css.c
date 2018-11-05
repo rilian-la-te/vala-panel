@@ -25,7 +25,7 @@
 
 #include "css.h"
 
-void css_apply_with_class(GtkWidget *widget, const gchar *css, const gchar *klass, bool remove)
+void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass, bool remove)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
@@ -44,7 +44,7 @@ void css_apply_with_class(GtkWidget *widget, const gchar *css, const gchar *klas
 	}
 }
 
-gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
+char *css_apply_from_file(GtkWidget *widget, const char *file)
 {
 	g_autoptr(GError) error  = NULL;
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
@@ -53,7 +53,7 @@ gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
 	gtk_css_provider_load_from_path(provider, file, &error);
 	if (error)
 	{
-		gchar *returnie = g_strdup(error->message);
+		char *returnie = g_strdup(error->message);
 		return returnie;
 	}
 	gtk_style_context_add_provider(context,
@@ -62,14 +62,14 @@ gchar *css_apply_from_file(GtkWidget *widget, const gchar *file)
 	return NULL;
 }
 
-gchar *css_apply_from_file_to_app(const gchar *file)
+char *css_apply_from_file_to_app(const char *file)
 {
 	g_autoptr(GError) error            = NULL;
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_path(provider, file, &error);
 	if (error)
 	{
-		gchar *returnie = g_strdup(error->message);
+		char *returnie = g_strdup(error->message);
 		return returnie;
 	}
 	gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
@@ -78,10 +78,10 @@ gchar *css_apply_from_file_to_app(const gchar *file)
 	return NULL;
 }
 
-inline gchar *css_generate_background(const char *filename, GdkRGBA *color)
+inline char *css_generate_background(const char *filename, GdkRGBA *color)
 {
-	gchar *returnie;
-	g_autofree gchar *str = gdk_rgba_to_string(color);
+	char *returnie;
+	g_autofree char *str = gdk_rgba_to_string(color);
 	if (!filename)
 		returnie = g_strdup_printf(
 		    ".-vala-panel-background{\n"
@@ -99,10 +99,10 @@ inline gchar *css_generate_background(const char *filename, GdkRGBA *color)
 	return returnie;
 }
 
-inline gchar *css_generate_font_color(GdkRGBA color)
+inline char *css_generate_font_color(GdkRGBA color)
 {
-	g_autofree gchar *color_str = gdk_rgba_to_string(&color);
-	gchar *ret;
+	g_autofree char *color_str = gdk_rgba_to_string(&color);
+	char *ret;
 	ret = g_strdup_printf(
 	    ".-vala-panel-font-color{\n"
 	    "color: %s;\n"
@@ -110,7 +110,7 @@ inline gchar *css_generate_font_color(GdkRGBA color)
 	    color_str);
 	return ret;
 }
-inline gchar *css_generate_font_size(gint size)
+inline char *css_generate_font_size(gint size)
 {
 	return g_strdup_printf(
 	    ".-vala-panel-font-size{\n"
@@ -118,7 +118,7 @@ inline gchar *css_generate_font_size(gint size)
 	    "}",
 	    size);
 }
-inline gchar *css_generate_font_label(gfloat size, bool is_bold)
+inline char *css_generate_font_label(gfloat size, bool is_bold)
 {
 	gint size_factor = (gint)round(size * 100);
 	return g_strdup_printf(
@@ -130,9 +130,9 @@ inline gchar *css_generate_font_label(gfloat size, bool is_bold)
 	    is_bold ? "bold" : "normal");
 }
 
-inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
+inline char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
 {
-	gchar *returnie;
+	char *returnie;
 	GdkRGBA color, active_color;
 	gtk_style_context_get_color(gtk_widget_get_style_context(widget),
 	                            gtk_widget_get_state_flags(widget),
@@ -181,7 +181,7 @@ inline gchar *css_generate_flat_button(GtkWidget *widget, GtkPositionType direct
 	return returnie;
 }
 
-gchar *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass)
+char *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);

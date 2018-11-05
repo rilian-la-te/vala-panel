@@ -35,6 +35,7 @@ struct _ValaPanelToplevelConfig
 	GtkStack *prefs_stack;
 	ValaPanelToplevel *_toplevel;
 	GtkComboBox *monitors_box;
+	GtkListStore *store_monitors;
 	GtkSpinButton *spin_iconsize;
 	GtkSpinButton *spin_height;
 	GtkSpinButton *spin_width;
@@ -44,12 +45,16 @@ struct _ValaPanelToplevelConfig
 	GtkColorButton *color_background;
 	GtkColorButton *color_foreground;
 	GtkFileChooserButton *file_background;
-	GtkTreeView *plugin_list;
-	GtkLabel *plugin_desc;
+	GtkListBox *plugin_list;
+	GtkStack *applet_info_stack;
+	GtkListBox *listbox_new_applet;
 	GtkButton *adding_button;
-	GtkButton *configure_button;
-	GtkListStore *store_monitors;
+	GtkButton *up_button;
+	GtkButton *down_button;
+	GtkButton *about_button;
 };
+
+void vala_panel_toplevel_config_select_applet(ValaPanelToplevelConfig *self, const char *uuid);
 
 G_END_DECLS
 

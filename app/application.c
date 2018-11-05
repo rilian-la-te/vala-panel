@@ -241,7 +241,7 @@ static int vala_panel_app_command_line(GApplication *application,
 		g_object_set(G_OBJECT(application), "profile", profile_name, NULL);
 	if (g_variant_dict_lookup(options, "command", "s", &ccommand))
 	{
-		g_autofree gchar *name    = NULL;
+		g_autofree char *name     = NULL;
 		g_autoptr(GVariant) param = NULL;
 		g_autoptr(GError) err     = NULL;
 		g_action_parse_detailed_name(ccommand, &name, &param, &err);
@@ -253,7 +253,7 @@ static int vala_panel_app_command_line(GApplication *application,
 		{
 			g_auto(GStrv) listv =
 			    g_action_group_list_actions(G_ACTION_GROUP(application));
-			g_autofree gchar *list = g_strjoinv(" ", listv);
+			g_autofree char *list = g_strjoinv(" ", listv);
 			g_application_command_line_printerr(
 			    commandline,
 			    _("%s: invalid command - %s. Doing nothing.\nValid commands: %s\n"),
@@ -266,7 +266,7 @@ static int vala_panel_app_command_line(GApplication *application,
 	{
 		if (g_strv_length(cremote) != 2)
 		{
-			g_autofree gchar *list = g_strjoinv(" ", cremote);
+			g_autofree char *list = g_strjoinv(" ", cremote);
 			g_application_command_line_printerr(
 			    commandline,
 			    _("%s: invalid remote command - %s. Remote commands should have "

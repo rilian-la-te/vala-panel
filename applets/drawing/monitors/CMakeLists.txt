@@ -16,6 +16,8 @@ add_library (${PLUGIN_NAME} MODULE
     mem.h
     swap.c
     swap.h
+    net.c
+    net.h
 )
 
 target_link_libraries (${PLUGIN_NAME} valapanel)

@@ -12,9 +12,10 @@ cache:
     - _ccache/
 
 build-main:
-  image: pritunl/archlinux
+  image: base/devel
   stage: build
   script:
+   - pacman -Sy
    - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
    - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
    - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
@@ -29,9 +30,10 @@ build-main:
 
 
 release-main:
-  image: pritunl/archlinux
+  image: base/devel
   stage: release
   script:
+    - pacman -Sy
     - pacman -S --noconfirm python3 python-pip
     - pip3 install gitlab_release
     - python3 -m gitlab_release ${PRIVATE_TOKEN} build/vala-panel*.tar.xz

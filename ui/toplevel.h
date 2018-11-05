@@ -37,7 +37,6 @@ G_DECLARE_FINAL_TYPE(ValaPanelToplevel, vala_panel_toplevel, VALA_PANEL, TOPLEVE
 ValaPanelCoreSettings *vala_panel_toplevel_get_core_settings();
 const char *vala_panel_toplevel_get_uuid(ValaPanelToplevel *self);
 bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self);
-G_GNUC_INTERNAL ValaPanelPlatform *vala_panel_toplevel_get_current_platform();
 
 ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
                                            const char *uid);
@@ -47,8 +46,8 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 
 void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons);
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
-G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *b,
-                                                              gpointer obj);
+G_GNUC_INTERNAL void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self,
+                                                          const char *uuid);
 void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self);
 
 G_END_DECLS

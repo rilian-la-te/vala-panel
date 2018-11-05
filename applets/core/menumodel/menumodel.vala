@@ -209,12 +209,14 @@ public class Menu: Applet
         {
             if(button != null)
                 int_menu.detach();
-            int_menu.destroy();
+            if(int_menu is Widget)
+                int_menu.destroy();
             int_menu = null;
         }
         if (button is Widget)
         {
-            button.destroy();
+            if(button is Widget)
+                button.destroy();
             button = null;
         }
         if (app_monitor != null)

@@ -45,6 +45,8 @@ add_library (${LIBNAME} SHARED
     ${LIBVALAPANEL_HEADERS}
     ${GLIB_RESOURCES_LIB}
     definitions.h
+    private.h
+    applet-manager.h
 )
 
 target_link_libraries (${LIBNAME} util-gtk)

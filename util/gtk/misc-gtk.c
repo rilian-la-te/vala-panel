@@ -124,7 +124,7 @@ void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper
 void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value)
 {
 	gtk_scale_button_set_value(b, value);
-	g_autofree gchar *str = g_strdup_printf("%d", value);
+	g_autofree char *str = g_strdup_printf("%d", value);
 	gtk_button_set_label(GTK_BUTTON(b), str);
 }
 

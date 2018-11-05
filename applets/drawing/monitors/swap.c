@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "mem.h"
+#include "swap.h"
 
 /*
  * Memory monitor functions

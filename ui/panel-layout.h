@@ -30,9 +30,9 @@ G_BEGIN_DECLS
 
 typedef enum
 {
-	PACK_START  = 0,
-	PACK_CENTER = 2,
-	PACK_END    = 1,
+	PACK_START = GTK_PACK_START,
+	PACK_END   = GTK_PACK_END,
+	PACK_CENTER,
 } ValaPanelAppletPackType;
 
 G_DECLARE_FINAL_TYPE(ValaPanelLayout, vala_panel_layout, VALA_PANEL, LAYOUT, GtkBox)
@@ -41,17 +41,21 @@ ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation or
 ValaPanelLayout *vala_panel_layout_construct(GType object_type, ValaPanelToplevel *top,
                                              GtkOrientation orient, gint spacing);
 void vala_panel_layout_init_applets(ValaPanelLayout *self);
-void vala_panel_layout_add_applet(ValaPanelLayout *self, const gchar *type);
-void vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
-                                    ValaPanelUnitSettings *s);
+ValaPanelApplet *vala_panel_layout_insert_applet(ValaPanelLayout *self, const char *type,
+                                                 ValaPanelAppletPackType pack, uint pos);
+ValaPanelApplet *vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
+                                                ValaPanelUnitSettings *s);
 void vala_panel_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet);
-void vala_panel_layout_applet_destroyed(ValaPanelLayout *self, const char *uuid);
 void vala_panel_layout_applets_repack(ValaPanelLayout *self);
 void vala_panel_layout_update_applet_positions(ValaPanelLayout *self);
+bool vala_panel_layout_can_move_to_direction(ValaPanelLayout *self, ValaPanelApplet *prev,
+                                             ValaPanelApplet *next, GtkPackType direction);
+void vala_panel_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelApplet *prev,
+                                            ValaPanelApplet *next, GtkPackType direction);
 GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self);
 ValaPanelUnitSettings *vala_panel_layout_get_applet_settings(ValaPanelApplet *pl);
+ValaPanelAppletPackType vala_panel_layout_get_applet_pack_type(ValaPanelApplet *pl);
 unsigned int vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl);
-void vala_panel_layout_set_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl, int pos);
 const char *vala_panel_layout_get_toplevel_id(ValaPanelLayout *self);
 ValaPanelAppletManager *vala_panel_layout_get_manager();
 

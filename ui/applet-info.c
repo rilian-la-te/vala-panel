@@ -217,7 +217,7 @@ bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info)
 	return ainfo->expandable;
 }
 
-void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
+static GtkDialog *vala_panel_applet_info_get_about_dialog(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	g_autoptr(GtkBuilder) builder =
@@ -232,6 +232,21 @@ void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
 	gtk_about_dialog_set_website(d, ainfo->website);
 	gtk_about_dialog_set_version(d, ainfo->version);
 	gtk_window_set_position(GTK_WINDOW(d), GTK_WIN_POS_CENTER);
+	return GTK_DIALOG(d);
+}
+
+GtkWidget *vala_panel_applet_info_get_about_widget(ValaPanelAppletInfo *info)
+{
+	GtkDialog *d         = vala_panel_applet_info_get_about_dialog(info);
+	GtkWidget *content   = gtk_dialog_get_content_area(d);
+	GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(content));
+	gtk_container_remove(parent, content);
+	return content;
+}
+
+void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
+{
+	GtkDialog *d = vala_panel_applet_info_get_about_dialog(info);
 	gtk_window_present(GTK_WINDOW(d));
 	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);

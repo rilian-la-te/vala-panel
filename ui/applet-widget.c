@@ -4,6 +4,8 @@
 #include "toplevel.h"
 #include "util-gtk.h"
 
+#include "private.h"
+
 typedef struct
 {
 	GtkDialog *dialog;
@@ -27,11 +29,12 @@ static void activate_remote(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_about(GSimpleAction *act, GVariant *param, gpointer self);
 
-static const GActionEntry entries[] =
-    { { VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL } };
+static const GActionEntry entries[] = {
+	{ VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL }
+};
 
 enum
 {
@@ -83,6 +86,13 @@ void vala_panel_applet_init_background(ValaPanelApplet *self)
 	css_apply_with_class(p->background, css, "-vala-panel-background", false);
 }
 
+GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self)
+{
+	GtkWidget *ui = VALA_PANEL_APPLET_GET_CLASS(self)->get_settings_ui(self);
+	gtk_widget_show(ui);
+	return ui;
+}
+
 void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
@@ -112,9 +122,11 @@ bool vala_panel_applet_is_configurable(ValaPanelApplet *self)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return g_action_group_get_action_enabled(G_ACTION_GROUP(p->grp), "configure");
 }
-static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self)
+static void activate_configure(GSimpleAction *act, GVariant *param, gpointer data)
 {
-	vala_panel_applet_show_config_dialog(VALA_PANEL_APPLET(self));
+	ValaPanelApplet *self = VALA_PANEL_APPLET(data);
+	vala_panel_toplevel_configure_applet(vala_panel_applet_get_toplevel(self),
+	                                     vala_panel_applet_get_uuid(self));
 }
 static void activate_remote(GSimpleAction *act, GVariant *param, gpointer obj)
 {
@@ -125,9 +137,9 @@ static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
 {
 	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletInfo *pl_info =
-	    vala_panel_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
-	                                              self,
-	                                              vala_panel_toplevel_get_core_settings());
+	    vp_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
+	                                      self,
+	                                      vala_panel_toplevel_get_core_settings());
 	vala_panel_applet_info_show_about_dialog(pl_info);
 }
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)

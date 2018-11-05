@@ -29,6 +29,7 @@ bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command
 bool vala_panel_applet_is_configurable(ValaPanelApplet *self);
 void vala_panel_applet_init_background(ValaPanelApplet *self);
 void vala_panel_applet_show_config_dialog(ValaPanelApplet *self);
+GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self);
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self);
 void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w);
 void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);

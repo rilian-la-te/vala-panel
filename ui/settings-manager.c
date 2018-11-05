@@ -31,7 +31,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 {
 	ValaPanelUnitSettings *created_settings = g_slice_new(ValaPanelUnitSettings);
 	created_settings->uuid                  = g_strdup(uuid);
-	g_autofree gchar *path =
+	g_autofree char *path =
 	    g_strdup_printf("%s%s/", settings->root_path, created_settings->uuid);
 	created_settings->type =
 	    g_settings_new_with_backend_and_path(VALA_PANEL_OBJECT_SCHEMA, settings->backend, path);
@@ -54,7 +54,7 @@ ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *setti
 	    g_settings_schema_source_lookup(source, tname, true);
 
 	/* Old way to find a schema */
-	g_autofree gchar *id = g_strdup_printf("%s.%s", settings->root_schema, tname);
+	g_autofree char *id = g_strdup_printf("%s.%s", settings->root_schema, tname);
 
 	g_autoptr(GSettingsSchema) old_schema = g_settings_schema_source_lookup(source, id, true);
 	if (new_schema != NULL)
@@ -154,7 +154,7 @@ static void vala_panel_core_settings_sync(ValaPanelCoreSettings *settings)
 static ValaPanelUnitSettings *vala_panel_core_settings_load_unit_settings(
     ValaPanelCoreSettings *settings, const char *uuid)
 {
-	g_autofree gchar *path = g_strdup_printf("%s%s/", settings->root_path, uuid);
+	g_autofree char *path = g_strdup_printf("%s%s/", settings->root_path, uuid);
 	g_autoptr(GSettings) s =
 	    g_settings_new_with_backend_and_path(VALA_PANEL_OBJECT_SCHEMA, settings->backend, path);
 	int en = g_settings_get_enum(s, VALA_PANEL_OBJECT_TYPE);

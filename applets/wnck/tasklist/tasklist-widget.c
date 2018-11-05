@@ -2270,7 +2270,7 @@ static gint xfce_tasklist_button_compare(gconstpointer child_a, gconstpointer ch
 	XfceTasklist *tasklist = XFCE_TASKLIST(user_data);
 	gint retval;
 	WnckClassGroup *class_group_a, *class_group_b;
-	const gchar *name_a, *name_b;
+	const char *name_a, *name_b;
 	WnckWorkspace *workspace_a, *workspace_b;
 	gint num_a, num_b;
 
@@ -2432,8 +2432,8 @@ static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistCh
 
 static void xfce_tasklist_button_name_changed(WnckWindow *window, XfceTasklistChild *child)
 {
-	const gchar *name;
-	gchar *label = NULL;
+	const char *name;
+	char *label = NULL;
 
 	g_return_if_fail(window == NULL || child->window == window);
 	g_return_if_fail(WNCK_IS_WINDOW(child->window));
@@ -3437,8 +3437,8 @@ static bool xfce_tasklist_group_button_button_press_event(GtkWidget *button, Gdk
 static void xfce_tasklist_group_button_name_changed(WnckClassGroup *class_group,
                                                     XfceTasklistChild *group_child)
 {
-	const gchar *name;
-	gchar *label;
+	const char *name;
+	char *label;
 	guint n_windows;
 	GSList *li;
 	XfceTasklistChild *child;

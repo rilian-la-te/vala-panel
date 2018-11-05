@@ -31,7 +31,7 @@ bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent
 
 void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data)
 {
-	const gchar *id                 = g_variant_get_string(param, NULL);
+	const char *id                  = g_variant_get_string(param, NULL);
 	g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new(id);
 	GtkApplication *app             = GTK_APPLICATION(user_data);
 	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);

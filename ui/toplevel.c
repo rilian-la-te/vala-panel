@@ -44,10 +44,11 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
 
-static const GActionEntry panel_entries[] =
-    { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
-      { "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
-      { "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } } };
+static const GActionEntry panel_entries[] = {
+	{ "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
+	{ "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
+	{ "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } }
+};
 
 enum
 {
@@ -350,6 +351,20 @@ void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
 		self->pref_dialog =
 		    g_object_new(vala_panel_toplevel_config_get_type(), "toplevel", self, NULL);
 	gtk_stack_set_visible_child_name(self->pref_dialog->prefs_stack, page);
+	gtk_window_present(self->pref_dialog);
+	g_signal_connect_swapped(self->pref_dialog,
+	                         "hide",
+	                         G_CALLBACK(vala_panel_toplevel_destroy_pref_dialog),
+	                         self);
+}
+
+G_GNUC_INTERNAL void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid)
+{
+	if (self->pref_dialog == NULL)
+		self->pref_dialog =
+		    g_object_new(vala_panel_toplevel_config_get_type(), "toplevel", self, NULL);
+	gtk_stack_set_visible_child_name(self->pref_dialog->prefs_stack, "applets");
+	vala_panel_toplevel_config_select_applet(self->pref_dialog, uuid);
 	gtk_window_present(self->pref_dialog);
 	g_signal_connect_swapped(self->pref_dialog,
 	                         "hide",
