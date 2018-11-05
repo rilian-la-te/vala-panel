@@ -82,6 +82,46 @@ ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation or
 	                                      NULL));
 }
 
+static void update_widget_position_keys(ValaPanelLayout *layout, GtkContainer *parent)
+{
+	g_autoptr(GList) applets_list = gtk_container_get_children(parent);
+	for (GList *l = applets_list; l != NULL; l = g_list_next(l))
+	{
+		ValaPanelApplet *applet = VALA_PANEL_APPLET(l->data);
+		uint idx;
+		gtk_container_child_get(GTK_CONTAINER(parent),
+		                        GTK_WIDGET(applet),
+		                        VP_KEY_POSITION,
+		                        &idx,
+		                        NULL);
+		ValaPanelUnitSettings *s = vala_panel_layout_get_applet_settings(applet);
+		g_settings_set_uint(s->common, VP_KEY_POSITION, idx);
+	}
+}
+
+static void restore_positions(ValaPanelLayout *layout)
+{
+	update_widget_position_keys(layout, layout->start_box);
+	update_widget_position_keys(layout, layout->center_box);
+	update_widget_position_keys(layout, layout->end_box);
+}
+
+static void restore_positions_by_pack(ValaPanelLayout *layout, ValaPanelAppletPackType pack)
+{
+	switch (pack)
+	{
+	case PACK_START:
+		update_widget_position_keys(layout, layout->start_box);
+		break;
+	case PACK_CENTER:
+		update_widget_position_keys(layout, layout->center_box);
+		break;
+	case PACK_END:
+		update_widget_position_keys(layout, layout->end_box);
+		break;
+	}
+}
+
 void vala_panel_layout_init_applets(ValaPanelLayout *self)
 {
 	g_auto(GStrv) core_units =
@@ -404,6 +444,10 @@ void vala_panel_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelAppl
 	}
 	self->suppress_sorting = false;
 	vala_panel_layout_update_applet_positions(self);
+	self->suppress_sorting = true;
+	restore_positions_by_pack(self, prev_pack);
+	restore_positions_by_pack(self, next_pack);
+	self->suppress_sorting = false;
 }
 
 static void vala_panel_layout_applets_reposition_after(ValaPanelLayout *self,
