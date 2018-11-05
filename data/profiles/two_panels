@@ -15,7 +15,7 @@ auto-hide=false
 
 [wcm]
 toplevel-id='toplevel2'
-plugin-type='wincmd'
+plugin-type='org.valapanel.wincmd'
 position=0
 left-button-command='iconify'
 middle-button-command='shade'
@@ -24,7 +24,7 @@ toggle-iconify-and-shade=true
 
 [sep1]
 toplevel-id='toplevel2'
-plugin-type='separator'
+plugin-type='org.valapanel.separator'
 position=1
 show-separator=false
 size=4
@@ -33,12 +33,12 @@ size=4
 toplevel-id='toplevel2'
 plugin-type='org.xfce.tasklist'
 position=2
-is-expanded=true
 
 [pgr]
 toplevel-id='toplevel2'
-plugin-type='pager'
-position=3
+plugin-type='org.valapanel.pager'
+position=0
+pack-type='end'
 
 [toplevel1]
 object-type='toplevel'
@@ -50,14 +50,14 @@ alignment='center'
 
 [sep2]
 toplevel-id='toplevel1'
-plugin-type='separator'
+plugin-type='org.valapanel.separator'
 position=0
 show-separator=false
 size=2
 
 [menubar]
 toplevel-id='toplevel1'
-plugin-type='menumodel'
+plugin-type='org.valapanel.menumodel'
 position=1
 icon-name='start-here-symbolic'
 is-internal-menu=true
@@ -66,29 +66,22 @@ is-menu-bar=true
 
 [launch]
 toplevel-id='toplevel1'
-plugin-type='launchbar'
+plugin-type='org.valapanel.launchbar'
 launch-buttons=['pcmanfm.desktop', 'gnome-terminal.desktop', 'firefox.desktop']
 position=2
 
-[sep3]
-toplevel-id='toplevel1'
-plugin-type='separator'
-is-expanded=true
-show-separator=false
-size=2
-position=3
-
 [xembed]
 toplevel-id='toplevel1'
-plugin-type='xembed'
-position=4
+plugin-type='org.valapanel.xembed'
+pack-type='end'
+position=0
 
 [clock]
 toplevel-id='toplevel1'
-plugin-type='clock'
+plugin-type='org.valapanel.clock'
 clock-format='%R'
 tooltip-format='%A %x'
 bold-font=false
 icon-only=false
 center-text=true
-position=5
+pack-type='end'

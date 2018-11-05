@@ -1,0 +1,67 @@
+[core-version-1]
+units=['toplevel1', 'menu', 'appmenu', 'clock', 'xembed', 'sntray']
+
+[global]
+is-dark=false
+is-custom=false
+logout-command='openbox --exit'
+shutdown-command='systemctl shutdown -h now'
+
+[toplevel1]
+object-type='toplevel'
+strut=true
+monitor=-1
+background-type='image'
+panel-gravity='north-left'
+height=26
+icon-size=24
+auto-hide=false
+enable-font-color=true
+font-color='rgb(255,255,255)'
+autohide=false
+
+[menu]
+toplevel-id='toplevel1'
+plugin-type='menumodel'
+position=0
+icon-name='start-here-symbolic'
+menu-name=nothing
+is-internal-menu=true
+is-system-menu=true
+is-menu-bar=false
+
+object-type='applet'
+
+[clock]
+toplevel-id='toplevel1'
+plugin-type='org.valapanel.clock'
+clock-format='%a %R'
+tooltip-format='%A %x'
+bold-font=true
+position=0
+
+object-type='applet'
+pack-type='center'
+
+[appmenu]
+object-type='applet'
+plugin-type='org.valapanel.appmenu'
+toplevel-id='toplevel1'
+pack-type='start'
+position=1
+compact-mode=true
+bold-application-name=true
+
+[sntray]
+object-type='applet'
+plugin-type='org.valapanel.sntray'
+toplevel-id='toplevel1'
+pack-type='end'
+position=1
+
+[xembed]
+object-type='applet'
+plugin-type='org.valapanel.xembed'
+toplevel-id='toplevel1'
+pack-type='end'
+position=0

@@ -17,32 +17,28 @@ icon-size=22
 
 [menumodel]
 toplevel-id='appmenu'
-plugin-type='menumodel'
+plugin-type='org.valapanel.menumodel'
 position=0
 is-menu-bar=false
+pack-type='start'
 
 [appmenu-valapanel]
 toplevel-id='appmenu'
-plugin-type='appmenu'
+plugin-type='org.valapanel.appmenu'
 position=1
-
-[separator]
-toplevel-id='appmenu'
-plugin-type='separator'
-position=2
-is-expanded=true
-show-separator=false
+pack-type='start'
 
 [xembed]
 toplevel-id='appmenu'
-plugin-type='xembed'
-position=3
+plugin-type='org.valapanel.xembed'
+position=0
+pack-type='end'
 
 [sntray]
 toplevel-id='appmenu'
-plugin-type='sntray-valapanel'
-is-expanded=false
-position=4
+plugin-type='org.valapanel.sntray'
+pack-type='end'
+position=1
 show-application-status=true
 show-communications=true
 show-system=true
@@ -55,7 +51,8 @@ filter-override={}
 
 [clock]
 toplevel-id='appmenu'
-plugin-type='clock'
-position=5
+plugin-type='org.valapanel.clock'
+position=2
+pack-type='end'
 clock-format='%R:%S'
 
