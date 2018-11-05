@@ -103,7 +103,7 @@ public void g_io_pager_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(PagerApplet),"pager",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(PagerApplet),"org.valapanel.pager",10);
 }
 
 public void g_io_pager_unload(GLib.IOModule module)

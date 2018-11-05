@@ -283,7 +283,7 @@ public void g_io_launchbar_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.AppletImpl),"launchbar",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.AppletImpl),"org.valapanel.launchbar",10);
 }
 
 public void g_io_launchbar_unload(GLib.IOModule module)

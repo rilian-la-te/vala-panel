@@ -203,7 +203,7 @@ public void g_io_dirmenu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DirmenuApplet),"dirmenu",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DirmenuApplet),"org.valapanel.dirmenu",10);
 }
 
 public void g_io_dirmenu_unload(GLib.IOModule module)

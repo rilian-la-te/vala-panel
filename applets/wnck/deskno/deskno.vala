@@ -108,7 +108,7 @@ public void g_io_deskno_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DesknoApplet),"deskno",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DesknoApplet),"org.valapanel.deskno",10);
 }
 
 public void g_io_deskno_unload(GLib.IOModule module)

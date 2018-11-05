@@ -71,7 +71,7 @@ public void g_io_separator_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SepApplet),"separator",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SepApplet),"org.valapanel.separator",10);
 }
 
 public void g_io_separator_unload(GLib.IOModule module)

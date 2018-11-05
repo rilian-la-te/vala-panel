@@ -301,7 +301,7 @@ public void g_io_menumodel_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuApplet),"menumodel",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuApplet),"org.valapanel.menumodel",10);
 }
 
 public void g_io_menumodel_unload(GLib.IOModule module)

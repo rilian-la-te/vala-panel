@@ -167,7 +167,7 @@ public void g_io_wincmd_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(WincmdApplet),"wincmd",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(WincmdApplet),"org.valapanel.wincmd",10);
 }
 
 public void g_io_wincmd_unload(GLib.IOModule module)
