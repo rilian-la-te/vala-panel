@@ -50,6 +50,6 @@ if(XCB_FOUND AND X11_XCB_FOUND)
 
 
     install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/vala-panel )
-    install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
+    #install(FILES xembedsniproxy.desktop DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 endif()
