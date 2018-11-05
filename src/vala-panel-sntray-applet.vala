@@ -109,7 +109,7 @@ public void g_io_sntray_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SNApplet),"sntray",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SNApplet),"org.valapanel.sntray",10);
 }
 public void g_io_sntray_unload(GLib.IOModule module)
 {
