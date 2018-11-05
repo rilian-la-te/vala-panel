@@ -31,7 +31,6 @@
 #define APPLET_INFO_LICENSE "License"
 #define APPLET_INFO_VERSION "Version"
 #define APPLET_INFO_EXCLUSIVE "Exclusive"
-#define APPLET_INFO_EXPANDABLE "Expandable"
 
 struct _ValaPanelAppletInfo
 {
@@ -44,7 +43,6 @@ struct _ValaPanelAppletInfo
 	char *help_uri;
 	char *version;
 	bool exclusive;
-	bool expandable;
 	GtkLicense license;
 };
 
@@ -103,8 +101,6 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	ret->version = tmp != NULL ? tmp : g_strdup(VERSION);
 	ret->exclusive =
 	    g_key_file_get_boolean(file, APPLET_INFO_GROUP, APPLET_INFO_EXCLUSIVE, NULL);
-	ret->expandable =
-	    g_key_file_get_boolean(file, APPLET_INFO_GROUP, APPLET_INFO_EXPANDABLE, NULL);
 	return ret;
 }
 
@@ -125,12 +121,11 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	}
 	else
 		ret->authors = NULL;
-	ret->website    = g_strdup(ainfo->website);
-	ret->help_uri   = g_strdup(ainfo->help_uri);
-	ret->license    = ainfo->license;
-	ret->version    = g_strdup(ainfo->version);
-	ret->exclusive  = ainfo->exclusive;
-	ret->expandable = ainfo->expandable;
+	ret->website   = g_strdup(ainfo->website);
+	ret->help_uri  = g_strdup(ainfo->help_uri);
+	ret->license   = ainfo->license;
+	ret->version   = g_strdup(ainfo->version);
+	ret->exclusive = ainfo->exclusive;
 	return ret;
 }
 
@@ -209,12 +204,6 @@ bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->exclusive;
-}
-
-bool vala_panel_applet_info_is_expandable(ValaPanelAppletInfo *info)
-{
-	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
-	return ainfo->expandable;
 }
 
 static GtkDialog *vala_panel_applet_info_get_about_dialog(ValaPanelAppletInfo *info)
