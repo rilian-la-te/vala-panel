@@ -109,7 +109,7 @@ public class Menu: Applet
     public override Widget get_settings_ui()
     {
         return Configurator.generic_config_widget(this.settings,
-                                      _("If internal menu is enabled, menu file will not be used, predefeined menu will be used instead."),null, GenericConfigType.TRIM,
+                                      _("If internal menu is enabled, menu file will not be used,\n predefeined menu will be used instead."),null, GenericConfigType.TRIM,
                                       _("Is internal menu"), Key.IS_INTERNAL_MENU, GenericConfigType.BOOL,
                                       _("Is system menu (can be keybound)"), Key.IS_SYSTEM_MENU, GenericConfigType.BOOL,
                                       _("Is Menubar"), Key.IS_MENU_BAR, GenericConfigType.BOOL,
