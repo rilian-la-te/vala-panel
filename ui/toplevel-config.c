@@ -327,8 +327,8 @@ static GtkListBoxRow *create_info_representation(ValaPanelAppletInfo *pl_info)
 	gtk_widget_set_margin_bottom(box, 4);
 
 	GtkImage *image =
-	    gtk_image_new_from_icon_name(vala_panel_applet_info_get_icon_name(pl_info),
-	                                 GTK_ICON_SIZE_MENU);
+	    GTK_IMAGE(gtk_image_new_from_icon_name(vala_panel_applet_info_get_icon_name(pl_info),
+	                                           GTK_ICON_SIZE_BUTTON));
 	gtk_widget_set_margin_start(image, 12);
 	gtk_widget_set_margin_end(image, 14);
 	gtk_widget_show(image);
