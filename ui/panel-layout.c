@@ -356,8 +356,8 @@ ValaPanelApplet *vala_panel_layout_insert_applet(ValaPanelLayout *self, const ch
 
 static uint count_applets_in_pack(ValaPanelLayout *self, ValaPanelAppletPackType pack)
 {
-	uint ret = 0;
-	GList *applets;
+	uint ret       = 0;
+	GList *applets = NULL;
 	switch (pack)
 	{
 	case PACK_START:
