@@ -112,13 +112,17 @@ public class Dirmenu: Applet
             /* Create and initialize menu item. */
             Gtk.MenuItem item = new Gtk.MenuItem();
             var box = new Box(Orientation.HORIZONTAL,10);
-                    var img = new Image.from_gicon(new ThemedIcon.with_default_fallbacks("folder-symbolic"),IconSize.MENU);
+            var img = new Image.from_gicon(new ThemedIcon.with_default_fallbacks("folder-symbolic"),IconSize.MENU);
+            img.show();
             box.pack_start(img,false,true);
             var lbl = new Label(cursor.dirname);
             box.pack_start(lbl,false,true);
+            lbl.show();
             item.add(box);
+            box.show();
             Gtk.Menu dummy = new Gtk.Menu();
             item.set_submenu(dummy);
+            item.show();
             menu.append(item);
 
             /* Unlink and free sorted directory name element, but reuse the directory name string. */
@@ -148,8 +152,10 @@ public class Dirmenu: Applet
                         Gdk.Display.get_default().get_app_launch_context());
                 } catch(GLib.Error e){stderr.printf("%s",e.message);}
             });
+        item.show();
         var term = new Gtk.MenuItem.with_mnemonic( _("Open in _Terminal") );
         term.activate.connect(()=>{launch_terminal(directory);});
+        term.show();
 
         /* Insert or append based on caller's preference. */
         if (at_top)
