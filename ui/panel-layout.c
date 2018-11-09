@@ -426,14 +426,15 @@ void vala_panel_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelAppl
 			g_settings_set_uint(prev_settings->common,
 			                    VP_KEY_POSITION,
 			                    count_applets_in_pack(self, next_pack));
+			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, next_pack);
 			vala_panel_layout_applets_reposition_after(self, prev_pack, 0, direction);
 		}
 		else
 		{
 			vala_panel_layout_applets_reposition_after(self, next_pack, 0, direction);
+			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, next_pack);
 			g_settings_set_uint(prev_settings->common, VP_KEY_POSITION, 0);
 		}
-		g_settings_set_enum(prev_settings->common, VP_KEY_PACK, next_pack);
 	}
 	else
 	{
