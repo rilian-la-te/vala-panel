@@ -28,7 +28,8 @@
 #include <stdbool.h>
 
 static const int PERIOD = 200;
-typedef enum {
+typedef enum
+{
 	AH_HIDDEN  = 0,
 	AH_WAITING = 1,
 	AH_GRAB    = 2,
@@ -44,11 +45,10 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
 
-static const GActionEntry panel_entries[] = {
-	{ "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
-	{ "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
-	{ "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } }
-};
+static const GActionEntry panel_entries[] =
+    { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
+      { "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
+      { "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } } };
 
 enum
 {
@@ -959,7 +959,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XS;
 		else
 			self->icon_size_hints = XXS;
-		appearance_update_required    = true;
+		appearance_update_required = true;
 		break;
 	case PROP_BG_FILE:
 		g_free0(self->background_file);
@@ -975,7 +975,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
 		if (-1 <= g_value_get_int(value))
-			self->mon        = g_value_get_int(value);
+			self->mon = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
 	case PROP_DOCK:
@@ -1054,14 +1054,14 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                                       0,
 	                                       (GParamFlags)(G_PARAM_STATIC_STRINGS |
 	                                                     G_PARAM_READABLE | G_PARAM_WRITABLE));
-	pspecs[PROP_WIDTH] = g_param_spec_int(VP_KEY_WIDTH,
-	                                      VP_KEY_WIDTH,
-	                                      VP_KEY_WIDTH,
-	                                      G_MININT,
-	                                      G_MAXINT,
-	                                      0,
-	                                      (GParamFlags)(G_PARAM_STATIC_STRINGS |
-	                                                    G_PARAM_READABLE | G_PARAM_WRITABLE));
+	pspecs[PROP_WIDTH]  = g_param_spec_int(VP_KEY_WIDTH,
+                                              VP_KEY_WIDTH,
+                                              VP_KEY_WIDTH,
+                                              G_MININT,
+                                              G_MAXINT,
+                                              0,
+                                              (GParamFlags)(G_PARAM_STATIC_STRINGS |
+                                                            G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	pspecs[PROP_USE_FONT] =
 	    g_param_spec_boolean(VP_KEY_USE_FONT,
