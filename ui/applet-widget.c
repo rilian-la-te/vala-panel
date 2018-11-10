@@ -29,11 +29,12 @@ static void activate_remote(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_about(GSimpleAction *act, GVariant *param, gpointer self);
 
-static const GActionEntry entries[] =
-    { { VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
-      { VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL } };
+static const GActionEntry entries[] = {
+	{ VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
+	{ VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL }
+};
 
 enum
 {
@@ -225,8 +226,9 @@ static void vala_panel_applet_get_preferred_height(GtkWidget *self, int *min, in
 	*nat = height;
 }
 
-static void vala_panel_applet_parent_set(ValaPanelApplet *self, GtkWidget *prev_parent)
+static void vala_panel_applet_parent_set(GtkWidget *w, GtkWidget *prev_parent)
 {
+	ValaPanelApplet *self     = VALA_PANEL_APPLET(w);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	if (prev_parent == NULL)
 	{
@@ -364,8 +366,7 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	vala_panel_applet_parent_class = g_type_class_peek_parent(klass);
 	((ValaPanelAppletClass *)klass)->update_context_menu =
 	    vala_panel_applet_update_context_menu_private;
-	((GtkWidgetClass *)klass)->parent_set =
-	    (void (*)(GtkWidget *, GtkWidget *))vala_panel_applet_parent_set;
+	((GtkWidgetClass *)klass)->parent_set           = vala_panel_applet_parent_set;
 	((ValaPanelAppletClass *)klass)->remote_command = NULL;
 	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
 	    vala_panel_applet_get_preferred_height_for_width;
