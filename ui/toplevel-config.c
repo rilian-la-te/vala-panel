@@ -566,7 +566,7 @@ static void listbox_new_applet_row_activated(GtkListBox *box, GtkListBoxRow *row
 	gtk_list_box_invalidate_filter(self->listbox_new_applet);
 }
 
-static bool listbox_new_filter(GtkListBoxRow *row, void *data)
+static int listbox_new_filter(GtkListBoxRow *row, void *data)
 {
 	AppletInfoData *d = config_row_get_info_data(row);
 	bool ret          = false;
@@ -575,14 +575,17 @@ static bool listbox_new_filter(GtkListBoxRow *row, void *data)
 	return ret;
 }
 
+static void destroy(GtkWidget *applet, G_GNUC_UNUSED void *data)
+{
+	g_clear_pointer(&applet, gtk_widget_destroy);
+}
+
 static void available_plugins_reload(ValaPanelToplevelConfig *self)
 {
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
 	vp_applet_manager_reload_applets(vala_panel_layout_get_manager());
-	gtk_container_foreach(GTK_CONTAINER(self->listbox_new_applet),
-	                      (GtkCallback)gtk_widget_destroy,
-	                      NULL);
+	gtk_container_foreach(GTK_CONTAINER(self->listbox_new_applet), (GtkCallback)destroy, NULL);
 	GList *all_types = vp_applet_manager_get_all_types(vala_panel_layout_get_manager());
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
