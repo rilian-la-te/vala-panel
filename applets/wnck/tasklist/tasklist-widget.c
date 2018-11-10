@@ -453,64 +453,6 @@ static void xfce_tasklist_class_init(XfceTasklistClass *klass)
 	                                                     TRUE,
 	                                                     G_PARAM_READWRITE |
 	                                                         G_PARAM_STATIC_STRINGS));
-
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_int("max-button-length",
-	//	                     NULL,
-	//	                     "The maximum length of a window button",
-	//	                     -1,
-	//	                     G_MAXINT,
-	//	                     DEFAULT_MAX_BUTTON_LENGTH,
-	//	                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_int("min-button-length",
-	//	                     NULL,
-	//	                     "The minimum length of a window button",
-	//	                     1,
-	//	                     G_MAXINT,
-	//	                     DEFAULT_MIN_BUTTON_LENGTH,
-	//	                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_int("max-button-size",
-	//	                     NULL,
-	//	                     "The maximum size of a window button",
-	//	                     1,
-	//	                     G_MAXINT,
-	//	                     DEFAULT_BUTTON_SIZE,
-	//	                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_enum("ellipsize-mode",
-	//	                      NULL,
-	//	                      "The ellipsize mode used for the button label",
-	//	                      PANGO_TYPE_ELLIPSIZE_MODE,
-	//	                      DEFAULT_ELLIPSIZE_MODE,
-	//	                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_int("minimized-icon-lucency",
-	//	                     NULL,
-	//	                     "Lucent percentage of minimized icons",
-	//	                     0,
-	//	                     100,
-	//	                     DEFAULT_ICON_LUCENCY,
-	//	                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
-	//	gtk_widget_class_install_style_property(
-	//	    gtkwidget_class,
-	//	    g_param_spec_int("menu-max-width-chars",
-	//	                     NULL,
-	//	                     "Maximum chars in the overflow menu labels",
-	//	                     0,
-	//	                     G_MAXINT,
-	//	                     DEFAULT_MENU_MAX_WIDTH_CHARS,
-	//	                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS));
 }
 
 XfceTasklist *xfce_tasklist_new()
