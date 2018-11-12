@@ -60,7 +60,7 @@ static void xfce_arrow_button_set_property(GObject *object, guint prop_id, const
 static void xfce_arrow_button_get_property(GObject *object, guint prop_id, GValue *value,
                                            GParamSpec *pspec);
 static void xfce_arrow_button_finalize(GObject *object);
-static bool xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr);
+static int xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr);
 static void xfce_arrow_button_get_preferred_width(GtkWidget *widget, gint *minimum_width,
                                                   gint *natural_width);
 static void xfce_arrow_button_get_preferred_height(GtkWidget *widget, gint *minimum_height,
@@ -190,7 +190,7 @@ static void xfce_arrow_button_finalize(GObject *object)
 	(*G_OBJECT_CLASS(xfce_arrow_button_parent_class)->finalize)(object);
 }
 
-static bool xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
+static int xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
 {
 	XfceArrowButton *button = XFCE_ARROW_BUTTON(widget);
 	GtkWidget *child;
@@ -263,7 +263,7 @@ static bool xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
 			gtk_render_arrow(context, cr, angle, x, y, width);
 	}
 
-	return TRUE;
+	return true;
 }
 
 static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientation, int for_size,
