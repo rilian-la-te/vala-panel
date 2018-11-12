@@ -696,6 +696,21 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
                                   int *natural_baseline)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(widget);
+	ValaPanelToplevel *top = VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist));
+	int base_width         = DEFAULT_BUTTON_SIZE;
+	int base_height        = DEFAULT_BUTTON_SIZE;
+	int icon_size          = GTK_ICON_SIZE_MENU;
+	int mod                = 0;
+	if (top)
+	{
+		int height;
+		g_object_get(top, VP_KEY_ICON_SIZE, &icon_size, VP_KEY_HEIGHT, &height, NULL);
+		tasklist->nrows = (int)floor(height / (float)icon_size);
+		tasklist->nrows = tasklist->nrows < 1 ? 1 : tasklist->nrows;
+		base_height     = height;
+		mod             = (int)ceil(height % icon_size) / tasklist->nrows;
+	}
+
 	if (tasklist->mode == orientation)
 	{
 		gint rows, cols;
@@ -715,7 +730,6 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 				gtk_widget_get_preferred_size(child->button, NULL, &child_req);
 
 				child_height = MAX(child_height, child_req.height);
-				child_height = MAX(child_height, tasklist->size / tasklist->nrows);
 
 				if (child->type == CHILD_TYPE_GROUP_MENU)
 					continue;
@@ -723,34 +737,16 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 				n_windows++;
 			}
 		}
+		child_height = MAX(child_height, icon_size + mod);
+		if (tasklist->show_labels)
+			child_height = MAX(child_height, tasklist->max_button_length);
 
 		tasklist->n_windows = n_windows;
 
-		if (n_windows == 0)
-		{
-			length = 0;
-		}
-		else
-		{
-			rows = MAX(tasklist->nrows, 1);
-			if ((tasklist->show_labels || tasklist->grouping) &&
-			    tasklist->max_button_size > 0)
-			{
-				rows = MAX(rows, tasklist->size / tasklist->max_button_size);
-				child_height = MIN(child_height, tasklist->max_button_size);
-			}
+		length = (int)ceil((n_windows * child_height) / tasklist->nrows);
 
-			cols = n_windows / rows;
-			if (cols * rows < n_windows)
-				cols++;
+		tasklist->size = length;
 
-			if (!tasklist->show_labels)
-				length = (tasklist->size / rows) * cols;
-			else if (tasklist->min_button_length != -1)
-				length = cols * tasklist->min_button_length;
-			else
-				length = cols * DEFAULT_MIN_BUTTON_LENGTH;
-		}
 		/* set the requested sizes */
 		if (natural != NULL)
 			*natural = length > ARROW_BUTTON_SIZE ? length : ARROW_BUTTON_SIZE;
@@ -760,8 +756,8 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 	}
 	else
 	{
-		*minimum = tasklist->size;
-		*natural = tasklist->size;
+		*minimum = base_height;
+		*natural = base_height;
 	}
 }
 
@@ -821,8 +817,6 @@ static void xfce_tasklist_size_layout(XfceTasklist *tasklist, GtkAllocation *all
 	/* if we're in deskbar mode, there are no columns */
 	if (xfce_tasklist_deskbar(tasklist) && tasklist->show_labels)
 		rows = 1;
-	else if (tasklist->show_labels && tasklist->max_button_size > 0)
-		rows = MAX(tasklist->nrows, tasklist->size / tasklist->max_button_size);
 	else
 		rows = tasklist->nrows;
 
