@@ -20,6 +20,7 @@
 #include "cpu.h"
 #include "mem.h"
 #include "monitor.h"
+#include "net.h"
 #include "swap.h"
 
 #define DEFAULT_WIDTH 40 /* Pixels               */
@@ -32,6 +33,8 @@ enum
 	CPU_POS = 0,
 	RAM_POS,
 	SWAP_POS,
+	NET_TX_POS,
+	NET_RX_POS,
 	N_POS
 };
 
@@ -42,9 +45,6 @@ struct _MonitorsApplet
 	bool displayed_mons[N_POS];
 	uint timer;
 };
-
-#define monitors_applet_from_da(da) VALA_PANEL_CPU_APPLET(gtk_widget_get_parent(GTK_WIDGET(da)))
-#define monitors_applet_get_da(p) GTK_DRAWING_AREA(gtk_bin_get_child(GTK_WIDGET(p)))
 
 G_DEFINE_DYNAMIC_TYPE(MonitorsApplet, monitors_applet, vala_panel_applet_get_type())
 
@@ -132,6 +132,28 @@ static Monitor *create_monitor_with_pos(MonitorsApplet *self, int pos)
 		                      tooltip_update_swap,
 		                      color);
 	}
+	if (pos == NET_TX_POS)
+	{
+		g_autofree char *color =
+		    g_settings_get_string(vala_panel_applet_get_settings(VALA_PANEL_APPLET(self)),
+		                          NET_TX_CL);
+		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
+		                      self,
+		                      update_net_tx,
+		                      tooltip_update_net_tx,
+		                      color);
+	}
+	if (pos == NET_RX_POS)
+	{
+		g_autofree char *color =
+		    g_settings_get_string(vala_panel_applet_get_settings(VALA_PANEL_APPLET(self)),
+		                          NET_RX_CL);
+		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
+		                      self,
+		                      update_net_rx,
+		                      tooltip_update_net_rx,
+		                      color);
+	}
 	return NULL;
 }
 
@@ -148,22 +170,25 @@ static bool monitors_update(void *data)
 	return true;
 }
 
+static void rebuild_mon(MonitorsApplet *self, int i)
+{
+	if (self->displayed_mons[i] && self->monitors[i] == NULL)
+	{
+		self->monitors[i] = create_monitor_with_pos(self, i);
+		gtk_box_reorder_child(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
+		                      GTK_WIDGET(self->monitors[i]->da),
+		                      i);
+	}
+	else if (!self->displayed_mons[i] && self->monitors[i] != NULL)
+	{
+		g_clear_pointer(&self->monitors[i], monitor_dispose);
+	}
+}
+
 static void rebuild_mons(MonitorsApplet *self)
 {
 	for (int i = 0; i < N_POS; i++)
-	{
-		if (self->displayed_mons[i] && self->monitors[i] == NULL)
-		{
-			self->monitors[i] = create_monitor_with_pos(self, i);
-			gtk_box_reorder_child(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-			                      GTK_WIDGET(self->monitors[i]->da),
-			                      i);
-		}
-		else if (!self->displayed_mons[i] && self->monitors[i] != NULL)
-		{
-			monitor_dispose(self->monitors[i]);
-		}
-	}
+		rebuild_mon(self, i);
 }
 
 void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
@@ -199,6 +224,22 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		g_autofree char *color = g_settings_get_string(settings, SWAP_CL);
 		gdk_rgba_parse(&self->monitors[SWAP_POS]->foreground_color, color);
 	}
+	else if (!g_strcmp0(key, DISPLAY_NET))
+	{
+		self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
+		self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
+		rebuild_mons(self);
+	}
+	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
+	{
+		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
+		gdk_rgba_parse(&self->monitors[NET_RX_POS]->foreground_color, color);
+	}
+	else if ((!g_strcmp0(key, NET_TX_CL)) && self->monitors[NET_TX_POS] != NULL)
+	{
+		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
+		gdk_rgba_parse(&self->monitors[NET_TX_POS]->foreground_color, color);
+	}
 }
 
 /* Applet widget constructor. */
@@ -214,31 +255,16 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	    true);
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	gtk_box_set_homogeneous(box, true);
-	self->displayed_mons[CPU_POS]  = g_settings_get_boolean(settings, DISPLAY_CPU);
-	self->displayed_mons[RAM_POS]  = g_settings_get_boolean(settings, DISPLAY_RAM);
-	self->displayed_mons[SWAP_POS] = g_settings_get_boolean(settings, DISPLAY_SWAP);
-	if (self->displayed_mons[CPU_POS])
-	{
-		g_autofree char *color = g_settings_get_string(settings, CPU_CL);
-		self->monitors[CPU_POS] =
-		    monitor_create(box, self, cpu_update, tooltip_update_cpu, color);
-	}
-	if (self->displayed_mons[RAM_POS])
-	{
-		g_autofree char *color = g_settings_get_string(settings, RAM_CL);
-		self->monitors[RAM_POS] =
-		    monitor_create(box, self, update_mem, tooltip_update_mem, color);
-	}
-	if (self->displayed_mons[SWAP_POS])
-	{
-		g_autofree char *color = g_settings_get_string(settings, SWAP_CL);
-		self->monitors[SWAP_POS] =
-		    monitor_create(box, self, update_swap, tooltip_update_swap, color);
-	}
-	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
-	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
+	self->displayed_mons[CPU_POS]    = g_settings_get_boolean(settings, DISPLAY_CPU);
+	self->displayed_mons[RAM_POS]    = g_settings_get_boolean(settings, DISPLAY_RAM);
+	self->displayed_mons[SWAP_POS]   = g_settings_get_boolean(settings, DISPLAY_SWAP);
+	self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
+	self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
 	gtk_widget_show(GTK_WIDGET(box));
+	rebuild_mons(self);
+	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
+	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
 	gtk_widget_show(GTK_WIDGET(self));
 	return self;
 }
@@ -263,6 +289,15 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 	                             CONF_BOOL,
 	                             _("Swap color"),
 	                             SWAP_CL,
+	                             CONF_STR,
+	                             _("Display network usage"),
+	                             DISPLAY_NET,
+	                             CONF_BOOL,
+	                             _("Net receive color"),
+	                             NET_RX_CL,
+	                             CONF_STR,
+	                             _("Net transmit color"),
+	                             NET_TX_CL,
 	                             CONF_STR,
 	                             _("Action when clicked"),
 	                             ACTION,

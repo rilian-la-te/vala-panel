@@ -25,11 +25,6 @@
       <default>'green'</default>
     </key>
   </schema>
-  <schema id="org.valapanel.indicator">
-    <key name="enabled-indicators" type="as">
-      <default>['applications']</default>
-    </key>
-  </schema>
   <schema id="org.valapanel.monitors">
     <key name="display-cpu-monitor" type="b">
       <default>true</default>
@@ -48,6 +43,15 @@
     </key>
     <key name="swap-color" type="s">
       <default>'yellow'</default>
+    </key>
+    <key name="display-net-monitor" type="b">
+      <default>true</default>
+    </key>
+    <key name="net-tx-color" type="s">
+      <default>'teal'</default>
+    </key>
+    <key name="net-rx-color" type="s">
+      <default>'cyan'</default>
     </key>
     <key name="click-action" type="s">
       <default>'lxtask'</default>
