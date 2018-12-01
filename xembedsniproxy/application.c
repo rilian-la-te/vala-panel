@@ -44,9 +44,9 @@ struct _XEmbedSNIApplication
 
 G_DEFINE_TYPE(XEmbedSNIApplication, xembed_sni_application, G_TYPE_APPLICATION)
 
-static const GOptionEntry entries[] =
-    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
-      { NULL } };
+static const GOptionEntry entries[] = {
+	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL }, { NULL }
+};
 
 enum
 {
@@ -398,14 +398,11 @@ static void xembed_sni_application_startup(GApplication *base)
 	}
 	resolve_atoms(con);
 	claim_systray_selection(self);
-	/* Add GDK event filter. */
-	//	gdk_window_add_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
 }
 
 static void xembed_sni_application_shutdown(GApplication *base)
 {
 	XEmbedSNIApplication *self = XEMBED_SNI_APPLICATION(base);
-	//	gdk_window_remove_filter(NULL, (GdkFilterFunc)xembed_sni_event_filter, self);
 	release_systray_selection(self);
 	G_APPLICATION_CLASS(xembed_sni_application_parent_class)
 	    ->shutdown((GApplication *)G_TYPE_CHECK_INSTANCE_CAST(base,

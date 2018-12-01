@@ -421,9 +421,7 @@ void status_notifier_item_send_click(StatusNotifierItem *sn, uint8_t mouseButton
 	g_autofree xcb_get_geometry_reply_t *clientGeom =
 	    xcb_get_geometry_reply(priv->conn, cookieSize, NULL);
 	if (!clientGeom)
-	{
 		return;
-	}
 
 	xcb_query_pointer_cookie_t cookie = xcb_query_pointer(priv->conn, priv->window_id);
 	g_autofree xcb_query_pointer_reply_t *pointer =
