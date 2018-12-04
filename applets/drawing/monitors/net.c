@@ -31,7 +31,7 @@ typedef struct
 	long long unsigned int b, e, m; /* Bytes, errors, max_value */
 } net_stat;
 
-inline bool scan_net_file(net_stat *rx_stat, net_stat *tx_stat)
+static inline bool scan_net_file(net_stat *rx_stat, net_stat *tx_stat)
 {
 	char buf[256];
 	long long unsigned int rxb, rxe, txb, txe;
