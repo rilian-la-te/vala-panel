@@ -25,6 +25,7 @@ G_BEGIN_DECLS
 
 #define DISPLAY_RAM "display-ram-monitor"
 #define RAM_CL "ram-color"
+#define RAM_WIDTH "ram-width"
 
 G_GNUC_INTERNAL bool update_mem(Monitor *m);
 G_GNUC_INTERNAL void tooltip_update_mem(Monitor *m);

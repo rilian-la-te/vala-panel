@@ -26,6 +26,8 @@ G_BEGIN_DECLS
 #define DISPLAY_NET "display-net-monitor"
 #define NET_RX_CL "net-rx-color"
 #define NET_TX_CL "net-tx-color"
+#define NET_RX_WIDTH "net-rx-width"
+#define NET_TX_WIDTH "net-tx-width"
 
 G_GNUC_INTERNAL bool update_net_tx(Monitor *m);
 G_GNUC_INTERNAL void tooltip_update_net_tx(Monitor *m);

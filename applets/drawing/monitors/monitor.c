@@ -74,8 +74,12 @@ static bool configure_event(GtkWidget *widget, GdkEventConfigure *dummy, gpointe
 		 * function) or its size changed, reallocate the buffer and preserve
 		 * existing data.
 		 */
+		static bool in_configure;
 		if (mon->stats == NULL || (new_pixmap_width != mon->pixmap_width))
 		{
+			if (in_configure)
+				return G_SOURCE_CONTINUE;
+			in_configure      = true;
 			double *new_stats = (double *)g_malloc0(sizeof(double) * new_pixmap_width);
 			if (new_stats == NULL)
 				return G_SOURCE_REMOVE;
@@ -123,7 +127,8 @@ static bool configure_event(GtkWidget *widget, GdkEventConfigure *dummy, gpointe
 				}
 			}
 			g_clear_pointer(&mon->stats, g_free);
-			mon->stats = new_stats;
+			mon->stats   = new_stats;
+			in_configure = false;
 		}
 
 		mon->pixmap_width  = new_pixmap_width;

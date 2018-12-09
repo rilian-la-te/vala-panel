@@ -25,6 +25,7 @@ G_BEGIN_DECLS
 
 #define DISPLAY_SWAP "display-swap-monitor"
 #define SWAP_CL "swap-color"
+#define SWAP_WIDTH "swap-width"
 
 G_GNUC_INTERNAL bool update_swap(Monitor *m);
 G_GNUC_INTERNAL void tooltip_update_swap(Monitor *m);

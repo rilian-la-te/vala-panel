@@ -25,6 +25,7 @@ G_BEGIN_DECLS
 
 #define DISPLAY_CPU "display-cpu-monitor"
 #define CPU_CL "cpu-color"
+#define CPU_WIDTH "cpu-width"
 
 G_GNUC_INTERNAL bool cpu_update(Monitor *c);
 G_GNUC_INTERNAL void tooltip_update_cpu(Monitor *m);

@@ -32,11 +32,17 @@
     <key name="cpu-color" type="s">
       <default>'red'</default>
     </key>
+    <key name="cpu-width" type="i">
+      <default>40</default>
+    </key>
     <key name="display-ram-monitor" type="b">
       <default>true</default>
     </key>
     <key name="ram-color" type="s">
       <default>'green'</default>
+    </key>
+    <key name="ram-width" type="i">
+      <default>40</default>
     </key>
     <key name="display-swap-monitor" type="b">
       <default>true</default>
@@ -44,14 +50,23 @@
     <key name="swap-color" type="s">
       <default>'yellow'</default>
     </key>
+    <key name="swap-width" type="i">
+      <default>40</default>
+    </key>
     <key name="display-net-monitor" type="b">
       <default>true</default>
     </key>
     <key name="net-tx-color" type="s">
       <default>'teal'</default>
     </key>
+    <key name="net-tx-width" type="i">
+      <default>40</default>
+    </key>
     <key name="net-rx-color" type="s">
       <default>'cyan'</default>
+    </key>
+    <key name="net-rx-width" type="i">
+      <default>40</default>
     </key>
     <key name="click-action" type="s">
       <default>'lxtask'</default>
