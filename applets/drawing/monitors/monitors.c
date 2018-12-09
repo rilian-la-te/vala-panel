@@ -197,7 +197,7 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	if (!g_strcmp0(key, DISPLAY_CPU))
 	{
 		self->displayed_mons[CPU_POS] = g_settings_get_boolean(settings, DISPLAY_CPU);
-		rebuild_mons(self);
+		rebuild_mon(self, CPU_POS);
 	}
 	else if ((!g_strcmp0(key, CPU_CL)) && self->monitors[CPU_POS] != NULL)
 	{
@@ -207,7 +207,7 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	else if (!g_strcmp0(key, DISPLAY_RAM))
 	{
 		self->displayed_mons[RAM_POS] = g_settings_get_boolean(settings, DISPLAY_RAM);
-		rebuild_mons(self);
+		rebuild_mon(self, RAM_POS);
 	}
 	else if ((!g_strcmp0(key, RAM_CL)) && self->monitors[RAM_POS] != NULL)
 	{
@@ -217,7 +217,7 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	else if (!g_strcmp0(key, DISPLAY_SWAP))
 	{
 		self->displayed_mons[SWAP_POS] = g_settings_get_boolean(settings, DISPLAY_SWAP);
-		rebuild_mons(self);
+		rebuild_mon(self, SWAP_POS);
 	}
 	else if ((!g_strcmp0(key, SWAP_CL)) && self->monitors[SWAP_POS] != NULL)
 	{
@@ -228,7 +228,8 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	{
 		self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
 		self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-		rebuild_mons(self);
+		rebuild_mon(self, NET_TX_POS);
+		rebuild_mon(self, NET_RX_POS);
 	}
 	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
 	{
