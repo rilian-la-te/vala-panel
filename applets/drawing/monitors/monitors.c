@@ -77,8 +77,7 @@ static void monitor_setup_size(Monitor *mon, MonitorsApplet *pl, int width)
 	             &height,
 	             NULL);
 	gtk_widget_set_size_request(GTK_WIDGET(mon->da), width, height);
-	gtk_widget_queue_resize(GTK_WIDGET(mon->da));
-	gtk_widget_queue_resize(gtk_bin_get_child(GTK_BIN(pl)));
+	monitor_resize(GTK_WIDGET(mon->da), mon);
 }
 
 static void monitor_init(Monitor *mon, MonitorsApplet *pl, const char *color, int width)

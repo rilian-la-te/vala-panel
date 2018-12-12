@@ -48,6 +48,7 @@ G_GNUC_INTERNAL void monitor_init_no_height(Monitor *mon, const char *color);
 G_GNUC_INTERNAL void monitor_redraw_pixmap(Monitor *mon);
 G_GNUC_INTERNAL bool monitor_update(Monitor *mon);
 G_GNUC_INTERNAL void monitor_dispose(Monitor *mon);
+G_GNUC_INTERNAL bool monitor_resize(GtkWidget *widget, Monitor *mon);
 
 G_END_DECLS
 
