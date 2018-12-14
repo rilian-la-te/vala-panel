@@ -16,23 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NET_H
-#define NET_H
+#ifndef MONITORS_H
+#define MONITORS_H
 
-#include "monitor.h"
+#include "client.h"
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-#define DISPLAY_NET "display-net-monitor"
-#define NET_RX_CL "net-rx-color"
-#define NET_TX_CL "net-tx-color"
-#define NET_RX_WIDTH "net-rx-width"
-#define NET_TX_WIDTH "net-tx-width"
+G_DECLARE_FINAL_TYPE(NetMonApplet, netmon_applet, VALA_PANEL, NETMON_APPLET, ValaPanelApplet)
 
-G_GNUC_INTERNAL bool update_net_tx(Monitor *m);
-G_GNUC_INTERNAL void tooltip_update_net_tx(Monitor *m);
-G_GNUC_INTERNAL bool update_net_rx(Monitor *m);
-G_GNUC_INTERNAL void tooltip_update_net_rx(Monitor *m);
+G_DECLARE_FINAL_TYPE(NetMonPlugin, netmon_plugin, VALA_PANEL, NETMON_PLUGIN, ValaPanelAppletPlugin)
 
 G_END_DECLS
 

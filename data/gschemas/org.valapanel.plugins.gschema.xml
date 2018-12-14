@@ -53,8 +53,13 @@
     <key name="swap-width" type="i">
       <default>40</default>
     </key>
-    <key name="display-net-monitor" type="b">
-      <default>true</default>
+    <key name="click-action" type="s">
+      <default>'lxtask'</default>
+    </key>
+  </schema>
+    <schema id="org.valapanel.netmon">
+    <key name="interface" type="s">
+      <default>'l0'</default>
     </key>
     <key name="net-tx-color" type="s">
       <default>'teal'</default>

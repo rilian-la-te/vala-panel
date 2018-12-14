@@ -20,7 +20,6 @@
 #include "cpu.h"
 #include "mem.h"
 #include "monitor.h"
-#include "net.h"
 #include "swap.h"
 
 #define DEFAULT_WIDTH 40 /* Pixels               */
@@ -33,8 +32,6 @@ enum
 	CPU_POS = 0,
 	RAM_POS,
 	SWAP_POS,
-	NET_TX_POS,
-	NET_RX_POS,
 	N_POS
 };
 
@@ -139,28 +136,6 @@ static Monitor *create_monitor_with_pos(MonitorsApplet *self, int pos)
 		                      color,
 		                      width);
 	}
-	if (pos == NET_TX_POS)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
-		int width              = g_settings_get_int(settings, NET_TX_WIDTH);
-		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-		                      self,
-		                      update_net_tx,
-		                      tooltip_update_net_tx,
-		                      color,
-		                      width);
-	}
-	if (pos == NET_RX_POS)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
-		int width              = g_settings_get_int(settings, NET_RX_WIDTH);
-		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-		                      self,
-		                      update_net_rx,
-		                      tooltip_update_net_rx,
-		                      color,
-		                      width);
-	}
 	return NULL;
 }
 
@@ -225,23 +200,6 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		g_autofree char *color = g_settings_get_string(settings, SWAP_CL);
 		gdk_rgba_parse(&self->monitors[SWAP_POS]->foreground_color, color);
 	}
-	else if (!g_strcmp0(key, DISPLAY_NET))
-	{
-		self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-		self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-		rebuild_mon(self, NET_TX_POS);
-		rebuild_mon(self, NET_RX_POS);
-	}
-	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
-		gdk_rgba_parse(&self->monitors[NET_RX_POS]->foreground_color, color);
-	}
-	else if ((!g_strcmp0(key, NET_TX_CL)) && self->monitors[NET_TX_POS] != NULL)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
-		gdk_rgba_parse(&self->monitors[NET_TX_POS]->foreground_color, color);
-	}
 	else if ((!g_strcmp0(key, CPU_WIDTH)) && self->monitors[CPU_POS] != NULL)
 	{
 		int width = g_settings_get_int(settings, CPU_WIDTH);
@@ -257,16 +215,6 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		int width = g_settings_get_int(settings, SWAP_WIDTH);
 		monitor_setup_size(self->monitors[SWAP_POS], self, width);
 	}
-	else if ((!g_strcmp0(key, NET_RX_WIDTH)) && self->monitors[NET_RX_POS] != NULL)
-	{
-		int width = g_settings_get_int(settings, NET_RX_WIDTH);
-		monitor_setup_size(self->monitors[NET_RX_POS], self, width);
-	}
-	else if ((!g_strcmp0(key, NET_TX_WIDTH)) && self->monitors[NET_TX_POS] != NULL)
-	{
-		int width = g_settings_get_int(settings, NET_TX_WIDTH);
-		monitor_setup_size(self->monitors[NET_TX_POS], self, width);
-	}
 }
 
 /* Applet widget constructor. */
@@ -280,12 +228,10 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);
-	GtkBox *box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
-	self->displayed_mons[CPU_POS]    = g_settings_get_boolean(settings, DISPLAY_CPU);
-	self->displayed_mons[RAM_POS]    = g_settings_get_boolean(settings, DISPLAY_RAM);
-	self->displayed_mons[SWAP_POS]   = g_settings_get_boolean(settings, DISPLAY_SWAP);
-	self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-	self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
+	GtkBox *box                    = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
+	self->displayed_mons[CPU_POS]  = g_settings_get_boolean(settings, DISPLAY_CPU);
+	self->displayed_mons[RAM_POS]  = g_settings_get_boolean(settings, DISPLAY_RAM);
+	self->displayed_mons[SWAP_POS] = g_settings_get_boolean(settings, DISPLAY_SWAP);
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
 	gtk_widget_show(GTK_WIDGET(box));
 	for (int i = 0; i < N_POS; i++)
@@ -325,21 +271,6 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 	                             CONF_STR,
 	                             _("Swap width"),
 	                             SWAP_WIDTH,
-	                             CONF_INT,
-	                             _("Display network usage"),
-	                             DISPLAY_NET,
-	                             CONF_BOOL,
-	                             _("Net receive color"),
-	                             NET_RX_CL,
-	                             CONF_STR,
-	                             _("Net receive width"),
-	                             NET_RX_WIDTH,
-	                             CONF_INT,
-	                             _("Net transmit color"),
-	                             NET_TX_CL,
-	                             CONF_STR,
-	                             _("Net receive width"),
-	                             NET_TX_WIDTH,
 	                             CONF_INT,
 	                             _("Action when clicked"),
 	                             ACTION,

@@ -1,4 +1,4 @@
-set(PLUGIN_NAME monitors)
+set(PLUGIN_NAME netmon)
 #####
 # Plugin Library
 #####
@@ -10,12 +10,8 @@ add_library (${PLUGIN_NAME} MODULE
     monitors.c
     monitor.h
     monitor.c
-    cpu.c
-    cpu.h
-    mem.c
-    mem.h
-    swap.c
-    swap.h
+    net.c
+    net.h
 )
 
 target_link_libraries (${PLUGIN_NAME} valapanel)

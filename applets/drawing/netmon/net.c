@@ -99,7 +99,7 @@ static inline bool scan_net_file(net_stat *rx_stat, net_stat *tx_stat)
 /*
  * Network monitor functions
  */
-G_GNUC_INTERNAL bool update_net_rx(Monitor *m)
+G_GNUC_INTERNAL bool update_net_rx(NetMon *m)
 {
 	/* Commented because I do not know how to handle overflows (note to both functions)*/
 	//    static net_stat previous_net_stat = { 0, 0 };
@@ -120,13 +120,13 @@ G_GNUC_INTERNAL bool update_net_rx(Monitor *m)
 				m->ring_cursor = 0;
 
 			/* Redraw with the new sample. */
-			monitor_redraw_pixmap(m);
+			netmon_redraw_pixmap(m);
 		}
 	}
 	return G_SOURCE_CONTINUE;
 }
 
-G_GNUC_INTERNAL void tooltip_update_net_rx(Monitor *m)
+G_GNUC_INTERNAL void tooltip_update_net_rx(NetMon *m)
 {
 	if (m != NULL && m->stats != NULL)
 	{
@@ -141,7 +141,7 @@ G_GNUC_INTERNAL void tooltip_update_net_rx(Monitor *m)
 	}
 }
 
-G_GNUC_INTERNAL bool update_net_tx(Monitor *m)
+G_GNUC_INTERNAL bool update_net_tx(NetMon *m)
 {
 	m->total = NET_MAX_MBPS;
 	if ((m->stats != NULL) && (m->pixmap != NULL))
@@ -159,13 +159,13 @@ G_GNUC_INTERNAL bool update_net_tx(Monitor *m)
 				m->ring_cursor = 0;
 
 			/* Redraw with the new sample. */
-			monitor_redraw_pixmap(m);
+			netmon_redraw_pixmap(m);
 		}
 	}
 	return G_SOURCE_CONTINUE;
 }
 
-G_GNUC_INTERNAL void tooltip_update_net_tx(Monitor *m)
+G_GNUC_INTERNAL void tooltip_update_net_tx(NetMon *m)
 {
 	if (m != NULL && m->stats != NULL)
 	{
