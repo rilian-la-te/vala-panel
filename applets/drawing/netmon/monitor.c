@@ -151,7 +151,7 @@ G_GNUC_INTERNAL bool netmon_resize(GtkWidget *widget, NetMon *mon)
 				                   new_pixmap_width,
 				                   mon->ring_cursor);
 			g_clear_pointer(&mon->tx_stats, g_free);
-			mon->rx_stats = new_tx_stats;
+			mon->tx_stats = new_tx_stats;
 		}
 		mon->pixmap_width  = new_pixmap_width;
 		mon->pixmap_height = new_pixmap_height;

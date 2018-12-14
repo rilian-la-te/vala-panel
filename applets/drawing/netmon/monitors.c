@@ -126,7 +126,7 @@ static bool monitors_update(void *data)
 
 static void rebuild_mon(NetMonApplet *self)
 {
-	g_clear_pointer(&self->monitor, g_free);
+	g_clear_pointer(&self->monitor, netmon_dispose);
 	self->monitor = create_monitor(self);
 }
 
