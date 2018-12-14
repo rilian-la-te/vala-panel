@@ -61,16 +61,13 @@
     <key name="interface" type="s">
       <default>'l0'</default>
     </key>
-    <key name="net-tx-color" type="s">
+    <key name="tx-color" type="s">
       <default>'teal'</default>
     </key>
-    <key name="net-tx-width" type="i">
-      <default>40</default>
-    </key>
-    <key name="net-rx-color" type="s">
+    <key name="rx-color" type="s">
       <default>'cyan'</default>
     </key>
-    <key name="net-rx-width" type="i">
+    <key name="width" type="i">
       <default>40</default>
     </key>
     <key name="click-action" type="s">

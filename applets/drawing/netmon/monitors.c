@@ -27,7 +27,6 @@
 
 enum
 {
-	NET_TX_POS = 0,
 	NET_RX_POS,
 	N_POS
 };
@@ -35,8 +34,7 @@ enum
 struct _NetMonApplet
 {
 	ValaPanelApplet _parent_;
-	NetMon *monitors[N_POS];
-	bool displayed_mons[N_POS];
+	NetMon *monitor;
 	uint timer;
 };
 
@@ -74,18 +72,21 @@ static void monitor_setup_size(NetMon *mon, NetMonApplet *pl, int width)
 	netmon_resize(GTK_WIDGET(mon->da), mon);
 }
 
-static void monitor_init(NetMon *mon, NetMonApplet *pl, const char *color, int width)
+static void monitor_init(NetMon *mon, NetMonApplet *pl, const char *rx_color, const char *tx_color,
+                         int width)
 {
-	netmon_init_no_height(mon, color);
+	netmon_init_no_height(mon, rx_color, tx_color);
 	monitor_setup_size(mon, pl, width);
 	g_signal_connect(mon->da, "button-release-event", G_CALLBACK(button_release_event), pl);
 }
 
 static NetMon *monitor_create(GtkBox *monitor_box, NetMonApplet *pl, update_func update,
-                              tooltip_update_func tooltip_update, const char *color, int width)
+                              tooltip_update_func tooltip_update, const char *interface_name,
+                              const char *rx_color, const char *tx_color, int width)
 {
 	NetMon *m = g_new0(NetMon, 1);
-	monitor_init(m, pl, color, width);
+	monitor_init(m, pl, rx_color, tx_color, width);
+	m->interface_name = (char *)interface_name;
 	m->update         = update;
 	m->tooltip_update = tooltip_update;
 	gtk_box_pack_start(GTK_BOX(monitor_box), GTK_WIDGET(m->da), false, false, 0);
@@ -97,32 +98,21 @@ static NetMon *monitor_create(GtkBox *monitor_box, NetMonApplet *pl, update_func
  * Applet functions
  */
 
-static NetMon *create_monitor_with_pos(NetMonApplet *self, int pos)
+static NetMon *create_monitor(NetMonApplet *self)
 {
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
-	if (pos == NET_TX_POS)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
-		int width              = g_settings_get_int(settings, NET_TX_WIDTH);
-		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-		                      self,
-		                      update_net_tx,
-		                      tooltip_update_net_tx,
-		                      color,
-		                      width);
-	}
-	if (pos == NET_RX_POS)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
-		int width              = g_settings_get_int(settings, NET_RX_WIDTH);
-		return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-		                      self,
-		                      update_net_rx,
-		                      tooltip_update_net_rx,
-		                      color,
-		                      width);
-	}
-	return NULL;
+	GSettings *settings       = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	g_autofree char *rx_color = g_settings_get_string(settings, NET_RX_CL);
+	g_autofree char *tx_color = g_settings_get_string(settings, NET_TX_CL);
+	char *interface_name      = g_settings_get_string(settings, NET_IFACE);
+	int width                 = g_settings_get_int(settings, WIDTH);
+	return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
+	                      self,
+	                      update_net,
+	                      tooltip_update_net,
+	                      interface_name,
+	                      rx_color,
+	                      tx_color,
+	                      width);
 }
 
 static bool monitors_update(void *data)
@@ -130,58 +120,37 @@ static bool monitors_update(void *data)
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(data);
 	if (g_source_is_destroyed(g_main_current_source()))
 		return false;
-	for (int i = 0; i < N_POS; i++)
-	{
-		if (self->monitors[i] != NULL)
-			netmon_update(self->monitors[i]);
-	}
+	netmon_update(self->monitor);
 	return true;
 }
 
-static void rebuild_mon(NetMonApplet *self, int i)
+static void rebuild_mon(NetMonApplet *self)
 {
-	if (self->displayed_mons[i] && self->monitors[i] == NULL)
-	{
-		self->monitors[i] = create_monitor_with_pos(self, i);
-		gtk_box_reorder_child(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
-		                      GTK_WIDGET(self->monitors[i]->da),
-		                      i);
-	}
-	else if (!self->displayed_mons[i] && self->monitors[i] != NULL)
-	{
-		g_clear_pointer(&self->monitors[i], netmon_dispose);
-	}
+	g_clear_pointer(&self->monitor, g_free);
+	self->monitor = create_monitor(self);
 }
 
 void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 {
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(user_data);
-	if (!g_strcmp0(key, DISPLAY_NET))
+	if (!g_strcmp0(key, NET_IFACE))
 	{
-		self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-		self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-		rebuild_mon(self, NET_TX_POS);
-		rebuild_mon(self, NET_RX_POS);
+		rebuild_mon(self);
 	}
-	//	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
-	//	{
-	//		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
-	//		gdk_rgba_parse(&self->monitors[NET_RX_POS]->foreground_color, color);
-	//	}
-	//	else if ((!g_strcmp0(key, NET_TX_CL)) && self->monitors[NET_TX_POS] != NULL)
-	//	{
-	//		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
-	//		gdk_rgba_parse(&self->monitors[NET_TX_POS]->foreground_color, color);
-	//	}
-	else if ((!g_strcmp0(key, NET_RX_WIDTH)) && self->monitors[NET_RX_POS] != NULL)
+	else if (!g_strcmp0(key, NET_RX_CL))
 	{
-		int width = g_settings_get_int(settings, NET_RX_WIDTH);
-		monitor_setup_size(self->monitors[NET_RX_POS], self, width);
+		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
+		gdk_rgba_parse(&self->monitor->rx_color, color);
 	}
-	else if ((!g_strcmp0(key, NET_TX_WIDTH)) && self->monitors[NET_TX_POS] != NULL)
+	else if (!g_strcmp0(key, NET_TX_CL))
 	{
-		int width = g_settings_get_int(settings, NET_TX_WIDTH);
-		monitor_setup_size(self->monitors[NET_TX_POS], self, width);
+		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
+		gdk_rgba_parse(&self->monitor->tx_color, color);
+	}
+	else if (!g_strcmp0(key, WIDTH))
+	{
+		int width = g_settings_get_int(settings, WIDTH);
+		monitor_setup_size(self->monitor, self, width);
 	}
 }
 
@@ -195,13 +164,10 @@ NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);
-	GtkBox *box                      = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
-	self->displayed_mons[NET_RX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
-	self->displayed_mons[NET_TX_POS] = g_settings_get_boolean(settings, DISPLAY_NET);
+	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
 	gtk_widget_show(GTK_WIDGET(box));
-	for (int i = 0; i < N_POS; i++)
-		rebuild_mon(self, i);
+	rebuild_mon(self);
 	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
 	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
 	gtk_widget_show(GTK_WIDGET(self));
@@ -211,20 +177,17 @@ NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings
 static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 {
 	return generic_config_widget(vala_panel_applet_get_settings(base),
-	                             _("Display network usage"),
-	                             DISPLAY_NET,
-	                             CONF_BOOL,
+	                             _("Network interface"),
+	                             NET_IFACE,
+	                             CONF_STR,
 	                             _("Net receive color"),
 	                             NET_RX_CL,
 	                             CONF_STR,
-	                             _("Net receive width"),
-	                             NET_RX_WIDTH,
-	                             CONF_INT,
 	                             _("Net transmit color"),
 	                             NET_TX_CL,
 	                             CONF_STR,
-	                             _("Net receive width"),
-	                             NET_TX_WIDTH,
+	                             _("Net width"),
+	                             WIDTH,
 	                             CONF_INT,
 	                             _("Action when clicked"),
 	                             ACTION,
@@ -243,11 +206,7 @@ static void netmon_applet_dispose(GObject *user_data)
 		c->timer = 0;
 	}
 	/* Freeing all monitors */
-	for (int i = 0; i < N_POS; i++)
-	{
-		if (c->monitors[i])
-			g_clear_pointer(&c->monitors[i], netmon_dispose);
-	}
+	g_clear_pointer(&c->monitor, netmon_dispose);
 
 	G_OBJECT_CLASS(netmon_applet_parent_class)->dispose(user_data);
 }

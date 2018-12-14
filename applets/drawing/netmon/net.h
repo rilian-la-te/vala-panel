@@ -23,16 +23,13 @@
 
 G_BEGIN_DECLS
 
-#define DISPLAY_NET "display-net-monitor"
-#define NET_RX_CL "net-rx-color"
-#define NET_TX_CL "net-tx-color"
-#define NET_RX_WIDTH "net-rx-width"
-#define NET_TX_WIDTH "net-tx-width"
+#define NET_IFACE "interface"
+#define NET_RX_CL "rx-color"
+#define NET_TX_CL "tx-color"
+#define WIDTH "width"
 
-G_GNUC_INTERNAL bool update_net_tx(NetMon *m);
-G_GNUC_INTERNAL void tooltip_update_net_tx(NetMon *m);
-G_GNUC_INTERNAL bool update_net_rx(NetMon *m);
-G_GNUC_INTERNAL void tooltip_update_net_rx(NetMon *m);
+G_GNUC_INTERNAL bool update_net(NetMon *m);
+G_GNUC_INTERNAL void tooltip_update_net(NetMon *m);
 
 G_END_DECLS
 

@@ -50,7 +50,7 @@ typedef struct mon
 	tooltip_update_func tooltip_update;
 } NetMon;
 
-G_GNUC_INTERNAL void netmon_init_no_height(NetMon *mon, const char *color);
+G_GNUC_INTERNAL void netmon_init_no_height(NetMon *mon, const char *rx_color, const char *tx_color);
 G_GNUC_INTERNAL void netmon_redraw_pixmap(NetMon *mon);
 G_GNUC_INTERNAL bool netmon_update(NetMon *mon);
 G_GNUC_INTERNAL void netmon_dispose(NetMon *mon);
