@@ -1,0 +1,3 @@
+[Plugin]
+Name=Network Graph
+Description=Draws network graph on panel (for each interface).
