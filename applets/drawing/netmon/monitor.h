@@ -32,14 +32,20 @@ typedef void (*tooltip_update_func)(struct mon *);
 
 typedef struct mon
 {
-	GdkRGBA foreground_color; /* Foreground color for drawing area      */
-	GtkDrawingArea *da;       /* Drawing area                           */
-	cairo_surface_t *pixmap;  /* Pixmap to be drawn on drawing area     */
-	int pixmap_width;         /* Width and size of the buffer           */
-	int pixmap_height;        /* Does not include border size           */
-	double *stats;            /* Circular buffer of values              */
-	double total;             /* Maximum possible value, as in mem_total*/
-	int ring_cursor;          /* Cursor for ring/circular buffer        */
+	GtkDrawingArea *da;      /* Drawing area                           */
+	cairo_surface_t *pixmap; /* Pixmap to be drawn on drawing area     */
+	int pixmap_width;        /* Width and size of the buffer           */
+	int pixmap_height;       /* Does not include border size           */
+	bool use_bar;
+	int average_samples;
+	char *interface_name;
+	GdkRGBA rx_color; /* Foreground color for drawing area      */
+	GdkRGBA tx_color; /* Foreground color for drawing area      */
+	double *tx_stats; /* Circular buffer of values              */
+	double tx_total;  /* Maximum possible value, as in mem_total*/
+	double *rx_stats; /* Circular buffer of values              */
+	double rx_total;  /* Maximum possible value, as in mem_total*/
+	int ring_cursor;  /* Cursor for ring/circular buffer        */
 	update_func update;
 	tooltip_update_func tooltip_update;
 } NetMon;

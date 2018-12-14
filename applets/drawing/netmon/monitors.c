@@ -163,16 +163,16 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		rebuild_mon(self, NET_TX_POS);
 		rebuild_mon(self, NET_RX_POS);
 	}
-	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
-		gdk_rgba_parse(&self->monitors[NET_RX_POS]->foreground_color, color);
-	}
-	else if ((!g_strcmp0(key, NET_TX_CL)) && self->monitors[NET_TX_POS] != NULL)
-	{
-		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
-		gdk_rgba_parse(&self->monitors[NET_TX_POS]->foreground_color, color);
-	}
+	//	else if ((!g_strcmp0(key, NET_RX_CL)) && self->monitors[NET_RX_POS] != NULL)
+	//	{
+	//		g_autofree char *color = g_settings_get_string(settings, NET_RX_CL);
+	//		gdk_rgba_parse(&self->monitors[NET_RX_POS]->foreground_color, color);
+	//	}
+	//	else if ((!g_strcmp0(key, NET_TX_CL)) && self->monitors[NET_TX_POS] != NULL)
+	//	{
+	//		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
+	//		gdk_rgba_parse(&self->monitors[NET_TX_POS]->foreground_color, color);
+	//	}
 	else if ((!g_strcmp0(key, NET_RX_WIDTH)) && self->monitors[NET_RX_POS] != NULL)
 	{
 		int width = g_settings_get_int(settings, NET_RX_WIDTH);

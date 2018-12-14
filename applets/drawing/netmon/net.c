@@ -104,78 +104,78 @@ G_GNUC_INTERNAL bool update_net_rx(NetMon *m)
 	/* Commented because I do not know how to handle overflows (note to both functions)*/
 	//    static net_stat previous_net_stat = { 0, 0 };
 
-	m->total = NET_MAX_MBPS;
-	if ((m->stats != NULL) && (m->pixmap != NULL))
-	{
-		/* Open statistics file and scan out net usage. */
-		net_stat net;
-		bool success = scan_net_file(&net, NULL);
-		if (success)
-		{
-			m->stats[m->ring_cursor] =
-			    (net.b - net.e) / (double)(BYTE_TO_MBPS * NET_MAX_MBPS);
+	//	m->total = NET_MAX_MBPS;
+	//	if ((m->stats != NULL) && (m->pixmap != NULL))
+	//	{
+	//		/* Open statistics file and scan out net usage. */
+	//		net_stat net;
+	//		bool success = scan_net_file(&net, NULL);
+	//		if (success)
+	//		{
+	//			m->stats[m->ring_cursor] =
+	//			    (net.b - net.e) / (double)(BYTE_TO_MBPS * NET_MAX_MBPS);
 
-			m->ring_cursor += 1;
-			if (m->ring_cursor >= m->pixmap_width)
-				m->ring_cursor = 0;
+	//			m->ring_cursor += 1;
+	//			if (m->ring_cursor >= m->pixmap_width)
+	//				m->ring_cursor = 0;
 
-			/* Redraw with the new sample. */
-			netmon_redraw_pixmap(m);
-		}
-	}
+	//			/* Redraw with the new sample. */
+	//			netmon_redraw_pixmap(m);
+	//		}
+	//	}
 	return G_SOURCE_CONTINUE;
 }
 
 G_GNUC_INTERNAL void tooltip_update_net_rx(NetMon *m)
 {
-	if (m != NULL && m->stats != NULL)
-	{
-		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor - 1;
-		if (m->da != NULL && m->stats != NULL)
-		{
-			g_autofree char *tooltip_txt =
-			    g_strdup_printf(_("Net receive: %.1fMB/s"),
-			                    m->stats[ring_pos] * NET_MAX_MBPS);
-			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
-		}
-	}
+	//	if (m != NULL && m->stats != NULL)
+	//	{
+	//		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor
+	//- 1; 		if (m->da != NULL && m->stats != NULL)
+	//		{
+	//			g_autofree char *tooltip_txt =
+	//			    g_strdup_printf(_("Net receive: %.1fMB/s"),
+	//			                    m->stats[ring_pos] * NET_MAX_MBPS);
+	//			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
+	//		}
+	//	}
 }
 
 G_GNUC_INTERNAL bool update_net_tx(NetMon *m)
 {
-	m->total = NET_MAX_MBPS;
-	if ((m->stats != NULL) && (m->pixmap != NULL))
-	{
-		/* Open statistics file and scan out net usage. */
-		net_stat net;
-		bool success = scan_net_file(NULL, &net);
-		if (success)
-		{
-			m->stats[m->ring_cursor] =
-			    (net.b - net.e) / (double)(BYTE_TO_MBPS * NET_MAX_MBPS);
+	//	m->total = NET_MAX_MBPS;
+	//	if ((m->stats != NULL) && (m->pixmap != NULL))
+	//	{
+	//		/* Open statistics file and scan out net usage. */
+	//		net_stat net;
+	//		bool success = scan_net_file(NULL, &net);
+	//		if (success)
+	//		{
+	//			m->stats[m->ring_cursor] =
+	//			    (net.b - net.e) / (double)(BYTE_TO_MBPS * NET_MAX_MBPS);
 
-			m->ring_cursor += 1;
-			if (m->ring_cursor >= m->pixmap_width)
-				m->ring_cursor = 0;
+	//			m->ring_cursor += 1;
+	//			if (m->ring_cursor >= m->pixmap_width)
+	//				m->ring_cursor = 0;
 
-			/* Redraw with the new sample. */
-			netmon_redraw_pixmap(m);
-		}
-	}
+	//			/* Redraw with the new sample. */
+	//			netmon_redraw_pixmap(m);
+	//		}
+	//	}
 	return G_SOURCE_CONTINUE;
 }
 
 G_GNUC_INTERNAL void tooltip_update_net_tx(NetMon *m)
 {
-	if (m != NULL && m->stats != NULL)
-	{
-		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor - 1;
-		if (m->da != NULL && m->stats != NULL)
-		{
-			g_autofree char *tooltip_txt =
-			    g_strdup_printf(_("Net transmit: %.1fMB/s"),
-			                    m->stats[ring_pos] * NET_MAX_MBPS);
-			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
-		}
-	}
+	//	if (m != NULL && m->stats != NULL)
+	//	{
+	//		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor
+	//- 1; 		if (m->da != NULL && m->stats != NULL)
+	//		{
+	//			g_autofree char *tooltip_txt =
+	//			    g_strdup_printf(_("Net transmit: %.1fMB/s"),
+	//			                    m->stats[ring_pos] * NET_MAX_MBPS);
+	//			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
+	//		}
+	//	}
 }
