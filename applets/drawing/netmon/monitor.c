@@ -55,7 +55,7 @@ G_GNUC_INTERNAL void netmon_redraw_pixmap(NetMon *mon)
 			cairo_move_to(cr, i + 0.5, mon->pixmap_height);
 		cairo_line_to(cr,
 		              i + 0.5,
-		              (1.0 - mon->rx_stats[drawing_cursor]) * mon->pixmap_height);
+		              (1.0 - mon->down_stats[drawing_cursor]) * mon->pixmap_height);
 	}
 	cairo_stroke(cr);
 	/* Draw TX stats */
@@ -68,7 +68,7 @@ G_GNUC_INTERNAL void netmon_redraw_pixmap(NetMon *mon)
 			cairo_move_to(cr, i + 0.5, mon->pixmap_height);
 		cairo_line_to(cr,
 		              i + 0.5,
-		              (1.0 - mon->tx_stats[drawing_cursor]) * mon->pixmap_height);
+		              (1.0 - mon->up_stats[drawing_cursor]) * mon->pixmap_height);
 	}
 	cairo_stroke(cr);
 	/* Finish */
@@ -129,29 +129,29 @@ G_GNUC_INTERNAL bool netmon_resize(GtkWidget *widget, NetMon *mon)
 		 * function) or its size changed, reallocate the buffer and preserve
 		 * existing data.
 		 */
-		if (mon->rx_stats == NULL || mon->tx_stats == NULL ||
+		if (mon->down_stats == NULL || mon->up_stats == NULL ||
 		    (new_pixmap_width != mon->pixmap_width))
 		{
-			double *new_rx_stats = g_new0(double, sizeof(double) * new_pixmap_width);
-			double *new_tx_stats = g_new0(double, sizeof(double) * new_pixmap_width);
-			if (new_rx_stats == NULL || new_tx_stats == NULL)
+			double *new_down_stats = g_new0(double, sizeof(double) * new_pixmap_width);
+			double *new_up_stats   = g_new0(double, sizeof(double) * new_pixmap_width);
+			if (new_down_stats == NULL || new_up_stats == NULL)
 				return G_SOURCE_REMOVE;
-			if (mon->rx_stats != NULL)
-				generate_new_stats(mon->rx_stats,
-				                   new_rx_stats,
+			if (mon->down_stats != NULL)
+				generate_new_stats(mon->down_stats,
+				                   new_down_stats,
 				                   mon->pixmap_width,
 				                   new_pixmap_width,
 				                   mon->ring_cursor);
-			g_clear_pointer(&mon->rx_stats, g_free);
-			mon->rx_stats = new_rx_stats;
-			if (mon->tx_stats != NULL)
-				generate_new_stats(mon->tx_stats,
-				                   new_tx_stats,
+			g_clear_pointer(&mon->down_stats, g_free);
+			mon->down_stats = new_down_stats;
+			if (mon->up_stats != NULL)
+				generate_new_stats(mon->up_stats,
+				                   new_up_stats,
 				                   mon->pixmap_width,
 				                   new_pixmap_width,
 				                   mon->ring_cursor);
-			g_clear_pointer(&mon->tx_stats, g_free);
-			mon->tx_stats = new_tx_stats;
+			g_clear_pointer(&mon->up_stats, g_free);
+			mon->up_stats = new_up_stats;
 		}
 		mon->pixmap_width  = new_pixmap_width;
 		mon->pixmap_height = new_pixmap_height;
@@ -186,7 +186,8 @@ static bool draw(GtkWidget *widget, cairo_t *cr, NetMon *mon)
 
 G_GNUC_INTERNAL void netmon_init_no_height(NetMon *mon, const char *rx_color, const char *tx_color)
 {
-	mon->da = GTK_DRAWING_AREA(gtk_drawing_area_new());
+	mon->da              = GTK_DRAWING_AREA(gtk_drawing_area_new());
+	mon->average_samples = 2;
 	gtk_widget_add_events(GTK_WIDGET(mon->da),
 	                      GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 	                          GDK_BUTTON_MOTION_MASK);
@@ -201,7 +202,7 @@ G_GNUC_INTERNAL void netmon_dispose(NetMon *mon)
 	g_clear_pointer(&mon->da, gtk_widget_destroy);
 	g_clear_pointer(&mon->pixmap, cairo_surface_destroy);
 	g_clear_pointer(&mon->interface_name, g_free);
-	g_clear_pointer(&mon->rx_stats, g_free);
-	g_clear_pointer(&mon->tx_stats, g_free);
+	g_clear_pointer(&mon->down_stats, g_free);
+	g_clear_pointer(&mon->up_stats, g_free);
 	g_clear_pointer(&mon, g_free);
 }

@@ -24,9 +24,8 @@
 
 #include "net.h"
 
-#define NET_SAMPLE_COUNT 20
-#define min(a, b) (a) < (b) ? a : b
-#define max(a, b) (a) > (b) ? a : b
+#define NET_SAMPLE_COUNT 5
+#define SAMPLE_SCALE_MULT 0.1
 
 /*
  * Network monitor functions
@@ -54,7 +53,7 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 	/* Ignore first two lines - header */
 	fgets(buf, 255, fp);
 	fgets(buf, 255, fp);
-	static int first_run = 1;
+	static bool first_run = true;
 	while (!feof(fp))
 	{
 		if (fgets(buf, 255, fp) == NULL)
@@ -86,15 +85,14 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 		net.last_up           = up;
 		if (first_run)
 		{
-			first_run = 0;
+			first_run = false;
 			break;
 		}
 
 		unsigned int curtmp1 = 0;
 		unsigned int curtmp2 = 0;
 		/* Average the samples */
-		int i;
-		for (i = 0; i < mon->average_samples; i++)
+		for (int i = 0; i < mon->average_samples; i++)
 		{
 			curtmp1 +=
 			    net.down[(net.cur_idx + NET_SAMPLE_COUNT - i) % NET_SAMPLE_COUNT];
@@ -102,40 +100,51 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 		}
 		net.down_rate = curtmp1 / (double)mon->average_samples;
 		net.up_rate   = curtmp2 / (double)mon->average_samples;
-		if (mon->rx_total > 0)
+		/* Count current values for tooltip */
+		mon->down_current = net.down_rate;
+		mon->up_current   = net.up_rate;
+		/* Count current values for tooltip */
 		{
-			net.down_rate /= (double)mon->rx_total;
-			net.down_rate = min(1.0, net.down_rate);
-		}
-		else
-		{
+			/* Check if we need downscaling */
+			double max_up_sample = 0.0, max_down_sample = 0.0;
+			for (int i = 0; i < mon->pixmap_width; i++)
+			{
+				max_up_sample   = MAX(max_up_sample, mon->up_stats[i]);
+				max_down_sample = MAX(max_down_sample, mon->down_stats[i]);
+			}
+			if (max_up_sample < SAMPLE_SCALE_MULT &&
+			    max_down_sample < SAMPLE_SCALE_MULT)
+			{
+				/* We need downscaling, process it */
+				for (int i = 0; i < mon->pixmap_width; i++)
+				{
+					mon->down_stats[i] /= SAMPLE_SCALE_MULT;
+					mon->up_stats[i] /= SAMPLE_SCALE_MULT;
+				}
+				net.max_up *= SAMPLE_SCALE_MULT;
+				net.max_down *= SAMPLE_SCALE_MULT;
+			}
+			/* We need one maximum to maintain consistent curves */
+			net.max_up   = MAX(net.max_up, net.max_down);
+			net.max_down = MAX(net.max_up, net.max_down);
+
 			/* Normalize by maximum speed (a priori unknown,
 			 so we must do this all the time). */
 			if (net.max_down < net.down_rate)
 			{
-				for (i = 0; i < mon->pixmap_width; i++)
-				{
-					mon->rx_stats[i] *= (net.max_down / net.down_rate);
-				}
+				for (int i = 0; i < mon->pixmap_width; i++)
+					mon->down_stats[i] *= (net.max_down / net.down_rate);
 				net.max_down  = net.down_rate;
 				net.down_rate = 1.0;
 			}
 			else if (net.max_down != 0)
 				net.down_rate /= net.max_down;
 		}
-		if (mon->tx_total > 0)
-		{
-			net.up_rate /= (double)mon->tx_total;
-			net.up_rate = min(1.0, net.up_rate);
-		}
-		else
 		{
 			if (net.max_up < net.up_rate)
 			{
-				for (i = 0; i < mon->pixmap_width; i++)
-				{
-					mon->tx_stats[i] *= (net.max_up / net.up_rate);
-				}
+				for (int i = 0; i < mon->pixmap_width; i++)
+					mon->up_stats[i] *= (net.max_up / net.up_rate);
 				net.max_up  = net.up_rate;
 				net.up_rate = 1.0;
 			}
@@ -147,23 +156,55 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 	}
 	fclose(fp);
 
-	mon->rx_stats[mon->ring_cursor] = net.down_rate;
-	mon->tx_stats[mon->ring_cursor] = net.up_rate;
+	mon->down_stats[mon->ring_cursor] = net.down_rate;
+	mon->up_stats[mon->ring_cursor]   = net.up_rate;
 
+	mon->ring_cursor += 1;
+	if (mon->ring_cursor >= mon->pixmap_width)
+		mon->ring_cursor = 0;
+	netmon_redraw_pixmap(mon);
 	return true;
+}
+
+static double count_coeff(double rate, double max)
+{
+	double bytes = rate * max;
+	if (bytes > 1073741824)
+		return bytes / 1073741824;
+	else if (bytes > 1048576)
+		return bytes / 1048576;
+	else if (bytes > 1024)
+		return bytes / 1024;
+	else
+		return bytes;
+}
+
+static const char *get_relevant_char(double bytes)
+{
+	if (bytes > 1073741824)
+		return _("GB/s");
+	else if (bytes > 1048576)
+		return _("MB/s");
+	else if (bytes > 1024)
+		return _("KB/s");
+	else
+		return _("B/s");
 }
 
 G_GNUC_INTERNAL void tooltip_update_net(NetMon *m)
 {
-	//	if (m != NULL && m->stats != NULL)
-	//	{
-	//		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor
-	//- 1; 		if (m->da != NULL && m->stats != NULL)
-	//		{
-	//			g_autofree char *tooltip_txt =
-	//			    g_strdup_printf(_("Net receive: %.1fMB/s"),
-	//			                    m->stats[ring_pos] * NET_MAX_MBPS);
-	//			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
-	//		}
-	//	}
+	if (m != NULL && m->down_stats != NULL && m->up_stats != NULL)
+	{
+		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor - 1;
+		if (m->da != NULL && m->down_stats != NULL && m->up_stats != NULL)
+		{
+			g_autofree char *tooltip_txt =
+			    g_strdup_printf(_("Net receive: %.3f %s \n Net transmit: %.3f %s\n"),
+			                    count_coeff(m->down_stats[ring_pos], m->down_current),
+			                    get_relevant_char(m->down_current),
+			                    count_coeff(m->up_stats[ring_pos], m->up_current),
+			                    get_relevant_char(m->up_current));
+			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
+		}
+	}
 }

@@ -39,13 +39,13 @@ typedef struct mon
 	bool use_bar;
 	int average_samples;
 	char *interface_name;
-	GdkRGBA rx_color; /* Foreground color for drawing area      */
-	GdkRGBA tx_color; /* Foreground color for drawing area      */
-	double *tx_stats; /* Circular buffer of values              */
-	double tx_total;  /* Maximum possible value, as in mem_total*/
-	double *rx_stats; /* Circular buffer of values              */
-	double rx_total;  /* Maximum possible value, as in mem_total*/
-	int ring_cursor;  /* Cursor for ring/circular buffer        */
+	GdkRGBA rx_color;    /* Foreground color for drawing area      */
+	GdkRGBA tx_color;    /* Foreground color for drawing area      */
+	double *up_stats;    /* Circular buffer of values              */
+	double up_current;   /* Maximum possible value, as in mem_total*/
+	double *down_stats;  /* Circular buffer of values              */
+	double down_current; /* Maximum possible value, as in mem_total*/
+	int ring_cursor;     /* Cursor for ring/circular buffer        */
 	update_func update;
 	tooltip_update_func tooltip_update;
 } NetMon;
