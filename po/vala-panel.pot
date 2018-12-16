@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 23:09+0300\n"
+"POT-Creation-Date: 2018-12-16 03:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,47 +134,50 @@ msgstr ""
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:249
+#: ../applets/drawing/monitors/monitors.c:248
 #: ../applets/drawing/monitors/monitors-old.vala:400
 msgid "Display CPU usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:252
+#: ../applets/drawing/monitors/monitors.c:251
 #: ../applets/drawing/monitors/monitors-old.vala:401
 msgid "CPU color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:255
+#: ../applets/drawing/monitors/monitors.c:254
+msgid "CPU width"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:257
 #: ../applets/drawing/monitors/monitors-old.vala:402
 msgid "Display RAM usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:258
+#: ../applets/drawing/monitors/monitors.c:260
 #: ../applets/drawing/monitors/monitors-old.vala:403
 msgid "RAM color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:261
+#: ../applets/drawing/monitors/monitors.c:263
+msgid "RAM width"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:266
 msgid "Display swap usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:264
+#: ../applets/drawing/monitors/monitors.c:269
 msgid "Swap color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:267
+#: ../applets/drawing/monitors/monitors.c:272
+msgid "Swap width"
+msgstr ""
+
+#: ../applets/drawing/monitors/monitors.c:275
+#: ../applets/drawing/netmon/monitors.c:215
 #: ../applets/drawing/monitors/monitors-old.vala:404
 msgid "Action when clicked"
-msgstr ""
-
-#: ../applets/drawing/monitors/net.c:137
-#, c-format
-msgid "Net receive: %.1fMB/s"
-msgstr ""
-
-#: ../applets/drawing/monitors/net.c:176
-#, c-format
-msgid "Net transmit: %.1fMB/s"
 msgstr ""
 
 #: ../applets/drawing/monitors/swap.c:98
@@ -182,23 +185,70 @@ msgstr ""
 msgid "Swap usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3325
+#: ../applets/drawing/netmon/monitors.c:197
+msgid "Network interface"
+msgstr ""
+
+#: ../applets/drawing/netmon/monitors.c:200
+msgid "Net average samples count (for more round speed)"
+msgstr ""
+
+#: ../applets/drawing/netmon/monitors.c:203
+msgid "Net receive color"
+msgstr ""
+
+#: ../applets/drawing/netmon/monitors.c:206
+msgid "Net transmit color"
+msgstr ""
+
+#: ../applets/drawing/netmon/monitors.c:209
+msgid "Net graph as histogram"
+msgstr ""
+
+#: ../applets/drawing/netmon/monitors.c:212
+msgid "Net width"
+msgstr ""
+
+#: ../applets/drawing/netmon/net.c:185
+msgid "GB/s"
+msgstr ""
+
+#: ../applets/drawing/netmon/net.c:187
+msgid "MB/s"
+msgstr ""
+
+#: ../applets/drawing/netmon/net.c:189
+msgid "KB/s"
+msgstr ""
+
+#: ../applets/drawing/netmon/net.c:191
+msgid "B/s"
+msgstr ""
+
+#: ../applets/drawing/netmon/net.c:202
+#, c-format
+msgid ""
+"Net receive: %.3f %s \n"
+"Net transmit: %.3f %s\n"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist-widget.c:3262
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3333
+#: ../applets/wnck/tasklist/tasklist-widget.c:3270
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3341
+#: ../applets/wnck/tasklist/tasklist-widget.c:3278
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3349
+#: ../applets/wnck/tasklist/tasklist-widget.c:3286
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3361
+#: ../applets/wnck/tasklist/tasklist-widget.c:3298
 msgid "_Close All"
 msgstr ""
 
@@ -218,23 +268,23 @@ msgstr ""
 msgid "Bold font"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:144
+#: ../applets/core/dirmenu/dirmenu.vala:148
 msgid "_Open"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:151
+#: ../applets/core/dirmenu/dirmenu.vala:156
 msgid "Open in _Terminal"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:195
+#: ../applets/core/dirmenu/dirmenu.vala:201
 msgid "Directory"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:196
+#: ../applets/core/dirmenu/dirmenu.vala:202
 msgid "Label"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:197
+#: ../applets/core/dirmenu/dirmenu.vala:203
 #: ../applets/core/menumodel/menumodel.vala:116
 #: ../applets/core/launchbar/config.ui:134
 msgid "Icon"
@@ -565,19 +615,19 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: ../data/ui/pref.ui:939
+#: ../data/ui/pref.ui:940
 msgid "No settings available"
 msgstr ""
 
-#: ../data/ui/pref.ui:949
+#: ../data/ui/pref.ui:950
 msgid "No Settings"
 msgstr ""
 
-#: ../data/ui/pref.ui:975
+#: ../data/ui/pref.ui:976
 msgid "New Applet"
 msgstr ""
 
-#: ../data/ui/pref.ui:1021
+#: ../data/ui/pref.ui:1022
 msgid "Applets"
 msgstr ""
 
@@ -880,6 +930,14 @@ msgstr ""
 
 #: ../applets/drawing/monitors/org.valapanel.monitors.desktop.plugin.in:4
 msgid "Draws monitors graph on panel (for CPU and RAM)."
+msgstr ""
+
+#: ../applets/drawing/netmon/org.valapanel.netmon.desktop.plugin.in:3
+msgid "Network Graph"
+msgstr ""
+
+#: ../applets/drawing/netmon/org.valapanel.netmon.desktop.plugin.in:4
+msgid "Draws network graph on panel (for each interface)."
 msgstr ""
 
 #: ../applets/wnck/buttons/org.valapanel.buttons.desktop.plugin.in:4

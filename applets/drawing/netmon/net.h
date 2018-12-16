@@ -26,7 +26,9 @@ G_BEGIN_DECLS
 #define NET_IFACE "interface"
 #define NET_RX_CL "rx-color"
 #define NET_TX_CL "tx-color"
-#define WIDTH "width"
+#define NET_WIDTH "width"
+#define NET_AVERAGE_SAMPLES "average-samples-precision"
+#define NET_USE_BAR "draw-as-bar"
 
 G_GNUC_INTERNAL bool update_net(NetMon *m);
 G_GNUC_INTERNAL void tooltip_update_net(NetMon *m);

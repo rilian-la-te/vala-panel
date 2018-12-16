@@ -26,6 +26,7 @@
 
 #define NET_SAMPLE_COUNT 5
 #define SAMPLE_SCALE_MULT 0.1
+#define MIN_MAXIMUM 10000
 
 /*
  * Network monitor functions
@@ -37,12 +38,13 @@ struct net_stat
 	int cur_idx;
 	long long down[NET_SAMPLE_COUNT], up[NET_SAMPLE_COUNT];
 	double down_rate, up_rate;
-	double max_down, max_up;
+	/* We need one maximum to maintain consistent curves */
+	double max;
 };
 
 G_GNUC_INTERNAL bool update_net(NetMon *mon)
 {
-	static struct net_stat net = { .cur_idx = 0, .max_down = 0, .max_up = 0 };
+	static struct net_stat net = { .cur_idx = 0, .max = MIN_MAXIMUM };
 
 	FILE *fp;
 	if (!(fp = fopen("/proc/net/dev", "r")))
@@ -103,53 +105,50 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 		/* Count current values for tooltip */
 		mon->down_current = net.down_rate;
 		mon->up_current   = net.up_rate;
-		/* Count current values for tooltip */
+		/* Check if we need downscaling */
+		double max_up_sample = 0.0, max_down_sample = 0.0;
+		for (int i = 0; i < mon->pixmap_width; i++)
 		{
-			/* Check if we need downscaling */
-			double max_up_sample = 0.0, max_down_sample = 0.0;
+			max_up_sample   = MAX(max_up_sample, mon->up_stats[i]);
+			max_down_sample = MAX(max_down_sample, mon->down_stats[i]);
+		}
+		if (max_up_sample < SAMPLE_SCALE_MULT && max_down_sample < SAMPLE_SCALE_MULT &&
+		    net.max >= MIN_MAXIMUM / SAMPLE_SCALE_MULT)
+		{
+			/* We need downscaling, process it */
 			for (int i = 0; i < mon->pixmap_width; i++)
 			{
-				max_up_sample   = MAX(max_up_sample, mon->up_stats[i]);
-				max_down_sample = MAX(max_down_sample, mon->down_stats[i]);
+				mon->down_stats[i] /= SAMPLE_SCALE_MULT;
+				mon->up_stats[i] /= SAMPLE_SCALE_MULT;
 			}
-			if (max_up_sample < SAMPLE_SCALE_MULT &&
-			    max_down_sample < SAMPLE_SCALE_MULT)
-			{
-				/* We need downscaling, process it */
-				for (int i = 0; i < mon->pixmap_width; i++)
-				{
-					mon->down_stats[i] /= SAMPLE_SCALE_MULT;
-					mon->up_stats[i] /= SAMPLE_SCALE_MULT;
-				}
-				net.max_up *= SAMPLE_SCALE_MULT;
-				net.max_down *= SAMPLE_SCALE_MULT;
-			}
-			/* We need one maximum to maintain consistent curves */
-			net.max_up   = MAX(net.max_up, net.max_down);
-			net.max_down = MAX(net.max_up, net.max_down);
-
-			/* Normalize by maximum speed (a priori unknown,
-			 so we must do this all the time). */
-			if (net.max_down < net.down_rate)
-			{
-				for (int i = 0; i < mon->pixmap_width; i++)
-					mon->down_stats[i] *= (net.max_down / net.down_rate);
-				net.max_down  = net.down_rate;
-				net.down_rate = 1.0;
-			}
-			else if (net.max_down != 0)
-				net.down_rate /= net.max_down;
+			net.max *= SAMPLE_SCALE_MULT;
 		}
+		double rate = MAX(net.up_rate, net.down_rate);
+		/* Normalize by maximum speed (a priori unknown,
+		 so we must do this all the time). */
+		if (net.max < rate)
 		{
-			if (net.max_up < net.up_rate)
+			for (int i = 0; i < mon->pixmap_width; i++)
 			{
-				for (int i = 0; i < mon->pixmap_width; i++)
-					mon->up_stats[i] *= (net.max_up / net.up_rate);
-				net.max_up  = net.up_rate;
-				net.up_rate = 1.0;
+				mon->down_stats[i] *= (net.max / rate);
+				mon->up_stats[i] *= (net.max / rate);
 			}
-			else if (net.max_up != 0)
-				net.up_rate /= net.max_up;
+			net.max = net.up_rate > net.down_rate ? net.up_rate : net.down_rate;
+			if (net.up_rate > net.down_rate)
+			{
+				net.up_rate = 1.0;
+				net.down_rate /= net.max;
+			}
+			else
+			{
+				net.down_rate = 1.0;
+				net.up_rate /= net.max;
+			}
+		}
+		else if (net.max != 0)
+		{
+			net.up_rate /= net.max;
+			net.down_rate /= net.max;
 		}
 		net.cur_idx = (net.cur_idx + 1) % NET_SAMPLE_COUNT;
 		break; // Ignore the rest
@@ -179,8 +178,9 @@ static double count_coeff(double rate, double max)
 		return bytes;
 }
 
-static const char *get_relevant_char(double bytes)
+static const char *get_relevant_char(double rate, double max)
 {
+	double bytes = rate * max;
 	if (bytes > 1073741824)
 		return _("GB/s");
 	else if (bytes > 1048576)
@@ -199,11 +199,13 @@ G_GNUC_INTERNAL void tooltip_update_net(NetMon *m)
 		if (m->da != NULL && m->down_stats != NULL && m->up_stats != NULL)
 		{
 			g_autofree char *tooltip_txt =
-			    g_strdup_printf(_("Net receive: %.3f %s \n Net transmit: %.3f %s\n"),
+                g_strdup_printf(_("Net receive: %.3f %s \nNet transmit: %.3f %s\n"),
 			                    count_coeff(m->down_stats[ring_pos], m->down_current),
-			                    get_relevant_char(m->down_current),
+			                    get_relevant_char(m->down_stats[ring_pos],
+			                                      m->down_current),
 			                    count_coeff(m->up_stats[ring_pos], m->up_current),
-			                    get_relevant_char(m->up_current));
+			                    get_relevant_char(m->up_stats[ring_pos],
+			                                      m->up_current));
 			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
 		}
 	}

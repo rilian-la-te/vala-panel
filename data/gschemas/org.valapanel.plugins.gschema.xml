@@ -59,7 +59,7 @@
   </schema>
     <schema id="org.valapanel.netmon">
     <key name="interface" type="s">
-      <default>'l0'</default>
+      <default>'lo'</default>
     </key>
     <key name="tx-color" type="s">
       <default>'teal'</default>
@@ -69,6 +69,12 @@
     </key>
     <key name="width" type="i">
       <default>40</default>
+    </key>
+    <key name="average-samples-precision" type="i">
+      <default>2</default>
+    </key>
+    <key name="draw-as-bar" type="b">
+      <default>false</default>
     </key>
     <key name="click-action" type="s">
       <default>'lxtask'</default>

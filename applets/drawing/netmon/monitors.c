@@ -82,13 +82,16 @@ static void monitor_init(NetMon *mon, NetMonApplet *pl, const char *rx_color, co
 
 static NetMon *monitor_create(GtkBox *monitor_box, NetMonApplet *pl, update_func update,
                               tooltip_update_func tooltip_update, const char *interface_name,
-                              const char *rx_color, const char *tx_color, int width)
+                              const char *rx_color, const char *tx_color, int width,
+                              int average_samples, bool use_bar)
 {
 	NetMon *m = g_new0(NetMon, 1);
 	monitor_init(m, pl, rx_color, tx_color, width);
-	m->interface_name = (char *)interface_name;
-	m->update         = update;
-	m->tooltip_update = tooltip_update;
+	m->interface_name  = (char *)interface_name;
+	m->average_samples = average_samples;
+	m->use_bar         = use_bar;
+	m->update          = update;
+	m->tooltip_update  = tooltip_update;
 	gtk_box_pack_start(GTK_BOX(monitor_box), GTK_WIDGET(m->da), false, false, 0);
 	gtk_widget_show(GTK_WIDGET(m->da));
 	return m;
@@ -104,7 +107,9 @@ static NetMon *create_monitor(NetMonApplet *self)
 	g_autofree char *rx_color = g_settings_get_string(settings, NET_RX_CL);
 	g_autofree char *tx_color = g_settings_get_string(settings, NET_TX_CL);
 	char *interface_name      = g_settings_get_string(settings, NET_IFACE);
-	int width                 = g_settings_get_int(settings, WIDTH);
+	int width                 = g_settings_get_int(settings, NET_WIDTH);
+	int average_samples       = g_settings_get_int(settings, NET_AVERAGE_SAMPLES);
+	bool use_bar              = g_settings_get_boolean(settings, NET_USE_BAR);
 	return monitor_create(GTK_BOX(gtk_bin_get_child(GTK_BIN(self))),
 	                      self,
 	                      update_net,
@@ -112,7 +117,9 @@ static NetMon *create_monitor(NetMonApplet *self)
 	                      interface_name,
 	                      rx_color,
 	                      tx_color,
-	                      width);
+	                      width,
+	                      average_samples,
+	                      use_bar);
 }
 
 static bool monitors_update(void *data)
@@ -147,10 +154,20 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 		g_autofree char *color = g_settings_get_string(settings, NET_TX_CL);
 		gdk_rgba_parse(&self->monitor->tx_color, color);
 	}
-	else if (!g_strcmp0(key, WIDTH))
+	else if (!g_strcmp0(key, NET_WIDTH))
 	{
-		int width = g_settings_get_int(settings, WIDTH);
+		int width = g_settings_get_int(settings, NET_WIDTH);
 		monitor_setup_size(self->monitor, self, width);
+	}
+	else if (!g_strcmp0(key, NET_AVERAGE_SAMPLES))
+	{
+		int width                      = g_settings_get_int(settings, NET_AVERAGE_SAMPLES);
+		self->monitor->average_samples = width;
+	}
+	else if (!g_strcmp0(key, NET_USE_BAR))
+	{
+		bool use_bar           = g_settings_get_boolean(settings, NET_USE_BAR);
+		self->monitor->use_bar = use_bar;
 	}
 }
 
@@ -180,14 +197,20 @@ static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 	                             _("Network interface"),
 	                             NET_IFACE,
 	                             CONF_STR,
+	                             _("Net average samples count (for more round speed)"),
+	                             NET_AVERAGE_SAMPLES,
+	                             CONF_INT,
 	                             _("Net receive color"),
 	                             NET_RX_CL,
 	                             CONF_STR,
 	                             _("Net transmit color"),
 	                             NET_TX_CL,
 	                             CONF_STR,
+	                             _("Net graph as histogram"),
+	                             NET_USE_BAR,
+	                             CONF_BOOL,
 	                             _("Net width"),
-	                             WIDTH,
+	                             NET_WIDTH,
 	                             CONF_INT,
 	                             _("Action when clicked"),
 	                             ACTION,
