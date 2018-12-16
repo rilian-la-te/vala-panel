@@ -198,14 +198,13 @@ G_GNUC_INTERNAL void tooltip_update_net(NetMon *m)
 		int ring_pos = (m->ring_cursor == 0) ? m->pixmap_width - 1 : m->ring_cursor - 1;
 		if (m->da != NULL && m->down_stats != NULL && m->up_stats != NULL)
 		{
-			g_autofree char *tooltip_txt =
-                g_strdup_printf(_("Net receive: %.3f %s \nNet transmit: %.3f %s\n"),
-			                    count_coeff(m->down_stats[ring_pos], m->down_current),
-			                    get_relevant_char(m->down_stats[ring_pos],
-			                                      m->down_current),
-			                    count_coeff(m->up_stats[ring_pos], m->up_current),
-			                    get_relevant_char(m->up_stats[ring_pos],
-			                                      m->up_current));
+			g_autofree char *tooltip_txt = g_strdup_printf(
+			    _("%s:\nNet receive: %.3f %s \nNet transmit: %.3f %s\n"),
+			    m->interface_name,
+			    count_coeff(m->down_stats[ring_pos], m->down_current),
+			    get_relevant_char(m->down_stats[ring_pos], m->down_current),
+			    count_coeff(m->up_stats[ring_pos], m->up_current),
+			    get_relevant_char(m->up_stats[ring_pos], m->up_current));
 			gtk_widget_set_tooltip_text(GTK_WIDGET(m->da), tooltip_txt);
 		}
 	}
