@@ -85,7 +85,7 @@ struct _StatusNotifierItemClass
 	void (*registration_failed)(StatusNotifierItem *sn, GError *error);
 };
 
-StatusNotifierItem *status_notifier_item_new_from_xcb_widnow(const char *id,
+StatusNotifierItem *status_notifier_item_new_from_xcb_window(const char *id,
                                                              StatusNotifierCategory category,
                                                              xcb_connection_t *conn,
                                                              xcb_window_t window);

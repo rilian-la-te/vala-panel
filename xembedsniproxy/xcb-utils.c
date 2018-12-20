@@ -24,6 +24,7 @@
 
 #include "xcb-utils.h"
 
+#include <gio/gio.h>
 #include <xcb/xcb_atom.h>
 
 /* X11 temporary atom */
@@ -176,6 +177,14 @@ xcb_screen_t *xcb_get_screen_for_connection(xcb_connection_t *connection, int sc
 			break;
 		}
 	return screen;
+}
+
+xcb_window_t xcb_get_root_for_connection(xcb_connection_t *connection, int screen_num)
+{
+	xcb_screen_t *screen = xcb_get_screen_for_connection(connection, screen_num);
+	if (screen)
+		return screen->root;
+	return 0;
 }
 
 xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_name)

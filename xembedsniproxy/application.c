@@ -20,6 +20,7 @@
 #include "application.h"
 #include "config.h"
 #include "gwater-xcb.h"
+#include "sn.h"
 #include "xcb-utils.h"
 
 #include <gio/gio.h>
@@ -37,6 +38,7 @@ struct _XEmbedSNIApplication
 	GApplication parent;
 	uint8_t damageEventBase;
 	GWaterXcbSource *src;
+	int default_screen;
 	xcb_window_t selection;
 	GHashTable *damageWatches;
 	GHashTable *proxies;
@@ -44,9 +46,9 @@ struct _XEmbedSNIApplication
 
 G_DEFINE_TYPE(XEmbedSNIApplication, xembed_sni_application, G_TYPE_APPLICATION)
 
-static const GOptionEntry entries[] = {
-	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL }, { NULL }
-};
+static const GOptionEntry entries[] =
+    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
+      { NULL } };
 
 enum
 {
@@ -128,8 +130,14 @@ static void xembed_sni_application_dock(XEmbedSNIApplication *self, xcb_window_t
 
 	if (xembed_sni_application_add_damage_watch(self, winId))
 	{
-		//        g_hash_table_insert(self->proxies,GUINT_TO_POINTER(winID),);
-		//        m_proxies[winId] = new SNIProxy(winId, this);
+		g_autofree char *id = g_strdup_printf("0x%x", winId);
+		StatusNotifierItem *item =
+		    status_notifier_item_new_from_xcb_window(id,
+		                                             SN_CATEGORY_APPLICATION_STATUS,
+		                                             g_water_xcb_source_get_connection(
+		                                                 self->src),
+		                                             winId);
+		g_hash_table_insert(self->proxies, GUINT_TO_POINTER(winId), item);
 	}
 }
 
@@ -218,7 +226,7 @@ static bool xcb_event_filter(xcb_generic_event_t *event, XEmbedSNIApplication *s
 		{
 			//            sniProx->update();
 			xcb_damage_subtract(g_water_xcb_source_get_connection(self->src),
-			                    GDK_POINTER_TO_XID(
+			                    GPOINTER_TO_UINT(
 			                        g_hash_table_lookup(self->damageWatches,
 			                                            GUINT_TO_POINTER(damagedWId))),
 			                    XCB_NONE,
@@ -243,7 +251,7 @@ static void claim_systray_selection(XEmbedSNIApplication *self)
 {
 	xcb_connection_t *con = g_water_xcb_source_get_connection(self->src);
 	g_autofree char *selection_atom_name =
-	    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", gdk_x11_get_default_screen());
+	    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", self->default_screen);
 	xcb_atom_t selection_atom =
 	    (xcb_atom_t)xcb_atom_get_for_connection(g_water_xcb_source_get_connection(self->src),
 	                                            selection_atom_name);
@@ -266,7 +274,9 @@ static void claim_systray_selection(XEmbedSNIApplication *self)
 	uint32_t values[] = { true,
 		              XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_STRUCTURE_NOTIFY };
 	self->selection   = xcb_generate_id(con);
-	xcb_window_t root = (xcb_window_t)gdk_x11_get_default_root_xwindow();
+	xcb_window_t root =
+	    (xcb_window_t)xcb_get_root_for_connection(g_water_xcb_source_get_connection(self->src),
+	                                              self->default_screen);
 	xcb_create_window(con,
 	                  XCB_COPY_FROM_PARENT,
 	                  self->selection,
@@ -333,10 +343,10 @@ static void release_systray_selection(XEmbedSNIApplication *self)
 	{
 		xcb_connection_t *con = g_water_xcb_source_get_connection(self->src);
 		g_autofree char *selection_atom_name =
-		    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", gdk_x11_get_default_screen());
+		    g_strdup_printf("_NET_SYSTEM_TRAY_S%d", self->default_screen);
 		xcb_atom_t selection_atom =
-		    (xcb_atom_t)gdk_x11_get_xatom_by_name_for_display(gdk_display_get_default(),
-		                                                      selection_atom_name);
+		    xcb_atom_get_for_connection(g_water_xcb_source_get_connection(self->src),
+		                                selection_atom_name);
 		g_autofree xcb_generic_error_t *err = NULL;
 		xcb_get_selection_owner_cookie_t sel_c =
 		    xcb_get_selection_owner(con, selection_atom);
@@ -371,11 +381,10 @@ static void xembed_sni_application_startup(GApplication *base)
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
-	int screen = 0;
 	// We only support X11
 	self->src = g_water_xcb_source_new(g_main_context_default(),
 	                                   "0",
-	                                   &screen,
+	                                   &self->default_screen,
 	                                   (GWaterXcbEventCallback)xcb_event_filter,
 	                                   self,
 	                                   NULL);

@@ -20,7 +20,6 @@
 #ifndef XCBUTILS_H
 #define XCBUTILS_H
 
-#include <gdk/gdkx.h>
 #include <stdbool.h>
 #include <xcb/xcb.h>
 
@@ -51,6 +50,7 @@ void resolve_atoms(xcb_connection_t *con);
 void xcb_connection_set_composited_for_xcb_window(xcb_connection_t *display, xcb_window_t win,
                                                   bool composited);
 xcb_screen_t *xcb_get_screen_for_connection(xcb_connection_t *c, int screen);
+xcb_window_t xcb_get_root_for_connection(xcb_connection_t *connection, int screen_num);
 xcb_atom_t xcb_atom_get_for_connection(xcb_connection_t *connection, const char *atom_nate);
 xcb_timestamp_t xcb_get_timestamp_for_connection(xcb_connection_t *conn);
 void xembed_message_send(xcb_connection_t *conn, xcb_window_t towin, long message, long d1, long d2,
