@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<gresources>
-  <gresource prefix="/org/vala-panel/sntray">
-    <file compressed="true" alias="style.css">css/vala-panel.css</file>
-    <file compressed="true" preprocess="xml-stripblanks">snconfig.ui</file>
-  </gresource>
-</gresources>
