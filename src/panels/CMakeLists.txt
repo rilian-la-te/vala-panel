@@ -1,6 +1,6 @@
 glib_compile_resources(RESOURCES
     source
-        sntray.gresource.xml
+        ../sntray.gresource.xml
 )
 
 #################
