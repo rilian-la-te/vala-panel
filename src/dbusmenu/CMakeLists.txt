@@ -48,7 +48,7 @@ PACKAGES
     gio-addons-2.0
     gobject-2.0
 OPTIONS
-    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
+    --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --target-glib=2.44
     --thread
 GENERATE_VAPI
