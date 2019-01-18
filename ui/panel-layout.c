@@ -34,7 +34,7 @@ static GParamSpec *vp_layout_properties[PROP_LAST];
 struct _ValaPanelLayout
 {
 	GtkBox __parent__;
-	const char *toplevel_id;
+	char *toplevel_id;
 	uint center_applets;
 	GHashTable *applets;
 	GtkWidget *start_box;
@@ -508,13 +508,14 @@ static void vala_panel_layout_get_property(GObject *object, guint property_id, G
 	}
 }
 
-static void vala_panel_layout_destroy(GtkWidget *obj)
+static void vala_panel_layout_destroy(GObject *obj)
 {
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
 	gtk_widget_destroy0(self->start_box);
 	gtk_widget_destroy0(self->end_box);
 	gtk_widget_destroy0(self->center_box);
 	g_clear_pointer(&self->applets, g_hash_table_unref);
+	g_clear_pointer(&self->toplevel_id, g_free);
 	GTK_WIDGET_CLASS(vala_panel_layout_parent_class)->destroy(GTK_WIDGET(self));
 }
 
@@ -564,7 +565,7 @@ static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 	G_OBJECT_CLASS(klass)->constructor  = vala_panel_layout_constructor;
 	G_OBJECT_CLASS(klass)->set_property = vala_panel_layout_set_property;
 	G_OBJECT_CLASS(klass)->get_property = vala_panel_layout_get_property;
-	GTK_WIDGET_CLASS(klass)->destroy    = vala_panel_layout_destroy;
+	G_OBJECT_CLASS(klass)->dispose      = vala_panel_layout_destroy;
 	vp_layout_properties[PROP_TOPLEVEL_ID] =
 	    g_param_spec_string(VALA_PANEL_TOPLEVEL_ID,
 	                        VALA_PANEL_TOPLEVEL_ID,

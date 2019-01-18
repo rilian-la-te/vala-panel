@@ -139,7 +139,7 @@ static Monitor *create_monitor_with_pos(MonitorsApplet *self, int pos)
 	return NULL;
 }
 
-static bool monitors_update(void *data)
+static int monitors_update(void *data)
 {
 	MonitorsApplet *self = VALA_PANEL_MONITORS_APPLET(data);
 	if (g_source_is_destroyed(g_main_current_source()))
