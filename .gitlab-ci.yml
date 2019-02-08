@@ -12,7 +12,7 @@ cache:
     - _ccache/
 
 build-main:
-  image: base/devel
+  image: archlinux/base
   stage: build
   script:
    - pacman -Sy
@@ -30,7 +30,7 @@ build-main:
 
 
 release-main:
-  image: base/devel
+  image: archlinux/base
   stage: release
   script:
     - pacman -Sy
