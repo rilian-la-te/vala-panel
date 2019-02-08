@@ -1,4 +1,4 @@
-image: base/devel
+image: archlinux/base
 stages:
   - build
   - release
@@ -29,7 +29,7 @@ build:
 
 
 release-main:
-  image: base/devel
+  image: archlinux/base
   stage: release
   script:
     - pacman -Sy
