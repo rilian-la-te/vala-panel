@@ -186,7 +186,7 @@ public class Clock: Applet
         /* Preset the widget position right now to not move it across the screen */
         win.set_type_hint(Gdk.WindowTypeHint.UTILITY);
         win.set_transient_for(this.toplevel);
-        win.set_attached_to(this);
+        win.set_attached_to(this.toplevel);
         calendar.show();
         set_popup_position(win);
         /* Return the widget. */
