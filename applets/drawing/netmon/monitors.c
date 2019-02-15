@@ -122,7 +122,7 @@ static NetMon *create_monitor(NetMonApplet *self)
 	                      use_bar);
 }
 
-static bool monitors_update(void *data)
+static int monitors_update(void *data)
 {
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(data);
 	if (g_source_is_destroyed(g_main_current_source()))
