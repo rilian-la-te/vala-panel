@@ -13,7 +13,7 @@ OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
     --target-glib=2.44
     --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-    --thread
+    
 )
 #####
 # Plugin Library
