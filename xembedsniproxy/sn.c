@@ -5,6 +5,7 @@
 #include "xtestsender.h"
 #include <cairo/cairo.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <glib.h>
 #include <unistd.h>
 
 static void gdk_cairo_surface_paint_pixbuf(cairo_surface_t *surface, const GdkPixbuf *pixbuf)
@@ -281,7 +282,6 @@ static void sn_item_class_init(StatusNotifierItemClass *klass)
 	                 G_TYPE_NONE,
 	                 1,
 	                 G_TYPE_ERROR);
-	g_type_class_add_private(klass, sizeof(StatusNotifierItemPrivate));
 }
 
 static void sn_item_init(StatusNotifierItem *sn)

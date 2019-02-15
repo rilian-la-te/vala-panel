@@ -21,7 +21,6 @@ if (ENABLE_XFCE)
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-        --thread
     )
     #####
     # Plugin Library
@@ -61,7 +60,6 @@ if (ENABLE_VALAPANEL)
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.44
         --gresources=${CMAKE_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-        --thread
         ${NEW_DEFINE}
     )
     #####
@@ -97,7 +95,6 @@ if (ENABLE_BUDGIE)
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.44
         --gresources=${CMAKE_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-        --thread
     )
     #####
     # Plugin Library
@@ -131,7 +128,6 @@ if (ENABLE_MATE)
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-        --thread
     )
     #####
     # Plugin Library

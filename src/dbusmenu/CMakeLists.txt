@@ -50,7 +50,6 @@ PACKAGES
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --target-glib=2.44
-    --thread
 GENERATE_VAPI
     vala-dbusmenu
 GENERATE_HEADER

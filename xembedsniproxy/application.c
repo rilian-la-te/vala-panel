@@ -46,9 +46,9 @@ struct _XEmbedSNIApplication
 
 G_DEFINE_TYPE(XEmbedSNIApplication, xembed_sni_application, G_TYPE_APPLICATION)
 
-static const GOptionEntry entries[] =
-    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
-      { NULL } };
+static const GOptionEntry entries[] = {
+	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL }, { NULL }
+};
 
 enum
 {

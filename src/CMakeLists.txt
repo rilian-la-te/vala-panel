@@ -27,11 +27,13 @@ set(VALA_FILES_CORE
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}/dbusmenu
 	--target-glib=2.44
         --gresources=${CMAKE_CURRENT_SOURCE_DIR}/sntray.gresource.xml
-        --thread
     GENERATE_VAPI
         vala-panel-sntray
     )
-add_library(sntray-core STATIC ${VALA_C_CORE} dbus-utils.c $<TARGET_OBJECTS:vala-dbusmenu-o>)
+add_library(sntray-core STATIC
+    ${VALA_C_CORE}
+    dbus-utils.c
+    $<TARGET_OBJECTS:vala-dbusmenu-o>)
 target_include_directories(sntray-core PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/dbusmenu)
 target_link_libraries (sntray-core GLIB2::GIO_UNIX GTK3::GDK GTK3::GTK m)
 set_target_properties(sntray-core PROPERTIES
