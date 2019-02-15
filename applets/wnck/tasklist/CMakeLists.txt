@@ -1,27 +1,13 @@
 set(PLUGIN_NAME tasklist-xfce)
-set(VALA_FILES ${PLUGIN_NAME}.vala)
-vala_precompile(VALA_C ${PLUGIN_NAME}
-    ${VALA_FILES}
-PACKAGES
-    ${CORE_PACKAGES}
-    vala-panel
-    ${PLUGIN_NAME}
-OPTIONS
-    --vapidir=${CMAKE_SOURCE_DIR}/vapi
-    --vapidir=${CMAKE_SOURCE_DIR}/ui
-    --vapidir=${CMAKE_BINARY_DIR}/vapi
-    --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
-    --target-glib=2.50
-    --gresources=${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-    --thread
-)
+
 #####
 # Plugin Library
 #####
 
 # Build library for plugin
 add_library (${PLUGIN_NAME} MODULE
-    ${VALA_C}
+    tasklist.c
+    tasklist.h
     tasklist-widget.c
     tasklist-widget.h
     xfce-arrow-button.c
