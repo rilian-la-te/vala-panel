@@ -1,5 +1,6 @@
 using GLib;
 using Gtk;
+using ValaDBusMenu;
 
 namespace ValaDBusMenu
 {

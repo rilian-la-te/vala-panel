@@ -1,4 +1,5 @@
 using GLib;
+using ValaDBusMenu;
 
 namespace ValaDBusMenu
 {
