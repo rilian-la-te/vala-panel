@@ -107,9 +107,11 @@ set(CORE_PACKAGES
   gio-2.0
   gio-unix-2.0
   gmodule-2.0
-  gio-addons-2.0
   posix)
 
+if(${Vala_VERSION}>0.40.4)
+    list(APPEND CORE_PACKAGES gio-addons-2.0)
+endif()
 
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(util)
