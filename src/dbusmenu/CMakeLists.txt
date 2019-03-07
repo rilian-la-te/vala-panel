@@ -4,6 +4,10 @@ cmake_policy (SET CMP0063 NEW)
 project (vala-dbusmenu C)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+if(${VALA_VERSION} VERSION_LESS "0.40.4")
+    set(ADDONS_PACKAGE gio-addons-2.0)
+endif()
+
 # Vala
 find_package (Vala 0.24 REQUIRED)
 include (ValaPrecompile)
@@ -45,8 +49,8 @@ PACKAGES
     gtk+-3.0
     gio-2.0
     glib-2.0
-    gio-addons-2.0
     gobject-2.0
+    ${ADDONS_PACKAGE}
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
     --target-glib=2.44
