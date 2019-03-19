@@ -159,6 +159,8 @@ public class Menu: Applet
     private Gtk.MenuBar create_menubar()
     {
         int_menu = null;
+        if(menu == null)
+            return new MenuBar();
         var menubar = new MenuBar.from_model(menu);
         MenuMaker.apply_menu_properties(menubar.get_children(),menu);
         this.background_widget = menubar;
@@ -176,6 +178,8 @@ public class Menu: Applet
     {
         Image? img = null;
         var menubutton = new ToggleButton();
+        if(menu == null)
+            return menubutton;
         var menuw = new Gtk.Menu.from_model(menu);
         int_menu = menuw;
         MenuMaker.apply_menu_properties(int_menu.get_children(),menu);
