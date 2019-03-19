@@ -20,7 +20,7 @@
 #include <stdbool.h>
 
 #include "config.h"
-#include "vala-panel/client.h"
+#include "client.h"
 
 static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder)
 {
