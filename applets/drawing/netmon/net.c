@@ -52,9 +52,10 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 		return 0;
 	}
 	char buf[256];
+	char *tmp;
 	/* Ignore first two lines - header */
-	fgets(buf, 255, fp);
-	fgets(buf, 255, fp);
+	tmp                   = fgets(buf, 255, fp);
+	tmp                   = fgets(buf, 255, fp);
 	static bool first_run = true;
 	while (!feof(fp))
 	{
