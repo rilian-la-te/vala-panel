@@ -17,6 +17,7 @@ TODO
  * [x] ~~Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
 *TODO for 0.5.0*
+
  * [x] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
  * [x] Implement free applet actions (not only menu)
  * [x] Made pack-type useful
@@ -39,7 +40,7 @@ Dependencies:
 *Core:*
  * GLib (>= 2.56.0)
  * GTK3 (>= 3.22.0)
- 
+
 *Plugins:*
  * libwnck (>= 3.4.7)
  * libX11
@@ -56,7 +57,7 @@ Special thanks
 ---
  * [Ikey Doherty](mailto:ikey@evolve-os.com) for icontasklist.
  * [XFCE Team](http://www.xfce.org/) for XFCE Tasklist.
- * [LXPanel team](https://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=summary) for creating a base for my fork. Vala Panel uses LXPanel's tray code and other inspirations (including generic-config-dialog.vala and most positioning code in toplevel.vala).
+ * [LXPanel team](https://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=summary) for creating a base for my fork. Vala Panel uses LXPanel's tray code and other inspirations (generic-config-dialog for applets and lxpanel-like remote command system).
 
 Inspirations
 ---
