@@ -1,6 +1,5 @@
 set(PLUGIN_NAME menumodel)
-set(VALA_FILES ${PLUGIN_NAME}.vala
-	menu-maker.vala)
+set(VALA_FILES ${PLUGIN_NAME}.vala)
 vala_precompile(VALA_C ${PLUGIN_NAME}
 	${VALA_FILES}
 PACKAGES
@@ -26,6 +25,7 @@ glib_compile_resources(RESOURCES
 
 # Build library for plugin
 add_library (${PLUGIN_NAME} MODULE
+    menu-maker.c
     ${VALA_C}
     ${RESOURCES}
 )

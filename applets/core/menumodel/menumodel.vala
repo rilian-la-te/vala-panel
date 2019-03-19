@@ -18,6 +18,7 @@
 
 using ValaPanel;
 using Gtk;
+
 public class MenuApplet : AppletPlugin
 {
     public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
@@ -27,6 +28,7 @@ public class MenuApplet : AppletPlugin
         return new Menu(toplevel,settings,number);
     }
 }
+
 namespace Key
 {
     internal const string ICON = "icon-name";
@@ -36,6 +38,13 @@ namespace Key
     internal const string IS_INTERNAL_MENU = "is-internal-menu";
     internal const string MODEL_FILE = "model-file";
 }
+
+namespace MenuMaker
+{
+    extern static static GLib.MenuModel create_applications_menu(bool do_settings);
+    extern static GLib.MenuModel create_main_menu(bool submenus, string? icon);
+}
+
 internal enum InternalMenu
 {
     SETTINGS,
@@ -43,6 +52,7 @@ internal enum InternalMenu
     RECENT,
     MOUNTS
 }
+
 public class Menu: Applet
 {
     GLib.Menu? menu;
