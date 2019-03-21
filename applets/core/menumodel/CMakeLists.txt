@@ -26,6 +26,8 @@ glib_compile_resources(RESOURCES
 # Build library for plugin
 add_library (${PLUGIN_NAME} MODULE
     menu-maker.c
+    menu.c
+    menu.h
     ${VALA_C}
     ${RESOURCES}
 )

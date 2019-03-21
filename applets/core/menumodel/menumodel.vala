@@ -19,13 +19,13 @@
 using ValaPanel;
 using Gtk;
 
-public class MenuApplet : AppletPlugin
+public class MenuPlugin : AppletPlugin
 {
     public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
-        return new Menu(toplevel,settings,number);
+        return new MenuP(toplevel,settings,number);
     }
 }
 
@@ -53,7 +53,7 @@ internal enum InternalMenu
     MOUNTS
 }
 
-public class Menu: Applet
+public class MenuP: Applet
 {
     GLib.Menu? menu;
     unowned Container? button;
@@ -67,7 +67,7 @@ public class Menu: Applet
     internal bool bar {get; set;}
     internal string? caption {get; set;}
     internal string? filename {get; set;}
-    public Menu(ValaPanel.Toplevel toplevel,
+    public MenuP(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
                                     string number)
     {
@@ -315,7 +315,7 @@ public void g_io_menumodel_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuApplet),"org.valapanel.menumodel",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuPlugin),"org.valapanel.menumodel",10);
 }
 
 public void g_io_menumodel_unload(GLib.IOModule module)

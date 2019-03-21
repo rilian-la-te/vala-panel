@@ -19,8 +19,8 @@
 #include <gio/gdesktopappinfo.h>
 #include <stdbool.h>
 
-#include "config.h"
 #include "client.h"
+#include "config.h"
 
 static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder)
 {
@@ -199,7 +199,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 	return G_MENU_MODEL(menu);
 }
 
-GMenuModel *menu_maker_create_main_menu(gboolean as_submenus, const gchar *icon_str)
+GMenuModel *menu_maker_create_main_menu(bool as_submenus, const char *icon_str)
 {
 	GMenu *menu                  = g_menu_new();
 	g_autoptr(GMenuModel) apps   = menu_maker_create_applications_menu(false);
