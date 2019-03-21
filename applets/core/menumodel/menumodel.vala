@@ -41,7 +41,7 @@ namespace Key
 
 namespace MenuMaker
 {
-    extern static static GLib.MenuModel create_applications_menu(bool do_settings);
+    extern static GLib.MenuModel create_applications_menu(bool do_settings);
     extern static GLib.MenuModel create_main_menu(bool submenus, string? icon);
 }
 
