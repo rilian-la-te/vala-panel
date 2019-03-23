@@ -137,7 +137,7 @@ static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
 {
 	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletInfo *pl_info =
-	    vp_applet_manager_get_applet_info(vala_panel_layout_get_manager(),
+	    vp_applet_manager_get_applet_info(vp_layout_get_manager(),
 	                                      self,
 	                                      vala_panel_toplevel_get_core_settings());
 	vala_panel_applet_info_show_about_dialog(pl_info);
@@ -150,7 +150,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	 * user manipulates the Configured Plugins list, after we remove this entry.
 	 * Close the configuration dialog if it is open. */
 	vala_panel_toplevel_destroy_pref_dialog(p->toplevel);
-	vala_panel_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
+	vp_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }
 static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
 {

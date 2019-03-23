@@ -59,8 +59,8 @@ bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char 
 {
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
-	priv->core_settings = vala_panel_core_settings_new(schema, path, backend);
-	return vala_panel_core_settings_init_unit_list(priv->core_settings);
+	priv->core_settings = vp_core_settings_new(schema, path, backend);
+	return vp_core_settings_init_unit_list(priv->core_settings);
 }
 
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
@@ -93,7 +93,7 @@ void vala_panel_platform_finalize(GObject *obj)
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	if (priv->core_settings)
-		vala_panel_core_settings_free(priv->core_settings);
+		vp_core_settings_free(priv->core_settings);
 }
 
 void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)

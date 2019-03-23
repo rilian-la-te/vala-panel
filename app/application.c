@@ -27,6 +27,7 @@
 #include <locale.h>
 #include <stdbool.h>
 
+#define PROFILE_TR N_("Use specified profile")
 #define COMMAND_DES_TR N_("Run command on already opened panel")
 #define REMOTE_DES_TR N_("Run remote command on panel applet")
 #define DEFAULT_PROFILE "default"
@@ -71,12 +72,13 @@ static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer d
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer data);
 
-static const GOptionEntry entries[] =
-    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
-      { "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, N_("Use specified profile"), N_("profile") },
-      { "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
-      { "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
-      { NULL } };
+static const GOptionEntry entries[] = {
+	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
+	{ "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, PROFILE_TR, N_("profile") },
+	{ "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
+	{ "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
+	{ NULL }
+};
 
 static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
@@ -90,10 +92,11 @@ static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "quit", activate_exit, NULL, NULL, NULL, { 0 } },
 	{ "restart", activate_restart, NULL, NULL, NULL, { 0 } },
 };
-static const GActionEntry vala_panel_application_menu_entries[3] =
-    { { "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
-      { "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
-      { "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } } };
+static const GActionEntry vala_panel_application_menu_entries[3] = {
+	{ "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
+	{ "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
+	{ "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } }
+};
 
 enum
 {
@@ -202,10 +205,9 @@ static void vala_panel_application_shutdown(GApplication *base)
 		char cwd[1024];
 		char *tmp;
 		tmp                = getcwd(cwd, 1024);
-		const char *argv[] = { GETTEXT_PACKAGE,
-			               "-p",
-			               VALA_PANEL_APPLICATION(base)->profile,
-			               NULL };
+		const char *argv[] = {
+			GETTEXT_PACKAGE, "-p", VALA_PANEL_APPLICATION(base)->profile, NULL
+		};
 		g_auto(GStrv) envp = g_get_environ();
 		g_spawn_async(cwd,
 		              (GStrv)argv,

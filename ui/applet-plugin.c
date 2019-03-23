@@ -27,9 +27,8 @@ static void vala_panel_applet_plugin_class_init(ValaPanelAppletPluginClass *klas
 {
 }
 
-ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(ValaPanelAppletPlugin *self,
-                                                            ValaPanelToplevel *top,
-                                                            GSettings *settings, const char *uuid)
+G_GNUC_INTERNAL ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(
+    ValaPanelAppletPlugin *self, ValaPanelToplevel *top, GSettings *settings, const char *uuid)
 {
 	if (self)
 		return VALA_PANEL_APPLET_PLUGIN_GET_CLASS(self)->get_applet_widget(self,

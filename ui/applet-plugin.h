@@ -24,7 +24,6 @@
 
 G_BEGIN_DECLS
 
-#define VALA_PANEL_APPLET_EXPANDABLE "ValaPanel-Expandable"
 #define VALA_PANEL_APPLET_EXCLUSIVE "ValaPanel-Exclusive"
 #define VALA_PANEL_APPLET_EXTENSION_POINT "vala-panel-applet-module"
 

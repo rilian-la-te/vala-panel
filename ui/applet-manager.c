@@ -115,7 +115,7 @@ static AppletInfoData *vp_applet_manager_get_info_data(ValaPanelAppletManager *s
                                                        ValaPanelCoreSettings *core_settings)
 {
 	ValaPanelUnitSettings *settings =
-	    vala_panel_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
+	    vp_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
 	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
 	return (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, str);
 }

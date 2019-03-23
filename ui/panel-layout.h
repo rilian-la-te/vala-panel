@@ -35,29 +35,27 @@ typedef enum
 	PACK_CENTER,
 } ValaPanelAppletPackType;
 
-G_DECLARE_FINAL_TYPE(ValaPanelLayout, vala_panel_layout, VALA_PANEL, LAYOUT, GtkBox)
+G_DECLARE_FINAL_TYPE(ValaPanelLayout, vp_layout, VALA_PANEL, LAYOUT, GtkBox)
 
-ValaPanelLayout *vala_panel_layout_new(ValaPanelToplevel *top, GtkOrientation orient, gint spacing);
-ValaPanelLayout *vala_panel_layout_construct(GType object_type, ValaPanelToplevel *top,
-                                             GtkOrientation orient, gint spacing);
-void vala_panel_layout_init_applets(ValaPanelLayout *self);
-ValaPanelApplet *vala_panel_layout_insert_applet(ValaPanelLayout *self, const char *type,
-                                                 ValaPanelAppletPackType pack, uint pos);
-ValaPanelApplet *vala_panel_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
-                                                ValaPanelUnitSettings *s);
-void vala_panel_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet);
-void vala_panel_layout_applets_repack(ValaPanelLayout *self);
-void vala_panel_layout_update_applet_positions(ValaPanelLayout *self);
-bool vala_panel_layout_can_move_to_direction(ValaPanelLayout *self, ValaPanelApplet *prev,
-                                             ValaPanelApplet *next, GtkPackType direction);
-void vala_panel_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelApplet *prev,
-                                            ValaPanelApplet *next, GtkPackType direction);
+G_GNUC_INTERNAL ValaPanelLayout *vp_layout_new(ValaPanelToplevel *top, GtkOrientation orient,
+                                               gint spacing);
+G_GNUC_INTERNAL void vp_layout_init_applets(ValaPanelLayout *self);
+G_GNUC_INTERNAL ValaPanelApplet *vp_layout_insert_applet(ValaPanelLayout *self, const char *type,
+                                                         ValaPanelAppletPackType pack, uint pos);
+G_GNUC_INTERNAL ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
+                                                        ValaPanelUnitSettings *s);
+G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet);
+G_GNUC_INTERNAL void vp_layout_update_applet_positions(ValaPanelLayout *self);
+G_GNUC_INTERNAL bool vp_layout_can_move_to_direction(ValaPanelLayout *self, ValaPanelApplet *prev,
+                                                     ValaPanelApplet *next, GtkPackType direction);
+G_GNUC_INTERNAL void vp_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelApplet *prev,
+                                                    ValaPanelApplet *next, GtkPackType direction);
 GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self);
-ValaPanelUnitSettings *vala_panel_layout_get_applet_settings(ValaPanelApplet *pl);
-ValaPanelAppletPackType vala_panel_layout_get_applet_pack_type(ValaPanelApplet *pl);
-unsigned int vala_panel_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl);
-const char *vala_panel_layout_get_toplevel_id(ValaPanelLayout *self);
-ValaPanelAppletManager *vala_panel_layout_get_manager();
+G_GNUC_INTERNAL ValaPanelUnitSettings *vp_layout_get_applet_settings(ValaPanelApplet *pl);
+G_GNUC_INTERNAL ValaPanelAppletPackType vp_layout_get_applet_pack_type(ValaPanelApplet *pl);
+G_GNUC_INTERNAL unsigned int vp_layout_get_applet_position(ValaPanelLayout *self,
+                                                           ValaPanelApplet *pl);
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_layout_get_manager(void);
 
 G_END_DECLS
 

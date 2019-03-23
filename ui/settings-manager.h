@@ -52,37 +52,30 @@ typedef enum
 	APPLET   = 1,
 } ValaPanelType;
 
-#define vala_panel_core_settings_remove_unit_settings(s, n)                                        \
-	vala_panel_core_settings_remove_unit_settings_full(s, n, false)
+#define vp_core_settings_remove_unit_settings(s, n)                                                \
+	vp_core_settings_remove_unit_settings_full(s, n, false)
 
-typedef ValaPanelUnitSettings *ValaPanelUnitSettingsPointer;
-typedef ValaPanelCoreSettings *ValaPanelCoreSettingsPointer;
-
-ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *settings,
-                                                    const char *name, const char *uuid,
-                                                    bool is_toplevel);
-void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
+void vp_unit_settings_free(ValaPanelUnitSettings *settings);
 bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings);
-GType vala_panel_unit_settings_get_type();
-G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelUnitSettingsPointer, vala_panel_unit_settings_free, NULL);
+GType vp_unit_settings_get_type(void);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelUnitSettings, vp_unit_settings_free)
 
-ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema, const char *path,
-                                                    GSettingsBackend *backend);
-void vala_panel_core_settings_free(ValaPanelCoreSettings *settings);
-ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings(ValaPanelCoreSettings *settings,
-                                                                  const char *name,
-                                                                  bool is_toplevel);
-ValaPanelUnitSettings *vala_panel_core_settings_add_unit_settings_full(
+G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_new(const char *schema, const char *path,
+                                                            GSettingsBackend *backend);
+void vp_core_settings_free(ValaPanelCoreSettings *settings);
+G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings(
+    ValaPanelCoreSettings *settings, const char *name, bool is_toplevel);
+G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings_full(
     ValaPanelCoreSettings *settings, const char *name, const char *uuid, bool is_toplevel);
 
-void vala_panel_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *settings,
-                                                        const char *name, bool destroy);
-ValaPanelUnitSettings *vala_panel_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
-                                                            const char *uuid);
-char *vala_panel_core_settings_get_uuid();
-bool vala_panel_core_settings_init_unit_list(ValaPanelCoreSettings *settings);
-GType vala_panel_core_settings_get_type();
-G_DEFINE_AUTO_CLEANUP_FREE_FUNC(ValaPanelCoreSettingsPointer, vala_panel_core_settings_free, NULL);
+G_GNUC_INTERNAL void vp_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *settings,
+                                                                const char *name, bool destroy);
+G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
+                                                                    const char *uuid);
+G_GNUC_INTERNAL char *vp_core_settings_get_uuid(void);
+G_GNUC_INTERNAL bool vp_core_settings_init_unit_list(ValaPanelCoreSettings *settings);
+GType vp_core_settings_get_type(void);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelCoreSettings, vp_core_settings_free)
 
 G_END_DECLS
 
