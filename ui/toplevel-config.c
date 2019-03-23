@@ -178,8 +178,6 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	g_object_get(self->_toplevel, VP_KEY_MONITOR, &true_monitor, NULL);
 
 	gtk_combo_box_set_active(self->monitors_box, true_monitor + 1);
-	/* update monitor */
-	on_monitors_changed(self->monitors_box, self);
 
 	/* size */
 	g_object_bind_property(self->_toplevel,
