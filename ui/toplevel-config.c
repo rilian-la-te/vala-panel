@@ -103,13 +103,8 @@ static void vala_panel_configure_dialog_finalize(GObject *obj)
 static void on_monitors_changed(GtkComboBox *box, void *data)
 {
 	ValaPanelToplevelConfig *self = VALA_PANEL_TOPLEVEL_CONFIG(data);
-	int panel_gravity, monitor, request_mon;
-	g_object_get(self->_toplevel,
-	             VP_KEY_MONITOR,
-	             &monitor,
-	             VP_KEY_GRAVITY,
-	             &panel_gravity,
-	             NULL);
+	int panel_gravity, request_mon;
+	g_object_get(self->_toplevel, VP_KEY_GRAVITY, &panel_gravity, NULL);
 
 	/* change monitor */
 	GtkTreeIter iter;
@@ -122,7 +117,6 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	                                       request_mon))
 	{
 		g_object_set(self->_toplevel, VP_KEY_MONITOR, request_mon, NULL);
-		gtk_combo_box_set_active(box, request_mon + 1);
 	}
 }
 static void background_color_connector(GtkColorButton *colorb, void *data)
