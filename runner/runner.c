@@ -122,7 +122,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 			launch = false;
 		if (!launch)
 		{
-			g_clear_pointer(&app_info, g_object_unref);
+			g_clear_object(&app_info);
 			g_autoptr(GError) err = NULL;
 			app_info              = g_app_info_create_from_commandline(
                             gtk_entry_get_text(GTK_ENTRY(self->main_entry)),
@@ -333,14 +333,14 @@ static void vala_panel_runner_destroy(GtkWidget *obj)
 
 	gtk_window_set_application((GtkWindow *)self, NULL);
 	g_cancellable_cancel(self->cancellable);
-	g_clear_pointer(&self->cancellable, g_object_unref);
-	g_clear_pointer(&self->task, g_object_unref);
+	g_clear_object(&self->cancellable);
+	g_clear_object(&self->task);
 	g_clear_pointer(&self->main_entry, gtk_widget_destroy);
 	g_clear_pointer(&self->bottom_revealer, gtk_widget_destroy);
 	g_clear_pointer(&self->app_box, gtk_widget_destroy);
 	g_clear_pointer(&self->terminal_button, gtk_widget_destroy);
-	g_clear_pointer(&self->model, g_object_unref);
-	g_clear_pointer(&self->filter, g_object_unref);
+	g_clear_object(&self->model);
+	g_clear_object(&self->filter);
 	GTK_WIDGET_CLASS(vala_panel_runner_parent_class)->destroy(obj);
 }
 

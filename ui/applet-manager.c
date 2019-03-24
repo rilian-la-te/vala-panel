@@ -35,7 +35,7 @@ static void applet_info_data_free(void *adata)
 {
 	AppletInfoData *data = (AppletInfoData *)adata;
 	g_clear_pointer(&data->info, vala_panel_applet_info_free);
-	g_object_unref(data->plugin);
+	g_clear_object(&data->plugin);
 	g_slice_free(AppletInfoData, data);
 }
 

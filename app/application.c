@@ -141,8 +141,7 @@ static void apply_styling(ValaPanelApplication *app)
 	{
 		gtk_style_context_remove_provider_for_screen(gdk_screen_get_default(),
 		                                             GTK_STYLE_PROVIDER(app->provider));
-		g_object_unref(app->provider);
-		app->provider = NULL;
+		g_clear_object(&app->provider);
 	}
 }
 
