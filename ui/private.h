@@ -15,8 +15,6 @@ G_GNUC_INTERNAL ValaPanelPlatform *vala_panel_toplevel_get_current_platform(void
 G_GNUC_INTERNAL ValaPanelCoreSettings *vala_panel_toplevel_get_core_settings(void);
 G_GNUC_INTERNAL const char *vala_panel_toplevel_get_uuid(ValaPanelToplevel *self);
 G_GNUC_INTERNAL bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self);
-G_GNUC_INTERNAL void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self,
-                                                          const char *uuid);
 G_GNUC_INTERNAL void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self);
 G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *b,
                                                               gpointer obj);

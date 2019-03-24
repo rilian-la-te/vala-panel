@@ -91,7 +91,6 @@ namespace ValaPanel {
 		[CCode (cheader_filename = "applet-widget-api.h")]
 		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
 		public void init_background ();
-		public void show_config_dialog ();
 		public bool is_configurable();
 		public virtual void update_context_menu (ref GLib.Menu parent_menu);
 		public virtual Widget get_settings_ui();
@@ -107,6 +106,7 @@ namespace ValaPanel {
 	public class Toplevel : Gtk.ApplicationWindow {
 		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
 		public void configure (string page);
+        public void configure_applet (string uuid);
 		[NoAccessorMethod]
 		public bool autohide { get; internal set; }
 		[NoAccessorMethod]

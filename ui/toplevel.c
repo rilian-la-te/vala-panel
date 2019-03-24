@@ -359,7 +359,7 @@ void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
 	                         self);
 }
 
-G_GNUC_INTERNAL void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid)
+void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid)
 {
 	if (self->pref_dialog == NULL)
 		self->pref_dialog =

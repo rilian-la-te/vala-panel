@@ -93,24 +93,6 @@ GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self)
 	return ui;
 }
 
-void vala_panel_applet_show_config_dialog(ValaPanelApplet *self)
-{
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	if (p->dialog == NULL)
-	{
-		GtkWidget *dlg = gtk_dialog_new();
-		GtkWidget *ui  = VALA_PANEL_APPLET_GET_CLASS(self)->get_settings_ui(self);
-		gtk_widget_show(ui);
-		gtk_widget_set_hexpand(ui, true);
-		gtk_widget_set_vexpand(ui, true);
-		gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dlg))), ui);
-		gtk_window_set_transient_for(dlg, p->toplevel);
-		p->dialog = dlg;
-		g_signal_connect_after(dlg, "hide", G_CALLBACK(destroy_dialog), p);
-		g_signal_connect_after(dlg, "destroy", G_CALLBACK(destroy_dialog), p);
-	}
-	gtk_window_present(p->dialog);
-}
 bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command)
 {
 	if (VALA_PANEL_APPLET_GET_CLASS(self)->remote_command)
@@ -371,7 +353,6 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
 	    vala_panel_applet_get_preferred_height_for_width;
 	((GtkWidgetClass *)klass)->get_preferred_width_for_height =
-
 	    vala_panel_applet_get_preferred_width_for_height;
 	((GtkWidgetClass *)klass)->get_request_mode      = vala_panel_applet_get_request_mode;
 	((GtkWidgetClass *)klass)->get_preferred_width   = vala_panel_applet_get_preferred_width;

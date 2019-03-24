@@ -132,7 +132,7 @@ namespace LaunchBar
         {
             if (button_type == ButtonType.BOOTSTRAP)
             {
-                this.get_launchbar().show_config_dialog();
+                this.get_launchbar().toplevel.configure_applet(this.get_launchbar().uuid);
                 return;
             }
             var desktop_info = info as DesktopAppInfo;

@@ -42,6 +42,7 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 
 void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons);
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
+void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid);
 
 G_END_DECLS
 
