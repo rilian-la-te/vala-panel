@@ -133,8 +133,8 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 	g_menu_append_item(section, item);
 	g_object_unref(item);
 	g_free(path);
-	section                   = G_MENU(gtk_builder_get_object(builder, "recent-section"));
-	GDesktopAppInfo *app_info = g_desktop_app_info_new("gnome-search-tool.desktop");
+	section = G_MENU(gtk_builder_get_object(builder, "recent-section"));
+	g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new("gnome-search-tool.desktop");
 	if (!app_info)
 		app_info = g_desktop_app_info_new("mate-search-tool.desktop");
 	if (app_info)
@@ -153,7 +153,6 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 		                                            G_APP_INFO(app_info))));
 		g_menu_prepend_item(section, item);
 		g_object_unref(item);
-		g_object_unref(app_info);
 	}
 	g_object_ref(menu);
 	return G_MENU_MODEL(menu);
@@ -166,7 +165,8 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu = G_MENU(gtk_builder_get_object(builder, "settings-section"));
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
-	GDesktopAppInfo *app_info = g_desktop_app_info_new("gnome-control-center.desktop");
+	g_autoptr(GDesktopAppInfo) app_info =
+	    g_desktop_app_info_new("gnome-control-center.desktop");
 	if (!app_info)
 		app_info = g_desktop_app_info_new("matecc.desktop");
 	if (!app_info)
@@ -190,7 +190,6 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 		                                        g_variant_new_string(g_app_info_get_id(
 		                                            G_APP_INFO(app_info))));
 		g_menu_append_item(menu, item);
-		g_object_unref(app_info);
 	}
 	g_menu_freeze(menu);
 	menu = G_MENU(gtk_builder_get_object(builder, "system-menu"));
