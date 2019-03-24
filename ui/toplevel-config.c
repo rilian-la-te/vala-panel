@@ -142,7 +142,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	gtk_combo_box_get_active_iter(box, &iter);
 	gtk_tree_model_get(GTK_TREE_MODEL(self->store_monitors), &iter, 0, &request_mon, -1);
 	if (vala_panel_platform_edge_available(vala_panel_toplevel_get_current_platform(),
-	                                       GTK_WINDOW(self->_toplevel),
+	                                       self->_toplevel,
 	                                       panel_gravity,
 	                                       request_mon))
 	{
