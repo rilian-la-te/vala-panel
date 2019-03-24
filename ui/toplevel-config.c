@@ -141,7 +141,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	GtkTreeIter iter;
 	gtk_combo_box_get_active_iter(box, &iter);
 	gtk_tree_model_get(GTK_TREE_MODEL(self->store_monitors), &iter, 0, &request_mon, -1);
-	if (vala_panel_platform_edge_available(vala_panel_toplevel_get_current_platform(),
+	if (vala_panel_platform_edge_available(vp_toplevel_get_current_platform(),
 	                                       self->_toplevel,
 	                                       panel_gravity,
 	                                       request_mon))
@@ -335,7 +335,7 @@ static ValaPanelAppletInfo *get_info_from_applet(ValaPanelApplet *pl)
 {
 	return vp_applet_manager_get_applet_info(vp_layout_get_manager(),
 	                                         pl,
-	                                         vala_panel_toplevel_get_core_settings());
+	                                         vp_toplevel_get_core_settings());
 }
 
 static GtkListBoxRow *create_info_representation(ValaPanelAppletInfo *pl_info)
@@ -372,7 +372,7 @@ static GtkListBoxRow *create_applet_representation(ValaPanelToplevelConfig *self
 	ValaPanelAppletInfo *pl_info =
 	    vp_applet_manager_get_applet_info(vp_layout_get_manager(),
 	                                      pl,
-	                                      vala_panel_toplevel_get_core_settings());
+	                                      vp_toplevel_get_core_settings());
 	GtkListBoxRow *row = create_info_representation(pl_info);
 	GtkBox *box        = GTK_BOX(gtk_bin_get_child(row));
 	GtkButton *button  = GTK_BUTTON(gtk_button_new());

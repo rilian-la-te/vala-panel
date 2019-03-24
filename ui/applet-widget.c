@@ -51,7 +51,7 @@ static GParamSpec *pspecs[VALA_PANEL_APPLET_ALL];
 
 static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
 {
-	return vala_panel_toplevel_release_event_helper(_sender, b, obj);
+	return vp_toplevel_release_event_helper(_sender, b, obj);
 }
 
 gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
@@ -121,7 +121,7 @@ static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
 	ValaPanelAppletInfo *pl_info =
 	    vp_applet_manager_get_applet_info(vp_layout_get_manager(),
 	                                      self,
-	                                      vala_panel_toplevel_get_core_settings());
+	                                      vp_toplevel_get_core_settings());
 	vala_panel_applet_info_show_about_dialog(pl_info);
 }
 static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
@@ -131,7 +131,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	/* If the configuration dialog is open, there will certainly be a crash if the
 	 * user manipulates the Configured Plugins list, after we remove this entry.
 	 * Close the configuration dialog if it is open. */
-	vala_panel_toplevel_destroy_pref_dialog(p->toplevel);
+	vp_toplevel_destroy_pref_dialog(p->toplevel);
 	vp_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }
 static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)

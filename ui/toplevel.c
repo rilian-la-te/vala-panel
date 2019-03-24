@@ -121,16 +121,16 @@ G_DEFINE_TYPE(ValaPanelToplevel, vala_panel_toplevel, GTK_TYPE_APPLICATION_WINDO
  *                                   Common functions
  *****************************************************************************************/
 
-G_GNUC_INTERNAL ValaPanelCoreSettings *vala_panel_toplevel_get_core_settings()
+G_GNUC_INTERNAL ValaPanelCoreSettings *vp_toplevel_get_core_settings()
 {
 	return vala_panel_platform_get_settings(platform);
 }
-G_GNUC_INTERNAL bool vala_panel_toplevel_is_initialized(ValaPanelToplevel *self)
+G_GNUC_INTERNAL bool vp_toplevel_is_initialized(ValaPanelToplevel *self)
 {
 	return self->initialized;
 }
 
-G_GNUC_INTERNAL ValaPanelPlatform *vala_panel_toplevel_get_current_platform()
+G_GNUC_INTERNAL ValaPanelPlatform *vp_toplevel_get_current_platform()
 {
 	return platform;
 }
@@ -313,8 +313,8 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 	return self->context_menu;
 }
 
-G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e,
-                                                              gpointer obj)
+G_GNUC_INTERNAL bool vp_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *e,
+                                                      gpointer obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
 	ValaPanelApplet *pl     = NULL;
@@ -335,13 +335,13 @@ G_GNUC_INTERNAL bool vala_panel_toplevel_release_event_helper(GtkWidget *_sender
 
 static bool button_release_event(GtkWidget *w, GdkEventButton *e)
 {
-	return vala_panel_toplevel_release_event_helper(w, e, w);
+	return vp_toplevel_release_event_helper(w, e, w);
 }
 
 /**************************************************************************************
  *                                     Actions stuff
  **************************************************************************************/
-G_GNUC_INTERNAL void vala_panel_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
+G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 {
 	gtk_widget_destroy0(self->pref_dialog);
 }
@@ -355,7 +355,7 @@ void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
 	gtk_window_present(self->pref_dialog);
 	g_signal_connect_swapped(self->pref_dialog,
 	                         "hide",
-	                         G_CALLBACK(vala_panel_toplevel_destroy_pref_dialog),
+	                         G_CALLBACK(vp_toplevel_destroy_pref_dialog),
 	                         self);
 }
 
@@ -369,7 +369,7 @@ void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *u
 	gtk_window_present(self->pref_dialog);
 	g_signal_connect_swapped(self->pref_dialog,
 	                         "hide",
-	                         G_CALLBACK(vala_panel_toplevel_destroy_pref_dialog),
+	                         G_CALLBACK(vp_toplevel_destroy_pref_dialog),
 	                         self);
 }
 
@@ -601,10 +601,7 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
                                                      PanelGravity e)
 {
-	vp_core_settings_add_unit_settings_full(vala_panel_toplevel_get_core_settings(),
-	                                        name,
-	                                        name,
-	                                        true);
+	vp_core_settings_add_unit_settings_full(vp_toplevel_get_core_settings(), name, name, true);
 	return vala_panel_toplevel_new_from_position(app, name, mon, e);
 }
 ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
@@ -711,9 +708,9 @@ void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
 {
 	int monitor;
 	g_object_get(panel, VP_KEY_MONITOR, &monitor, NULL);
-	if (monitor < mons && !vala_panel_toplevel_is_initialized(panel) && mons > 0)
+	if (monitor < mons && !vp_toplevel_is_initialized(panel) && mons > 0)
 		start_ui(panel);
-	else if ((monitor >= mons && vala_panel_toplevel_is_initialized(panel)) || mons == 0)
+	else if ((monitor >= mons && vp_toplevel_is_initialized(panel)) || mons == 0)
 		stop_ui(panel);
 	else
 	{
@@ -783,7 +780,7 @@ static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
  * Setters and getters
  */
 
-G_GNUC_INTERNAL const char *vala_panel_toplevel_get_uuid(ValaPanelToplevel *self)
+G_GNUC_INTERNAL const char *vp_toplevel_get_uuid(ValaPanelToplevel *self)
 {
 	return self->uuid;
 }

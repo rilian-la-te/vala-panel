@@ -78,7 +78,7 @@ G_GNUC_INTERNAL ValaPanelLayout *vp_layout_new(ValaPanelToplevel *top, GtkOrient
 	                                      "vexpand",
 	                                      true,
 	                                      "toplevel-id",
-	                                      vala_panel_toplevel_get_uuid(top),
+	                                      vp_toplevel_get_uuid(top),
 	                                      NULL));
 }
 
@@ -224,7 +224,7 @@ G_GNUC_INTERNAL void vp_layout_applet_packing_updated(GSettings *settings, const
 	ValaPanelLayout *self = vala_panel_applet_get_layout(pl);
 
 	/* Prevent a massive amount of resorting */
-	if (!vala_panel_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
+	if (!vp_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
 		return;
 
 	if (!g_strcmp0(key, VP_KEY_PACK))
@@ -239,7 +239,7 @@ G_GNUC_INTERNAL void vp_layout_applet_position_updated(GSettings *settings, cons
 	    vala_panel_toplevel_get_layout(vala_panel_applet_get_toplevel(pl));
 
 	/* Prevent a massive amount of resorting */
-	if (!vala_panel_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
+	if (!vp_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
 		return;
 
 	/* Prevent a massive amount of resorting when applets is moved*/
@@ -546,7 +546,7 @@ static void vp_layout_init(ValaPanelLayout *self)
 static void vp_layout_class_init(ValaPanelLayoutClass *klass)
 {
 	manager                             = vp_applet_manager_new();
-	core_settings                       = vala_panel_toplevel_get_core_settings();
+	core_settings                       = vp_toplevel_get_core_settings();
 	G_OBJECT_CLASS(klass)->constructor  = vp_layout_constructor;
 	G_OBJECT_CLASS(klass)->set_property = vp_layout_set_property;
 	G_OBJECT_CLASS(klass)->get_property = vp_layout_get_property;
