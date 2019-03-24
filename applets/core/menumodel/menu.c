@@ -35,11 +35,22 @@ typedef enum
 	RECENT
 } MenuInternalEnum;
 
+enum
+{
+	PROP_SYSTEM,
+	PROP_INTERN,
+	PROP_BAR,
+	PROP_ICON,
+	PROP_CAPTION,
+	PROP_FILENAME
+};
+
 extern GMenuModel *menu_maker_create_applications_menu(bool do_settings);
 extern GMenuModel *menu_maker_create_main_menu(bool submenus, const char *icon);
 
 static GMenuModel *create_menumodel(MenuApplet *self);
 static void menumodel_widget_rebuild(MenuApplet *self);
+static GtkContainer *menumodel_widget_create(MenuApplet *self);
 
 /* Private context for Menu applet. */
 struct _MenuApplet
@@ -68,8 +79,39 @@ MenuApplet *menu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, co
 	/* Allocate applet context*/
 	MenuApplet *c = VALA_PANEL_MENU_APPLET(
 	    vala_panel_applet_construct(menu_applet_get_type(), toplevel, settings, uuid));
-
+	gtk_widget_show(c->button);
+	gtk_widget_show(c);
 	return c;
+}
+
+static GObject *menu_applet_constructor(GType type, guint n_construct_properties,
+                                        GObjectConstructParam *construct_properties)
+{
+	GObjectClass *parent_class = G_OBJECT_CLASS(menu_applet_parent_class);
+	GObject *obj =
+	    parent_class->constructor(type, n_construct_properties, construct_properties);
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(obj);
+	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
+	g_simple_action_set_enabled(
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
+	    true);
+	g_simple_action_set_enabled(
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_REMOTE)),
+	    true);
+	self->button        = NULL;
+	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	g_settings_bind(settings, IS_SYSTEM_MENU, self, "system", G_SETTINGS_BIND_GET);
+	g_settings_bind(settings, IS_MENU_BAR, self, "bar", G_SETTINGS_BIND_GET);
+	g_settings_bind(settings, IS_INTERNAL_MENU, self, "intern", G_SETTINGS_BIND_GET);
+	g_settings_bind(settings, MODEL_FILE, self, "filename", G_SETTINGS_BIND_GET);
+	g_settings_bind(settings, ICON, self, "icon", G_SETTINGS_BIND_GET);
+	g_settings_bind(settings, CAPTION, self, "caption", G_SETTINGS_BIND_GET);
+	GtkContainer *w = menumodel_widget_create(self);
+	self->button    = w;
+	gtk_container_add(self, self->button);
+	GtkSettings *gtksettings = gtk_widget_get_settings(self);
+	g_object_set(gtksettings, "gtk-shell-shows-menubar", false, NULL);
+	return obj;
 }
 
 static GtkContainer *menumodel_widget_create(MenuApplet *self)
@@ -87,9 +129,9 @@ static void menumodel_widget_destroy(MenuApplet *self)
 {
 	vala_panel_applet_set_background_widget(self, self);
 	if (self->monitor_update_idle)
-	{
 		g_source_remove(self->monitor_update_idle);
-	}
+	if (self->show_system_menu_idle)
+		g_source_remove(self->show_system_menu_idle);
 	if (GTK_IS_WIDGET(self->int_menu))
 	{
 		if (self->button)
@@ -212,13 +254,155 @@ static void menu_applet_dispose(GObject *user_data)
 	G_OBJECT_CLASS(menu_applet_parent_class)->dispose(user_data);
 }
 
+static void menu_applet_get_property(GObject *object, uint prop_id, GValue *value,
+                                     GParamSpec *pspec)
+{
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(object);
+	switch (prop_id)
+	{
+	case PROP_BAR:
+		g_value_set_boolean(value, self->bar);
+		break;
+	case PROP_INTERN:
+		g_value_set_boolean(value, self->intern);
+		break;
+	case PROP_SYSTEM:
+		g_value_set_boolean(value, self->system);
+		break;
+	case PROP_ICON:
+		g_value_set_string(value, self->icon);
+		break;
+	case PROP_CAPTION:
+		g_value_set_string(value, self->caption);
+		break;
+	case PROP_FILENAME:
+		g_value_set_string(value, self->filename);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		break;
+	}
+}
+
+static void menu_applet_set_property(GObject *object, uint prop_id, const GValue *value,
+                                     GParamSpec *pspec)
+{
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(object);
+	switch (prop_id)
+	{
+	case PROP_BAR:
+		self->bar = g_value_get_boolean(value);
+		menumodel_widget_rebuild(self);
+		break;
+	case PROP_INTERN:
+		self->intern = g_value_get_boolean(value);
+		menumodel_widget_rebuild(self);
+		break;
+	case PROP_SYSTEM:
+		self->system = g_value_get_boolean(value);
+		break;
+	case PROP_ICON:
+		g_free0(self->icon);
+		self->icon = g_value_dup_string(value);
+		if (!self->bar)
+			menumodel_widget_rebuild(self);
+		else
+		{
+			GtkImage *image       = gtk_button_get_image(self->button);
+			g_autoptr(GError) err = NULL;
+			g_autoptr(GIcon) icon = g_icon_new_for_string(self->icon, &err);
+			if (err)
+				break;
+			g_object_set(image, "gicon", icon, NULL);
+		}
+		break;
+	case PROP_CAPTION:
+		g_free0(self->caption);
+		self->caption = g_value_dup_string(value);
+		if (!self->bar)
+			gtk_button_set_label(self->button, self->caption);
+		break;
+	case PROP_FILENAME:
+		g_free0(self->icon);
+		self->caption = g_value_dup_string(value);
+		if (!self->intern)
+			menumodel_widget_rebuild(self);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		break;
+	}
+}
+
+static GtkWidget *menu_applet_get_settings_ui(ValaPanelApplet *self)
+{
+	GSettings *settings = vala_panel_applet_get_settings(self);
+	return generic_config_widget(settings,
+	                             _("If internal menu is enabled, menu file will not be used,\n "
+	                               "predefeined menu will be used instead."),
+	                             NULL,
+	                             CONF_TRIM,
+	                             _("Is internal menu"),
+	                             IS_INTERNAL_MENU,
+	                             CONF_BOOL,
+	                             _("Is system menu (can be keybound)"),
+	                             IS_SYSTEM_MENU,
+	                             CONF_BOOL,
+	                             _("Is Menubar"),
+	                             IS_MENU_BAR,
+	                             CONF_BOOL,
+	                             _("Icon"),
+	                             ICON,
+	                             CONF_FILE_ENTRY,
+	                             _("Caption (for button only)"),
+	                             CAPTION,
+	                             CONF_STR,
+	                             _("Menu file name"),
+	                             MODEL_FILE,
+	                             CONF_FILE_ENTRY,
+	                             NULL);
+}
+
+static int show_menu_int(void *data)
+{
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(data);
+	if (g_source_is_destroyed(g_main_current_source()))
+		return false;
+	if (GTK_IS_MENU(self->int_menu))
+		gtk_menu_popup_at_widget(self->int_menu,
+		                         self,
+		                         GDK_GRAVITY_NORTH,
+		                         GDK_GRAVITY_NORTH,
+		                         NULL);
+	else
+		gtk_menu_shell_select_first(GTK_MENU_SHELL(self->button), false);
+	self->show_system_menu_idle = 0;
+	return false;
+}
+
+static bool menu_applet_remote_command(ValaPanelApplet *obj, const char *command_name)
+{
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(obj);
+	if (!g_strcmp0(command_name, "menu") && self->system && self->show_system_menu_idle == 0)
+	{
+		g_timeout_add(200, show_menu_int, self);
+		return true;
+	}
+	return false;
+}
+
 static void menu_applet_init(MenuApplet *self)
 {
 }
 
 static void menu_applet_class_init(MenuAppletClass *klass)
 {
-	G_OBJECT_CLASS(klass)->dispose = menu_applet_dispose;
+	G_OBJECT_CLASS(klass)->constructor              = menu_applet_constructor;
+	G_OBJECT_CLASS(klass)->get_property             = menu_applet_get_property;
+	G_OBJECT_CLASS(klass)->set_property             = menu_applet_set_property;
+	G_OBJECT_CLASS(klass)->dispose                  = menu_applet_dispose;
+	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = menu_applet_get_settings_ui;
+	VALA_PANEL_APPLET_CLASS(klass)->remote_command  = menu_applet_remote_command;
 }
 
 static void menu_applet_class_finalize(MenuAppletClass *klass)
