@@ -289,10 +289,10 @@ const char *vala_panel_applet_get_uuid(ValaPanelApplet *self)
 	return p->uuid;
 }
 
-const char *vala_panel_applet_get_action_group(ValaPanelApplet *self)
+GActionMap *vala_panel_applet_get_action_group(ValaPanelApplet *self)
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	return p->grp;
+	return G_ACTION_MAP(p->grp);
 }
 static void vala_panel_applet_get_property(GObject *object, guint property_id, GValue *value,
                                            GParamSpec *pspec)

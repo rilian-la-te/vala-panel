@@ -35,7 +35,7 @@ void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w
 void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);
 GSettings *vala_panel_applet_get_settings(ValaPanelApplet *self);
 const char *vala_panel_applet_get_uuid(ValaPanelApplet *self);
-const char *vala_panel_applet_get_action_group(ValaPanelApplet *self);
+GActionMap *vala_panel_applet_get_action_group(ValaPanelApplet *self);
 
 G_END_DECLS
 
