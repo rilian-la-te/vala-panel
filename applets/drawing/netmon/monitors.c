@@ -269,10 +269,10 @@ static ValaPanelApplet *netmon_plugin_get_applet_widget(ValaPanelAppletPlugin *b
 	return VALA_PANEL_APPLET(netmon_applet_new(toplevel, settings, uuid));
 }
 
-NetMonApplet *netmon_plugin_new(GType object_type)
+NetMonPlugin *netmon_plugin_new(GType object_type)
 {
-	return VALA_PANEL_NETMON_APPLET(
-	    vala_panel_applet_plugin_construct(netmon_applet_get_type()));
+	return VALA_PANEL_NETMON_PLUGIN(
+	    vala_panel_applet_plugin_construct(netmon_plugin_get_type()));
 }
 
 static void netmon_plugin_class_init(NetMonPluginClass *klass)

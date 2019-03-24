@@ -333,9 +333,9 @@ static ValaPanelApplet *cpu_plugin_get_applet_widget(ValaPanelAppletPlugin *base
 	return VALA_PANEL_APPLET(cpu_applet_new(toplevel, settings, uuid));
 }
 
-CpuApplet *cpu_plugin_new(GType object_type)
+CpuPlugin *cpu_plugin_new(GType object_type)
 {
-	return VALA_PANEL_CPU_PLUGIN(vala_panel_applet_plugin_construct(cpu_applet_get_type()));
+	return VALA_PANEL_CPU_PLUGIN(vala_panel_applet_plugin_construct(cpu_plugin_get_type()));
 }
 
 static void cpu_plugin_class_init(CpuPluginClass *klass)

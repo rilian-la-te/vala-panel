@@ -333,10 +333,10 @@ static ValaPanelApplet *monitors_plugin_get_applet_widget(ValaPanelAppletPlugin 
 	return VALA_PANEL_APPLET(monitors_applet_new(toplevel, settings, uuid));
 }
 
-MonitorsApplet *monitors_plugin_new(GType object_type)
+MonitorsPlugin *monitors_plugin_new(GType object_type)
 {
-	return VALA_PANEL_MONITORS_APPLET(
-	    vala_panel_applet_plugin_construct(monitors_applet_get_type()));
+	return VALA_PANEL_MONITORS_PLUGIN(
+	    vala_panel_applet_plugin_construct(monitors_plugin_get_type()));
 }
 
 static void monitors_plugin_class_init(MonitorsPluginClass *klass)
