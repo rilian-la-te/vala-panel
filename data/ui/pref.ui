@@ -353,7 +353,7 @@
                             <property name="can_focus">False</property>
                             <property name="model">liststore-monitor</property>
                             <property name="id_column">1</property>
-                            <signal name="changed" handler="on_monitor_changed" swapped="no"/>
+                            <signal name="changed" handler="on_monitor_changed" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkCellRendererText"/>
                               <attributes>
@@ -808,7 +808,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <signal name="clicked" handler="on_moveup_plugin" swapped="no"/>
+                            <signal name="clicked" handler="on_moveup_plugin" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image4">
                                 <property name="visible">True</property>
@@ -830,7 +830,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <signal name="clicked" handler="on_movedown_plugin" swapped="no"/>
+                            <signal name="clicked" handler="on_movedown_plugin" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image5">
                                 <property name="visible">True</property>
@@ -852,7 +852,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="on_about_plugin" swapped="no"/>
+                            <signal name="clicked" handler="on_about_plugin" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image6">
                                 <property name="visible">True</property>
@@ -874,7 +874,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <signal name="clicked" handler="on_add_plugin" swapped="no"/>
+                            <signal name="clicked" handler="on_add_plugin" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image1">
                                 <property name="visible">True</property>
