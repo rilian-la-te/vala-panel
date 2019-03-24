@@ -1042,67 +1042,61 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                        VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
-	pspecs[PROP_HEIGHT] = g_param_spec_int(VP_KEY_HEIGHT,
-	                                       VP_KEY_HEIGHT,
-	                                       VP_KEY_HEIGHT,
-	                                       G_MININT,
-	                                       G_MAXINT,
-	                                       0,
-	                                       (GParamFlags)(G_PARAM_STATIC_STRINGS |
-	                                                     G_PARAM_READABLE | G_PARAM_WRITABLE));
-	pspecs[PROP_WIDTH]  = g_param_spec_int(VP_KEY_WIDTH,
-                                              VP_KEY_WIDTH,
-                                              VP_KEY_WIDTH,
-                                              G_MININT,
-                                              G_MAXINT,
-                                              0,
-                                              (GParamFlags)(G_PARAM_STATIC_STRINGS |
-                                                            G_PARAM_READABLE | G_PARAM_WRITABLE));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
+	pspecs[PROP_HEIGHT] =
+	    g_param_spec_int(VP_KEY_HEIGHT,
+	                     VP_KEY_HEIGHT,
+	                     VP_KEY_HEIGHT,
+	                     G_MININT,
+	                     G_MAXINT,
+	                     0,
+	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+	pspecs[PROP_WIDTH] =
+	    g_param_spec_int(VP_KEY_WIDTH,
+	                     VP_KEY_WIDTH,
+	                     VP_KEY_WIDTH,
+	                     G_MININT,
+	                     G_MAXINT,
+	                     0,
+	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
 	pspecs[PROP_USE_FONT] =
 	    g_param_spec_boolean(VP_KEY_USE_FONT,
 	                         VP_KEY_USE_FONT,
 	                         VP_KEY_USE_FONT,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_USE_BG_COLOR] =
 	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_COLOR,
 	                         VP_KEY_USE_BACKGROUND_COLOR,
 	                         VP_KEY_USE_BACKGROUND_COLOR,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_USE_FG_COLOR] =
 	    g_param_spec_boolean(VP_KEY_USE_FOREGROUND_COLOR,
 	                         VP_KEY_USE_FOREGROUND_COLOR,
 	                         VP_KEY_USE_FOREGROUND_COLOR,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_USE_BG_FILE] =
 	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_FILE,
 	                         VP_KEY_USE_BACKGROUND_FILE,
 	                         VP_KEY_USE_BACKGROUND_FILE,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_FONT_SIZE_ONLY] =
 	    g_param_spec_boolean(VP_KEY_FONT_SIZE_ONLY,
 	                         VP_KEY_FONT_SIZE_ONLY,
 	                         VP_KEY_FONT_SIZE_ONLY,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_TB_LOOK] =
 	    g_param_spec_boolean(VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_FONT_SIZE] =
 	    g_param_spec_uint(VP_KEY_FONT_SIZE,
 	                      VP_KEY_FONT_SIZE,
@@ -1110,8 +1104,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
-	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                    G_PARAM_WRITABLE));
+	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_CORNER_RAD] =
 	    g_param_spec_uint(VP_KEY_CORNER_RADIUS,
 	                      VP_KEY_CORNER_RADIUS,
@@ -1119,28 +1112,25 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
-	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                    G_PARAM_WRITABLE));
-	pspecs[PROP_FONT] = g_param_spec_string(VP_KEY_FONT,
-	                                        VP_KEY_FONT,
-	                                        VP_KEY_FONT,
-	                                        NULL,
-	                                        (GParamFlags)(G_PARAM_STATIC_STRINGS |
-	                                                      G_PARAM_READABLE | G_PARAM_WRITABLE));
+	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+	pspecs[PROP_FONT] =
+	    g_param_spec_string(VP_KEY_FONT,
+	                        VP_KEY_FONT,
+	                        VP_KEY_FONT,
+	                        NULL,
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_BG_COLOR] =
 	    g_param_spec_string(VP_KEY_BACKGROUND_COLOR,
 	                        VP_KEY_BACKGROUND_COLOR,
 	                        VP_KEY_BACKGROUND_COLOR,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_FG_COLOR] =
 	    g_param_spec_string(VP_KEY_FOREGROUND_COLOR,
 	                        VP_KEY_FOREGROUND_COLOR,
 	                        VP_KEY_FOREGROUND_COLOR,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_ICON_SIZE] =
 	    g_param_spec_uint(VP_KEY_ICON_SIZE,
 	                      VP_KEY_ICON_SIZE,
@@ -1148,23 +1138,21 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
-	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                    G_PARAM_WRITABLE));
+	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_BG_FILE] =
 	    g_param_spec_string(VP_KEY_BACKGROUND_FILE,
 	                        VP_KEY_BACKGROUND_FILE,
 	                        VP_KEY_BACKGROUND_FILE,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_GRAVITY] =
 	    g_param_spec_enum(VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
 	                      VALA_PANEL_TYPE_GRAVITY,
 	                      0,
-	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
+	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                    G_PARAM_CONSTRUCT));
 	pspecs[PROP_ORIENTATION] =
 	    g_param_spec_enum(VP_KEY_ORIENTATION,
 	                      VP_KEY_ORIENTATION,
@@ -1180,58 +1168,32 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
 	                     G_MININT,
 	                     G_MAXINT,
 	                     0,
-	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                   G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
+	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                   G_PARAM_CONSTRUCT));
 	pspecs[PROP_DOCK] =
 	    g_param_spec_boolean(VP_KEY_DOCK,
 	                         VP_KEY_DOCK,
 	                         VP_KEY_DOCK,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_STRUT] =
 	    g_param_spec_boolean(VP_KEY_STRUT,
 	                         VP_KEY_STRUT,
 	                         VP_KEY_STRUT,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_IS_DYNAMIC] =
 	    g_param_spec_boolean(VP_KEY_DYNAMIC,
 	                         VP_KEY_DYNAMIC,
 	                         VP_KEY_DYNAMIC,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[PROP_AUTOHIDE] =
 	    g_param_spec_boolean(VP_KEY_AUTOHIDE,
 	                         VP_KEY_AUTOHIDE,
 	                         VP_KEY_AUTOHIDE,
 	                         FALSE,
-	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                       G_PARAM_WRITABLE));
+	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
-	g_object_class_install_property(oclass, PROP_UUID, pspecs[PROP_UUID]);
-	g_object_class_install_property(oclass, PROP_HEIGHT, pspecs[PROP_HEIGHT]);
-	g_object_class_install_property(oclass, PROP_WIDTH, pspecs[PROP_WIDTH]);
-	g_object_class_install_property(oclass, PROP_USE_FONT, pspecs[PROP_USE_FONT]);
-	g_object_class_install_property(oclass, PROP_USE_BG_COLOR, pspecs[PROP_USE_BG_COLOR]);
-	g_object_class_install_property(oclass, PROP_USE_FG_COLOR, pspecs[PROP_USE_FG_COLOR]);
-	g_object_class_install_property(oclass, PROP_USE_BG_FILE, pspecs[PROP_USE_BG_FILE]);
-	g_object_class_install_property(oclass, PROP_FONT_SIZE_ONLY, pspecs[PROP_FONT_SIZE_ONLY]);
-	g_object_class_install_property(oclass, PROP_TB_LOOK, pspecs[PROP_TB_LOOK]);
-	g_object_class_install_property(oclass, PROP_FONT_SIZE, pspecs[PROP_FONT_SIZE]);
-	g_object_class_install_property(oclass, PROP_CORNER_RAD, pspecs[PROP_CORNER_RAD]);
-	g_object_class_install_property(oclass, PROP_FONT, pspecs[PROP_FONT]);
-	g_object_class_install_property(oclass, PROP_BG_COLOR, pspecs[PROP_BG_COLOR]);
-	g_object_class_install_property(oclass, PROP_FG_COLOR, pspecs[PROP_FG_COLOR]);
-	g_object_class_install_property(oclass, PROP_ICON_SIZE, pspecs[PROP_ICON_SIZE]);
-	g_object_class_install_property(oclass, PROP_BG_FILE, pspecs[PROP_BG_FILE]);
-	g_object_class_install_property(oclass, PROP_GRAVITY, pspecs[PROP_GRAVITY]);
-	g_object_class_install_property(oclass, PROP_ORIENTATION, pspecs[PROP_ORIENTATION]);
-	g_object_class_install_property(oclass, PROP_MONITOR, pspecs[PROP_MONITOR]);
-	g_object_class_install_property(oclass, PROP_DOCK, pspecs[PROP_DOCK]);
-	g_object_class_install_property(oclass, PROP_STRUT, pspecs[PROP_STRUT]);
-	g_object_class_install_property(oclass, PROP_IS_DYNAMIC, pspecs[PROP_IS_DYNAMIC]);
-	g_object_class_install_property(oclass, PROP_AUTOHIDE, pspecs[PROP_AUTOHIDE]);
+	g_object_class_install_properties(oclass, PROP_LAST, pspecs);
 }

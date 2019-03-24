@@ -556,9 +556,7 @@ static void vp_layout_class_init(ValaPanelLayoutClass *klass)
 	                        VALA_PANEL_TOPLEVEL_ID,
 	                        VALA_PANEL_TOPLEVEL_ID,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                PROP_TOPLEVEL_ID,
-	                                vp_layout_properties[PROP_TOPLEVEL_ID]);
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_properties(G_OBJECT_CLASS(klass), PROP_LAST, vp_layout_properties);
 }

@@ -718,11 +718,11 @@ static void vp_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 	                        VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                TOPLEVEL_PROPERTY,
-	                                vp_toplevel_config_properties[TOPLEVEL_PROPERTY]);
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_properties(G_OBJECT_CLASS(klass),
+	                                  NUM_PROPERTIES,
+	                                  vp_toplevel_config_properties);
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/lib/pref.ui");
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),

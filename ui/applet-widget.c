@@ -164,21 +164,17 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
 	*base_min = *base_nat = -1;
 }
 
-static void vala_panel_applet_get_preferred_height_for_width(GtkWidget *self, int width, int *min,
+static void vala_panel_applet_get_preferred_height_for_width(GtkWidget *obj, int width, int *min,
                                                              int *nat)
 {
+	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
 	int x, y;
-	vala_panel_applet_measure(VALA_PANEL_APPLET(self),
-	                          GTK_ORIENTATION_VERTICAL,
-	                          width,
-	                          min,
-	                          nat,
-	                          &x,
-	                          &y);
+	vala_panel_applet_measure(self, GTK_ORIENTATION_VERTICAL, width, min, nat, &x, &y);
 }
-static void vala_panel_applet_get_preferred_width_for_height(GtkWidget *self, int height, int *min,
+static void vala_panel_applet_get_preferred_width_for_height(GtkWidget *obj, int height, int *min,
                                                              int *nat)
 {
+	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
 	int x, y;
 	vala_panel_applet_measure(self, GTK_ORIENTATION_HORIZONTAL, height, min, nat, &x, &y);
 }
@@ -191,21 +187,17 @@ GtkSizeRequestMode vala_panel_applet_get_request_mode(GtkWidget *obj)
 	return (pos == GTK_ORIENTATION_HORIZONTAL) ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
 	                                           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
-static void vala_panel_applet_get_preferred_width(GtkWidget *self, int *min, int *nat)
+static void vala_panel_applet_get_preferred_width(GtkWidget *obj, int *min, int *nat)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
-	int height, icon_size;
-	g_object_get(p->toplevel, VP_KEY_HEIGHT, &height, VP_KEY_ICON_SIZE, &icon_size, NULL);
-	*min = icon_size;
-	*nat = height;
+	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
+	int x, y;
+	vala_panel_applet_measure(self, GTK_ORIENTATION_HORIZONTAL, 0, min, nat, &x, &y);
 }
-static void vala_panel_applet_get_preferred_height(GtkWidget *self, int *min, int *nat)
+static void vala_panel_applet_get_preferred_height(GtkWidget *obj, int *min, int *nat)
 {
-	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
-	int height, icon_size;
-	g_object_get(p->toplevel, VP_KEY_HEIGHT, &height, VP_KEY_ICON_SIZE, &icon_size, NULL);
-	*min = icon_size;
-	*nat = height;
+	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
+	int x, y;
+	vala_panel_applet_measure(self, GTK_ORIENTATION_VERTICAL, 0, min, nat, &x, &y);
 }
 
 static void vala_panel_applet_parent_set(GtkWidget *w, GtkWidget *prev_parent)
@@ -367,48 +359,33 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	                        VP_KEY_BACKGROUND_WIDGET,
 	                        VP_KEY_BACKGROUND_WIDGET,
 	                        gtk_widget_get_type(),
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	pspecs[VALA_PANEL_APPLET_TOPLEVEL] =
 	    g_param_spec_object(VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
 	pspecs[VALA_PANEL_APPLET_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        NULL,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
 	pspecs[VALA_PANEL_APPLET_SETTINGS] =
 	    g_param_spec_object(VP_KEY_SETTINGS,
 	                        VP_KEY_SETTINGS,
 	                        VP_KEY_SETTINGS,
 	                        G_TYPE_SETTINGS,
-	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE |
-	                                      G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
+	                                      G_PARAM_CONSTRUCT_ONLY));
 	pspecs[VALA_PANEL_APPLET_GRP] =
 	    g_param_spec_object(VP_KEY_ACTION_GROUP,
 	                        VP_KEY_ACTION_GROUP,
 	                        VP_KEY_ACTION_GROUP,
 	                        G_TYPE_SIMPLE_ACTION_GROUP,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APPLET_BACKGROUND_WIDGET,
-	                                pspecs[VALA_PANEL_APPLET_BACKGROUND_WIDGET]);
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APPLET_TOPLEVEL,
-	                                pspecs[VALA_PANEL_APPLET_TOPLEVEL]);
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APPLET_SETTINGS,
-	                                pspecs[VALA_PANEL_APPLET_SETTINGS]);
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APPLET_UUID,
-	                                pspecs[VALA_PANEL_APPLET_UUID]);
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APPLET_GRP,
-	                                pspecs[VALA_PANEL_APPLET_GRP]);
+	g_object_class_install_properties(G_OBJECT_CLASS(klass), VALA_PANEL_APPLET_ALL, pspecs);
 }

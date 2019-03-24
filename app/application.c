@@ -660,8 +660,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    "profile",
 	                                                    "default",
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_RUN_COMMAND,
 	                                g_param_spec_string(VP_KEY_RUN,
@@ -669,8 +668,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_RUN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_TERMINAL_COMMAND,
 	                                g_param_spec_string(VP_KEY_TERMINAL,
@@ -678,8 +676,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_TERMINAL,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_LOCK_COMMAND,
 	                                g_param_spec_string(VP_KEY_LOCK,
@@ -687,8 +684,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_LOCK,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_LOGOUT_COMMAND,
 	                                g_param_spec_string(VP_KEY_LOGOUT,
@@ -696,8 +692,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_LOGOUT,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_SHUTDOWN_COMMAND,
 	                                g_param_spec_string(VP_KEY_SHUTDOWN,
@@ -705,8 +700,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_SHUTDOWN,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_DARK,
 	                                g_param_spec_boolean(VP_KEY_DARK,
@@ -714,8 +708,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                     VP_KEY_DARK,
 	                                                     false,
 	                                                     G_PARAM_STATIC_STRINGS |
-	                                                         G_PARAM_READABLE |
-	                                                         G_PARAM_WRITABLE));
+	                                                         G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_IS_CUSTOM,
 	                                g_param_spec_boolean(VP_KEY_CUSTOM,
@@ -723,8 +716,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                     VP_KEY_CUSTOM,
 	                                                     false,
 	                                                     G_PARAM_STATIC_STRINGS |
-	                                                         G_PARAM_READABLE |
-	                                                         G_PARAM_WRITABLE));
+	                                                         G_PARAM_READWRITE));
 	g_object_class_install_property(G_OBJECT_CLASS(klass),
 	                                VALA_PANEL_APP_CSS,
 	                                g_param_spec_string(VP_KEY_CSS,
@@ -732,8 +724,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	                                                    VP_KEY_CSS,
 	                                                    NULL,
 	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READABLE |
-	                                                        G_PARAM_WRITABLE));
+	                                                        G_PARAM_READWRITE));
 }
 
 int main(int argc, char *argv[])
