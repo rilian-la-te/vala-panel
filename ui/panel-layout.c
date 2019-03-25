@@ -504,19 +504,14 @@ static void vp_layout_destroy(GObject *obj)
 	GTK_WIDGET_CLASS(vp_layout_parent_class)->destroy(GTK_WIDGET(self));
 }
 
-static GObject *vp_layout_constructor(GType type, guint n_construct_properties,
-                                      GObjectConstructParam *construct_properties)
+static void vp_layout_constructed(GObject *obj)
 {
-	GObjectClass *parent_class = G_OBJECT_CLASS(vp_layout_parent_class);
-	GObject *obj =
-	    parent_class->constructor(type, n_construct_properties, construct_properties);
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
 	gtk_box_pack_start(self, self->start_box, false, true, 0);
 	gtk_widget_show(self->start_box);
 	gtk_box_pack_end(self, self->end_box, false, true, 0);
 	gtk_widget_show(self->end_box);
 	gtk_box_set_center_widget(GTK_BOX(self), self->center_box);
-	return G_OBJECT(self);
 }
 
 static void vp_layout_init(ValaPanelLayout *self)
@@ -547,7 +542,7 @@ static void vp_layout_class_init(ValaPanelLayoutClass *klass)
 {
 	manager                             = vp_applet_manager_new();
 	core_settings                       = vp_toplevel_get_core_settings();
-	G_OBJECT_CLASS(klass)->constructor  = vp_layout_constructor;
+	G_OBJECT_CLASS(klass)->constructed  = vp_layout_constructed;
 	G_OBJECT_CLASS(klass)->set_property = vp_layout_set_property;
 	G_OBJECT_CLASS(klass)->get_property = vp_layout_get_property;
 	G_OBJECT_CLASS(klass)->dispose      = vp_layout_destroy;
