@@ -68,8 +68,6 @@ static GObject *vala_panel_applet_constructor(GType type, guint n_construct_prop
 	    parent_class->constructor(type, n_construct_properties, construct_properties);
 	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
-	gtk_widget_set_has_window((GtkWidget *)self, false);
-	gtk_widget_insert_action_group(self, "applet", p->grp);
 	g_signal_connect(self,
 	                 "button-release-event",
 	                 G_CALLBACK(release_event_helper),
@@ -233,6 +231,8 @@ static void vala_panel_applet_init(ValaPanelApplet *self)
 	cnf = G_SIMPLE_ACTION(
 	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_REMOTE));
 	g_simple_action_set_enabled(cnf, false);
+	gtk_widget_set_has_window((GtkWidget *)self, false);
+	gtk_widget_insert_action_group(self, "applet", p->grp);
 }
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self)
 {
