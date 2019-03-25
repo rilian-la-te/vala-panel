@@ -207,7 +207,8 @@ GMenuModel *menu_maker_create_main_menu(bool as_submenus, const char *icon_str)
 	if (as_submenus)
 	{
 		g_autoptr(GMenuItem) item = g_menu_item_new_submenu(_("Applications"), apps);
-		g_menu_item_set_attribute(item, "icon", "s", icon_str);
+		if (icon_str)
+			g_menu_item_set_attribute(item, "icon", "s", icon_str);
 		g_menu_append_item(menu, item);
 		g_menu_append_submenu(menu, _("Places"), places);
 		g_menu_append_submenu(menu, _("System"), system);
