@@ -77,17 +77,15 @@ G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps)
 
 G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(IconPixmap *self)
 {
-	uint *new_bytes       = (uint *)self->bytes;
-	size_t new_bytes_size = self->bytes_size / sizeof(uint);
-	for (int i = 0; i < new_bytes_size; i++)
+    if(!self->bytes)
+        return NULL;
+	for (size_t i = 0; i < self->bytes_size; i += 4)
 	{
-		new_bytes[i] = GUINT_TO_BE(new_bytes[i]);
-	}
-	for (int i = 0; i < self->bytes_size; i += 4)
-	{
-		u_int8_t red       = self->bytes[i];
-		self->bytes[i]     = self->bytes[i + 2];
-		self->bytes[i + 2] = red;
+		u_int8_t alpha     = self->bytes[i];
+		self->bytes[i]     = self->bytes[i + 1];
+		self->bytes[i + 1] = self->bytes[i + 2];
+		self->bytes[i + 2] = self->bytes[i + 3];
+		self->bytes[i + 3] = alpha;
 	}
 	u_int8_t *pixbytes = g_memdup(self->bytes, self->bytes_size);
 	return G_ICON(gdk_pixbuf_new_from_data(pixbytes,
