@@ -111,12 +111,12 @@ static void menu_applet_constructed(GObject *obj)
 
 static void panel_gravity_changed(ValaPanelToplevel *panel, GParamSpec *param, GtkMenuBar *menu)
 {
-	int gravity;
-	g_object_get(panel, VP_KEY_GRAVITY, &gravity, NULL);
-	GtkPackDirection orient;
-	orient = vala_panel_orient_from_gravity(gravity) ? GTK_PACK_DIRECTION_LTR
-	                                                 : GTK_PACK_DIRECTION_TTB;
-	gtk_menu_bar_set_pack_direction(menu, orient);
+	GtkOrientation orient;
+	GtkPackDirection pack;
+	g_object_get(panel, VP_KEY_ORIENTATION, &orient, NULL);
+	pack =
+	    orient == GTK_ORIENTATION_HORIZONTAL ? GTK_PACK_DIRECTION_LTR : GTK_PACK_DIRECTION_TTB;
+	gtk_menu_bar_set_pack_direction(menu, pack);
 }
 
 static GtkContainer *create_menubar(MenuApplet *self)
@@ -581,21 +581,21 @@ static void menu_plugin_class_finalize(MenuPluginClass *klass)
  * IO Module functions
  */
 
-// void g_io_menumodel_load(GTypeModule *module)
-//{
-//    g_return_if_fail(module != NULL);
+void g_io_menumodel_load(GTypeModule *module)
+{
+	g_return_if_fail(module != NULL);
 
-//    menu_applet_register_type(module);
-//    menu_plugin_register_type(module);
+	menu_applet_register_type(module);
+	menu_plugin_register_type(module);
 
-//    g_type_module_use(module);
-//    g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-//                                   menu_plugin_get_type(),
-//                                   "org.valapanel.menumodel",
-//                                   10);
-//}
+	g_type_module_use(module);
+	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
+	                               menu_plugin_get_type(),
+	                               "org.valapanel.menumodel",
+	                               10);
+}
 
-// void g_io_menumodel_unload(GIOModule *module)
-//{
-//    g_return_if_fail(module != NULL);
-//}
+void g_io_menumodel_unload(GIOModule *module)
+{
+	g_return_if_fail(module != NULL);
+}
