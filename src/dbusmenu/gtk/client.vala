@@ -38,7 +38,7 @@ namespace ValaDBusMenu
         }
         public void detach()
         {
-            SignalHandler.disconnect_by_data(get_root_item(),this);
+            SignalHandler.disconnect_matched (get_root_item(), SignalMatchType.DATA, 0, 0, null, null, &this);
             if (root_menu != null)
                 root_menu.foreach((c)=>{root_menu.remove(c); c.destroy();});
         }
