@@ -19,7 +19,7 @@
 using ValaPanel;
 using Gtk;
 
-public class MenuPlugin : AppletPlugin
+public class MenuPPlugin : AppletPlugin
 {
     public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
                                     GLib.Settings? settings,
@@ -315,7 +315,7 @@ public void g_io_menumodel_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuPlugin),"org.valapanel.menumodel",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(MenuPPlugin),"org.valapanel.menumodel",10);
 }
 
 public void g_io_menumodel_unload(GLib.IOModule module)
