@@ -65,7 +65,7 @@ static void gdk_cairo_surface_paint_pixbuf(cairo_surface_t *surface, const GdkPi
 		else
 		{
 			guchar *end = p + 4 * width;
-			guint t1, t2, t3;
+			uint t1, t2, t3;
 
 #define MULT(d, c, a, t)                                                                           \
 	G_STMT_START                                                                               \

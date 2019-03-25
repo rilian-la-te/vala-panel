@@ -43,7 +43,7 @@
 struct _GWaterXcbSource
 {
 	GSource source;
-	gboolean connection_owned;
+	bool connection_owned;
 	xcb_connection_t *connection;
 	gpointer fd;
 	GQueue *queue;
@@ -54,7 +54,7 @@ static void _g_water_xcb_source_event_free(gpointer data)
 	free(data);
 }
 
-static gboolean _g_water_xcb_source_prepare(GSource *source, gint *timeout)
+static bool _g_water_xcb_source_prepare(GSource *source, gint *timeout)
 {
 	GWaterXcbSource *self = (GWaterXcbSource *)source;
 	xcb_flush(self->connection);
@@ -62,7 +62,7 @@ static gboolean _g_water_xcb_source_prepare(GSource *source, gint *timeout)
 	return !g_queue_is_empty(self->queue);
 }
 
-static gboolean _g_water_xcb_source_check(GSource *source)
+static bool _g_water_xcb_source_check(GSource *source)
 {
 	GWaterXcbSource *self = (GWaterXcbSource *)source;
 
@@ -83,13 +83,12 @@ static gboolean _g_water_xcb_source_check(GSource *source)
 	return !g_queue_is_empty(self->queue);
 }
 
-static gboolean _g_water_xcb_source_dispatch(GSource *source, GSourceFunc callback,
-                                             gpointer user_data)
+static bool _g_water_xcb_source_dispatch(GSource *source, GSourceFunc callback, gpointer user_data)
 {
 	GWaterXcbSource *self = (GWaterXcbSource *)source;
 	xcb_generic_event_t *event;
 
-	gboolean ret;
+	bool ret;
 
 	event = g_queue_pop_head(self->queue);
 	ret   = ((GWaterXcbEventCallback)callback)(event, user_data);
@@ -115,7 +114,7 @@ static GSourceFuncs _g_water_xcb_source_funcs = {
 	.finalize = _g_water_xcb_source_finalize,
 };
 
-GWaterXcbSource *g_water_xcb_source_new(GMainContext *context, const gchar *display, gint *screen,
+GWaterXcbSource *g_water_xcb_source_new(GMainContext *context, const char *display, gint *screen,
                                         GWaterXcbEventCallback callback, gpointer user_data,
                                         GDestroyNotify destroy_func)
 {

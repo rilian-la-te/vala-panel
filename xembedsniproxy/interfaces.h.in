@@ -14,10 +14,10 @@ G_BEGIN_DECLS
 #define ITEM_OBJECT         "/StatusNotifierItem"
 #define ITEM_INTERFACE      "org.kde.StatusNotifierItem"
 
-static const gchar watcher_xml[] = "@WATCHER_XML@";
+static const char watcher_xml[] = "@WATCHER_XML@";
 
 
-static const gchar item_xml[] = "@ITEM_XML@";
+static const char item_xml[] = "@ITEM_XML@";
 
 G_END_DECLS
 

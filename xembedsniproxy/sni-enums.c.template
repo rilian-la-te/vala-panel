@@ -43,13 +43,13 @@ GType
 
 	Return value: The nick for the given value or #NULL on error
 */
-const gchar *
+const char *
 @enum_name@_get_nick (@EnumName@ value)
 {
 	GEnumClass * class = G_ENUM_CLASS(g_type_class_ref(@enum_name@_get_type()));
 	g_return_val_if_fail(class != NULL, NULL);
 
-	const gchar * ret = NULL;
+	const char * ret = NULL;
 	GEnumValue * val = g_enum_get_value(class, value);
 	if (val != NULL) {
 		ret = val->value_nick;
@@ -68,7 +68,7 @@ const gchar *
 	Return value: The value for the given @nick
 */
 @EnumName@
-@enum_name@_get_value_from_nick (const gchar * nick)
+@enum_name@_get_value_from_nick (const char * nick)
 {
 	GEnumClass * class = G_ENUM_CLASS(g_type_class_ref(@enum_name@_get_type()));
 	g_return_val_if_fail(class != NULL, 0);

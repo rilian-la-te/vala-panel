@@ -448,7 +448,7 @@ static void xembed_sni_app_finalize(GObject *object)
 	(*G_OBJECT_CLASS(xembed_sni_application_parent_class)->finalize)(object);
 }
 
-static void xembed_sni_app_set_property(GObject *object, guint prop_id, const GValue *value,
+static void xembed_sni_app_set_property(GObject *object, uint prop_id, const GValue *value,
                                         GParamSpec *pspec)
 {
 	XEmbedSNIApplication *app;
@@ -464,7 +464,7 @@ static void xembed_sni_app_set_property(GObject *object, guint prop_id, const GV
 	}
 }
 
-static void xembed_sni_app_get_property(GObject *object, guint prop_id, GValue *value,
+static void xembed_sni_app_get_property(GObject *object, uint prop_id, GValue *value,
                                         GParamSpec *pspec)
 {
 	XEmbedSNIApplication *app;
