@@ -109,10 +109,6 @@ set(CORE_PACKAGES
   gmodule-2.0
   posix)
 
-if(${VALA_VERSION} VERSION_LESS "0.43.91")
-    list(APPEND CORE_PACKAGES gio-addons-2.0)
-endif()
-
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(util)
 ADD_SUBDIRECTORY(runner)
