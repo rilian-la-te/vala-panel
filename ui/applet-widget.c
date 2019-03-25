@@ -60,8 +60,12 @@ gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings
 	return g_object_new(ex, "toplevel", top, "settings", settings, "uuid", uuid, NULL);
 }
 
-static void vala_panel_applet_constructed(GObject *obj)
+static GObject *vala_panel_applet_constructor(GType type, guint n_construct_properties,
+                                              GObjectConstructParam *construct_properties)
 {
+	GObjectClass *parent_class = G_OBJECT_CLASS(vala_panel_applet_parent_class);
+	GObject *obj =
+	    parent_class->constructor(type, n_construct_properties, construct_properties);
 	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	gtk_widget_set_has_window((GtkWidget *)self, false);
@@ -70,6 +74,7 @@ static void vala_panel_applet_constructed(GObject *obj)
 	                 "button-release-event",
 	                 G_CALLBACK(release_event_helper),
 	                 p->toplevel);
+	return G_OBJECT(self);
 }
 
 void vala_panel_applet_init_background(ValaPanelApplet *self)
@@ -345,7 +350,7 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	((GtkWidgetClass *)klass)->get_preferred_width   = vala_panel_applet_get_preferred_width;
 	((GtkWidgetClass *)klass)->get_preferred_height  = vala_panel_applet_get_preferred_height;
 	((ValaPanelAppletClass *)klass)->get_settings_ui = vala_panel_applet_get_config_dialog;
-	G_OBJECT_CLASS(klass)->constructed               = vala_panel_applet_constructed;
+	G_OBJECT_CLASS(klass)->constructor               = vala_panel_applet_constructor;
 	G_OBJECT_CLASS(klass)->get_property              = vala_panel_applet_get_property;
 	G_OBJECT_CLASS(klass)->set_property              = vala_panel_applet_set_property;
 	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_applet_finalize;
