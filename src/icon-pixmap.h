@@ -31,10 +31,10 @@ typedef struct
 } IconPixmap;
 
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant);
-G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant);
+G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant);
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self);
 G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps);
-G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(IconPixmap *self);
+G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
 
 typedef struct
 {

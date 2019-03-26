@@ -17,7 +17,7 @@
  */
 
 #include "icon-pixmap.h"
-#include <cairo.h>
+#include <gtk/gtk.h>
 #include <stdbool.h>
 
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
@@ -52,7 +52,7 @@ G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
 G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
 
-G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant)
+G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant)
 {
 	size_t i             = 0;
 	size_t size          = g_variant_n_children(variant);
@@ -65,6 +65,7 @@ G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant)
 		pixmaps[i] = icon_pixmap_new(pixmap_variant);
 		i++;
 	}
+	pixmaps[size] = NULL;
 	return pixmaps;
 }
 
@@ -75,7 +76,7 @@ G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps)
 	g_clear_pointer(&pixmaps, g_free);
 }
 
-G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(IconPixmap *self)
+G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 {
 	if (!self->bytes)
 		return NULL;
@@ -98,6 +99,87 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(IconPixmap *self)
 	                                                                     self->width),
 	                                       g_free,
 	                                       NULL));
+}
+
+static inline bool string_empty(const char *path)
+{
+	return (path == NULL || strlen(path) == 0);
+}
+
+static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path)
+{
+	if (string_empty(path))
+		return NULL;
+	g_autoptr(GError) err = NULL;
+	g_autoptr(GDir) dir   = g_dir_open(path, 0, &err);
+	if (err)
+		return NULL;
+	for (const char *ch = g_dir_read_name(dir); ch != NULL; ch = g_dir_read_name(dir))
+	{
+		g_autofree char *new_path = g_build_filename(path, ch, NULL);
+		g_autoptr(GFile) f        = g_file_new_for_path(new_path);
+		char *sstr                = g_strrstr(new_path, ".");
+		long index                = sstr != NULL ? labs(sstr - new_path) : -1;
+		g_autofree char *icon =
+		    index >= 0 ? g_strndup(new_path, (ulong)index) : g_strdup(new_path);
+		if (!g_strcmp0(icon_name, icon))
+			return g_file_icon_new(f);
+		GIcon *ret  = NULL;
+		GFileType t = g_file_query_file_type(f, G_FILE_QUERY_INFO_NONE, NULL);
+		if (t == G_FILE_TYPE_DIRECTORY)
+			ret = icon_pixmap_find_file_icon(icon_name, new_path);
+		if (ret)
+			return ret;
+	}
+	return NULL;
+}
+
+GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
+                               const GtkIconTheme *theme, const char *icon_theme_path,
+                               const int icon_size, const bool use_symbolic)
+{
+	if (!string_empty(icon_name))
+	{
+		g_autofree char *new_name = (use_symbolic)
+		                                ? g_strdup_printf("%s-symbolic", icon_name)
+		                                : g_strdup(icon_name);
+		if (icon_name[0] == '/')
+		{
+			g_autoptr(GFile) f = g_file_new_for_path(icon_name);
+			return g_file_icon_new(f);
+		}
+		else if (string_empty(icon_theme_path) || gtk_icon_theme_has_icon(theme, new_name))
+		{
+			return g_themed_icon_new_with_default_fallbacks(new_name);
+		}
+		else
+		{
+			return icon_pixmap_find_file_icon(icon_name, icon_theme_path);
+		}
+	}
+	else if (pixmaps != NULL && pixmaps[0] != NULL)
+	{
+		GdkPixbuf *pixbuf = NULL;
+		size_t i;
+		for (i = 0; pixmaps[i] != NULL; i++)
+		{
+			if (pixmaps[i]->height >= icon_size && pixmaps[i]->width >= icon_size)
+				break;
+		}
+		pixbuf = GDK_PIXBUF(icon_pixmap_gicon(pixmaps[i]));
+		if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
+		    gdk_pixbuf_get_height(pixbuf) > icon_size)
+		{
+			GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
+			                                         icon_size,
+			                                         icon_size,
+			                                         GDK_INTERP_BILINEAR);
+			g_clear_object(&pixbuf);
+			pixbuf = tmp;
+		}
+		return G_ICON(pixbuf);
+	}
+	return NULL;
 }
 
 ToolTip *tooltip_new(GVariant *variant)
@@ -132,31 +214,3 @@ G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)
 G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
-
-GIcon *icon_pixmap_find_file_icon(char *icon_name, char *path)
-{
-	if (path == NULL || strlen(path) == 0)
-		return NULL;
-	g_autoptr(GError) err = NULL;
-	g_autoptr(GDir) dir   = g_dir_open(path, 0, &err);
-	if (err)
-		return NULL;
-	for (const char *ch = g_dir_read_name(dir); ch != NULL; ch = g_dir_read_name(dir))
-	{
-		g_autofree char *new_path = g_build_filename(path, ch, NULL);
-		g_autoptr(GFile) f        = g_file_new_for_path(new_path);
-		char *sstr                = g_strrstr(new_path, ".");
-		long index                = sstr != NULL ? labs(sstr - new_path) : -1;
-		g_autofree char *icon =
-		    index >= 0 ? g_strndup(new_path, (ulong)index) : g_strdup(new_path);
-		if (!g_strcmp0(icon_name, icon))
-			return g_file_icon_new(f);
-		GIcon *ret  = NULL;
-		GFileType t = g_file_query_file_type(f, G_FILE_QUERY_INFO_NONE, NULL);
-		if (t == G_FILE_TYPE_DIRECTORY)
-			ret = icon_pixmap_find_file_icon(icon_name, new_path);
-		if (ret)
-			return ret;
-	}
-	return NULL;
-}
