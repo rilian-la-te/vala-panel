@@ -19,8 +19,8 @@
 #ifndef ICONPIXMAP_H
 #define ICONPIXMAP_H
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#include <gio/gio.h>
+#include <gtk/gtk.h>
+#include <stdbool.h>
 
 typedef struct
 {
@@ -35,6 +35,9 @@ G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant);
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self);
 G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps);
 G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
+GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
+                               const GtkIconTheme *theme, const char *icon_theme_path,
+                               const int icon_size, const bool use_symbolic);
 
 typedef struct
 {
