@@ -77,8 +77,8 @@ G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps)
 
 G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(IconPixmap *self)
 {
-    if(!self->bytes)
-        return NULL;
+	if (!self->bytes)
+		return NULL;
 	for (size_t i = 0; i < self->bytes_size; i += 4)
 	{
 		u_int8_t alpha     = self->bytes[i];
@@ -132,3 +132,31 @@ G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)
 G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
+
+GIcon *icon_pixmap_find_file_icon(char *icon_name, char *path)
+{
+	if (path == NULL || strlen(path) == 0)
+		return NULL;
+	g_autoptr(GError) err = NULL;
+	g_autoptr(GDir) dir   = g_dir_open(path, 0, &err);
+	if (err)
+		return NULL;
+	for (const char *ch = g_dir_read_name(dir); ch != NULL; ch = g_dir_read_name(dir))
+	{
+		g_autofree char *new_path = g_build_filename(path, ch, NULL);
+		g_autoptr(GFile) f        = g_file_new_for_path(new_path);
+		char *sstr                = g_strrstr(new_path, ".");
+		long index                = sstr != NULL ? labs(sstr - new_path) : -1;
+		g_autofree char *icon =
+		    index >= 0 ? g_strndup(new_path, (ulong)index) : g_strdup(new_path);
+		if (!g_strcmp0(icon_name, icon))
+			return g_file_icon_new(f);
+		GIcon *ret  = NULL;
+		GFileType t = g_file_query_file_type(f, G_FILE_QUERY_INFO_NONE, NULL);
+		if (t == G_FILE_TYPE_DIRECTORY)
+			ret = icon_pixmap_find_file_icon(icon_name, new_path);
+		if (ret)
+			return ret;
+	}
+	return NULL;
+}
