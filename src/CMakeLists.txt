@@ -33,8 +33,8 @@ set(VALA_FILES_CORE
 add_library(sntray-core STATIC
     ${VALA_C_CORE}
     dbus-utils.c
-#    snproxy.c
-#    snproxy.h
+    snproxy.c
+    snproxy.h
     rtparser.h
     icon-pixmap.c
     icon-pixmap.h

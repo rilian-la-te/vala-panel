@@ -31,6 +31,7 @@ typedef struct
 } IconPixmap;
 
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant);
+G_GNUC_INTERNAL IconPixmap *icon_pixmap_copy(IconPixmap *src);
 G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant);
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self);
 G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps);
@@ -38,13 +39,42 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
 GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
                                const GtkIconTheme *theme, const char *icon_theme_path,
                                const int icon_size, const bool use_symbolic);
+G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
 
 typedef struct
 {
 	char *icon_name;
 	IconPixmap **pixmaps;
+	GIcon *icon;
 	char *title;
 	char *description;
 } ToolTip;
+
+G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant);
+G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src);
+G_GNUC_INTERNAL void tooltip_free(ToolTip *self);
+G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
+
+typedef enum
+{
+	SN_CATEGORY_APPLICATION,
+	SN_CATEGORY_COMMUNICATIONS,
+	SN_CATEGORY_SYSTEM,
+	SN_CATEGORY_HARDWARE,
+	SN_CATEGORY_OTHER
+} SnCategory;
+GType sn_category_get_type(void);
+const char *sn_category_get_nick(SnCategory value);
+SnCategory sn_category_get_value_from_nick(const char *nick);
+
+typedef enum
+{
+	SN_STATUS_PASSIVE,
+	SN_STATUS_ACTIVE,
+	SN_STATUS_NEEDS_ATTENTION
+} SnStatus;
+GType sn_status_get_type(void);
+const char *sn_status_get_nick(SnStatus value);
+SnStatus sn_status_get_value_from_nick(const char *nick);
 
 #endif // ICONPIXMAP_H

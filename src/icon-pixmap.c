@@ -33,7 +33,7 @@ G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
 	return self;
 }
 
-G_GNUC_INTERNAL static IconPixmap *icon_pixmap_copy(IconPixmap *src)
+G_GNUC_INTERNAL IconPixmap *icon_pixmap_copy(IconPixmap *src)
 {
 	IconPixmap *dst = g_new0(IconPixmap, 1);
 	dst->width      = src->width;
@@ -50,7 +50,6 @@ G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 }
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
-G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
 
 G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant)
 {
@@ -182,35 +181,135 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 	return NULL;
 }
 
-ToolTip *tooltip_new(GVariant *variant)
+G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 {
 	ToolTip *self = g_new0(ToolTip, 1);
 	g_variant_get_child(variant, 0, "s", self->icon_name);
 	g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
 	self->pixmaps          = unbox_pixmaps(ch);
+	self->icon             = NULL;
 	g_variant_get_child(variant, 2, "s", self->title);
 	g_variant_get_child(variant, 3, "s", self->description);
 	return self;
 }
 
-G_GNUC_INTERNAL static ToolTip *tooltip_copy(ToolTip *src)
+G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
 {
 	ToolTip *dst     = g_new0(ToolTip, 1);
 	dst->icon_name   = g_strdup(src->icon_name);
 	dst->title       = g_strdup(src->title);
 	dst->description = g_strdup(src->description);
 	dst->pixmaps     = src->pixmaps;
+	dst->icon        = g_object_ref(src->icon);
 	return dst;
 }
 
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 {
-	g_clear_pointer(&self->icon_name, g_free);
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->description, g_free);
+	g_clear_object(&self->icon);
+	g_clear_pointer(&self->icon_name, g_free);
 	g_clear_pointer(&self->pixmaps, icon_pixmap_freev);
 	g_clear_pointer(&self, g_free);
 }
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)
-G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
+/*
+ * This part is required, because we use non-standard nicks.
+ */
+
+GType sn_category_get_type(void)
+{
+	static GType the_type = 0;
+
+	if (the_type == 0)
+	{
+		static const GEnumValue values[] = {
+			{ SN_CATEGORY_APPLICATION, "SN_CATEGORY_APPLICATION", "ApplicationStatus" },
+			{ SN_CATEGORY_COMMUNICATIONS,
+			  "SN_CATEGORY_COMMUNICATIONS",
+			  "Communications" },
+			{ SN_CATEGORY_SYSTEM, "SN_CATEGORY_SYSTEM_SERVICES", "SystemServices" },
+			{ SN_CATEGORY_HARDWARE, "SN_CATEGORY_HARDWARE", "Hardware" },
+			{ SN_CATEGORY_OTHER, "SN_CATEGORY_OTHER", "Other" },
+			{ 0, NULL, NULL }
+		};
+		the_type = g_enum_register_static(g_intern_static_string("SnCategory"), values);
+	}
+	return the_type;
+}
+
+const char *sn_category_get_nick(SnCategory value)
+{
+	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_category_get_type()));
+	g_return_val_if_fail(class != NULL, NULL);
+
+	const char *ret = NULL;
+	GEnumValue *val = g_enum_get_value(class, value);
+	if (val != NULL)
+		ret = val->value_nick;
+
+	g_type_class_unref(class);
+	return ret;
+}
+
+SnCategory sn_category_get_value_from_nick(const char *nick)
+{
+	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_category_get_type()));
+	g_return_val_if_fail(class != NULL, 0);
+
+	SnCategory ret  = 0;
+	GEnumValue *val = g_enum_get_value_by_nick(class, nick);
+	if (val != NULL)
+		ret = val->value;
+
+	g_type_class_unref(class);
+	return ret;
+}
+GType sn_status_get_type(void)
+{
+	static GType the_type = 0;
+
+	if (the_type == 0)
+	{
+		static const GEnumValue values[] = {
+			{ SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
+			{ SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
+			{ SN_STATUS_NEEDS_ATTENTION,
+			  "SN_STATUS_NEEDS_ATTENTION",
+			  "NeedsAttention" },
+			{ 0, NULL, NULL }
+		};
+		the_type = g_enum_register_static(g_intern_static_string("SnStatus"), values);
+	}
+	return the_type;
+}
+
+const char *sn_status_get_nick(SnStatus value)
+{
+	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_status_get_type()));
+	g_return_val_if_fail(class != NULL, NULL);
+
+	const char *ret = NULL;
+	GEnumValue *val = g_enum_get_value(class, value);
+	if (val != NULL)
+		ret = val->value_nick;
+
+	g_type_class_unref(class);
+	return ret;
+}
+
+SnStatus sn_status_get_value_from_nick(const char *nick)
+{
+	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_status_get_type()));
+	g_return_val_if_fail(class != NULL, 0);
+
+	SnStatus ret    = 0;
+	GEnumValue *val = g_enum_get_value_by_nick(class, nick);
+	if (val != NULL)
+		ret = val->value;
+
+	g_type_class_unref(class);
+	return ret;
+}
