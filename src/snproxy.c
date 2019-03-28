@@ -10,7 +10,7 @@ struct _SnProxy
 	bool initialized;
 
 	GCancellable *cancellable;
-	GDBusProxy *self_proxy;
+	GDBusProxy *item_proxy;
 	GDBusProxy *properties_proxy;
 	uint properties_timeout;
 
@@ -64,7 +64,7 @@ enum
 
 enum
 {
-	FINISH,
+	FAIL,
 	LAST_SIGNAL
 };
 
@@ -152,15 +152,15 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 
 	g_object_class_install_properties(oclass, PROP_LAST, pspecs);
 
-	signals[FINISH] = g_signal_new(g_intern_static_string(PROXY_SIGNAL_FINISH),
-	                               G_TYPE_FROM_CLASS(oclass),
-	                               G_SIGNAL_RUN_LAST,
-	                               0,
-	                               NULL,
-	                               NULL,
-	                               g_cclosure_marshal_VOID__VOID,
-	                               G_TYPE_NONE,
-	                               0);
+	signals[FAIL] = g_signal_new(g_intern_static_string(PROXY_SIGNAL_FAIL),
+	                             G_TYPE_FROM_CLASS(oclass),
+	                             G_SIGNAL_RUN_LAST,
+	                             0,
+	                             NULL,
+	                             NULL,
+	                             g_cclosure_marshal_VOID__VOID,
+	                             G_TYPE_NONE,
+	                             0);
 
 	oclass->finalize     = sn_proxy_finalize;
 	oclass->get_property = sn_proxy_get_property;
@@ -173,7 +173,7 @@ static void sn_proxy_init(SnProxy *self)
 	self->initialized = false;
 
 	self->cancellable        = g_cancellable_new();
-	self->self_proxy         = NULL;
+	self->item_proxy         = NULL;
 	self->properties_proxy   = NULL;
 	self->properties_timeout = 0;
 
@@ -214,7 +214,7 @@ static void sn_proxy_finalize(GObject *object)
 		g_source_remove(self->properties_timeout);
 
 	g_clear_object(&self->properties_proxy);
-	g_clear_object(&self->self_proxy);
+	g_clear_object(&self->item_proxy);
 
 	g_clear_pointer(&self->bus_name, g_free);
 	g_clear_pointer(&self->object_path, g_free);
@@ -276,13 +276,121 @@ static void sn_proxy_set_property(GObject *object, uint prop_id, const GValue *v
 	}
 }
 
+static void sn_proxy_unsubscribe(void *data, GObject *unused)
+{
+	SubscriptionContext *context = data;
+
+	g_dbus_connection_signal_unsubscribe(context->connection, context->handler);
+	g_clear_pointer(&context, g_free);
+}
+
+static void sn_item_name_owner_changed(GDBusConnection *connection, const char *sender_name,
+                                       const char *object_path, const char *interface_name,
+                                       const char *signal_name, GVariant *parameters,
+                                       void *user_data)
+{
+	SnProxy *self              = user_data;
+	g_autofree char *new_owner = NULL;
+
+	g_variant_get(parameters, "(sss)", NULL, NULL, &new_owner);
+	if ((new_owner == NULL || strlen(new_owner) == 0))
+		g_signal_emit(self, signals[FAIL], 0);
+}
+
+static void sn_item_properties_callback(GObject *source_object, GAsyncResult *res,
+                                        gpointer user_data)
+{
+	SnProxy *self           = SN_PROXY(user_data);
+	g_autoptr(GError) error = NULL;
+
+	self->properties_proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+		return;
+	if (self->properties_proxy == NULL)
+		g_signal_emit(self, signals[FAIL], 0);
+	// TODO: Update all properties hele
+}
+
+static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
+{
+	SnProxy *self           = SN_PROXY(user_data);
+	g_autoptr(GError) error = NULL;
+
+	self->item_proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+		return;
+	if (self->item_proxy == NULL)
+		;
+
+	SubscriptionContext *context = g_new0(SubscriptionContext, 1);
+	context->connection          = g_dbus_proxy_get_connection(self->item_proxy);
+	context->handler =
+	    g_dbus_connection_signal_subscribe(g_dbus_proxy_get_connection(self->item_proxy),
+	                                       "org.freedesktop.DBus",
+	                                       "org.freedesktop.DBus",
+	                                       "NameOwnerChanged",
+	                                       "/org/freedesktop/DBus",
+	                                       g_dbus_proxy_get_name(self->item_proxy),
+	                                       G_DBUS_SIGNAL_FLAGS_NONE,
+	                                       sn_item_name_owner_changed,
+	                                       self,
+	                                       NULL);
+	g_object_weak_ref(G_OBJECT(self->item_proxy), sn_proxy_unsubscribe, context);
+
+	//  g_signal_connect (self->item_proxy, "g-signal", G_CALLBACK (sn_proxy_signal_received),
+	//  self);
+
+	g_dbus_proxy_new(g_dbus_proxy_get_connection(self->item_proxy),
+	                 G_DBUS_PROXY_FLAGS_NONE,
+	                 NULL,
+	                 self->bus_name,
+	                 self->object_path,
+	                 "org.freedesktop.DBus.Properties",
+	                 self->cancellable,
+	                 sn_item_properties_callback,
+	                 self);
+}
+
+static int sn_proxy_start_failed(void *user_data)
+{
+	SnProxy *self = user_data;
+
+	/* start is failed, emit the signel in next loop iteration */
+	g_signal_emit(G_OBJECT(self), signals[FAIL], 0);
+
+	return G_SOURCE_REMOVE;
+}
+
+void sn_proxy_start(SnProxy *self)
+{
+	g_return_if_fail(SN_IS_PROXY(self));
+	g_return_if_fail(!self->started);
+
+	if (!g_dbus_is_name(self->bus_name))
+	{
+		g_idle_add(sn_proxy_start_failed, self);
+		return;
+	}
+
+	self->started = true;
+	g_dbus_proxy_new_for_bus(G_BUS_TYPE_SESSION,
+	                         G_DBUS_PROXY_FLAGS_NONE,
+	                         NULL,
+	                         self->bus_name,
+	                         self->object_path,
+	                         "org.kde.StatusNotifierItem",
+	                         self->cancellable,
+	                         sn_proxy_item_callback,
+	                         self);
+}
+
 void sn_proxy_context_menu(SnProxy *self, gint x_root, gint y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->self_proxy != NULL);
+	g_return_if_fail(self->item_proxy != NULL);
 
-	g_dbus_proxy_call(self->self_proxy,
+	g_dbus_proxy_call(self->item_proxy,
 	                  "ContextMenu",
 	                  g_variant_new("(ii)", x_root, y_root),
 	                  G_DBUS_CALL_FLAGS_NONE,
@@ -296,9 +404,9 @@ void sn_proxy_activate(SnProxy *self, gint x_root, gint y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->self_proxy != NULL);
+	g_return_if_fail(self->item_proxy != NULL);
 
-	g_dbus_proxy_call(self->self_proxy,
+	g_dbus_proxy_call(self->item_proxy,
 	                  "Activate",
 	                  g_variant_new("(ii)", x_root, y_root),
 	                  G_DBUS_CALL_FLAGS_NONE,
@@ -312,9 +420,9 @@ void sn_proxy_secondary_activate(SnProxy *self, gint x_root, gint y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->self_proxy != NULL);
+	g_return_if_fail(self->item_proxy != NULL);
 
-	g_dbus_proxy_call(self->self_proxy,
+	g_dbus_proxy_call(self->item_proxy,
 	                  "SecondaryActivate",
 	                  g_variant_new("(ii)", x_root, y_root),
 	                  G_DBUS_CALL_FLAGS_NONE,
@@ -328,9 +436,9 @@ void sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->self_proxy != NULL);
+	g_return_if_fail(self->item_proxy != NULL);
 
-	g_dbus_proxy_call(self->self_proxy,
+	g_dbus_proxy_call(self->item_proxy,
 	                  "XAyatanaSecondaryActivate",
 	                  g_variant_new("(u)", event_time),
 	                  G_DBUS_CALL_FLAGS_NONE,
@@ -344,11 +452,11 @@ void sn_proxy_scroll(SnProxy *self, gint delta_x, gint delta_y)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->self_proxy != NULL);
+	g_return_if_fail(self->item_proxy != NULL);
 
 	if (delta_x != 0)
 	{
-		g_dbus_proxy_call(self->self_proxy,
+		g_dbus_proxy_call(self->item_proxy,
 		                  "Scroll",
 		                  g_variant_new("(is)", delta_x, "horizontal"),
 		                  G_DBUS_CALL_FLAGS_NONE,
@@ -360,7 +468,7 @@ void sn_proxy_scroll(SnProxy *self, gint delta_x, gint delta_y)
 
 	if (delta_y != 0)
 	{
-		g_dbus_proxy_call(self->self_proxy,
+		g_dbus_proxy_call(self->item_proxy,
 		                  "Scroll",
 		                  g_variant_new("(is)", delta_y, "vertical"),
 		                  G_DBUS_CALL_FLAGS_NONE,

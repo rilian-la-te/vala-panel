@@ -39,7 +39,7 @@ G_BEGIN_DECLS
 #define PROXY_PROP_MENU_OBJECT_PATH "menu-object-path"
 #define PROXY_PROP_ORDERING_INDEX "x-ayatana-ordering-index"
 
-#define PROXY_SIGNAL_FINISH "finish"
+#define PROXY_SIGNAL_FAIL "fail"
 
 #define PROXY_DBUS_IFACE_DEFAULT "org.freedesktop.DBus"
 #define PROXY_DBUS_PATH_DEFAULT "/org/freedesktop/DBus"
