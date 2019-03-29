@@ -34,7 +34,7 @@ struct _SnProxy
 	char *icon_desc;
 	char *attention_desc;
 
-	bool items_in_menu;
+	bool item_is_menu;
 };
 
 G_DEFINE_TYPE(SnProxy, sn_proxy, G_TYPE_OBJECT)
@@ -197,7 +197,7 @@ static void sn_proxy_init(SnProxy *self)
 	self->attention_desc = NULL;
 
 	/*DBusMenu ones is much more likely than Activate ones */
-	self->items_in_menu = true;
+	self->item_is_menu = true;
 }
 
 static void sn_proxy_finalize(GObject *object)
@@ -355,12 +355,12 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 				update_menu            = true;
 			}
 		}
-		else if (!g_strcmp0(name, "ItemsInMenu"))
+		else if (!g_strcmp0(name, "ItemIsMenu"))
 		{
-			if (g_variant_get_boolean(value) != self->items_in_menu)
+			if (g_variant_get_boolean(value) != self->item_is_menu)
 			{
-				self->items_in_menu = g_variant_get_boolean(value);
-				update_menu         = true;
+				self->item_is_menu = g_variant_get_boolean(value);
+				update_menu        = true;
 			}
 		}
 	}
