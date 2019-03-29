@@ -33,13 +33,6 @@ struct _SnProxy
 	char *icon_desc;
 	char *attention_desc;
 
-	char *icon_name;
-	char *attention_icon_name;
-	char *overlay_icon_name;
-	IconPixmap *icon_pixbuf;
-	IconPixmap *attention_icon_pixbuf;
-	IconPixmap *overlay_icon_pixbuf;
-
 	bool items_in_menu;
 };
 
@@ -202,13 +195,6 @@ static void sn_proxy_init(SnProxy *self)
 	self->icon_desc      = NULL;
 	self->attention_desc = NULL;
 
-	self->icon_name             = NULL;
-	self->attention_icon_name   = NULL;
-	self->overlay_icon_name     = NULL;
-	self->icon_pixbuf           = NULL;
-	self->attention_icon_pixbuf = NULL;
-	self->overlay_icon_pixbuf   = NULL;
-
 	/*DBusMenu ones is much more likely than Activate ones */
 	self->items_in_menu = true;
 }
@@ -238,14 +224,6 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->icon_desc, g_free);
 	g_clear_pointer(&self->attention_desc, g_free);
-
-	g_clear_pointer(&self->icon_name, g_free);
-	g_clear_pointer(&self->attention_icon_name, g_free);
-	g_clear_pointer(&self->overlay_icon_name, g_free);
-
-	g_clear_pointer(&self->icon_pixbuf, icon_pixmap_free);
-	g_clear_pointer(&self->attention_icon_pixbuf, icon_pixmap_free);
-	g_clear_pointer(&self->overlay_icon_pixbuf, icon_pixmap_free);
 
 	G_OBJECT_CLASS(sn_proxy_parent_class)->finalize(object);
 }
@@ -315,7 +293,13 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	bool update_desc          = false;
 	bool update_menu          = false;
 	ToolTip *new_tooltip      = NULL;
-	g_autoptr(GError) error;
+	char *icon_name;
+	char *attention_icon_name;
+	char *overlay_icon_name;
+	IconPixmap **icon_pixbuf;
+	IconPixmap **attention_icon_pixbuf;
+	IconPixmap **overlay_icon_pixbuf;
+	g_autoptr(GError) error = NULL;
 	g_autoptr(GVariant) properties =
 	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
