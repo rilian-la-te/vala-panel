@@ -137,7 +137,7 @@ namespace StatusNotifier
         private async void init_proxy() throws Error
         {
             this.iface = yield Bus.get_proxy(BusType.SESSION,object_name,object_path);
-            if (iface.items_in_menu || iface.menu != null)
+            if (iface.item_is_menu || iface.menu != null)
                 setup_inner_menu();
             title = iface.title;
             this.ordering_index = iface.x_ayatana_ordering_index;
@@ -265,7 +265,7 @@ namespace StatusNotifier
         public bool context_menu()
         {
             int x,y;
-            if (iface.items_in_menu || iface.menu != null)
+            if (iface.item_is_menu || iface.menu != null)
             {
                 menu.hide.connect(()=>{(this.get_parent() as FlowBox).unselect_child(this);});
                 menu.popup_at_widget(get_applet(),Gdk.Gravity.NORTH,Gdk.Gravity.NORTH,null);
