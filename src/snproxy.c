@@ -18,6 +18,7 @@ struct _SnProxy
 	char *bus_name;
 	char *object_path;
 	char *id;
+	SnCategory category;
 	SnStatus status;
 	char *x_ayatana_label;
 	char *x_ayatana_label_guide;
@@ -50,6 +51,7 @@ enum
 	PROP_BUS_NAME,
 	PROP_OBJECT_PATH,
 	PROP_ID,
+	PROP_CATEGORY,
 	PROP_STATUS,
 	PROP_LABEL,
 	PROP_LABEL_GUIDE,
@@ -98,18 +100,24 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 	                        PROXY_PROP_OBJ_PATH,
 	                        NULL,
 	                        G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_STATUS] = g_param_spec_enum(PROXY_PROP_STATUS,
-	                                        PROXY_PROP_STATUS,
-	                                        PROXY_PROP_STATUS,
-	                                        sn_status_get_type(),
-	                                        SN_STATUS_PASSIVE,
-	                                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ID]     = g_param_spec_string(PROXY_PROP_ID,
+	pspecs[PROP_CATEGORY] = g_param_spec_enum(PROXY_PROP_CATEGORY,
+	                                          PROXY_PROP_CATEGORY,
+	                                          PROXY_PROP_CATEGORY,
+	                                          sn_category_get_type(),
+	                                          SN_CATEGORY_APPLICATION,
+	                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_STATUS]   = g_param_spec_enum(PROXY_PROP_STATUS,
+                                                PROXY_PROP_STATUS,
+                                                PROXY_PROP_STATUS,
+                                                sn_status_get_type(),
+                                                SN_STATUS_PASSIVE,
+                                                G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_ID]       = g_param_spec_string(PROXY_PROP_ID,
                                               PROXY_PROP_LABEL,
                                               PROXY_PROP_LABEL,
                                               NULL,
                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_LABEL]  = g_param_spec_string(PROXY_PROP_LABEL,
+	pspecs[PROP_LABEL]    = g_param_spec_string(PROXY_PROP_LABEL,
                                                  PROXY_PROP_LABEL,
                                                  PROXY_PROP_LABEL,
                                                  NULL,
@@ -180,12 +188,13 @@ static void sn_proxy_init(SnProxy *self)
 	self->bus_name                 = NULL;
 	self->object_path              = NULL;
 	self->id                       = NULL;
+	self->category                 = SN_CATEGORY_APPLICATION;
 	self->status                   = SN_STATUS_PASSIVE;
 	self->x_ayatana_label          = NULL;
 	self->x_ayatana_label_guide    = NULL;
 	self->icon                     = NULL;
 	self->icon_theme_path          = NULL;
-	self->tooltip                  = NULL;
+	self->tooltip                  = tooltip_new(NULL);
 	self->menu_object_path         = NULL;
 	self->x_ayatana_ordering_index = 0;
 
@@ -284,10 +293,10 @@ static void sn_proxy_unsubscribe(void *data, GObject *unused)
 	g_clear_pointer(&context, g_free);
 }
 
-static void sn_item_name_owner_changed(GDBusConnection *connection, const char *sender_name,
-                                       const char *object_path, const char *interface_name,
-                                       const char *signal_name, GVariant *parameters,
-                                       void *user_data)
+static void sn_proxy_name_owner_changed(GDBusConnection *connection, const char *sender_name,
+                                        const char *object_path, const char *interface_name,
+                                        const char *signal_name, GVariant *parameters,
+                                        void *user_data)
 {
 	SnProxy *self              = user_data;
 	g_autofree char *new_owner = NULL;
@@ -297,8 +306,140 @@ static void sn_item_name_owner_changed(GDBusConnection *connection, const char *
 		g_signal_emit(self, signals[FAIL], 0);
 }
 
-static void sn_item_properties_callback(GObject *source_object, GAsyncResult *res,
-                                        gpointer user_data)
+static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
+{
+	SnProxy *self             = user_data;
+	bool update_tooltip       = false;
+	bool update_tooltip_title = false;
+	bool update_icon          = false;
+	bool update_desc          = false;
+	bool update_menu          = false;
+	ToolTip *new_tooltip      = NULL;
+	g_autoptr(GError) error;
+	g_autoptr(GVariant) properties =
+	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
+	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+		return;
+	if (!properties)
+		g_signal_emit(self, signals[FAIL], 0);
+	GVariantIter *iter;
+	g_variant_get(properties, "(a{sv})", &iter);
+	char *name;
+	GVariant *value;
+	while (g_variant_iter_loop(iter, "{&sv}", &name, &value))
+	{
+		if (!g_strcmp0(name, "Category"))
+		{
+			SnCategory new_cat =
+			    sn_category_get_value_from_nick(g_variant_get_string(value, NULL));
+			if (self->category != new_cat)
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_CATEGORY]);
+		}
+		else if (!g_strcmp0(name, "Id"))
+		{
+			if (!self->id || g_strcmp0(g_variant_get_string(value, NULL), self->id))
+			{
+				g_clear_pointer(&self->id, g_free);
+				self->id = g_variant_dup_string(value, NULL);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ID]);
+			}
+		}
+		else if (!g_strcmp0(name, "Status"))
+		{
+			SnStatus new_st =
+			    sn_status_get_value_from_nick(g_variant_get_string(value, NULL));
+			if (self->status != new_st)
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_STATUS]);
+		}
+		else if (!g_strcmp0(name, "Title"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->title))
+			{
+				g_clear_pointer(&self->title, g_free);
+				self->title    = g_variant_dup_string(value, NULL);
+				update_tooltip = true;
+			}
+		}
+		else if (!g_strcmp0(name, "Menu"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->menu_object_path))
+			{
+				g_clear_pointer(&self->menu_object_path, g_free);
+				self->menu_object_path = g_variant_dup_string(value, NULL);
+				update_menu            = true;
+			}
+		}
+		else if (!g_strcmp0(name, "ItemsInMenu"))
+		{
+			if (g_variant_get_boolean(value) != self->items_in_menu)
+			{
+				self->items_in_menu = g_variant_get_boolean(value);
+				update_menu         = true;
+			}
+		}
+	}
+	if (update_desc)
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
+	if (update_menu)
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
+	if (update_tooltip)
+	{
+		if (!tooltip_equal(self->tooltip, new_tooltip))
+		{
+			if (new_tooltip)
+			{
+				g_clear_pointer(&self->tooltip, tooltip_free);
+				self->tooltip = new_tooltip;
+				if (!self->tooltip->title)
+					self->tooltip->title = g_strdup(self->title);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP]);
+			}
+			if (!new_tooltip && g_strcmp0(self->tooltip->title, self->title))
+			{
+				g_clear_pointer(&self->tooltip->title, g_free);
+				self->tooltip->title = g_strdup(self->title);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP]);
+			}
+		}
+	}
+	if (update_icon)
+	{
+		// TODO: Implement update_icon
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
+	}
+}
+
+static int sn_proxy_reload_begin(gpointer user_data)
+{
+	SnProxy *self = user_data;
+
+	self->properties_timeout = 0;
+
+	g_dbus_proxy_call(self->properties_proxy,
+	                  "GetAll",
+	                  g_variant_new("(s)", "org.kde.StatusNotifierItem"),
+	                  G_DBUS_CALL_FLAGS_NONE,
+	                  -1,
+	                  self->cancellable,
+	                  sn_proxy_reload_finish,
+	                  self);
+
+	return G_SOURCE_REMOVE;
+}
+
+void sn_proxy_reload(SnProxy *self)
+{
+	g_return_if_fail(SN_IS_PROXY(self));
+	g_return_if_fail(self->properties_proxy != NULL);
+
+	/* same approach as in Plasma Workspace */
+	if (self->properties_timeout != 0)
+		g_source_remove(self->properties_timeout);
+	self->properties_timeout = g_timeout_add(10, sn_proxy_reload_begin, self);
+}
+
+static void sn_proxy_properties_callback(GObject *source_object, GAsyncResult *res,
+                                         gpointer user_data)
 {
 	SnProxy *self           = SN_PROXY(user_data);
 	g_autoptr(GError) error = NULL;
@@ -308,7 +449,29 @@ static void sn_item_properties_callback(GObject *source_object, GAsyncResult *re
 		return;
 	if (self->properties_proxy == NULL)
 		g_signal_emit(self, signals[FAIL], 0);
-	// TODO: Update all properties hele
+	sn_proxy_reload(self);
+}
+
+static void sn_proxy_signal_received(GDBusProxy *proxy, gchar *sender_name, gchar *signal_name,
+                                     GVariant *parameters, gpointer user_data)
+{
+	SnProxy *self = user_data;
+
+	if (!g_strcmp0(signal_name, "NewTitle") || !g_strcmp0(signal_name, "NewIcon") ||
+	    !g_strcmp0(signal_name, "NewAttentionIcon") ||
+	    !g_strcmp0(signal_name, "NewOverlayIcon") || !g_strcmp0(signal_name, "NewToolTip"))
+	{
+		// Reload all properties in async mode.
+		sn_proxy_reload(self);
+	}
+	else if (!g_strcmp0(signal_name, "NewStatus"))
+	{
+		// Just notify for status change, requires fast reaction.
+		const char *status;
+		g_variant_get(parameters, "(s)", &status);
+		self->status = sn_status_get_value_from_nick(status);
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_STATUS]);
+	}
 }
 
 static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
@@ -332,13 +495,12 @@ static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gp
 	                                       "/org/freedesktop/DBus",
 	                                       g_dbus_proxy_get_name(self->item_proxy),
 	                                       G_DBUS_SIGNAL_FLAGS_NONE,
-	                                       sn_item_name_owner_changed,
+	                                       sn_proxy_name_owner_changed,
 	                                       self,
 	                                       NULL);
 	g_object_weak_ref(G_OBJECT(self->item_proxy), sn_proxy_unsubscribe, context);
 
-	//  g_signal_connect (self->item_proxy, "g-signal", G_CALLBACK (sn_proxy_signal_received),
-	//  self);
+	g_signal_connect(self->item_proxy, "g-signal", G_CALLBACK(sn_proxy_signal_received), self);
 
 	g_dbus_proxy_new(g_dbus_proxy_get_connection(self->item_proxy),
 	                 G_DBUS_PROXY_FLAGS_NONE,
@@ -347,7 +509,7 @@ static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gp
 	                 self->object_path,
 	                 "org.freedesktop.DBus.Properties",
 	                 self->cancellable,
-	                 sn_item_properties_callback,
+	                 sn_proxy_properties_callback,
 	                 self);
 }
 

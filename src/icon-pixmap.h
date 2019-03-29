@@ -52,6 +52,7 @@ typedef struct
 
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant);
 G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src);
+G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst);
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self);
 G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
 
@@ -63,9 +64,9 @@ typedef enum
 	SN_CATEGORY_HARDWARE,
 	SN_CATEGORY_OTHER
 } SnCategory;
-GType sn_category_get_type(void);
-const char *sn_category_get_nick(SnCategory value);
-SnCategory sn_category_get_value_from_nick(const char *nick);
+G_GNUC_INTERNAL GType sn_category_get_type(void);
+G_GNUC_INTERNAL const char *sn_category_get_nick(SnCategory value);
+G_GNUC_INTERNAL SnCategory sn_category_get_value_from_nick(const char *nick);
 
 typedef enum
 {
@@ -73,8 +74,8 @@ typedef enum
 	SN_STATUS_ACTIVE,
 	SN_STATUS_NEEDS_ATTENTION
 } SnStatus;
-GType sn_status_get_type(void);
-const char *sn_status_get_nick(SnStatus value);
-SnStatus sn_status_get_value_from_nick(const char *nick);
+G_GNUC_INTERNAL GType sn_status_get_type(void);
+G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value);
+G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick);
 
 #endif // ICONPIXMAP_H

@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 #define PROXY_PROP_BUS_NAME "bus-name"
 #define PROXY_PROP_OBJ_PATH "object-path"
 #define PROXY_PROP_ID "id"
+#define PROXY_PROP_CATEGORY "category"
 #define PROXY_PROP_STATUS "status"
 #define PROXY_PROP_LABEL "x-ayatana-label"
 #define PROXY_PROP_LABEL_GUIDE "x-ayatana-label-guide"

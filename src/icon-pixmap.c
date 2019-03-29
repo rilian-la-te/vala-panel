@@ -23,6 +23,8 @@
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
 {
 	IconPixmap *self = g_new0(IconPixmap, 1);
+	if (!pixmap_variant)
+		return self;
 	g_variant_get_child(pixmap_variant, 0, "i", self->width);
 	g_variant_get_child(pixmap_variant, 1, "i", self->height);
 	g_autoptr(GVariant) bytes_variant = g_variant_get_child_value(pixmap_variant, 2);
@@ -105,6 +107,24 @@ static inline bool string_empty(const char *path)
 	return (path == NULL || strlen(path) == 0);
 }
 
+static bool icon_pixmap_equal(IconPixmap *src, IconPixmap *dst)
+{
+	if (!src && !dst)
+		return true;
+	if (!src || !dst)
+		return false;
+	if (src->height != dst->height)
+		return false;
+	if (src->width != dst->width)
+		return false;
+	if (src->bytes_size != dst->bytes_size)
+		return false;
+	for (size_t i = 0; i < src->bytes_size; i++)
+		if (src->bytes[i] != dst->bytes[i])
+			return false;
+	return true;
+}
+
 static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path)
 {
 	if (string_empty(path))
@@ -148,13 +168,9 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 			return g_file_icon_new(f);
 		}
 		else if (string_empty(icon_theme_path) || gtk_icon_theme_has_icon(theme, new_name))
-		{
 			return g_themed_icon_new_with_default_fallbacks(new_name);
-		}
 		else
-		{
 			return icon_pixmap_find_file_icon(icon_name, icon_theme_path);
-		}
 	}
 	else if (pixmaps != NULL && pixmaps[0] != NULL)
 	{
@@ -184,6 +200,8 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 {
 	ToolTip *self = g_new0(ToolTip, 1);
+	if (!variant)
+		return self;
 	g_variant_get_child(variant, 0, "s", self->icon_name);
 	g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
 	self->pixmaps          = unbox_pixmaps(ch);
@@ -203,6 +221,30 @@ G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
 	dst->icon        = g_object_ref(src->icon);
 	return dst;
 }
+G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst)
+{
+	const ToolTip *t1 = (const ToolTip *)src;
+	const ToolTip *t2 = (const ToolTip *)dst;
+	if (!src && !dst)
+		return true;
+	if (!src || !dst)
+		return false;
+	int i = 0;
+	if (g_strcmp0(t1->icon_name, t2->icon_name))
+		return false;
+	if (g_strcmp0(t1->title, t2->title))
+		return false;
+	if (g_strcmp0(t1->description, t2->description))
+		return false;
+	if (!g_icon_equal(t1->icon, t2->icon))
+		return false;
+	for (i = 0; icon_pixmap_equal(t1->pixmaps[i], t2->pixmaps[i]) && t2->pixmaps[i] != NULL;
+	     i++)
+		;
+	if (t1->pixmaps[i] != NULL || t2->pixmaps[i] != NULL)
+		return false;
+	return true;
+}
 
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 {
@@ -219,7 +261,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)
  * This part is required, because we use non-standard nicks.
  */
 
-GType sn_category_get_type(void)
+G_GNUC_INTERNAL GType sn_category_get_type(void)
 {
 	static GType the_type = 0;
 
@@ -240,7 +282,7 @@ GType sn_category_get_type(void)
 	return the_type;
 }
 
-const char *sn_category_get_nick(SnCategory value)
+G_GNUC_INTERNAL const char *sn_category_get_nick(SnCategory value)
 {
 	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_category_get_type()));
 	g_return_val_if_fail(class != NULL, NULL);
@@ -254,7 +296,7 @@ const char *sn_category_get_nick(SnCategory value)
 	return ret;
 }
 
-SnCategory sn_category_get_value_from_nick(const char *nick)
+G_GNUC_INTERNAL SnCategory sn_category_get_value_from_nick(const char *nick)
 {
 	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_category_get_type()));
 	g_return_val_if_fail(class != NULL, 0);
@@ -267,7 +309,7 @@ SnCategory sn_category_get_value_from_nick(const char *nick)
 	g_type_class_unref(class);
 	return ret;
 }
-GType sn_status_get_type(void)
+G_GNUC_INTERNAL GType sn_status_get_type(void)
 {
 	static GType the_type = 0;
 
@@ -286,7 +328,7 @@ GType sn_status_get_type(void)
 	return the_type;
 }
 
-const char *sn_status_get_nick(SnStatus value)
+G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value)
 {
 	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_status_get_type()));
 	g_return_val_if_fail(class != NULL, NULL);
@@ -300,7 +342,7 @@ const char *sn_status_get_nick(SnStatus value)
 	return ret;
 }
 
-SnStatus sn_status_get_value_from_nick(const char *nick)
+G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick)
 {
 	GEnumClass *class = G_ENUM_CLASS(g_type_class_ref(sn_status_get_type()));
 	g_return_val_if_fail(class != NULL, 0);
