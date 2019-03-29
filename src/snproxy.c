@@ -36,9 +36,9 @@ struct _SnProxy
 	char *icon_name;
 	char *attention_icon_name;
 	char *overlay_icon_name;
-	GdkPixbuf *icon_pixbuf;
-	GdkPixbuf *attention_icon_pixbuf;
-	GdkPixbuf *overlay_icon_pixbuf;
+	IconPixmap *icon_pixbuf;
+	IconPixmap *attention_icon_pixbuf;
+	IconPixmap *overlay_icon_pixbuf;
 
 	bool items_in_menu;
 };
@@ -243,9 +243,9 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_pointer(&self->attention_icon_name, g_free);
 	g_clear_pointer(&self->overlay_icon_name, g_free);
 
-	g_clear_object(&self->icon_pixbuf);
-	g_clear_object(&self->attention_icon_pixbuf);
-	g_clear_object(&self->overlay_icon_pixbuf);
+	g_clear_pointer(&self->icon_pixbuf, icon_pixmap_free);
+	g_clear_pointer(&self->attention_icon_pixbuf, icon_pixmap_free);
+	g_clear_pointer(&self->overlay_icon_pixbuf, icon_pixmap_free);
 
 	G_OBJECT_CLASS(sn_proxy_parent_class)->finalize(object);
 }
