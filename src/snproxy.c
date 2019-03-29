@@ -23,6 +23,7 @@ struct _SnProxy
 	char *x_ayatana_label;
 	char *x_ayatana_label_guide;
 	GIcon *icon;
+	GIcon *attention_icon;
 	char *icon_theme_path;
 	ToolTip *tooltip;
 	char *menu_object_path;
@@ -286,13 +287,14 @@ static void sn_proxy_name_owner_changed(GDBusConnection *connection, const char 
 
 static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	SnProxy *self             = user_data;
-	bool update_tooltip       = false;
-	bool update_tooltip_title = false;
-	bool update_icon          = false;
-	bool update_desc          = false;
-	bool update_menu          = false;
-	ToolTip *new_tooltip      = NULL;
+	SnProxy *self              = user_data;
+	bool update_tooltip        = false;
+	bool update_tooltip_title  = false;
+	bool update_icon           = false;
+	bool update_attention_icon = false;
+	bool update_desc           = false;
+	bool update_menu           = false;
+	ToolTip *new_tooltip       = NULL;
 	char *icon_name;
 	char *attention_icon_name;
 	char *overlay_icon_name;
@@ -389,7 +391,7 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	if (update_icon)
 	{
 		// TODO: Implement update_icon
-		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
 	}
 }
 
