@@ -36,6 +36,7 @@ add_library(sntray-core STATIC
     snproxy.c
     snproxy.h
     rtparser.h
+    rtparser.c
     icon-pixmap.c
     icon-pixmap.h
     $<TARGET_OBJECTS:vala-dbusmenu-o>)
