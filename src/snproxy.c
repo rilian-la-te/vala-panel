@@ -47,13 +47,13 @@ enum
 	PROP_ID,
 	PROP_CATEGORY,
 	PROP_STATUS,
-	PROP_LABEL,
-	PROP_LABEL_GUIDE,
 	PROP_DESC,
 	PROP_ICON,
 	PROP_ICON_THEME_PATH,
 	PROP_TOOLTIP,
 	PROP_MENU_OBJECT_PATH,
+	PROP_LABEL,
+	PROP_LABEL_GUIDE,
 	PROP_ORDERING_INDEX,
 	PROP_LAST
 };
@@ -87,7 +87,6 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 	                        PROXY_PROP_BUS_NAME,
 	                        NULL,
 	                        G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
-
 	pspecs[PROP_OBJECT_PATH] =
 	    g_param_spec_string(PROXY_PROP_OBJ_PATH,
 	                        PROXY_PROP_OBJ_PATH,
@@ -111,39 +110,38 @@ static void sn_proxy_class_init(SnProxyClass *klass)
                                               PROXY_PROP_LABEL,
                                               NULL,
                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_LABEL]    = g_param_spec_string(PROXY_PROP_LABEL,
-                                                 PROXY_PROP_LABEL,
-                                                 PROXY_PROP_LABEL,
-                                                 NULL,
-                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-
-	pspecs[PROP_LABEL_GUIDE] = g_param_spec_string(PROXY_PROP_LABEL_GUIDE,
-	                                               PROXY_PROP_LABEL_GUIDE,
-	                                               PROXY_PROP_LABEL_GUIDE,
-	                                               NULL,
-	                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-
-	pspecs[PROP_DESC]    = g_param_spec_string(PROXY_PROP_DESC,
+	pspecs[PROP_DESC]     = g_param_spec_string(PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 NULL,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ICON]    = g_param_spec_object(PROXY_PROP_ICON,
+	pspecs[PROP_ICON]     = g_param_spec_object(PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 G_TYPE_ICON,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_TOOLTIP] = g_param_spec_boxed(PROXY_PROP_TOOLTIP,
-	                                          PROXY_PROP_TOOLTIP,
-	                                          PROXY_PROP_TOOLTIP,
-	                                          tooltip_get_type(),
-	                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TOOLTIP]  = g_param_spec_boxed(PROXY_PROP_TOOLTIP,
+                                                  PROXY_PROP_TOOLTIP,
+                                                  PROXY_PROP_TOOLTIP,
+                                                  tooltip_get_type(),
+                                                  G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_MENU_OBJECT_PATH] =
 	    g_param_spec_string(PROXY_PROP_MENU_OBJECT_PATH,
 	                        PROXY_PROP_MENU_OBJECT_PATH,
 	                        PROXY_PROP_MENU_OBJECT_PATH,
 	                        NULL,
 	                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+	pspecs[PROP_LABEL]          = g_param_spec_string(PROXY_PROP_LABEL,
+                                                 PROXY_PROP_LABEL,
+                                                 PROXY_PROP_LABEL,
+                                                 NULL,
+                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_LABEL_GUIDE]    = g_param_spec_string(PROXY_PROP_LABEL_GUIDE,
+                                                       PROXY_PROP_LABEL_GUIDE,
+                                                       PROXY_PROP_LABEL_GUIDE,
+                                                       NULL,
+                                                       G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_ORDERING_INDEX] = g_param_spec_uint(PROXY_PROP_ORDERING_INDEX,
 	                                                PROXY_PROP_ORDERING_INDEX,
 	                                                PROXY_PROP_ORDERING_INDEX,
@@ -184,12 +182,13 @@ static void sn_proxy_init(SnProxy *self)
 	self->id                       = NULL;
 	self->category                 = SN_CATEGORY_APPLICATION;
 	self->status                   = SN_STATUS_PASSIVE;
-	self->x_ayatana_label          = NULL;
-	self->x_ayatana_label_guide    = NULL;
+	self->attention_icon           = NULL;
 	self->icon                     = NULL;
 	self->icon_theme_path          = NULL;
 	self->tooltip                  = tooltip_new(NULL);
 	self->menu_object_path         = NULL;
+	self->x_ayatana_label          = NULL;
+	self->x_ayatana_label_guide    = NULL;
 	self->x_ayatana_ordering_index = 0;
 
 	self->title          = NULL;
@@ -215,12 +214,13 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_pointer(&self->bus_name, g_free);
 	g_clear_pointer(&self->object_path, g_free);
 	g_clear_pointer(&self->id, g_free);
-	g_clear_pointer(&self->x_ayatana_label, g_free);
-	g_clear_pointer(&self->x_ayatana_label_guide, g_free);
 	g_clear_object(&self->icon);
+	g_clear_object(&self->attention_icon);
 	g_clear_pointer(&self->icon_theme_path, g_free);
 	g_clear_pointer(&self->tooltip, tooltip_free);
 	g_clear_pointer(&self->menu_object_path, g_free);
+	g_clear_pointer(&self->x_ayatana_label, g_free);
+	g_clear_pointer(&self->x_ayatana_label_guide, g_free);
 
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->icon_desc, g_free);
@@ -231,10 +231,48 @@ static void sn_proxy_finalize(GObject *object)
 
 static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, GParamSpec *pspec)
 {
-	SnProxy *self = SN_PROXY(object);
+	SnProxy *self     = SN_PROXY(object);
+	bool is_attention = self->status == SN_STATUS_ATTENTION;
 
 	switch (prop_id)
 	{
+	case PROP_ID:
+		g_value_set_string(value, self->id);
+		break;
+	case PROP_CATEGORY:
+		g_value_set_enum(value, self->category);
+		break;
+	case PROP_STATUS:
+		g_value_set_enum(value, self->status);
+		break;
+	case PROP_DESC:
+		g_value_set_string(value,
+		                   is_attention && self->attention_desc ? self->attention_desc
+		                                                        : self->icon_desc);
+		break;
+	case PROP_ICON:
+		g_value_set_object(value,
+		                   is_attention && self->attention_icon ? self->attention_icon
+		                                                        : self->icon);
+		break;
+	case PROP_TOOLTIP:
+		g_value_set_boxed(value, self->tooltip);
+		break;
+	case PROP_LABEL:
+		g_value_set_string(value, self->x_ayatana_label);
+		break;
+	case PROP_LABEL_GUIDE:
+		g_value_set_string(value, self->x_ayatana_label_guide);
+		break;
+	case PROP_ORDERING_INDEX:
+		g_value_set_uint(value, self->x_ayatana_ordering_index);
+		break;
+	case PROP_ICON_THEME_PATH:
+		g_value_set_string(value, self->icon_theme_path);
+		break;
+	case PROP_MENU_OBJECT_PATH:
+		g_value_set_string(value, self->menu_object_path);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 		break;
