@@ -230,7 +230,7 @@ public class QRichTextParser
             str = str.replace("&","&amp;");
         return str;
     }
-    public bool parse (string markup) throws MarkupError
+    private bool parse (string markup) throws MarkupError
     {
         return context.parse (prepare(markup), -1);
     }
