@@ -72,7 +72,7 @@ typedef enum
 {
 	SN_STATUS_PASSIVE,
 	SN_STATUS_ACTIVE,
-	SN_STATUS_NEEDS_ATTENTION
+	SN_STATUS_ATTENTION
 } SnStatus;
 G_GNUC_INTERNAL GType sn_status_get_type(void);
 G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value);

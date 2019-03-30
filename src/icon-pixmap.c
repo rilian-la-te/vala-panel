@@ -318,9 +318,7 @@ G_GNUC_INTERNAL GType sn_status_get_type(void)
 		static const GEnumValue values[] = {
 			{ SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
 			{ SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
-			{ SN_STATUS_NEEDS_ATTENTION,
-			  "SN_STATUS_NEEDS_ATTENTION",
-			  "NeedsAttention" },
+			{ SN_STATUS_ATTENTION, "SN_STATUS_NEEDS_ATTENTION", "NeedsAttention" },
 			{ 0, NULL, NULL }
 		};
 		the_type = g_enum_register_static(g_intern_static_string("SnStatus"), values);
