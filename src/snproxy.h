@@ -36,7 +36,9 @@ G_BEGIN_DECLS
 #define PROXY_PROP_DESC "accessible-desc"
 #define PROXY_PROP_ICON "current-icon"
 #define PROXY_PROP_ICON_THEME_PATH "icon-theme-path"
-#define PROXY_PROP_TOOLTIP "tooltip"
+#define PROXY_PROP_TOOLTIP_TITLE "tooltip-title"
+#define PROXY_PROP_TOOLTIP_DESCRIPTION "tooltip-description"
+#define PROXY_PROP_TOOLTIP_ICON "tooltip-icon"
 #define PROXY_PROP_MENU_OBJECT_PATH "menu-object-path"
 #define PROXY_PROP_ORDERING_INDEX "x-ayatana-ordering-index"
 

@@ -50,7 +50,9 @@ enum
 	PROP_DESC,
 	PROP_ICON,
 	PROP_ICON_THEME_PATH,
-	PROP_TOOLTIP,
+	PROP_TOOLTIP_TITLE,
+	PROP_TOOLTIP_DESCRIPTION,
+	PROP_TOOLTIP_ICON,
 	PROP_MENU_OBJECT_PATH,
 	PROP_LABEL,
 	PROP_LABEL_GUIDE,
@@ -93,38 +95,49 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 	                        PROXY_PROP_OBJ_PATH,
 	                        NULL,
 	                        G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_CATEGORY] = g_param_spec_enum(PROXY_PROP_CATEGORY,
-	                                          PROXY_PROP_CATEGORY,
-	                                          PROXY_PROP_CATEGORY,
-	                                          sn_category_get_type(),
-	                                          SN_CATEGORY_APPLICATION,
-	                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_STATUS]   = g_param_spec_enum(PROXY_PROP_STATUS,
+	pspecs[PROP_CATEGORY]      = g_param_spec_enum(PROXY_PROP_CATEGORY,
+                                                  PROXY_PROP_CATEGORY,
+                                                  PROXY_PROP_CATEGORY,
+                                                  sn_category_get_type(),
+                                                  SN_CATEGORY_APPLICATION,
+                                                  G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_STATUS]        = g_param_spec_enum(PROXY_PROP_STATUS,
                                                 PROXY_PROP_STATUS,
                                                 PROXY_PROP_STATUS,
                                                 sn_status_get_type(),
                                                 SN_STATUS_PASSIVE,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ID]       = g_param_spec_string(PROXY_PROP_ID,
+	pspecs[PROP_ID]            = g_param_spec_string(PROXY_PROP_ID,
                                               PROXY_PROP_LABEL,
                                               PROXY_PROP_LABEL,
                                               NULL,
                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_DESC]     = g_param_spec_string(PROXY_PROP_DESC,
+	pspecs[PROP_DESC]          = g_param_spec_string(PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 NULL,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ICON]     = g_param_spec_object(PROXY_PROP_ICON,
+	pspecs[PROP_ICON]          = g_param_spec_object(PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 G_TYPE_ICON,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_TOOLTIP]  = g_param_spec_boxed(PROXY_PROP_TOOLTIP,
-                                                  PROXY_PROP_TOOLTIP,
-                                                  PROXY_PROP_TOOLTIP,
-                                                  tooltip_get_type(),
-                                                  G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TOOLTIP_TITLE] = g_param_spec_string(PROXY_PROP_TOOLTIP_TITLE,
+	                                                 PROXY_PROP_TOOLTIP_TITLE,
+	                                                 PROXY_PROP_TOOLTIP_TITLE,
+	                                                 NULL,
+	                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TOOLTIP_DESCRIPTION] =
+	    g_param_spec_string(PROXY_PROP_TOOLTIP_DESCRIPTION,
+	                        PROXY_PROP_TOOLTIP_DESCRIPTION,
+	                        PROXY_PROP_TOOLTIP_DESCRIPTION,
+	                        NULL,
+	                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TOOLTIP_ICON] = g_param_spec_object(PROXY_PROP_TOOLTIP_ICON,
+	                                                PROXY_PROP_TOOLTIP_ICON,
+	                                                PROXY_PROP_TOOLTIP_ICON,
+	                                                G_TYPE_ICON,
+	                                                G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_MENU_OBJECT_PATH] =
 	    g_param_spec_string(PROXY_PROP_MENU_OBJECT_PATH,
 	                        PROXY_PROP_MENU_OBJECT_PATH,
@@ -255,8 +268,8 @@ static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, 
 		                   is_attention && self->attention_icon ? self->attention_icon
 		                                                        : self->icon);
 		break;
-	case PROP_TOOLTIP:
-		g_value_set_boxed(value, self->tooltip);
+	case PROP_TOOLTIP_TITLE:
+		g_value_set_string(value, self->tooltip->title);
 		break;
 	case PROP_LABEL:
 		g_value_set_string(value, self->x_ayatana_label);
@@ -352,7 +365,35 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	GVariant *value;
 	while (g_variant_iter_loop(iter, "{&sv}", &name, &value))
 	{
-		if (!g_strcmp0(name, "Category"))
+		if (!g_strcmp0(name, "XAyatanaLabel"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->x_ayatana_label))
+			{
+				g_clear_pointer(&self->x_ayatana_label, g_free);
+				self->x_ayatana_label = g_variant_dup_string(value, NULL);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_LABEL]);
+			}
+		}
+		else if (!g_strcmp0(name, "XAyatanaLabelGuide"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL),
+			               self->x_ayatana_label_guide))
+			{
+				g_clear_pointer(&self->x_ayatana_label_guide, g_free);
+				self->x_ayatana_label_guide = g_variant_dup_string(value, NULL);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_LABEL_GUIDE]);
+			}
+		}
+		else if (!g_strcmp0(name, "XAyatanaOrderingIndex"))
+		{
+			if (g_variant_get_uint32(value) != self->x_ayatana_ordering_index)
+			{
+				self->x_ayatana_ordering_index = g_variant_get_uint32(value);
+				g_object_notify_by_pspec(G_OBJECT(self),
+				                         pspecs[PROP_ORDERING_INDEX]);
+			}
+		}
+		else if (!g_strcmp0(name, "Category"))
 		{
 			SnCategory new_cat =
 			    sn_category_get_value_from_nick(g_variant_get_string(value, NULL));
@@ -416,13 +457,15 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 				self->tooltip = new_tooltip;
 				if (!self->tooltip->title)
 					self->tooltip->title = g_strdup(self->title);
-				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP]);
+				g_object_notify_by_pspec(G_OBJECT(self),
+				                         pspecs[PROP_TOOLTIP_TITLE]);
 			}
 			if (!new_tooltip && g_strcmp0(self->tooltip->title, self->title))
 			{
 				g_clear_pointer(&self->tooltip->title, g_free);
 				self->tooltip->title = g_strdup(self->title);
-				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP]);
+				g_object_notify_by_pspec(G_OBJECT(self),
+				                         pspecs[PROP_TOOLTIP_TITLE]);
 			}
 		}
 	}
