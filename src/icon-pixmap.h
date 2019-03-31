@@ -78,4 +78,8 @@ G_GNUC_INTERNAL GType sn_status_get_type(void);
 G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value);
 G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick);
 
+G_GNUC_INTERNAL inline bool string_empty(const char *path)
+{
+	return (path == NULL || strlen(path) == 0);
+}
 #endif // ICONPIXMAP_H

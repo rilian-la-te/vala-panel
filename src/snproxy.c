@@ -1,6 +1,7 @@
 
 #include "snproxy.h"
 #include <gtk/gtk.h>
+#include <math.h>
 
 struct _SnProxy
 {
@@ -33,8 +34,12 @@ struct _SnProxy
 	char *title;
 	char *icon_desc;
 	char *attention_desc;
+	int icon_size;
 
 	bool item_is_menu;
+
+	GtkIconTheme *theme;
+	bool use_symbolic;
 };
 
 G_DEFINE_TYPE(SnProxy, sn_proxy, G_TYPE_OBJECT)
@@ -44,6 +49,8 @@ enum
 	PROP_0,
 	PROP_BUS_NAME,
 	PROP_OBJECT_PATH,
+	PROP_ICON_SIZE,
+	PROP_SYMBOLIC,
 	PROP_ID,
 	PROP_CATEGORY,
 	PROP_STATUS,
@@ -69,6 +76,7 @@ enum
 static GParamSpec *pspecs[PROP_LAST];
 static uint signals[LAST_SIGNAL] = { 0 };
 
+void sn_proxy_reload(SnProxy *self);
 static void sn_proxy_finalize(GObject *object);
 static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, GParamSpec *pspec);
 static void sn_proxy_set_property(GObject *object, uint prop_id, const GValue *value,
@@ -95,6 +103,20 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 	                        PROXY_PROP_OBJ_PATH,
 	                        NULL,
 	                        G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_ICON_SIZE] =
+	    g_param_spec_int(PROXY_PROP_ICON_SIZE,
+	                     PROXY_PROP_ICON_SIZE,
+	                     PROXY_PROP_ICON_SIZE,
+	                     0,
+	                     256,
+	                     0,
+	                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_SYMBOLIC] =
+	    g_param_spec_boolean(PROXY_PROP_SYMBOLIC,
+	                         PROXY_PROP_SYMBOLIC,
+	                         PROXY_PROP_SYMBOLIC,
+	                         true,
+	                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_CATEGORY]      = g_param_spec_enum(PROXY_PROP_CATEGORY,
                                                   PROXY_PROP_CATEGORY,
                                                   PROXY_PROP_CATEGORY,
@@ -208,6 +230,8 @@ static void sn_proxy_init(SnProxy *self)
 	self->icon_desc      = NULL;
 	self->attention_desc = NULL;
 
+	self->theme = gtk_icon_theme_get_default();
+
 	/*DBusMenu ones is much more likely than Activate ones */
 	self->item_is_menu = true;
 }
@@ -239,6 +263,8 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_pointer(&self->icon_desc, g_free);
 	g_clear_pointer(&self->attention_desc, g_free);
 
+	g_clear_object(&self->theme);
+
 	G_OBJECT_CLASS(sn_proxy_parent_class)->finalize(object);
 }
 
@@ -258,10 +284,17 @@ static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, 
 	case PROP_STATUS:
 		g_value_set_enum(value, self->status);
 		break;
+	case PROP_SYMBOLIC:
+		g_value_set_uint(value, self->use_symbolic);
+		break;
+	case PROP_ICON_SIZE:
+		g_value_set_int(value, self->icon_size);
+		break;
 	case PROP_DESC:
 		g_value_set_string(value,
-		                   is_attention && self->attention_desc ? self->attention_desc
-		                                                        : self->icon_desc);
+		                   is_attention && !string_empty(self->attention_desc)
+		                       ? self->attention_desc
+		                       : self->icon_desc);
 		break;
 	case PROP_ICON:
 		g_value_set_object(value,
@@ -303,12 +336,24 @@ static void sn_proxy_set_property(GObject *object, uint prop_id, const GValue *v
 		g_free(self->bus_name);
 		self->bus_name = g_value_dup_string(value);
 		break;
-
 	case PROP_OBJECT_PATH:
 		g_free(self->object_path);
 		self->object_path = g_value_dup_string(value);
 		break;
-
+	case PROP_ICON_SIZE:
+		if (self->icon_size != g_value_get_int(value))
+		{
+			self->icon_size = g_value_get_int(value);
+			sn_proxy_reload(self);
+		}
+		break;
+	case PROP_SYMBOLIC:
+		if (self->use_symbolic != g_value_get_boolean(value))
+		{
+			self->use_symbolic = g_value_get_boolean(value);
+			sn_proxy_reload(self);
+		}
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 		break;
@@ -336,23 +381,80 @@ static void sn_proxy_name_owner_changed(GDBusConnection *connection, const char 
 		g_signal_emit(self, signals[FAIL], 0);
 }
 
+static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const IconPixmap **pixmaps,
+                                 const char *overlay, const IconPixmap **opixmaps)
+{
+	g_autoptr(GIcon) tmp_main_icon    = icon_pixmap_select_icon(icon_name,
+                                                                 pixmaps,
+                                                                 self->theme,
+                                                                 self->icon_theme_path,
+                                                                 self->icon_size,
+                                                                 self->use_symbolic);
+	g_autoptr(GIcon) tmp_overlay_icon = icon_pixmap_select_icon(overlay,
+	                                                            opixmaps,
+	                                                            self->theme,
+	                                                            self->icon_theme_path,
+	                                                            self->icon_size / 4,
+	                                                            self->use_symbolic);
+	g_autoptr(GEmblem) overlay_icon   = NULL;
+	g_autoptr(GIcon) icon             = NULL;
+	if (tmp_overlay_icon)
+		overlay_icon = g_emblem_new(tmp_overlay_icon);
+	if (tmp_main_icon)
+		icon = g_emblemed_icon_new(tmp_main_icon, overlay_icon);
+	g_autoptr(GtkIconInfo) info =
+	    gtk_icon_theme_lookup_by_gicon(self->theme, icon, self->icon_size, 0);
+	g_autoptr(GError) err = NULL;
+	if (info)
+	{
+		g_autoptr(GdkPixbuf) first_pixbuf = gtk_icon_info_load_icon(info, &err);
+		if (err)
+			return g_object_ref(icon);
+		double aspect_ratio =
+		    gdk_pixbuf_get_width(first_pixbuf) / gdk_pixbuf_get_height(first_pixbuf);
+		if (aspect_ratio - 1 > fabs(0.000000001))
+		{
+			g_autoptr(GtkIconInfo) sinfo =
+			    gtk_icon_theme_lookup_by_gicon(self->theme,
+			                                   icon,
+			                                   (int)(round(self->icon_size *
+			                                               aspect_ratio)),
+			                                   0);
+			g_autoptr(GdkPixbuf) spixbuf = gtk_icon_info_load_icon(sinfo, &err);
+			if (err)
+				return g_object_ref(icon);
+			g_autoptr(GdkPixbuf) tpixbuf =
+			    gdk_pixbuf_scale_simple(spixbuf,
+			                            (int)(round(self->icon_size * aspect_ratio)),
+			                            self->icon_size,
+			                            GDK_INTERP_BILINEAR);
+			return g_object_ref(G_ICON(tpixbuf));
+		}
+		else
+		{
+			return g_object_ref(G_ICON(first_pixbuf));
+		}
+	}
+	return g_object_ref(icon);
+}
+
 static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	SnProxy *self              = user_data;
-	bool update_tooltip        = false;
-	bool update_tooltip_title  = false;
-	bool update_icon           = false;
-	bool update_attention_icon = false;
-	bool update_desc           = false;
-	bool update_menu           = false;
-	ToolTip *new_tooltip       = NULL;
-	char *icon_name;
-	char *attention_icon_name;
-	char *overlay_icon_name;
-	IconPixmap **icon_pixbuf;
-	IconPixmap **attention_icon_pixbuf;
-	IconPixmap **overlay_icon_pixbuf;
-	g_autoptr(GError) error = NULL;
+	SnProxy *self                      = user_data;
+	bool update_tooltip                = false;
+	bool update_tooltip_title          = false;
+	bool update_icon                   = false;
+	bool update_attention_icon         = false;
+	bool update_desc                   = false;
+	bool update_menu                   = false;
+	ToolTip *new_tooltip               = NULL;
+	char *icon_name                    = NULL;
+	char *attention_icon_name          = NULL;
+	char *overlay_icon_name            = NULL;
+	IconPixmap **icon_pixmap           = NULL;
+	IconPixmap **attention_icon_pixmap = NULL;
+	IconPixmap **overlay_icon_pixmap   = NULL;
+	g_autoptr(GError) error            = NULL;
 	g_autoptr(GVariant) properties =
 	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
@@ -471,8 +573,32 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	}
 	if (update_icon)
 	{
-		// TODO: Implement update_icon
-		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
+		g_autoptr(GIcon) new_icon = sn_proxy_load_icon(self,
+		                                               icon_name,
+		                                               icon_pixmap,
+		                                               overlay_icon_name,
+		                                               overlay_icon_pixmap);
+		if (!g_icon_equal(self->icon, new_icon))
+		{
+			g_clear_object(&self->icon);
+			self->icon = g_object_ref(new_icon);
+			g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
+		}
+	}
+	if (update_attention_icon)
+	{
+		g_autoptr(GIcon) new_icon = sn_proxy_load_icon(self,
+		                                               attention_icon_name,
+		                                               attention_icon_pixmap,
+		                                               overlay_icon_name,
+		                                               overlay_icon_pixmap);
+		if (!g_icon_equal(self->attention_icon, new_icon))
+		{
+			g_clear_object(&self->attention_icon);
+			self->attention_icon = g_object_ref(new_icon);
+			if (self->status == SN_STATUS_ATTENTION)
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
+		}
 	}
 }
 

@@ -102,11 +102,6 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 	                                       NULL));
 }
 
-static inline bool string_empty(const char *path)
-{
-	return (path == NULL || strlen(path) == 0);
-}
-
 static bool icon_pixmap_equal(IconPixmap *src, IconPixmap *dst)
 {
 	if (!src && !dst)
