@@ -445,6 +445,7 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	bool update_tooltip_title          = false;
 	bool update_icon                   = false;
 	bool update_attention_icon         = false;
+	bool update_theme_path             = false;
 	bool update_desc                   = false;
 	bool update_menu                   = false;
 	ToolTip *new_tooltip               = NULL;
@@ -544,11 +545,46 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 				update_menu        = true;
 			}
 		}
+		else if (!g_strcmp0(name, "AccessibleDesc"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->icon_desc))
+			{
+				g_clear_pointer(&self->icon_desc, g_free);
+				self->icon_desc = g_variant_dup_string(value, NULL);
+				update_desc     = true;
+				update_tooltip  = true;
+			}
+		}
+		else if (!g_strcmp0(name, "AttentionAccessibleDesc"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->attention_desc))
+			{
+				g_clear_pointer(&self->attention_desc, g_free);
+				self->attention_desc = g_variant_dup_string(value, NULL);
+				if (self->status == SN_STATUS_ATTENTION)
+				{
+					update_desc    = true;
+					update_tooltip = true;
+				}
+			}
+		}
+		else if (!g_strcmp0(name, "IconThemePath"))
+		{
+			if (!g_strcmp0(g_variant_get_string(value, NULL), self->icon_theme_path))
+			{
+				g_clear_pointer(&self->icon_theme_path, g_free);
+				self->icon_theme_path = g_variant_dup_string(value, NULL);
+				gtk_icon_theme_append_search_path(self->theme,
+				                                  self->icon_theme_path);
+				update_icon           = true;
+				update_attention_icon = true;
+			}
+		}
 	}
 	if (update_desc)
 		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
 	if (update_menu)
-		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
+		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_MENU_OBJECT_PATH]);
 	if (update_tooltip)
 	{
 		if (!tooltip_equal(self->tooltip, new_tooltip))
