@@ -18,8 +18,8 @@
 
 using GLib;
 
-[CCode(cheader_filename="snproxy.h",cprefix="Sn",lower_case_cprefix="sn_")]
-namespace Sn
+[CCode(cprefix="Sn",lower_case_cprefix="sn_")]
+namespace StatusNotifier
 {
 	[CCode(cheader_filename="icon-pixmap.h")]
 	public enum Category
@@ -37,6 +37,7 @@ namespace Sn
 		ACTIVE,
 		ATTENTION,
 	}
+	[CCode(cheader_filename="snproxy.h")]
 	public class Proxy: GLib.Object
 	{
 		[NoAccessorMethod]
@@ -73,8 +74,11 @@ namespace Sn
 		public signal void fail();
 		public signal void initialized();
 		/* Ayatana */
+		[NoAccessorMethod]
 		public string x_ayatana_label {owned get;}
+		[NoAccessorMethod]
 		public string x_ayatana_label_guide {owned get;}
+		[NoAccessorMethod]
 		public uint x_ayatana_ordering_index {get;}
 
 		/*Internal Methods */
@@ -86,7 +90,7 @@ namespace Sn
 		public void activate(int x, int y);
 		public void secondary_activate(int x, int y);
 		public void scroll(int dx, int dy);
-		public void ayatana_secondary_activate(uint32 timestamp) throws Error;
+		public void ayatana_secondary_activate(uint32 timestamp);
 	}
 }
 
