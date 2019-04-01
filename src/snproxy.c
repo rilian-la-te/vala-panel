@@ -26,7 +26,8 @@ struct _SnProxy
 	GIcon *icon;
 	GIcon *attention_icon;
 	char *icon_theme_path;
-	ToolTip *tooltip;
+	char *tooltip_text;
+	GIcon *tooltip_icon;
 	char *menu_object_path;
 	uint x_ayatana_ordering_index;
 
@@ -57,8 +58,7 @@ enum
 	PROP_DESC,
 	PROP_ICON,
 	PROP_ICON_THEME_PATH,
-	PROP_TOOLTIP_TITLE,
-	PROP_TOOLTIP_DESCRIPTION,
+	PROP_TOOLTIP_TEXT,
 	PROP_TOOLTIP_ICON,
 	PROP_MENU_OBJECT_PATH,
 	PROP_LABEL,
@@ -117,44 +117,38 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 	                         PROXY_PROP_SYMBOLIC,
 	                         true,
 	                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_CATEGORY]      = g_param_spec_enum(PROXY_PROP_CATEGORY,
+	pspecs[PROP_CATEGORY]     = g_param_spec_enum(PROXY_PROP_CATEGORY,
                                                   PROXY_PROP_CATEGORY,
                                                   PROXY_PROP_CATEGORY,
                                                   sn_category_get_type(),
                                                   SN_CATEGORY_APPLICATION,
                                                   G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_STATUS]        = g_param_spec_enum(PROXY_PROP_STATUS,
+	pspecs[PROP_STATUS]       = g_param_spec_enum(PROXY_PROP_STATUS,
                                                 PROXY_PROP_STATUS,
                                                 PROXY_PROP_STATUS,
                                                 sn_status_get_type(),
                                                 SN_STATUS_PASSIVE,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ID]            = g_param_spec_string(PROXY_PROP_ID,
+	pspecs[PROP_ID]           = g_param_spec_string(PROXY_PROP_ID,
                                               PROXY_PROP_LABEL,
                                               PROXY_PROP_LABEL,
                                               NULL,
                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_DESC]          = g_param_spec_string(PROXY_PROP_DESC,
+	pspecs[PROP_DESC]         = g_param_spec_string(PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 NULL,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_ICON]          = g_param_spec_object(PROXY_PROP_ICON,
+	pspecs[PROP_ICON]         = g_param_spec_object(PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 PROXY_PROP_ICON,
                                                 G_TYPE_ICON,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_TOOLTIP_TITLE] = g_param_spec_string(PROXY_PROP_TOOLTIP_TITLE,
-	                                                 PROXY_PROP_TOOLTIP_TITLE,
-	                                                 PROXY_PROP_TOOLTIP_TITLE,
-	                                                 NULL,
-	                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	pspecs[PROP_TOOLTIP_DESCRIPTION] =
-	    g_param_spec_string(PROXY_PROP_TOOLTIP_DESCRIPTION,
-	                        PROXY_PROP_TOOLTIP_DESCRIPTION,
-	                        PROXY_PROP_TOOLTIP_DESCRIPTION,
-	                        NULL,
-	                        G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TOOLTIP_TEXT] = g_param_spec_string(PROXY_PROP_TOOLTIP_TITLE,
+	                                                PROXY_PROP_TOOLTIP_TITLE,
+	                                                PROXY_PROP_TOOLTIP_TITLE,
+	                                                NULL,
+	                                                G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_TOOLTIP_ICON] = g_param_spec_object(PROXY_PROP_TOOLTIP_ICON,
 	                                                PROXY_PROP_TOOLTIP_ICON,
 	                                                PROXY_PROP_TOOLTIP_ICON,
@@ -220,7 +214,8 @@ static void sn_proxy_init(SnProxy *self)
 	self->attention_icon           = NULL;
 	self->icon                     = NULL;
 	self->icon_theme_path          = NULL;
-	self->tooltip                  = tooltip_new(NULL);
+	self->tooltip_text             = NULL;
+	self->tooltip_icon             = NULL;
 	self->menu_object_path         = NULL;
 	self->x_ayatana_label          = NULL;
 	self->x_ayatana_label_guide    = NULL;
@@ -254,7 +249,8 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_object(&self->icon);
 	g_clear_object(&self->attention_icon);
 	g_clear_pointer(&self->icon_theme_path, g_free);
-	g_clear_pointer(&self->tooltip, tooltip_free);
+	g_clear_pointer(&self->tooltip_text, g_free);
+	g_clear_object(&self->tooltip_icon);
 	g_clear_pointer(&self->menu_object_path, g_free);
 	g_clear_pointer(&self->x_ayatana_label, g_free);
 	g_clear_pointer(&self->x_ayatana_label_guide, g_free);
@@ -301,8 +297,23 @@ static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, 
 		                   is_attention && self->attention_icon ? self->attention_icon
 		                                                        : self->icon);
 		break;
-	case PROP_TOOLTIP_TITLE:
-		g_value_set_string(value, self->tooltip->title);
+	case PROP_TOOLTIP_TEXT:
+		if (!string_empty(self->tooltip_text))
+			g_value_set_string(value, self->tooltip_text);
+		else if (!string_empty(self->attention_desc) && is_attention)
+			g_value_set_string(value, self->attention_desc);
+		else if (!string_empty(self->icon_desc))
+			g_value_set_string(value, self->icon_desc);
+		else if (!string_empty(self->title))
+			g_value_set_string(value, self->title);
+		break;
+	case PROP_TOOLTIP_ICON:
+		if (self->tooltip_icon)
+			g_value_set_object(value, self->tooltip_icon);
+		else if (self->attention_icon && is_attention)
+			g_value_set_object(value, self->attention_icon);
+		else if (self->icon)
+			g_value_set_object(value, self->icon);
 		break;
 	case PROP_LABEL:
 		g_value_set_string(value, self->x_ayatana_label);
@@ -440,22 +451,20 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const Ico
 
 static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	SnProxy *self                      = user_data;
-	bool update_tooltip                = false;
-	bool update_tooltip_title          = false;
-	bool update_icon                   = false;
-	bool update_attention_icon         = false;
-	bool update_theme_path             = false;
-	bool update_desc                   = false;
-	bool update_menu                   = false;
-	ToolTip *new_tooltip               = NULL;
-	char *icon_name                    = NULL;
-	char *attention_icon_name          = NULL;
-	char *overlay_icon_name            = NULL;
-	IconPixmap **icon_pixmap           = NULL;
-	IconPixmap **attention_icon_pixmap = NULL;
-	IconPixmap **overlay_icon_pixmap   = NULL;
-	g_autoptr(GError) error            = NULL;
+	SnProxy *self               = user_data;
+	bool update_tooltip         = false;
+	bool update_icon            = false;
+	bool update_attention_icon  = false;
+	bool update_desc            = false;
+	bool update_menu            = false;
+	ToolTip *new_tooltip        = NULL;
+	char *icon_name             = NULL;
+	char *att_name              = NULL;
+	char *overlay_name          = NULL;
+	IconPixmap **icon_pixmap    = NULL;
+	IconPixmap **att_pixmap     = NULL;
+	IconPixmap **overlay_pixmap = NULL;
+	g_autoptr(GError) error     = NULL;
 	g_autoptr(GVariant) properties =
 	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
@@ -580,6 +589,38 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 				update_attention_icon = true;
 			}
 		}
+		else if (!g_strcmp0(name, "IconName"))
+		{
+			icon_name   = g_variant_dup_string(value, NULL);
+			update_icon = true;
+		}
+		else if (!g_strcmp0(name, "AttentionIconName"))
+		{
+			icon_name             = g_variant_dup_string(value, NULL);
+			update_attention_icon = true;
+		}
+		else if (!g_strcmp0(name, "OverlayIconName"))
+		{
+			icon_name             = g_variant_dup_string(value, NULL);
+			update_icon           = true;
+			update_attention_icon = true;
+		}
+		else if (!g_strcmp0(name, "IconPixmap"))
+		{
+			icon_pixmap = unbox_pixmaps(value);
+			update_icon = true;
+		}
+		else if (!g_strcmp0(name, "AttentionIconPixmap"))
+		{
+			att_pixmap            = unbox_pixmaps(value);
+			update_attention_icon = true;
+		}
+		else if (!g_strcmp0(name, "OverlayIconPixmap"))
+		{
+			overlay_pixmap        = unbox_pixmaps(value);
+			update_icon           = true;
+			update_attention_icon = true;
+		}
 	}
 	if (update_desc)
 		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_DESC]);
@@ -587,33 +628,29 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 		g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_MENU_OBJECT_PATH]);
 	if (update_tooltip)
 	{
-		if (!tooltip_equal(self->tooltip, new_tooltip))
-		{
-			if (new_tooltip)
-			{
-				g_clear_pointer(&self->tooltip, tooltip_free);
-				self->tooltip = new_tooltip;
-				if (!self->tooltip->title)
-					self->tooltip->title = g_strdup(self->title);
-				g_object_notify_by_pspec(G_OBJECT(self),
-				                         pspecs[PROP_TOOLTIP_TITLE]);
-			}
-			if (!new_tooltip && g_strcmp0(self->tooltip->title, self->title))
-			{
-				g_clear_pointer(&self->tooltip->title, g_free);
-				self->tooltip->title = g_strdup(self->title);
-				g_object_notify_by_pspec(G_OBJECT(self),
-				                         pspecs[PROP_TOOLTIP_TITLE]);
-			}
-		}
+		char *markup     = NULL;
+		GIcon *icon      = NULL;
+		bool notify_text = false;
+		bool notify_icon = false;
+		if (new_tooltip)
+			unbox_tooltip(new_tooltip,
+			              self->theme,
+			              self->icon_theme_path,
+			              &icon,
+			              &markup);
+		if (g_strcmp0(markup, self->tooltip_text))
+			notify_text = true;
+		if (!g_icon_equal(self->tooltip_icon, icon))
+			notify_icon = true;
+		if (notify_text)
+			g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP_TEXT]);
+		if (notify_icon)
+			g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TOOLTIP_ICON]);
 	}
 	if (update_icon)
 	{
-		g_autoptr(GIcon) new_icon = sn_proxy_load_icon(self,
-		                                               icon_name,
-		                                               icon_pixmap,
-		                                               overlay_icon_name,
-		                                               overlay_icon_pixmap);
+		g_autoptr(GIcon) new_icon =
+		    sn_proxy_load_icon(self, icon_name, icon_pixmap, overlay_name, overlay_pixmap);
 		if (!g_icon_equal(self->icon, new_icon))
 		{
 			g_clear_object(&self->icon);
@@ -623,11 +660,8 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	}
 	if (update_attention_icon)
 	{
-		g_autoptr(GIcon) new_icon = sn_proxy_load_icon(self,
-		                                               attention_icon_name,
-		                                               attention_icon_pixmap,
-		                                               overlay_icon_name,
-		                                               overlay_icon_pixmap);
+		g_autoptr(GIcon) new_icon =
+		    sn_proxy_load_icon(self, att_name, att_pixmap, overlay_name, overlay_pixmap);
 		if (!g_icon_equal(self->attention_icon, new_icon))
 		{
 			g_clear_object(&self->attention_icon);
