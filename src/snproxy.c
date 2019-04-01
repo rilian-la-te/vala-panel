@@ -713,6 +713,10 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 		if (self->id != NULL)
 		{
 			self->initialized = true;
+			g_signal_connect_swapped(self->theme,
+			                         "changed",
+			                         G_CALLBACK(sn_proxy_reload),
+			                         self);
 			g_signal_emit(self, signals[INITIALIZED], 0);
 		}
 	}
@@ -792,7 +796,10 @@ static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gp
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 		return;
 	if (self->item_proxy == NULL)
-		;
+	{
+		g_signal_emit(G_OBJECT(self), signals[FAIL], 0);
+		return;
+	}
 
 	SubscriptionContext *context = g_new0(SubscriptionContext, 1);
 	context->connection          = g_dbus_proxy_get_connection(self->item_proxy);
