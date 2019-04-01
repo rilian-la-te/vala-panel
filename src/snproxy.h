@@ -22,20 +22,18 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-#include "icon-pixmap.h"
-
 G_BEGIN_DECLS
 
 #define PROXY_PROP_BUS_NAME "bus-name"
 #define PROXY_PROP_OBJ_PATH "object-path"
 #define PROXY_PROP_ID "id"
+#define PROXY_PROP_TITLE "title"
 #define PROXY_PROP_CATEGORY "category"
 #define PROXY_PROP_STATUS "status"
 #define PROXY_PROP_LABEL "x-ayatana-label"
 #define PROXY_PROP_LABEL_GUIDE "x-ayatana-label-guide"
 #define PROXY_PROP_DESC "accessible-desc"
 #define PROXY_PROP_ICON "icon"
-#define PROXY_PROP_ICON_THEME_PATH "icon-theme-path"
 #define PROXY_PROP_ICON_SIZE "icon-size"
 #define PROXY_PROP_SYMBOLIC "use-symbolic"
 #define PROXY_PROP_TOOLTIP_TITLE "tooltip-text"
@@ -54,6 +52,16 @@ G_BEGIN_DECLS
 #define PROXY_KDE_METHOD_GET_ALL "GetAll"
 
 G_DECLARE_FINAL_TYPE(SnProxy, sn_proxy, SN, PROXY, GObject)
+
+G_GNUC_INTERNAL SnProxy *sn_proxy_new(const char *bus_name, const char *object_path);
+G_GNUC_INTERNAL void sn_proxy_start(SnProxy *self);
+G_GNUC_INTERNAL void sn_proxy_reload(SnProxy *self);
+
+G_GNUC_INTERNAL void sn_proxy_context_menu(SnProxy *self, gint x_root, gint y_root);
+G_GNUC_INTERNAL void sn_proxy_activate(SnProxy *self, gint x_root, gint y_root);
+G_GNUC_INTERNAL void sn_proxy_secondary_activate(SnProxy *self, gint x_root, gint y_root);
+G_GNUC_INTERNAL void sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time);
+G_GNUC_INTERNAL void sn_proxy_scroll(SnProxy *self, gint delta_x, gint delta_y);
 
 G_END_DECLS
 

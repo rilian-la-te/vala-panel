@@ -1,5 +1,6 @@
 
 #include "snproxy.h"
+#include "icon-pixmap.h"
 #include <gtk/gtk.h>
 #include <math.h>
 
@@ -19,6 +20,7 @@ struct _SnProxy
 	char *bus_name;
 	char *object_path;
 	char *id;
+	char *title;
 	SnCategory category;
 	SnStatus status;
 	char *x_ayatana_label;
@@ -32,7 +34,6 @@ struct _SnProxy
 	uint x_ayatana_ordering_index;
 
 	/* Internal now */
-	char *title;
 	char *icon_desc;
 	char *attention_desc;
 	int icon_size;
@@ -53,6 +54,7 @@ enum
 	PROP_ICON_SIZE,
 	PROP_SYMBOLIC,
 	PROP_ID,
+	PROP_TITLE,
 	PROP_CATEGORY,
 	PROP_STATUS,
 	PROP_DESC,
@@ -130,10 +132,15 @@ static void sn_proxy_class_init(SnProxyClass *klass)
                                                 SN_STATUS_PASSIVE,
                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_ID]           = g_param_spec_string(PROXY_PROP_ID,
-                                              PROXY_PROP_LABEL,
-                                              PROXY_PROP_LABEL,
+                                              PROXY_PROP_ID,
+                                              PROXY_PROP_ID,
                                               NULL,
                                               G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+	pspecs[PROP_TITLE]        = g_param_spec_string(PROXY_PROP_TITLE,
+                                                 PROXY_PROP_TITLE,
+                                                 PROXY_PROP_TITLE,
+                                                 NULL,
+                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 	pspecs[PROP_DESC]         = g_param_spec_string(PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
                                                 PROXY_PROP_DESC,
@@ -273,6 +280,9 @@ static void sn_proxy_get_property(GObject *object, uint prop_id, GValue *value, 
 	{
 	case PROP_ID:
 		g_value_set_string(value, self->id);
+		break;
+	case PROP_TITLE:
+		g_value_set_string(value, self->title);
 		break;
 	case PROP_CATEGORY:
 		g_value_set_enum(value, self->category);
@@ -533,7 +543,8 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 			if (!g_strcmp0(g_variant_get_string(value, NULL), self->title))
 			{
 				g_clear_pointer(&self->title, g_free);
-				self->title    = g_variant_dup_string(value, NULL);
+				self->title = g_variant_dup_string(value, NULL);
+				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_TITLE]);
 				update_tooltip = true;
 			}
 		}
@@ -784,6 +795,16 @@ static int sn_proxy_start_failed(void *user_data)
 	g_signal_emit(G_OBJECT(self), signals[FAIL], 0);
 
 	return G_SOURCE_REMOVE;
+}
+
+SnProxy *sn_proxy_new(const char *bus_name, const char *object_path)
+{
+	return SN_PROXY(g_object_new(sn_proxy_get_type(),
+	                             PROXY_PROP_BUS_NAME,
+	                             bus_name,
+	                             PROXY_PROP_OBJ_PATH,
+	                             object_path,
+	                             NULL));
 }
 
 void sn_proxy_start(SnProxy *self)
