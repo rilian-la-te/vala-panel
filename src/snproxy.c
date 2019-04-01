@@ -71,6 +71,7 @@ enum
 
 enum
 {
+	INITIALIZED,
 	FAIL,
 	LAST_SIGNAL
 };
@@ -188,15 +189,24 @@ static void sn_proxy_class_init(SnProxyClass *klass)
 
 	g_object_class_install_properties(oclass, PROP_LAST, pspecs);
 
-	signals[FAIL] = g_signal_new(g_intern_static_string(PROXY_SIGNAL_FAIL),
-	                             G_TYPE_FROM_CLASS(oclass),
-	                             G_SIGNAL_RUN_LAST,
-	                             0,
-	                             NULL,
-	                             NULL,
-	                             g_cclosure_marshal_VOID__VOID,
-	                             G_TYPE_NONE,
-	                             0);
+	signals[FAIL]        = g_signal_new(g_intern_static_string(PROXY_SIGNAL_FAIL),
+                                     G_TYPE_FROM_CLASS(oclass),
+                                     G_SIGNAL_RUN_LAST,
+                                     0,
+                                     NULL,
+                                     NULL,
+                                     g_cclosure_marshal_VOID__VOID,
+                                     G_TYPE_NONE,
+                                     0);
+	signals[INITIALIZED] = g_signal_new(g_intern_static_string(PROXY_SIGNAL_INITIALIZED),
+	                                    G_TYPE_FROM_CLASS(oclass),
+	                                    G_SIGNAL_RUN_LAST,
+	                                    0,
+	                                    NULL,
+	                                    NULL,
+	                                    g_cclosure_marshal_VOID__VOID,
+	                                    G_TYPE_NONE,
+	                                    0);
 
 	oclass->finalize     = sn_proxy_finalize;
 	oclass->get_property = sn_proxy_get_property;
@@ -398,7 +408,7 @@ static void sn_proxy_name_owner_changed(GDBusConnection *connection, const char 
 	g_autofree char *new_owner = NULL;
 
 	g_variant_get(parameters, "(sss)", NULL, NULL, &new_owner);
-	if ((new_owner == NULL || strlen(new_owner) == 0))
+	if (string_empty(new_owner))
 		g_signal_emit(self, signals[FAIL], 0);
 }
 
@@ -679,6 +689,14 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 			self->attention_icon = g_object_ref(new_icon);
 			if (self->status == SN_STATUS_ATTENTION)
 				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
+		}
+	}
+	if (!self->initialized)
+	{
+		if (self->id != NULL)
+		{
+			self->initialized = true;
+			g_signal_emit(self, signals[INITIALIZED], 0);
 		}
 	}
 }
