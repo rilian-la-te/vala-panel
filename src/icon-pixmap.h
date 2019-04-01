@@ -22,6 +22,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+G_BEGIN_DECLS
+
 typedef struct
 {
 	int width;
@@ -39,8 +41,6 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
 GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
                                const GtkIconTheme *theme, const char *icon_theme_path,
                                const int icon_size, const bool use_symbolic);
-G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
-
 typedef struct
 {
 	char *icon_name;
@@ -56,8 +56,6 @@ G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst);
 G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
                                    const char *icon_theme_path, GIcon **icon, char **markup);
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self);
-G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
-
 typedef enum
 {
 	SN_CATEGORY_APPLICATION,
@@ -67,6 +65,7 @@ typedef enum
 	SN_CATEGORY_OTHER
 } SnCategory;
 G_GNUC_INTERNAL GType sn_category_get_type(void);
+#define SN_TYPE_CATEGORY sn_category_get_type()
 G_GNUC_INTERNAL const char *sn_category_get_nick(SnCategory value);
 G_GNUC_INTERNAL SnCategory sn_category_get_value_from_nick(const char *nick);
 
@@ -77,6 +76,7 @@ typedef enum
 	SN_STATUS_ATTENTION
 } SnStatus;
 G_GNUC_INTERNAL GType sn_status_get_type(void);
+#define SN_TYPE_STATUS sn_status_get_type()
 G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value);
 G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick);
 
@@ -84,4 +84,7 @@ G_GNUC_INTERNAL inline bool string_empty(const char *path)
 {
 	return (path == NULL || strlen(path) == 0);
 }
+
+G_END_DECLS
+
 #endif // ICONPIXMAP_H

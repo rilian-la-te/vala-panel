@@ -52,8 +52,6 @@ G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 	g_clear_pointer(&self, g_free);
 }
 
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
-
 G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant)
 {
 	size_t i             = 0;
@@ -192,6 +190,8 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 	}
 	return NULL;
 }
+G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
 
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 {
@@ -309,6 +309,7 @@ G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 	g_clear_pointer(&self, g_free);
 }
 
+G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)
 /*
  * This part is required, because we use non-standard nicks.
@@ -341,7 +342,7 @@ G_GNUC_INTERNAL const char *sn_category_get_nick(SnCategory value)
 	g_return_val_if_fail(class != NULL, NULL);
 
 	const char *ret = NULL;
-	GEnumValue *val = g_enum_get_value(class, value);
+	GEnumValue *val = g_enum_get_value(class, (int)value);
 	if (val != NULL)
 		ret = val->value_nick;
 
@@ -357,7 +358,7 @@ G_GNUC_INTERNAL SnCategory sn_category_get_value_from_nick(const char *nick)
 	SnCategory ret  = 0;
 	GEnumValue *val = g_enum_get_value_by_nick(class, nick);
 	if (val != NULL)
-		ret = val->value;
+		ret = (uint)val->value;
 
 	g_type_class_unref(class);
 	return ret;
@@ -385,7 +386,7 @@ G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value)
 	g_return_val_if_fail(class != NULL, NULL);
 
 	const char *ret = NULL;
-	GEnumValue *val = g_enum_get_value(class, value);
+	GEnumValue *val = g_enum_get_value(class, (int)value);
 	if (val != NULL)
 		ret = val->value_nick;
 
@@ -401,7 +402,7 @@ G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick)
 	SnStatus ret    = 0;
 	GEnumValue *val = g_enum_get_value_by_nick(class, nick);
 	if (val != NULL)
-		ret = val->value;
+		ret = (uint)val->value;
 
 	g_type_class_unref(class);
 	return ret;
