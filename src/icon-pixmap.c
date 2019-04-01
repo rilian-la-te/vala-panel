@@ -195,15 +195,22 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 {
-	ToolTip *self = g_new0(ToolTip, 1);
+	ToolTip *self           = g_new0(ToolTip, 1);
+	const char *type_string = g_variant_get_type_string(variant);
+	bool is_full            = !g_strcmp0(type_string, "(sa(iiay)ss)");
 	if (!variant)
 		return self;
-	g_variant_get_child(variant, 0, "s", self->icon_name);
-	g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
-	self->pixmaps          = unbox_pixmaps(ch);
-	self->icon             = NULL;
-	g_variant_get_child(variant, 2, "s", self->title);
-	g_variant_get_child(variant, 3, "s", self->description);
+	if (is_full)
+	{
+		g_variant_get_child(variant, 0, "s", self->icon_name);
+		g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
+		self->pixmaps          = unbox_pixmaps(ch);
+		self->icon             = NULL;
+		g_variant_get_child(variant, 2, "s", self->title);
+		g_variant_get_child(variant, 3, "s", self->description);
+	}
+	else if (!g_strcmp0(g_variant_get_type_string(variant), "s"))
+		self->title = g_variant_dup_string(variant, NULL);
 	return self;
 }
 
