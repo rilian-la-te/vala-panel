@@ -17,6 +17,7 @@
  */
 
 #include "icon-pixmap.h"
+#include "rtparser.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
@@ -215,6 +216,56 @@ G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
 	dst->pixmaps     = src->pixmaps;
 	dst->icon        = g_object_ref(src->icon);
 	return dst;
+}
+G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
+                                   const char *icon_theme_path, GIcon **icon, char **markup)
+{
+	g_autofree char *raw_text = g_strdup_printf("%s\n%s", tooltip->title, tooltip->description);
+	bool is_pango_markup      = true;
+	g_autoptr(GString) bldr   = g_string_new("");
+	if (raw_text)
+	{
+		GError *err = NULL;
+		pango_parse_markup(raw_text, -1, '\0', NULL, NULL, NULL, &err);
+		if (err)
+			is_pango_markup = false;
+	}
+	if (!is_pango_markup)
+	{
+		g_string_append(bldr, "<markup>");
+		if (!string_empty(tooltip->title))
+			g_string_append(bldr, tooltip->title);
+		if (!string_empty(tooltip->description) > 0)
+		{
+			if (bldr->len > 8)
+				g_string_append(bldr, "<br/>");
+			g_string_append(bldr, tooltip->description);
+		}
+		g_string_append(bldr, "</markup>");
+		g_autoptr(QRichTextParser) markup_parser = qrich_text_parser_new(bldr->str);
+		qrich_text_parser_translate_markup(markup_parser);
+		*markup = (!string_empty(markup_parser->pango_markup))
+		              ? g_strdup(markup_parser->pango_markup)
+		              : g_strdup(raw_text);
+		g_autoptr(GIcon) res_icon = icon_pixmap_select_icon(tooltip->icon_name,
+		                                                    tooltip->pixmaps,
+		                                                    theme,
+		                                                    icon_theme_path,
+		                                                    48,
+		                                                    false);
+		*icon = (markup_parser->icon != NULL) ? g_object_ref(markup_parser->icon)
+		                                      : g_object_ref(res_icon);
+	}
+	else
+	{
+		*markup = g_strdup(raw_text);
+		*icon   = icon_pixmap_select_icon(tooltip->icon_name,
+                                                tooltip->pixmaps,
+                                                theme,
+                                                icon_theme_path,
+                                                48,
+                                                false);
+	}
 }
 G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst)
 {

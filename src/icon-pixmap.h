@@ -53,6 +53,8 @@ typedef struct
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant);
 G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src);
 G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst);
+G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
+                                   const char *icon_theme_path, GIcon **icon, char **markup);
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self);
 G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
 
