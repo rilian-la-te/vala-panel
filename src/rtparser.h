@@ -57,4 +57,6 @@ QRichTextParser *qrich_text_parser_new(const char *markup);
 void qrich_text_parser_free(QRichTextParser *self);
 void qrich_text_parser_translate_markup(QRichTextParser *self);
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(QRichTextParser, qrich_text_parser_free)
+
 #endif

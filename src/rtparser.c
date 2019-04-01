@@ -65,8 +65,6 @@ void qrich_text_parser_free(QRichTextParser *self)
 }
 
 void qrich_text_parser_free(QRichTextParser *self);
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(QRichTextParser, qrich_text_parser_free)
-
 static void init_sets(QRichTextParser *parser)
 {
 #define D(s) s, s
