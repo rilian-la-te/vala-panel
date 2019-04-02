@@ -123,7 +123,9 @@ static GtkContainer *create_menubar(MenuApplet *self)
 {
 	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(self);
 	GtkMenuBar *menubar    = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
-	apply_menu_properties(gtk_container_get_children(GTK_CONTAINER(menubar)), self->menu);
+	GList *ch_list         = gtk_container_get_children(GTK_CONTAINER(menubar));
+	apply_menu_properties(ch_list, self->menu);
+	g_clear_pointer(&ch_list, g_list_free);
 	vala_panel_applet_set_background_widget(self, menubar);
 	vala_panel_applet_init_background(self);
 	gtk_widget_show(menubar);

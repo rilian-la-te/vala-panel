@@ -535,6 +535,7 @@ static void update_appearance(ValaPanelToplevel *self)
 	g_string_append_printf(str, " font-family: %s;\n", family);
 	g_string_append_printf(str, "}\n");
 	g_string_append_printf(str, ".-vala-panel-foreground-color {\n");
+	g_clear_pointer(&desc, pango_font_description_free);
 	g_autofree char *foreground_color = gdk_rgba_to_string(&self->foreground_color);
 	g_string_append_printf(str, " color: %s;\n", foreground_color);
 	g_string_append_printf(str, "}\n");

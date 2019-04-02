@@ -245,7 +245,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                       self->color_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
-	char *file = NULL;
+	g_autofree char *file = NULL;
 	bool use_background_file;
 	g_object_get(self->_toplevel,
 	             VP_KEY_BACKGROUND_FILE,
@@ -254,7 +254,7 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	             &use_background_file,
 	             NULL);
 	if (use_background_file && file != NULL)
-		gtk_file_chooser_set_filename(self->file_background, file);
+		gtk_file_chooser_set_filename(self->file_background, g_strdup(file));
 	gtk_widget_set_sensitive(self->file_background, use_background_file);
 	g_object_bind_property(self->_toplevel,
 	                       VP_KEY_USE_BACKGROUND_FILE,
@@ -265,8 +265,6 @@ static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_cons
 	                 "file-set",
 	                 G_CALLBACK(background_file_connector),
 	                 self->_toplevel);
-	//    if(file)
-	//        g_free0(file);
 	/* foregorund */
 	g_object_get(self->_toplevel, VP_KEY_FOREGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
@@ -545,6 +543,7 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 		gtk_container_add(GTK_CONTAINER(self->plugin_list), GTK_WIDGET(r));
 		plugin_list_generate_applet_settings(w, self);
 	}
+	g_clear_pointer(&plugins, g_list_free);
 	gtk_list_box_set_sort_func(self->plugin_list,
 	                           plugin_list_sort,
 	                           vala_panel_toplevel_get_layout(self->_toplevel),
