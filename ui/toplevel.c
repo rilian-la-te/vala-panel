@@ -1008,6 +1008,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		vala_panel_toplevel_update_geometry(self);
 	if (appearance_update_required)
 		update_appearance(self);
+	g_clear_pointer(&desc, pango_font_description_free);
 }
 
 void vala_panel_toplevel_init(ValaPanelToplevel *self)
