@@ -453,11 +453,13 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const Ico
 		icon = g_emblemed_icon_new(tmp_main_icon, overlay_icon);
 	if (!icon)
 		return NULL;
+	if (self->use_symbolic && G_IS_THEMED_ICON(tmp_main_icon))
+		return g_object_ref(icon);
 	g_autoptr(GtkIconInfo) info =
 	    gtk_icon_theme_lookup_by_gicon(self->theme, icon, self->icon_size, 0);
-	g_autoptr(GError) err = NULL;
 	if (info)
 	{
+		g_autoptr(GError) err             = NULL;
 		g_autoptr(GdkPixbuf) first_pixbuf = gtk_icon_info_load_icon(info, &err);
 		if (err)
 			return g_object_ref(icon);
@@ -624,8 +626,8 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 			{
 				g_clear_pointer(&self->icon_theme_path, g_free);
 				self->icon_theme_path = g_variant_dup_string(value, NULL);
-				gtk_icon_theme_append_search_path(self->theme,
-				                                  self->icon_theme_path);
+				gtk_icon_theme_prepend_search_path(self->theme,
+				                                   self->icon_theme_path);
 				update_icon           = true;
 				update_attention_icon = true;
 			}
