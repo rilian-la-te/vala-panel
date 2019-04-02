@@ -52,6 +52,7 @@ static GtkLicense vala_panel_applet_info_get_license_from_name(const char *licen
 	GEnumValue *val        = g_enum_get_value_by_name(enum_class, license_name);
 	if (!val)
 		val = g_enum_get_value_by_nick(enum_class, license_name);
+	g_type_class_unref(enum_class);
 	return val ? (GtkLicense)val->value : GTK_LICENSE_LGPL_3_0;
 }
 
@@ -94,9 +95,10 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	ret->help_uri =
 	    tmp != NULL ? tmp
 	                : g_strdup("https://gitlab.com/vala-panel-project/vala-panel/wikis/home");
-	tmp = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_WEBSITE, NULL);
+	tmp = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_LICENSE, NULL);
 	ret->license =
 	    tmp != NULL ? vala_panel_applet_info_get_license_from_name(tmp) : GTK_LICENSE_LGPL_3_0;
+	g_clear_pointer(&tmp, g_free);
 	tmp          = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_VERSION, NULL);
 	ret->version = tmp != NULL ? tmp : g_strdup(VERSION);
 	ret->exclusive =
