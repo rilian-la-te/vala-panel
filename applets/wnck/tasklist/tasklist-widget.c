@@ -2316,10 +2316,10 @@ static gint xfce_tasklist_button_compare(gconstpointer child_a, gconstpointer ch
 
 static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistChild *child)
 {
-	GdkPixbuf *pixbuf;
-	const char *icon_name  = NULL;
-	GdkPixbuf *lucent      = NULL;
-	XfceTasklist *tasklist = child->tasklist;
+	GdkPixbuf *pixbuf               = NULL;
+	g_autoptr(GdkPixbuf) new_pixbuf = NULL;
+	GdkPixbuf *lucent               = NULL;
+	XfceTasklist *tasklist          = child->tasklist;
 	uint icon_size;
 
 	g_return_if_fail(XFCE_IS_TASKLIST(tasklist));
@@ -2358,9 +2358,10 @@ static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistCh
 #endif
 	}
 	if (gdk_pixbuf_get_width(pixbuf) > icon_size)
-		pixbuf = gdk_pixbuf_scale_simple(pixbuf, icon_size, icon_size, GDK_INTERP_BILINEAR);
+		new_pixbuf =
+		    gdk_pixbuf_scale_simple(pixbuf, icon_size, icon_size, GDK_INTERP_BILINEAR);
 
-	gtk_image_set_from_pixbuf(GTK_IMAGE(child->icon), pixbuf);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(child->icon), new_pixbuf ? new_pixbuf : pixbuf);
 	gtk_image_set_pixel_size(GTK_IMAGE(child->icon), icon_size);
 
 	if (lucent != NULL && lucent != pixbuf)
