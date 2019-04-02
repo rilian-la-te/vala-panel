@@ -78,14 +78,14 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 	if (!self->bytes)
 		return NULL;
 	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
-	for (size_t i = 0; i < self->bytes_size; i += 4)
+
+#if G_BYTE_ORDER == G_LITTLE_ENDIAN
 	{
-		u_int8_t alpha = self->bytes[i];
-		bytes[i]       = self->bytes[i + 1];
-		bytes[i + 1]   = self->bytes[i + 2];
-		bytes[i + 2]   = self->bytes[i + 3];
-		bytes[i + 3]   = alpha;
+		u_int32_t *data = (u_int32_t *)bytes;
+		for (size_t i = 0; i < self->bytes_size / 4; i++)
+			data[i] = GUINT32_FROM_BE(data[i]);
 	}
+#endif
 	return G_ICON(gdk_pixbuf_new_from_data(bytes,
 	                                       GDK_COLORSPACE_RGB,
 	                                       true,
@@ -318,15 +318,16 @@ G_GNUC_INTERNAL GType sn_category_get_type(void)
 
 	if (the_type == 0)
 	{
-		static const GEnumValue values[] =
-		    { { SN_CATEGORY_APPLICATION, "SN_CATEGORY_APPLICATION", "ApplicationStatus" },
-		      { SN_CATEGORY_COMMUNICATIONS,
-			"SN_CATEGORY_COMMUNICATIONS",
-			"Communications" },
-		      { SN_CATEGORY_SYSTEM, "SN_CATEGORY_SYSTEM_SERVICES", "SystemServices" },
-		      { SN_CATEGORY_HARDWARE, "SN_CATEGORY_HARDWARE", "Hardware" },
-		      { SN_CATEGORY_OTHER, "SN_CATEGORY_OTHER", "Other" },
-		      { 0, NULL, NULL } };
+		static const GEnumValue values[] = {
+			{ SN_CATEGORY_APPLICATION, "SN_CATEGORY_APPLICATION", "ApplicationStatus" },
+			{ SN_CATEGORY_COMMUNICATIONS,
+			  "SN_CATEGORY_COMMUNICATIONS",
+			  "Communications" },
+			{ SN_CATEGORY_SYSTEM, "SN_CATEGORY_SYSTEM_SERVICES", "SystemServices" },
+			{ SN_CATEGORY_HARDWARE, "SN_CATEGORY_HARDWARE", "Hardware" },
+			{ SN_CATEGORY_OTHER, "SN_CATEGORY_OTHER", "Other" },
+			{ 0, NULL, NULL }
+		};
 		the_type = g_enum_register_static(g_intern_static_string("SnCategory"), values);
 	}
 	return the_type;
@@ -365,11 +366,12 @@ G_GNUC_INTERNAL GType sn_status_get_type(void)
 
 	if (the_type == 0)
 	{
-		static const GEnumValue values[] =
-		    { { SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
-		      { SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
-		      { SN_STATUS_ATTENTION, "SN_STATUS_NEEDS_ATTENTION", "NeedsAttention" },
-		      { 0, NULL, NULL } };
+		static const GEnumValue values[] = {
+			{ SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
+			{ SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
+			{ SN_STATUS_ATTENTION, "SN_STATUS_NEEDS_ATTENTION", "NeedsAttention" },
+			{ 0, NULL, NULL }
+		};
 		the_type = g_enum_register_static(g_intern_static_string("SnStatus"), values);
 	}
 	return the_type;
