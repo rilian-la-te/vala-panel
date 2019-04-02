@@ -43,12 +43,12 @@ ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const cha
 {
 	ValaPanelPlatformX11 *pl =
 	    VALA_PANEL_PLATFORM_X11(g_object_new(vala_panel_platform_x11_get_type(), NULL));
-	pl->app     = app;
-	pl->profile = g_strdup(profile);
-	GSettingsBackend *backend =
-	    g_keyfile_settings_backend_new(_user_config_file_name_new(pl->profile),
-	                                   VALA_PANEL_OBJECT_PATH,
-	                                   VALA_PANEL_CONFIG_HEADER);
+	pl->app                   = app;
+	pl->profile               = g_strdup(profile);
+	g_autofree char *filename = _user_config_file_name_new(pl->profile);
+	GSettingsBackend *backend = g_keyfile_settings_backend_new(filename,
+	                                                           VALA_PANEL_OBJECT_PATH,
+	                                                           VALA_PANEL_CONFIG_HEADER);
 	vala_panel_platform_init_settings(VALA_PANEL_PLATFORM(pl), backend);
 	return pl;
 }
