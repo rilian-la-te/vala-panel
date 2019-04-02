@@ -28,8 +28,8 @@ typedef struct
 {
 	int width;
 	int height;
-	u_int8_t *bytes;
 	size_t bytes_size;
+	u_int8_t *bytes;
 } IconPixmap;
 
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant);

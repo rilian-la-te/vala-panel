@@ -213,7 +213,8 @@ static void visit_start(GMarkupParseContext *context, const char *name,
 	if (g_hash_table_lookup(self->translated_to_pango, name))
 		g_string_append_printf(self->pango_markup_builder,
 		                       "<%s>",
-		                       g_hash_table_lookup(self->translated_to_pango, name));
+		                       (char *)g_hash_table_lookup(self->translated_to_pango,
+		                                                   name));
 	if (g_hash_table_lookup(self->division_names, name))
 		g_debug("Found block. Pango markup not support blocks for now.\n");
 	if (g_hash_table_lookup(self->span_aliases, name))
@@ -244,7 +245,7 @@ static void visit_start(GMarkupParseContext *context, const char *name,
 	if (g_hash_table_lookup(self->special_spans, name))
 		g_string_append_printf(self->pango_markup_builder,
 		                       "<%s>",
-		                       g_hash_table_lookup(self->special_spans, name));
+		                       (char *)g_hash_table_lookup(self->special_spans, name));
 	if (g_hash_table_lookup(self->lists, name))
 	{
 		self->list_order = 0;

@@ -26,13 +26,9 @@ G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
 	IconPixmap *self = g_new0(IconPixmap, 1);
 	if (!pixmap_variant)
 		return self;
-	g_variant_get_child(pixmap_variant, 0, "i", self->width);
-	g_variant_get_child(pixmap_variant, 1, "i", self->height);
-	g_autoptr(GVariant) bytes_variant = g_variant_get_child_value(pixmap_variant, 2);
-	self->bytes_size                  = g_variant_n_children(bytes_variant);
-	const u_int8_t *bytes =
-	    g_variant_get_fixed_array(bytes_variant, &self->bytes_size, sizeof(u_int8_t));
-	self->bytes = g_memdup(bytes, self->bytes_size);
+	g_variant_get(pixmap_variant, "(iiay)", &self->width, &self->height, &self->bytes, NULL);
+	self->bytes_size = (ulong)(self->width * self->height * 4);
+	self->bytes      = g_memdup(self->bytes, self->bytes_size);
 	return self;
 }
 
@@ -82,15 +78,16 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 	if (!self->bytes)
 		return NULL;
 	u_int64_t bsize = (self->bytes_size / 4) * 4;
+	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
 	for (size_t i = 0; i < bsize; i += 4)
 	{
-		u_int8_t alpha     = self->bytes[i];
-		self->bytes[i]     = self->bytes[i + 1];
-		self->bytes[i + 1] = self->bytes[i + 2];
-		self->bytes[i + 2] = self->bytes[i + 3];
-		self->bytes[i + 3] = alpha;
+		u_int8_t alpha = self->bytes[i];
+		bytes[i]       = self->bytes[i + 1];
+		bytes[i + 1]   = self->bytes[i + 2];
+		bytes[i + 2]   = self->bytes[i + 3];
+		bytes[i + 3]   = alpha;
 	}
-	return G_ICON(gdk_pixbuf_new_from_data(self->bytes,
+	return G_ICON(gdk_pixbuf_new_from_data(bytes,
 	                                       GDK_COLORSPACE_RGB,
 	                                       true,
 	                                       8,
@@ -178,18 +175,21 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 			if (pixmaps[i]->height >= icon_size && pixmaps[i]->width >= icon_size)
 				break;
 		}
-		pixbuf = GDK_PIXBUF(icon_pixmap_gicon(pixmaps[i]));
-		if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
-		    gdk_pixbuf_get_height(pixbuf) > icon_size)
+		if (pixmaps[i])
 		{
-			GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
-			                                         icon_size,
-			                                         icon_size,
-			                                         GDK_INTERP_BILINEAR);
-			g_clear_object(&pixbuf);
-			pixbuf = tmp;
+			pixbuf = GDK_PIXBUF(icon_pixmap_gicon(pixmaps[i]));
+			if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
+			    gdk_pixbuf_get_height(pixbuf) > icon_size)
+			{
+				GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
+				                                         icon_size,
+				                                         icon_size,
+				                                         GDK_INTERP_BILINEAR);
+				g_clear_object(&pixbuf);
+				pixbuf = tmp;
+			}
+			return G_ICON(pixbuf);
 		}
-		return G_ICON(pixbuf);
 	}
 	return NULL;
 }

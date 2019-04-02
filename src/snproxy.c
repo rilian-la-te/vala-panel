@@ -790,6 +790,8 @@ static void sn_proxy_signal_received(GDBusProxy *proxy, gchar *sender_name, gcha
                                      GVariant *parameters, gpointer user_data)
 {
 	SnProxy *self = SN_PROXY(user_data);
+	if (!self->initialized)
+		return;
 
 	if (!g_strcmp0(signal_name, "NewTitle") || !g_strcmp0(signal_name, "NewIcon") ||
 	    !g_strcmp0(signal_name, "NewAttentionIcon") ||
