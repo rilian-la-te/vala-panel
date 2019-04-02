@@ -77,9 +77,8 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 {
 	if (!self->bytes)
 		return NULL;
-	u_int64_t bsize = (self->bytes_size / 4) * 4;
 	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
-	for (size_t i = 0; i < bsize; i += 4)
+	for (size_t i = 0; i < self->bytes_size; i += 4)
 	{
 		u_int8_t alpha = self->bytes[i];
 		bytes[i]       = self->bytes[i + 1];
