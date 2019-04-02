@@ -63,6 +63,7 @@ G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant)
 	while ((pixmap_variant = g_variant_iter_next_value(&pixmap_iter)))
 	{
 		pixmaps[i] = icon_pixmap_new(pixmap_variant);
+		g_clear_pointer(&pixmap_variant, g_variant_unref);
 		i++;
 	}
 	pixmaps[size] = NULL;
@@ -131,10 +132,12 @@ static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path
 	{
 		g_autofree char *new_path = g_build_filename(path, ch, NULL);
 		g_autoptr(GFile) f        = g_file_new_for_path(new_path);
-		char *sstr                = g_strrstr(new_path, ".");
-		long index                = sstr != NULL ? labs(sstr - new_path) : -1;
-		g_autofree char *icon =
-		    index >= 0 ? g_strndup(new_path, (ulong)index) : g_strdup(new_path);
+		char *sstr                = g_strrstr(ch, ".");
+		long diff                 = -1;
+		if (sstr != NULL)
+			diff = sstr - ch;
+		long index            = labs(diff);
+		g_autofree char *icon = index >= 0 ? g_strndup(ch, (ulong)index) : g_strdup(ch);
 		if (!g_strcmp0(icon_name, icon))
 			return g_file_icon_new(f);
 		GIcon *ret  = NULL;
@@ -195,19 +198,18 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
 
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 {
-	ToolTip *self           = g_new0(ToolTip, 1);
-	const char *type_string = g_variant_get_type_string(variant);
-	bool is_full            = !g_strcmp0(type_string, "(sa(iiay)ss)");
+	ToolTip *self = g_new0(ToolTip, 1);
 	if (!variant)
 		return self;
+	const char *type_string = g_variant_get_type_string(variant);
+	bool is_full            = !g_strcmp0(type_string, "(sa(iiay)ss)");
 	if (is_full)
 	{
-		g_variant_get_child(variant, 0, "s", self->icon_name);
+		g_variant_get_child(variant, 0, "s", &self->icon_name, NULL);
 		g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
 		self->pixmaps          = unbox_pixmaps(ch);
-		self->icon             = NULL;
-		g_variant_get_child(variant, 2, "s", self->title);
-		g_variant_get_child(variant, 3, "s", self->description);
+		g_variant_get_child(variant, 2, "s", &self->title, NULL);
+		g_variant_get_child(variant, 3, "s", &self->description, NULL);
 	}
 	else if (!g_strcmp0(g_variant_get_type_string(variant), "s"))
 		self->title = g_variant_dup_string(variant, NULL);
@@ -221,7 +223,6 @@ G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
 	dst->title       = g_strdup(src->title);
 	dst->description = g_strdup(src->description);
 	dst->pixmaps     = src->pixmaps;
-	dst->icon        = g_object_ref(src->icon);
 	return dst;
 }
 G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
@@ -232,7 +233,7 @@ G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
 	g_autoptr(GString) bldr   = g_string_new("");
 	if (raw_text)
 	{
-		GError *err = NULL;
+		g_autoptr(GError) err = NULL;
 		pango_parse_markup(raw_text, -1, '\0', NULL, NULL, NULL, &err);
 		if (err)
 			is_pango_markup = false;
@@ -289,8 +290,6 @@ G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst)
 		return false;
 	if (g_strcmp0(t1->description, t2->description))
 		return false;
-	if (!g_icon_equal(t1->icon, t2->icon))
-		return false;
 	for (i = 0; icon_pixmap_equal(t1->pixmaps[i], t2->pixmaps[i]) && t2->pixmaps[i] != NULL;
 	     i++)
 		;
@@ -303,7 +302,6 @@ G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 {
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->description, g_free);
-	g_clear_object(&self->icon);
 	g_clear_pointer(&self->icon_name, g_free);
 	g_clear_pointer(&self->pixmaps, icon_pixmap_freev);
 	g_clear_pointer(&self, g_free);
@@ -321,16 +319,15 @@ G_GNUC_INTERNAL GType sn_category_get_type(void)
 
 	if (the_type == 0)
 	{
-		static const GEnumValue values[] = {
-			{ SN_CATEGORY_APPLICATION, "SN_CATEGORY_APPLICATION", "ApplicationStatus" },
-			{ SN_CATEGORY_COMMUNICATIONS,
-			  "SN_CATEGORY_COMMUNICATIONS",
-			  "Communications" },
-			{ SN_CATEGORY_SYSTEM, "SN_CATEGORY_SYSTEM_SERVICES", "SystemServices" },
-			{ SN_CATEGORY_HARDWARE, "SN_CATEGORY_HARDWARE", "Hardware" },
-			{ SN_CATEGORY_OTHER, "SN_CATEGORY_OTHER", "Other" },
-			{ 0, NULL, NULL }
-		};
+		static const GEnumValue values[] =
+		    { { SN_CATEGORY_APPLICATION, "SN_CATEGORY_APPLICATION", "ApplicationStatus" },
+		      { SN_CATEGORY_COMMUNICATIONS,
+			"SN_CATEGORY_COMMUNICATIONS",
+			"Communications" },
+		      { SN_CATEGORY_SYSTEM, "SN_CATEGORY_SYSTEM_SERVICES", "SystemServices" },
+		      { SN_CATEGORY_HARDWARE, "SN_CATEGORY_HARDWARE", "Hardware" },
+		      { SN_CATEGORY_OTHER, "SN_CATEGORY_OTHER", "Other" },
+		      { 0, NULL, NULL } };
 		the_type = g_enum_register_static(g_intern_static_string("SnCategory"), values);
 	}
 	return the_type;
@@ -369,12 +366,11 @@ G_GNUC_INTERNAL GType sn_status_get_type(void)
 
 	if (the_type == 0)
 	{
-		static const GEnumValue values[] = {
-			{ SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
-			{ SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
-			{ SN_STATUS_ATTENTION, "SN_STATUS_NEEDS_ATTENTION", "NeedsAttention" },
-			{ 0, NULL, NULL }
-		};
+		static const GEnumValue values[] =
+		    { { SN_STATUS_PASSIVE, "SN_STATUS_PASSIVE", "Passive" },
+		      { SN_STATUS_ACTIVE, "SN_STATUS_ACTIVE", "Active" },
+		      { SN_STATUS_ATTENTION, "SN_STATUS_NEEDS_ATTENTION", "NeedsAttention" },
+		      { 0, NULL, NULL } };
 		the_type = g_enum_register_static(g_intern_static_string("SnStatus"), values);
 	}
 	return the_type;

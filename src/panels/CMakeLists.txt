@@ -16,6 +16,7 @@ if (ENABLE_XFCE)
         libxfconf-0
     CUSTOM_VAPIS
         ${CMAKE_BINARY_DIR}/src/vala-panel-sntray.vapi
+        ${CMAKE_SOURCE_DIR}/src/sntray-backend.vapi
     OPTIONS
         --vapidir=${CMAKE_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
@@ -29,6 +30,7 @@ if (ENABLE_XFCE)
         ${VALA_C_XFCE}
         ${RESOURCES}
     )
+    target_include_directories(sntray-xfce  PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(sntray-xfce  sntray-core PkgConfig::XFCE)
     add_custom_target(sntray-xfce-ide SOURCES ${VALA_FILES_XFCE})
 
@@ -55,6 +57,7 @@ if (ENABLE_VALAPANEL)
         vala-panel
     CUSTOM_VAPIS
         ${CMAKE_BINARY_DIR}/src/vala-panel-sntray.vapi
+        ${CMAKE_SOURCE_DIR}/src/sntray-backend.vapi
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
@@ -69,6 +72,7 @@ if (ENABLE_VALAPANEL)
         ${VALA_C_VALAPANEL}
         ${RESOURCES}
     )
+    target_include_directories(sntray-valapanel  PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(sntray-valapanel sntray-core PkgConfig::VALAPANEL)
     add_custom_target(sntray-valapanel-ide SOURCES ${VALA_FILES_VALAPANEL})
     set_target_properties(sntray-valapanel PROPERTIES
@@ -90,6 +94,7 @@ if (ENABLE_BUDGIE)
         budgie-1.0
     CUSTOM_VAPIS
         ${CMAKE_BINARY_DIR}/src/vala-panel-sntray.vapi
+        ${CMAKE_SOURCE_DIR}/src/sntray-backend.vapi
     OPTIONS
         --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
@@ -103,6 +108,7 @@ if (ENABLE_BUDGIE)
         ${VALA_C_BUDGIE}
         ${RESOURCES}
     )
+    target_include_directories(sntray-budgie  PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(sntray-budgie sntray-core PkgConfig::BUDGIE)
     add_custom_target(sntray-budgie-ide SOURCES ${VALA_FILES_BUDGIE})
 
@@ -123,6 +129,7 @@ if (ENABLE_MATE)
         libmatepanelapplet-4.0
     CUSTOM_VAPIS
         ${CMAKE_BINARY_DIR}/src/vala-panel-sntray.vapi
+        ${CMAKE_SOURCE_DIR}/src/sntray-backend.vapi
     OPTIONS
         --vapidir=${CMAKE_SOURCE_DIR}/vapi
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
@@ -136,6 +143,7 @@ if (ENABLE_MATE)
         ${VALA_C_MATE}
         ${RESOURCES}
     )
+    target_include_directories(sntray-mate  PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_dependencies(sntray-mate sntray-core)
     target_link_libraries(sntray-mate sntray-core PkgConfig::MATE)
     add_custom_target(sntray-mate-ide SOURCES ${VALA_FILES_MATE})

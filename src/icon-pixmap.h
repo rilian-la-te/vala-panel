@@ -38,14 +38,14 @@ G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant);
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self);
 G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps);
 G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
-GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
-                               const GtkIconTheme *theme, const char *icon_theme_path,
-                               const int icon_size, const bool use_symbolic);
+G_GNUC_INTERNAL GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
+                                               const GtkIconTheme *theme,
+                                               const char *icon_theme_path, const int icon_size,
+                                               const bool use_symbolic);
 typedef struct
 {
 	char *icon_name;
 	IconPixmap **pixmaps;
-	GIcon *icon;
 	char *title;
 	char *description;
 } ToolTip;
@@ -80,7 +80,7 @@ G_GNUC_INTERNAL GType sn_status_get_type(void);
 G_GNUC_INTERNAL const char *sn_status_get_nick(SnStatus value);
 G_GNUC_INTERNAL SnStatus sn_status_get_value_from_nick(const char *nick);
 
-G_GNUC_INTERNAL inline bool string_empty(const char *path)
+static inline bool string_empty(const char *path)
 {
 	return (path == NULL || strlen(path) == 0);
 }

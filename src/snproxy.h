@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 #define PROXY_PROP_SYMBOLIC "use-symbolic"
 #define PROXY_PROP_TOOLTIP_TITLE "tooltip-text"
 #define PROXY_PROP_TOOLTIP_ICON "tooltip-icon"
-#define PROXY_PROP_MENU_OBJECT_PATH "menu-object-path"
+#define PROXY_PROP_MENU_OBJECT_PATH "menu"
 #define PROXY_PROP_ORDERING_INDEX "x-ayatana-ordering-index"
 
 #define PROXY_SIGNAL_FAIL "fail"
