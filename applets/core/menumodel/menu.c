@@ -177,8 +177,9 @@ static GtkContainer *create_menubutton(MenuApplet *self)
 		return menubutton;
 	self->int_menu = gtk_menu_new_from_model(self->menu);
 	g_object_ref(self->int_menu);
-	apply_menu_properties(gtk_container_get_children(GTK_CONTAINER(self->int_menu)),
-	                      self->menu);
+	GList *ch_list = gtk_container_get_children(GTK_CONTAINER(self->int_menu));
+	apply_menu_properties(ch_list, self->menu);
+	g_clear_pointer(&ch_list, g_list_free);
 	gtk_menu_attach_to_widget(self->int_menu, menubutton, NULL);
 	g_signal_connect(menubutton, "toggled", G_CALLBACK(on_menubutton_toggled), self);
 	g_signal_connect(self->int_menu, "hide", G_CALLBACK(on_menu_hide), menubutton);
