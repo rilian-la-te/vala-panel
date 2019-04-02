@@ -107,7 +107,7 @@ static void vp_toplevel_config_init(ValaPanelToplevelConfig *self)
 	gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-static void vala_panel_configure_dialog_finalize(GObject *obj)
+static void vp_toplevel_config_finalize(GObject *obj)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(obj);
 	g_clear_object(&self->monitors_box);
@@ -170,14 +170,14 @@ static void background_file_connector(GtkFileChooser *colorb, void *data)
 	g_autofree char *chr_str = gtk_file_chooser_get_filename(colorb);
 	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_FILE, chr_str, NULL);
 }
-static GObject *vala_panel_configure_dialog_constructor(GType type, guint n_construct_properties,
-                                                        GObjectConstructParam *construct_properties)
+static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_properties,
+                                               GObjectConstructParam *construct_properties)
 {
 	GObjectClass *parent_class = G_OBJECT_CLASS(vp_toplevel_config_parent_class);
 	GObject *obj =
 	    parent_class->constructor(type, n_construct_properties, construct_properties);
-	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(obj);
-	GdkRGBA color;
+	ValaPanelToplevelConfig *self      = VP_TOPLEVEL_CONFIG(obj);
+	GdkRGBA color                      = { 0 };
 	g_autoptr(GSimpleActionGroup) conf = g_simple_action_group_new();
 	vala_panel_apply_window_icon(GTK_WINDOW(self));
 	gtk_window_set_transient_for(self, self->_toplevel);
@@ -711,8 +711,8 @@ static void vp_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 	vp_toplevel_config_parent_class     = g_type_class_peek_parent(klass);
 	G_OBJECT_CLASS(klass)->get_property = vp_toplevel_config_get_property;
 	G_OBJECT_CLASS(klass)->set_property = vp_toplevel_config_set_property;
-	G_OBJECT_CLASS(klass)->constructor  = vala_panel_configure_dialog_constructor;
-	G_OBJECT_CLASS(klass)->finalize     = vala_panel_configure_dialog_finalize;
+	G_OBJECT_CLASS(klass)->constructor  = vp_toplevel_config_constructor;
+	G_OBJECT_CLASS(klass)->finalize     = vp_toplevel_config_finalize;
 	vp_toplevel_config_properties[TOPLEVEL_PROPERTY] =
 	    g_param_spec_object(VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
