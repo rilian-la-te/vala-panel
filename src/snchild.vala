@@ -123,6 +123,7 @@ namespace StatusNotifier
                 if (get_applet() != null)
                 {
                     get_applet().bind_property(INDICATOR_SIZE,image,"pixel-size",BindingFlags.SYNC_CREATE);
+                    get_applet().bind_property(INDICATOR_SIZE,proxy,"icon-size",BindingFlags.SYNC_CREATE);
                     get_applet().bind_property(USE_SYMBOLIC,proxy,"use-symbolic",BindingFlags.SYNC_CREATE);
                     get_applet().bind_property(USE_LABELS,label,"visible",BindingFlags.SYNC_CREATE);
                 }
@@ -131,6 +132,7 @@ namespace StatusNotifier
             proxy.initialized.connect(()=>{
                 init_proxy();
             });
+            proxy.start();
         }
         private void init_proxy()
         {

@@ -119,12 +119,6 @@ static void init_sets(QRichTextParser *parser)
 #undef D
 }
 
-static char string_get(const char *self, long index)
-{
-	g_return_val_if_fail(self != NULL, '\0');
-	return (char)self[index];
-}
-
 static char *string_slice(const char *self, long start, long end)
 {
 	char *result = NULL;
@@ -161,7 +155,7 @@ static long string_last_index_of(const gchar *self, const gchar *needle, gint st
 		return -1;
 }
 
-static gchar *string_replace(const gchar *self, const gchar *old, const gchar *replacement)
+static char *string_replace(const gchar *self, const gchar *old, const gchar *replacement)
 {
 	g_return_val_if_fail(self != NULL, NULL);
 	g_return_val_if_fail(old != NULL, NULL);
@@ -209,11 +203,103 @@ static char *parse_size(const char *size)
 }
 
 // <name>
-static void visit_start(GMarkupParseContext *context, const char *element_name,
-                        const char **attribute_names, const char **attribute_values, void *obj,
+static void visit_start(GMarkupParseContext *context, const char *name,
+                        const char **attribute_names, const char **attr_values, void *obj,
                         GError **error)
 {
 	QRichTextParser *self = (QRichTextParser *)obj;
+	if (g_hash_table_lookup(self->pango_names, name))
+		g_string_append_printf(self->pango_markup_builder, "<%s>", name);
+	if (g_hash_table_lookup(self->translated_to_pango, name))
+		g_string_append_printf(self->pango_markup_builder,
+		                       "<%s>",
+		                       g_hash_table_lookup(self->translated_to_pango, name));
+	if (g_hash_table_lookup(self->division_names, name))
+		g_debug("Found block. Pango markup not support blocks for now.\n");
+	if (g_hash_table_lookup(self->span_aliases, name))
+	{
+		g_string_append_printf(self->pango_markup_builder, "<span");
+		for (size_t i = 0; attribute_names[i] != NULL; i++)
+		{
+			const char *attr = attribute_names[i];
+			if (g_str_equal(attr, "bgcolor"))
+				g_string_append_printf(self->pango_markup_builder,
+				                       " background=\"%s\" ",
+				                       attr_values[i]);
+			if (g_str_equal(attr, "color"))
+				g_string_append_printf(self->pango_markup_builder,
+				                       " foreground=\"%s\" ",
+				                       attr_values[i]);
+			if (g_str_equal(attr, "size"))
+				g_string_append_printf(self->pango_markup_builder,
+				                       " size=\"%s\" ",
+				                       parse_size(attr_values[i]));
+			if (g_str_equal(attr, "face"))
+				g_string_append_printf(self->pango_markup_builder,
+				                       " face=\"%s\" ",
+				                       attr_values[i]);
+		}
+		g_string_append_printf(self->pango_markup_builder, ">");
+	}
+	if (g_hash_table_lookup(self->special_spans, name))
+		g_string_append_printf(self->pango_markup_builder,
+		                       "<%s>",
+		                       g_hash_table_lookup(self->special_spans, name));
+	if (g_hash_table_lookup(self->lists, name))
+	{
+		self->list_order = 0;
+		if (g_str_equal(name, "ol"))
+			self->list_type = NUM;
+		else
+			self->list_type = DOT;
+	}
+	if (g_str_equal(name, "li"))
+	{
+		if (self->list_type == NUM)
+			g_string_append_printf(self->pango_markup_builder,
+			                       "%d. ",
+			                       self->list_order);
+		if (self->list_type == DOT)
+			g_string_append_printf(self->pango_markup_builder, "+ ");
+		self->list_order++;
+	}
+	if (g_str_equal(name, "img"))
+	{
+		int i = 0;
+		for (size_t i = 0; attribute_names[i] != NULL; i++)
+		{
+			const char *attr = attribute_names[i];
+			if (g_str_equal(attr, "src") || g_str_equal(attr, "source"))
+			{
+				if (self->icon != NULL)
+					fprintf(
+					    stderr,
+					    "Multiple icons is not supported. Used only first\n");
+				if (attr_values[i][0] == '/')
+				{
+					g_autoptr(GFile) f = g_file_new_for_path(attr_values[i]);
+					self->icon         = g_file_icon_new(f);
+				}
+				else
+				{
+					g_autofree char *basename =
+					    g_path_get_basename(attr_values[i]);
+					g_autofree char *icon_name =
+					    string_slice(basename,
+					                 0,
+					                 string_last_index_of(basename, ".", 0));
+					g_autofree char *symb_name =
+					    g_strdup_printf("%s-symbolic", icon_name);
+					self->icon =
+					    g_themed_icon_new_with_default_fallbacks(symb_name);
+				}
+			}
+		}
+	}
+	if (g_str_equal(name, "br"))
+		g_string_append_printf(self->pango_markup_builder, "\n");
+	if (g_str_equal(name, "table"))
+		self->table_depth++;
 }
 
 // </name>
@@ -249,18 +335,26 @@ static void visit_text(GMarkupParseContext *context, const char *text, size_t te
 {
 	QRichTextParser *self     = (QRichTextParser *)obj;
 	g_autofree char *new_text = string_replace(text, "\n", "");
+	g_autofree char *stripped = NULL;
 	if (self->table_depth > 0)
-		new_text = g_strstrip(string_replace(new_text, "\n", ""));
-	g_string_append_printf(self->pango_markup_builder, "%s", new_text);
+		stripped = g_strstrip(string_replace(new_text, "\n", ""));
+	else
+		stripped = g_strdup(new_text);
+	g_string_append_printf(self->pango_markup_builder, "%s", stripped);
 }
 static char *prepare(const char *raw)
 {
-	g_autofree char *str = NULL;
-	if (strstr(str, "&nbsp;"))
-		str = string_replace(raw, "&nbsp;", " ");
-	if (strstr(str, "&"))
-		str = string_replace(raw, "&", "&amp;");
-	return g_strdup(str);
+	g_autofree char *str1 = NULL;
+	g_autofree char *str2 = NULL;
+	if (strstr(raw, "&nbsp;"))
+		str1 = string_replace(raw, "&nbsp;", " ");
+	if (strstr(raw, "&"))
+		str2 = string_replace(str1, "&", "&amp;");
+	if (str2)
+		return g_strdup(str2);
+	if (str1)
+		return g_strdup(str2);
+	return g_strdup(raw);
 }
 
 static bool parse(QRichTextParser *self, const char *markup)
@@ -277,7 +371,7 @@ void qrich_text_parser_translate_markup(QRichTextParser *self)
 {
 	g_clear_object(&self->icon);
 	parse(self, self->rich_markup);
-	self->pango_markup = self->pango_markup_builder->str;
+	self->pango_markup = g_strdup(self->pango_markup_builder->str);
 	g_string_erase(self->pango_markup_builder, 0, -1);
 	if (strstr(self->pango_markup, "&"))
 	{

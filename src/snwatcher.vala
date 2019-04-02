@@ -111,7 +111,8 @@ namespace StatusNotifier
         {
             string outer = id.dup();
             uint name = name_watcher.lookup(id);
-            Bus.unwatch_name(name);
+            if(name != 0)
+                Bus.unwatch_name(name);
             name_watcher.remove(id);
             status_notifier_item_unregistered(outer);
             this.notify_property("registered-status-notifier-items");
