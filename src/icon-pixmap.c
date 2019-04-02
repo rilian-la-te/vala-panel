@@ -52,7 +52,7 @@ G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 	g_clear_pointer(&self, g_free);
 }
 
-G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant)
+G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant)
 {
 	size_t i             = 0;
 	size_t size          = g_variant_n_children(variant);
@@ -81,7 +81,8 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 {
 	if (!self->bytes)
 		return NULL;
-	for (size_t i = 0; i < self->bytes_size; i += 4)
+	u_int64_t bsize = (self->bytes_size / 4) * 4;
+	for (size_t i = 0; i < bsize; i += 4)
 	{
 		u_int8_t alpha     = self->bytes[i];
 		self->bytes[i]     = self->bytes[i + 1];
@@ -89,8 +90,7 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 		self->bytes[i + 2] = self->bytes[i + 3];
 		self->bytes[i + 3] = alpha;
 	}
-	u_int8_t *pixbytes = g_memdup(self->bytes, self->bytes_size);
-	return G_ICON(gdk_pixbuf_new_from_data(pixbytes,
+	return G_ICON(gdk_pixbuf_new_from_data(self->bytes,
 	                                       GDK_COLORSPACE_RGB,
 	                                       true,
 	                                       8,
@@ -151,7 +151,7 @@ static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path
 }
 
 GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
-                               const GtkIconTheme *theme, const char *icon_theme_path,
+                               GtkIconTheme *theme, const char *icon_theme_path,
                                const int icon_size, const bool use_symbolic)
 {
 	if (!string_empty(icon_name))
@@ -225,7 +225,7 @@ G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
 	dst->pixmaps     = src->pixmaps;
 	return dst;
 }
-G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
+G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
                                    const char *icon_theme_path, GIcon **icon, char **markup)
 {
 	g_autofree char *raw_text = g_strdup_printf("%s\n%s", tooltip->title, tooltip->description);
