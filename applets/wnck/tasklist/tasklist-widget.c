@@ -1238,12 +1238,11 @@ static void xfce_tasklist_remove(GtkContainer *container, GtkWidget *widget)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(container);
 	bool was_visible;
-	XfceTasklistChild *child;
-	GList *li;
+	GList *li = NULL;
 
 	for (li = tasklist->windows; li != NULL; li = li->next)
 	{
-		child = li->data;
+		XfceTasklistChild *child = li->data;
 
 		if (child->button == widget)
 		{
