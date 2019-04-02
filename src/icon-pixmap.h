@@ -34,14 +34,13 @@ typedef struct
 
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant);
 G_GNUC_INTERNAL IconPixmap *icon_pixmap_copy(IconPixmap *src);
-G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(const GVariant *variant);
+G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant);
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self);
 G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps);
 G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self);
 G_GNUC_INTERNAL GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
-                                               const GtkIconTheme *theme,
-                                               const char *icon_theme_path, const int icon_size,
-                                               const bool use_symbolic);
+                                               GtkIconTheme *theme, const char *icon_theme_path,
+                                               const int icon_size, const bool use_symbolic);
 typedef struct
 {
 	char *icon_name;
@@ -53,7 +52,7 @@ typedef struct
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant);
 G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src);
 G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst);
-G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, const GtkIconTheme *theme,
+G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
                                    const char *icon_theme_path, GIcon **icon, char **markup);
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self);
 typedef enum
