@@ -45,11 +45,10 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
 
-static const GActionEntry panel_entries[] = {
-	{ "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
-	{ "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
-	{ "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } }
-};
+static const GActionEntry panel_entries[] =
+    { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
+      { "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
+      { "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } } };
 
 enum
 {
@@ -691,11 +690,11 @@ static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *sel
 		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
-		gtk_main_iteration();
+		gtk_main_iteration_do(false);
 	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
 	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
 	while (gtk_events_pending())
-		gtk_main_iteration();
+		gtk_main_iteration_do(false);
 }
 
 static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
@@ -869,6 +868,7 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
+	g_clear_pointer(&desc, pango_font_description_free);
 }
 
 static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
