@@ -22,67 +22,53 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
+G_GNUC_INTERNAL IconPixmap *icon_pixmap_new_with_size(GVariant *pixmaps, int icon_size) // Format:
+                                                                                        // a@(ii@ay)
 {
 	IconPixmap *self = g_new0(IconPixmap, 1);
-	if (!pixmap_variant)
+	if (!pixmaps)
 		return self;
-	g_variant_get(pixmap_variant, "(ii@ay)", &self->width, &self->height, NULL);
-	g_autoptr(GVariant) bytes_var = g_variant_get_child_value(pixmap_variant, 2);
-	self->bytes =
-	    (u_int8_t *)g_variant_get_fixed_array(bytes_var, &self->bytes_size, sizeof(u_int8_t));
-	self->bytes = g_memdup(self->bytes, self->bytes_size);
+	GVariantIter pixmap_iter;
+	g_variant_iter_init(&pixmap_iter, pixmaps);
+	size_t i = 0, max = g_variant_n_children(pixmaps);
+	g_autoptr(GVariant) pixmap_variant = NULL;
+	while ((pixmap_variant = g_variant_iter_next_value(&pixmap_iter)))
+	{
+		int width;
+		int height;
+		g_variant_get(pixmap_variant, "(ii@ay)", &width, &height, NULL);
+		if ((height >= icon_size && width >= icon_size) || i >= max - 1)
+		{
+			self->height = height;
+			self->width  = width;
+			g_autoptr(GVariant) bytes_var =
+			    g_variant_get_child_value(pixmap_variant, 2);
+			self->bytes    = (u_int8_t *)g_variant_get_fixed_array(bytes_var,
+                                                                            &self->bytes_size,
+                                                                            sizeof(u_int8_t));
+			self->bytes    = g_memdup(self->bytes, self->bytes_size);
+			self->is_gicon = false;
+			break;
+		}
+		g_clear_pointer(&pixmap_variant, g_variant_unref);
+		i++;
+	}
 	return self;
-}
-
-G_GNUC_INTERNAL IconPixmap *icon_pixmap_copy(IconPixmap *src)
-{
-	IconPixmap *dst = g_new0(IconPixmap, 1);
-	dst->width      = src->width;
-	dst->height     = src->height;
-	dst->bytes_size = src->bytes_size;
-	dst->bytes      = g_memdup(src->bytes, src->bytes_size);
-	return dst;
 }
 
 G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 {
-	g_clear_pointer(&self->bytes, g_free);
+	if (!self->is_gicon)
+		g_clear_pointer(&self->bytes, g_free);
 	g_clear_pointer(&self, g_free);
 }
 
-G_GNUC_INTERNAL IconPixmap **unbox_pixmaps(GVariant *variant)
-{
-	size_t i             = 0;
-	size_t size          = g_variant_n_children(variant);
-	IconPixmap **pixmaps = g_new0(IconPixmap *, size + 1);
-	GVariantIter pixmap_iter;
-	g_variant_iter_init(&pixmap_iter, variant);
-	GVariant *pixmap_variant;
-	while ((pixmap_variant = g_variant_iter_next_value(&pixmap_iter)))
-	{
-		pixmaps[i] = icon_pixmap_new(pixmap_variant);
-		g_clear_pointer(&pixmap_variant, g_variant_unref);
-		i++;
-	}
-	pixmaps[size] = NULL;
-	return pixmaps;
-}
-
-G_GNUC_INTERNAL void icon_pixmap_freev(IconPixmap **pixmaps)
-{
-	for (size_t i = 0; pixmaps[i] != NULL; i++)
-		g_clear_pointer(&pixmaps[i], icon_pixmap_free);
-	g_clear_pointer(&pixmaps, g_free);
-}
-
-G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
+G_GNUC_INTERNAL GIcon *icon_pixmap_to_gicon(IconPixmap *self)
 {
 	if (!self->bytes)
 		return NULL;
-	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
 	{
-		u_int32_t *data = (u_int32_t *)bytes;
+		u_int32_t *data = (u_int32_t *)self->bytes;
 		for (size_t i = 0; i < self->bytes_size / 4; i++)
 		{
 			data[i]    = GUINT32_FROM_BE(data[i]);
@@ -93,34 +79,20 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 			data[i]    = a << 24 | r << 16 | g << 8 | b;
 		}
 	}
-	return G_ICON(gdk_pixbuf_new_from_data(bytes,
-	                                       GDK_COLORSPACE_RGB,
-	                                       true,
-	                                       8,
-	                                       self->width,
-	                                       self->height,
-	                                       cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
-	                                                                     self->width),
-	                                       g_free,
-	                                       NULL));
-}
-
-static bool icon_pixmap_equal(IconPixmap *src, IconPixmap *dst)
-{
-	if (!src && !dst)
-		return true;
-	if (!src || !dst)
-		return false;
-	if (src->height != dst->height)
-		return false;
-	if (src->width != dst->width)
-		return false;
-	if (src->bytes_size != dst->bytes_size)
-		return false;
-	for (size_t i = 0; i < src->bytes_size; i++)
-		if (src->bytes[i] != dst->bytes[i])
-			return false;
-	return true;
+	GIcon *icon =
+	    G_ICON(gdk_pixbuf_new_from_data(self->bytes,
+	                                    GDK_COLORSPACE_RGB,
+	                                    true,
+	                                    8,
+	                                    self->width,
+	                                    self->height,
+	                                    cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
+	                                                                  self->width),
+	                                    g_free,
+	                                    NULL));
+	self->is_gicon = true;
+	self->bytes    = NULL;
+	return icon;
 }
 
 static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path)
@@ -153,13 +125,13 @@ static GIcon *icon_pixmap_find_file_icon(const char *icon_name, const char *path
 	return NULL;
 }
 
-GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps,
-                               GtkIconTheme *theme, const char *icon_theme_path,
-                               const int icon_size, const bool use_symbolic)
+GIcon *icon_pixmap_select_icon(const char *icon_name, IconPixmap *pixmap, GtkIconTheme *theme,
+                               const char *icon_theme_path, const int icon_size,
+                               const bool use_symbolic)
 {
 	if (!string_empty(icon_name))
 	{
-		g_autofree char *new_name = (use_symbolic)
+		g_autofree char *new_name = (use_symbolic && !g_strrstr(icon_name, "-symbolic"))
 		                                ? g_strdup_printf("%s-symbolic", icon_name)
 		                                : g_strdup(icon_name);
 		if (icon_name[0] == '/')
@@ -172,34 +144,23 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, const IconPixmap **pixmaps
 		else
 			return icon_pixmap_find_file_icon(icon_name, icon_theme_path);
 	}
-	else if (pixmaps != NULL && pixmaps[0] != NULL)
+	else if (pixmap != NULL)
 	{
-		GdkPixbuf *pixbuf = NULL;
-		size_t i;
-		for (i = 0; pixmaps[i] != NULL; i++)
+		GdkPixbuf *pixbuf = GDK_PIXBUF(icon_pixmap_to_gicon(pixmap));
+		if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
+		    gdk_pixbuf_get_height(pixbuf) > icon_size)
 		{
-			if (pixmaps[i]->height >= icon_size && pixmaps[i]->width >= icon_size)
-				break;
+			GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
+			                                         icon_size,
+			                                         icon_size,
+			                                         GDK_INTERP_BILINEAR);
+			g_clear_object(&pixbuf);
+			pixbuf = tmp;
 		}
-		if (pixmaps[i])
-		{
-			pixbuf = GDK_PIXBUF(icon_pixmap_gicon(pixmaps[i]));
-			if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
-			    gdk_pixbuf_get_height(pixbuf) > icon_size)
-			{
-				GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
-				                                         icon_size,
-				                                         icon_size,
-				                                         GDK_INTERP_BILINEAR);
-				g_clear_object(&pixbuf);
-				pixbuf = tmp;
-			}
-			return G_ICON(pixbuf);
-		}
+		return G_ICON(pixbuf);
 	}
 	return NULL;
 }
-G_DEFINE_BOXED_TYPE(IconPixmap, icon_pixmap, icon_pixmap_copy, icon_pixmap_free)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(IconPixmap, icon_pixmap_free)
 
 G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
@@ -213,7 +174,7 @@ G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 	{
 		g_variant_get_child(variant, 0, "s", &self->icon_name, NULL);
 		g_autoptr(GVariant) ch = g_variant_get_child_value(variant, 1);
-		self->pixmaps          = unbox_pixmaps(ch);
+		self->pixmap           = icon_pixmap_new_with_size(ch, GTK_ICON_SIZE_DIALOG);
 		g_variant_get_child(variant, 2, "s", &self->title, NULL);
 		g_variant_get_child(variant, 3, "s", &self->description, NULL);
 	}
@@ -222,15 +183,6 @@ G_GNUC_INTERNAL ToolTip *tooltip_new(GVariant *variant)
 	return self;
 }
 
-G_GNUC_INTERNAL ToolTip *tooltip_copy(ToolTip *src)
-{
-	ToolTip *dst     = g_new0(ToolTip, 1);
-	dst->icon_name   = g_strdup(src->icon_name);
-	dst->title       = g_strdup(src->title);
-	dst->description = g_strdup(src->description);
-	dst->pixmaps     = src->pixmaps;
-	return dst;
-}
 G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
                                    const char *icon_theme_path, GIcon **icon, char **markup)
 {
@@ -262,10 +214,10 @@ G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
 		              ? g_strdup(markup_parser->pango_markup)
 		              : g_strdup(raw_text);
 		g_autoptr(GIcon) res_icon = icon_pixmap_select_icon(tooltip->icon_name,
-		                                                    tooltip->pixmaps,
+		                                                    tooltip->pixmap,
 		                                                    theme,
 		                                                    icon_theme_path,
-		                                                    48,
+		                                                    GTK_ICON_SIZE_DIALOG,
 		                                                    false);
 		*icon = (markup_parser->icon != NULL) ? g_object_ref(markup_parser->icon)
 		                                      : g_object_ref(res_icon);
@@ -274,44 +226,20 @@ G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
 	{
 		*markup = g_strdup(raw_text);
 		*icon   = icon_pixmap_select_icon(tooltip->icon_name,
-                                                tooltip->pixmaps,
+                                                tooltip->pixmap,
                                                 theme,
                                                 icon_theme_path,
                                                 48,
                                                 false);
 	}
 }
-G_GNUC_INTERNAL bool tooltip_equal(const void *src, const void *dst)
-{
-	const ToolTip *t1 = (const ToolTip *)src;
-	const ToolTip *t2 = (const ToolTip *)dst;
-	if (!src && !dst)
-		return true;
-	if (!src || !dst)
-		return false;
-	int i = 0;
-	if (g_strcmp0(t1->icon_name, t2->icon_name))
-		return false;
-	if (g_strcmp0(t1->title, t2->title))
-		return false;
-	if (g_strcmp0(t1->description, t2->description))
-		return false;
-	for (i = 0; icon_pixmap_equal(t1->pixmaps[i], t2->pixmaps[i]) && t2->pixmaps[i] != NULL;
-	     i++)
-		;
-	if (t1->pixmaps[i] != NULL || t2->pixmaps[i] != NULL)
-		return false;
-	return true;
-}
-
 G_GNUC_INTERNAL void tooltip_free(ToolTip *self)
 {
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->description, g_free);
 	g_clear_pointer(&self->icon_name, g_free);
-	g_clear_pointer(&self->pixmaps, icon_pixmap_freev);
+	g_clear_pointer(&self->pixmap, icon_pixmap_free);
 	g_clear_pointer(&self, g_free);
 }
 
-G_DEFINE_BOXED_TYPE(ToolTip, tooltip, tooltip_copy, tooltip_free)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(ToolTip, tooltip_free)

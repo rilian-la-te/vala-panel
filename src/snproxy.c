@@ -431,17 +431,17 @@ static void sn_proxy_name_owner_changed(GDBusConnection *connection, const char 
 		g_signal_emit(self, signals[FAIL], 0);
 }
 
-static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const IconPixmap **pixmaps,
-                                 const char *overlay, const IconPixmap **opixmaps)
+static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, IconPixmap *pixmap,
+                                 const char *overlay, IconPixmap *opixmap)
 {
 	g_autoptr(GIcon) tmp_main_icon    = icon_pixmap_select_icon(icon_name,
-                                                                 pixmaps,
+                                                                 pixmap,
                                                                  self->theme,
                                                                  self->icon_theme_path,
                                                                  self->icon_size,
                                                                  self->use_symbolic);
 	g_autoptr(GIcon) tmp_overlay_icon = icon_pixmap_select_icon(overlay,
-	                                                            opixmaps,
+	                                                            opixmap,
 	                                                            self->theme,
 	                                                            self->icon_theme_path,
 	                                                            self->icon_size / 4,
@@ -472,9 +472,9 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	g_autofree char *icon_name    = NULL;
 	g_autofree char *att_name     = NULL;
 	g_autofree char *overlay_name = NULL;
-	IconPixmap **icon_pixmap      = NULL;
-	IconPixmap **att_pixmap       = NULL;
-	IconPixmap **overlay_pixmap   = NULL;
+	IconPixmap *icon_pixmap       = NULL;
+	IconPixmap *att_pixmap        = NULL;
+	IconPixmap *overlay_pixmap    = NULL;
 	g_autoptr(GError) error       = NULL;
 	g_autoptr(GVariant) properties =
 	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
@@ -622,17 +622,17 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 		}
 		else if (!g_strcmp0(name, "IconPixmap"))
 		{
-			icon_pixmap = unbox_pixmaps(value);
+			icon_pixmap = icon_pixmap_new_with_size(value, self->icon_size);
 			update_icon = true;
 		}
 		else if (!g_strcmp0(name, "AttentionIconPixmap"))
 		{
-			att_pixmap            = unbox_pixmaps(value);
+			att_pixmap            = icon_pixmap_new_with_size(value, self->icon_size);
 			update_attention_icon = true;
 		}
 		else if (!g_strcmp0(name, "OverlayIconPixmap"))
 		{
-			overlay_pixmap        = unbox_pixmaps(value);
+			overlay_pixmap        = icon_pixmap_new_with_size(value, self->icon_size);
 			update_icon           = true;
 			update_attention_icon = true;
 		}
@@ -700,9 +700,9 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_ICON]);
 		}
 	}
-	g_clear_pointer(&icon_pixmap, icon_pixmap_freev);
-	g_clear_pointer(&att_pixmap, icon_pixmap_freev);
-	g_clear_pointer(&overlay_pixmap, icon_pixmap_freev);
+	g_clear_pointer(&icon_pixmap, icon_pixmap_free);
+	g_clear_pointer(&att_pixmap, icon_pixmap_free);
+	g_clear_pointer(&overlay_pixmap, icon_pixmap_free);
 	if (!self->initialized)
 	{
 		if (self->id != NULL)
