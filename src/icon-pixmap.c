@@ -29,7 +29,8 @@ G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
 		return self;
 	g_variant_get(pixmap_variant, "(ii@ay)", &self->width, &self->height, NULL);
 	g_autoptr(GVariant) bytes_var = g_variant_get_child_value(pixmap_variant, 2);
-	self->bytes = g_variant_get_fixed_array(bytes_var, &self->bytes_size, sizeof(u_int8_t));
+	self->bytes =
+	    (u_int8_t *)g_variant_get_fixed_array(bytes_var, &self->bytes_size, sizeof(u_int8_t));
 	self->bytes = g_memdup(self->bytes, self->bytes_size);
 	return self;
 }
@@ -80,13 +81,18 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 	if (!self->bytes)
 		return NULL;
 	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
-#if G_BYTE_ORDER == G_LITTLE_ENDIAN
 	{
 		u_int32_t *data = (u_int32_t *)bytes;
 		for (size_t i = 0; i < self->bytes_size / 4; i++)
-			data[i] = GUINT32_FROM_BE(data[i]);
+		{
+			data[i]    = GUINT32_FROM_BE(data[i]);
+			u_int8_t a = (data[i] >> 24) & 0xFF;
+			u_int8_t b = (data[i] >> 16) & 0xFF;
+			u_int8_t g = (data[i] >> 8) & 0xFF;
+			u_int8_t r = data[i] & 0xFF;
+			data[i]    = a << 24 | r << 16 | g << 8 | b;
+		}
 	}
-#endif
 	return G_ICON(gdk_pixbuf_new_from_data(bytes,
 	                                       GDK_COLORSPACE_RGB,
 	                                       true,
