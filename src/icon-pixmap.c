@@ -26,9 +26,10 @@ G_GNUC_INTERNAL IconPixmap *icon_pixmap_new(GVariant *pixmap_variant)
 	IconPixmap *self = g_new0(IconPixmap, 1);
 	if (!pixmap_variant)
 		return self;
-	g_variant_get(pixmap_variant, "(iiay)", &self->width, &self->height, &self->bytes, NULL);
-	self->bytes_size = (ulong)(self->width * self->height * 4);
-	self->bytes      = g_memdup(self->bytes, self->bytes_size);
+	g_variant_get(pixmap_variant, "(ii@ay)", &self->width, &self->height, NULL);
+	g_autoptr(GVariant) bytes_var = g_variant_get_child_value(pixmap_variant, 2);
+	self->bytes = g_variant_get_fixed_array(bytes_var, &self->bytes_size, sizeof(u_int8_t));
+	self->bytes = g_memdup(self->bytes, self->bytes_size);
 	return self;
 }
 
@@ -78,7 +79,6 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_gicon(const IconPixmap *self)
 	if (!self->bytes)
 		return NULL;
 	u_int8_t *bytes = g_memdup(self->bytes, self->bytes_size);
-
 #if G_BYTE_ORDER == G_LITTLE_ENDIAN
 	{
 		u_int32_t *data = (u_int32_t *)bytes;
