@@ -597,8 +597,8 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 			{
 				g_clear_pointer(&self->icon_theme_path, g_free);
 				self->icon_theme_path = g_variant_dup_string(value, NULL);
-				gtk_icon_theme_prepend_search_path(self->theme,
-				                                   self->icon_theme_path);
+				gtk_icon_theme_append_search_path(self->theme,
+				                                  self->icon_theme_path);
 				update_icon           = true;
 				update_attention_icon = true;
 			}
