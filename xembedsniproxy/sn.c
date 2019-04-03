@@ -135,12 +135,9 @@ enum
 	PROP_TITLE,
 	PROP_CATEGORY,
 	PROP_STATUS,
-	PROP_ICON_NAME,
 	PROP_ICON_PIXBUF,
-	PROP_TOOLTIP_MESSAGE,
 	PROP_CONNECTION,
 	PROP_WINDOW_ID,
-	PROP_STATE,
 	NB_PROPS
 };
 
@@ -159,13 +156,11 @@ enum InjectMode
 typedef struct
 {
 	char *id;
-	StatusNotifierCategory category;
+	SnCategory category;
 	char *title;
-	StatusNotifierStatus status;
+	SnStatus status;
 	bool always_use_pixbuf;
-	char *icon_name;
 	GdkPixbuf *icon;
-	char *tooltip_message;
 	enum InjectMode mode;
 	xcb_window_t window_id;
 	xcb_window_t container_id;
@@ -173,7 +168,6 @@ typedef struct
 
 	uint tooltip_freeze;
 
-	StatusNotifierState state;
 	uint dbus_watch_id;
 	gulong dbus_sid;
 	uint dbus_owner_id;
@@ -181,6 +175,8 @@ typedef struct
 	GDBusProxy *dbus_proxy;
 	GDBusConnection *dbus_conn;
 	GError *dbus_err;
+	bool initialized;
+	bool registered;
 } StatusNotifierItemPrivate;
 
 static uint uniq_id = 0;
@@ -228,27 +224,15 @@ static void sn_item_class_init(StatusNotifierItemClass *klass)
 	    g_param_spec_enum("category",
 	                      "category",
 	                      "Category of the item",
-	                      status_notifier_category_get_type(),
-	                      SN_CATEGORY_APPLICATION_STATUS,
-	                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY);
+	                      sn_category_get_type(),
+	                      SN_CATEGORY_APPLICATION,
+	                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 	sn_item_props[PROP_STATUS] = g_param_spec_enum("status",
 	                                               "status",
 	                                               "Status of the item",
-	                                               status_notifier_status_get_type(),
+	                                               sn_status_get_type(),
 	                                               SN_STATUS_PASSIVE,
 	                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-	sn_item_props[PROP_ICON_NAME] =
-	    g_param_spec_string("icon-name",
-	                        "icon-name",
-	                        "Descriptive name for the shown icon (taken from xprop)",
-	                        NULL,
-	                        G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-	sn_item_props[PROP_TOOLTIP_MESSAGE] =
-	    g_param_spec_string("tooltip-title",
-	                        "tooltip-title",
-	                        "Title of the tooltip",
-	                        NULL,
-	                        G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 	sn_item_props[PROP_CONNECTION] =
 	    g_param_spec_pointer("connection",
 	                         "connection",
@@ -262,12 +246,6 @@ static void sn_item_class_init(StatusNotifierItemClass *klass)
 	                      G_MAXUINT,
 	                      0,
 	                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-	sn_item_props[PROP_STATE] = g_param_spec_enum("state",
-	                                              "state",
-	                                              "DBus registration state of the item",
-	                                              status_notifier_state_get_type(),
-	                                              SN_STATE_NOT_REGISTERED,
-	                                              G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
 	g_object_class_install_properties(o_class, NB_PROPS, sn_item_props);
 
@@ -310,7 +288,7 @@ static void dbus_free(StatusNotifierItem *sn)
 	}
 	if (priv->dbus_proxy)
 	{
-		g_object_unref(priv->dbus_proxy);
+		g_clear_object(&priv->dbus_proxy);
 		priv->dbus_proxy = NULL;
 	}
 	if (priv->dbus_reg_id > 0)
@@ -320,7 +298,7 @@ static void dbus_free(StatusNotifierItem *sn)
 	}
 	if (priv->dbus_conn)
 	{
-		g_object_unref(priv->dbus_conn);
+		g_clear_object(&priv->dbus_conn);
 		priv->dbus_conn = NULL;
 	}
 }
@@ -330,13 +308,10 @@ static void sn_item_finalize(GObject *object)
 	StatusNotifierItem *sn = (StatusNotifierItem *)object;
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-	uint i;
 
 	g_free(priv->id);
 	g_free(priv->title);
-	g_free(priv->icon_name);
-	g_object_unref(priv->icon);
-	g_free(priv->tooltip_message);
+	g_clear_object(&priv->icon);
 
 	dbus_free(sn);
 
@@ -349,21 +324,21 @@ static void dbus_notify(StatusNotifierItem *sn, uint prop)
 	    (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
 	const char *signal;
 
-	if (priv->state != SN_STATE_REGISTERED)
+	if (!priv->registered)
 		return;
 
 	switch (prop)
 	{
 	case PROP_STATUS:
 	{
-		const char *const *s_status[] = { "Passive", "Active", "NeedsAttention" };
-		signal                        = "NewStatus";
+		signal = "NewStatus";
 		g_dbus_connection_emit_signal(priv->dbus_conn,
 		                              NULL,
 		                              ITEM_OBJECT,
 		                              ITEM_INTERFACE,
 		                              signal,
-		                              g_variant_new("(s)", s_status[priv->status]),
+		                              g_variant_new("(s)",
+		                                            sn_status_get_nick(priv->status)),
 		                              NULL);
 		return;
 	}
@@ -371,11 +346,7 @@ static void dbus_notify(StatusNotifierItem *sn, uint prop)
 		signal = "NewTitle";
 		break;
 	case PROP_ICON_PIXBUF:
-	case PROP_ICON_NAME:
 		signal = "NewIcon";
-		break;
-	case PROP_TOOLTIP_MESSAGE:
-		signal = "NewToolTip";
 		break;
 	default:
 		g_return_if_reached();
@@ -390,8 +361,7 @@ static void dbus_notify(StatusNotifierItem *sn, uint prop)
 	                              NULL);
 }
 
-StatusNotifierItem *status_notifier_item_new_from_xcb_window(const char *id,
-                                                             StatusNotifierCategory category,
+StatusNotifierItem *status_notifier_item_new_from_xcb_window(const char *id, SnCategory category,
                                                              xcb_connection_t *conn,
                                                              xcb_window_t window)
 {
@@ -414,7 +384,7 @@ void sn_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon, Gd
 	g_return_if_fail(SN_IS_ITEM(sn));
 	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
 
-	g_object_unref(priv->icon);
+	g_clear_object(&priv->icon);
 	priv->icon = g_object_ref(pixbuf);
 
 	notify(sn, PROP_ICON_PIXBUF);
@@ -446,7 +416,7 @@ void sn_item_set_title(StatusNotifierItem *sn, const char *title)
 	dbus_notify(sn, PROP_TITLE);
 }
 
-void sn_item_set_status(StatusNotifierItem *sn, StatusNotifierStatus status)
+void sn_item_set_status(StatusNotifierItem *sn, SnStatus status)
 {
 	StatusNotifierItemPrivate *priv;
 
@@ -459,7 +429,7 @@ void sn_item_set_status(StatusNotifierItem *sn, StatusNotifierStatus status)
 	dbus_notify(sn, PROP_STATUS);
 }
 
-StatusNotifierStatus sn_item_get_status(StatusNotifierItem *sn)
+SnStatus sn_item_get_status(StatusNotifierItem *sn)
 {
 	g_return_val_if_fail(SN_IS_ITEM(sn), -1);
 	StatusNotifierItemPrivate *priv =
@@ -477,41 +447,6 @@ void sn_item_set_window_id(StatusNotifierItem *sn, u_int32_t window_id)
 	priv->window_id = window_id;
 
 	notify(sn, PROP_WINDOW_ID);
-}
-
-void sn_item_set_tooltip_body(StatusNotifierItem *sn, const char *body)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-
-	g_free(priv->tooltip_message);
-	priv->tooltip_message = g_strdup(body);
-
-	notify(sn, PROP_TOOLTIP_MESSAGE);
-	if (priv->tooltip_freeze == 0)
-		dbus_notify(sn, PROP_TOOLTIP_MESSAGE);
-}
-
-void sn_item_set_tooltip(StatusNotifierItem *sn, GdkPixbuf *icon, const char *title,
-                         const char *body)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-
-	sn_item_set_from_pixbuf(sn, SN_TOOLTIP_ICON, icon);
-	sn_item_set_tooltip_body(sn, body);
-}
-
-char *sn_item_get_tooltip_body(StatusNotifierItem *sn)
-{
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	StatusNotifierItemPrivate *priv =
-	    (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-	return g_strdup(priv->tooltip_message);
 }
 
 void sn_item_send_click(StatusNotifierItem *sn, uint8_t mouseButton, int x, int y)
@@ -770,9 +705,6 @@ static void sn_item_set_property(GObject *object, uint prop_id, const GValue *va
 	case PROP_ICON_PIXBUF:
 		sn_item_set_from_pixbuf(sn, SN_ICON, g_value_get_object(value));
 		break;
-	case PROP_TOOLTIP_MESSAGE:
-		sn_item_set_tooltip_body(sn, g_value_get_string(value));
-		break;
 	case PROP_WINDOW_ID:
 		sn_item_set_window_id(sn, g_value_get_uint(value));
 		break;
@@ -806,14 +738,8 @@ static void sn_item_get_property(GObject *object, uint prop_id, GValue *value, G
 	case PROP_ICON_PIXBUF:
 		g_value_take_object(value, sn_item_get_pixbuf(sn, SN_ICON));
 		break;
-	case PROP_TOOLTIP_MESSAGE:
-		g_value_set_string(value, priv->tooltip_message);
-		break;
 	case PROP_WINDOW_ID:
 		g_value_set_uint(value, priv->window_id);
-		break;
-	case PROP_STATE:
-		g_value_set_enum(value, priv->state);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
@@ -833,54 +759,20 @@ static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UN
 		return g_variant_new("s", priv->id);
 	else if (!g_strcmp0(property, "Category"))
 	{
-		return g_variant_new("s", "ApplicationStatus");
+		return g_variant_new("s", sn_category_get_nick(priv->category));
 	}
 	else if (!g_strcmp0(property, "Title"))
 		return g_variant_new("s", (priv->title) ? priv->title : "");
 	else if (!g_strcmp0(property, "Status"))
-	{
-		const char *const *s_status[] = { "Passive", "Active", "NeedsAttention" };
-		return g_variant_new("s", s_status[priv->status]);
-	}
+		return g_variant_new("s", sn_status_get_nick(priv->status));
 	else if (!g_strcmp0(property, "WindowId"))
 		return g_variant_new("i", priv->window_id);
-	else if (!g_strcmp0(property, "IconName"))
-		return g_variant_new("s", (priv->icon_name) ? priv->icon_name : "");
 	else if (!g_strcmp0(property, "IconPixmap"))
 		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_ICON));
-	else if (!g_strcmp0(property, "OverlayIconName"))
-		return g_variant_new("s", "");
-	else if (!g_strcmp0(property, "OverlayIconPixmap"))
-		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_OVERLAY_ICON));
-	else if (!g_strcmp0(property, "AttentionIconName"))
-		return g_variant_new("s", "");
-	else if (!g_strcmp0(property, "AttentionIconPixmap"))
-		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_ATTENTION_ICON));
-	else if (!g_strcmp0(property, "AttentionMovieName"))
-		return g_variant_new("s", "");
-	else if (!g_strcmp0(property, "ToolTip"))
-	{
-		GVariant *variant;
-		GVariantBuilder *builder;
-
-		builder = get_builder_for_icon_pixmap(sn, SN_TOOLTIP_ICON);
-		variant = g_variant_new("(sa(iiay)ss)",
-		                        "",
-		                        builder,
-		                        (priv->title) ? priv->title : "",
-		                        (priv->tooltip_message) ? priv->tooltip_message : "");
-		g_variant_builder_unref(builder);
-
-		return variant;
-	}
 	else if (!g_strcmp0(property, "ItemIsMenu"))
 		return g_variant_new("b", false);
-	else if (!g_strcmp0(property, "Menu"))
-	{
-		return g_variant_new("o", "/NO_DBUSMENU");
-	}
 
-	g_return_val_if_reached(NULL);
+	return NULL;
 }
 
 static void dbus_failed(StatusNotifierItem *sn, GError *error, bool fatal)
@@ -889,11 +781,6 @@ static void dbus_failed(StatusNotifierItem *sn, GError *error, bool fatal)
 	    (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
 
 	dbus_free(sn);
-	if (fatal)
-	{
-		priv->state = SN_STATE_FAILED;
-		notify(sn, PROP_STATE);
-	}
 	g_signal_emit(sn, sn_item_signals[SIGNAL_REGISTRATION_FAILED], 0, error);
 	g_error_free(error);
 }
@@ -943,8 +830,7 @@ static void register_item_cb(GObject *sce, GAsyncResult *result, gpointer data)
 	}
 	g_variant_unref(variant);
 
-	priv->state = SN_STATE_REGISTERED;
-	notify(sn, PROP_STATE);
+	//	notify(sn, PROP_STATE);
 }
 
 static void name_acquired(GDBusConnection *conn _UNUSED_, const char *name, gpointer data)
@@ -961,7 +847,7 @@ static void name_acquired(GDBusConnection *conn _UNUSED_, const char *name, gpoi
 	                  NULL,
 	                  register_item_cb,
 	                  sn);
-	g_object_unref(priv->dbus_proxy);
+	g_clear_object(&priv->dbus_proxy);
 	priv->dbus_proxy = NULL;
 }
 
@@ -1110,9 +996,8 @@ void sn_item_register(StatusNotifierItem *sn)
 	g_return_if_fail(SN_IS_ITEM(sn));
 	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
 
-	if (priv->state == SN_STATE_REGISTERING || priv->state == SN_STATE_REGISTERED)
+	if (priv->registered)
 		return;
-	priv->state = SN_STATE_REGISTERING;
 
 	priv->dbus_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
 	                                       WATCHER_NAME,

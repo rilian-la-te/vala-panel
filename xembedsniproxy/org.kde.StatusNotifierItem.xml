@@ -16,41 +16,21 @@
          <arg type="i" name="delta" direction="in" />
          <arg type="s" name="orientation" direction="in" />
       </method>
-      <method name="XAyatanaSecondaryActivate">
-         <arg type="u" name="timestamp" direction="in" />
-      </method>
       <signal name="NewTitle" />
       <signal name="NewIcon" />
-      <signal name="NewIconThemePath">
-         <arg type="s" name="icon_theme_path" />
-      </signal>
       <signal name="NewAttentionIcon" />
       <signal name="NewOverlayIcon" />
       <signal name="NewToolTip" />
       <signal name="NewStatus">
          <arg type="s" name="status" />
       </signal>
-      <signal name="XAyatanaNewLabel">
-         <arg type="s" name="label" />
-         <arg type="s" name="guide" />
-      </signal>
-      <property type="s" name="Category" access="readwrite" />
-      <property type="s" name="Id" access="readwrite" />
-      <property type="s" name="Status" access="readwrite" />
-      <property type="s" name="Title" access="readwrite" />
-      <property type="i" name="WindowId" access="readwrite" />
-      <property type="o" name="Menu" access="readwrite" />
-      <property type="b" name="ItemsInMenu" access="readwrite" />
-      <property type="s" name="IconThemePath" access="readwrite" />
-      <property type="s" name="IconName" access="readwrite" />
-      <property type="s" name="IconAccessibleDesc" access="readwrite" />
-      <property type="s" name="OverlayIconName" access="readwrite" />
-      <property type="s" name="AttentionIconName" access="readwrite" />
-      <property type="s" name="AttentionAccessibleDesc" access="readwrite" />
-      <property type="(sa(iiay)ss)" name="ToolTip" access="readwrite" />
-      <property type="s" name="XAyatanaLabel" access="readwrite" />
-      <property type="s" name="XAyatanaLabelGuide" access="readwrite" />
-      <property type="u" name="XAyatanaOrderingIndex" access="readwrite" />
+      <property type="s" name="Category" access="read" />
+      <property type="s" name="Id" access="read" />
+      <property type="s" name="Status" access="read" />
+      <property type="s" name="Title" access="read" />
+      <property type="i" name="WindowId" access="read" />
+      <property type="b" name="ItemsInMenu" access="read" />
+      <property type="(iiay)" name="IconPixmap" access="read">
    </interface>
 </node>
 

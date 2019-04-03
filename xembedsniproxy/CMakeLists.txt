@@ -14,11 +14,16 @@ pkg_check_modules(X11_XCB x11-xcb IMPORTED_TARGET)
 pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0 IMPORTED_TARGET)
 pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
 
+
+cmake_dependent_option(ENABLE_SHIM "Enable XEmbed shim for SNI" ON
+    "XCB_FOUND;X11_XCB_FOUND;GDK_PIXBUF_FOUND;CAIRO_FOUND" OFF)
+
+add_feature_info(Shim ENABLE_SHIM "XEmbed shim for using in Wayland/non-Xembed environment")
+
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(ENUM_FILES
-    sn.c
-    sn.h
+    ${CMAKE_SOURCE_DIR}/include/sn-common.h
         )
 add_glib_enumtypes(ENUMSC ENUMSH sni-enums ${ENUM_FILES})
 
@@ -59,14 +64,6 @@ if(XCB_FOUND AND X11_XCB_FOUND)
         GLIB2::GOBJECT
         GLIB2::GIO_UNIX
     )
-
-   # add_executable(xcb-tray xcb-tray.c gwater-xcb.c gwater-xcb.h)
-
-
-#    target_link_libraries(xcb-tray
-#        PkgConfig::XCB
-#        GLIB2::GIO_UNIX
-#    )
 
 
     install(TARGETS xembedsniproxy RUNTIME DESTINATION ${CMAKE_INSTALL_LIBEXECDIR}/vala-panel )

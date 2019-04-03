@@ -46,9 +46,9 @@ struct _XEmbedSNIApplication
 
 G_DEFINE_TYPE(XEmbedSNIApplication, xembed_sni_application, G_TYPE_APPLICATION)
 
-static const GOptionEntry entries[] = {
-	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL }, { NULL }
-};
+static const GOptionEntry entries[] =
+    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
+      { NULL } };
 
 enum
 {
@@ -133,7 +133,7 @@ static void xembed_sni_application_dock(XEmbedSNIApplication *self, xcb_window_t
 		g_autofree char *id = g_strdup_printf("0x%x", winId);
 		StatusNotifierItem *item =
 		    status_notifier_item_new_from_xcb_window(id,
-		                                             SN_CATEGORY_APPLICATION_STATUS,
+		                                             SN_CATEGORY_APPLICATION,
 		                                             g_water_xcb_source_get_connection(
 		                                                 self->src),
 		                                             winId);

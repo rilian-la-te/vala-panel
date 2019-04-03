@@ -15,7 +15,7 @@ G_BEGIN_DECLS
 /*** END file-production ***/
 
 /*** BEGIN enumeration-production ***/
-#define VALA_PANEL_TYPE_@ENUMSHORT@	(@enum_name@_get_type())
+#define SN_TYPE_@ENUMSHORT@	(@enum_name@_get_type())
 GType @enum_name@_get_type (void) G_GNUC_CONST;
 const char * @enum_name@_get_nick (@EnumName@ value) G_GNUC_CONST;
 @EnumName@ @enum_name@_get_value_from_nick (const char * nick) G_GNUC_CONST;
