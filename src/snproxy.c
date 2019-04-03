@@ -453,41 +453,6 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const Ico
 		icon = g_emblemed_icon_new(tmp_main_icon, overlay_icon);
 	if (!icon)
 		return NULL;
-	if (G_IS_THEMED_ICON(tmp_main_icon))
-		return g_object_ref(icon);
-	g_autoptr(GtkIconInfo) info =
-	    gtk_icon_theme_lookup_by_gicon(self->theme, icon, self->icon_size, 0);
-	if (info)
-	{
-		g_autoptr(GError) err             = NULL;
-		g_autoptr(GdkPixbuf) first_pixbuf = gtk_icon_info_load_icon(info, &err);
-		if (err)
-			return g_object_ref(icon);
-		double aspect_ratio =
-		    gdk_pixbuf_get_width(first_pixbuf) / gdk_pixbuf_get_height(first_pixbuf);
-		if (aspect_ratio - 1 > fabs(0.000000001))
-		{
-			g_autoptr(GtkIconInfo) sinfo =
-			    gtk_icon_theme_lookup_by_gicon(self->theme,
-			                                   icon,
-			                                   (int)(round(self->icon_size *
-			                                               aspect_ratio)),
-			                                   0);
-			g_autoptr(GdkPixbuf) spixbuf = gtk_icon_info_load_icon(sinfo, &err);
-			if (err)
-				return g_object_ref(icon);
-			g_autoptr(GdkPixbuf) tpixbuf =
-			    gdk_pixbuf_scale_simple(spixbuf,
-			                            (int)(round(self->icon_size * aspect_ratio)),
-			                            self->icon_size,
-			                            GDK_INTERP_BILINEAR);
-			return g_object_ref(G_ICON(tpixbuf));
-		}
-		else
-		{
-			return g_object_ref(G_ICON(first_pixbuf));
-		}
-	}
 	return g_object_ref(icon);
 }
 
