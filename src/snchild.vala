@@ -152,7 +152,7 @@ namespace StatusNotifier
                 if(pspec.name == "tooltip-text" || pspec.name == "tooltip-title")
                     this.trigger_tooltip_query();
                 if(pspec.name == "x-ayatana-label" || pspec.name == "x-ayatana-label-guide")
-                    iface_new_label_cb(proxy.x_ayatana_label, proxy.x_ayatana_label_guide);
+                    this.label.set_text(proxy.x_ayatana_label);             /* FIXME: Guided labels */
             });
             this.changed();
             this.show();
@@ -183,7 +183,7 @@ namespace StatusNotifier
         }
         private void iface_new_status_cb()
         {
-            iface_new_label_cb(proxy.x_ayatana_label, proxy.x_ayatana_label_guide);
+            this.label.set_text(proxy.x_ayatana_label);
             iface_new_icon_cb();
             this.trigger_tooltip_query();
             switch(proxy.status)
@@ -204,17 +204,6 @@ namespace StatusNotifier
             tip.set_icon_from_gicon(proxy.tooltip_icon,IconSize.DIALOG);
             tip.set_markup(proxy.tooltip_text);
             return true;
-        }
-        private void iface_new_label_cb(string? label, string? guide)
-        {
-            if (label != null)
-            {
-                this.label.set_text(label);
-                this.label.show();
-            }
-            else
-                this.label.hide();
-            /* FIXME: Guided labels */
         }
         private unowned ItemBox get_applet()
         {
