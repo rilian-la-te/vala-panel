@@ -180,15 +180,14 @@ namespace StatusNotifier
             this.label.set_text(proxy.x_ayatana_label);
             iface_new_icon_cb();
             this.trigger_tooltip_query();
-            switch(proxy.status)
+            this.status = proxy.status;
+            switch(this.status)
             {
                 case Status.PASSIVE:
                 case Status.ACTIVE:
-                    iface_new_icon_cb();
                     this.get_style_context().remove_class(STYLE_CLASS_NEEDS_ATTENTION);
                     break;
                 case Status.ATTENTION:
-                    iface_new_icon_cb();
                     this.get_style_context().add_class(STYLE_CLASS_NEEDS_ATTENTION);
                     break;
             }
