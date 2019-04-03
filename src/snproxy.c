@@ -540,7 +540,10 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 			SnStatus new_st =
 			    sn_status_get_value_from_nick(g_variant_get_string(value, NULL));
 			if (self->status != new_st)
+			{
+				self->status = new_st;
 				g_object_notify_by_pspec(G_OBJECT(self), pspecs[PROP_STATUS]);
+			}
 		}
 		else if (!g_strcmp0(name, "Title"))
 		{
