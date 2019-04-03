@@ -30,8 +30,15 @@ OPTIONS
 GENERATE_VAPI
     vala-panel-sntray
 )
+set(ENUM_FILES
+    ${CMAKE_SOURCE_DIR}/include/sn-common.h
+        )
+add_glib_enumtypes(ENUMSC ENUMSH sni-enums ${ENUM_FILES})
 add_library(sntray-core STATIC
     ${VALA_C_CORE}
+    ${CMAKE_SOURCE_DIR}/include/sn-common.h
+    ${ENUMSC}
+    ${ENUMSH}
     dbus-utils.c
     snproxy.c
     snproxy.h

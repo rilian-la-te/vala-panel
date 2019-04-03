@@ -21,7 +21,7 @@ using GLib;
 [CCode(cprefix="Sn",lower_case_cprefix="sn_")]
 namespace StatusNotifier
 {
-	[CCode(cheader_filename="icon-pixmap.h")]
+	[CCode(cheader_filename="sn-enums.h")]
 	public enum Category
 	{
 		APPLICATION,
@@ -30,7 +30,7 @@ namespace StatusNotifier
 		HARDWARE,
 		OTHER
 	}
-	[CCode(cheader_filename="icon-pixmap.h")]
+	[CCode(cheader_filename="sn-enums.h")]
 	public enum Status
 	{
 		PASSIVE,

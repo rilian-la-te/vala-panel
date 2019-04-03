@@ -18,6 +18,7 @@
 
 #include "snproxy.h"
 #include "icon-pixmap.h"
+#include "sni-enums.h"
 #include <gtk/gtk.h>
 #include <math.h>
 

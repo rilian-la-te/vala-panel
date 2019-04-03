@@ -70,6 +70,8 @@ add_feature_info(Budgie ENABLE_BUDGIE "Budgie Desktop Integration")
 
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.in ${CMAKE_BINARY_DIR}/src/config.vala)
+# Common include dir
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 
 add_subdirectory(data)
 add_subdirectory(po)
