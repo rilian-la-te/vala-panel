@@ -50,7 +50,7 @@ namespace StatusNotifier
         /* Public properties */
         public string[] registered_status_notifier_items {owned get {return get_registered_items();}}
         public bool is_status_notifier_host_registered {get; private set; default = true;}
-        public int protocol_version {get {return 0;}}
+        public int protocol_version {get; default = 0;}
         /* Public methods */
         public void register_status_notifier_item(string service, BusName sender)
         {
