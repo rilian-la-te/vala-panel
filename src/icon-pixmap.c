@@ -18,6 +18,7 @@
 
 #include "icon-pixmap.h"
 #include "rtparser.h"
+#include "sn-common.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
@@ -242,7 +243,7 @@ G_GNUC_INTERNAL void unbox_tooltip(ToolTip *tooltip, GtkIconTheme *theme,
 		g_string_append(bldr, "<markup>");
 		if (!string_empty(tooltip->title))
 			g_string_append(bldr, tooltip->title);
-		if (!string_empty(tooltip->description) > 0)
+		if (!string_empty(tooltip->description))
 		{
 			if (bldr->len > 8)
 				g_string_append(bldr, "<br/>");

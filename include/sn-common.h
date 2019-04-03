@@ -40,10 +40,7 @@ typedef enum
 	SN_STATUS_ATTENTION /*< nick=NeedsAttention >*/
 } SnStatus;
 
-static inline bool string_empty(const char *path)
-{
-	return (path == NULL || strlen(path) == 0);
-}
+#define string_empty(str) (!(str) ? true : (!strlen(str) ? true : false))
 
 G_END_DECLS
 
