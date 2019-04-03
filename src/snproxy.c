@@ -273,8 +273,10 @@ static void sn_proxy_finalize(GObject *object)
 	if (self->properties_timeout != 0)
 		g_source_remove(self->properties_timeout);
 
-	g_signal_handlers_disconnect_by_data(self->theme, self);
-	g_signal_handlers_disconnect_by_data(self->item_proxy, self);
+	if (GTK_IS_ICON_THEME(self->theme))
+		g_signal_handlers_disconnect_by_data(self->theme, self);
+	if (self->item_proxy)
+		g_signal_handlers_disconnect_by_data(self->item_proxy, self);
 
 	g_clear_object(&self->properties_proxy);
 	g_clear_object(&self->item_proxy);
@@ -294,8 +296,6 @@ static void sn_proxy_finalize(GObject *object)
 	g_clear_pointer(&self->title, g_free);
 	g_clear_pointer(&self->icon_desc, g_free);
 	g_clear_pointer(&self->attention_desc, g_free);
-
-	g_clear_object(&self->theme);
 
 	G_OBJECT_CLASS(sn_proxy_parent_class)->finalize(object);
 }
@@ -453,7 +453,7 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const Ico
 		icon = g_emblemed_icon_new(tmp_main_icon, overlay_icon);
 	if (!icon)
 		return NULL;
-	if (self->use_symbolic && G_IS_THEMED_ICON(tmp_main_icon))
+	if (G_IS_THEMED_ICON(tmp_main_icon))
 		return g_object_ref(icon);
 	g_autoptr(GtkIconInfo) info =
 	    gtk_icon_theme_lookup_by_gicon(self->theme, icon, self->icon_size, 0);
@@ -493,7 +493,10 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, const Ico
 
 static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	SnProxy *self                 = user_data;
+	if (!SN_IS_PROXY(user_data))
+		return;
+
+	SnProxy *self                 = SN_PROXY(user_data);
 	bool update_tooltip           = false;
 	bool update_icon              = false;
 	bool update_attention_icon    = false;
@@ -512,7 +515,10 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 		return;
 	if (!properties)
+	{
 		g_signal_emit(self, signals[FAIL], 0);
+		return;
+	}
 	GVariantIter *iter;
 	g_variant_get(properties, "(a{sv})", &iter);
 	char *name;
@@ -777,6 +783,9 @@ void sn_proxy_reload(SnProxy *self)
 static void sn_proxy_properties_callback(GObject *source_object, GAsyncResult *res,
                                          gpointer user_data)
 {
+	if (!SN_IS_PROXY(user_data))
+		return;
+
 	SnProxy *self           = SN_PROXY(user_data);
 	g_autoptr(GError) error = NULL;
 
@@ -784,7 +793,10 @@ static void sn_proxy_properties_callback(GObject *source_object, GAsyncResult *r
 	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
 		return;
 	if (self->properties_proxy == NULL)
+	{
 		g_signal_emit(self, signals[FAIL], 0);
+		return;
+	}
 	sn_proxy_reload(self);
 }
 
@@ -814,6 +826,9 @@ static void sn_proxy_signal_received(GDBusProxy *proxy, gchar *sender_name, gcha
 
 static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
+	if (!SN_IS_PROXY(user_data))
+		return;
+
 	SnProxy *self           = SN_PROXY(user_data);
 	g_autoptr(GError) error = NULL;
 
