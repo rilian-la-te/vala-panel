@@ -20,6 +20,12 @@ using Gtk;
 
 namespace StatusNotifier
 {
+    [DBus (name = "org.kde.StatusNotifierItem")]
+    private interface ItemIface : Object
+    {
+        public abstract string id {owned get;}
+        public abstract string title {owned get;}
+    }
     [DBus (name = "org.kde.StatusNotifierWatcher")]
     public interface WatcherIface: Object
     {

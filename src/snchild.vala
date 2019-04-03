@@ -20,12 +20,6 @@ using Gtk;
 
 namespace StatusNotifier
 {
-    [DBus (name = "org.kde.StatusNotifierItem")]
-    private interface ItemIface : Object
-    {
-        public abstract string id {owned get;}
-        public abstract string title {owned get;}
-    }
     public class Item : FlowBoxChild
     {
         public ObjectPath object_path {private get; internal construct;}
