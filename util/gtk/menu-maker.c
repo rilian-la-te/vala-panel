@@ -183,7 +183,7 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 				jumplen += ((uint)g_menu_model_get_n_items(link_menu) - 1);
 				apply_menu_properties(l, link_menu);
 			}
-			g_object_unref(link_menu);
+			g_clear_object(&link_menu);
 			has_section = has_section || is_section;
 			has_submenu = has_submenu || is_submenu;
 		}

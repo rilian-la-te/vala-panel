@@ -84,7 +84,7 @@ static void on_remove_plugin(GtkButton *btn, void *user_data);
 G_GNUC_INTERNAL void vp_toplevel_config_select_applet(ValaPanelToplevelConfig *self,
                                                       const char *uuid)
 {
-	GList *ch               = gtk_container_get_children(self->plugin_list);
+	g_autoptr(GList) ch     = gtk_container_get_children(self->plugin_list);
 	GtkListBoxRow *selected = NULL;
 	for (GList *l = ch; l != NULL; l = g_list_next(l))
 	{
@@ -93,7 +93,6 @@ G_GNUC_INTERNAL void vp_toplevel_config_select_applet(ValaPanelToplevelConfig *s
 			selected = GTK_LIST_BOX_ROW(l->data);
 	}
 	gtk_list_box_select_row(self->plugin_list, selected);
-	g_list_free(ch);
 }
 
 G_GNUC_INTERNAL void vp_toplevel_config_select_page(ValaPanelToplevelConfig *self, const char *page)
