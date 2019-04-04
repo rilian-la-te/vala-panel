@@ -24,13 +24,6 @@ typedef enum
 	SN_ERROR_NO_HOST
 } StatusNotifierError;
 
-typedef enum
-{
-	SN_ICON = 0,
-	SN_TOOLTIP_ICON,
-	SN_ICONS_NUM /*< skip >*/
-} StatusNotifierIcon;
-
 struct _StatusNotifierItemClass
 {
 	GObjectClass parent_class;

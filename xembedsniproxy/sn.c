@@ -8,123 +8,6 @@
 #include <glib.h>
 #include <unistd.h>
 
-static void gdk_cairo_surface_paint_pixbuf(cairo_surface_t *surface, const GdkPixbuf *pixbuf)
-{
-	gint width, height;
-	guchar *gdk_pixels, *cairo_pixels;
-	int gdk_rowstride, cairo_stride;
-	int n_channels;
-	int j;
-
-	if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS)
-		return;
-
-	/* This function can't just copy any pixbuf to any surface, be
-	 * sure to read the invariants here before calling it */
-
-	g_assert(cairo_surface_get_type(surface) == CAIRO_SURFACE_TYPE_IMAGE);
-	g_assert(cairo_image_surface_get_format(surface) == CAIRO_FORMAT_RGB24 ||
-	         cairo_image_surface_get_format(surface) == CAIRO_FORMAT_ARGB32);
-	g_assert(cairo_image_surface_get_width(surface) == gdk_pixbuf_get_width(pixbuf));
-	g_assert(cairo_image_surface_get_height(surface) == gdk_pixbuf_get_height(pixbuf));
-
-	cairo_surface_flush(surface);
-
-	width         = gdk_pixbuf_get_width(pixbuf);
-	height        = gdk_pixbuf_get_height(pixbuf);
-	gdk_pixels    = gdk_pixbuf_get_pixels(pixbuf);
-	gdk_rowstride = gdk_pixbuf_get_rowstride(pixbuf);
-	n_channels    = gdk_pixbuf_get_n_channels(pixbuf);
-	cairo_stride  = cairo_image_surface_get_stride(surface);
-	cairo_pixels  = cairo_image_surface_get_data(surface);
-
-	for (j = height; j; j--)
-	{
-		guchar *p = gdk_pixels;
-		guchar *q = cairo_pixels;
-
-		if (n_channels == 3)
-		{
-			guchar *end = p + 3 * width;
-
-			while (p < end)
-			{
-#if G_BYTE_ORDER == G_LITTLE_ENDIAN
-				q[0] = p[2];
-				q[1] = p[1];
-				q[2] = p[0];
-#else
-				q[1] = p[0];
-				q[2] = p[1];
-				q[3] = p[2];
-#endif
-				p += 3;
-				q += 4;
-			}
-		}
-		else
-		{
-			guchar *end = p + 4 * width;
-			uint t1, t2, t3;
-
-#define MULT(d, c, a, t)                                                                           \
-	G_STMT_START                                                                               \
-	{                                                                                          \
-		t = c * a + 0x80;                                                                  \
-		d = ((t >> 8) + t) >> 8;                                                           \
-	}                                                                                          \
-	G_STMT_END
-
-			while (p < end)
-			{
-#if G_BYTE_ORDER == G_LITTLE_ENDIAN
-				MULT(q[0], p[2], p[3], t1);
-				MULT(q[1], p[1], p[3], t2);
-				MULT(q[2], p[0], p[3], t3);
-				q[3] = p[3];
-#else
-				q[0] = p[3];
-				MULT(q[1], p[0], p[3], t1);
-				MULT(q[2], p[1], p[3], t2);
-				MULT(q[3], p[2], p[3], t3);
-#endif
-
-				p += 4;
-				q += 4;
-			}
-
-#undef MULT
-		}
-
-		gdk_pixels += gdk_rowstride;
-		cairo_pixels += cairo_stride;
-	}
-
-	cairo_surface_mark_dirty(surface);
-}
-
-void gdk_cairo_set_source_pixbuf(cairo_t *cr, const GdkPixbuf *pixbuf, gdouble pixbuf_x,
-                                 gdouble pixbuf_y)
-{
-	cairo_format_t format;
-	cairo_surface_t *surface;
-
-	if (gdk_pixbuf_get_n_channels(pixbuf) == 3)
-		format = CAIRO_FORMAT_RGB24;
-	else
-		format = CAIRO_FORMAT_ARGB32;
-
-	surface = cairo_surface_create_similar_image(cairo_get_target(cr),
-	                                             format,
-	                                             gdk_pixbuf_get_width(pixbuf),
-	                                             gdk_pixbuf_get_height(pixbuf));
-
-	gdk_cairo_surface_paint_pixbuf(surface, pixbuf);
-
-	cairo_set_source_surface(cr, surface, pixbuf_x, pixbuf_y);
-	cairo_surface_destroy(surface);
-}
-
 #define _UNUSED_ __attribute__((unused))
 
 enum
@@ -135,10 +18,10 @@ enum
 	PROP_TITLE,
 	PROP_CATEGORY,
 	PROP_STATUS,
-	PROP_ICON_PIXBUF,
 	PROP_CONNECTION,
 	PROP_WINDOW_ID,
-	NB_PROPS
+	PROP_ICON,
+	NB_PROPS = PROP_ICON,
 };
 
 enum
@@ -160,7 +43,6 @@ typedef struct
 	char *title;
 	SnStatus status;
 	bool always_use_pixbuf;
-	GdkPixbuf *icon;
 	enum InjectMode mode;
 	xcb_window_t window_id;
 	xcb_window_t container_id;
@@ -194,11 +76,6 @@ static void sn_item_set_property(GObject *object, uint prop_id, const GValue *va
                                  GParamSpec *pspec);
 static void sn_item_get_property(GObject *object, uint prop_id, GValue *value, GParamSpec *pspec);
 static void sn_item_finalize(GObject *object);
-
-GdkPixbuf *sn_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon);
-void sn_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon, GdkPixbuf *pixbuf);
-
-void sn_item_set_tooltip_title(StatusNotifierItem *sn, const char *title);
 
 G_DEFINE_TYPE_WITH_PRIVATE(StatusNotifierItem, sn_item, G_TYPE_OBJECT)
 
@@ -311,8 +188,6 @@ static void sn_item_finalize(GObject *object)
 
 	g_free(priv->id);
 	g_free(priv->title);
-	g_clear_object(&priv->icon);
-
 	dbus_free(sn);
 
 	G_OBJECT_CLASS(sn_item_parent_class)->finalize(object);
@@ -345,7 +220,7 @@ static void dbus_notify(StatusNotifierItem *sn, uint prop)
 	case PROP_TITLE:
 		signal = "NewTitle";
 		break;
-	case PROP_ICON_PIXBUF:
+	case PROP_ICON:
 		signal = "NewIcon";
 		break;
 	default:
@@ -375,31 +250,6 @@ StatusNotifierItem *status_notifier_item_new_from_xcb_window(const char *id, SnC
 	                                          "window-id",
 	                                          window,
 	                                          NULL);
-}
-
-void sn_item_set_from_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon, GdkPixbuf *pixbuf)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_if_fail(SN_IS_ITEM(sn));
-	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-
-	g_clear_object(&priv->icon);
-	priv->icon = g_object_ref(pixbuf);
-
-	notify(sn, PROP_ICON_PIXBUF);
-	if (icon != SN_TOOLTIP_ICON || priv->tooltip_freeze == 0)
-		dbus_notify(sn, PROP_ICON_PIXBUF);
-}
-
-GdkPixbuf *sn_item_get_pixbuf(StatusNotifierItem *sn, StatusNotifierIcon icon)
-{
-	StatusNotifierItemPrivate *priv;
-
-	g_return_val_if_fail(SN_IS_ITEM(sn), NULL);
-	priv = (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
-
-	return GDK_PIXBUF(g_object_ref(priv->icon));
 }
 
 void sn_item_set_title(StatusNotifierItem *sn, const char *title)
@@ -636,7 +486,7 @@ static void method_call(GDBusConnection *conn _UNUSED_, const char *sender _UNUS
 	g_dbus_method_invocation_return_value(invocation, NULL);
 }
 
-static GVariantBuilder *get_builder_for_icon_pixmap(StatusNotifierItem *sn, StatusNotifierIcon icon)
+static GVariantBuilder *get_builder_for_xcb_window(StatusNotifierItem *sn)
 {
 	StatusNotifierItemPrivate *priv =
 	    (StatusNotifierItemPrivate *)sn_item_get_instance_private(sn);
@@ -645,39 +495,7 @@ static GVariantBuilder *get_builder_for_icon_pixmap(StatusNotifierItem *sn, Stat
 	cairo_t *cr;
 	gint width, height, stride;
 	uint *data;
-
-	width  = gdk_pixbuf_get_width(priv->icon);
-	height = gdk_pixbuf_get_height(priv->icon);
-
-	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-	cr      = cairo_create(surface);
-	gdk_cairo_set_source_pixbuf(cr, priv->icon, 0, 0);
-	cairo_paint(cr);
-	cairo_destroy(cr);
-
-	stride = cairo_image_surface_get_stride(surface);
-	cairo_surface_flush(surface);
-	data = (uint *)cairo_image_surface_get_data(surface);
-#if G_BYTE_ORDER == G_LITTLE_ENDIAN
-	uint i, max;
-
-	max = (uint)(stride * height) / sizeof(uint);
-	for (i = 0; i < max; ++i)
-		data[i] = GUINT_TO_BE(data[i]);
-#endif
-
-	builder = g_variant_builder_new(G_VARIANT_TYPE("a(iiay)"));
-	g_variant_builder_open(builder, G_VARIANT_TYPE("(iiay)"));
-	g_variant_builder_add(builder, "i", width);
-	g_variant_builder_add(builder, "i", height);
-	g_variant_builder_add_value(builder,
-	                            g_variant_new_from_data(G_VARIANT_TYPE("ay"),
-	                                                    data,
-	                                                    (gsize)(stride * height),
-	                                                    TRUE,
-	                                                    (GDestroyNotify)cairo_surface_destroy,
-	                                                    surface));
-	g_variant_builder_close(builder);
+	// TODO: Implement this.
 	return builder;
 }
 
@@ -701,9 +519,6 @@ static void sn_item_set_property(GObject *object, uint prop_id, const GValue *va
 		break;
 	case PROP_STATUS:
 		sn_item_set_status(sn, g_value_get_enum(value));
-		break;
-	case PROP_ICON_PIXBUF:
-		sn_item_set_from_pixbuf(sn, SN_ICON, g_value_get_object(value));
 		break;
 	case PROP_WINDOW_ID:
 		sn_item_set_window_id(sn, g_value_get_uint(value));
@@ -735,9 +550,6 @@ static void sn_item_get_property(GObject *object, uint prop_id, GValue *value, G
 	case PROP_STATUS:
 		g_value_set_enum(value, priv->status);
 		break;
-	case PROP_ICON_PIXBUF:
-		g_value_take_object(value, sn_item_get_pixbuf(sn, SN_ICON));
-		break;
 	case PROP_WINDOW_ID:
 		g_value_set_uint(value, priv->window_id);
 		break;
@@ -768,7 +580,7 @@ static GVariant *get_prop(GDBusConnection *conn _UNUSED_, const char *sender _UN
 	else if (!g_strcmp0(property, "WindowId"))
 		return g_variant_new("i", priv->window_id);
 	else if (!g_strcmp0(property, "IconPixmap"))
-		return g_variant_new("a(iiay)", get_builder_for_icon_pixmap(sn, SN_ICON));
+		return g_variant_new("a(iiay)", get_builder_for_xcb_window(sn));
 	else if (!g_strcmp0(property, "ItemIsMenu"))
 		return g_variant_new("b", false);
 
