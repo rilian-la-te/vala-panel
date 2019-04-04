@@ -358,7 +358,7 @@ static uint count_applets_in_pack(ValaPanelLayout *self, ValaPanelAppletPackType
 		break;
 	}
 	ret = g_list_length(applets);
-	g_list_free(applets);
+	g_clear_pointer(&applets, g_list_free);
 	return ret;
 }
 
