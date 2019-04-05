@@ -135,8 +135,8 @@ void vp_core_settings_free(ValaPanelCoreSettings *settings)
 	g_free0(settings->root_path);
 	g_free0(settings->root_schema);
 	g_clear_object(&settings->core_settings);
-	g_clear_object(&settings->backend);
 	g_hash_table_unref(settings->all_units);
+	g_clear_object(&settings->backend);
 	g_slice_free(ValaPanelCoreSettings, settings);
 }
 
@@ -145,8 +145,7 @@ G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings, vp_core_settings, vp_core_settings_co
 
 static void vp_core_settings_sync(ValaPanelCoreSettings *settings)
 {
-	g_autofree GStrv unit_list =
-	    (GStrv)g_hash_table_get_keys_as_array(settings->all_units, NULL);
+	g_auto(GStrv) unit_list = (GStrv)g_hash_table_get_keys_as_array(settings->all_units, NULL);
 	g_settings_set_strv(settings->core_settings, VALA_PANEL_CORE_UNITS, unit_list);
 }
 

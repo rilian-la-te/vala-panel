@@ -86,7 +86,6 @@ struct _ValaPanelToplevel
 	GtkApplicationWindow __parent__;
 	ValaPanelLayout *layout;
 	GtkRevealer *ah_rev;
-	GtkSeparator *ah_sep;
 	PanelAutohideState ah_state;
 	ValaPanelUnitSettings *settings;
 	GtkCssProvider *provider;
