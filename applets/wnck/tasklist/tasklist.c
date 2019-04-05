@@ -33,7 +33,7 @@ struct _TaskListApplet
 	XfceTasklist *widget;
 };
 
-G_DEFINE_DYNAMIC_TYPE(TaskListApplet, tasklist_applet, vala_panel_applet_get_type());
+G_DEFINE_DYNAMIC_TYPE(TaskListApplet, tasklist_applet, vala_panel_applet_get_type())
 
 static void tasklist_settings_changed(GSettings *settings, char *key, void *data)
 {
@@ -65,7 +65,9 @@ static void tasklist_settings_changed(GSettings *settings, char *key, void *data
 static void tasklist_notify_orientation_connect(GObject *topo, GParamSpec *pspec, void *data)
 {
 	ValaPanelToplevel *top = VALA_PANEL_TOPLEVEL(topo);
-	XfceTasklist *self     = XFCE_TASKLIST(data);
+	if (!XFCE_IS_TASKLIST(data))
+		return;
+	XfceTasklist *self = XFCE_TASKLIST(data);
 	GtkOrientation orient;
 	PanelGravity gravity;
 	if (!g_strcmp0(pspec->name, VP_KEY_ORIENTATION))
@@ -179,7 +181,7 @@ struct _TaskListPlugin
 	ValaPanelAppletPlugin parent;
 };
 
-G_DEFINE_DYNAMIC_TYPE(TaskListPlugin, tasklist_plugin, vala_panel_applet_plugin_get_type());
+G_DEFINE_DYNAMIC_TYPE(TaskListPlugin, tasklist_plugin, vala_panel_applet_plugin_get_type())
 
 static ValaPanelApplet *tasklist_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
                                                           ValaPanelToplevel *toplevel,
