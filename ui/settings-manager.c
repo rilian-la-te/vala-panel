@@ -193,7 +193,10 @@ G_GNUC_INTERNAL void vp_core_settings_remove_unit_settings_full(ValaPanelCoreSet
 	}
 	g_hash_table_remove(settings->all_units, name);
 	if (destroy)
+	{
 		vp_core_settings_sync(settings);
+		g_settings_sync();
+	}
 }
 
 G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,

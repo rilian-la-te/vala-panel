@@ -334,6 +334,7 @@ static void vala_panel_applet_finalize(GObject *obj)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	g_clear_object(&p->grp);
 	g_free0(p->uuid);
+	G_OBJECT_CLASS(vala_panel_applet_parent_class)->finalize(obj);
 }
 static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 {

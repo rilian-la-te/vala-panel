@@ -339,10 +339,17 @@ static void menu_applet_dispose(GObject *user_data)
 {
 	MenuApplet *self = VALA_PANEL_MENU_APPLET(user_data);
 	menumodel_widget_destroy(self);
+
+	G_OBJECT_CLASS(menu_applet_parent_class)->dispose(user_data);
+}
+
+static void menu_applet_finalize(GObject *user_data)
+{
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(user_data);
 	g_free0(self->icon);
 	g_free0(self->filename);
 	g_free0(self->caption);
-	G_OBJECT_CLASS(menu_applet_parent_class)->dispose(user_data);
+	G_OBJECT_CLASS(menu_applet_parent_class)->finalize(user_data);
 }
 
 static void menu_applet_get_property(GObject *object, uint prop_id, GValue *value,
@@ -497,6 +504,7 @@ static void menu_applet_class_init(MenuAppletClass *klass)
 	G_OBJECT_CLASS(klass)->get_property             = menu_applet_get_property;
 	G_OBJECT_CLASS(klass)->set_property             = menu_applet_set_property;
 	G_OBJECT_CLASS(klass)->dispose                  = menu_applet_dispose;
+	G_OBJECT_CLASS(klass)->finalize                 = menu_applet_finalize;
 	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = menu_applet_get_settings_ui;
 	VALA_PANEL_APPLET_CLASS(klass)->remote_command  = menu_applet_remote_command;
 	menu_applet_props[PROP_BAR] =

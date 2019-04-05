@@ -18,10 +18,12 @@
 
 #include "panel-platform.h"
 #include "definitions.h"
+#include "toplevel.h"
 
 typedef struct
 {
 	ValaPanelCoreSettings *core_settings;
+	GHashTable *toplevels;
 } ValaPanelPlatformPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
@@ -73,6 +75,20 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
 	return false;
 }
 
+void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit)
+{
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	g_hash_table_add(priv->toplevels, unit);
+}
+
+void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit)
+{
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	g_hash_table_remove(priv->toplevels, unit);
+}
+
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
@@ -80,25 +96,11 @@ ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 	return priv->core_settings;
 }
 
-void vala_panel_platform_init(ValaPanelPlatform *self)
+bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
-	priv->core_settings = NULL;
-}
-
-void vala_panel_platform_finalize(GObject *obj)
-{
-	ValaPanelPlatform *self = VALA_PANEL_PLATFORM(obj);
-	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
-	if (priv->core_settings)
-		vp_core_settings_free(priv->core_settings);
-}
-
-void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
-{
-	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
+	return g_hash_table_size(priv->toplevels);
 }
 
 bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
@@ -110,4 +112,29 @@ bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
 		                                                           gravity,
 		                                                           monitor);
 	return false;
+}
+
+static void vala_panel_platform_init(ValaPanelPlatform *self)
+{
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	priv->core_settings = NULL;
+	priv->toplevels =
+	    g_hash_table_new_full(g_direct_hash, g_direct_equal, gtk_widget_destroy, NULL);
+}
+
+static void vala_panel_platform_finalize(GObject *obj)
+{
+	ValaPanelPlatform *self = VALA_PANEL_PLATFORM(obj);
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	g_hash_table_unref(priv->toplevels);
+	if (priv->core_settings)
+		vp_core_settings_free(priv->core_settings);
+	G_OBJECT_CLASS(vala_panel_platform_parent_class)->finalize(obj);
+}
+
+static void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
+{
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
 }

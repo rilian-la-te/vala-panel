@@ -146,6 +146,7 @@ static void vp_applet_manager_finalize(GObject *data)
 	ValaPanelAppletManager *self = VP_APPLET_MANAGER(data);
 	g_hash_table_unref(self->applet_info_table);
 	g_io_module_scope_free(self->scope);
+	G_OBJECT_CLASS(vp_applet_manager_parent_class)->finalize(data);
 }
 
 static void vp_applet_manager_init(ValaPanelAppletManager *self)

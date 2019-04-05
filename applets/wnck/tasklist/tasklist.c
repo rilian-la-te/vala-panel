@@ -157,6 +157,7 @@ static void tasklist_applet_displose(GObject *base)
 	TaskListApplet *self = TASKLIST_APPLET(base);
 	g_signal_handlers_disconnect_by_data(self, self->widget);
 	g_signal_handlers_disconnect_by_data(self, self);
+	G_OBJECT_CLASS(tasklist_applet_parent_class)->dispose(base);
 }
 
 static void tasklist_applet_class_init(TaskListAppletClass *klass)

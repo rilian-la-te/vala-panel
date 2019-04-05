@@ -146,7 +146,7 @@ static void stop_ui(ValaPanelToplevel *self)
 	}
 	GtkWidget *ch = gtk_bin_get_child(GTK_BIN(self));
 	if (ch)
-		gtk_widget_destroy0(ch);
+		gtk_widget_destroy(ch);
 }
 
 static void vala_panel_toplevel_destroy(GObject *base)
@@ -159,7 +159,6 @@ static void vala_panel_toplevel_destroy(GObject *base)
 static void vala_panel_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
-	gtk_widget_destroy0(self->context_menu);
 	gtk_widget_destroy0(self->pref_dialog);
 	g_free0(self->uuid);
 	g_clear_object(&self->provider);
@@ -246,10 +245,10 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	                                   self->settings->common,
 	                                   VP_KEY_STRUT);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_DOCK);
-	vala_panel_bind_gsettings(self, self->settings->common, VP_KEY_MONITOR);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
-	                                   self->settings->common,
-	                                   VP_KEY_ICON_SIZE);
+	vala_panel_bind_gsettings(self, self->settings->common, VP_KEY_MONITOR)
+	    vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                       self->settings->common,
+	                                       VP_KEY_ICON_SIZE);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_BACKGROUND_COLOR);
@@ -287,7 +286,6 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	                                self);
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
-	GtkApplication *panel_app = gtk_window_get_application(GTK_WINDOW(self));
 }
 
 /**************************************************************************************
@@ -435,34 +433,35 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 	                               new_name,
 	                               new_mon,
 	                               (PanelGravity)3 * new_edge);
+	vala_panel_platform_register_unit(platform, new_toplevel);
 	//        new_toplevel.configure("position");
 	gtk_widget_show(GTK_WIDGET(new_toplevel));
 	gtk_widget_queue_resize(GTK_WIDGET(new_toplevel));
 }
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data)
 {
-	ValaPanelToplevel *self         = VALA_PANEL_TOPLEVEL(data);
-	g_autoptr(GtkMessageDialog) dlg = GTK_MESSAGE_DIALOG(
-	    gtk_message_dialog_new_with_markup(GTK_WINDOW(self),
-	                                       GTK_DIALOG_MODAL,
-	                                       GTK_MESSAGE_QUESTION,
-	                                       GTK_BUTTONS_OK_CANCEL,
-	                                       _("Really delete this panel?\n<b>Warning:"
-	                                         "This can not be recovered.</b>")));
+	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(data);
+	GtkMessageDialog *dlg   = GTK_MESSAGE_DIALOG(
+            gtk_message_dialog_new_with_markup(GTK_WINDOW(self),
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_QUESTION,
+                                               GTK_BUTTONS_OK_CANCEL,
+                                               _("Really delete this panel?\n<b>Warning:"
+                                                 "This can not be recovered.</b>")));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
 	bool ok = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
 	gtk_widget_destroy(GTK_WIDGET(dlg));
 	if (ok)
 	{
-		g_autofree char *uid  = g_strdup(self->uuid);
-		g_autofree char *path = NULL;
-		g_object_get(self->settings->common, "path", &path, NULL);
+		g_autofree char *uid = g_strdup(self->uuid);
 		stop_ui(self);
-		gtk_widget_destroy(GTK_WIDGET(self));
-		/* delete the config file of this panel */
+		gtk_widget_hide(self);
+		/* delete the config unit of this panel */
 		ValaPanelCoreSettings *st = vala_panel_platform_get_settings(platform);
 		vp_core_settings_remove_unit_settings_full(st, uid, true);
+		/* Unregister unit in platform, causes panel destruction */
+		vala_panel_platform_unregister_unit(platform, GTK_WINDOW(self));
 	}
 }
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data)
@@ -608,9 +607,11 @@ static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const 
 ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
                                            const char *uid)
 {
-	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	if (platform == NULL)
+	{
 		platform = plt;
+	}
+	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	init_actions(ret, false);
 	return ret;
 }
