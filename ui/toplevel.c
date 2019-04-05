@@ -145,8 +145,7 @@ static void stop_ui(ValaPanelToplevel *self)
 		self->initialized = false;
 	}
 	GtkWidget *ch = gtk_bin_get_child(GTK_BIN(self));
-	if (ch)
-		gtk_widget_destroy(ch);
+	g_clear_pointer(&ch, gtk_widget_destroy);
 }
 
 static void vala_panel_toplevel_destroy(GObject *base)
@@ -730,8 +729,9 @@ static int timeout_func(ValaPanelToplevel *self)
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
 		vala_panel_toplevel_update_geometry_no_orient(self);
 		self->ah_state = AH_HIDDEN;
+		return G_SOURCE_REMOVE;
 	}
-	return G_SOURCE_REMOVE;
+	return G_SOURCE_CONTINUE;
 }
 
 static void ah_show(ValaPanelToplevel *self)
@@ -776,6 +776,8 @@ static void grab_notify(ValaPanelToplevel *self, bool was_grabbed)
 		self->ah_state = AH_VISIBLE;
 		ah_hide(self);
 	}
+	else
+		self->ah_state = AH_VISIBLE;
 }
 
 /*
