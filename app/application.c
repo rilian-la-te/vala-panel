@@ -195,7 +195,6 @@ static void vala_panel_application_shutdown(GApplication *base)
 	{
 		GtkWindow *w = GTK_WINDOW(il->data);
 		gtk_window_set_application(w, NULL);
-		gtk_widget_destroy(GTK_WIDGET(w));
 	}
 	G_APPLICATION_CLASS(vala_panel_application_parent_class)->shutdown(base);
 	if (VALA_PANEL_APPLICATION(base)->restart)
@@ -295,10 +294,9 @@ static int vala_panel_app_command_line(GApplication *application,
 						                                     il->data),
 						                                 command_name);
 				}
-				//            g_list_free(applets);
+				g_list_free(applets);
 			}
 		}
-		//    g_list_free(windows);
 	}
 	g_application_activate(application);
 	return 0;
@@ -398,7 +396,7 @@ static void vala_panel_app_finalize(GObject *object)
 	g_free0(app->logout_command);
 	g_free0(app->shutdown_command);
 	g_clear_object(&app->provider);
-	g_free(app->profile);
+	g_free0(app->profile);
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
 
@@ -533,10 +531,9 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 				if (success)
 					break;
 			}
-			//            g_list_free(applets);
+			g_list_free(applets);
 		}
 	}
-	//    g_list_free(windows);
 }
 
 static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
@@ -730,5 +727,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 int main(int argc, char *argv[])
 {
 	ValaPanelApplication *app = vala_panel_application_new();
-	return g_application_run(G_APPLICATION(app), argc, argv);
+	int ret                   = g_application_run(G_APPLICATION(app), argc, argv);
+	g_clear_object(&app);
+	return ret;
 }

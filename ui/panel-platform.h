@@ -75,12 +75,22 @@ struct _ValaPanelPlatformClass
 	gpointer padding[11];
 };
 
-bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
-                                                   const char *profile);
+/* Non-virtual functions */
+
+/* GSettings management */
 bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
 bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
+
+/* Toplevel registration and destruction */
+void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit);
+void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit);
+bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self);
+
+/* Virtual functions */
+bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
+                                                   const char *profile);
 bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGravity alloc,

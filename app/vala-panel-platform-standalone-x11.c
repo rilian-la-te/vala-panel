@@ -18,7 +18,6 @@
 
 #include "config.h"
 
-#include "applet-widget.h"
 #include "definitions.h"
 #include "gio/gsettingsbackend.h"
 #include "server.h"
@@ -46,29 +45,23 @@ ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const cha
 	pl->app                   = app;
 	pl->profile               = g_strdup(profile);
 	g_autofree char *filename = _user_config_file_name_new(pl->profile);
-	GSettingsBackend *backend = g_keyfile_settings_backend_new(filename,
-	                                                           VALA_PANEL_OBJECT_PATH,
-	                                                           VALA_PANEL_CONFIG_HEADER);
+	g_autoptr(GSettingsBackend) backend =
+	    g_keyfile_settings_backend_new(filename,
+	                                   VALA_PANEL_OBJECT_PATH,
+	                                   VALA_PANEL_CONFIG_HEADER);
 	vala_panel_platform_init_settings(VALA_PANEL_PLATFORM(pl), backend);
 	return pl;
 }
 
-typedef struct
+static void predicate_func(const char *key, ValaPanelUnitSettings *value, ValaPanelPlatform *self)
 {
-	GtkApplication *app;
-	ValaPanelPlatform *obj;
-	int toplevels_count;
-} DataStruct;
-
-static void predicate_func(const char *key, ValaPanelUnitSettings *value, DataStruct *user_data)
-{
-	bool is_toplevel = vala_panel_unit_settings_is_toplevel(value);
+	bool is_toplevel                = vala_panel_unit_settings_is_toplevel(value);
+	ValaPanelPlatformX11 *user_data = VALA_PANEL_PLATFORM_X11(self);
 	if (is_toplevel)
 	{
-		ValaPanelToplevel *unit =
-		    vala_panel_toplevel_new(user_data->app, user_data->obj, key);
+		ValaPanelToplevel *unit = vala_panel_toplevel_new(user_data->app, self, key);
+		vala_panel_platform_register_unit(self, GTK_WINDOW(unit));
 		gtk_application_add_window(user_data->app, GTK_WINDOW(unit));
-		user_data->toplevels_count++;
 	}
 }
 
@@ -128,32 +121,27 @@ static void monitor_removed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 	update_toplevel_geometry_for_all(scr, data);
 }
 
-static bool vala_panel_platform_x11_start_panels_from_profile(ValaPanelPlatform *obj,
-                                                              GtkApplication *app,
-                                                              const char *profile)
+static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplication *app,
+                                              const char *profile)
 {
+	ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
 	ValaPanelCoreSettings *core = vala_panel_platform_get_settings(obj);
-	ValaPanelPlatformX11 *pl    = VALA_PANEL_PLATFORM_X11(obj);
-	DataStruct user_data;
-	user_data.app             = app;
-	user_data.obj             = obj;
-	user_data.toplevels_count = 0;
-	g_hash_table_foreach(core->all_units, (GHFunc)predicate_func, &user_data);
+	g_hash_table_foreach(core->all_units, (GHFunc)predicate_func, self);
 	monitors_update_init(app);
 	g_signal_connect(gdk_display_get_default(),
 	                 "monitor-added",
 	                 G_CALLBACK(monitor_added_cb),
-	                 pl->app);
+	                 self->app);
 	g_signal_connect(gdk_display_get_default(),
 	                 "monitor-removed",
 	                 G_CALLBACK(monitor_removed_cb),
-	                 pl->app);
-	return user_data.toplevels_count;
+	                 self->app);
+	return vala_panel_platform_has_units_loaded(self);
 }
 
 // TODO: Make more readable code without switch
-static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top,
-                                                 PanelGravity gravity, int monitor)
+static void vpp_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,
+                                 int monitor)
 {
 	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
 	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
@@ -217,7 +205,7 @@ static void vala_panel_platform_x11_move_to_side(ValaPanelPlatform *f, GtkWindow
 	gtk_window_move(top, x, y);
 }
 
-static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
+static bool vpp_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	int strut_set = false;
 	g_object_get(top, VP_KEY_STRUT, &strut_set, NULL);
@@ -226,7 +214,7 @@ static bool vala_panel_platform_x11_edge_can_strut(ValaPanelPlatform *f, GtkWind
 	return strut_set;
 }
 
-static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
+static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	bool autohide;
 	PanelGravity gravity;
@@ -318,8 +306,8 @@ static void vala_panel_platform_x11_update_strut(ValaPanelPlatform *f, GtkWindow
 	}
 }
 
-static bool vala_panel_platform_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top,
-                                                   PanelGravity gravity, int monitor)
+static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, PanelGravity gravity,
+                                   int monitor)
 {
 	ValaPanelPlatformX11 *pl = VALA_PANEL_PLATFORM_X11(self);
 	int edge                 = vala_panel_edge_from_gravity(gravity);
@@ -343,12 +331,12 @@ static bool vala_panel_platform_x11_edge_available(ValaPanelPlatform *self, GtkW
 		}
 	return true;
 }
-static void vala_panel_platform_x11_finalize(GObject *obj)
+static void vpp_x11_finalize(GObject *obj)
 {
 	ValaPanelPlatformX11 *self = VALA_PANEL_PLATFORM_X11(obj);
 	g_signal_handlers_disconnect_by_data(gdk_display_get_default(), self->app);
 	monitors_update_finalize(self->app);
-	g_free(self->profile);
+	g_clear_pointer(&self->profile, g_free);
 	(*G_OBJECT_CLASS(vala_panel_platform_x11_parent_class)->finalize)(obj);
 }
 
@@ -358,11 +346,11 @@ static void vala_panel_platform_x11_init(ValaPanelPlatformX11 *self)
 
 static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 {
-	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vala_panel_platform_x11_move_to_side;
-	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vala_panel_platform_x11_update_strut;
-	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vala_panel_platform_x11_edge_can_strut;
+	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vpp_x11_move_to_side;
+	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vpp_x11_update_strut;
+	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vpp_x11_edge_can_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->start_panels_from_profile =
-	    vala_panel_platform_x11_start_panels_from_profile;
-	VALA_PANEL_PLATFORM_CLASS(klass)->edge_available = vala_panel_platform_x11_edge_available;
-	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_platform_x11_finalize;
+	    vpp_x11_start_panels_from_profile;
+	VALA_PANEL_PLATFORM_CLASS(klass)->edge_available = vpp_x11_edge_available;
+	G_OBJECT_CLASS(klass)->finalize                  = vpp_x11_finalize;
 }

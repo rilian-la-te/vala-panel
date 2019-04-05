@@ -501,7 +501,7 @@ static void vp_layout_destroy(GObject *obj)
 	gtk_widget_destroy0(self->center_box);
 	g_clear_pointer(&self->applets, g_hash_table_unref);
 	g_clear_pointer(&self->toplevel_id, g_free);
-	GTK_WIDGET_CLASS(vp_layout_parent_class)->destroy(GTK_WIDGET(self));
+	G_OBJECT_CLASS(vp_layout_parent_class)->dispose(obj);
 }
 
 static void vp_layout_constructed(GObject *obj)
@@ -535,7 +535,7 @@ static void vp_layout_init(ValaPanelLayout *self)
 	                       self->end_box,
 	                       "orientation",
 	                       G_BINDING_SYNC_CREATE);
-	self->applets = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	self->applets = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, gtk_widget_destroy);
 }
 
 static void vp_layout_class_init(ValaPanelLayoutClass *klass)
