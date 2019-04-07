@@ -53,16 +53,9 @@ static ValaPanelUnitSettings *vp_unit_settings_new(ValaPanelCoreSettings *settin
 	g_autoptr(GSettingsSchema) new_schema =
 	    g_settings_schema_source_lookup(source, tname, true);
 
-	/* Old way to find a schema */
-	g_autofree char *id = g_strdup_printf("%s.%s", settings->root_schema, tname);
-
-	g_autoptr(GSettingsSchema) old_schema = g_settings_schema_source_lookup(source, id, true);
 	if (new_schema != NULL)
 		created_settings->custom =
 		    g_settings_new_with_backend_and_path(tname, settings->backend, path);
-	else if (old_schema != NULL)
-		created_settings->custom =
-		    g_settings_new_with_backend_and_path(id, settings->backend, path);
 	else
 		created_settings->custom = NULL;
 	return created_settings;
@@ -87,6 +80,7 @@ void vp_unit_settings_free(ValaPanelUnitSettings *settings)
 	g_clear_object(&settings->custom);
 	g_clear_object(&settings->common);
 	g_clear_object(&settings->type);
+	g_clear_pointer(&settings->uuid, g_free);
 	g_slice_free(ValaPanelUnitSettings, settings);
 }
 
@@ -145,7 +139,9 @@ G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings, vp_core_settings, vp_core_settings_co
 
 static void vp_core_settings_sync(ValaPanelCoreSettings *settings)
 {
-	g_auto(GStrv) unit_list = (GStrv)g_hash_table_get_keys_as_array(settings->all_units, NULL);
+	g_autofree GStrv unit_list =
+	    (GStrv)g_hash_table_get_keys_as_array(settings->all_units, NULL); // We should free only
+	                                                                      // container here
 	g_settings_set_strv(settings->core_settings, VALA_PANEL_CORE_UNITS, unit_list);
 }
 
@@ -174,7 +170,7 @@ G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings_full(
 G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings(
     ValaPanelCoreSettings *settings, const char *name, bool is_toplevel)
 {
-	g_autofree char *uuid = vp_core_settings_get_uuid();
+	g_autofree char *uuid = g_uuid_string_random();
 	return vp_core_settings_add_unit_settings_full(settings, name, uuid, is_toplevel);
 }
 
@@ -211,9 +207,4 @@ G_GNUC_INTERNAL bool vp_core_settings_init_unit_list(ValaPanelCoreSettings *sett
 	for (int i = 0; unit_list[i] != NULL; i++)
 		vp_core_settings_load_unit_settings(settings, unit_list[i]);
 	return g_hash_table_size(settings->all_units);
-}
-
-G_GNUC_INTERNAL char *vp_core_settings_get_uuid()
-{
-	return g_uuid_string_random();
 }
