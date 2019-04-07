@@ -20,8 +20,8 @@
 #include "private.h"
 #include "settings-manager.h"
 
-ValaPanelCoreSettings *core_settings;
-ValaPanelAppletManager *manager;
+static ValaPanelCoreSettings *core_settings;
+static ValaPanelAppletManager *manager;
 
 enum
 {
@@ -45,6 +45,8 @@ struct _ValaPanelLayout
 
 G_DEFINE_TYPE(ValaPanelLayout, vp_layout, GTK_TYPE_BOX)
 
+static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char *name,
+                                               ValaPanelUnitSettings *s);
 void vp_layout_update_applet_positions(ValaPanelLayout *self);
 static void vp_layout_applets_reposition_after(ValaPanelLayout *self,
                                                ValaPanelAppletPackType alignment, uint after,
@@ -136,9 +138,7 @@ G_GNUC_INTERNAL void vp_layout_init_applets(ValaPanelLayout *self)
 			    g_settings_get_string(pl->common, VALA_PANEL_TOPLEVEL_ID);
 			g_autofree char *name = g_settings_get_string(pl->common, VP_KEY_NAME);
 			if (!g_strcmp0(id, self->toplevel_id))
-				vp_layout_place_applet(self,
-				                       vp_applet_manager_applet_ref(manager, name),
-				                       pl);
+				vp_layout_place_applet(self, name, pl);
 		}
 	}
 	vp_layout_update_applet_positions(self);
@@ -250,15 +250,14 @@ G_GNUC_INTERNAL void vp_layout_applet_position_updated(GSettings *settings, cons
 		vp_layout_applet_reposition(NULL, pl, NULL);
 }
 
-G_GNUC_INTERNAL ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, AppletInfoData *data,
-                                                        ValaPanelUnitSettings *s)
+static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char *name,
+                                               ValaPanelUnitSettings *s)
 {
-	if (data == NULL)
+	if (name == NULL)
 		return NULL;
-	ValaPanelToplevel *top = vp_layout_get_toplevel(self);
-	ValaPanelApplet *applet =
-	    vala_panel_applet_plugin_get_applet_widget(data->plugin, top, s->custom, s->uuid);
-	bool nonfloat = g_object_is_floating(applet) ? false : true;
+	ValaPanelToplevel *top  = vp_layout_get_toplevel(self);
+	ValaPanelApplet *applet = vp_applet_manager_get_applet_widget(manager, name, top, s);
+	bool nonfloat           = g_object_is_floating(applet) ? false : true;
 	g_hash_table_insert(self->applets, g_strdup(vala_panel_applet_get_uuid(applet)), applet);
 	vp_layout_applet_repack(NULL, applet, self);
 	vp_layout_applet_reposition(NULL, applet, NULL);
@@ -338,8 +337,7 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_layout_insert_applet(ValaPanelLayout *self, 
 	g_settings_set_enum(s->common, VP_KEY_PACK, pack);
 	g_settings_set_uint(s->common, VP_KEY_POSITION, pos);
 	vp_applet_manager_reload_applets(manager);
-	ValaPanelApplet *applet =
-	    vp_layout_place_applet(self, vp_applet_manager_applet_ref(manager, type), s);
+	ValaPanelApplet *applet = vp_layout_place_applet(self, type, s);
 	vp_layout_update_applet_positions(self);
 	return applet;
 }

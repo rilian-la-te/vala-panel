@@ -29,17 +29,16 @@ G_DECLARE_FINAL_TYPE(ValaPanelAppletManager, vp_applet_manager, VP, APPLET_MANAG
 typedef struct
 {
 	ValaPanelAppletInfo *info;
-	ValaPanelAppletPlugin *plugin;
+	GType applet_type;
 	uint count;
 } AppletInfoData;
 
-G_GNUC_INTERNAL ValaPanelAppletManager *vp_applet_manager_new();
-
-G_GNUC_INTERNAL AppletInfoData *vp_applet_manager_applet_ref(ValaPanelAppletManager *self,
-                                                             const char *name);
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_applet_manager_new(void);
 G_GNUC_INTERNAL void vp_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name);
-G_GNUC_INTERNAL ValaPanelAppletPlugin *vp_applet_manager_get_plugin(
-    ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
+G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAppletManager *self,
+                                                                     const char *type,
+                                                                     ValaPanelToplevel *top,
+                                                                     ValaPanelUnitSettings *s);
 G_GNUC_INTERNAL ValaPanelAppletInfo *vp_applet_manager_get_applet_info(
     ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
 G_GNUC_INTERNAL void vp_applet_manager_reload_applets(ValaPanelAppletManager *self);
