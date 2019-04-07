@@ -49,6 +49,9 @@ public class Dirmenu: Applet
                                     string number)
     {
         base(toplevel,settings,number);
+    }
+    public override void constructed()
+    {
         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         var button = new MenuButton();
         var img = new Image();

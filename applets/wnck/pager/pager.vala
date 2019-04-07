@@ -36,6 +36,9 @@ public class Pager: Applet
                                     string number)
     {
         base(toplevel,settings,number);
+    }
+    public override void constructed()
+    {
         widget = new Wnck.Pager();
         /* FIXME: use some global setting for border */
         this.set_border_width(0);

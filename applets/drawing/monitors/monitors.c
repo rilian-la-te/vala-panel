@@ -224,6 +224,14 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	/* Allocate applet context*/
 	MonitorsApplet *self = VALA_PANEL_MONITORS_APPLET(
 	    vala_panel_applet_construct(monitors_applet_get_type(), toplevel, settings, uuid));
+
+	return self;
+}
+static void monitors_applet_constructed(GObject *obj)
+{
+	MonitorsApplet *self        = VALA_PANEL_MONITORS_APPLET(obj);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(self);
+	GSettings *settings         = vala_panel_applet_get_settings(self);
 	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
@@ -239,7 +247,6 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
 	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
 	gtk_widget_show(GTK_WIDGET(self));
-	return self;
 }
 
 static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
@@ -304,6 +311,7 @@ static void monitors_applet_init(MonitorsApplet *self)
 
 static void monitors_applet_class_init(MonitorsAppletClass *klass)
 {
+	G_OBJECT_CLASS(klass)->constructed              = monitors_applet_constructed;
 	G_OBJECT_CLASS(klass)->dispose                  = monitors_applet_dispose;
 	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = monitors_get_settings_ui;
 }

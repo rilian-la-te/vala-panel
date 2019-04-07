@@ -87,8 +87,7 @@ MenuApplet *menu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, co
 
 static void menu_applet_constructed(GObject *obj)
 {
-	GObjectClass *parent_class = G_OBJECT_CLASS(menu_applet_parent_class);
-	MenuApplet *self           = VALA_PANEL_MENU_APPLET(obj);
+	MenuApplet *self = VALA_PANEL_MENU_APPLET(obj);
 	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),

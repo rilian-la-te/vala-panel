@@ -48,6 +48,9 @@ namespace LaunchBar
                                         string number)
         {
             base(toplevel,settings,number);
+        }
+        public override void constructed()
+        {
             (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
             layout = new FlowBox();
             Gtk.drag_dest_set (

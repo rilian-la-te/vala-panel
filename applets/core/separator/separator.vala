@@ -39,6 +39,9 @@ public class Sep: Applet
                                     string number)
     {
         base(toplevel,settings,number);
+    }
+    public override void constructed()
+    {
         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
         widget = new Separator(toplevel.orientation == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL);
         this.add(widget);

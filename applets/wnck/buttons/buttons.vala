@@ -40,6 +40,9 @@ public class Buttons: Applet
                                     string number)
     {
         base(toplevel,settings,number);
+    }
+    public override void constructed()
+    {
         Wnck.Screen.get_default().force_update();
         handler = Wnck.Screen.get_default().active_window_changed.connect(update_buttons_sensitivity);
         state = Wnck.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{

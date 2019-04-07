@@ -256,7 +256,12 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 	/* Allocate applet context*/
 	CpuApplet *c = VALA_PANEL_CPU_APPLET(
 	    vala_panel_applet_construct(cpu_applet_get_type(), toplevel, settings, uuid));
-
+	return c;
+}
+static void cpu_applet_constructed(GObject *obj)
+{
+	CpuApplet *c                = VALA_PANEL_CPU_APPLET(obj);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(c);
 	/* Allocate drawing area as a child of top level widget. */
 	GtkDrawingArea *da = gtk_drawing_area_new();
 	gtk_widget_add_events(da,
@@ -279,7 +284,6 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 	gtk_widget_show(da);
 	c->timer = g_timeout_add(1500, (GSourceFunc)cpu_update, (gpointer)c);
 	gtk_widget_show(GTK_WIDGET(c));
-	return c;
 }
 
 /* Plugin destructor. */
@@ -305,7 +309,8 @@ static void cpu_applet_init(CpuApplet *self)
 
 static void cpu_applet_class_init(CpuAppletClass *klass)
 {
-	G_OBJECT_CLASS(klass)->dispose = cpu_applet_dispose;
+	G_OBJECT_CLASS(klass)->constructed = cpu_applet_constructed;
+	G_OBJECT_CLASS(klass)->dispose     = cpu_applet_dispose;
 }
 
 static void cpu_applet_class_finalize(CpuAppletClass *klass)

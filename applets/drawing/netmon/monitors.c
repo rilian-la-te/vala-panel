@@ -177,6 +177,13 @@ NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings
 	/* Allocate applet context*/
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(
 	    vala_panel_applet_construct(netmon_applet_get_type(), toplevel, settings, uuid));
+	return self;
+}
+static void netmon_applet_constructed(GObject *obj)
+{
+	NetMonApplet *self          = VALA_PANEL_NETMON_APPLET(obj);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(self);
+	GSettings *settings         = vala_panel_applet_get_settings(self);
 	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
@@ -188,7 +195,6 @@ NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings
 	self->timer = g_timeout_add_seconds(UPDATE_PERIOD, (GSourceFunc)monitors_update, self);
 	g_signal_connect(settings, "changed", G_CALLBACK(on_settings_changed), self);
 	gtk_widget_show(GTK_WIDGET(self));
-	return self;
 }
 
 static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
@@ -241,6 +247,7 @@ static void netmon_applet_init(NetMonApplet *self)
 static void netmon_applet_class_init(NetMonAppletClass *klass)
 {
 	G_OBJECT_CLASS(klass)->dispose                  = netmon_applet_dispose;
+	G_OBJECT_CLASS(klass)->constructed              = netmon_applet_constructed;
 	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = netmon_get_settings_ui;
 }
 
