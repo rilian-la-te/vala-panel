@@ -1,5 +1,5 @@
 /*
- * generic-monitor-plugin
+ * vala-panel
  * Copyright (C) 2015-2018 Konstantin Pugin <ria.freelander@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
