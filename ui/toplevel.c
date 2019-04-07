@@ -424,7 +424,7 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data)
 		gtk_widget_destroy(GTK_WIDGET(msg));
 		return;
 	}
-	g_autofree char *new_name = vp_core_settings_get_uuid();
+	g_autofree char *new_name = g_uuid_string_random();
 	// FIXME: Translate after adding constructors
 	ValaPanelToplevel *new_toplevel =
 	    vala_panel_toplevel_create(gtk_window_get_application(GTK_WINDOW(self)),
@@ -1026,22 +1026,22 @@ void vala_panel_toplevel_init(ValaPanelToplevel *self)
 	self->ah_state        = AH_VISIBLE; // We starts as Visible to init autohide chain properly
 }
 
-void vala_panel_toplevel_class_init(ValaPanelToplevelClass *parent)
+void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 {
-	GObjectClass *oclass                                     = G_OBJECT_CLASS(parent);
-	GTK_WIDGET_CLASS(parent)->enter_notify_event             = enter_notify_event;
-	GTK_WIDGET_CLASS(parent)->leave_notify_event             = leave_notify_event;
-	GTK_WIDGET_CLASS(parent)->button_release_event           = button_release_event;
-	GTK_WIDGET_CLASS(parent)->get_preferred_height           = get_preferred_height;
-	GTK_WIDGET_CLASS(parent)->get_preferred_width            = get_preferred_width;
-	GTK_WIDGET_CLASS(parent)->get_preferred_height_for_width = get_preferred_height_for_width;
-	GTK_WIDGET_CLASS(parent)->get_preferred_width_for_height = get_preferred_width_for_height;
-	GTK_WIDGET_CLASS(parent)->get_request_mode               = get_request_mode;
-	GTK_WIDGET_CLASS(parent)->grab_notify                    = grab_notify;
-	oclass->set_property                                     = vala_panel_toplevel_set_property;
-	oclass->get_property                                     = vala_panel_toplevel_get_property;
-	oclass->dispose                                          = vala_panel_toplevel_destroy;
-	oclass->finalize                                         = vala_panel_toplevel_finalize;
+	GObjectClass *oclass                                    = G_OBJECT_CLASS(klass);
+	GTK_WIDGET_CLASS(klass)->enter_notify_event             = enter_notify_event;
+	GTK_WIDGET_CLASS(klass)->leave_notify_event             = leave_notify_event;
+	GTK_WIDGET_CLASS(klass)->button_release_event           = button_release_event;
+	GTK_WIDGET_CLASS(klass)->get_preferred_height           = get_preferred_height;
+	GTK_WIDGET_CLASS(klass)->get_preferred_width            = get_preferred_width;
+	GTK_WIDGET_CLASS(klass)->get_preferred_height_for_width = get_preferred_height_for_width;
+	GTK_WIDGET_CLASS(klass)->get_preferred_width_for_height = get_preferred_width_for_height;
+	GTK_WIDGET_CLASS(klass)->get_request_mode               = get_request_mode;
+	GTK_WIDGET_CLASS(klass)->grab_notify                    = grab_notify;
+	oclass->set_property                                    = vala_panel_toplevel_set_property;
+	oclass->get_property                                    = vala_panel_toplevel_get_property;
+	oclass->dispose                                         = vala_panel_toplevel_destroy;
+	oclass->finalize                                        = vala_panel_toplevel_finalize;
 	pspecs[PROP_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
 	                        VP_KEY_UUID,

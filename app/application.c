@@ -641,7 +641,6 @@ static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer da
 
 static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 {
-	vala_panel_application_parent_class                = g_type_class_peek_parent(klass);
 	((GApplicationClass *)klass)->startup              = vala_panel_application_startup;
 	((GApplicationClass *)klass)->shutdown             = vala_panel_application_shutdown;
 	((GApplicationClass *)klass)->activate             = vala_panel_application_activate;

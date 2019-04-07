@@ -357,7 +357,6 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 {
 	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
 	                                            "/org/vala-panel/runner/app-runner.ui");
-	vala_panel_runner_parent_class   = g_type_class_peek_parent(klass);
 	GTK_WIDGET_CLASS(klass)->destroy = vala_panel_runner_destroy;
 	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
 	                                          "main-entry",

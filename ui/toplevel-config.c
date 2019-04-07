@@ -707,7 +707,6 @@ static void on_movedown_plugin(GtkButton *btn, void *user_data)
 
 static void vp_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 {
-	vp_toplevel_config_parent_class     = g_type_class_peek_parent(klass);
 	G_OBJECT_CLASS(klass)->get_property = vp_toplevel_config_get_property;
 	G_OBJECT_CLASS(klass)->set_property = vp_toplevel_config_set_property;
 	G_OBJECT_CLASS(klass)->constructor  = vp_toplevel_config_constructor;
