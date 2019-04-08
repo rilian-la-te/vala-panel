@@ -229,6 +229,7 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 }
 static void monitors_applet_constructed(GObject *obj)
 {
+	G_OBJECT_CLASS(monitors_applet_parent_class)->constructed(obj);
 	MonitorsApplet *self        = VALA_PANEL_MONITORS_APPLET(obj);
 	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(self);
 	GSettings *settings         = vala_panel_applet_get_settings(self);

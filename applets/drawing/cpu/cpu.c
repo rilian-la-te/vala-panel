@@ -260,6 +260,7 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 }
 static void cpu_applet_constructed(GObject *obj)
 {
+	G_OBJECT_CLASS(cpu_applet_parent_class)->constructed(obj);
 	CpuApplet *c                = VALA_PANEL_CPU_APPLET(obj);
 	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(c);
 	/* Allocate drawing area as a child of top level widget. */
