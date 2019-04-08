@@ -32,33 +32,20 @@ typedef struct
 	GMenuModel *section;
 	GtkMenuItem *menuitem;
 	int item_pos;
-	volatile int ref_count;
 } DragData;
 
-static DragData *drag_data_ref(DragData *data)
-{
-	g_atomic_int_inc(&(data->ref_count));
-	return data;
-}
-static void drag_data_unref(DragData *data)
-{
-	if (g_atomic_int_dec_and_test(&(data->ref_count)))
-		g_slice_free(DragData, data);
-}
 static void drag_data_destroy(GtkWidget *w, DragData *data)
 {
 	g_signal_handlers_disconnect_by_data(data->menuitem, data);
 	gtk_drag_source_unset(GTK_WIDGET(data->menuitem));
-	data->ref_count = 1;
-	drag_data_unref(data);
+	g_slice_free(DragData, data);
 }
 static DragData *drag_data_new(GtkMenuItem *item, GMenuModel *section, int model_item)
 {
-	DragData *data  = (DragData *)g_slice_alloc0(sizeof(DragData));
-	data->section   = section;
-	data->menuitem  = item;
-	data->item_pos  = model_item;
-	data->ref_count = 1;
+	DragData *data = (DragData *)g_slice_alloc0(sizeof(DragData));
+	data->section  = section;
+	data->menuitem = item;
+	data->item_pos = model_item;
 	return data;
 }
 void drag_data_get(GtkWidget *item, GdkDragContext *context, GtkSelectionData *sdata, uint info,

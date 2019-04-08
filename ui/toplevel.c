@@ -537,8 +537,9 @@ static void update_appearance(ValaPanelToplevel *self)
 	g_autofree char *foreground_color = gdk_rgba_to_string(&self->foreground_color);
 	g_string_append_printf(str, " color: %s;\n", foreground_color);
 	g_string_append_printf(str, "}\n");
-	char *css      = str->str;
-	self->provider = css_add_css_to_widget(GTK_WIDGET(self), css);
+	char *css = str->str;
+	g_clear_object(&self->provider);
+	self->provider = css_add_css_with_provider(GTK_WIDGET(self), css);
 	css_toggle_class(GTK_WIDGET(self),
 	                 "-vala-panel-background",
 	                 self->use_background_color || self->use_background_file);

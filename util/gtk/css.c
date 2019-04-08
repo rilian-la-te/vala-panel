@@ -202,17 +202,29 @@ void css_toggle_class(GtkWidget *widget, const char *klass, bool apply)
 		gtk_style_context_remove_class(context, klass);
 }
 
-GtkCssProvider *css_add_css_to_widget(GtkWidget *widget, const char *css)
+GtkCssProvider *css_add_css_with_provider(GtkWidget *widget, const char *css)
 {
 	g_autoptr(GError) err    = NULL;
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
-	GtkCssProvider *provider = gtk_css_provider_new();
+	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
 	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
 	gtk_style_context_add_provider(context,
 	                               GTK_STYLE_PROVIDER(provider),
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	return err ? NULL : provider;
+	return err ? NULL : g_object_ref(provider);
+}
+
+void css_add_css_to_widget(GtkWidget *widget, const char *css)
+{
+	g_autoptr(GError) err    = NULL;
+	GtkStyleContext *context = gtk_widget_get_style_context(widget);
+	gtk_widget_reset_style(widget);
+	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
+	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
+	gtk_style_context_add_provider(context,
+	                               GTK_STYLE_PROVIDER(provider),
+	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 GtkCssProvider *css_apply_from_file_to_app_with_provider(const char *file)

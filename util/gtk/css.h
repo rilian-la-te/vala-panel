@@ -36,7 +36,8 @@ void css_toggle_class(GtkWidget *w, const char *klass, bool apply);
 GtkCssProvider *css_apply_from_file_to_app_with_provider(const char *file);
 GtkCssProvider *css_apply_from_file_to_app_with_provider_and_priority(const char *file,
                                                                       unsigned int priority);
-GtkCssProvider *css_add_css_to_widget(GtkWidget *w, const char *css);
+GtkCssProvider *css_add_css_with_provider(GtkWidget *widget, const char *css);
+void css_add_css_to_widget(GtkWidget *w, const char *css);
 char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction);
 
 #endif
