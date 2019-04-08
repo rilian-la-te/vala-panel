@@ -237,6 +237,8 @@ static void menumodel_widget_destroy(MenuApplet *self)
 		g_signal_handlers_disconnect_by_data(self->file_monitor, self);
 		g_clear_object(&self->file_monitor);
 	}
+	if (G_IS_OBJECT(self->menu))
+		g_object_unref(self->menu);
 }
 
 static int monitor_update_idle(gpointer user_data)
@@ -303,7 +305,7 @@ static GMenuModel *read_menumodel(MenuApplet *m)
 	gotten = G_MENU(gtk_builder_get_object(builder, "vala-panel-internal-recent"));
 	if (gotten)
 		load_internal_menus(gotten, RECENT);
-	g_object_ref(menu);
+	g_object_ref_sink(menu);
 	return menu;
 }
 
