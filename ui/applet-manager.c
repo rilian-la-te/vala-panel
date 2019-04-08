@@ -176,7 +176,7 @@ static void vp_applet_manager_init(ValaPanelAppletManager *self)
 static void vp_applet_manager_class_init(ValaPanelAppletManagerClass *klass)
 {
 	applet_point = g_io_extension_point_register(VALA_PANEL_APPLET_EXTENSION_POINT);
-	g_io_extension_point_set_required_type(applet_point, vala_panel_applet_plugin_get_type());
+	g_io_extension_point_set_required_type(applet_point, G_TYPE_OBJECT);
 	G_OBJECT_CLASS(klass)->finalize = vp_applet_manager_finalize;
 }
 

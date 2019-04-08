@@ -18,15 +18,6 @@
 
 using ValaPanel;
 using Gtk;
-public class ClockApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Clock(toplevel,settings,number);
-    }
-}
 public class Clock: Applet
 {
     private const string TIP_FORMAT = "tooltip-format";
@@ -281,7 +272,7 @@ public void g_io_clock_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(ClockApplet),"org.valapanel.clock",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Clock),"org.valapanel.clock",10);
 }
 
 public void g_io_clock_unload(GLib.IOModule module)

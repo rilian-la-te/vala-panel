@@ -25,8 +25,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(TaskListApplet, tasklist_applet, TASKLIST, APPLET, ValaPanelApplet);
 
-G_DECLARE_FINAL_TYPE(TaskListPlugin, tasklist_plugin, TASKLIST, PLUGIN, ValaPanelAppletPlugin);
-
 G_END_DECLS
 
 #endif // VALAPANELGENMON_H

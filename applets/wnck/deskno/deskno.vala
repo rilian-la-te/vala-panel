@@ -18,15 +18,7 @@
 
 using ValaPanel;
 using Gtk;
-public class DesknoApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Deskno(toplevel,settings,number);
-    }
-}
+
 public class Deskno: Applet
 {
     private const string KEY_LABELS = "wm-labels";
@@ -111,7 +103,7 @@ public void g_io_deskno_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DesknoApplet),"org.valapanel.deskno",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Deskno),"org.valapanel.deskno",10);
 }
 
 public void g_io_deskno_unload(GLib.IOModule module)

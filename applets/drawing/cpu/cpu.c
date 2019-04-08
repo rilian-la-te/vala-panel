@@ -319,45 +319,6 @@ static void cpu_applet_class_finalize(CpuAppletClass *klass)
 }
 
 /*
- * Plugin functions
- */
-
-struct _CpuPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(CpuPlugin, cpu_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *cpu_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                     ValaPanelToplevel *toplevel,
-                                                     GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(cpu_applet_new(toplevel, settings, uuid));
-}
-
-CpuPlugin *cpu_plugin_new(GType object_type)
-{
-	return VALA_PANEL_CPU_PLUGIN(vala_panel_applet_plugin_construct(cpu_plugin_get_type()));
-}
-
-static void cpu_plugin_class_init(CpuPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget = cpu_plugin_get_applet_widget;
-}
-
-static void cpu_plugin_init(CpuPlugin *self)
-{
-}
-
-static void cpu_plugin_class_finalize(CpuPluginClass *klass)
-{
-}
-
-/*
  * IO Module functions
  */
 
@@ -366,11 +327,10 @@ void g_io_cpu_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	cpu_applet_register_type(module);
-	cpu_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               cpu_plugin_get_type(),
+	                               cpu_applet_get_type(),
 	                               "org.valapanel.cpu",
 	                               10);
 }

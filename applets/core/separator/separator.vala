@@ -18,15 +18,7 @@
 
 using ValaPanel;
 using Gtk;
-public class SepApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Sep(toplevel,settings,number);
-    }
-}
+
 public class Sep: Applet
 {
     Separator widget;
@@ -74,7 +66,7 @@ public void g_io_separator_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SepApplet),"org.valapanel.separator",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Sep),"org.valapanel.separator",10);
 }
 
 public void g_io_separator_unload(GLib.IOModule module)

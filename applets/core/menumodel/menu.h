@@ -25,8 +25,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(MenuApplet, menu_applet, VALA_PANEL, MENU_APPLET, ValaPanelApplet)
 
-G_DECLARE_FINAL_TYPE(MenuPlugin, menu_plugin, VALA_PANEL, MENU_PLUGIN, ValaPanelAppletPlugin)
-
 G_END_DECLS
 
 #endif // VALAPANELGENMON_H

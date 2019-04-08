@@ -24,8 +24,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(CpuApplet, cpu_applet, VALA_PANEL, CPU_APPLET, ValaPanelApplet)
 
-G_DECLARE_FINAL_TYPE(CpuPlugin, cpu_plugin, VALA_PANEL, CPU_PLUGIN, ValaPanelAppletPlugin)
-
 G_END_DECLS
 
 #endif // VALAPANELGENMON_H

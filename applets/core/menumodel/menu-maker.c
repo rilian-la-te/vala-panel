@@ -73,7 +73,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 	GtkBuilder *builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu = gtk_builder_get_object(builder, "applications-menu");
-	g_object_ref(menu);
+	g_object_ref_sink(menu);
 	GList *list = g_app_info_get_all();
 	for (GList *l = list; l; l = l->next)
 		menu_maker_parse_app_info(l->data, builder);
@@ -133,7 +133,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu    = G_MENU(gtk_builder_get_object(builder, "places-menu"));
 	GMenu *section = G_MENU(gtk_builder_get_object(builder, "folders-section"));
-	g_object_ref(menu);
+	g_object_ref_sink(menu);
 	GMenuItem *item = g_menu_item_new(_("Home"), NULL);
 	char *path      = g_filename_to_uri(g_get_home_dir(), NULL, NULL);
 	g_menu_item_set_attribute(item, "icon", "s", "user-home");
@@ -191,7 +191,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 	}
 	g_menu_freeze(menu);
 	menu = G_MENU(gtk_builder_get_object(builder, "system-menu"));
-	g_object_ref(menu);
+	g_object_ref_sink(menu);
 	g_clear_object(&builder);
 	g_menu_freeze(menu);
 	return G_MENU_MODEL(menu);

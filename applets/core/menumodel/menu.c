@@ -121,8 +121,10 @@ static void panel_gravity_changed(ValaPanelToplevel *panel, GParamSpec *param, G
 
 static GtkContainer *create_menubar(MenuApplet *self)
 {
-	ValaPanelToplevel *top   = vala_panel_applet_get_toplevel(self);
-	GtkMenuBar *menubar      = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
+	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(self);
+	GtkMenuBar *menubar    = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
+	if (G_IS_OBJECT(self->menu))
+		g_object_unref(self->menu);
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(menubar));
 	apply_menu_properties(ch_list, self->menu);
 	vala_panel_applet_set_background_widget(self, menubar);
@@ -176,7 +178,9 @@ static GtkContainer *create_menubutton(MenuApplet *self)
 	GtkToggleButton *menubutton = gtk_toggle_button_new();
 	if (!self->menu)
 		return menubutton;
-	self->int_menu           = gtk_menu_new_from_model(self->menu);
+	self->int_menu = gtk_menu_new_from_model(self->menu);
+	if (G_IS_OBJECT(self->menu))
+		g_object_unref(self->menu);
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(self->int_menu));
 	apply_menu_properties(ch_list, self->menu);
 	g_clear_pointer(&ch_list, g_list_free);
@@ -304,7 +308,7 @@ static GMenuModel *read_menumodel(MenuApplet *m)
 	gotten = G_MENU(gtk_builder_get_object(builder, "vala-panel-internal-recent"));
 	if (gotten)
 		load_internal_menus(gotten, RECENT);
-	g_object_ref(menu);
+	g_object_ref_sink(menu);
 	return menu;
 }
 
@@ -549,45 +553,6 @@ static void menu_applet_class_finalize(MenuAppletClass *klass)
 }
 
 /*
- * Plugin functions
- */
-
-struct _MenuPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(MenuPlugin, menu_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *menu_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                      ValaPanelToplevel *toplevel,
-                                                      GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(menu_applet_new(toplevel, settings, uuid));
-}
-
-MenuPlugin *menu_plugin_new(GType object_type)
-{
-	return VALA_PANEL_MENU_PLUGIN(vala_panel_applet_plugin_construct(menu_plugin_get_type()));
-}
-
-static void menu_plugin_class_init(MenuPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget = menu_plugin_get_applet_widget;
-}
-
-static void menu_plugin_init(MenuPlugin *self)
-{
-}
-
-static void menu_plugin_class_finalize(MenuPluginClass *klass)
-{
-}
-
-/*
  * IO Module functions
  */
 
@@ -596,11 +561,10 @@ void g_io_menumodel_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	menu_applet_register_type(module);
-	menu_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               menu_plugin_get_type(),
+	                               menu_applet_get_type(),
 	                               "org.valapanel.menumodel",
 	                               10);
 }

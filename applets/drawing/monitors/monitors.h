@@ -26,9 +26,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(MonitorsApplet, monitors_applet, VALA_PANEL, MONITORS_APPLET, ValaPanelApplet)
 
-G_DECLARE_FINAL_TYPE(MonitorsPlugin, monitors_plugin, VALA_PANEL, MONITORS_PLUGIN,
-                     ValaPanelAppletPlugin)
-
 G_END_DECLS
 
 #endif // MONITORS_H
