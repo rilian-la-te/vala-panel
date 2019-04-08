@@ -120,8 +120,10 @@ static void panel_gravity_changed(ValaPanelToplevel *panel, GParamSpec *param, G
 
 static GtkContainer *create_menubar(MenuApplet *self)
 {
-	ValaPanelToplevel *top   = vala_panel_applet_get_toplevel(self);
-	GtkMenuBar *menubar      = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
+	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(self);
+	GtkMenuBar *menubar    = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
+	if (G_IS_OBJECT(self->menu))
+		g_object_unref(self->menu);
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(menubar));
 	apply_menu_properties(ch_list, self->menu);
 	vala_panel_applet_set_background_widget(self, menubar);
@@ -175,7 +177,9 @@ static GtkContainer *create_menubutton(MenuApplet *self)
 	GtkToggleButton *menubutton = gtk_toggle_button_new();
 	if (!self->menu)
 		return menubutton;
-	self->int_menu           = gtk_menu_new_from_model(self->menu);
+	self->int_menu = gtk_menu_new_from_model(self->menu);
+	if (G_IS_OBJECT(self->menu))
+		g_object_unref(self->menu);
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(self->int_menu));
 	apply_menu_properties(ch_list, self->menu);
 	g_clear_pointer(&ch_list, g_list_free);
@@ -237,8 +241,6 @@ static void menumodel_widget_destroy(MenuApplet *self)
 		g_signal_handlers_disconnect_by_data(self->file_monitor, self);
 		g_clear_object(&self->file_monitor);
 	}
-	if (G_IS_OBJECT(self->menu))
-		g_object_unref(self->menu);
 }
 
 static int monitor_update_idle(gpointer user_data)
