@@ -83,6 +83,13 @@ TaskListApplet *tasklist_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 {
 	TaskListApplet *self = TASKLIST_APPLET(
 	    vala_panel_applet_construct(tasklist_applet_get_type(), toplevel, settings, uuid));
+	return self;
+}
+static void tasklist_applet_constructed(GObject *obj)
+{
+	TaskListApplet *self        = TASKLIST_APPLET(obj);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(self);
+	GSettings *settings         = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
 	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	GtkOrientation orient;
 	PanelGravity gravity;
@@ -122,8 +129,6 @@ TaskListApplet *tasklist_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(widget));
 	gtk_widget_show(GTK_WIDGET(widget));
 	gtk_widget_show(GTK_WIDGET(self));
-
-	return self;
 }
 
 static GtkWidget *tasklist_applet_get_settings_ui(ValaPanelApplet *base)
@@ -165,50 +170,11 @@ static void tasklist_applet_displose(GObject *base)
 static void tasklist_applet_class_init(TaskListAppletClass *klass)
 {
 	((ValaPanelAppletClass *)klass)->get_settings_ui = tasklist_applet_get_settings_ui;
+	G_OBJECT_CLASS(klass)->constructed               = tasklist_applet_constructed;
 	G_OBJECT_CLASS(klass)->dispose                   = tasklist_applet_displose;
 }
 
 static void tasklist_applet_class_finalize(TaskListAppletClass *klass)
-{
-}
-
-/*
- * Plugin functions
- */
-
-struct _TaskListPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(TaskListPlugin, tasklist_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *tasklist_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                          ValaPanelToplevel *toplevel,
-                                                          GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(tasklist_applet_new(toplevel, settings, uuid));
-}
-
-TaskListPlugin *tasklist_plugin_new(GType object_type)
-{
-	return TASKLIST_PLUGIN(vala_panel_applet_plugin_construct(tasklist_applet_get_type()));
-}
-
-static void tasklist_plugin_class_init(TaskListPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget =
-	    tasklist_plugin_get_applet_widget;
-}
-
-static void tasklist_plugin_init(TaskListPlugin *self)
-{
-}
-
-static void tasklist_plugin_class_finalize(TaskListPluginClass *klass)
 {
 }
 
@@ -221,11 +187,10 @@ void g_io_tasklist_xfce_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	tasklist_applet_register_type(module);
-	tasklist_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               tasklist_plugin_get_type(),
+	                               tasklist_applet_get_type(),
 	                               "org.xfce.tasklist",
 	                               10);
 }

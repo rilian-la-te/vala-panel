@@ -19,15 +19,6 @@
 using ValaPanel;
 using Gtk;
 
-public class DirmenuApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Dirmenu(toplevel,settings,number);
-    }
-}
 public class Dirmenu: Applet
 {
     private struct DirectorySort
@@ -212,7 +203,7 @@ public void g_io_dirmenu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(DirmenuApplet),"org.valapanel.dirmenu",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Dirmenu),"org.valapanel.dirmenu",10);
 }
 
 public void g_io_dirmenu_unload(GLib.IOModule module)

@@ -27,15 +27,6 @@ public const TargetEntry[] MENU_TARGETS = {
 
 namespace LaunchBar
 {
-    public class AppletImpl : AppletPlugin
-    {
-        public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                        GLib.Settings? settings,
-                                        string number)
-        {
-            return new Bar(toplevel,settings,number);
-        }
-    }
     private const string BUTTONS = "launch-buttons";
     public class Bar: Applet
     {
@@ -286,7 +277,7 @@ public void g_io_launchbar_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.AppletImpl),"org.valapanel.launchbar",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.Bar),"org.valapanel.launchbar",10);
 }
 
 public void g_io_launchbar_unload(GLib.IOModule module)

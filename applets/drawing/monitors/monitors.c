@@ -321,47 +321,6 @@ static void monitors_applet_class_finalize(MonitorsAppletClass *klass)
 }
 
 /*
- * Plugin functions
- */
-
-struct _MonitorsPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(MonitorsPlugin, monitors_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *monitors_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                          ValaPanelToplevel *toplevel,
-                                                          GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(monitors_applet_new(toplevel, settings, uuid));
-}
-
-MonitorsPlugin *monitors_plugin_new(GType object_type)
-{
-	return VALA_PANEL_MONITORS_PLUGIN(
-	    vala_panel_applet_plugin_construct(monitors_plugin_get_type()));
-}
-
-static void monitors_plugin_class_init(MonitorsPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget =
-	    monitors_plugin_get_applet_widget;
-}
-
-static void monitors_plugin_init(MonitorsPlugin *self)
-{
-}
-
-static void monitors_plugin_class_finalize(MonitorsPluginClass *klass)
-{
-}
-
-/*
  * IO Module functions
  */
 
@@ -370,11 +329,10 @@ void g_io_monitors_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	monitors_applet_register_type(module);
-	monitors_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               monitors_plugin_get_type(),
+	                               monitors_applet_get_type(),
 	                               "org.valapanel.monitors",
 	                               10);
 }

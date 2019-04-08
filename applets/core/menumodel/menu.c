@@ -548,45 +548,6 @@ static void menu_applet_class_finalize(MenuAppletClass *klass)
 }
 
 /*
- * Plugin functions
- */
-
-struct _MenuPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(MenuPlugin, menu_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *menu_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                      ValaPanelToplevel *toplevel,
-                                                      GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(menu_applet_new(toplevel, settings, uuid));
-}
-
-MenuPlugin *menu_plugin_new(GType object_type)
-{
-	return VALA_PANEL_MENU_PLUGIN(vala_panel_applet_plugin_construct(menu_plugin_get_type()));
-}
-
-static void menu_plugin_class_init(MenuPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget = menu_plugin_get_applet_widget;
-}
-
-static void menu_plugin_init(MenuPlugin *self)
-{
-}
-
-static void menu_plugin_class_finalize(MenuPluginClass *klass)
-{
-}
-
-/*
  * IO Module functions
  */
 
@@ -595,11 +556,10 @@ void g_io_menumodel_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	menu_applet_register_type(module);
-	menu_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               menu_plugin_get_type(),
+	                               menu_applet_get_type(),
 	                               "org.valapanel.menumodel",
 	                               10);
 }

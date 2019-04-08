@@ -18,15 +18,7 @@
 
 using ValaPanel;
 using Gtk;
-public class PagerApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Pager(toplevel,settings,number);
-    }
-}
+
 public class Pager: Applet
 {
     Wnck.Pager widget;
@@ -106,7 +98,7 @@ public void g_io_pager_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(PagerApplet),"org.valapanel.pager",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Pager),"org.valapanel.pager",10);
 }
 
 public void g_io_pager_unload(GLib.IOModule module)

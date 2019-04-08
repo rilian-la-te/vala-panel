@@ -256,46 +256,6 @@ static void netmon_applet_class_finalize(NetMonAppletClass *klass)
 }
 
 /*
- * Plugin functions
- */
-
-struct _NetMonPlugin
-{
-	ValaPanelAppletPlugin parent;
-};
-
-G_DEFINE_DYNAMIC_TYPE(NetMonPlugin, netmon_plugin, vala_panel_applet_plugin_get_type())
-
-static ValaPanelApplet *netmon_plugin_get_applet_widget(ValaPanelAppletPlugin *base,
-                                                        ValaPanelToplevel *toplevel,
-                                                        GSettings *settings, const char *uuid)
-{
-	g_return_val_if_fail(toplevel != NULL, NULL);
-	g_return_val_if_fail(uuid != NULL, NULL);
-
-	return VALA_PANEL_APPLET(netmon_applet_new(toplevel, settings, uuid));
-}
-
-NetMonPlugin *netmon_plugin_new(GType object_type)
-{
-	return VALA_PANEL_NETMON_PLUGIN(
-	    vala_panel_applet_plugin_construct(netmon_plugin_get_type()));
-}
-
-static void netmon_plugin_class_init(NetMonPluginClass *klass)
-{
-	((ValaPanelAppletPluginClass *)klass)->get_applet_widget = netmon_plugin_get_applet_widget;
-}
-
-static void netmon_plugin_init(NetMonPlugin *self)
-{
-}
-
-static void netmon_plugin_class_finalize(NetMonPluginClass *klass)
-{
-}
-
-/*
  * IO Module functions
  */
 
@@ -304,11 +264,10 @@ void g_io_netmon_load(GTypeModule *module)
 	g_return_if_fail(module != NULL);
 
 	netmon_applet_register_type(module);
-	netmon_plugin_register_type(module);
 
 	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
-	                               netmon_plugin_get_type(),
+	                               netmon_applet_get_type(),
 	                               "org.valapanel.netmon",
 	                               10);
 }

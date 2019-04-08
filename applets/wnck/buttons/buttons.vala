@@ -18,15 +18,7 @@
 
 using ValaPanel;
 using Gtk;
-public class ButtonsApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Buttons(toplevel,settings,number);
-    }
-}
+
 public class Buttons: Applet
 {
     Button? minimize = null;
@@ -212,7 +204,7 @@ public void g_io_buttons_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(ButtonsApplet),"org.valapanel.buttons",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Buttons),"org.valapanel.buttons",10);
 }
 
 public void g_io_buttons_unload(GLib.IOModule module)

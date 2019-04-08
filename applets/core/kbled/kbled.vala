@@ -18,15 +18,7 @@
 
 using ValaPanel;
 using Gtk;
-public class KbLEDApplet : AppletPlugin
-{
-    public override Applet get_applet_widget(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        return new Kbled(toplevel,settings,number);
-    }
-}
+
 public class Kbled: Applet
 {
     private const string CAPS_ON = "capslock-on";
@@ -116,7 +108,7 @@ public void g_io_kbled_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
     module.use();
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(KbLEDApplet),"org.valapanel.kbled",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Kbled),"org.valapanel.kbled",10);
 }
 
 public void g_io_kbled_unload(GLib.IOModule module)
