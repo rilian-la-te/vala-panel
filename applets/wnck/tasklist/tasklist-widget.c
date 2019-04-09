@@ -1413,9 +1413,9 @@ static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
 	g_return_if_fail(GDK_IS_DISPLAY(tasklist->gdk_display));
 
 	/* disconnect monitor signals */
-    g_signal_handlers_disconnect_by_data(tasklist->screen,tasklist);
-    g_signal_handlers_disconnect_by_data(tasklist->gdk_display,tasklist);
-    g_return_if_fail(n == 5);
+	g_signal_handlers_disconnect_by_data(tasklist->screen, tasklist);
+	g_signal_handlers_disconnect_by_data(tasklist->gdk_display, tasklist);
+	g_return_if_fail(n == 5);
 
 	/* delete all known class groups (and their buttons) */
 	g_hash_table_remove_all(tasklist->class_groups);
