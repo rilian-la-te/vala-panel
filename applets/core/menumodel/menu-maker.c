@@ -70,21 +70,24 @@ static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder
 
 G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 {
-	GtkBuilder *builder =
+	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu = gtk_builder_get_object(builder, "applications-menu");
 	g_object_ref_sink(menu);
 	GList *list = g_app_info_get_all();
 	for (GList *l = list; l; l = l->next)
+	{
 		menu_maker_parse_app_info(l->data, builder);
-	g_list_free_full(list, g_object_unref);
+		g_clear_object(&l->data);
+	}
+	g_list_free(list);
 	for (int i = 0; i < g_menu_model_get_n_items(menu); i++)
 	{
 		i                    = (i < 0) ? 0 : i;
 		g_autofree char *cat = NULL;
 		bool in_cat =
 		    g_menu_model_get_item_attribute(menu, i, "x-valapanel-cat", "s", &cat);
-		GMenu *submenu =
+		g_autoptr(GMenu) submenu =
 		    G_MENU(g_menu_model_get_item_link(G_MENU_MODEL(menu), i, G_MENU_LINK_SUBMENU));
 		if (g_menu_model_get_n_items(G_MENU_MODEL(submenu)) <= 0 ||
 		    (in_cat && g_strv_contains(cats, cat)))
@@ -96,7 +99,6 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 		if (i >= g_menu_model_get_n_items(menu) || g_menu_model_get_n_items(menu) <= 0)
 			break;
 	}
-	g_clear_object(&builder);
 	g_menu_freeze(menu);
 	return G_MENU_MODEL(menu);
 }
@@ -129,7 +131,7 @@ static GMenuItem *add_app_info_launch_item(GDesktopAppInfo *app_info)
 
 G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 {
-	GtkBuilder *builder =
+	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu    = G_MENU(gtk_builder_get_object(builder, "places-menu"));
 	GMenu *section = G_MENU(gtk_builder_get_object(builder, "folders-section"));
@@ -161,14 +163,13 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 		g_menu_prepend_item(section, item);
 		g_clear_object(&item);
 	}
-	g_clear_object(&builder);
 	return G_MENU_MODEL(menu);
 }
 
 G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 {
 	g_autoptr(GMenu) section = G_MENU(menu_maker_create_applications_menu(true));
-	GtkBuilder *builder =
+	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
 	GMenu *menu = G_MENU(gtk_builder_get_object(builder, "settings-section"));
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
@@ -192,7 +193,6 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
 	g_menu_freeze(menu);
 	menu = G_MENU(gtk_builder_get_object(builder, "system-menu"));
 	g_object_ref_sink(menu);
-	g_clear_object(&builder);
 	g_menu_freeze(menu);
 	return G_MENU_MODEL(menu);
 }
@@ -203,6 +203,7 @@ GMenuModel *menu_maker_create_main_menu(bool as_submenus, const char *icon_str)
 	g_autoptr(GMenuModel) apps   = menu_maker_create_applications_menu(false);
 	g_autoptr(GMenuModel) places = menu_maker_create_places_menu();
 	g_autoptr(GMenuModel) system = menu_maker_create_system_menu();
+	g_autoptr(GMenu) section     = g_menu_new();
 	if (as_submenus)
 	{
 		g_autoptr(GMenuItem) item = g_menu_item_new_submenu(_("Applications"), apps);
@@ -216,7 +217,6 @@ GMenuModel *menu_maker_create_main_menu(bool as_submenus, const char *icon_str)
 	{
 		g_menu_append(menu, _("Vala Panel - " VERSION), "foo.improper-action");
 		g_menu_append_section(menu, NULL, apps);
-		g_autoptr(GMenu) section = g_menu_new();
 		g_menu_append_submenu(section, _("Places"), places);
 		g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 		append_all_sections(menu, system);
