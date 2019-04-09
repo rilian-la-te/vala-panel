@@ -541,7 +541,7 @@ static void vp_layout_init(ValaPanelLayout *self)
 
 static void vp_layout_class_init(ValaPanelLayoutClass *klass)
 {
-	manager                             = vp_applet_manager_new();
+	manager                             = vp_toplevel_get_manager();
 	core_settings                       = vp_toplevel_get_core_settings();
 	G_OBJECT_CLASS(klass)->constructed  = vp_layout_constructed;
 	G_OBJECT_CLASS(klass)->set_property = vp_layout_set_property;

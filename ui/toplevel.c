@@ -19,6 +19,7 @@
 #include "toplevel.h"
 #include "definitions.h"
 #include "panel-layout.h"
+#include "private.h"
 #include "toplevel-config.h"
 #include "util-gtk.h"
 #include "vala-panel-enums.h"
@@ -124,6 +125,11 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_toplevel_get_core_settings()
 {
 	return vala_panel_platform_get_settings(platform);
 }
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_toplevel_get_manager()
+{
+	return vp_platform_get_manager(platform);
+}
+
 G_GNUC_INTERNAL bool vp_toplevel_is_initialized(ValaPanelToplevel *self)
 {
 	return self->initialized;

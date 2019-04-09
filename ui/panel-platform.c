@@ -17,12 +17,14 @@
  */
 
 #include "panel-platform.h"
+#include "applet-manager.h"
 #include "definitions.h"
 #include "toplevel.h"
 
 typedef struct
 {
 	ValaPanelCoreSettings *core_settings;
+	ValaPanelAppletManager *manager;
 	GHashTable *toplevels;
 } ValaPanelPlatformPrivate;
 
@@ -96,6 +98,13 @@ ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 	return priv->core_settings;
 }
 
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_platform_get_manager(ValaPanelPlatform *self)
+{
+	ValaPanelPlatformPrivate *priv =
+	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	return priv->manager;
+}
+
 bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
@@ -119,6 +128,7 @@ static void vala_panel_platform_init(ValaPanelPlatform *self)
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	priv->core_settings = NULL;
+	priv->manager       = vp_applet_manager_new();
 	priv->toplevels =
 	    g_hash_table_new_full(g_direct_hash, g_direct_equal, gtk_widget_destroy, NULL);
 }
@@ -131,6 +141,7 @@ static void vala_panel_platform_finalize(GObject *obj)
 	g_hash_table_unref(priv->toplevels);
 	if (priv->core_settings)
 		vp_core_settings_free(priv->core_settings);
+	g_clear_object(&priv->manager);
 	G_OBJECT_CLASS(vala_panel_platform_parent_class)->finalize(obj);
 }
 

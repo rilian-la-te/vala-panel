@@ -104,7 +104,7 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_new(const char *schema, 
                                                         (GDestroyNotify)vp_unit_settings_free);
 	new_settings->root_path             = g_strdup(path);
 	new_settings->root_schema           = g_strdup(schema);
-	new_settings->backend               = g_object_ref(backend);
+	new_settings->backend               = g_object_ref_sink(backend);
 	g_autofree char *core_path =
 	    g_strdup_printf("%s%s/", new_settings->root_path, VALA_PANEL_CORE_PATH_ELEM);
 	new_settings->core_settings = g_settings_new_with_backend_and_path(VALA_PANEL_CORE_SCHEMA,
