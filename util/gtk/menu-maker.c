@@ -93,10 +93,9 @@ void append_all_sections(GMenu *menu1, GMenuModel *menu2)
 	{
 		g_autoptr(GMenuModel) link =
 		    g_menu_model_get_item_link(menu2, i, G_MENU_LINK_SECTION);
-		g_autoptr(GVariant) labelv =
-		    g_menu_model_get_item_attribute_value(menu2, i, "label", G_VARIANT_TYPE_STRING);
-		const char *label = labelv != NULL ? g_variant_get_string(labelv, NULL) : NULL;
-		if (link != NULL)
+		g_autofree char *label = NULL;
+		g_menu_model_get_item_attribute(menu2, i, "label", "s", &label, NULL);
+		if (link)
 			g_menu_append_section(menu1, label, link);
 	}
 }
