@@ -35,8 +35,7 @@ void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, co
 	                prop,
 	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |
 	                                     G_SETTINGS_BIND_DEFAULT));
-	g_autoptr(GAction) action = g_settings_create_action(settings, prop);
-	g_action_map_add_action(map, action);
+	vala_panel_add_prop_as_action(map, prop);
 }
 
 void vala_panel_reset_schema(GSettings *settings)
