@@ -681,7 +681,6 @@ static void xfce_tasklist_finalize(GObject *object)
 		g_source_remove(tasklist->update_monitor_geometry_id);
 
 	/* free the class group hash table */
-	g_clear_pointer(&tasklist->arrow_button, gtk_widget_destroy);
 	g_hash_table_destroy(tasklist->class_groups);
 
 #ifdef GDK_WINDOWING_X11

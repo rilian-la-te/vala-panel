@@ -194,7 +194,6 @@ static GtkContainer *create_menubutton(MenuApplet *self)
 
 static GtkContainer *menumodel_widget_create(MenuApplet *self)
 {
-	g_clear_object(&self->menu);
 	self->menu        = create_menumodel(self);
 	GtkContainer *ret = NULL;
 	if (!self->menu)
@@ -232,6 +231,8 @@ static void menumodel_widget_destroy(MenuApplet *self)
 			gtk_widget_destroy0(self->int_menu);
 	}
 	gtk_widget_destroy0(self->button);
+	if (G_IS_OBJECT(self->menu))
+		g_clear_object(&self->menu);
 	if (self->app_monitor)
 	{
 		g_signal_handlers_disconnect_by_data(self->app_monitor, self);
