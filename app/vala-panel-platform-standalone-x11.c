@@ -337,7 +337,7 @@ static void vpp_x11_finalize(GObject *obj)
 	g_signal_handlers_disconnect_by_data(gdk_display_get_default(), self->app);
 	monitors_update_finalize(self->app);
 	g_clear_pointer(&self->profile, g_free);
-	(*G_OBJECT_CLASS(vala_panel_platform_x11_parent_class)->finalize)(obj);
+	G_OBJECT_CLASS(vala_panel_platform_x11_parent_class)->finalize(obj);
 }
 
 static void vala_panel_platform_x11_init(ValaPanelPlatformX11 *self)
