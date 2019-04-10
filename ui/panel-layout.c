@@ -257,7 +257,9 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 		return NULL;
 	ValaPanelToplevel *top  = vp_layout_get_toplevel(self);
 	ValaPanelApplet *applet = vp_applet_manager_get_applet_widget(manager, name, top, s);
-	bool nonfloat           = g_object_is_floating(applet) ? false : true;
+	if (!applet)
+		return NULL;
+	bool nonfloat = g_object_is_floating(applet) ? false : true;
 	g_hash_table_insert(self->applets, g_strdup(vala_panel_applet_get_uuid(applet)), applet);
 	vp_layout_applet_repack(NULL, applet, self);
 	vp_layout_applet_reposition(NULL, applet, NULL);
