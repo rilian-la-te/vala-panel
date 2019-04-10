@@ -62,13 +62,17 @@ static void redraw_pixmap(CpuApplet *c)
 	cairo_t *cr              = cairo_create(c->pixmap);
 	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(c));
 	GtkStateFlags flags      = gtk_widget_get_state_flags(GTK_WIDGET(c));
-	GdkRGBA background_color;
-	gtk_style_context_get(context, flags, "background-color", &background_color, NULL);
+	g_autoptr(GdkRGBA) background_color;
+	gtk_style_context_get(context,
+	                      flags,
+	                      GTK_STYLE_PROPERTY_BACKGROUND_COLOR,
+	                      &background_color,
+	                      NULL);
 	cairo_set_line_width(cr, 1.0);
 	/* Erase pixmap. */
 	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	cairo_rectangle(cr, 0, 0, c->pixmap_width, c->pixmap_height);
-	gdk_cairo_set_source_rgba(cr, &background_color);
+	gdk_cairo_set_source_rgba(cr, background_color);
 	cairo_fill(cr);
 
 	/* Recompute pixmap. */
@@ -232,9 +236,13 @@ static bool draw(GtkWidget *widget, cairo_t *cr, CpuApplet *c)
 	{
 		GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(c));
 		GtkStateFlags flags      = gtk_widget_get_state_flags(GTK_WIDGET(c));
-		GdkRGBA background_color;
-		gtk_style_context_get(context, flags, "background-color", &background_color, NULL);
-		gdk_cairo_set_source_rgba(cr, &background_color);
+		g_autoptr(GdkRGBA) background_color;
+		gtk_style_context_get(context,
+		                      flags,
+		                      GTK_STYLE_PROPERTY_BACKGROUND_COLOR,
+		                      &background_color,
+		                      NULL);
+		gdk_cairo_set_source_rgba(cr, background_color);
 		cairo_set_source_surface(cr, c->pixmap, BORDER_SIZE, BORDER_SIZE);
 		cairo_paint(cr);
 		/* check_cairo_status(cr); */
