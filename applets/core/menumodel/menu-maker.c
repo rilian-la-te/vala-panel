@@ -76,11 +76,8 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 	g_object_ref_sink(menu);
 	GList *list = g_app_info_get_all();
 	for (GList *l = list; l; l = l->next)
-	{
 		menu_maker_parse_app_info(l->data, builder);
-		g_clear_object(&l->data);
-	}
-	g_list_free(list);
+	g_list_free_full(list, g_object_unref);
 	for (int i = 0; i < g_menu_model_get_n_items(menu); i++)
 	{
 		i                    = (i < 0) ? 0 : i;
