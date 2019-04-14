@@ -28,8 +28,7 @@ static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder
 	{
 		GMenu *menu_link          = NULL;
 		bool found                = false;
-		g_autoptr(GMenuItem) item = g_menu_item_new(NULL, NULL);
-		g_menu_item_set_label(item, g_app_info_get_name(info));
+		g_autoptr(GMenuItem) item = g_menu_item_new(g_app_info_get_name(info), NULL);
 		g_menu_item_set_action_and_target(item,
 		                                  "app.launch-id",
 		                                  "s",
