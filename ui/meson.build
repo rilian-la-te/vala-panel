@@ -45,7 +45,7 @@ ui_inc = include_directories('.')
 ui = library(library_name,
              ui_headers, ui_sources, ui_res, ui_enums_gen,
              dependencies: core_deps,
-             link_with: [util, util_gtk],
+             link_whole: [util, util_gtk],
              include_directories: [core_inc,util_inc, util_gtk_inc, ui_inc],
              version: meson.project_version(),
              c_args: ['-DG_SETTINGS_ENABLE_BACKEND'],

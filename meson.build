@@ -32,9 +32,28 @@ applets_libdir = join_paths(prefix,libdir, meson.project_name(),'applets')
 profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_name())
 
 
+#am_cflags = [
+#    '-fstack-protector',
+#    '-Wno-missing-field-initializers',
+#    '-Wstrict-prototypes',
+#    '-Wundef',
+#    '-Werror-implicit-function-declaration',
+#    '-Wformat',
+#    '-Wformat-security',
+#    '-Werror=format-security',
+#    '-Wconversion',
+#    '-Wno-unused-parameter',
+#    '-Wunreachable-code',
+#    '-Wall',
+#    '-W',
+#]
 am_cflags = [
+    '-Wno-unused',
+    '-Wno-unused-parameter',
+    '-Wno-discarded-qualifiers',
+    '-Wno-incompatible-pointer-types',
+    '-Wno-missing-field-initializers',
     '-fstack-protector',
-    '-pedantic',
     '-Wstrict-prototypes',
     '-Wundef',
     '-Werror-implicit-function-declaration',
@@ -42,8 +61,8 @@ am_cflags = [
     '-Wformat-security',
     '-Werror=format-security',
     '-Wconversion',
-    '-Wno-unused-parameter',
     '-Wunreachable-code',
+    '-Wextra',
     '-Wall',
     '-W',
 ]

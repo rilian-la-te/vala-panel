@@ -6,7 +6,7 @@ sources = files(
   'xfce-arrow-button.c',
   'xfce-arrow-button.h',
   )
-tasklist = shared_module( 'tasklist',
+tasklist = shared_module( 'tasklist-xfce',
                         sources, 
                         dependencies: [core_deps,vala_panel_dep, wnck],
                         install: true,

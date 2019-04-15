@@ -18,9 +18,10 @@ util_sources = files(
 util_inc = include_directories('.')
 
 util = static_library(
-							'util', util_sources, util_headers,
-							dependencies : [giounix,glib,gio],
-						 )
+    'util', util_sources, util_headers,
+    dependencies : [giounix,glib,gio],
+    pic: true,
+)
 install_headers(util_headers, subdir : meson.project_name())
 
 subdir('gtk')
