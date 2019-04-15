@@ -20,8 +20,9 @@ util_gtk_enums_gen = gnome.mkenums(
   enum,
   sources: util_gtk_enum_headers,
   c_template: enum + '.c.template',
-  h_template: enum + '.h.template'
-
+  h_template: enum + '.h.template',
+  install_header: true,
+  install_dir: join_paths(includedir, meson.project_name()),
 )
 util_gtk_inc = include_directories('.')
 

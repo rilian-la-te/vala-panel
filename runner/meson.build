@@ -11,13 +11,10 @@ runner_res = gnome.compile_resources(
     c_name: 'runner'
 )
 
-cc = meson.get_compiler('c')
-m_dep = cc.find_library('m', required : false)
-
 runner = executable(
     meson.project_name()+'-runner',
     runner_sources, runner_res,
-    dependencies: [core_deps, m_dep],
+    dependencies: [core_deps],
     include_directories: [core_inc, util_inc, util_gtk_inc],
     link_with: [util, util_gtk],
     install : true
