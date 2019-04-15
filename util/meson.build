@@ -17,7 +17,7 @@ util_sources = files(
 
 util_inc = include_directories('.')
 
-util_dep = static_library(
+util = static_library(
 							'util', util_sources, util_headers,
 							dependencies : [giounix,glib,gio],
 						 )
