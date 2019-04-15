@@ -24,6 +24,7 @@ build-main:
   artifacts:
     paths:
     - "build/vala-panel*.tar.xz"
+    - "build/meson-dist/vala-panel*.tar.xz"
     expire_in: 1 week
 
 
