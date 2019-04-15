@@ -73,13 +73,12 @@ static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer d
 static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer data);
 
-static const GOptionEntry entries[] = {
-	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
-	{ "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, PROFILE_TR, N_("profile") },
-	{ "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
-	{ "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
-	{ NULL }
-};
+static const GOptionEntry entries[] =
+    { { "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
+      { "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, PROFILE_TR, N_("profile") },
+      { "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
+      { "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
+      { NULL } };
 
 static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
@@ -93,26 +92,27 @@ static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "quit", activate_exit, NULL, NULL, NULL, { 0 } },
 	{ "restart", activate_restart, NULL, NULL, NULL, { 0 } },
 };
-static const GActionEntry vala_panel_application_menu_entries[3] = {
-	{ "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
-	{ "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
-	{ "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } }
-};
+static const GActionEntry vala_panel_application_menu_entries[3] =
+    { { "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
+      { "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
+      { "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } } };
 
 enum
 {
-	VALA_PANEL_APP_DUMMY_PROPERTY,
-	VALA_PANEL_APP_PROFILE,
-	VALA_PANEL_APP_RUN_COMMAND,
-	VALA_PANEL_APP_TERMINAL_COMMAND,
-	VALA_PANEL_APP_LOCK_COMMAND,
-	VALA_PANEL_APP_LOGOUT_COMMAND,
-	VALA_PANEL_APP_SHUTDOWN_COMMAND,
-	VALA_PANEL_APP_IS_DARK,
-	VALA_PANEL_APP_IS_CUSTOM,
-	VALA_PANEL_APP_CSS,
-	VALA_PANEL_APP_ALL
+	PROP_DUMMY_PROPERTY,
+	PROP_PROFILE,
+	PROP_RUN_COMMAND,
+	PROP_TERMINAL_COMMAND,
+	PROP_LOCK_COMMAND,
+	PROP_LOGOUT_COMMAND,
+	PROP_SHUTDOWN_COMMAND,
+	PROP_IS_DARK,
+	PROP_IS_CUSTOM,
+	PROP_CSS,
+	PROP_ALL
 };
+
+static GParamSpec *pspecs[PROP_ALL];
 
 static inline void destroy0(GtkWidget *x, void *data)
 {
@@ -204,9 +204,10 @@ static void vala_panel_application_shutdown(GApplication *base)
 		char cwd[1024];
 		char *tmp;
 		tmp                = getcwd(cwd, 1024);
-		const char *argv[] = {
-			GETTEXT_PACKAGE, "-p", VALA_PANEL_APPLICATION(base)->profile, NULL
-		};
+		const char *argv[] = { GETTEXT_PACKAGE,
+			               "-p",
+			               VALA_PANEL_APPLICATION(base)->profile,
+			               NULL };
 		g_auto(GStrv) envp = g_get_environ();
 		g_spawn_async(cwd,
 		              (GStrv)argv,
@@ -221,7 +222,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 	}
 }
 
-static gint vala_panel_app_handle_local_options(GApplication *application, GVariantDict *options)
+static gint PROP_handle_local_options(GApplication *application, GVariantDict *options)
 {
 	if (g_variant_dict_contains(options, "version"))
 	{
@@ -231,8 +232,7 @@ static gint vala_panel_app_handle_local_options(GApplication *application, GVari
 	return -1;
 }
 
-static int vala_panel_app_command_line(GApplication *application,
-                                       GApplicationCommandLine *commandline)
+static int PROP_command_line(GApplication *application, GApplicationCommandLine *commandline)
 {
 	g_autofree char *profile_name = NULL;
 	g_autofree char *ccommand     = NULL;
@@ -385,7 +385,7 @@ void vala_panel_application_activate(GApplication *app)
 	}
 }
 
-static void vala_panel_app_finalize(GObject *object)
+static void PROP_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
 	g_clear_object(&app->config);
@@ -401,8 +401,8 @@ static void vala_panel_app_finalize(GObject *object)
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
 
-static void vala_panel_app_set_property(GObject *object, guint prop_id, const GValue *value,
-                                        GParamSpec *pspec)
+static void PROP_set_property(GObject *object, guint prop_id, const GValue *value,
+                              GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
@@ -411,47 +411,47 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 
 	switch (prop_id)
 	{
-	case VALA_PANEL_APP_IS_DARK:
+	case PROP_IS_DARK:
 		app->dark = g_value_get_boolean(value);
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_IS_CUSTOM:
+	case PROP_IS_CUSTOM:
 		app->custom = g_value_get_boolean(value);
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_TERMINAL_COMMAND:
+	case PROP_TERMINAL_COMMAND:
 		g_free0(app->terminal_command);
 		app->terminal_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_RUN_COMMAND:
+	case PROP_RUN_COMMAND:
 		g_free0(app->run_command);
 		app->run_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_LOCK_COMMAND:
+	case PROP_LOCK_COMMAND:
 		g_free0(app->lock_command);
 		app->lock_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_LOGOUT_COMMAND:
+	case PROP_LOGOUT_COMMAND:
 		g_free0(app->logout_command);
 		app->logout_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_SHUTDOWN_COMMAND:
+	case PROP_SHUTDOWN_COMMAND:
 		g_free0(app->shutdown_command);
 		app->shutdown_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_PROFILE:
+	case PROP_PROFILE:
 		g_free0(app->profile);
 		app->profile = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case VALA_PANEL_APP_CSS:
+	case PROP_CSS:
 		g_free0(app->css);
 		app->css = g_strdup(g_value_get_string(value));
 		apply_styling(app);
@@ -463,8 +463,7 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 	}
 }
 
-static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *value,
-                                        GParamSpec *pspec)
+static void PROP_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
@@ -473,31 +472,31 @@ static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *
 
 	switch (prop_id)
 	{
-	case VALA_PANEL_APP_IS_DARK:
+	case PROP_IS_DARK:
 		g_value_set_boolean(value, app->dark);
 		break;
-	case VALA_PANEL_APP_IS_CUSTOM:
+	case PROP_IS_CUSTOM:
 		g_value_set_boolean(value, app->custom);
 		break;
-	case VALA_PANEL_APP_RUN_COMMAND:
+	case PROP_RUN_COMMAND:
 		g_value_set_string(value, app->run_command);
 		break;
-	case VALA_PANEL_APP_TERMINAL_COMMAND:
+	case PROP_TERMINAL_COMMAND:
 		g_value_set_string(value, app->terminal_command);
 		break;
-	case VALA_PANEL_APP_LOCK_COMMAND:
+	case PROP_LOCK_COMMAND:
 		g_value_set_string(value, app->lock_command);
 		break;
-	case VALA_PANEL_APP_LOGOUT_COMMAND:
+	case PROP_LOGOUT_COMMAND:
 		g_value_set_string(value, app->logout_command);
 		break;
-	case VALA_PANEL_APP_SHUTDOWN_COMMAND:
+	case PROP_SHUTDOWN_COMMAND:
 		g_value_set_string(value, app->shutdown_command);
 		break;
-	case VALA_PANEL_APP_PROFILE:
+	case PROP_PROFILE:
 		g_value_set_string(value, app->profile);
 		break;
-	case VALA_PANEL_APP_CSS:
+	case PROP_CSS:
 		g_value_set_string(value, app->css);
 		break;
 	default:
@@ -642,86 +641,63 @@ static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer da
 
 static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 {
-	((GApplicationClass *)klass)->startup              = vala_panel_application_startup;
-	((GApplicationClass *)klass)->shutdown             = vala_panel_application_shutdown;
-	((GApplicationClass *)klass)->activate             = vala_panel_application_activate;
-	((GApplicationClass *)klass)->handle_local_options = vala_panel_app_handle_local_options;
-	((GApplicationClass *)klass)->command_line         = vala_panel_app_command_line;
-	G_OBJECT_CLASS(klass)->get_property                = vala_panel_app_get_property;
-	G_OBJECT_CLASS(klass)->set_property                = vala_panel_app_set_property;
-	G_OBJECT_CLASS(klass)->finalize                    = vala_panel_app_finalize;
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_PROFILE,
-	                                g_param_spec_string("profile",
-	                                                    "profile",
-	                                                    "profile",
-	                                                    "default",
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_RUN_COMMAND,
-	                                g_param_spec_string(VP_KEY_RUN,
-	                                                    VP_KEY_RUN,
-	                                                    VP_KEY_RUN,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_TERMINAL_COMMAND,
-	                                g_param_spec_string(VP_KEY_TERMINAL,
-	                                                    VP_KEY_TERMINAL,
-	                                                    VP_KEY_TERMINAL,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_LOCK_COMMAND,
-	                                g_param_spec_string(VP_KEY_LOCK,
-	                                                    VP_KEY_LOCK,
-	                                                    VP_KEY_LOCK,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_LOGOUT_COMMAND,
-	                                g_param_spec_string(VP_KEY_LOGOUT,
-	                                                    VP_KEY_LOGOUT,
-	                                                    VP_KEY_LOGOUT,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_SHUTDOWN_COMMAND,
-	                                g_param_spec_string(VP_KEY_SHUTDOWN,
-	                                                    VP_KEY_SHUTDOWN,
-	                                                    VP_KEY_SHUTDOWN,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_IS_DARK,
-	                                g_param_spec_boolean(VP_KEY_DARK,
-	                                                     VP_KEY_DARK,
-	                                                     VP_KEY_DARK,
-	                                                     false,
-	                                                     G_PARAM_STATIC_STRINGS |
-	                                                         G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_IS_CUSTOM,
-	                                g_param_spec_boolean(VP_KEY_CUSTOM,
-	                                                     VP_KEY_CUSTOM,
-	                                                     VP_KEY_CUSTOM,
-	                                                     false,
-	                                                     G_PARAM_STATIC_STRINGS |
-	                                                         G_PARAM_READWRITE));
-	g_object_class_install_property(G_OBJECT_CLASS(klass),
-	                                VALA_PANEL_APP_CSS,
-	                                g_param_spec_string(VP_KEY_CSS,
-	                                                    VP_KEY_CSS,
-	                                                    VP_KEY_CSS,
-	                                                    NULL,
-	                                                    G_PARAM_STATIC_STRINGS |
-	                                                        G_PARAM_READWRITE));
+	G_APPLICATION_CLASS(klass)->startup              = vala_panel_application_startup;
+	G_APPLICATION_CLASS(klass)->shutdown             = vala_panel_application_shutdown;
+	G_APPLICATION_CLASS(klass)->activate             = vala_panel_application_activate;
+	G_APPLICATION_CLASS(klass)->handle_local_options = PROP_handle_local_options;
+	G_APPLICATION_CLASS(klass)->command_line         = PROP_command_line;
+	G_OBJECT_CLASS(klass)->get_property              = PROP_get_property;
+	G_OBJECT_CLASS(klass)->set_property              = PROP_set_property;
+	G_OBJECT_CLASS(klass)->finalize                  = PROP_finalize;
+	pspecs[PROP_PROFILE]                             = g_param_spec_string("profile",
+                                                   "profile",
+                                                   "profile",
+                                                   "default",
+                                                   G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_RUN_COMMAND]                         = g_param_spec_string(VP_KEY_RUN,
+                                                       VP_KEY_RUN,
+                                                       VP_KEY_RUN,
+                                                       NULL,
+                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_TERMINAL_COMMAND] =
+	    g_param_spec_string(VP_KEY_TERMINAL,
+	                        VP_KEY_TERMINAL,
+	                        VP_KEY_TERMINAL,
+	                        NULL,
+	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_LOCK_COMMAND] = g_param_spec_string(VP_KEY_LOCK,
+	                                                VP_KEY_LOCK,
+	                                                VP_KEY_LOCK,
+	                                                NULL,
+	                                                G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_LOGOUT_COMMAND] =
+	    g_param_spec_string(VP_KEY_LOGOUT,
+	                        VP_KEY_LOGOUT,
+	                        VP_KEY_LOGOUT,
+	                        NULL,
+	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_SHUTDOWN_COMMAND] =
+	    g_param_spec_string(VP_KEY_SHUTDOWN,
+	                        VP_KEY_SHUTDOWN,
+	                        VP_KEY_SHUTDOWN,
+	                        NULL,
+	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_IS_DARK]   = g_param_spec_boolean(VP_KEY_DARK,
+                                                    VP_KEY_DARK,
+                                                    VP_KEY_DARK,
+                                                    false,
+                                                    G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_IS_CUSTOM] = g_param_spec_boolean(VP_KEY_CUSTOM,
+	                                              VP_KEY_CUSTOM,
+	                                              VP_KEY_CUSTOM,
+	                                              false,
+	                                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	pspecs[PROP_CSS]       = g_param_spec_string(VP_KEY_CSS,
+                                               VP_KEY_CSS,
+                                               VP_KEY_CSS,
+                                               NULL,
+                                               G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	g_object_class_install_properties(G_OBJECT_CLASS(klass), PROP_ALL, pspecs);
 }
 
 int main(int argc, char *argv[])
