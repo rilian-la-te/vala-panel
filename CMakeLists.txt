@@ -107,8 +107,7 @@ set(CORE_PACKAGES
   glib-2.0
   gio-2.0
   gio-unix-2.0
-  gmodule-2.0
-  posix)
+  gmodule-2.0)
 
 ADD_SUBDIRECTORY(po)
 ADD_SUBDIRECTORY(util)

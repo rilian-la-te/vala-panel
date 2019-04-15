@@ -4,6 +4,7 @@ vala_precompile(VALA_C ${PLUGIN_NAME}
     ${VALA_FILES}
 PACKAGES
     ${CORE_PACKAGES}
+    posix
     vala-panel
 OPTIONS
     --vapidir=${CMAKE_SOURCE_DIR}/vapi
