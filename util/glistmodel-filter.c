@@ -185,7 +185,7 @@ static void vala_panel_list_model_filter_class_init(ValaPanelListModelFilterClas
 void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self, uint max_results)
 {
 	self->max_results = max_results;
-	g_object_notify(self, "max-results");
+	g_object_notify(G_OBJECT(self), "max-results");
 }
 
 void vala_panel_list_model_filter_set_filter_func(ValaPanelListModelFilter *self,
@@ -207,9 +207,9 @@ static bool continue_check(ValaPanelListModelFilter *self)
 void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self)
 {
 	uint old_matches     = self->filter_matches;
-	int base_items_num   = (int)g_list_model_get_n_items(self->base_model);
+	uint base_items_num  = g_list_model_get_n_items(self->base_model);
 	self->filter_matches = 0;
-	for (int i = 0; ((i < base_items_num) && continue_check(self)); i++)
+	for (uint i = 0; ((i < base_items_num) && continue_check(self)); i++)
 	{
 		gpointer item = g_list_model_get_item(self->base_model, i);
 		if (self->filter_func(item, self->user_data))

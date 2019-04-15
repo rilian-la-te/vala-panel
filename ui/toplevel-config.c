@@ -84,7 +84,7 @@ static void on_remove_plugin(GtkButton *btn, void *user_data);
 G_GNUC_INTERNAL void vp_toplevel_config_select_applet(ValaPanelToplevelConfig *self,
                                                       const char *uuid)
 {
-	g_autoptr(GList) ch     = gtk_container_get_children(self->plugin_list);
+	g_autoptr(GList) ch     = gtk_container_get_children(GTK_CONTAINER(self->plugin_list));
 	GtkListBoxRow *selected = NULL;
 	for (GList *l = ch; l != NULL; l = g_list_next(l))
 	{
@@ -142,7 +142,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	gtk_combo_box_get_active_iter(box, &iter);
 	gtk_tree_model_get(GTK_TREE_MODEL(self->store_monitors), &iter, 0, &request_mon, -1);
 	if (vala_panel_platform_edge_available(vp_toplevel_get_current_platform(),
-	                                       top,
+	                                       GTK_WINDOW(top),
 	                                       panel_gravity,
 	                                       request_mon))
 	{
@@ -152,7 +152,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 static void background_color_connector(GtkColorButton *colorb, void *data)
 {
 	GdkRGBA color;
-	gtk_color_chooser_get_rgba(colorb, &color);
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorb), &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
 	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_COLOR, chr_str, NULL);
 }
@@ -160,7 +160,7 @@ static void background_color_connector(GtkColorButton *colorb, void *data)
 static void foreground_color_connector(GtkColorButton *colorb, void *data)
 {
 	GdkRGBA color;
-	gtk_color_chooser_get_rgba(colorb, &color);
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorb), &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
 	g_object_set(G_OBJECT(data), VP_KEY_FOREGROUND_COLOR, chr_str, NULL);
 }
@@ -179,7 +179,7 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	GdkRGBA color                      = { 0 };
 	g_autoptr(GSimpleActionGroup) conf = g_simple_action_group_new();
 	vala_panel_apply_window_icon(GTK_WINDOW(self));
-	gtk_window_set_transient_for(self, self->_toplevel);
+	gtk_window_set_transient_for(GTK_WINDOW(self), GTK_WINDOW(self->_toplevel));
 	/* monitors */
 	int monitors       = 0;
 	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self->_toplevel));
@@ -189,14 +189,9 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	for (int i = 0; i < monitors; i++)
 	{
 		GtkTreeIter iter;
+		const char *model = gdk_monitor_get_model(gdk_display_get_monitor(screen, i));
 		gtk_list_store_append(self->store_monitors, &iter);
-		gtk_list_store_set(self->store_monitors,
-		                   &iter,
-		                   0,
-		                   i,
-		                   1,
-		                   gdk_monitor_get_model(gdk_display_get_monitor(screen, i)),
-		                   -1);
+		gtk_list_store_set(self->store_monitors, &iter, 0, i, 1, model, -1);
 	}
 	int true_monitor;
 	g_object_get(self->_toplevel, VP_KEY_MONITOR, &true_monitor, NULL);
@@ -253,8 +248,8 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	             &use_background_file,
 	             NULL);
 	if (use_background_file && file != NULL)
-		gtk_file_chooser_set_filename(self->file_background, g_strdup(file));
-	gtk_widget_set_sensitive(self->file_background, use_background_file);
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(self->file_background), file);
+	gtk_widget_set_sensitive(GTK_WIDGET(self->file_background), use_background_file);
 	g_object_bind_property(self->_toplevel,
 	                       VP_KEY_USE_BACKGROUND_FILE,
 	                       self->file_background,
@@ -293,9 +288,11 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	/* plugin list */
 	init_plugin_list(self);
 	on_add_plugin_stack_box_generate(self);
-	gtk_widget_insert_action_group(self, "conf", conf);
-	gtk_widget_insert_action_group(self, "win", self->_toplevel);
-	gtk_widget_insert_action_group(self, "app", gtk_window_get_application(self->_toplevel));
+	GActionGroup *top_act =
+	    G_ACTION_GROUP(gtk_window_get_application(GTK_WINDOW(self->_toplevel)));
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "conf", G_ACTION_GROUP(conf));
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "win", G_ACTION_GROUP(self->_toplevel));
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "app", top_act);
 	return obj;
 }
 
@@ -338,30 +335,30 @@ static ValaPanelAppletInfo *get_info_from_applet(ValaPanelApplet *pl)
 
 static GtkListBoxRow *create_info_representation(ValaPanelAppletInfo *pl_info)
 {
-	GtkListBoxRow *row = gtk_list_box_row_new();
-	GtkBox *box        = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+	GtkWidget *row = gtk_list_box_row_new();
+	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 	gtk_widget_show(box);
-	gtk_container_add(row, box);
+	gtk_container_add(GTK_CONTAINER(row), box);
 
 	gtk_widget_set_margin_top(box, 4);
 	gtk_widget_set_margin_bottom(box, 4);
 
-	GtkImage *image =
-	    GTK_IMAGE(gtk_image_new_from_icon_name(vala_panel_applet_info_get_icon_name(pl_info),
-	                                           GTK_ICON_SIZE_BUTTON));
+	GtkWidget *image =
+	    gtk_image_new_from_icon_name(vala_panel_applet_info_get_icon_name(pl_info),
+	                                 GTK_ICON_SIZE_BUTTON);
 	gtk_widget_set_margin_start(image, 12);
 	gtk_widget_set_margin_end(image, 14);
 	gtk_widget_show(image);
-	gtk_box_pack_start(box, image, false, false, 0);
+	gtk_box_pack_start(GTK_BOX(box), image, false, false, 0);
 
-	GtkLabel *label = gtk_label_new(vala_panel_applet_info_get_name(pl_info));
+	GtkWidget *label = gtk_label_new(vala_panel_applet_info_get_name(pl_info));
 	gtk_widget_set_margin_end(label, 18);
 	gtk_widget_set_halign(label, GTK_ALIGN_START);
 	gtk_widget_show(label);
-	gtk_box_pack_start(box, label, false, false, 0);
+	gtk_box_pack_start(GTK_BOX(box), label, false, false, 0);
 	gtk_widget_show(box);
 	gtk_widget_show(row);
-	return row;
+	return GTK_LIST_BOX_ROW(row);
 }
 
 static GtkListBoxRow *create_applet_representation(ValaPanelToplevelConfig *self,
@@ -372,18 +369,18 @@ static GtkListBoxRow *create_applet_representation(ValaPanelToplevelConfig *self
 	                                      pl,
 	                                      vp_toplevel_get_core_settings());
 	GtkListBoxRow *row = create_info_representation(pl_info);
-	GtkBox *box        = GTK_BOX(gtk_bin_get_child(row));
-	GtkButton *button  = GTK_BUTTON(gtk_button_new());
-	GtkImage *image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_MENU);
+	GtkBox *box        = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
+	GtkWidget *button  = gtk_button_new();
+	GtkWidget *image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_widget_show(image);
-	gtk_container_add(button, image);
+	gtk_container_add(GTK_CONTAINER(button), image);
 	gtk_widget_show(button);
 	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(button));
 	gtk_style_context_add_class(context, "circular");
 	gtk_style_context_add_class(context, "destructive-action");
-	gtk_button_set_relief(button, GTK_RELIEF_NONE);
+	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	gtk_box_pack_end(box, button, false, false, 0);
-	g_signal_connect(button, "clicked", on_remove_plugin, self);
+	g_signal_connect(button, "clicked", G_CALLBACK(on_remove_plugin), self);
 	config_row_set_applet(row, pl);
 	return row;
 }
@@ -398,13 +395,13 @@ static int plugin_list_sort(GtkListBoxRow *before, GtkListBoxRow *after, void *u
 	ValaPanelApplet *after_info  = after ? config_row_get_applet(after) : NULL;
 	uint bpos                    = vp_layout_get_applet_position(layout, before_info);
 	uint apos                    = vp_layout_get_applet_position(layout, after_info);
-	int bi                       = vp_layout_get_applet_pack_type(before_info);
+	uint bi                      = vp_layout_get_applet_pack_type(before_info);
 
 	if (before_info != NULL && after_info != NULL &&
 	    vp_layout_get_applet_pack_type(before_info) !=
 	        vp_layout_get_applet_pack_type(after_info))
 	{
-		int ai = vp_layout_get_applet_pack_type(after_info);
+		uint ai = vp_layout_get_applet_pack_type(after_info);
 		if (ai != bi)
 		{
 			if (bi == PACK_START || ai == PACK_END)
@@ -433,8 +430,8 @@ static void plugin_list_headers(GtkListBoxRow *before, GtkListBoxRow *after, voi
 {
 	ValaPanelApplet *before_info = before ? config_row_get_applet(before) : NULL;
 	ValaPanelApplet *after_info  = after ? config_row_get_applet(after) : NULL;
-	int prev        = before_info ? vp_layout_get_applet_pack_type(before_info) : -1;
-	int next        = after_info ? vp_layout_get_applet_pack_type(after_info) : -1;
+	int prev        = before_info ? (int)vp_layout_get_applet_pack_type(before_info) : -1;
+	int next        = after_info ? (int)vp_layout_get_applet_pack_type(after_info) : -1;
 	GtkLabel *label = GTK_LABEL(gtk_list_box_row_get_header(before));
 
 	if (after == NULL || prev != next)
@@ -468,21 +465,22 @@ static void plugin_list_headers(GtkListBoxRow *before, GtkListBoxRow *after, voi
 		gtk_list_box_row_set_header(before, NULL);
 }
 
-static void on_plugin_list_row_selected(GtkListBox *box, GtkListBoxRow *row, gpointer data)
+static void on_plugin_list_row_selected(G_GNUC_UNUSED GtkListBox *box, GtkListBoxRow *row,
+                                        gpointer data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(data);
 	if (!row)
 	{
-		gtk_widget_set_sensitive(self->about_button, false);
-		gtk_widget_set_sensitive(self->up_button, false);
-		gtk_widget_set_sensitive(self->down_button, false);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->about_button), false);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->up_button), false);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->down_button), false);
 		gtk_stack_set_visible_child_name(self->applet_info_stack, NO_SETTINGS);
 	}
 	else
 	{
 		ValaPanelApplet *pl     = config_row_get_applet(row);
 		ValaPanelLayout *layout = vala_panel_toplevel_get_layout(self->_toplevel);
-		gtk_widget_set_sensitive(self->about_button, true);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->about_button), true);
 		GtkListBoxRow *down_row =
 		    gtk_list_box_get_row_at_index(self->plugin_list,
 		                                  gtk_list_box_row_get_index(row) + 1);
@@ -491,16 +489,10 @@ static void on_plugin_list_row_selected(GtkListBox *box, GtkListBoxRow *row, gpo
 		    gtk_list_box_get_row_at_index(self->plugin_list,
 		                                  gtk_list_box_row_get_index(row) - 1);
 		ValaPanelApplet *up = up_row ? config_row_get_applet(up_row) : NULL;
-		gtk_widget_set_sensitive(self->up_button,
-		                         vp_layout_can_move_to_direction(layout,
-		                                                         pl,
-		                                                         up,
-		                                                         GTK_PACK_START));
-		gtk_widget_set_sensitive(self->down_button,
-		                         vp_layout_can_move_to_direction(layout,
-		                                                         pl,
-		                                                         down,
-		                                                         GTK_PACK_END));
+		bool c_m_up   = vp_layout_can_move_to_direction(layout, pl, up, GTK_PACK_START);
+		bool c_m_down = vp_layout_can_move_to_direction(layout, pl, down, GTK_PACK_END);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->up_button), c_m_up);
+		gtk_widget_set_sensitive(GTK_WIDGET(self->down_button), c_m_down);
 		if (vala_panel_applet_is_configurable(pl))
 			gtk_stack_set_visible_child_name(self->applet_info_stack,
 			                                 vala_panel_applet_get_uuid(pl));
@@ -526,7 +518,7 @@ static void plugin_list_add_applet(const char *type, ValaPanelToplevelConfig *se
 	uint prev_pos       = prev ? vp_layout_get_applet_position(layout, prev_pl) : 0;
 	ValaPanelApplet *pl = vp_layout_insert_applet(layout, type, prev_pack, prev_pos);
 	GtkListBoxRow *row  = create_applet_representation(self, pl);
-	gtk_container_add(self->plugin_list, row);
+	gtk_container_add(GTK_CONTAINER(self->plugin_list), GTK_WIDGET(row));
 	plugin_list_generate_applet_settings(pl, self);
 	gtk_list_box_invalidate_sort(self->plugin_list);
 }
@@ -551,7 +543,7 @@ static void init_plugin_list(ValaPanelToplevelConfig *self)
 	on_plugin_list_row_selected(self->plugin_list, NULL, self);
 }
 
-static void on_about_plugin(GtkButton *btn, void *data)
+static void on_about_plugin(G_GNUC_UNUSED GtkButton *btn, void *data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(data);
 	GtkListBoxRow *row            = gtk_list_box_get_selected_row(self->plugin_list);
@@ -586,7 +578,7 @@ static void listbox_new_applet_row_activated(GtkListBox *box, GtkListBoxRow *row
 	gtk_list_box_invalidate_filter(self->listbox_new_applet);
 }
 
-static int listbox_new_filter(GtkListBoxRow *row, void *data)
+static int listbox_new_filter(GtkListBoxRow *row, G_GNUC_UNUSED void *data)
 {
 	AppletInfoData *d = config_row_get_info_data(row);
 	bool ret          = false;
@@ -612,7 +604,7 @@ static void available_plugins_reload(ValaPanelToplevelConfig *self)
 		AppletInfoData *d  = (AppletInfoData *)l->data;
 		GtkListBoxRow *row = create_info_representation(d->info);
 		config_row_set_info(row, d);
-		gtk_container_add(self->listbox_new_applet, row);
+		gtk_container_add(GTK_CONTAINER(self->listbox_new_applet), GTK_WIDGET(row));
 	}
 	g_list_free(all_types);
 }
@@ -627,7 +619,7 @@ static void on_add_plugin_stack_box_generate(ValaPanelToplevelConfig *self)
 	                             NULL);
 }
 
-static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
+static void on_add_plugin(G_GNUC_UNUSED GtkButton *btn, ValaPanelToplevelConfig *self)
 {
 	const char *name = gtk_stack_get_visible_child_name(self->applet_info_stack);
 	if (!g_strcmp0(name, NEW_APPLET_NAME))
@@ -637,9 +629,9 @@ static void on_add_plugin(GtkButton *btn, ValaPanelToplevelConfig *self)
 		return;
 	}
 	available_plugins_reload(self);
-	gtk_widget_set_sensitive(self->about_button, false);
-	gtk_widget_set_sensitive(self->up_button, false);
-	gtk_widget_set_sensitive(self->down_button, false);
+	gtk_widget_set_sensitive(GTK_WIDGET(self->about_button), false);
+	gtk_widget_set_sensitive(GTK_WIDGET(self->up_button), false);
+	gtk_widget_set_sensitive(GTK_WIDGET(self->down_button), false);
 	gtk_stack_set_visible_child_name(self->applet_info_stack, NEW_APPLET_NAME);
 }
 
@@ -671,7 +663,7 @@ static void on_remove_plugin(GtkButton *btn, void *user_data)
 	gtk_list_box_invalidate_filter(self->listbox_new_applet);
 }
 
-static void on_moveup_plugin(GtkButton *btn, void *user_data)
+static void on_moveup_plugin(G_GNUC_UNUSED GtkButton *btn, void *user_data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(user_data);
 	ValaPanelLayout *layout       = vala_panel_toplevel_get_layout(self->_toplevel);
@@ -688,7 +680,7 @@ static void on_moveup_plugin(GtkButton *btn, void *user_data)
 	gtk_list_box_invalidate_sort(self->plugin_list);
 }
 
-static void on_movedown_plugin(GtkButton *btn, void *user_data)
+static void on_movedown_plugin(G_GNUC_UNUSED GtkButton *btn, void *user_data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(user_data);
 	ValaPanelLayout *layout       = vala_panel_toplevel_get_layout(self->_toplevel);

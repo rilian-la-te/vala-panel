@@ -118,7 +118,7 @@ inline char *css_generate_font_size(gint size)
 	    "}",
 	    size);
 }
-inline char *css_generate_font_label(gfloat size, bool is_bold)
+inline char *css_generate_font_label(double size, bool is_bold)
 {
 	gint size_factor = (gint)round(size * 100);
 	return g_strdup_printf(
@@ -208,7 +208,7 @@ GtkCssProvider *css_add_css_with_provider(GtkWidget *widget, const char *css)
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
-	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
+	gtk_css_provider_load_from_data(provider, css, (long)strlen(css), &err);
 	gtk_style_context_add_provider(context,
 	                               GTK_STYLE_PROVIDER(provider),
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -221,7 +221,7 @@ void css_add_css_to_widget(GtkWidget *widget, const char *css)
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
 	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
-	gtk_css_provider_load_from_data(provider, css, strlen(css), &err);
+	gtk_css_provider_load_from_data(provider, css, (long)strlen(css), &err);
 	gtk_style_context_add_provider(context,
 	                               GTK_STYLE_PROVIDER(provider),
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);

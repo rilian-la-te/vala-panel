@@ -125,7 +125,7 @@ static GMenuItem *add_app_info_launch_item(GDesktopAppInfo *app_info)
 	return item;
 }
 
-G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
+G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu(void)
 {
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
@@ -162,7 +162,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_places_menu()
 	return G_MENU_MODEL(menu);
 }
 
-G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu()
+G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu(void)
 {
 	g_autoptr(GMenu) section = G_MENU(menu_maker_create_applications_menu(true));
 	g_autoptr(GtkBuilder) builder =

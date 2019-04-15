@@ -26,8 +26,8 @@
 
 static char *generate_markup(const char *name, const char *sdesc)
 {
-	char *nom  = g_markup_escape_text(name, strlen(name));
-	char *desc = g_markup_escape_text(sdesc, strlen(sdesc));
+	char *nom  = g_markup_escape_text(name, (long)strlen(name));
+	char *desc = g_markup_escape_text(sdesc, (long)strlen(sdesc));
 	char *ret  = g_strdup_printf("<big>%s</big>\n<small>%s</small>", nom, desc);
 	g_free(nom);
 	g_free(desc);
@@ -123,7 +123,7 @@ static uint info_data_model_get_n_items(GListModel *lst)
 static gpointer info_data_model_get_item(GListModel *lst, uint pos)
 {
 	InfoDataModel *self = VALA_PANEL_INFO_DATA_MODEL(lst);
-	GSequenceIter *iter = g_sequence_get_iter_at_pos(self->seq, pos);
+	GSequenceIter *iter = g_sequence_get_iter_at_pos(self->seq, (int)pos);
 	return (InfoData *)g_sequence_get(iter);
 }
 

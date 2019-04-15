@@ -104,7 +104,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	ret->version = tmp != NULL ? tmp : g_strdup(VERSION);
 	ret->exclusive =
 	    g_key_file_get_boolean(file, APPLET_INFO_GROUP, APPLET_INFO_EXCLUSIVE, NULL);
-	return ret;
+	return (ValaPanelAppletInfo *)ret;
 }
 
 ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
@@ -176,7 +176,7 @@ const char *vala_panel_applet_info_get_icon_name(ValaPanelAppletInfo *info)
 const char *const *vala_panel_applet_info_get_authors(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
-	return ainfo->authors;
+	return (const char *const *)ainfo->authors;
 }
 
 const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info)

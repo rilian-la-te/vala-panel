@@ -30,7 +30,7 @@ struct _ValaPanelRunApplication
 
 G_DEFINE_TYPE(ValaPanelRunApplication, vala_panel_run_application, GTK_TYPE_APPLICATION)
 
-static ValaPanelRunApplication *vala_panel_run_application_new()
+static ValaPanelRunApplication *vala_panel_run_application_new(void)
 {
 	return VALA_PANEL_RUN_APPLICATION(g_object_new(vala_panel_run_application_get_type(),
 	                                               "application-id",

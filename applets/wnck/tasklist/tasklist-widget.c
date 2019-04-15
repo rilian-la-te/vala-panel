@@ -1406,7 +1406,7 @@ static void xfce_tasklist_disconnect_screen(XfceTasklist *tasklist)
 	GSList *li, *lnext;
 	GList *wi, *wnext;
 	XfceTasklistChild *child;
-	guint n;
+	uint n = 5;
 
 	g_return_if_fail(XFCE_IS_TASKLIST(tasklist));
 	g_return_if_fail(WNCK_IS_SCREEN(tasklist->screen));

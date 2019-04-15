@@ -91,7 +91,7 @@ add_definitions(-Wall -Wextra
                 -Wno-unused
                 -Wno-unused-parameter# Vala loves to create variables
                #-pedantic
-                -Wno-ignored-qualifiers
+                -Wno-discarded-qualifiers
                 -Wno-incompatible-pointer-types
                 -Wno-missing-field-initializers
                 -Wno-sign-compare

@@ -17,11 +17,6 @@ typedef struct
 
 } ValaPanelAppletPrivate;
 
-static inline void destroy_dialog(GtkDialog *p, gpointer user_data)
-{
-	gtk_widget_destroy0(((ValaPanelAppletPrivate *)user_data)->dialog);
-}
-
 G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelApplet, vala_panel_applet, GTK_TYPE_BIN)
 
 static void activate_configure(GSimpleAction *act, GVariant *param, gpointer self);
@@ -102,18 +97,21 @@ bool vala_panel_applet_is_configurable(ValaPanelApplet *self)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	return g_action_group_get_action_enabled(G_ACTION_GROUP(p->grp), "configure");
 }
-static void activate_configure(GSimpleAction *act, GVariant *param, gpointer data)
+static void activate_configure(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
+                               gpointer data)
 {
 	ValaPanelApplet *self = VALA_PANEL_APPLET(data);
 	vala_panel_toplevel_configure_applet(vala_panel_applet_get_toplevel(self),
 	                                     vala_panel_applet_get_uuid(self));
 }
-static void activate_remote(GSimpleAction *act, GVariant *param, gpointer obj)
+static void activate_remote(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
+                            gpointer obj)
 {
 	const char *command = g_variant_get_string(param, NULL);
 	vala_panel_applet_remote_command(VALA_PANEL_APPLET(obj), command);
 }
-static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
+static void activate_about(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
+                           gpointer obj)
 {
 	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletInfo *pl_info =
@@ -122,7 +120,8 @@ static void activate_about(GSimpleAction *act, GVariant *param, gpointer obj)
 	                                      vp_toplevel_get_core_settings());
 	vala_panel_applet_info_show_about_dialog(pl_info);
 }
-static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
+static void activate_remove(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
+                            gpointer obj)
 {
 	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
@@ -132,7 +131,7 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer obj)
 	vp_toplevel_destroy_pref_dialog(p->toplevel);
 	vp_layout_remove_applet(vala_panel_toplevel_get_layout(p->toplevel), self);
 }
-static GtkWidget *vala_panel_applet_get_config_dialog(ValaPanelApplet *self)
+static GtkWidget *vala_panel_applet_get_config_dialog(G_GNUC_UNUSED ValaPanelApplet *self)
 {
 	return NULL;
 }
@@ -215,7 +214,8 @@ void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_
 	VALA_PANEL_APPLET_GET_CLASS(self)->update_context_menu(self, parent_menu);
 }
 
-static void vala_panel_applet_update_context_menu_private(ValaPanelApplet *self, GMenu *parent_menu)
+static void vala_panel_applet_update_context_menu_private(G_GNUC_UNUSED ValaPanelApplet *self,
+                                                          G_GNUC_UNUSED GMenu *parent_menu)
 {
 }
 
@@ -231,8 +231,8 @@ static void vala_panel_applet_init(ValaPanelApplet *self)
 	cnf = G_SIMPLE_ACTION(
 	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_REMOTE));
 	g_simple_action_set_enabled(cnf, false);
-	gtk_widget_set_has_window((GtkWidget *)self, false);
-	gtk_widget_insert_action_group(self, "applet", p->grp);
+	gtk_widget_set_has_window(GTK_WIDGET(self), false);
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "applet", G_ACTION_GROUP(p->grp));
 }
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self)
 {

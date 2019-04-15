@@ -84,7 +84,7 @@ G_GNUC_INTERNAL ValaPanelLayout *vp_layout_new(ValaPanelToplevel *top, GtkOrient
 	                                      NULL));
 }
 
-static void update_widget_position_keys(ValaPanelLayout *layout, GtkContainer *parent)
+static void update_widget_position_keys(GtkContainer *parent)
 {
 	g_autoptr(GList) applets_list = gtk_container_get_children(parent);
 	for (GList *l = applets_list; l != NULL; l = g_list_next(l))
@@ -101,25 +101,18 @@ static void update_widget_position_keys(ValaPanelLayout *layout, GtkContainer *p
 	}
 }
 
-static void restore_positions(ValaPanelLayout *layout)
-{
-	update_widget_position_keys(layout, layout->start_box);
-	update_widget_position_keys(layout, layout->center_box);
-	update_widget_position_keys(layout, layout->end_box);
-}
-
 static void restore_positions_by_pack(ValaPanelLayout *layout, ValaPanelAppletPackType pack)
 {
 	switch (pack)
 	{
 	case PACK_START:
-		update_widget_position_keys(layout, layout->start_box);
+		update_widget_position_keys(GTK_CONTAINER(layout->start_box));
 		break;
 	case PACK_CENTER:
-		update_widget_position_keys(layout, layout->center_box);
+		update_widget_position_keys(GTK_CONTAINER(layout->center_box));
 		break;
 	case PACK_END:
-		update_widget_position_keys(layout, layout->end_box);
+		update_widget_position_keys(GTK_CONTAINER(layout->end_box));
 		break;
 	}
 }
@@ -213,12 +206,14 @@ static void vp_layout_applet_reposition(G_GNUC_UNUSED GHashTable *unused, ValaPa
                                         G_GNUC_UNUSED ValaPanelLayout *self)
 {
 	ValaPanelUnitSettings *settings = vp_layout_get_applet_settings(pl);
-	int pos                         = g_settings_get_uint(settings->common, VP_KEY_POSITION);
-	gtk_box_reorder_child(GTK_BOX(gtk_widget_get_parent(GTK_WIDGET(pl))), GTK_WIDGET(pl), pos);
+	uint pos                        = g_settings_get_uint(settings->common, VP_KEY_POSITION);
+	gtk_box_reorder_child(GTK_BOX(gtk_widget_get_parent(GTK_WIDGET(pl))),
+	                      GTK_WIDGET(pl),
+	                      (int)pos);
 }
 
-G_GNUC_INTERNAL void vp_layout_applet_packing_updated(GSettings *settings, const char *key,
-                                                      void *user_data)
+G_GNUC_INTERNAL void vp_layout_applet_packing_updated(G_GNUC_UNUSED GSettings *settings,
+                                                      const char *key, void *user_data)
 {
 	ValaPanelApplet *pl   = VALA_PANEL_APPLET(user_data);
 	ValaPanelLayout *self = vala_panel_applet_get_layout(pl);
@@ -231,8 +226,8 @@ G_GNUC_INTERNAL void vp_layout_applet_packing_updated(GSettings *settings, const
 		vp_layout_applet_repack(NULL, pl, self);
 }
 
-G_GNUC_INTERNAL void vp_layout_applet_position_updated(GSettings *settings, const char *key,
-                                                       void *user_data)
+G_GNUC_INTERNAL void vp_layout_applet_position_updated(G_GNUC_UNUSED GSettings *settings,
+                                                       const char *key, void *user_data)
 {
 	ValaPanelApplet *pl = VALA_PANEL_APPLET(user_data);
 	ValaPanelLayout *layout =
@@ -280,7 +275,6 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet)
 {
 	g_autofree char *uuid        = g_strdup(vala_panel_applet_get_uuid(applet));
-	ValaPanelUnitSettings *s     = vp_core_settings_get_by_uuid(core_settings, uuid);
 	uint pos                     = vp_layout_get_applet_position(self, applet);
 	ValaPanelAppletPackType type = vp_layout_get_applet_pack_type(applet);
 	g_clear_pointer(&applet, gtk_widget_destroy);
@@ -313,7 +307,8 @@ G_GNUC_INTERNAL ValaPanelAppletPackType vp_layout_get_applet_pack_type(ValaPanel
 	return type;
 }
 
-G_GNUC_INTERNAL uint vp_layout_get_applet_position(ValaPanelLayout *self, ValaPanelApplet *pl)
+G_GNUC_INTERNAL uint vp_layout_get_applet_position(G_GNUC_UNUSED ValaPanelLayout *self,
+                                                   ValaPanelApplet *pl)
 {
 	int res;
 	gtk_container_child_get(GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(pl))),
@@ -336,7 +331,7 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_layout_insert_applet(ValaPanelLayout *self, 
 	g_settings_set_string(s->common, VP_KEY_NAME, type);
 	g_settings_set_string(s->common, VALA_PANEL_TOPLEVEL_ID, self->toplevel_id);
 	vp_layout_applets_reposition_after(self, pack, pos, GTK_PACK_END);
-	g_settings_set_enum(s->common, VP_KEY_PACK, pack);
+	g_settings_set_enum(s->common, VP_KEY_PACK, (int)pack);
 	g_settings_set_uint(s->common, VP_KEY_POSITION, pos);
 	vp_applet_manager_reload_applets(manager);
 	ValaPanelApplet *applet = vp_layout_place_applet(self, type, s);
@@ -351,13 +346,13 @@ static uint count_applets_in_pack(ValaPanelLayout *self, ValaPanelAppletPackType
 	switch (pack)
 	{
 	case PACK_START:
-		applets = gtk_container_get_children(self->start_box);
+		applets = gtk_container_get_children(GTK_CONTAINER(self->start_box));
 		break;
 	case PACK_CENTER:
-		applets = gtk_container_get_children(self->center_box);
+		applets = gtk_container_get_children(GTK_CONTAINER(self->center_box));
 		break;
 	case PACK_END:
-		applets = gtk_container_get_children(self->end_box);
+		applets = gtk_container_get_children(GTK_CONTAINER(self->end_box));
 		break;
 	}
 	ret = g_list_length(applets);
@@ -365,12 +360,11 @@ static uint count_applets_in_pack(ValaPanelLayout *self, ValaPanelAppletPackType
 	return ret;
 }
 
-G_GNUC_INTERNAL bool vp_layout_can_move_to_direction(ValaPanelLayout *self, ValaPanelApplet *prev,
-                                                     ValaPanelApplet *next, GtkPackType direction)
+G_GNUC_INTERNAL bool vp_layout_can_move_to_direction(G_GNUC_UNUSED ValaPanelLayout *self,
+                                                     ValaPanelApplet *prev, ValaPanelApplet *next,
+                                                     GtkPackType direction)
 {
-	ValaPanelUnitSettings *prev_settings = vp_layout_get_applet_settings(prev);
-	ValaPanelUnitSettings *next_settings = next ? vp_layout_get_applet_settings(next) : NULL;
-	ValaPanelAppletPackType prev_pack    = vp_layout_get_applet_pack_type(prev);
+	ValaPanelAppletPackType prev_pack = vp_layout_get_applet_pack_type(prev);
 	if (!next)
 	{
 		if ((direction == GTK_PACK_START && prev_pack != PACK_START) ||
@@ -414,13 +408,13 @@ G_GNUC_INTERNAL void vp_layout_move_applet_one_step(ValaPanelLayout *self, ValaP
 			g_settings_set_uint(prev_settings->common,
 			                    VP_KEY_POSITION,
 			                    count_applets_in_pack(self, next_pack));
-			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, next_pack);
+			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, (int)next_pack);
 			vp_layout_applets_reposition_after(self, prev_pack, 0, direction);
 		}
 		else
 		{
 			vp_layout_applets_reposition_after(self, next_pack, 0, direction);
-			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, next_pack);
+			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, (int)next_pack);
 			g_settings_set_uint(prev_settings->common, VP_KEY_POSITION, 0);
 		}
 	}
@@ -510,9 +504,9 @@ static void vp_layout_destroy(GObject *obj)
 static void vp_layout_constructed(GObject *obj)
 {
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
-	gtk_box_pack_start(self, self->start_box, false, true, 0);
+	gtk_box_pack_start(GTK_BOX(self), self->start_box, false, true, 0);
 	gtk_widget_show(self->start_box);
-	gtk_box_pack_end(self, self->end_box, false, true, 0);
+	gtk_box_pack_end(GTK_BOX(self), self->end_box, false, true, 0);
 	gtk_widget_show(self->end_box);
 	gtk_box_set_center_widget(GTK_BOX(self), self->center_box);
 }
@@ -538,7 +532,10 @@ static void vp_layout_init(ValaPanelLayout *self)
 	                       self->end_box,
 	                       "orientation",
 	                       G_BINDING_SYNC_CREATE);
-	self->applets = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, gtk_widget_destroy);
+	self->applets = g_hash_table_new_full(g_str_hash,
+	                                      g_str_equal,
+	                                      g_free,
+	                                      (GDestroyNotify)gtk_widget_destroy);
 }
 
 static void vp_layout_class_init(ValaPanelLayoutClass *klass)

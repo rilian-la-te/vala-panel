@@ -27,11 +27,12 @@ struct _BoxedWrapper
 
 G_DEFINE_TYPE(BoxedWrapper, boxed_wrapper, G_TYPE_OBJECT)
 
-static void boxed_wrapper_finalize(BoxedWrapper *self)
+static void boxed_wrapper_finalize(GObject *obj)
 {
+	BoxedWrapper *self = VALA_PANEL_BOXED_WRAPPER(obj);
 	if (self->boxed_type && self->boxed)
 		g_boxed_free(self->boxed_type, self->boxed);
-	G_OBJECT_CLASS(boxed_wrapper_parent_class)->finalize(self);
+	G_OBJECT_CLASS(boxed_wrapper_parent_class)->finalize(obj);
 }
 
 static void boxed_wrapper_init(BoxedWrapper *self)

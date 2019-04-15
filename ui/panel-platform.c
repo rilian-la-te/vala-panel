@@ -129,8 +129,10 @@ static void vala_panel_platform_init(ValaPanelPlatform *self)
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	priv->core_settings = NULL;
 	priv->manager       = vp_applet_manager_new();
-	priv->toplevels =
-	    g_hash_table_new_full(g_direct_hash, g_direct_equal, gtk_widget_destroy, NULL);
+	priv->toplevels     = g_hash_table_new_full(g_direct_hash,
+                                                g_direct_equal,
+                                                (GDestroyNotify)gtk_widget_destroy,
+                                                NULL);
 }
 
 static void vala_panel_platform_finalize(GObject *obj)

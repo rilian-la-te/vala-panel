@@ -46,7 +46,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 		if (!name)
 			break;
 		GtkLabel *label = GTK_LABEL(gtk_label_new(name));
-		gtk_widget_show(label);
+		gtk_widget_show(GTK_WIDGET(label));
 		GtkWidget *entry       = NULL;
 		void *arg              = va_arg(l, void *);
 		const char *key        = NULL;
@@ -172,7 +172,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				gtk_box_pack_start(hbox, GTK_WIDGET(label), false, false, 2);
 				gtk_box_pack_start(hbox, entry, true, true, 2);
 				gtk_box_pack_start(dlg_vbox, GTK_WIDGET(hbox), false, false, 2);
-				gtk_widget_show(hbox);
+				gtk_widget_show(GTK_WIDGET(hbox));
 			}
 		}
 	}

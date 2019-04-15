@@ -142,7 +142,9 @@ static void vp_core_settings_sync(ValaPanelCoreSettings *settings)
 	g_autofree GStrv unit_list =
 	    (GStrv)g_hash_table_get_keys_as_array(settings->all_units, NULL); // We should free only
 	                                                                      // container here
-	g_settings_set_strv(settings->core_settings, VALA_PANEL_CORE_UNITS, unit_list);
+	g_settings_set_strv(settings->core_settings,
+	                    VALA_PANEL_CORE_UNITS,
+	                    (const char *const *)unit_list);
 }
 
 static ValaPanelUnitSettings *vp_core_settings_load_unit_settings(ValaPanelCoreSettings *settings,

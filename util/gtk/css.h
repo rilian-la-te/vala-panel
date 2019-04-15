@@ -28,7 +28,7 @@ void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass,
 char *css_generate_background(const char *filename, GdkRGBA *color);
 char *css_generate_font_color(GdkRGBA color);
 char *css_generate_font_size(gint size);
-char *css_generate_font_label(gfloat size, bool is_bold);
+char *css_generate_font_label(double size, bool is_bold);
 char *css_apply_from_file(GtkWidget *widget, const char *file);
 char *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass);
 char *css_apply_from_file_to_app(const char *file);

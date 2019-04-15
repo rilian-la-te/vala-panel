@@ -26,7 +26,7 @@ typedef struct
 	pid_t pid;
 } SpawnData;
 
-void child_spawn_func(void *data)
+void child_spawn_func(G_GNUC_UNUSED void *data)
 {
 	setpgid(0, getpgid(getppid()));
 }

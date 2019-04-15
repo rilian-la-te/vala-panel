@@ -29,7 +29,8 @@ bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent
 	return vala_panel_launch_with_context(app_info, cxt, uris);
 }
 
-void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data)
+void activate_menu_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+                             gpointer user_data)
 {
 	const char *id                  = g_variant_get_string(param, NULL);
 	g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new(id);
@@ -38,7 +39,8 @@ void activate_menu_launch_id(GSimpleAction *action, GVariant *param, gpointer us
 	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }
 
-void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data)
+void activate_menu_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+                              gpointer user_data)
 {
 	const char *uri                 = g_variant_get_string(param, NULL);
 	g_autoptr(GList) uris           = g_list_append(NULL, (gpointer)uri);
@@ -48,7 +50,8 @@ void activate_menu_launch_uri(GSimpleAction *action, GVariant *param, gpointer u
 	vala_panel_launch(info, uris, GTK_WIDGET(window));
 }
 
-void activate_menu_launch_command(GSimpleAction *action, GVariant *param, gpointer user_data)
+void activate_menu_launch_command(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+                                  gpointer user_data)
 {
 	g_autoptr(GError) err           = NULL;
 	const char *commandline         = g_variant_get_string(param, NULL);

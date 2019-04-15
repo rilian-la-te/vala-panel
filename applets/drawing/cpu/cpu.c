@@ -157,8 +157,8 @@ static bool configure_event(GtkWidget *widget, GdkEventConfigure *event, CpuAppl
 
 	gtk_widget_get_allocation(widget, &allocation);
 	/* Allocate pixmap and statistics buffer without border pixels. */
-	uint new_pixmap_width  = MAX(allocation.width - BORDER_SIZE * 2, 0);
-	uint new_pixmap_height = MAX(allocation.height - BORDER_SIZE * 2, 0);
+	uint new_pixmap_width  = (uint)MAX(allocation.width - BORDER_SIZE * 2, 0);
+	uint new_pixmap_height = (uint)MAX(allocation.height - BORDER_SIZE * 2, 0);
 	if ((new_pixmap_width > 0) && (new_pixmap_height > 0))
 	{
 		/* If statistics buffer does not exist or it changed size, reallocate and preserve

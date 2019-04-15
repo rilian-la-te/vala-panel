@@ -34,7 +34,7 @@ typedef struct
 	int item_pos;
 } DragData;
 
-static void drag_data_destroy(GtkWidget *w, DragData *data)
+static void drag_data_destroy(G_GNUC_UNUSED GtkWidget *w, DragData *data)
 {
 	g_signal_handlers_disconnect_by_data(data->menuitem, data);
 	gtk_drag_source_unset(GTK_WIDGET(data->menuitem));
@@ -48,8 +48,9 @@ static DragData *drag_data_new(GtkMenuItem *item, GMenuModel *section, int model
 	data->item_pos = model_item;
 	return data;
 }
-void drag_data_get(GtkWidget *item, GdkDragContext *context, GtkSelectionData *sdata, uint info,
-                   uint time_, DragData *data)
+void drag_data_get(G_GNUC_UNUSED GtkWidget *item, G_GNUC_UNUSED GdkDragContext *context,
+                   GtkSelectionData *sdata, G_GNUC_UNUSED uint info, G_GNUC_UNUSED uint time_,
+                   DragData *data)
 {
 	GStrv uri_list              = NULL;
 	g_autofree char *action     = NULL;
@@ -74,7 +75,7 @@ void drag_data_get(GtkWidget *item, GdkDragContext *context, GtkSelectionData *s
 	uri_list[0] = launch_str;
 	gtk_selection_data_set_uris(sdata, uri_list);
 }
-static void drag_data_begin(GtkWidget *item, GdkDragContext *context, DragData *data)
+static void drag_data_begin(GtkWidget *item, G_GNUC_UNUSED GdkDragContext *context, DragData *data)
 {
 	g_autoptr(GVariant) val = g_menu_model_get_item_attribute_value(data->section,
 	                                                                data->item_pos,

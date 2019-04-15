@@ -24,7 +24,7 @@
 #include "misc-gtk.h"
 #include "misc.h"
 
-static void set_widget_align(GtkWidget *user_data, gpointer data)
+static void set_widget_align(GtkWidget *user_data, G_GNUC_UNUSED gpointer data)
 {
 	if (GTK_IS_WIDGET(user_data))
 	{
@@ -42,7 +42,8 @@ void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double
 }
 
 /* Children hierarhy: button => alignment => box => (label,image) */
-static void setup_button_notify_connect(GObject *_sender, GParamSpec *b, gpointer self)
+static void setup_button_notify_connect(GObject *_sender, GParamSpec *b,
+                                        G_GNUC_UNUSED gpointer self)
 {
 	GtkButton *a = GTK_BUTTON(_sender);
 	if (!strcmp(b->name, "label") || !strcmp(b->name, "image"))
@@ -66,7 +67,7 @@ static void setup_button_notify_connect(GObject *_sender, GParamSpec *b, gpointe
 void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 {
 	css_apply_from_resource(GTK_WIDGET(b), "/org/vala-panel/lib/style.css", "-panel-button");
-	g_signal_connect(b, "notify", setup_button_notify_connect, NULL);
+	g_signal_connect(G_OBJECT(b), "notify", G_CALLBACK(setup_button_notify_connect), NULL);
 	if (img != NULL)
 	{
 		gtk_button_set_image(b, GTK_WIDGET(img));
@@ -92,18 +93,20 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 
 void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top)
 {
-	css_apply_from_resource(btn, "/org/vala-panel/lib/style.css", "-panel-icon-button");
-	css_toggle_class(btn, GTK_STYLE_CLASS_BUTTON, true);
+	css_apply_from_resource(GTK_WIDGET(btn),
+	                        "/org/vala-panel/lib/style.css",
+	                        "-panel-icon-button");
+	css_toggle_class(GTK_WIDGET(btn), GTK_STYLE_CLASS_BUTTON, true);
 	GtkImage *img = NULL;
 	if (icon != NULL)
 	{
-		img = gtk_image_new();
+		img = GTK_IMAGE(gtk_image_new());
 		vala_panel_setup_icon(img, icon, top, -1);
 	}
 	vala_panel_setup_button(btn, img, label);
-	gtk_container_set_border_width(btn, 0);
-	gtk_widget_set_can_focus(btn, false);
-	gtk_widget_set_has_window(btn, false);
+	gtk_container_set_border_width(GTK_CONTAINER(btn), 0);
+	gtk_widget_set_can_focus(GTK_WIDGET(btn), false);
+	gtk_widget_set_has_window(GTK_WIDGET(btn), false);
 }
 
 inline void vala_panel_apply_window_icon(GtkWindow *win)

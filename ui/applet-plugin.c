@@ -19,11 +19,11 @@
 
 G_DEFINE_ABSTRACT_TYPE(ValaPanelAppletPlugin, vala_panel_applet_plugin, G_TYPE_OBJECT)
 
-static void vala_panel_applet_plugin_init(ValaPanelAppletPlugin *self)
+static void vala_panel_applet_plugin_init(G_GNUC_UNUSED ValaPanelAppletPlugin *self)
 {
 }
 
-static void vala_panel_applet_plugin_class_init(ValaPanelAppletPluginClass *klass)
+static void vala_panel_applet_plugin_class_init(G_GNUC_UNUSED ValaPanelAppletPluginClass *klass)
 {
 }
 
