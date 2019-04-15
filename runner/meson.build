@@ -7,7 +7,7 @@ runner_sources = files(
 
 runner_res = gnome.compile_resources(
     'runner', 'runner.gresource.xml',
-    source_dir: 'runner',
+    source_dir: ['runner', 'data'],
     c_name: 'runner'
 )
 

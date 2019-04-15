@@ -1,0 +1,6 @@
+subdir('kbled')
+subdir('separator')
+subdir('menumodel')
+subdir('clock')
+subdir('dirmenu')
+subdir('launchbar')

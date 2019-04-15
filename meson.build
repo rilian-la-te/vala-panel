@@ -47,7 +47,7 @@ am_cflags = [
     '-Wall',
     '-W',
 ]
-add_global_arguments(am_cflags, language: 'c')
+add_project_arguments(am_cflags, language: 'c')
 
 ################
 # Dependencies #
@@ -58,12 +58,17 @@ glib = dependency('glib-2.0', version: glib_ver)
 gio = dependency('gio-2.0', version: glib_ver)
 giounix = dependency('gio-unix-2.0', version: glib_ver)
 gmodule = dependency('gmodule-2.0', version: glib_ver)
-gtk = dependency('gtk+-3.0', version: '>=3.22')
+gtk_ver = '>=3.22'
+gtk = dependency('gtk+-3.0', version: gtk_ver)
 cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
 core_deps = [glib, gio, giounix, gmodule, gtk, m]
 core_inc = include_directories('.')
+
+applets_vapi_dir = join_paths(meson.current_source_dir(), 'ui')
+add_project_arguments(['--vapidir', applets_vapi_dir], language: 'vala')
+vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
 
 #################
 # Configuration #
@@ -76,7 +81,7 @@ conf_data.set('PLUGINS_DATA', applets_datadir)
 conf_data.set('DATADIR', project_datadir)
 conf_data.set('PROFILES_DIR', profiles_dir)
 
-configure_file(input : 'util/config.h.in',
+config = configure_file(input : join_paths('util','config.h.in'),
                output : 'config.h',
 			   configuration : conf_data)
 
@@ -94,6 +99,9 @@ readmes = [
 install_data(readmes, install_dir : join_paths(datadir, meson.project_name(), 'doc'))
 
 subdir('po')
+subdir('data')
 subdir('util')
 subdir('runner')
 subdir('ui')
+subdir('app')
+subdir('applets')

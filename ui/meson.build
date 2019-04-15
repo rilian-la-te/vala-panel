@@ -37,7 +37,7 @@ ui_enums_gen = gnome.mkenums(
 )
 ui_res = gnome.compile_resources(
     'ui', 'libvalapanel.gresource.xml',
-    source_dir: 'ui',
+    source_dir: 'data',
     c_name: 'ui'
 )
 ui_inc = include_directories('.')
