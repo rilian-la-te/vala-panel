@@ -60,6 +60,9 @@ giounix = dependency('gio-unix-2.0', version: glib_ver)
 gmodule = dependency('gmodule-2.0', version: glib_ver)
 gtk = dependency('gtk+-3.0', version: '>=3.22')
 
+core_deps = [glib, gio, giounix, gmodule, gtk]
+core_inc = include_directories('.')
+
 #################
 # Configuration #
 #################
@@ -88,3 +91,5 @@ readmes = [
 install_data(readmes, install_dir : join_paths(get_option('datadir'), meson.project_name(), 'doc'))
 
 subdir('po')
+subdir('util')
+subdir('runner')
