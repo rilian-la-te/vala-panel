@@ -135,7 +135,11 @@ G_GNUC_INTERNAL bool netmon_resize(GtkWidget *widget, NetMon *mon)
 			double *new_down_stats = g_new0(double, sizeof(double) * new_pixmap_width);
 			double *new_up_stats   = g_new0(double, sizeof(double) * new_pixmap_width);
 			if (new_down_stats == NULL || new_up_stats == NULL)
+			{
+				g_clear_pointer(&new_down_stats, g_free);
+				g_clear_pointer(&new_up_stats, g_free);
 				return G_SOURCE_REMOVE;
+			}
 			if (mon->down_stats != NULL)
 				generate_new_stats(mon->down_stats,
 				                   new_down_stats,
