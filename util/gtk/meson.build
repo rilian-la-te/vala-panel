@@ -25,9 +25,11 @@ util_gtk_enums_gen = gnome.mkenums(
 )
 util_gtk_inc = include_directories('.')
 
-util_gtk_dep = static_library(
+util_gtk = static_library(
 								'util-gtk', util_gtk_sources, util_gtk_headers, util_gtk_enums_gen,
 								dependencies : core_deps,
-								link_with: util_dep,
+								link_with: util,
 								include_directories: [core_inc,util_inc, util_gtk_inc],
 							 )
+
+install_headers(util_gtk_headers, subdir : meson.project_name())
