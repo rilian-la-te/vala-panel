@@ -16,10 +16,8 @@ build-main:
   stage: build
   script:
    - pacman -Sy
-   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
-   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-   - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
-   - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
+   - pacman -S --noconfirm libwnck3 gtk3 vala meson git base-devel clang ninja
+   - meson build --prefix=/usr && cd build
    - ninja
    - ninja install
    - ninja dist
