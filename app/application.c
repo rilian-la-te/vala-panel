@@ -17,6 +17,7 @@
  */
 
 #include "config.h"
+#include "version.h"
 
 #include "application.h"
 #include "panel-layout.h"

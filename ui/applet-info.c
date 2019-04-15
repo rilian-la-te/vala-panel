@@ -17,6 +17,7 @@
  */
 #include "applet-info.h"
 #include "config.h"
+#include "version.h"
 
 #include <glib/gi18n.h>
 

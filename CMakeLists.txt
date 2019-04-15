@@ -76,6 +76,7 @@ endif(RPMTools_FOUND)
 add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Configuration
 configure_file (${CMAKE_SOURCE_DIR}/util/config.h.in ${CMAKE_BINARY_DIR}/config.h)
+configure_file (${CMAKE_SOURCE_DIR}/util/version.h.in ${CMAKE_BINARY_DIR}/version.h)
 configure_file (${CMAKE_SOURCE_DIR}/${APPNAME}.pc.cmake ${CMAKE_BINARY_DIR}/${APPNAME}.pc @ONLY)
 
 # Some definitions
