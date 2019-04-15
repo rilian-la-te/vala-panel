@@ -86,7 +86,6 @@ add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
 find_package (Vala 0.34 REQUIRED)
 include (ValaPrecompile)
 
-add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
 #add_definitions(-w) #Suppress all GCC warnings
 add_definitions(-Wall -Wextra
                 -Wno-unused
