@@ -23,6 +23,7 @@ namespace PanelCSS
 {
     public void apply_with_class(Gtk.Widget w, string css, string klass, bool add);
     public void toggle_class(Widget w, string klass, bool apply);
+	[CCode (cname = "css_add_css_with_provider")]
     public CssProvider? add_css_to_widget(Widget w, string css);
     public Gtk.CssProvider? apply_from_file_to_app_with_provider(string file);
     public string apply_from_file_to_app(string file);
