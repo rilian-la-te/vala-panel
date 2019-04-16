@@ -2,7 +2,10 @@ project('vala-panel', 'vala', 'c',
 	version : '0.5.0',
 	meson_version: '>=0.47.0',
 	license: ['LGPL-3.0'],
-    default_options: ['c_std=gnu11'])
+    default_options: [
+        'c_std=gnu11',
+        'buildtype=debugoptimized',
+        'warning_level=3'])
 
 library_name = 'valapanel'
 
@@ -33,8 +36,12 @@ profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_na
 
 
 #am_cflags = [
-#    '-fstack-protector',
+#    '-Wno-unused',
+#    '-Wno-unused-parameter',
+#    '-Wno-discarded-qualifiers',
+#    '-Wno-incompatible-pointer-types',
 #    '-Wno-missing-field-initializers',
+#    '-fstack-protector',
 #    '-Wstrict-prototypes',
 #    '-Wundef',
 #    '-Werror-implicit-function-declaration',
@@ -42,29 +49,13 @@ profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_na
 #    '-Wformat-security',
 #    '-Werror=format-security',
 #    '-Wconversion',
-#    '-Wno-unused-parameter',
 #    '-Wunreachable-code',
+#    '-Wextra',
 #    '-Wall',
 #    '-W',
 #]
 am_cflags = [
-    '-Wno-unused',
-    '-Wno-unused-parameter',
-    '-Wno-discarded-qualifiers',
-    '-Wno-incompatible-pointer-types',
-    '-Wno-missing-field-initializers',
-    '-fstack-protector',
-    '-Wstrict-prototypes',
-    '-Wundef',
-    '-Werror-implicit-function-declaration',
-    '-Wformat',
-    '-Wformat-security',
-    '-Werror=format-security',
-    '-Wconversion',
-    '-Wunreachable-code',
-    '-Wextra',
-    '-Wall',
-    '-W',
+    '-fstack-protector'
 ]
 add_project_arguments(am_cflags, language: 'c')
 
