@@ -42,7 +42,7 @@ ui_res = gnome.compile_resources(
 ui_inc = include_directories('.')
 
 ui = library(library_name,
-             ui_headers, ui_sources, ui_res, ui_enums_gen,
+             ui_headers, ui_sources, ui_res, ui_enums_gen, version,
              dependencies: core_deps,
              link_whole: [util, util_gtk],
              include_directories: [core_inc,util_inc, util_gtk_inc, ui_inc],
