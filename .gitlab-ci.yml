@@ -31,6 +31,7 @@ build-alpine-meson:
   stage: build
   script:
    - apk add --no-cache python3 gtk+3.0 vala ninja libwnck3 build-base
+   - pip3 install meson
    - meson bld --prefix=/usr && cd bld
    - ninja dist
   artifacts:
