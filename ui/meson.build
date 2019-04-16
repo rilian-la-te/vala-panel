@@ -71,7 +71,8 @@ pkg.generate(ui,
              variables: [
                  'datadir='+join_paths('${prefix}',datadir,meson.project_name()),
                  'datarootdir='+join_paths('${prefix}',datadir),
-                 'pluginsdir='+join_paths('${libdir}',meson.project_name(),'applets'),
+                 'applets_dir='+join_paths('${libdir}',meson.project_name(),'applets'),
+                 'applets_data='+join_paths('${datadir}','applets'),
                 ],
              extra_cflags: ['-I${includedir}/vala-panel']
             )

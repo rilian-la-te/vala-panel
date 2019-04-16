@@ -1,9 +1,11 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-pkglibdir=@CMAKE_INSTALL_FULL_LIBDIR@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
 includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
-pluginsdir=@PLUGINS_DIRECTORY@
+
 datadir=@CMAKE_INSTALL_FULL_DATADIR@/@CMAKE_PROJECT_NAME@
 datarootdir=@CMAKE_INSTALL_FULL_DATAROOTDIR@
+applets_dir=@PLUGINS_DIRECTORY@
+applets_data=@PLUGINS_DATA@
 
 Name: vala-panel
 Description: A GTK3 desktop panel
