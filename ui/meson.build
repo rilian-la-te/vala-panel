@@ -8,7 +8,6 @@ ui_headers = ui_enum_headers + files (
     'applet-widget-api.h',
     'applet-widget.h',
     'settings-manager.h',
-    'panel-platform.h',
     'toplevel.h',
     'toplevel-config.h',
     'applet-plugin.h',

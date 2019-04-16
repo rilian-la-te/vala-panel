@@ -31,7 +31,7 @@ install_data(
     install_dir: join_paths(project_datadir, 'images')
 )
 
-schema_dir = join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
+schema_dir = join_paths(datadir, 'glib-2.0', 'schemas')
 install_data([
     join_paths('gschemas','org.valapanel.builtin.gschema.xml'),
     join_paths('gschemas','org.valapanel.gschema.xml'),

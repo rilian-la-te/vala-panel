@@ -77,7 +77,6 @@ core_deps = [glib, gio, giounix, gmodule, gtk, m]
 core_inc = include_directories('.')
 
 applets_vapi_dir = join_paths(meson.current_source_dir(), 'ui')
-add_project_arguments(['--vapidir', applets_vapi_dir], language: 'vala')
 vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
 
 #################
