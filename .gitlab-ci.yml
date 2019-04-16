@@ -40,11 +40,10 @@ build-alpine-meson:
     expire_in: 1 week
 
 release-main:
-  image: archlinux/base
+  image: alpine:edge
   stage: release
   script:
-    - pacman -Sy
-    - pacman -S --noconfirm python3 python-pip
+    - apk add --no-cache python3
     - pip3 install gitlab_release
     - python3 -m gitlab_release ${PRIVATE_TOKEN} build/vala-panel*.tar.xz
   only:
