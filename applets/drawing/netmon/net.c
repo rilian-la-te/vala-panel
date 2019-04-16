@@ -18,7 +18,6 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <error.h>
 #include <stdbool.h>
 #include <stdio.h>
 
