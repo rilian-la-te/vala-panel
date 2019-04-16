@@ -223,7 +223,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 	}
 }
 
-static gint PROP_handle_local_options(GApplication *application, GVariantDict *options)
+static gint vala_panel_app_handle_local_options(GApplication *application, GVariantDict *options)
 {
 	if (g_variant_dict_contains(options, "version"))
 	{
@@ -233,7 +233,8 @@ static gint PROP_handle_local_options(GApplication *application, GVariantDict *o
 	return -1;
 }
 
-static int PROP_command_line(GApplication *application, GApplicationCommandLine *commandline)
+static int vala_panel_app_command_line(GApplication *application,
+                                       GApplicationCommandLine *commandline)
 {
 	g_autofree char *profile_name = NULL;
 	g_autofree char *ccommand     = NULL;
@@ -386,7 +387,7 @@ void vala_panel_application_activate(GApplication *app)
 	}
 }
 
-static void PROP_finalize(GObject *object)
+static void vala_panel_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
 	g_clear_object(&app->config);
@@ -402,8 +403,8 @@ static void PROP_finalize(GObject *object)
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
 
-static void PROP_set_property(GObject *object, guint prop_id, const GValue *value,
-                              GParamSpec *pspec)
+static void vala_panel_app_set_property(GObject *object, guint prop_id, const GValue *value,
+                                        GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
@@ -464,7 +465,8 @@ static void PROP_set_property(GObject *object, guint prop_id, const GValue *valu
 	}
 }
 
-static void PROP_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *value,
+                                        GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
@@ -645,11 +647,11 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	G_APPLICATION_CLASS(klass)->startup              = vala_panel_application_startup;
 	G_APPLICATION_CLASS(klass)->shutdown             = vala_panel_application_shutdown;
 	G_APPLICATION_CLASS(klass)->activate             = vala_panel_application_activate;
-	G_APPLICATION_CLASS(klass)->handle_local_options = PROP_handle_local_options;
-	G_APPLICATION_CLASS(klass)->command_line         = PROP_command_line;
-	G_OBJECT_CLASS(klass)->get_property              = PROP_get_property;
-	G_OBJECT_CLASS(klass)->set_property              = PROP_set_property;
-	G_OBJECT_CLASS(klass)->finalize                  = PROP_finalize;
+	G_APPLICATION_CLASS(klass)->handle_local_options = vala_panel_app_handle_local_options;
+	G_APPLICATION_CLASS(klass)->command_line         = vala_panel_app_command_line;
+	G_OBJECT_CLASS(klass)->get_property              = vala_panel_app_get_property;
+	G_OBJECT_CLASS(klass)->set_property              = vala_panel_app_set_property;
+	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_app_finalize;
 	pspecs[PROP_PROFILE]                             = g_param_spec_string("profile",
                                                    "profile",
                                                    "profile",

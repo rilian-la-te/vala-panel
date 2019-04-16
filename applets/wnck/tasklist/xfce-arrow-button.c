@@ -483,8 +483,6 @@ bool xfce_arrow_button_get_blinking(XfceArrowButton *button)
 void xfce_arrow_button_set_blinking(XfceArrowButton *button, bool blinking)
 {
 	g_return_if_fail(XFCE_IS_ARROW_BUTTON(button));
-	XfceArrowButtonPrivate *priv =
-	    (XfceArrowButtonPrivate *)xfce_arrow_button_get_instance_private(button);
 
 	if (blinking)
 		css_apply_from_resource(GTK_WIDGET(button),

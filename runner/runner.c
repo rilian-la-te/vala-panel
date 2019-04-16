@@ -56,9 +56,8 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG)
 
 GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
 {
-	ValaPanelRunner *self = VALA_PANEL_RUNNER(user_data);
-	InfoData *data        = (InfoData *)boxed_wrapper_dup_boxed(wr);
-	GtkBox *box           = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
+	InfoData *data = (InfoData *)boxed_wrapper_dup_boxed(wr);
+	GtkBox *box    = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),
 	                            "launcher-button");

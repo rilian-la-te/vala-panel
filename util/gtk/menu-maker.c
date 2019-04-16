@@ -191,8 +191,8 @@ void apply_menu_properties(GList *w, GMenuModel *menu)
 				apply_menu_dnd(GTK_MENU_ITEM(l->data), menu, i);
 			g_variant_unref(val);
 		}
-		l       = g_list_nth(l, jumplen);
-		jumplen = 1;
+		l = g_list_nth(l, jumplen);
+
 		if (l == NULL)
 			break;
 	}
