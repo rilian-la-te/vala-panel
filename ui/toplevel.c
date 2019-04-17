@@ -624,7 +624,7 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 	return ret;
 }
 
-static int calc_width(int scrw, int panel_width, int panel_margin)
+static inline int calc_width(int scrw, int panel_width, int panel_margin)
 {
 	int effective_width = (int)round(scrw * panel_width / 100.0);
 	if ((effective_width + panel_margin) > scrw)
