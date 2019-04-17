@@ -5,8 +5,7 @@ project('vala-panel', 'vala', 'c',
     default_options: [
         'c_std=gnu11',
         'buildtype=debugoptimized',
-        'warning_level=1',
-        'werror=true'
+        'warning_level=1'
         ])
 
 library_name = 'valapanel'
