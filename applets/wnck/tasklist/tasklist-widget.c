@@ -78,8 +78,11 @@ enum
 	PROP_WRAP_WINDOWS,
 	PROP_INCLUDE_ALL_BLINKING,
 	PROP_MIDDLE_CLICK,
-	PROP_LABEL_DECORATIONS
+	PROP_LABEL_DECORATIONS,
+	PROP_ALL,
 };
+
+static GParamSpec *props[PROP_ALL];
 
 struct _XfceTasklistClass
 {
@@ -235,8 +238,6 @@ static void xfce_tasklist_get_property(GObject *object, guint prop_id, GValue *v
 static void xfce_tasklist_set_property(GObject *object, guint prop_id, const GValue *value,
                                        GParamSpec *pspec);
 static void xfce_tasklist_finalize(GObject *object);
-static void xfce_tasklist_get_preferred_length(GtkWidget *widget, gint *minimum_length,
-                                               gint *natural_length);
 static void xfce_tasklist_get_preferred_width(GtkWidget *widget, gint *minimum_width,
                                               gint *natural_width);
 static void xfce_tasklist_get_preferred_height(GtkWidget *widget, gint *minimum_height,
@@ -244,7 +245,7 @@ static void xfce_tasklist_get_preferred_height(GtkWidget *widget, gint *minimum_
 static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *allocation);
 static void xfce_tasklist_realize(GtkWidget *widget);
 static void xfce_tasklist_unrealize(GtkWidget *widget);
-static bool xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event);
+static int xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event);
 static void xfce_tasklist_remove(GtkContainer *container, GtkWidget *widget);
 static void xfce_tasklist_forall(GtkContainer *container, bool include_internals,
                                  GtkCallback callback, gpointer callback_data);
@@ -269,7 +270,7 @@ static void xfce_tasklist_skipped_windows_state_changed(WnckWindow *window,
                                                         WnckWindowState new_state,
                                                         XfceTasklist *tasklist);
 static void xfce_tasklist_sort(XfceTasklist *tasklist);
-static bool xfce_tasklist_update_icon_geometries(gpointer data);
+static int xfce_tasklist_update_icon_geometries(gpointer data);
 static void xfce_tasklist_update_icon_geometries_destroyed(gpointer data);
 
 /* wireframe */
@@ -322,137 +323,104 @@ static void xfce_tasklist_class_init(XfceTasklistClass *klass)
 	gtkcontainer_class->forall     = xfce_tasklist_forall;
 	gtkcontainer_class->child_type = xfce_tasklist_child_type;
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_GROUPING,
-	                                g_param_spec_uint("grouping",
-	                                                  NULL,
-	                                                  NULL,
-	                                                  XFCE_TASKLIST_GROUPING_MIN,
-	                                                  XFCE_TASKLIST_GROUPING_MAX +
-	                                                      1 /* TODO drop this later */,
-	                                                  XFCE_TASKLIST_GROUPING_DEFAULT,
-	                                                  G_PARAM_READWRITE |
-	                                                      G_PARAM_STATIC_STRINGS));
+	props[PROP_GROUPING] =
+	    g_param_spec_uint("grouping",
+	                      NULL,
+	                      NULL,
+	                      XFCE_TASKLIST_GROUPING_MIN,
+	                      XFCE_TASKLIST_GROUPING_MAX + 1 /* TODO drop this later */,
+	                      XFCE_TASKLIST_GROUPING_DEFAULT,
+	                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_INCLUDE_ALL_WORKSPACES,
-	                                g_param_spec_boolean("include-all-workspaces",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     false,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_INCLUDE_ALL_WORKSPACES] =
+	    g_param_spec_boolean("include-all-workspaces",
+	                         NULL,
+	                         NULL,
+	                         false,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_INCLUDE_ALL_MONITORS,
-	                                g_param_spec_boolean("include-all-monitors",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_INCLUDE_ALL_MONITORS] =
+	    g_param_spec_boolean("include-all-monitors",
+	                         NULL,
+	                         NULL,
+	                         true,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_FLAT_BUTTONS,
-	                                g_param_spec_boolean("flat-buttons",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     false,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_FLAT_BUTTONS] = g_param_spec_boolean("flat-buttons",
+	                                                NULL,
+	                                                NULL,
+	                                                false,
+	                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_SWITCH_WORKSPACE_ON_UNMINIMIZE,
-	                                g_param_spec_boolean("switch-workspace-on-unminimize",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_SWITCH_WORKSPACE_ON_UNMINIMIZE] =
+	    g_param_spec_boolean("switch-workspace-on-unminimize",
+	                         NULL,
+	                         NULL,
+	                         true,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_SHOW_LABELS,
-	                                g_param_spec_boolean("show-labels",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_SHOW_LABELS] = g_param_spec_boolean("show-labels",
+	                                               NULL,
+	                                               NULL,
+	                                               true,
+	                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_SHOW_ONLY_MINIMIZED,
-	                                g_param_spec_boolean("show-only-minimized",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     false,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_SHOW_ONLY_MINIMIZED] =
+	    g_param_spec_boolean("show-only-minimized",
+	                         NULL,
+	                         NULL,
+	                         false,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_SHOW_WIREFRAMES,
-	                                g_param_spec_boolean("show-wireframes",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     false,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_SHOW_WIREFRAMES] =
+	    g_param_spec_boolean("show-wireframes",
+	                         NULL,
+	                         NULL,
+	                         false,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_SORT_ORDER,
-	                                g_param_spec_uint("sort-order",
-	                                                  NULL,
-	                                                  NULL,
-	                                                  XFCE_TASKLIST_SORT_ORDER_MIN,
-	                                                  XFCE_TASKLIST_SORT_ORDER_MAX,
-	                                                  XFCE_TASKLIST_SORT_ORDER_DEFAULT,
-	                                                  G_PARAM_READWRITE |
-	                                                      G_PARAM_STATIC_STRINGS));
+	props[PROP_SORT_ORDER] = g_param_spec_uint("sort-order",
+	                                           NULL,
+	                                           NULL,
+	                                           XFCE_TASKLIST_SORT_ORDER_MIN,
+	                                           XFCE_TASKLIST_SORT_ORDER_MAX,
+	                                           XFCE_TASKLIST_SORT_ORDER_DEFAULT,
+	                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_WINDOW_SCROLLING,
-	                                g_param_spec_boolean("window-scrolling",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_WINDOW_SCROLLING] =
+	    g_param_spec_boolean("window-scrolling",
+	                         NULL,
+	                         NULL,
+	                         true,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_WRAP_WINDOWS,
-	                                g_param_spec_boolean("wrap-windows",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     false,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_WRAP_WINDOWS] = g_param_spec_boolean("wrap-windows",
+	                                                NULL,
+	                                                NULL,
+	                                                false,
+	                                                G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_INCLUDE_ALL_BLINKING,
-	                                g_param_spec_boolean("include-all-blinking",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     true,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_INCLUDE_ALL_BLINKING] =
+	    g_param_spec_boolean("include-all-blinking",
+	                         NULL,
+	                         NULL,
+	                         true,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-	g_object_class_install_property(gobject_class,
-	                                PROP_MIDDLE_CLICK,
-	                                g_param_spec_uint("middle-click",
-	                                                  NULL,
-	                                                  NULL,
-	                                                  XFCE_TASKLIST_MIDDLE_CLICK_MIN,
-	                                                  XFCE_TASKLIST_MIDDLE_CLICK_MAX,
-	                                                  XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT,
-	                                                  G_PARAM_READWRITE |
-	                                                      G_PARAM_STATIC_STRINGS));
-	g_object_class_install_property(gobject_class,
-	                                PROP_LABEL_DECORATIONS,
-	                                g_param_spec_boolean("label-decorations",
-	                                                     NULL,
-	                                                     NULL,
-	                                                     TRUE,
-	                                                     G_PARAM_READWRITE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	props[PROP_MIDDLE_CLICK] = g_param_spec_uint("middle-click",
+	                                             NULL,
+	                                             NULL,
+	                                             XFCE_TASKLIST_MIDDLE_CLICK_MIN,
+	                                             XFCE_TASKLIST_MIDDLE_CLICK_MAX,
+	                                             XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT,
+	                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+	props[PROP_LABEL_DECORATIONS] =
+	    g_param_spec_boolean("label-decorations",
+	                         NULL,
+	                         NULL,
+	                         TRUE,
+	                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+	g_object_class_install_properties(gobject_class, PROP_ALL, props);
 }
 
 XfceTasklist *xfce_tasklist_new()
@@ -1079,54 +1047,54 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 		                    xfce_tasklist_update_icon_geometries_destroyed);
 }
 
-static void xfce_tasklist_style_set(GtkWidget *widget, GtkStyle *previous_style)
+/*static void xfce_tasklist_style_set(GtkWidget *widget, GtkStyle *previous_style)
 {
-	XfceTasklist *tasklist = XFCE_TASKLIST(widget);
-	gint max_button_length;
-	gint max_button_size;
-	gint min_button_length;
+        XfceTasklist *tasklist = XFCE_TASKLIST(widget);
+        gint max_button_length;
+        gint max_button_size;
+        gint min_button_length;
 
-	/* let gtk update the widget style */
-	(*GTK_WIDGET_CLASS(xfce_tasklist_parent_class)->style_set)(widget, previous_style);
+    // let gtk update the widget style
+        (*GTK_WIDGET_CLASS(xfce_tasklist_parent_class)->style_set)(widget, previous_style);
 
-	/* read the style properties */
-	gtk_widget_style_get(GTK_WIDGET(tasklist),
-	                     "max-button-length",
-	                     &max_button_length,
-	                     "min-button-length",
-	                     &min_button_length,
-	                     "ellipsize-mode",
-	                     &tasklist->ellipsize_mode,
-	                     "max-button-size",
-	                     &max_button_size,
-	                     "minimized-icon-lucency",
-	                     &tasklist->minimized_icon_lucency,
-	                     "menu-max-width-chars",
-	                     &tasklist->menu_max_width_chars,
-	                     NULL);
+    // read the style properties
+        gtk_widget_style_get(GTK_WIDGET(tasklist),
+                             "max-button-length",
+                             &max_button_length,
+                             "min-button-length",
+                             &min_button_length,
+                             "ellipsize-mode",
+                             &tasklist->ellipsize_mode,
+                             "max-button-size",
+                             &max_button_size,
+                             "minimized-icon-lucency",
+                             &tasklist->minimized_icon_lucency,
+                             "menu-max-width-chars",
+                             &tasklist->menu_max_width_chars,
+                             NULL);
 
-	/* update the widget */
-	if (tasklist->max_button_length != max_button_length ||
-	    tasklist->max_button_size != max_button_size ||
-	    tasklist->min_button_length != min_button_length)
-	{
-		if (max_button_length > 0)
-		{
-			/* prevent abuse of the min/max button length */
-			tasklist->max_button_length = MAX(min_button_length, max_button_length);
-			tasklist->min_button_length = MIN(min_button_length, max_button_length);
-		}
-		else
-		{
-			tasklist->max_button_length = max_button_length;
-			tasklist->min_button_length = min_button_length;
-		}
+    // update the widget
+        if (tasklist->max_button_length != max_button_length ||
+            tasklist->max_button_size != max_button_size ||
+            tasklist->min_button_length != min_button_length)
+        {
+                if (max_button_length > 0)
+                {
+            // prevent abuse of the min/max button length
+                        tasklist->max_button_length = MAX(min_button_length, max_button_length);
+                        tasklist->min_button_length = MIN(min_button_length, max_button_length);
+                }
+                else
+                {
+                        tasklist->max_button_length = max_button_length;
+                        tasklist->min_button_length = min_button_length;
+                }
 
-		tasklist->max_button_size = max_button_size;
+                tasklist->max_button_size = max_button_size;
 
-		gtk_widget_queue_resize(widget);
-	}
-}
+                gtk_widget_queue_resize(widget);
+        }
+} */
 
 static void xfce_tasklist_realize(GtkWidget *widget)
 {
@@ -1148,7 +1116,7 @@ static void xfce_tasklist_unrealize(GtkWidget *widget)
 	(*GTK_WIDGET_CLASS(xfce_tasklist_parent_class)->unrealize)(widget);
 }
 
-static bool xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event)
+static int xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event)
 {
 	XfceTasklist *tasklist   = XFCE_TASKLIST(widget);
 	XfceTasklistChild *child = NULL;
@@ -1729,7 +1697,7 @@ static void xfce_tasklist_sort(XfceTasklist *tasklist)
 	gtk_widget_queue_resize(GTK_WIDGET(tasklist));
 }
 
-static bool xfce_tasklist_update_icon_geometries(gpointer data)
+static int xfce_tasklist_update_icon_geometries(gpointer data)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(data);
 	GList *li;
