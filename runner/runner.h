@@ -25,7 +25,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelRunner, vala_panel_runner, VALA_PANEL, RUNNER, GtkDialog);
+G_DECLARE_FINAL_TYPE(ValaPanelRunner, vala_panel_runner, VALA_PANEL, RUNNER, GtkDialog)
 
 ValaPanelRunner *vala_panel_runner_new(GtkApplication *app);
 void gtk_run(ValaPanelRunner *self);

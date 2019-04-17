@@ -82,7 +82,7 @@ static void update_toplevel_geometry_for_all(GdkDisplay *scr, void *data)
 		}
 	}
 }
-static void monitor_notify_cb(GObject *gobject, GParamSpec *pspec, gpointer user_data)
+static void monitor_notify_cb(GObject *gobject, G_GNUC_UNUSED GParamSpec *pspec, gpointer user_data)
 {
 	GdkMonitor *mon = GDK_MONITOR(gobject);
 	update_toplevel_geometry_for_all(gdk_monitor_get_display(mon), user_data);
@@ -122,7 +122,7 @@ static void monitor_removed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 }
 
 static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplication *app,
-                                              const char *profile)
+                                              G_GNUC_UNUSED const char *profile)
 {
 	ValaPanelPlatformX11 *self  = VALA_PANEL_PLATFORM_X11(obj);
 	ValaPanelCoreSettings *core = vala_panel_platform_get_settings(obj);
@@ -140,8 +140,8 @@ static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplica
 }
 
 // TODO: Make more readable code without switch
-static void vpp_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,
-                                 int monitor)
+static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top,
+                                 PanelGravity gravity, int monitor)
 {
 	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
 	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
@@ -205,7 +205,7 @@ static void vpp_x11_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGrav
 	gtk_window_move(top, x, y);
 }
 
-static bool vpp_x11_edge_can_strut(ValaPanelPlatform *f, GtkWindow *top)
+static bool vpp_x11_edge_can_strut(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top)
 {
 	int strut_set = false;
 	g_object_get(top, VP_KEY_STRUT, &strut_set, NULL);
@@ -340,7 +340,7 @@ static void vpp_x11_finalize(GObject *obj)
 	G_OBJECT_CLASS(vala_panel_platform_x11_parent_class)->finalize(obj);
 }
 
-static void vala_panel_platform_x11_init(ValaPanelPlatformX11 *self)
+static void vala_panel_platform_x11_init(G_GNUC_UNUSED ValaPanelPlatformX11 *self)
 {
 }
 

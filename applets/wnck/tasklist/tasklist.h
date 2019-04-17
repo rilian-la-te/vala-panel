@@ -23,7 +23,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(TaskListApplet, tasklist_applet, TASKLIST, APPLET, ValaPanelApplet);
+G_DECLARE_FINAL_TYPE(TaskListApplet, tasklist_applet, TASKLIST, APPLET, ValaPanelApplet)
 
 G_END_DECLS
 

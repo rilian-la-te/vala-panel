@@ -116,7 +116,7 @@ enum
 
 static GParamSpec *pspecs[PROP_ALL];
 
-static inline void destroy0(GtkWidget *x, void *data)
+static inline void destroy0(GtkWidget *x, G_GNUC_UNUSED void *data)
 {
 	gtk_widget_destroy0(x);
 }
@@ -222,7 +222,8 @@ static void vala_panel_application_shutdown(GApplication *base)
 	}
 }
 
-static gint vala_panel_app_handle_local_options(GApplication *application, GVariantDict *options)
+static gint vala_panel_app_handle_local_options(G_GNUC_UNUSED GApplication *application,
+                                                GVariantDict *options)
 {
 	if (g_variant_dict_contains(options, "version"))
 	{
@@ -515,7 +516,8 @@ static inline void file_chooser_helper(GtkFileChooser *self, ValaPanelApplicatio
 
 /* TODO: Move activate_menu to hidden toplevel interface, it is not X11-specific */
 
-static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_menu(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                          gpointer data)
 {
 	GtkApplication *app = GTK_APPLICATION(data);
 	GList *windows      = gtk_application_get_windows(app);
@@ -538,7 +540,8 @@ static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data)
 	}
 }
 
-static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_panel_preferences(G_GNUC_UNUSED GSimpleAction *simple,
+                                       G_GNUC_UNUSED GVariant *param, gpointer data)
 {
 	GtkApplication *app   = GTK_APPLICATION(data);
 	GList *windows        = gtk_application_get_windows(app);
@@ -558,7 +561,8 @@ static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, g
 	}
 }
 
-static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_preferences(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                                 gpointer data)
 {
 	static GtkDialog *pref_dialog = NULL;
 	ValaPanelApplication *self    = VALA_PANEL_APPLICATION(data);
@@ -587,7 +591,8 @@ static void activate_preferences(GSimpleAction *simple, GVariant *param, gpointe
 	g_signal_connect_after(pref_dialog, "response", G_CALLBACK(destroy0), &pref_dialog);
 }
 
-static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_about(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                           G_GNUC_UNUSED gpointer data)
 {
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/app/about.ui");
@@ -600,41 +605,47 @@ static void activate_about(GSimpleAction *simple, GVariant *param, gpointer data
 	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
 }
 
-static void activate_run(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_run(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                         gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->run_command);
 	activate_menu_launch_command(NULL, par, app);
 }
 
-static void activate_lock(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_lock(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                          gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->lock_command);
 	activate_menu_launch_command(NULL, par, app);
 }
 
-static void activate_logout(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_logout(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                            gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->logout_command);
 	activate_menu_launch_command(NULL, par, app);
 }
 
-static void activate_shutdown(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_shutdown(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                              gpointer data)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->shutdown_command);
 	activate_menu_launch_command(NULL, par, app);
 }
-static void activate_exit(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_exit(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                          gpointer data)
 {
 	ValaPanelApplication *app = (ValaPanelApplication *)data;
 	app->restart              = false;
 	g_application_quit(G_APPLICATION(app));
 }
 
-static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer data)
+static void activate_restart(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
+                             gpointer data)
 {
 	ValaPanelApplication *app = (ValaPanelApplication *)data;
 	app->restart              = true;

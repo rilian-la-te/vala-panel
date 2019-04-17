@@ -165,7 +165,7 @@ static bool configure_event(GtkWidget *widget, G_GNUC_UNUSED GdkEventConfigure *
 		 * existing data. */
 		if ((c->stats_cpu == NULL) || (new_pixmap_width != c->pixmap_width))
 		{
-			float *new_stats_cpu = g_new0(typeof(*c->stats_cpu), new_pixmap_width);
+			float *new_stats_cpu = g_new0(float, new_pixmap_width);
 			if (c->stats_cpu != NULL)
 			{
 				if (new_pixmap_width > c->pixmap_width)

@@ -109,7 +109,7 @@ void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label
 	gtk_widget_set_has_window(GTK_WIDGET(btn), false);
 }
 
-inline void vala_panel_apply_window_icon(GtkWindow *win)
+void vala_panel_apply_window_icon(GtkWindow *win)
 {
 	g_autoptr(GdkPixbuf) icon =
 	    gdk_pixbuf_new_from_resource("/org/vala-panel/lib/panel.png", NULL);

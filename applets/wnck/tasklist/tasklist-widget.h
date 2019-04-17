@@ -23,10 +23,6 @@
 
 G_BEGIN_DECLS
 
-typedef enum _XfceTasklistGrouping XfceTasklistGrouping;
-typedef enum _XfceTasklistSortOrder XfceTasklistSortOrder;
-typedef enum _XfceTasklistMClick XfceTasklistMClick;
-
 G_DECLARE_FINAL_TYPE(XfceTasklist, xfce_tasklist, XFCE, TASKLIST, GtkContainer)
 
 #define XFCE_TYPE_TASKLIST (xfce_tasklist_get_type())
@@ -65,6 +61,10 @@ enum _XfceTasklistMClick
 	XFCE_TASKLIST_MIDDLE_CLICK_MAX     = XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW,
 	XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING
 };
+
+typedef enum _XfceTasklistGrouping XfceTasklistGrouping;
+typedef enum _XfceTasklistSortOrder XfceTasklistSortOrder;
+typedef enum _XfceTasklistMClick XfceTasklistMClick;
 
 GType xfce_tasklist_get_type(void) G_GNUC_CONST;
 

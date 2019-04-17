@@ -78,7 +78,7 @@ char *css_apply_from_file_to_app(const char *file)
 	return NULL;
 }
 
-inline char *css_generate_background(const char *filename, GdkRGBA *color)
+char *css_generate_background(const char *filename, GdkRGBA *color)
 {
 	char *returnie;
 	g_autofree char *str = gdk_rgba_to_string(color);
@@ -99,7 +99,7 @@ inline char *css_generate_background(const char *filename, GdkRGBA *color)
 	return returnie;
 }
 
-inline char *css_generate_font_color(GdkRGBA color)
+char *css_generate_font_color(GdkRGBA color)
 {
 	g_autofree char *color_str = gdk_rgba_to_string(&color);
 	char *ret;
@@ -110,7 +110,7 @@ inline char *css_generate_font_color(GdkRGBA color)
 	    color_str);
 	return ret;
 }
-inline char *css_generate_font_size(gint size)
+char *css_generate_font_size(gint size)
 {
 	return g_strdup_printf(
 	    ".-vala-panel-font-size{\n"
@@ -130,7 +130,7 @@ inline char *css_generate_font_label(double size, bool is_bold)
 	    is_bold ? "bold" : "normal");
 }
 
-inline char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
+char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
 {
 	char *returnie;
 	GdkRGBA color, active_color;
