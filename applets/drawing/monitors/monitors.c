@@ -49,7 +49,8 @@ G_DEFINE_DYNAMIC_TYPE(MonitorsApplet, monitors_applet, vala_panel_applet_get_typ
  * Generic monitor functions and events
  */
 
-static bool button_release_event(GtkWidget *widget, GdkEventButton *evt, MonitorsApplet *applet)
+static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *evt,
+                                 MonitorsApplet *applet)
 {
 	g_autoptr(GVariant) var =
 	    g_settings_get_value(vala_panel_applet_get_settings(VALA_PANEL_APPLET(applet)), ACTION);
@@ -305,7 +306,7 @@ static void monitors_applet_dispose(GObject *user_data)
 	G_OBJECT_CLASS(monitors_applet_parent_class)->dispose(user_data);
 }
 
-static void monitors_applet_init(MonitorsApplet *self)
+static void monitors_applet_init(G_GNUC_UNUSED MonitorsApplet *self)
 {
 }
 
@@ -316,7 +317,7 @@ static void monitors_applet_class_init(MonitorsAppletClass *klass)
 	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = monitors_get_settings_ui;
 }
 
-static void monitors_applet_class_finalize(MonitorsAppletClass *klass)
+static void monitors_applet_class_finalize(G_GNUC_UNUSED MonitorsAppletClass *klass)
 {
 }
 

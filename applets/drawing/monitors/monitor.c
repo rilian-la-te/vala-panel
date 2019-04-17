@@ -58,7 +58,7 @@ G_GNUC_INTERNAL void monitor_redraw_pixmap(Monitor *mon)
 	gtk_widget_queue_draw(GTK_WIDGET(mon->da));
 }
 
-G_GNUC_INTERNAL bool monitor_resize(GtkWidget *widget, Monitor *mon)
+G_GNUC_INTERNAL bool monitor_resize(G_GNUC_UNUSED GtkWidget *widget, Monitor *mon)
 {
 	GtkAllocation allocation;
 	int new_pixmap_width, new_pixmap_height;
@@ -135,13 +135,14 @@ G_GNUC_INTERNAL bool monitor_resize(GtkWidget *widget, Monitor *mon)
 	return G_SOURCE_CONTINUE;
 }
 
-static bool configure_event(GtkWidget *widget, GdkEventConfigure *dummy, gpointer data)
+static bool configure_event(GtkWidget *widget, G_GNUC_UNUSED GdkEventConfigure *dummy,
+                            gpointer data)
 {
 	Monitor *mon = (Monitor *)data;
 	return monitor_resize(widget, mon);
 }
 
-static bool draw(GtkWidget *widget, cairo_t *cr, Monitor *mon)
+static bool draw(G_GNUC_UNUSED GtkWidget *widget, cairo_t *cr, Monitor *mon)
 {
 	/* Draw the requested part of the pixmap onto the drawing area.
 	 * Translate it in both x and y by the border size. */

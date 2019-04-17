@@ -266,9 +266,9 @@ static int xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
 	return true;
 }
 
-static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientation, int for_size,
-                                      int *minimum, int *natural, int *minimum_baseline,
-                                      int *natural_baseline)
+static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientation,
+                                      G_GNUC_UNUSED int for_size, int *minimum, int *natural,
+                                      int *minimum_baseline, int *natural_baseline)
 {
 	XfceArrowButton *button = XFCE_ARROW_BUTTON(widget);
 	int minimum_child, natural_child;

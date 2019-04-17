@@ -25,10 +25,10 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_about(GSimpleAction *act, GVariant *param, gpointer self);
 
 static const GActionEntry entries[] = {
-	{ VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL },
-	{ VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL },
-	{ VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL },
-	{ VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL }
+	{ VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL, { 0 } },
+	{ VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL, { 0 } },
+	{ VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL, { 0 } },
+	{ VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL, { 0 } }
 };
 
 enum

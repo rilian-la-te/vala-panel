@@ -83,7 +83,7 @@ static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 		return item;
 }
 
-static void vala_panel_list_model_filter_get_property(GObject *object, guint property_id,
+static void vala_panel_list_model_filter_get_property(GObject *object, uint property_id,
                                                       GValue *value, GParamSpec *pspec)
 {
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(object);
@@ -100,14 +100,15 @@ static void vala_panel_list_model_filter_get_property(GObject *object, guint pro
 	}
 }
 
-static void vala_panel_filter_base_changed(GListModel *list, guint position, guint removed,
-                                           guint added, gpointer user_data)
+static void vala_panel_filter_base_changed(G_GNUC_UNUSED GListModel *list,
+                                           G_GNUC_UNUSED uint position, G_GNUC_UNUSED uint removed,
+                                           G_GNUC_UNUSED uint added, gpointer user_data)
 {
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(user_data);
 	vala_panel_list_model_filter_invalidate(self);
 }
 
-static void vala_panel_list_model_filter_set_property(GObject *object, guint property_id,
+static void vala_panel_list_model_filter_set_property(GObject *object, uint property_id,
                                                       const GValue *value, GParamSpec *pspec)
 {
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(object);
@@ -141,7 +142,7 @@ static void g_list_model_iface_init(GListModelInterface *iface)
 	iface->get_n_items   = vala_panel_list_model_filter_get_n_items;
 }
 
-static void vala_panel_list_model_filter_init(ValaPanelListModelFilter *self)
+static void vala_panel_list_model_filter_init(G_GNUC_UNUSED ValaPanelListModelFilter *self)
 {
 }
 

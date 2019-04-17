@@ -156,7 +156,7 @@ static GtkWidget *tasklist_applet_get_settings_ui(ValaPanelApplet *base)
 	return GTK_WIDGET(config);
 }
 
-static void tasklist_applet_init(TaskListApplet *self)
+static void tasklist_applet_init(G_GNUC_UNUSED TaskListApplet *self)
 {
 }
 
@@ -175,7 +175,7 @@ static void tasklist_applet_class_init(TaskListAppletClass *klass)
 	G_OBJECT_CLASS(klass)->dispose                   = tasklist_applet_displose;
 }
 
-static void tasklist_applet_class_finalize(TaskListAppletClass *klass)
+static void tasklist_applet_class_finalize(G_GNUC_UNUSED TaskListAppletClass *klass)
 {
 }
 

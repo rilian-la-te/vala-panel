@@ -54,7 +54,7 @@ static void vala_panel_run_application_finalize(GObject *app)
 	g_clear_pointer(&w, gtk_widget_destroy);
 	(*G_OBJECT_CLASS(vala_panel_run_application_parent_class)->finalize)(app);
 }
-static void vala_panel_run_application_init(ValaPanelRunApplication *self)
+static void vala_panel_run_application_init(G_GNUC_UNUSED ValaPanelRunApplication *self)
 {
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);

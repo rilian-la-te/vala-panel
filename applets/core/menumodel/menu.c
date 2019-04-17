@@ -109,7 +109,8 @@ static void menu_applet_constructed(GObject *obj)
 	gtk_widget_show(GTK_WIDGET(self));
 }
 
-static void panel_gravity_changed(ValaPanelToplevel *panel, GParamSpec *param, GtkMenuBar *menu)
+static void panel_gravity_changed(ValaPanelToplevel *panel, G_GNUC_UNUSED GParamSpec *param,
+                                  GtkMenuBar *menu)
 {
 	GtkOrientation orient;
 	GtkPackDirection pack;
@@ -545,7 +546,7 @@ static void menu_applet_class_init(MenuAppletClass *klass)
 	g_object_class_install_properties(G_OBJECT_CLASS(klass), NUM_PROPERTIES, menu_applet_props);
 }
 
-static void menu_applet_class_finalize(MenuAppletClass *klass)
+static void menu_applet_class_finalize(G_GNUC_UNUSED MenuAppletClass *klass)
 {
 }
 

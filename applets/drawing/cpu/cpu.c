@@ -151,7 +151,7 @@ static int cpu_update(CpuApplet *c)
 }
 
 /* Handler for configure_event on drawing area. */
-static bool configure_event(GtkWidget *widget, GdkEventConfigure *event, CpuApplet *c)
+static bool configure_event(GtkWidget *widget, G_GNUC_UNUSED GdkEventConfigure *event, CpuApplet *c)
 {
 	GtkAllocation allocation;
 
@@ -228,7 +228,7 @@ static bool configure_event(GtkWidget *widget, GdkEventConfigure *event, CpuAppl
 }
 
 /* Handler for draw on drawing area. */
-static bool draw(GtkWidget *widget, cairo_t *cr, CpuApplet *c)
+static bool draw(G_GNUC_UNUSED GtkWidget *widget, cairo_t *cr, CpuApplet *c)
 {
 	/* Draw the requested part of the pixmap onto the drawing area.
 	 * Translate it in both x and y by the border size. */
@@ -250,7 +250,7 @@ static bool draw(GtkWidget *widget, cairo_t *cr, CpuApplet *c)
 	return false;
 }
 
-static void on_height_change(GObject *owner, GParamSpec *pspec, void *data)
+static void on_height_change(GObject *owner, G_GNUC_UNUSED GParamSpec *pspec, void *data)
 {
 	GtkWidget *da = GTK_WIDGET(data);
 	uint height;
@@ -312,7 +312,7 @@ static void cpu_applet_dispose(GObject *user_data)
 	G_OBJECT_CLASS(cpu_applet_parent_class)->dispose(user_data);
 }
 
-static void cpu_applet_init(CpuApplet *self)
+static void cpu_applet_init(G_GNUC_UNUSED CpuApplet *self)
 {
 }
 
@@ -322,7 +322,7 @@ static void cpu_applet_class_init(CpuAppletClass *klass)
 	G_OBJECT_CLASS(klass)->dispose     = cpu_applet_dispose;
 }
 
-static void cpu_applet_class_finalize(CpuAppletClass *klass)
+static void cpu_applet_class_finalize(G_GNUC_UNUSED CpuAppletClass *klass)
 {
 }
 

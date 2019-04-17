@@ -44,7 +44,8 @@ G_DEFINE_DYNAMIC_TYPE(NetMonApplet, netmon_applet, vala_panel_applet_get_type())
  * Generic monitor functions and events
  */
 
-static bool button_release_event(GtkWidget *widget, GdkEventButton *evt, NetMonApplet *applet)
+static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *evt,
+                                 NetMonApplet *applet)
 {
 	ValaPanelApplet *base = VALA_PANEL_APPLET(applet);
 	GtkWindow *top        = GTK_WINDOW(vala_panel_applet_get_toplevel(base));
@@ -238,7 +239,7 @@ static void netmon_applet_dispose(GObject *user_data)
 	G_OBJECT_CLASS(netmon_applet_parent_class)->dispose(user_data);
 }
 
-static void netmon_applet_init(NetMonApplet *self)
+static void netmon_applet_init(G_GNUC_UNUSED NetMonApplet *self)
 {
 }
 
@@ -249,7 +250,7 @@ static void netmon_applet_class_init(NetMonAppletClass *klass)
 	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = netmon_get_settings_ui;
 }
 
-static void netmon_applet_class_finalize(NetMonAppletClass *klass)
+static void netmon_applet_class_finalize(G_GNUC_UNUSED NetMonAppletClass *klass)
 {
 }
 

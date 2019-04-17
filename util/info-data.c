@@ -109,7 +109,7 @@ static void info_data_model_iface_init(GListModelInterface *iface);
 G_DEFINE_TYPE_WITH_CODE(InfoDataModel, info_data_model, G_TYPE_OBJECT,
                         G_IMPLEMENT_INTERFACE(G_TYPE_LIST_MODEL, info_data_model_iface_init))
 
-static GType info_data_model_get_item_type(GListModel *lst)
+static GType info_data_model_get_item_type(G_GNUC_UNUSED GListModel *lst)
 {
 	return info_data_get_type();
 }

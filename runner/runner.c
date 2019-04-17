@@ -54,7 +54,7 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG)
 	                        (gpointer)info,                                                    \
 	                        (GDestroyNotify)info_data_free)
 
-GtkWidget *create_widget_func(const BoxedWrapper *wr, gpointer user_data)
+GtkWidget *create_widget_func(const BoxedWrapper *wr, G_GNUC_UNUSED gpointer user_data)
 {
 	InfoData *data = (InfoData *)boxed_wrapper_dup_boxed(wr);
 	GtkBox *box    = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
@@ -164,7 +164,7 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 	return false;
 }
 
-void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
+void on_entry_changed(G_GNUC_UNUSED GtkSearchEntry *ent, ValaPanelRunner *self)
 {
 	if (self->filter)
 		vala_panel_list_model_filter_invalidate(self->filter);
@@ -184,7 +184,8 @@ void on_entry_changed(GtkSearchEntry *ent, ValaPanelRunner *self)
 	}
 }
 
-static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res, gpointer user_data)
+static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res,
+                                     G_GNUC_UNUSED gpointer user_data)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(source_object);
 	self->model           = (InfoDataModel *)g_task_propagate_pointer(G_TASK(res), NULL);
@@ -223,7 +224,8 @@ static int info_data_compare_func(gconstpointer a, gconstpointer b,
 	return 1;
 }
 
-static void vala_panel_runner_create_data_list(GTask *task, void *source, void *task_data,
+static void vala_panel_runner_create_data_list(GTask *task, G_GNUC_UNUSED void *source,
+                                               G_GNUC_UNUSED void *task_data,
                                                GCancellable *cancellable)
 {
 	g_autoptr(InfoDataModel) obj_list = info_data_model_new();
@@ -305,7 +307,8 @@ static void build_app_box(ValaPanelRunner *self)
 /**
  * Handle click/<enter> activation on the main list
  */
-static void on_row_activated(GtkListBox *box, GtkListBoxRow *row, ValaPanelRunner *self)
+static void on_row_activated(G_GNUC_UNUSED GtkListBox *box, G_GNUC_UNUSED GtkListBoxRow *row,
+                             ValaPanelRunner *self)
 {
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 }
@@ -313,7 +316,7 @@ static void on_row_activated(GtkListBox *box, GtkListBoxRow *row, ValaPanelRunne
 /**
  * Handle click/<enter> activation on the entry
  */
-static void on_entry_activated(GtkEntry *row, ValaPanelRunner *self)
+static void on_entry_activated(G_GNUC_UNUSED GtkEntry *row, ValaPanelRunner *self)
 {
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 }
@@ -321,7 +324,7 @@ static void on_entry_activated(GtkEntry *row, ValaPanelRunner *self)
 /**
  * Handle click/<enter> activation on the entry
  */
-static void on_entry_cancelled(GtkSearchEntry *row, ValaPanelRunner *self)
+static void on_entry_cancelled(G_GNUC_UNUSED GtkSearchEntry *row, ValaPanelRunner *self)
 {
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_CANCEL);
 }

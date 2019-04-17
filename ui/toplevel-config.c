@@ -426,7 +426,8 @@ static int plugin_list_sort(GtkListBoxRow *before, GtkListBoxRow *after, void *u
 /**
  * Provide headers in the list to separate the visual positions
  */
-static void plugin_list_headers(GtkListBoxRow *before, GtkListBoxRow *after, void *user_data)
+static void plugin_list_headers(GtkListBoxRow *before, GtkListBoxRow *after,
+                                G_GNUC_UNUSED void *user_data)
 {
 	ValaPanelApplet *before_info = before ? config_row_get_applet(before) : NULL;
 	ValaPanelApplet *after_info  = after ? config_row_get_applet(after) : NULL;
@@ -554,7 +555,8 @@ static void on_about_plugin(G_GNUC_UNUSED GtkButton *btn, void *data)
 	vala_panel_applet_info_show_about_dialog(info);
 }
 
-static int listbox_new_name_sort(GtkListBoxRow *before, GtkListBoxRow *after, void *user_data)
+static int listbox_new_name_sort(GtkListBoxRow *before, GtkListBoxRow *after,
+                                 G_GNUC_UNUSED void *user_data)
 {
 	AppletInfoData *before_info = before ? config_row_get_info_data(before) : NULL;
 	AppletInfoData *after_info  = after ? config_row_get_info_data(after) : NULL;
@@ -567,7 +569,7 @@ static int listbox_new_name_sort(GtkListBoxRow *before, GtkListBoxRow *after, vo
 		return 1;
 }
 
-static void listbox_new_applet_row_activated(GtkListBox *box, GtkListBoxRow *row,
+static void listbox_new_applet_row_activated(G_GNUC_UNUSED GtkListBox *box, GtkListBoxRow *row,
                                              gpointer user_data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(user_data);

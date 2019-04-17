@@ -114,7 +114,7 @@ static void generate_new_stats(double *old_stats, double *new_stats, int old_wid
 	}
 }
 
-G_GNUC_INTERNAL bool netmon_resize(GtkWidget *widget, NetMon *mon)
+G_GNUC_INTERNAL bool netmon_resize(G_GNUC_UNUSED GtkWidget *widget, NetMon *mon)
 {
 	GtkAllocation allocation;
 	int new_pixmap_width, new_pixmap_height;
@@ -168,13 +168,14 @@ G_GNUC_INTERNAL bool netmon_resize(GtkWidget *widget, NetMon *mon)
 	return G_SOURCE_CONTINUE;
 }
 
-static bool configure_event(GtkWidget *widget, GdkEventConfigure *dummy, gpointer data)
+static bool configure_event(GtkWidget *widget, G_GNUC_UNUSED GdkEventConfigure *dummy,
+                            gpointer data)
 {
 	NetMon *mon = (NetMon *)data;
 	return netmon_resize(widget, mon);
 }
 
-static bool draw(GtkWidget *widget, cairo_t *cr, NetMon *mon)
+static bool draw(G_GNUC_UNUSED GtkWidget *widget, cairo_t *cr, NetMon *mon)
 {
 	/* Draw the requested part of the pixmap onto the drawing area.
 	 * Translate it in both x and y by the border size. */
