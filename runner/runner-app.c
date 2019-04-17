@@ -44,13 +44,14 @@ static void vala_panel_run_application_activate(GApplication *application)
 {
 	ValaPanelRunApplication *app = VALA_PANEL_RUN_APPLICATION(application);
 	if (app->run_dialog == NULL)
-		app->run_dialog = vala_panel_runner_new(GTK_APPLICATION(app));
+		app->run_dialog = GTK_WINDOW(vala_panel_runner_new(GTK_APPLICATION(app)));
 	gtk_run(VALA_PANEL_RUNNER(app->run_dialog));
 }
 
 static void vala_panel_run_application_finalize(GObject *app)
 {
-	g_clear_pointer(&VALA_PANEL_RUN_APPLICATION(app)->run_dialog, gtk_widget_destroy);
+	GtkWidget *w = GTK_WIDGET(VALA_PANEL_RUN_APPLICATION(app)->run_dialog);
+	g_clear_pointer(&w, gtk_widget_destroy);
 	(*G_OBJECT_CLASS(vala_panel_run_application_parent_class)->finalize)(app);
 }
 static void vala_panel_run_application_init(ValaPanelRunApplication *self)

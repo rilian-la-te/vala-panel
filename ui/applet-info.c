@@ -129,7 +129,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	ret->license   = ainfo->license;
 	ret->version   = g_strdup(ainfo->version);
 	ret->exclusive = ainfo->exclusive;
-	return ret;
+	return (ValaPanelAppletInfo *)ret;
 }
 
 void vala_panel_applet_info_free(void *info)

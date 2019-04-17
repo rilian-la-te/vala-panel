@@ -203,14 +203,13 @@ static void vala_panel_application_shutdown(GApplication *base)
 	if (VALA_PANEL_APPLICATION(base)->restart)
 	{
 		g_autoptr(GError) err = NULL;
-		char cwd[1024];
-		char *tmp;
-		tmp                = getcwd(cwd, 1024);
+		char cwd[PATH_MAX];
+		char *cwdp         = getcwd(cwd, PATH_MAX);
 		const char *argv[] = {
 			GETTEXT_PACKAGE, "-p", VALA_PANEL_APPLICATION(base)->profile, NULL
 		};
 		g_auto(GStrv) envp = g_get_environ();
-		g_spawn_async(cwd,
+		g_spawn_async(cwdp,
 		              (GStrv)argv,
 		              envp,
 		              G_SPAWN_SEARCH_PATH,

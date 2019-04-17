@@ -144,34 +144,30 @@ int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 
 void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error)
 {
-	GtkMessageDialog *dlg;
 	g_warning("%s", error);
-	dlg = (GtkMessageDialog *)gtk_message_dialog_new((GtkWindow *)parent,
-	                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
-	                                                 GTK_MESSAGE_ERROR,
-	                                                 GTK_BUTTONS_CLOSE,
-	                                                 "%s",
-	                                                 error);
-	vala_panel_apply_window_icon(
-	    G_TYPE_CHECK_INSTANCE_TYPE(dlg, gtk_window_get_type()) ? ((GtkWindow *)dlg) : NULL);
-	gtk_window_set_title((GtkWindow *)dlg, _("Error"));
-	gtk_dialog_run((GtkDialog *)dlg);
-	gtk_widget_destroy((GtkWidget *)dlg);
+	GtkWidget *dlg = gtk_message_dialog_new(parent,
+	                                        GTK_DIALOG_DESTROY_WITH_PARENT,
+	                                        GTK_MESSAGE_ERROR,
+	                                        GTK_BUTTONS_CLOSE,
+	                                        "%s",
+	                                        error);
+	vala_panel_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
+	gtk_window_set_title(GTK_WINDOW(dlg), _("Error"));
+	gtk_dialog_run(GTK_DIALOG(dlg));
+	gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
 bool vala_panel_generate_confirmation_dialog(GtkWindow *parent, const char *error)
 {
-	GtkMessageDialog *dlg;
-	dlg = (GtkMessageDialog *)gtk_message_dialog_new((GtkWindow *)parent,
-	                                                 GTK_DIALOG_MODAL,
-	                                                 GTK_MESSAGE_QUESTION,
-	                                                 GTK_BUTTONS_OK_CANCEL,
-	                                                 "%s",
-	                                                 error);
-	vala_panel_apply_window_icon(
-	    G_TYPE_CHECK_INSTANCE_TYPE(dlg, gtk_window_get_type()) ? ((GtkWindow *)dlg) : NULL);
-	gtk_window_set_title((GtkWindow *)dlg, _("Error"));
-	bool ret = (gtk_dialog_run((GtkDialog *)dlg) == GTK_RESPONSE_OK);
-	gtk_widget_destroy((GtkWidget *)dlg);
+	GtkWidget *dlg = gtk_message_dialog_new(parent,
+	                                        GTK_DIALOG_MODAL,
+	                                        GTK_MESSAGE_QUESTION,
+	                                        GTK_BUTTONS_OK_CANCEL,
+	                                        "%s",
+	                                        error);
+	vala_panel_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
+	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
+	bool ret = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
+	gtk_widget_destroy(GTK_WIDGET(dlg));
 	return ret;
 }

@@ -136,7 +136,7 @@ static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplica
 	                 "monitor-removed",
 	                 G_CALLBACK(monitor_removed_cb),
 	                 self->app);
-	return vala_panel_platform_has_units_loaded(self);
+	return vala_panel_platform_has_units_loaded(obj);
 }
 
 // TODO: Make more readable code without switch

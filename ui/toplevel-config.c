@@ -635,21 +635,21 @@ static void on_add_plugin(G_GNUC_UNUSED GtkButton *btn, ValaPanelToplevelConfig 
 	gtk_stack_set_visible_child_name(self->applet_info_stack, NEW_APPLET_NAME);
 }
 
-static inline GtkListBoxRow *get_row_from_btn(GtkButton *self)
+static inline GtkWidget *get_row_from_btn(GtkButton *self)
 {
-	return GTK_LIST_BOX_ROW(gtk_widget_get_ancestor(GTK_WIDGET(self), GTK_TYPE_LIST_BOX_ROW));
+	return gtk_widget_get_ancestor(GTK_WIDGET(self), GTK_TYPE_LIST_BOX_ROW);
 }
 
 static void on_remove_plugin(GtkButton *btn, void *user_data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(user_data);
-	GtkListBoxRow *row            = get_row_from_btn(btn);
+	GtkWidget *row                = get_row_from_btn(btn);
 	if (!row)
 		return;
 	ValaPanelApplet *pl = config_row_get_applet(row);
 	GtkWidget *w =
 	    gtk_stack_get_child_by_name(self->applet_info_stack, vala_panel_applet_get_uuid(pl));
-	int index              = gtk_list_box_row_get_index(row);
+	int index              = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 	GtkListBoxRow *sel_row = gtk_list_box_get_selected_row(self->plugin_list);
 	int sel_index          = sel_row ? gtk_list_box_row_get_index(sel_row) : -1;
 	gtk_widget_destroy0(row);

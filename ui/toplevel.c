@@ -156,6 +156,8 @@ static void stop_ui(ValaPanelToplevel *self)
 static void vala_panel_toplevel_destroy(GObject *base)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(base);
+	if (GTK_IS_WIDGET(self->pref_dialog))
+		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
 	stop_ui(self);
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->dispose(base);
 }
@@ -163,9 +165,8 @@ static void vala_panel_toplevel_destroy(GObject *base)
 static void vala_panel_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
-	gtk_widget_destroy0(self->pref_dialog);
-	g_free0(self->uuid);
 	g_clear_object(&self->provider);
+	g_free0(self->uuid);
 	g_free0(self->font);
 	g_free0(self->background_file);
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
@@ -305,7 +306,8 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 		GMenu *gmenusection = G_MENU(gtk_builder_get_object(builder, "plugin-section"));
 		vala_panel_applet_update_context_menu(pl, gmenusection);
 	}
-	gtk_widget_destroy0(self->context_menu);
+	if (GTK_IS_WIDGET(self->context_menu))
+		gtk_widget_destroy(GTK_WIDGET(self->context_menu));
 	self->context_menu = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(gmenu)));
 	if (pl != NULL)
 		gtk_menu_attach_to_widget(self->context_menu, GTK_WIDGET(pl), NULL);
@@ -345,7 +347,8 @@ static int button_release_event(GtkWidget *w, GdkEventButton *e)
  **************************************************************************************/
 G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 {
-	gtk_widget_destroy0(self->pref_dialog);
+	if (GTK_IS_WIDGET(self->pref_dialog))
+		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
 }
 
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)

@@ -334,10 +334,6 @@ static void vala_panel_runner_destroy(GtkWidget *obj)
 	g_cancellable_cancel(self->cancellable);
 	g_clear_object(&self->cancellable);
 	g_clear_object(&self->task);
-	g_clear_pointer(&self->main_entry, gtk_widget_destroy);
-	g_clear_pointer(&self->bottom_revealer, gtk_widget_destroy);
-	g_clear_pointer(&self->app_box, gtk_widget_destroy);
-	g_clear_pointer(&self->terminal_button, gtk_widget_destroy);
 	g_clear_object(&self->model);
 	g_clear_object(&self->filter);
 	GTK_WIDGET_CLASS(vala_panel_runner_parent_class)->destroy(obj);
@@ -354,40 +350,40 @@ static void vala_panel_runner_init(ValaPanelRunner *self)
 
 static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 {
-	gtk_widget_class_set_template_from_resource(GTK_WIDGET_CLASS(klass),
-	                                            "/org/vala-panel/runner/app-runner.ui");
-	GTK_WIDGET_CLASS(klass)->destroy = vala_panel_runner_destroy;
-	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
+	GtkWidgetClass *wclass = GTK_WIDGET_CLASS(klass);
+	wclass->destroy        = vala_panel_runner_destroy;
+	gtk_widget_class_set_template_from_resource(wclass, "/org/vala-panel/runner/app-runner.ui");
+	gtk_widget_class_bind_template_child_full(wclass,
 	                                          "main-entry",
 	                                          false,
 	                                          G_STRUCT_OFFSET(ValaPanelRunner, main_entry));
-	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_child_full(wclass,
 	                                          "search-box",
 	                                          false,
 	                                          G_STRUCT_OFFSET(ValaPanelRunner, app_box));
-	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_child_full(wclass,
 	                                          "terminal-button",
 	                                          false,
 	                                          G_STRUCT_OFFSET(ValaPanelRunner,
 	                                                          terminal_button));
-	gtk_widget_class_bind_template_child_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_child_full(wclass,
 	                                          "revealer",
 	                                          true,
 	                                          G_STRUCT_OFFSET(ValaPanelRunner,
 	                                                          bottom_revealer));
-	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "on_search_changed",
 	                                             G_CALLBACK(on_entry_changed));
-	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "on_search_activated",
 	                                             G_CALLBACK(on_entry_activated));
-	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "on_search_cancelled",
 	                                             G_CALLBACK(on_entry_cancelled));
-	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "vala_panel_runner_response",
 	                                             G_CALLBACK(vala_panel_runner_response));
-	gtk_widget_class_bind_template_callback_full(GTK_WIDGET_CLASS(klass),
+	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "on_row_activated",
 	                                             G_CALLBACK(on_row_activated));
 }
