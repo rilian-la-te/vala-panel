@@ -88,6 +88,7 @@ include (ValaPrecompile)
 
 #add_definitions(-w) #Suppress all GCC warnings
 add_definitions(-Wall -Wextra
+                -Wunused-function
                 -Wno-unused
                 -Wno-unused-parameter# Vala loves to create variables
                #-pedantic
