@@ -202,7 +202,8 @@ G_GNUC_INTERNAL void netmon_init_no_height(NetMon *mon, const char *rx_color, co
 
 G_GNUC_INTERNAL void netmon_dispose(NetMon *mon)
 {
-	g_clear_pointer(&mon->da, gtk_widget_destroy);
+	if (GTK_IS_WIDGET(mon->da))
+		gtk_widget_destroy(GTK_WIDGET(mon->da));
 	g_clear_pointer(&mon->pixmap, cairo_surface_destroy);
 	g_clear_pointer(&mon->interface_name, g_free);
 	g_clear_pointer(&mon->down_stats, g_free);

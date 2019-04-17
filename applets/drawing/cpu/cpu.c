@@ -102,7 +102,7 @@ static void redraw_pixmap(CpuApplet *c)
 	cairo_destroy(cr);
 
 	/* Redraw pixmap. */
-	gtk_widget_queue_draw(cpu_applet_get_da(c));
+	gtk_widget_queue_draw(GTK_WIDGET(cpu_applet_get_da(c)));
 }
 
 /* Periodic timer callback. */
@@ -270,14 +270,14 @@ static void cpu_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(cpu_applet_parent_class)->constructed(obj);
 	CpuApplet *c                = VALA_PANEL_CPU_APPLET(obj);
-	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(c);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(c));
 	/* Allocate drawing area as a child of top level widget. */
-	GtkDrawingArea *da = gtk_drawing_area_new();
-	gtk_widget_add_events(da,
+	GtkDrawingArea *da = GTK_DRAWING_AREA(gtk_drawing_area_new());
+	gtk_widget_add_events(GTK_WIDGET(da),
 	                      GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 	                          GDK_BUTTON_MOTION_MASK);
-	on_height_change(toplevel, NULL, da);
-	gtk_container_add(GTK_CONTAINER(c), da);
+	on_height_change(G_OBJECT(toplevel), NULL, da);
+	gtk_container_add(GTK_CONTAINER(c), GTK_WIDGET(da));
 	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(toplevel));
 	GtkStateFlags flags      = gtk_widget_get_state_flags(GTK_WIDGET(toplevel));
 	gtk_style_context_get_color(context, flags, &c->foreground_color);
@@ -290,7 +290,7 @@ static void cpu_applet_constructed(GObject *obj)
 	g_signal_connect(G_OBJECT(da), "configure-event", G_CALLBACK(configure_event), (gpointer)c);
 	g_signal_connect(G_OBJECT(da), "draw", G_CALLBACK(draw), (gpointer)c);
 	/* Show the widget.  Connect a timer to refresh the statistics. */
-	gtk_widget_show(da);
+	gtk_widget_show(GTK_WIDGET(da));
 	c->timer = g_timeout_add(1500, (GSourceFunc)cpu_update, (gpointer)c);
 	gtk_widget_show(GTK_WIDGET(c));
 }

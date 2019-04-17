@@ -247,7 +247,7 @@ static void xfce_tasklist_realize(GtkWidget *widget);
 static void xfce_tasklist_unrealize(GtkWidget *widget);
 static int xfce_tasklist_scroll_event(GtkWidget *widget, GdkEventScroll *event);
 static void xfce_tasklist_remove(GtkContainer *container, GtkWidget *widget);
-static void xfce_tasklist_forall(GtkContainer *container, bool include_internals,
+static void xfce_tasklist_forall(GtkContainer *container, int include_internals,
                                  GtkCallback callback, gpointer callback_data);
 static GType xfce_tasklist_child_type(GtkContainer *container);
 static void xfce_tasklist_arrow_button_toggled(GtkWidget *button, XfceTasklist *tasklist);
@@ -665,7 +665,6 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(widget);
 	ValaPanelToplevel *top = VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist));
-	int base_width         = DEFAULT_BUTTON_SIZE;
 	int base_height        = DEFAULT_BUTTON_SIZE;
 	int icon_size          = GTK_ICON_SIZE_MENU;
 	int mod                = 0;
@@ -681,7 +680,6 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 
 	if (tasklist->mode == orientation)
 	{
-		gint rows, cols;
 		gint n_windows;
 		GtkRequisition child_req;
 		gint length;
@@ -1234,7 +1232,7 @@ static void xfce_tasklist_remove(GtkContainer *container, GtkWidget *widget)
 	}
 }
 
-static void xfce_tasklist_forall(GtkContainer *container, bool include_internals,
+static void xfce_tasklist_forall(GtkContainer *container, int include_internals,
                                  GtkCallback callback, gpointer callback_data)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(container);
@@ -1765,7 +1763,7 @@ static void xfce_tasklist_update_icon_geometries_destroyed(gpointer data)
 	XFCE_TASKLIST(data)->update_icon_geometries_id = 0;
 }
 
-static bool xfce_tasklist_update_monitor_geometry_idle(gpointer data)
+static int xfce_tasklist_update_monitor_geometry_idle(gpointer data)
 {
 	XfceTasklist *tasklist = XFCE_TASKLIST(data);
 	bool geometry_set      = false;
@@ -1825,7 +1823,7 @@ static void xfce_tasklist_update_monitor_geometry_idle_destroy(gpointer data)
 	XFCE_TASKLIST(data)->update_monitor_geometry_id = 0;
 }
 
-static bool xfce_tasklist_child_drag_motion_timeout(gpointer data)
+static int xfce_tasklist_child_drag_motion_timeout(gpointer data)
 {
 	XfceTasklistChild *child = data;
 
@@ -3189,7 +3187,6 @@ static GtkWidget *xfce_tasklist_group_button_menu(XfceTasklistChild *group_child
 	XfceTasklistChild *child;
 	GtkWidget *mi;
 	GtkWidget *menu;
-	GtkWidget *image;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(group_child->tasklist), NULL);
 	g_return_val_if_fail(WNCK_IS_CLASS_GROUP(group_child->class_group), NULL);
@@ -3799,14 +3796,14 @@ static void xfce_tasklist_update_orientation(XfceTasklist *tasklist)
 {
 	bool horizontal;
 	GList *li;
-	XfceTasklistChild *child;
+	//	XfceTasklistChild *child;
 
 	horizontal = !xfce_tasklist_vertical(tasklist);
 
 	/* update the tasklist */
 	for (li = tasklist->windows; li != NULL; li = li->next)
 	{
-		child = li->data;
+		//		child = li->data;
 		/* update task box */
 		//      gtk_orientable_set_orientation (GTK_ORIENTABLE (child->box),
 		//          horizontal ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);

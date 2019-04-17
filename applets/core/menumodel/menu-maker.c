@@ -24,16 +24,17 @@
 
 static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder)
 {
-	if (g_app_info_should_show(info))
+	GAppInfo *ai = G_APP_INFO(info);
+	if (g_app_info_should_show(ai))
 	{
 		GMenu *menu_link          = NULL;
 		bool found                = false;
-		g_autoptr(GMenuItem) item = g_menu_item_new(g_app_info_get_name(info), NULL);
+		g_autoptr(GMenuItem) item = g_menu_item_new(g_app_info_get_name(ai), NULL);
 		g_menu_item_set_action_and_target(item,
 		                                  "app.launch-id",
 		                                  "s",
-		                                  g_app_info_get_id(info));
-		GIcon *icon = g_app_info_get_icon(info);
+		                                  g_app_info_get_id(ai));
+		GIcon *icon = g_app_info_get_icon(ai);
 		if (icon)
 			g_menu_item_set_icon(item, icon);
 		else
@@ -42,11 +43,11 @@ static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder
 			                          "s",
 			                          "application-x-executable");
 		g_menu_item_set_attribute(item, ATTRIBUTE_DND_SOURCE, "b", true);
-		if (g_app_info_get_description(info) != NULL)
+		if (g_app_info_get_description(ai) != NULL)
 			g_menu_item_set_attribute(item,
 			                          ATTRIBUTE_TOOLTIP,
 			                          "s",
-			                          g_app_info_get_description(info));
+			                          g_app_info_get_description(ai));
 		const char *cats_str = g_desktop_app_info_get_categories(info)
 		                           ? g_desktop_app_info_get_categories(info)
 		                           : " ";
@@ -71,18 +72,18 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 {
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/menumodel/system-menus.ui");
-	GMenu *menu = gtk_builder_get_object(builder, "applications-menu");
+	GMenu *menu     = G_MENU(gtk_builder_get_object(builder, "applications-menu"));
+	GMenuModel *mdl = G_MENU_MODEL(menu);
 	g_object_ref_sink(menu);
 	GList *list = g_app_info_get_all();
 	for (GList *l = list; l; l = l->next)
 		menu_maker_parse_app_info(l->data, builder);
 	g_list_free_full(list, g_object_unref);
-	for (int i = 0; i < g_menu_model_get_n_items(menu); i++)
+	for (int i = 0; i < g_menu_model_get_n_items(mdl); i++)
 	{
 		i                    = (i < 0) ? 0 : i;
 		g_autofree char *cat = NULL;
-		bool in_cat =
-		    g_menu_model_get_item_attribute(menu, i, "x-valapanel-cat", "s", &cat);
+		bool in_cat = g_menu_model_get_item_attribute(mdl, i, "x-valapanel-cat", "s", &cat);
 		g_autoptr(GMenu) submenu =
 		    G_MENU(g_menu_model_get_item_link(G_MENU_MODEL(menu), i, G_MENU_LINK_SUBMENU));
 		if (g_menu_model_get_n_items(G_MENU_MODEL(submenu)) <= 0 ||
@@ -92,7 +93,7 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_applications_model(const char **cats)
 			i--;
 		}
 
-		if (i >= g_menu_model_get_n_items(menu) || g_menu_model_get_n_items(menu) <= 0)
+		if (i >= g_menu_model_get_n_items(mdl) || g_menu_model_get_n_items(mdl) <= 0)
 			break;
 	}
 	g_menu_freeze(menu);
@@ -114,11 +115,12 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_applications_menu(bool do_settings
 static GMenuItem *add_app_info_launch_item(GDesktopAppInfo *app_info)
 {
 	GMenuItem *item = g_menu_item_new(NULL, NULL);
-	if (g_app_info_get_description(app_info) != NULL)
+	GAppInfo *ai    = G_APP_INFO(app_info);
+	if (g_app_info_get_description(ai) != NULL)
 		g_menu_item_set_attribute(item,
 		                          ATTRIBUTE_TOOLTIP,
 		                          "s",
-		                          g_app_info_get_description(app_info));
+		                          g_app_info_get_description(ai));
 	g_menu_item_set_attribute(item, ATTRIBUTE_DND_SOURCE, "b", true);
 	GVariant *idv = g_variant_new_string(g_app_info_get_id(G_APP_INFO(app_info)));
 	g_menu_item_set_action_and_target_value(item, "app.launch-id", idv);

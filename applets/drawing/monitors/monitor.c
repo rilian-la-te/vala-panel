@@ -167,7 +167,8 @@ G_GNUC_INTERNAL void monitor_init_no_height(Monitor *mon, const char *color)
 
 G_GNUC_INTERNAL void monitor_dispose(Monitor *mon)
 {
-	g_clear_pointer(&mon->da, gtk_widget_destroy);
+	if (GTK_IS_WIDGET(mon->da))
+		gtk_widget_destroy(GTK_WIDGET(mon->da));
 	g_clear_pointer(&mon->pixmap, cairo_surface_destroy);
 	g_clear_pointer(&mon->stats, g_free);
 	g_clear_pointer(&mon, g_free);

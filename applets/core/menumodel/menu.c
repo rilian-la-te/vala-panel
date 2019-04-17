@@ -173,25 +173,24 @@ static void menubutton_create_image(MenuApplet *self, GtkToggleButton *menubutto
 
 static GtkContainer *create_menubutton(MenuApplet *self)
 {
-	GtkImage *img               = NULL;
-	GtkToggleButton *menubutton = gtk_toggle_button_new();
+	GtkWidget *menubutton = gtk_toggle_button_new();
 	if (!self->menu)
-		return menubutton;
-	self->int_menu           = gtk_menu_new_from_model(self->menu);
+		return GTK_CONTAINER(menubutton);
+	self->int_menu           = GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(self->menu)));
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(self->int_menu));
-	apply_menu_properties(ch_list, self->menu);
+	apply_menu_properties(ch_list, G_MENU_MODEL(self->menu));
 	g_clear_pointer(&ch_list, g_list_free);
 	gtk_menu_attach_to_widget(self->int_menu, menubutton, NULL);
 	g_signal_connect(menubutton, "toggled", G_CALLBACK(on_menubutton_toggled), self);
 	g_signal_connect(self->int_menu, "hide", G_CALLBACK(on_menu_hide), menubutton);
-	menubutton_create_image(self, menubutton);
+	menubutton_create_image(self, GTK_TOGGLE_BUTTON(menubutton));
 	gtk_widget_show(menubutton);
-	return menubutton;
+	return GTK_CONTAINER(menubutton);
 }
 
 static GtkContainer *menumodel_widget_create(MenuApplet *self)
 {
-	self->menu        = create_menumodel(self);
+	self->menu        = G_MENU(create_menumodel(self));
 	GtkContainer *ret = NULL;
 	if (!self->menu)
 	{
@@ -206,15 +205,15 @@ static GtkContainer *menumodel_widget_create(MenuApplet *self)
 
 static void menumodel_widget_destroy(MenuApplet *self)
 {
-	vala_panel_applet_set_background_widget(self, self);
+	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	vala_panel_applet_set_background_widget(VALA_PANEL_APPLET(self), GTK_WIDGET(self));
 	if (self->monitor_update_idle)
 		g_source_remove(self->monitor_update_idle);
 	if (self->show_system_menu_idle)
 		g_source_remove(self->show_system_menu_idle);
 	if (self->button)
 	{
-		g_signal_handlers_disconnect_by_data(vala_panel_applet_get_toplevel(self),
-		                                     self->button);
+		g_signal_handlers_disconnect_by_data(top, self->button);
 		g_signal_handlers_disconnect_by_data(self->button, self);
 	}
 	if (GTK_IS_WIDGET(self->int_menu))
@@ -225,9 +224,9 @@ static void menumodel_widget_destroy(MenuApplet *self)
 			gtk_menu_detach(self->int_menu);
 		}
 		if (GTK_IS_WIDGET(self->int_menu))
-			gtk_widget_destroy0(self->int_menu);
+			gtk_widget_destroy(GTK_WIDGET(self->int_menu));
 	}
-	gtk_widget_destroy0(self->button);
+	gtk_widget_destroy(GTK_WIDGET(self->button));
 	if (G_IS_OBJECT(self->menu))
 		g_clear_object(&self->menu);
 	if (self->app_monitor)
@@ -263,7 +262,7 @@ static void menumodel_widget_rebuild(MenuApplet *self)
 	menumodel_widget_destroy(self);
 	self->button = menumodel_widget_create(self);
 	if (GTK_IS_WIDGET(self->button))
-		gtk_container_add(self, self->button);
+		gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(self->button));
 }
 
 static void load_internal_menus(GMenu *menu, MenuInternalEnum enum_id)

@@ -88,9 +88,10 @@ TaskListApplet *tasklist_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 static void tasklist_applet_constructed(GObject *obj)
 {
 	TaskListApplet *self        = TASKLIST_APPLET(obj);
-	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(self);
-	GSettings *settings         = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
-	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
+	ValaPanelApplet *base       = VALA_PANEL_APPLET(self);
+	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(base);
+	GSettings *settings         = vala_panel_applet_get_settings(base);
+	GActionMap *map             = G_ACTION_MAP(vala_panel_applet_get_action_group(base));
 	GtkOrientation orient;
 	PanelGravity gravity;
 	g_object_get(toplevel, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);

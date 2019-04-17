@@ -46,16 +46,14 @@ G_DEFINE_DYNAMIC_TYPE(NetMonApplet, netmon_applet, vala_panel_applet_get_type())
 
 static bool button_release_event(GtkWidget *widget, GdkEventButton *evt, NetMonApplet *applet)
 {
+	ValaPanelApplet *base = VALA_PANEL_APPLET(applet);
+	GtkWindow *top        = GTK_WINDOW(vala_panel_applet_get_toplevel(base));
 	g_autoptr(GVariant) var =
-	    g_settings_get_value(vala_panel_applet_get_settings(VALA_PANEL_APPLET(applet)), ACTION);
+	    g_settings_get_value(vala_panel_applet_get_settings(base), ACTION);
 	if (evt->button == 1 &&
 	    g_variant_type_is_subtype_of(g_variant_get_type(var), G_VARIANT_TYPE_STRING))
 	{
-		activate_menu_launch_command(NULL,
-		                             var,
-		                             gtk_window_get_application(
-		                                 GTK_WINDOW(vala_panel_applet_get_toplevel(
-		                                     VALA_PANEL_APPLET(applet)))));
+		activate_menu_launch_command(NULL, var, gtk_window_get_application(top));
 		return true;
 	}
 	return false;
@@ -183,7 +181,7 @@ static void netmon_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(netmon_applet_parent_class)->constructed(obj);
 	NetMonApplet *self  = VALA_PANEL_NETMON_APPLET(obj);
-	GSettings *settings = vala_panel_applet_get_settings(self);
+	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
 	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),

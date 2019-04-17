@@ -51,7 +51,7 @@ G_GNUC_INTERNAL bool update_net(NetMon *mon)
 		return 0;
 	}
 	char buf[256];
-	char *tmp;
+	G_GNUC_UNUSED char *tmp;
 	/* Ignore first two lines - header */
 	tmp                   = fgets(buf, 255, fp);
 	tmp                   = fgets(buf, 255, fp);
