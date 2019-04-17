@@ -101,20 +101,20 @@ static const GActionEntry vala_panel_application_menu_entries[3] = {
 
 enum
 {
-	PROP_DUMMY_PROPERTY,
-	PROP_PROFILE,
-	PROP_RUN_COMMAND,
-	PROP_TERMINAL_COMMAND,
-	PROP_LOCK_COMMAND,
-	PROP_LOGOUT_COMMAND,
-	PROP_SHUTDOWN_COMMAND,
-	PROP_IS_DARK,
-	PROP_IS_CUSTOM,
-	PROP_CSS,
-	PROP_ALL
+	APP_DUMMY_PROPERTY,
+	APP_PROFILE,
+	APP_RUN_COMMAND,
+	APP_TERMINAL_COMMAND,
+	APP_LOCK_COMMAND,
+	APP_LOGOUT_COMMAND,
+	APP_SHUTDOWN_COMMAND,
+	APP_IS_DARK,
+	APP_IS_CUSTOM,
+	APP_CSS,
+	APP_ALL
 };
 
-static GParamSpec *pspecs[PROP_ALL];
+static GParamSpec *app_specs[APP_ALL];
 
 static inline void destroy0(GtkWidget *x, G_GNUC_UNUSED void *data)
 {
@@ -403,7 +403,7 @@ static void vala_panel_app_finalize(GObject *object)
 	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
 }
 
-static void vala_panel_app_set_property(GObject *object, guint prop_id, const GValue *value,
+static void vala_panel_app_set_property(GObject *object, uint id, const GValue *value,
                                         GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
@@ -411,99 +411,98 @@ static void vala_panel_app_set_property(GObject *object, guint prop_id, const GV
 
 	app = VALA_PANEL_APPLICATION(object);
 
-	switch (prop_id)
+	switch (id)
 	{
-	case PROP_IS_DARK:
+	case APP_IS_DARK:
 		app->dark = g_value_get_boolean(value);
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_IS_CUSTOM:
+	case APP_IS_CUSTOM:
 		app->custom = g_value_get_boolean(value);
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_TERMINAL_COMMAND:
+	case APP_TERMINAL_COMMAND:
 		g_free0(app->terminal_command);
 		app->terminal_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_RUN_COMMAND:
+	case APP_RUN_COMMAND:
 		g_free0(app->run_command);
 		app->run_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_LOCK_COMMAND:
+	case APP_LOCK_COMMAND:
 		g_free0(app->lock_command);
 		app->lock_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_LOGOUT_COMMAND:
+	case APP_LOGOUT_COMMAND:
 		g_free0(app->logout_command);
 		app->logout_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_SHUTDOWN_COMMAND:
+	case APP_SHUTDOWN_COMMAND:
 		g_free0(app->shutdown_command);
 		app->shutdown_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_PROFILE:
+	case APP_PROFILE:
 		g_free0(app->profile);
 		app->profile = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
-	case PROP_CSS:
+	case APP_CSS:
 		g_free0(app->css);
 		app->css = g_strdup(g_value_get_string(value));
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, id, pspec);
 		break;
 	}
 }
 
-static void vala_panel_app_get_property(GObject *object, guint prop_id, GValue *value,
-                                        GParamSpec *pspec)
+static void vala_panel_app_get_property(GObject *object, uint id, GValue *value, GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
 
 	app = VALA_PANEL_APPLICATION(object);
 
-	switch (prop_id)
+	switch (id)
 	{
-	case PROP_IS_DARK:
+	case APP_IS_DARK:
 		g_value_set_boolean(value, app->dark);
 		break;
-	case PROP_IS_CUSTOM:
+	case APP_IS_CUSTOM:
 		g_value_set_boolean(value, app->custom);
 		break;
-	case PROP_RUN_COMMAND:
+	case APP_RUN_COMMAND:
 		g_value_set_string(value, app->run_command);
 		break;
-	case PROP_TERMINAL_COMMAND:
+	case APP_TERMINAL_COMMAND:
 		g_value_set_string(value, app->terminal_command);
 		break;
-	case PROP_LOCK_COMMAND:
+	case APP_LOCK_COMMAND:
 		g_value_set_string(value, app->lock_command);
 		break;
-	case PROP_LOGOUT_COMMAND:
+	case APP_LOGOUT_COMMAND:
 		g_value_set_string(value, app->logout_command);
 		break;
-	case PROP_SHUTDOWN_COMMAND:
+	case APP_SHUTDOWN_COMMAND:
 		g_value_set_string(value, app->shutdown_command);
 		break;
-	case PROP_PROFILE:
+	case APP_PROFILE:
 		g_value_set_string(value, app->profile);
 		break;
-	case PROP_CSS:
+	case APP_CSS:
 		g_value_set_string(value, app->css);
 		break;
 	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, id, pspec);
 		break;
 	}
 }
@@ -662,55 +661,57 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 	G_OBJECT_CLASS(klass)->get_property              = vala_panel_app_get_property;
 	G_OBJECT_CLASS(klass)->set_property              = vala_panel_app_set_property;
 	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_app_finalize;
-	pspecs[PROP_PROFILE]                             = g_param_spec_string("profile",
-                                                   "profile",
-                                                   "profile",
-                                                   "default",
-                                                   G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_RUN_COMMAND]                         = g_param_spec_string(VP_KEY_RUN,
-                                                       VP_KEY_RUN,
-                                                       VP_KEY_RUN,
-                                                       NULL,
-                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_TERMINAL_COMMAND] =
+	app_specs[APP_PROFILE]                           = g_param_spec_string("profile",
+                                                     "profile",
+                                                     "profile",
+                                                     "default",
+                                                     G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	app_specs[APP_RUN_COMMAND] =
+	    g_param_spec_string(VP_KEY_RUN,
+	                        VP_KEY_RUN,
+	                        VP_KEY_RUN,
+	                        NULL,
+	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	app_specs[APP_TERMINAL_COMMAND] =
 	    g_param_spec_string(VP_KEY_TERMINAL,
 	                        VP_KEY_TERMINAL,
 	                        VP_KEY_TERMINAL,
 	                        NULL,
 	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_LOCK_COMMAND] = g_param_spec_string(VP_KEY_LOCK,
-	                                                VP_KEY_LOCK,
-	                                                VP_KEY_LOCK,
-	                                                NULL,
-	                                                G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_LOGOUT_COMMAND] =
+	app_specs[APP_LOCK_COMMAND] =
+	    g_param_spec_string(VP_KEY_LOCK,
+	                        VP_KEY_LOCK,
+	                        VP_KEY_LOCK,
+	                        NULL,
+	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	app_specs[APP_LOGOUT_COMMAND] =
 	    g_param_spec_string(VP_KEY_LOGOUT,
 	                        VP_KEY_LOGOUT,
 	                        VP_KEY_LOGOUT,
 	                        NULL,
 	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_SHUTDOWN_COMMAND] =
+	app_specs[APP_SHUTDOWN_COMMAND] =
 	    g_param_spec_string(VP_KEY_SHUTDOWN,
 	                        VP_KEY_SHUTDOWN,
 	                        VP_KEY_SHUTDOWN,
 	                        NULL,
 	                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_IS_DARK]   = g_param_spec_boolean(VP_KEY_DARK,
-                                                    VP_KEY_DARK,
-                                                    VP_KEY_DARK,
-                                                    false,
-                                                    G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_IS_CUSTOM] = g_param_spec_boolean(VP_KEY_CUSTOM,
-	                                              VP_KEY_CUSTOM,
-	                                              VP_KEY_CUSTOM,
-	                                              false,
-	                                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	pspecs[PROP_CSS]       = g_param_spec_string(VP_KEY_CSS,
-                                               VP_KEY_CSS,
-                                               VP_KEY_CSS,
-                                               NULL,
-                                               G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
-	g_object_class_install_properties(G_OBJECT_CLASS(klass), PROP_ALL, pspecs);
+	app_specs[APP_IS_DARK]   = g_param_spec_boolean(VP_KEY_DARK,
+                                                      VP_KEY_DARK,
+                                                      VP_KEY_DARK,
+                                                      false,
+                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	app_specs[APP_IS_CUSTOM] = g_param_spec_boolean(VP_KEY_CUSTOM,
+	                                                VP_KEY_CUSTOM,
+	                                                VP_KEY_CUSTOM,
+	                                                false,
+	                                                G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	app_specs[APP_CSS]       = g_param_spec_string(VP_KEY_CSS,
+                                                 VP_KEY_CSS,
+                                                 VP_KEY_CSS,
+                                                 NULL,
+                                                 G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE);
+	g_object_class_install_properties(G_OBJECT_CLASS(klass), APP_ALL, app_specs);
 }
 
 int main(int argc, char *argv[])

@@ -25,11 +25,11 @@ static ValaPanelAppletManager *manager;
 
 enum
 {
-	PROP_DUMMY,
-	PROP_TOPLEVEL_ID,
-	PROP_LAST
+	LAYOUT_DUMMY,
+	LAYOUT_TOPLEVEL_ID,
+	LAYOUT_LAST
 };
-static GParamSpec *vp_layout_properties[PROP_LAST];
+static GParamSpec *vp_layout_properties[LAYOUT_LAST];
 
 struct _ValaPanelLayout
 {
@@ -466,7 +466,7 @@ static void vp_layout_set_property(GObject *object, guint property_id, const GVa
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(object);
 	switch (property_id)
 	{
-	case PROP_TOPLEVEL_ID:
+	case LAYOUT_TOPLEVEL_ID:
 		g_free0(self->toplevel_id);
 		self->toplevel_id = g_value_dup_string(value);
 		break;
@@ -481,7 +481,7 @@ static void vp_layout_get_property(GObject *object, guint property_id, GValue *v
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(object);
 	switch (property_id)
 	{
-	case PROP_TOPLEVEL_ID:
+	case LAYOUT_TOPLEVEL_ID:
 		g_value_set_string(value, self->toplevel_id);
 		break;
 	default:
@@ -546,12 +546,12 @@ static void vp_layout_class_init(ValaPanelLayoutClass *klass)
 	G_OBJECT_CLASS(klass)->set_property = vp_layout_set_property;
 	G_OBJECT_CLASS(klass)->get_property = vp_layout_get_property;
 	G_OBJECT_CLASS(klass)->dispose      = vp_layout_destroy;
-	vp_layout_properties[PROP_TOPLEVEL_ID] =
+	vp_layout_properties[LAYOUT_TOPLEVEL_ID] =
 	    g_param_spec_string(VALA_PANEL_TOPLEVEL_ID,
 	                        VALA_PANEL_TOPLEVEL_ID,
 	                        VALA_PANEL_TOPLEVEL_ID,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
-	g_object_class_install_properties(G_OBJECT_CLASS(klass), PROP_LAST, vp_layout_properties);
+	g_object_class_install_properties(G_OBJECT_CLASS(klass), LAYOUT_LAST, vp_layout_properties);
 }

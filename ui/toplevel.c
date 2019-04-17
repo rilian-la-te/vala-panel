@@ -54,33 +54,33 @@ static const GActionEntry panel_entries[] = {
 
 enum
 {
-	PROP_DUMMY,
-	PROP_UUID,
-	PROP_HEIGHT,
-	PROP_WIDTH,
-	PROP_USE_FONT,
-	PROP_USE_BG_COLOR,
-	PROP_USE_FG_COLOR,
-	PROP_USE_BG_FILE,
-	PROP_FONT_SIZE_ONLY,
-	PROP_FONT_SIZE,
-	PROP_CORNER_RAD,
-	PROP_FONT,
-	PROP_BG_COLOR,
-	PROP_FG_COLOR,
-	PROP_ICON_SIZE,
-	PROP_TB_LOOK,
-	PROP_BG_FILE,
-	PROP_GRAVITY,
-	PROP_ORIENTATION,
-	PROP_MONITOR,
-	PROP_DOCK,
-	PROP_STRUT,
-	PROP_IS_DYNAMIC,
-	PROP_AUTOHIDE,
-	PROP_LAST
+	TOP_DUMMY,
+	TOP_UUID,
+	TOP_HEIGHT,
+	TOP_WIDTH,
+	TOP_USE_FONT,
+	TOP_USE_BG_COLOR,
+	TOP_USE_FG_COLOR,
+	TOP_USE_BG_FILE,
+	TOP_FONT_SIZE_ONLY,
+	TOP_FONT_SIZE,
+	TOP_CORNER_RAD,
+	TOP_FONT,
+	TOP_BG_COLOR,
+	TOP_FG_COLOR,
+	TOP_ICON_SIZE,
+	TOP_TB_LOOK,
+	TOP_BG_FILE,
+	TOP_GRAVITY,
+	TOP_ORIENTATION,
+	TOP_MONITOR,
+	TOP_DOCK,
+	TOP_STRUT,
+	TOP_IS_DYNAMIC,
+	TOP_AUTOHIDE,
+	TOP_LAST
 };
-static GParamSpec *pspecs[PROP_LAST];
+static GParamSpec *top_specs[TOP_LAST];
 
 struct _ValaPanelToplevel
 {
@@ -811,75 +811,75 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 
 	switch (property_id)
 	{
-	case PROP_UUID:
+	case TOP_UUID:
 		g_value_set_string(value, self->uuid);
 		break;
-	case PROP_HEIGHT:
+	case TOP_HEIGHT:
 		g_value_set_int(value, self->height);
 		break;
-	case PROP_WIDTH:
+	case TOP_WIDTH:
 		g_value_set_int(value, self->width);
 		break;
-	case PROP_USE_FONT:
+	case TOP_USE_FONT:
 		g_value_set_boolean(value, self->use_font);
 		break;
-	case PROP_USE_BG_COLOR:
+	case TOP_USE_BG_COLOR:
 		g_value_set_boolean(value, self->use_background_color);
 		break;
-	case PROP_USE_FG_COLOR:
+	case TOP_USE_FG_COLOR:
 		g_value_set_boolean(value, self->use_foreground_color);
 		break;
-	case PROP_USE_BG_FILE:
+	case TOP_USE_BG_FILE:
 		g_value_set_boolean(value, self->use_background_file);
 		break;
-	case PROP_FONT_SIZE_ONLY:
+	case TOP_FONT_SIZE_ONLY:
 		g_value_set_boolean(value, self->font_size_only);
 		break;
-	case PROP_TB_LOOK:
+	case TOP_TB_LOOK:
 		g_value_set_boolean(value, self->use_toolbar_appearance);
 		break;
-	case PROP_FONT_SIZE:
+	case TOP_FONT_SIZE:
 		g_value_set_int(value, pango_font_description_get_size(desc));
 		break;
-	case PROP_CORNER_RAD:
+	case TOP_CORNER_RAD:
 		g_value_set_uint(value, self->corner_radius);
 		break;
-	case PROP_FONT:
+	case TOP_FONT:
 		g_value_set_string(value, self->font);
 		break;
-	case PROP_BG_COLOR:
+	case TOP_BG_COLOR:
 		str = gdk_rgba_to_string(&self->background_color);
 		g_value_take_string(value, str);
 		break;
-	case PROP_FG_COLOR:
+	case TOP_FG_COLOR:
 		str2 = gdk_rgba_to_string(&self->foreground_color);
 		g_value_take_string(value, str2);
 		break;
-	case PROP_ICON_SIZE:
+	case TOP_ICON_SIZE:
 		g_value_set_uint(value, self->icon_size_hints);
 		break;
-	case PROP_BG_FILE:
+	case TOP_BG_FILE:
 		g_value_set_string(value, self->background_file);
 		break;
-	case PROP_GRAVITY:
+	case TOP_GRAVITY:
 		g_value_set_enum(value, (int)self->gravity);
 		break;
-	case PROP_ORIENTATION:
+	case TOP_ORIENTATION:
 		g_value_set_enum(value, vala_panel_orient_from_gravity(self->gravity));
 		break;
-	case PROP_MONITOR:
+	case TOP_MONITOR:
 		g_value_set_int(value, self->mon);
 		break;
-	case PROP_DOCK:
+	case TOP_DOCK:
 		g_value_set_boolean(value, self->dock);
 		break;
-	case PROP_STRUT:
+	case TOP_STRUT:
 		g_value_set_boolean(value, self->strut);
 		break;
-	case PROP_IS_DYNAMIC:
+	case TOP_IS_DYNAMIC:
 		g_value_set_boolean(value, self->is_dynamic);
 		break;
-	case PROP_AUTOHIDE:
+	case TOP_AUTOHIDE:
 		g_value_set_boolean(value, self->autohide);
 		break;
 	default:
@@ -900,64 +900,64 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 
 	switch (property_id)
 	{
-	case PROP_UUID:
+	case TOP_UUID:
 		g_free0(self->uuid);
 		self->uuid = g_value_dup_string(value);
 		break;
-	case PROP_HEIGHT:
+	case TOP_HEIGHT:
 		self->height             = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
-	case PROP_WIDTH:
+	case TOP_WIDTH:
 		self->width              = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
-	case PROP_USE_FONT:
+	case TOP_USE_FONT:
 		self->use_font             = g_value_get_boolean(value);
 		appearance_update_required = true;
 		break;
-	case PROP_USE_BG_COLOR:
+	case TOP_USE_BG_COLOR:
 		self->use_background_color = g_value_get_boolean(value);
 		appearance_update_required = true;
 		break;
-	case PROP_USE_FG_COLOR:
+	case TOP_USE_FG_COLOR:
 		self->use_foreground_color = g_value_get_boolean(value);
 		appearance_update_required = true;
 		break;
-	case PROP_USE_BG_FILE:
+	case TOP_USE_BG_FILE:
 		self->use_background_file  = g_value_get_boolean(value);
 		appearance_update_required = true;
 		break;
-	case PROP_FONT_SIZE_ONLY:
+	case TOP_FONT_SIZE_ONLY:
 		self->font_size_only       = g_value_get_boolean(value);
 		appearance_update_required = true;
 		break;
-	case PROP_TB_LOOK:
+	case TOP_TB_LOOK:
 		self->use_toolbar_appearance = g_value_get_boolean(value);
 		appearance_update_required   = true;
 		break;
-	case PROP_FONT_SIZE:
+	case TOP_FONT_SIZE:
 		pango_font_description_set_size(desc, g_value_get_int(value));
 		appearance_update_required = true;
 		break;
-	case PROP_CORNER_RAD:
+	case TOP_CORNER_RAD:
 		self->corner_radius        = g_value_get_uint(value);
 		appearance_update_required = true;
 		break;
-	case PROP_FONT:
+	case TOP_FONT:
 		g_free0(self->font);
 		self->font                 = g_value_dup_string(value);
 		appearance_update_required = true;
 		break;
-	case PROP_BG_COLOR:
+	case TOP_BG_COLOR:
 		gdk_rgba_parse(&self->background_color, g_value_get_string(value));
 		appearance_update_required = true;
 		break;
-	case PROP_FG_COLOR:
+	case TOP_FG_COLOR:
 		gdk_rgba_parse(&self->foreground_color, g_value_get_string(value));
 		appearance_update_required = true;
 		break;
-	case PROP_ICON_SIZE:
+	case TOP_ICON_SIZE:
 		icon_size_value = g_value_get_uint(value);
 		if (icon_size_value >= (uint)XXXL)
 			self->icon_size_hints = XXL;
@@ -977,16 +977,16 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->icon_size_hints = XXS;
 		appearance_update_required = true;
 		break;
-	case PROP_BG_FILE:
+	case TOP_BG_FILE:
 		g_free0(self->background_file);
 		self->background_file      = g_value_dup_string(value);
 		appearance_update_required = true;
 		break;
-	case PROP_GRAVITY:
+	case TOP_GRAVITY:
 		self->gravity            = (PanelGravity)g_value_get_enum(value);
 		geometry_update_required = true;
 		break;
-	case PROP_MONITOR:
+	case TOP_MONITOR:
 		if (gdk_display_get_default() != NULL)
 			mons = gdk_display_get_n_monitors(gdk_display_get_default());
 		g_assert(mons >= 1);
@@ -994,20 +994,20 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 			self->mon = g_value_get_int(value);
 		geometry_update_required = true;
 		break;
-	case PROP_DOCK:
+	case TOP_DOCK:
 		self->dock               = g_value_get_boolean(value);
 		geometry_update_required = true;
 		break;
-	case PROP_STRUT:
+	case TOP_STRUT:
 		self->strut                = g_value_get_boolean(value);
 		geometry_update_required   = true;
 		appearance_update_required = true;
 		break;
-	case PROP_IS_DYNAMIC:
+	case TOP_IS_DYNAMIC:
 		self->is_dynamic         = g_value_get_boolean(value);
 		geometry_update_required = true;
 		break;
-	case PROP_AUTOHIDE:
+	case TOP_AUTOHIDE:
 		self->autohide = g_value_get_boolean(value);
 		if (self->ah_rev != NULL)
 		{
@@ -1057,14 +1057,14 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	oclass->get_property                                    = vala_panel_toplevel_get_property;
 	oclass->dispose                                         = vala_panel_toplevel_destroy;
 	oclass->finalize                                        = vala_panel_toplevel_finalize;
-	pspecs[PROP_UUID] =
+	top_specs[TOP_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
-	pspecs[PROP_HEIGHT] =
+	top_specs[TOP_HEIGHT] =
 	    g_param_spec_int(VP_KEY_HEIGHT,
 	                     VP_KEY_HEIGHT,
 	                     VP_KEY_HEIGHT,
@@ -1072,7 +1072,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                     G_MAXINT,
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_WIDTH] =
+	top_specs[TOP_WIDTH] =
 	    g_param_spec_int(VP_KEY_WIDTH,
 	                     VP_KEY_WIDTH,
 	                     VP_KEY_WIDTH,
@@ -1081,43 +1081,43 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
-	pspecs[PROP_USE_FONT] =
+	top_specs[TOP_USE_FONT] =
 	    g_param_spec_boolean(VP_KEY_USE_FONT,
 	                         VP_KEY_USE_FONT,
 	                         VP_KEY_USE_FONT,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_USE_BG_COLOR] =
+	top_specs[TOP_USE_BG_COLOR] =
 	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_COLOR,
 	                         VP_KEY_USE_BACKGROUND_COLOR,
 	                         VP_KEY_USE_BACKGROUND_COLOR,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_USE_FG_COLOR] =
+	top_specs[TOP_USE_FG_COLOR] =
 	    g_param_spec_boolean(VP_KEY_USE_FOREGROUND_COLOR,
 	                         VP_KEY_USE_FOREGROUND_COLOR,
 	                         VP_KEY_USE_FOREGROUND_COLOR,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_USE_BG_FILE] =
+	top_specs[TOP_USE_BG_FILE] =
 	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_FILE,
 	                         VP_KEY_USE_BACKGROUND_FILE,
 	                         VP_KEY_USE_BACKGROUND_FILE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_FONT_SIZE_ONLY] =
+	top_specs[TOP_FONT_SIZE_ONLY] =
 	    g_param_spec_boolean(VP_KEY_FONT_SIZE_ONLY,
 	                         VP_KEY_FONT_SIZE_ONLY,
 	                         VP_KEY_FONT_SIZE_ONLY,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_TB_LOOK] =
+	top_specs[TOP_TB_LOOK] =
 	    g_param_spec_boolean(VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_FONT_SIZE] =
+	top_specs[TOP_FONT_SIZE] =
 	    g_param_spec_uint(VP_KEY_FONT_SIZE,
 	                      VP_KEY_FONT_SIZE,
 	                      VP_KEY_FONT_SIZE,
@@ -1125,7 +1125,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_CORNER_RAD] =
+	top_specs[TOP_CORNER_RAD] =
 	    g_param_spec_uint(VP_KEY_CORNER_RADIUS,
 	                      VP_KEY_CORNER_RADIUS,
 	                      VP_KEY_CORNER_RADIUS,
@@ -1133,25 +1133,25 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_FONT] =
+	top_specs[TOP_FONT] =
 	    g_param_spec_string(VP_KEY_FONT,
 	                        VP_KEY_FONT,
 	                        VP_KEY_FONT,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_BG_COLOR] =
+	top_specs[TOP_BG_COLOR] =
 	    g_param_spec_string(VP_KEY_BACKGROUND_COLOR,
 	                        VP_KEY_BACKGROUND_COLOR,
 	                        VP_KEY_BACKGROUND_COLOR,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_FG_COLOR] =
+	top_specs[TOP_FG_COLOR] =
 	    g_param_spec_string(VP_KEY_FOREGROUND_COLOR,
 	                        VP_KEY_FOREGROUND_COLOR,
 	                        VP_KEY_FOREGROUND_COLOR,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_ICON_SIZE] =
+	top_specs[TOP_ICON_SIZE] =
 	    g_param_spec_uint(VP_KEY_ICON_SIZE,
 	                      VP_KEY_ICON_SIZE,
 	                      VP_KEY_ICON_SIZE,
@@ -1159,13 +1159,13 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_BG_FILE] =
+	top_specs[TOP_BG_FILE] =
 	    g_param_spec_string(VP_KEY_BACKGROUND_FILE,
 	                        VP_KEY_BACKGROUND_FILE,
 	                        VP_KEY_BACKGROUND_FILE,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_GRAVITY] =
+	top_specs[TOP_GRAVITY] =
 	    g_param_spec_enum(VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
@@ -1173,7 +1173,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                    G_PARAM_CONSTRUCT));
-	pspecs[PROP_ORIENTATION] =
+	top_specs[TOP_ORIENTATION] =
 	    g_param_spec_enum(VP_KEY_ORIENTATION,
 	                      VP_KEY_ORIENTATION,
 	                      VP_KEY_ORIENTATION,
@@ -1181,7 +1181,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 
-	pspecs[PROP_MONITOR] =
+	top_specs[TOP_MONITOR] =
 	    g_param_spec_int(VP_KEY_MONITOR,
 	                     VP_KEY_MONITOR,
 	                     VP_KEY_MONITOR,
@@ -1190,30 +1190,30 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                   G_PARAM_CONSTRUCT));
-	pspecs[PROP_DOCK] =
+	top_specs[TOP_DOCK] =
 	    g_param_spec_boolean(VP_KEY_DOCK,
 	                         VP_KEY_DOCK,
 	                         VP_KEY_DOCK,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_STRUT] =
+	top_specs[TOP_STRUT] =
 	    g_param_spec_boolean(VP_KEY_STRUT,
 	                         VP_KEY_STRUT,
 	                         VP_KEY_STRUT,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_IS_DYNAMIC] =
+	top_specs[TOP_IS_DYNAMIC] =
 	    g_param_spec_boolean(VP_KEY_DYNAMIC,
 	                         VP_KEY_DYNAMIC,
 	                         VP_KEY_DYNAMIC,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[PROP_AUTOHIDE] =
+	top_specs[TOP_AUTOHIDE] =
 	    g_param_spec_boolean(VP_KEY_AUTOHIDE,
 	                         VP_KEY_AUTOHIDE,
 	                         VP_KEY_AUTOHIDE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
-	g_object_class_install_properties(oclass, PROP_LAST, pspecs);
+	g_object_class_install_properties(oclass, TOP_LAST, top_specs);
 }

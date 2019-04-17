@@ -42,7 +42,7 @@ enum
 	VALA_PANEL_APPLET_ALL
 };
 
-static GParamSpec *pspecs[VALA_PANEL_APPLET_ALL];
+static GParamSpec *applet_specs[VALA_PANEL_APPLET_ALL];
 
 static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer obj)
 {
@@ -354,38 +354,40 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	G_OBJECT_CLASS(klass)->get_property             = vala_panel_applet_get_property;
 	G_OBJECT_CLASS(klass)->set_property             = vala_panel_applet_set_property;
 	G_OBJECT_CLASS(klass)->finalize                 = vala_panel_applet_finalize;
-	pspecs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
+	applet_specs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
 	    g_param_spec_object(VP_KEY_BACKGROUND_WIDGET,
 	                        VP_KEY_BACKGROUND_WIDGET,
 	                        VP_KEY_BACKGROUND_WIDGET,
 	                        gtk_widget_get_type(),
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-	pspecs[VALA_PANEL_APPLET_TOPLEVEL] =
+	applet_specs[VALA_PANEL_APPLET_TOPLEVEL] =
 	    g_param_spec_object(VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VP_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
-	pspecs[VALA_PANEL_APPLET_UUID] =
+	applet_specs[VALA_PANEL_APPLET_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        VP_KEY_UUID,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
-	pspecs[VALA_PANEL_APPLET_SETTINGS] =
+	applet_specs[VALA_PANEL_APPLET_SETTINGS] =
 	    g_param_spec_object(VP_KEY_SETTINGS,
 	                        VP_KEY_SETTINGS,
 	                        VP_KEY_SETTINGS,
 	                        G_TYPE_SETTINGS,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
-	pspecs[VALA_PANEL_APPLET_GRP] =
+	applet_specs[VALA_PANEL_APPLET_GRP] =
 	    g_param_spec_object(VP_KEY_ACTION_GROUP,
 	                        VP_KEY_ACTION_GROUP,
 	                        VP_KEY_ACTION_GROUP,
 	                        G_TYPE_SIMPLE_ACTION_GROUP,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
-	g_object_class_install_properties(G_OBJECT_CLASS(klass), VALA_PANEL_APPLET_ALL, pspecs);
+	g_object_class_install_properties(G_OBJECT_CLASS(klass),
+	                                  VALA_PANEL_APPLET_ALL,
+	                                  applet_specs);
 }
