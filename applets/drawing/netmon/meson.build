@@ -8,10 +8,8 @@ sources = files(
   )
 netmon = shared_module( 'netmon',
                         sources, 
-                        dependencies: [core_deps,vala_panel_dep],
+                        dependencies: libvalapanel,
                         install: true,
-                        c_args: applet_cflags,
-                        include_directories: applet_inc,
                         install_dir: applets_libdir
                      )
                      

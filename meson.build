@@ -56,7 +56,8 @@ profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_na
 #    '-W',
 #]
 am_cflags = [
-    '-fstack-protector'
+    '-fstack-protector',
+    '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),
 ]
 add_project_arguments(am_cflags, language: 'c')
 
@@ -76,9 +77,6 @@ m = cc.find_library('m', required : false)
 
 core_deps = [glib, gio, giounix, gmodule, gtk, m]
 core_inc = include_directories('.')
-
-applets_vapi_dir = join_paths(meson.current_source_dir(), 'ui')
-vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
 
 #################
 # Configuration #

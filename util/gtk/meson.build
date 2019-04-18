@@ -26,12 +26,17 @@ util_gtk_enums_gen = gnome.mkenums(
 )
 util_gtk_inc = include_directories('.')
 
-util_gtk = static_library(
+util_gtk_lib = static_library(
     'util-gtk', util_gtk_sources, util_gtk_headers, util_gtk_enums_gen,
-    dependencies : core_deps,
-    link_with: util,
+    dependencies : [util, gmodule, gtk, m],
     pic: true,
-    include_directories: [core_inc,util_inc, util_gtk_inc],
+    include_directories: util_gtk_inc,
+)
+
+util_gtk = declare_dependency(
+	link_whole: util_gtk_lib,
+	dependencies: [util, gmodule, gtk, m],
+	include_directories: util_gtk_inc,
 )
 
 

@@ -1,10 +1,9 @@
 sources = files('pager.vala')
 pager = shared_module( 'pager',
                         sources, 
-                        dependencies: [core_deps,vala_panel_dep, wnck, gdk_x11],
+                        dependencies: [libvalapanel, wnck, gdk_x11],
                         install: true,
-                        c_args: [applet_cflags, wnck_cflags],
-                        include_directories: applet_inc,
+                        c_args: wnck_cflags,
                         install_dir: applets_libdir
                      )
                      

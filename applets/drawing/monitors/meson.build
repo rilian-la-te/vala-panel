@@ -12,10 +12,8 @@ sources = files(
   )
 monitors = shared_module( 'monitors',
                         sources, 
-                        dependencies: [core_deps,vala_panel_dep, m],
+                        dependencies: libvalapanel,
                         install: true,
-                        c_args: applet_cflags,
-                        include_directories: applet_inc,
                         install_dir: applets_libdir
                      )
                      

@@ -6,10 +6,8 @@ res = gnome.compile_resources(
 )
 clock = shared_module( 'kbled',
                         sources, res, config,
-                        dependencies: [core_deps,vala_panel_dep],
+                        dependencies: libvalapanel,
                         install: true,
-                        c_args: applet_cflags,
-                        include_directories: applet_inc,
                         install_dir: applets_libdir
                      )
                      

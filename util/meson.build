@@ -17,10 +17,16 @@ util_sources = files(
 
 util_inc = include_directories('.')
 
-util = static_library(
+util_lib = static_library(
     'util', util_sources, util_headers,
     dependencies : [giounix,glib,gio],
     pic: true,
+)
+
+util = declare_dependency(
+	link_whole: util_lib,
+	dependencies : [giounix,glib,gio],
+	include_directories: [core_inc, util_inc],
 )
 install_headers(util_headers, subdir : meson.project_name())
 

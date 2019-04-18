@@ -14,8 +14,7 @@ runner_res = gnome.compile_resources(
 runner = executable(
     meson.project_name()+'-runner',
     runner_sources, runner_res,
-    dependencies: [core_deps],
-    include_directories: [core_inc, util_inc, util_gtk_inc],
-    link_with: [util, util_gtk],
+    dependencies: util_gtk,
+    include_directories: core_inc,
     install : true
 )

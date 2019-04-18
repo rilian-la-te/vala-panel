@@ -41,15 +41,23 @@ ui_res = gnome.compile_resources(
 )
 ui_inc = include_directories('.')
 
-ui = library(library_name,
+ui_lib = library(library_name,
              ui_headers, ui_sources, ui_res, ui_enums_gen, version,
-             dependencies: core_deps,
-             link_whole: [util, util_gtk],
-             include_directories: [core_inc,util_inc, util_gtk_inc, ui_inc],
+             dependencies: util_gtk,
+             include_directories: ui_inc,
              version: meson.project_version(),
              c_args: ['-DG_SETTINGS_ENABLE_BACKEND'],
              soversion: 0,
              install: true)
+
+applets_vapi_dir = meson.current_source_dir()
+vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
+
+libvalapanel = declare_dependency(
+	link_with: ui_lib,
+	dependencies: [util_gtk,vala_panel_dep],
+	include_directories: ui_inc,
+)
 
 install_headers(ui_headers, subdir : meson.project_name())
 vapi_dir = join_paths(prefix, datadir, 'vala', 'vapi')
@@ -63,7 +71,7 @@ install_data(
 )
 
 pkg = import('pkgconfig')
-pkg.generate(ui,
+pkg.generate(ui_lib,
              name: meson.project_name(),
              description: 'A GTK3 desktop panel',
              requires: [glib, gio, giounix, gmodule, gtk],

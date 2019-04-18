@@ -14,9 +14,7 @@ app_res = gnome.compile_resources(
 app = executable(
     meson.project_name(),
     app_sources, app_res,
-    dependencies: [core_deps],
+    dependencies: libvalapanel,
     c_args: ['-DG_SETTINGS_ENABLE_BACKEND'],
-    include_directories: [core_inc, util_inc, util_gtk_inc, ui_inc],
-    link_with: [util, util_gtk, ui],
     install : true
 )
