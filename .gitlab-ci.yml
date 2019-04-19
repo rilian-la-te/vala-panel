@@ -12,11 +12,12 @@ cache:
     - _ccache/
 
 build-arch-cmake:
-  image: alpine:edge
+  image: archlinux/base
   stage: build
   script:
-   - apk add --no-cache cmake gtk+3.0-dev vala ninja libwnck3-dev build-base git
-   - git clone --depth 1 https://gitlab.com/vala-panel-project/cmake-vala.git
+   - pacman -Sy
+   - pacman -S --noconfirm libwnck3 gtk3 vala cmake git base-devel clang ninja
+   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
    - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
    - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja && ninja install && ninja dist
