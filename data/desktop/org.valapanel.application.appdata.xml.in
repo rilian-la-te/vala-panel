@@ -24,7 +24,7 @@
 ​    <library>libvalapanel.so.0</library>
 ​  </provides>
 ​  <releases>
-​    <release version="0.3.60" date="2017-05-06" />
+​    <release version="0.5.0" date="2019-08-13" />
 ​  </releases>
   ​<translation type="gettext">vala-panel</translation>
 ​  <developer_name>Konstantin</developer_name>
