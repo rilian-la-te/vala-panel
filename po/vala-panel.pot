@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-17 00:05+0300\n"
+"POT-Creation-Date: 2019-04-21 02:19+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,18 @@ msgstr ""
 msgid "Select a file"
 msgstr ""
 
-#: ../util/gtk/generic-config-dialog.c:198
+#: ../util/gtk/generic-config-dialog.c:199
 #: ../applets/wnck/tasklist/config.ui:80
 msgid "_Close"
 msgstr ""
 
-#: ../util/gtk/misc-gtk.c:154 ../util/gtk/misc-gtk.c:170 ../ui/toplevel.c:426
+#: ../util/gtk/misc-gtk.c:155 ../ui/toplevel.c:432
 #: ../applets/core/launchbar/launchbar-config.vala:212
 msgid "Error"
+msgstr ""
+
+#: ../util/gtk/misc-gtk.c:169 ../ui/toplevel.c:461
+msgid "Confirm"
 msgstr ""
 
 #: ../util/info-data.c:65 ../util/info-data.c:66
@@ -41,85 +45,148 @@ msgstr ""
 msgid "Run system command"
 msgstr ""
 
-#: ../ui/applet-info.c:74
+#: ../ui/applet-info.c:76
 msgid "Applet"
 msgstr ""
 
-#: ../ui/applet-info.c:80
+#: ../ui/applet-info.c:82
 msgid "Vala Panel Applet"
 msgstr ""
 
-#: ../ui/toplevel-config.c:427
+#: ../ui/toplevel-config.c:445
 msgid "Start"
 msgstr ""
 
-#: ../ui/toplevel-config.c:430
+#: ../ui/toplevel-config.c:448
 msgid "Center"
 msgstr ""
 
-#: ../ui/toplevel-config.c:433
+#: ../ui/toplevel-config.c:451
 msgid "End"
 msgstr ""
 
-#: ../ui/toplevel.c:424
+#: ../ui/toplevel.c:430
 msgid "There is no room for another panel. All the edges are taken."
 msgstr ""
 
-#: ../ui/toplevel.c:450
+#: ../ui/toplevel.c:458
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning:This can not be recovered.</b>"
 msgstr ""
 
-#: ../ui/toplevel.c:453
-msgid "Confirm"
-msgstr ""
-
-#: ../app/application.c:30
-msgid "Run command on already opened panel"
-msgstr ""
-
 #: ../app/application.c:31
-msgid "Run remote command on panel applet"
-msgstr ""
-
-#: ../app/application.c:75
-msgid "Print version and exit"
-msgstr ""
-
-#: ../app/application.c:81
 msgid "Use specified profile"
 msgstr ""
 
-#: ../app/application.c:82
+#: ../app/application.c:32
+msgid "Run command on already opened panel"
+msgstr ""
+
+#: ../app/application.c:33
+msgid "Run remote command on panel applet"
+msgstr ""
+
+#: ../app/application.c:77
+msgid "Print version and exit"
+msgstr ""
+
+#: ../app/application.c:78
 msgid "profile"
 msgstr ""
 
-#: ../app/application.c:83 ../app/application.c:84
+#: ../app/application.c:79 ../app/application.c:80
 msgid "cmd"
 msgstr ""
 
-#: ../app/application.c:234
+#: ../app/application.c:230
 #, c-format
 msgid "%s - Version %s\n"
 msgstr ""
 
-#: ../app/application.c:266
+#: ../app/application.c:262
 #, c-format
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
 "Valid commands: %s\n"
 msgstr ""
 
-#: ../app/application.c:279
+#: ../app/application.c:275
 #, c-format
 msgid ""
 "%s: invalid remote command - %s. Remote commands should have exactly 2 "
 "arguments\n"
 msgstr ""
 
-#: ../app/application.c:563
+#: ../app/application.c:558
 msgid "No panel with this name found.\n"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:137
+msgid "Home"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:145
+msgid "Desktop"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:159
+msgid "Search..."
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:187
+msgid "Control center"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:207
+#: ../applets/core/launchbar/config.ui:37
+msgid "Applications"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:211
+#: ../applets/core/menumodel/menu-maker.c:218
+msgid "Places"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:212
+#: ../applets/core/menumodel/system-menus.ui:40
+msgid "System"
+msgstr ""
+
+#: ../applets/core/menumodel/menu-maker.c:216
+msgid "Vala Panel - "
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:446
+msgid ""
+"If internal menu is enabled, menu file will not be used,\n"
+" predefeined menu will be used instead."
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:450
+msgid "Is internal menu"
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:453
+msgid "Is system menu (can be keybound)"
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:456
+msgid "Is Menubar"
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:459
+#: ../applets/core/dirmenu/dirmenu.vala:197
+#: ../applets/core/launchbar/config.ui:134
+msgid "Icon"
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:462
+msgid "Caption (for button only)"
+msgstr ""
+
+#: ../applets/core/menumodel/menu.c:465
+msgid "Menu file name"
 msgstr ""
 
 #: ../applets/drawing/monitors/cpu.c:82
@@ -128,84 +195,84 @@ msgstr ""
 msgid "CPU usage: %.2f%%"
 msgstr ""
 
-#: ../applets/drawing/monitors/mem.c:86
+#: ../applets/drawing/monitors/mem.c:85
 #: ../applets/drawing/monitors/monitors-old.vala:340
 #, c-format
 msgid "RAM usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:248
+#: ../applets/drawing/monitors/monitors.c:256
 #: ../applets/drawing/monitors/monitors-old.vala:400
 msgid "Display CPU usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:251
+#: ../applets/drawing/monitors/monitors.c:259
 #: ../applets/drawing/monitors/monitors-old.vala:401
 msgid "CPU color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:254
+#: ../applets/drawing/monitors/monitors.c:262
 msgid "CPU width"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:257
+#: ../applets/drawing/monitors/monitors.c:265
 #: ../applets/drawing/monitors/monitors-old.vala:402
 msgid "Display RAM usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:260
+#: ../applets/drawing/monitors/monitors.c:268
 #: ../applets/drawing/monitors/monitors-old.vala:403
 msgid "RAM color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:263
+#: ../applets/drawing/monitors/monitors.c:271
 msgid "RAM width"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:266
+#: ../applets/drawing/monitors/monitors.c:274
 msgid "Display swap usage"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:269
+#: ../applets/drawing/monitors/monitors.c:277
 msgid "Swap color"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:272
+#: ../applets/drawing/monitors/monitors.c:280
 msgid "Swap width"
 msgstr ""
 
-#: ../applets/drawing/monitors/monitors.c:275
-#: ../applets/drawing/netmon/monitors.c:215
+#: ../applets/drawing/monitors/monitors.c:283
+#: ../applets/drawing/netmon/monitors.c:220
 #: ../applets/drawing/monitors/monitors-old.vala:404
 msgid "Action when clicked"
 msgstr ""
 
-#: ../applets/drawing/monitors/swap.c:98
+#: ../applets/drawing/monitors/swap.c:97
 #, c-format
 msgid "Swap usage: %.1fMB (%.2f%%)"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:197
+#: ../applets/drawing/netmon/monitors.c:202
 msgid "Network interface"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:200
+#: ../applets/drawing/netmon/monitors.c:205
 msgid "Net average samples count (for more round speed)"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:203
+#: ../applets/drawing/netmon/monitors.c:208
 msgid "Net receive color"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:206
+#: ../applets/drawing/netmon/monitors.c:211
 msgid "Net transmit color"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:209
+#: ../applets/drawing/netmon/monitors.c:214
 msgid "Net graph as histogram"
 msgstr ""
 
-#: ../applets/drawing/netmon/monitors.c:212
+#: ../applets/drawing/netmon/monitors.c:217
 msgid "Net width"
 msgstr ""
 
@@ -233,69 +300,83 @@ msgid ""
 "Net transmit: %.3f %s\n"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3262
+#: ../applets/wnck/tasklist/tasklist-widget.c:3230
 msgid "Mi_nimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3270
+#: ../applets/wnck/tasklist/tasklist-widget.c:3238
 msgid "Un_minimize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3278
+#: ../applets/wnck/tasklist/tasklist-widget.c:3246
 msgid "Ma_ximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3286
+#: ../applets/wnck/tasklist/tasklist-widget.c:3254
 msgid "_Unmaximize All"
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-widget.c:3298
+#: ../applets/wnck/tasklist/tasklist-widget.c:3266
 msgid "_Close All"
 msgstr ""
 
-#: ../applets/core/clock/clock.vala:100
+#: ../applets/wnck/tasklist/tasklist.c:138
+msgid "Show windows from all desktops"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.c:141
+msgid "Show window`s workspace on unminimize"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.c:144
+msgid "Close windows on middle click"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.c:147
+msgid "Group windows when needed"
+msgstr ""
+
+#: ../applets/wnck/tasklist/tasklist.c:150
+msgid "Show task labels"
+msgstr ""
+
+#: ../applets/core/clock/clock.vala:94
 msgid "Clock Format"
 msgstr ""
 
-#: ../applets/core/clock/clock.vala:101
+#: ../applets/core/clock/clock.vala:95
 msgid "Tooltip Format"
 msgstr ""
 
-#: ../applets/core/clock/clock.vala:102
+#: ../applets/core/clock/clock.vala:96
 msgid "Format codes: man 3 strftime; %n for line break"
 msgstr ""
 
-#: ../applets/core/clock/clock.vala:103 ../applets/wnck/deskno/deskno.vala:67
+#: ../applets/core/clock/clock.vala:97 ../applets/wnck/deskno/deskno.vala:62
 msgid "Bold font"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:148
+#: ../applets/core/dirmenu/dirmenu.vala:142
 msgid "_Open"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:156
+#: ../applets/core/dirmenu/dirmenu.vala:150
 msgid "Open in _Terminal"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:201
+#: ../applets/core/dirmenu/dirmenu.vala:195
 msgid "Directory"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:202
+#: ../applets/core/dirmenu/dirmenu.vala:196
 msgid "Label"
 msgstr ""
 
-#: ../applets/core/dirmenu/dirmenu.vala:203
-#: ../applets/core/menumodel/menumodel.vala:116
-#: ../applets/core/launchbar/config.ui:134
-msgid "Icon"
-msgstr ""
-
-#: ../applets/core/kbled/kbled.vala:73
+#: ../applets/core/kbled/kbled.vala:68
 msgid "Show CapsLock"
 msgstr ""
 
-#: ../applets/core/kbled/kbled.vala:74
+#: ../applets/core/kbled/kbled.vala:69
 msgid "Show NumLock"
 msgstr ""
 
@@ -317,105 +398,23 @@ msgid ""
 " Adding current directory as launcher."
 msgstr ""
 
-#: ../applets/core/menumodel/menu-maker.vala:100
-msgid "Home"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:111
-msgid "Desktop"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:128
-msgid "Search..."
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:156
-msgid "Control center"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:175
-#: ../applets/core/launchbar/config.ui:37
-msgid "Applications"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:179
-#: ../applets/core/menumodel/menu-maker.vala:187
-msgid "Places"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:180
-#: ../applets/core/menumodel/system-menus.ui:40
-msgid "System"
-msgstr ""
-
-#: ../applets/core/menumodel/menu-maker.vala:184
-#: ../data/desktop/org.valapanel.application.desktop.in:4
-msgid "Vala Panel"
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:112
-msgid ""
-"If internal menu is enabled, menu file will not be used,\n"
-" predefeined menu will be used instead."
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:113
-msgid "Is internal menu"
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:114
-msgid "Is system menu (can be keybound)"
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:115
-msgid "Is Menubar"
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:117
-msgid "Caption (for button only)"
-msgstr ""
-
-#: ../applets/core/menumodel/menumodel.vala:118
-msgid "Menu file name"
-msgstr ""
-
-#: ../applets/core/separator/separator.vala:64 ../data/ui/pref.ui:544
+#: ../applets/core/separator/separator.vala:59 ../data/ui/pref.ui:544
 msgid "Size"
 msgstr ""
 
-#: ../applets/core/separator/separator.vala:65
+#: ../applets/core/separator/separator.vala:60
 msgid "Visible separator"
 msgstr ""
 
-#: ../applets/wnck/deskno/deskno.vala:68
+#: ../applets/wnck/deskno/deskno.vala:63
 msgid "Display desktop names"
 msgstr ""
 
-#: ../applets/wnck/pager/pager.vala:97
+#: ../applets/wnck/pager/pager.vala:92
 msgid "Workspaces..."
 msgstr ""
 
-#: ../applets/wnck/tasklist/tasklist-xfce.vala:81
-msgid "Show windows from all desktops"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist-xfce.vala:82
-msgid "Show window`s workspace on unminimize"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist-xfce.vala:83
-msgid "Close windows on middle click"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist-xfce.vala:84
-msgid "Group windows when needed"
-msgstr ""
-
-#: ../applets/wnck/tasklist/tasklist-xfce.vala:85
-msgid "Show task labels"
-msgstr ""
-
-#: ../applets/wnck/wincmd/wincmd.vala:89
+#: ../applets/wnck/wincmd/wincmd.vala:84
 msgid "Alternately iconify/shade and raise"
 msgstr ""
 
@@ -466,14 +465,6 @@ msgstr ""
 
 #: ../app/app-pref.ui:186
 msgid "Widget Style"
-msgstr ""
-
-#: ../data/ui/new-plugin.ui:25
-msgid "Plugin Name"
-msgstr ""
-
-#: ../data/ui/new-plugin.ui:37
-msgid "Plugin Description"
 msgstr ""
 
 #: ../data/ui/panel-menus.ui:6
@@ -975,6 +966,10 @@ msgstr ""
 
 #: ../applets/wnck/wincmd/org.valapanel.wincmd.desktop.plugin.in:4
 msgid "Can shows desktop and shades window."
+msgstr ""
+
+#: ../data/desktop/org.valapanel.application.desktop.in:4
+msgid "Vala Panel"
 msgstr ""
 
 #: ../data/desktop/org.valapanel.application.desktop.in:5
