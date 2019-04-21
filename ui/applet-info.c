@@ -25,6 +25,7 @@
 
 #define APPLET_INFO_NAME "Name"
 #define APPLET_INFO_DESCRIPTION "Description"
+#define APPLET_INFO_COMMENT "Comment"
 #define APPLET_INFO_ICON "Icon"
 #define APPLET_INFO_AUTHORS "Authors"
 #define APPLET_INFO_WEBSITE "Website"
@@ -79,9 +80,12 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
                                            APPLET_INFO_DESCRIPTION,
                                            NULL,
                                            NULL);
-	ret->description = tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet"));
-	tmp              = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_ICON, NULL);
-	ret->icon_name   = tmp != NULL ? tmp : g_strdup("package-x-generic");
+	g_autofree char *cmt =
+	    g_key_file_get_locale_string(file, APPLET_INFO_GROUP, APPLET_INFO_COMMENT, NULL, NULL);
+	ret->description =
+	    cmt != NULL ? cmt : (tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet")));
+	tmp            = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_ICON, NULL);
+	ret->icon_name = tmp != NULL ? tmp : g_strdup("package-x-generic");
 	g_key_file_set_list_separator(file, ';');
 	GStrv tmp_list =
 	    g_key_file_get_string_list(file, APPLET_INFO_GROUP, APPLET_INFO_AUTHORS, NULL, NULL);
