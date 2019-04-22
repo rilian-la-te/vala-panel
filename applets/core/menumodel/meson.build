@@ -4,23 +4,16 @@ sources = files(
   'menu.h',
   )
 
+plugin_name = meson.current_source_dir().split('/').get(-1)
 res = gnome.compile_resources(
-    'menumodel', 'menumodel.gresource.xml',
+    plugin_name+'res', plugin_name+'.gresource.xml',
     source_dir: meson.current_source_dir(),
-    c_name: 'menumodel'
+    c_name: 'res'
 )
-clock = shared_module( 'menumodel',
+
+plugin = shared_module(  plugin_name,
                         sources, res, config,
                         dependencies: libvalapanel,
                         install: true,
                         install_dir: applets_libdir
                      )
-                     
-i18n.merge_file(
-  input: 'org.valapanel.menumodel.desktop.plugin.in',
-  output: 'org.valapanel.menumodel.plugin',
-  type: 'desktop',
-  po_dir: join_paths(meson.source_root(),'po'),
-  install: true,
-  install_dir: applets_datadir
-)

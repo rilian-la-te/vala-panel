@@ -3,9 +3,8 @@ gdk_x11 = dependency('gdk-x11-3.0', version: gtk_ver, required : get_option('wnc
 drawing = get_option('drawing')
 
 subdir('core')
+subdir('wnck', if_found: [wnck, gdk_x11])
 if(drawing)
     subdir('drawing')
 endif
-if(wnck.found() and gdk_x11.found())
-    subdir('wnck')
-endif
+

@@ -4,23 +4,16 @@ sources = files(
   'launchbar-config.vala',
   )
 
+plugin_name = meson.current_source_dir().split('/').get(-1)
 res = gnome.compile_resources(
-    'barres', 'launchbar.gresource.xml',
+    plugin_name+'res', plugin_name+'.gresource.xml',
     source_dir: meson.current_source_dir(),
-    c_name: 'launchbar'
+    c_name: 'res'
 )
-clock = shared_module( 'launchbar',
+
+plugin = shared_module(  plugin_name,
                         sources, res, config,
                         dependencies: libvalapanel,
                         install: true,
                         install_dir: applets_libdir
                      )
-                     
-i18n.merge_file(
-  input: 'org.valapanel.launchbar.desktop.plugin.in',
-  output: 'org.valapanel.launchbar.plugin',
-  type: 'desktop',
-  po_dir: join_paths(meson.source_root(),'po'),
-  install: true,
-  install_dir: applets_datadir
-)
