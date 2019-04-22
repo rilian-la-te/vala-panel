@@ -23,19 +23,19 @@ namespace ValaDBusMenu
                         int recursion_depth,
                         string[] property_names,
                         out uint revision,
-                        [DBus (signature = "(ia{sv}av)")] out Variant layout) throws IOError;
+                        [DBus (signature = "(ia{sv}av)")] out Variant layout) throws DBusError,IOError;
         /* properties signature is "a(ia{sv})" */
         public abstract void get_group_properties(
                             int[] ids,
                             string[] property_names,
-                            [DBus (signature = "a(ia{sv})")] out Variant properties) throws IOError;
-        public abstract void get_property(int id, string name, out Variant value) throws IOError;
-        public abstract void event(int id, string event_id, Variant? data, uint timestamp) throws IOError;
+                            [DBus (signature = "a(ia{sv})")] out Variant properties) throws DBusError,IOError;
+        public abstract void get_property(int id, string name, out Variant value) throws DBusError,IOError;
+        public abstract void event(int id, string event_id, Variant? data, uint timestamp) throws DBusError,IOError;
         /* events signature is a(isvu) */
         public abstract void event_group( [DBus (signature = "a(isvu)")] Variant events,
-                                        out int[] id_errors) throws IOError;
-        public abstract void about_to_show(int id, out bool need_update) throws IOError;
-        public abstract void about_to_show_group(int[] ids, out int[] updates_needed, out int[] id_errors) throws IOError;
+                                        out int[] id_errors) throws DBusError,IOError;
+        public abstract void about_to_show(int id, out bool need_update) throws DBusError,IOError;
+        public abstract void about_to_show_group(int[] ids, out int[] updates_needed, out int[] id_errors) throws DBusError,IOError;
         /*updated properties signature is a(ia{sv}), removed is a(ias)*/
         public abstract signal void items_properties_updated(
                                 [DBus (signature = "a(ia{sv})")] Variant updated_props,

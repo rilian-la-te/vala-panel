@@ -164,7 +164,6 @@ namespace StatusNotifier
                     try
                     {
                         proxy.ayatana_secondary_activate(e.time);
-                        return true;
                     } catch (Error e){/* This only means than method not supported*/}
                     try
                     {
