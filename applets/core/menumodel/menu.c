@@ -98,10 +98,10 @@ static void menu_applet_constructed(GObject *obj)
 	    true);
 	self->button        = NULL;
 	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	g_settings_bind(settings, MODEL_FILE, self, MODEL_FILE, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, IS_SYSTEM, self, IS_SYSTEM, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, IS_BAR, self, IS_BAR, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, IS_INTERNAL, self, IS_INTERNAL, G_SETTINGS_BIND_GET);
-	g_settings_bind(settings, MODEL_FILE, self, MODEL_FILE, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, ICON, self, ICON, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, CAPTION, self, CAPTION, G_SETTINGS_BIND_GET);
 	GtkSettings *gtksettings = gtk_widget_get_settings(GTK_WIDGET(self));
@@ -227,7 +227,8 @@ static void menumodel_widget_destroy(MenuApplet *self)
 		if (GTK_IS_WIDGET(self->int_menu))
 			gtk_widget_destroy(GTK_WIDGET(self->int_menu));
 	}
-	gtk_widget_destroy(GTK_WIDGET(self->button));
+	if (GTK_IS_WIDGET(self->button))
+		gtk_widget_destroy(GTK_WIDGET(self->button));
 	if (G_IS_OBJECT(self->menu))
 		g_clear_object(&self->menu);
 	if (self->app_monitor)
@@ -429,7 +430,7 @@ static void menu_applet_set_property(GObject *object, uint prop_id, const GValue
 		break;
 	case PROP_FILENAME:
 		g_free0(self->icon);
-		self->caption = g_value_dup_string(value);
+		self->filename = g_value_dup_string(value);
 		if (!self->intern)
 			menumodel_widget_rebuild(self);
 		break;
