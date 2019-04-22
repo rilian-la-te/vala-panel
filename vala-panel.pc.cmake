@@ -12,4 +12,4 @@ Description: A GTK3 desktop panel
 Requires: glib-2.0 >= 2.56.0 gtk+-3.0 >= 3.22
 Version: @VERSION@
 Cflags: -I${includedir}/vala-panel
-Libs: -L${pkglibdir} -lvalapanel
+Libs: -L${libdir} -lvalapanel
