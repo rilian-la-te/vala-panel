@@ -144,7 +144,7 @@ char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
 	active_color.alpha       = 0.5;
 	g_autofree char *c_str   = gdk_rgba_to_string(&color);
 	g_autofree char *act_str = gdk_rgba_to_string(&active_color);
-	const char *edge;
+	const char *edge         = "0px 0px 0px 0px";
 	if (direction == GTK_POS_BOTTOM)
 		edge = "0px 0px 2px 0px";
 	if (direction == GTK_POS_TOP)
