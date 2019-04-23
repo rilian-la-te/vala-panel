@@ -39,6 +39,8 @@ enum
 	N_PROPERTIES
 };
 
+static GParamSpec *filter_spec[N_PROPERTIES];
+
 static void g_list_model_iface_init(GListModelInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE(ValaPanelListModelFilter, vala_panel_list_model_filter, G_TYPE_OBJECT,
@@ -153,34 +155,29 @@ static void vala_panel_list_model_filter_class_init(ValaPanelListModelFilterClas
 	object_class->set_property = vala_panel_list_model_filter_set_property;
 	object_class->get_property = vala_panel_list_model_filter_get_property;
 
-	g_object_class_install_property(object_class,
-	                                PROP_BASE_MODEL,
-	                                g_param_spec_object("base-model",
-	                                                    "",
-	                                                    "",
-	                                                    G_TYPE_LIST_MODEL,
-	                                                    G_PARAM_CONSTRUCT_ONLY |
-	                                                        G_PARAM_READWRITE |
-	                                                        G_PARAM_STATIC_STRINGS));
-	g_object_class_install_property(object_class,
-	                                PROP_MAX_RESULTS,
-	                                g_param_spec_uint("max-results",
-	                                                  "",
-	                                                  "",
-	                                                  0,
-	                                                  G_MAXUINT,
-	                                                  50,
-	                                                  G_PARAM_READWRITE |
-	                                                      G_PARAM_STATIC_STRINGS));
-	g_object_class_install_property(object_class,
-	                                PROP_WRAP_TO_GOBJECT,
-	                                g_param_spec_boolean("wrap-to-gobject",
-	                                                     "",
-	                                                     "",
-	                                                     true,
-	                                                     G_PARAM_CONSTRUCT_ONLY |
-	                                                         G_PARAM_WRITABLE |
-	                                                         G_PARAM_STATIC_STRINGS));
+	filter_spec[PROP_BASE_MODEL] =
+	    g_param_spec_object("base-model",
+	                        "",
+	                        "",
+	                        G_TYPE_LIST_MODEL,
+	                        G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE |
+	                            G_PARAM_STATIC_STRINGS);
+	filter_spec[PROP_MAX_RESULTS] =
+	    g_param_spec_uint("max-results",
+	                      "",
+	                      "",
+	                      0,
+	                      G_MAXUINT,
+	                      50,
+	                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+	filter_spec[PROP_WRAP_TO_GOBJECT] =
+	    g_param_spec_boolean("wrap-to-gobject",
+	                         "",
+	                         "",
+	                         true,
+	                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE |
+	                             G_PARAM_STATIC_STRINGS);
+	g_object_class_install_properties(object_class, N_PROPERTIES, filter_spec);
 }
 
 void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self, uint max_results)
