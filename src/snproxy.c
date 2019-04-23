@@ -881,7 +881,7 @@ void sn_proxy_start(SnProxy *self)
 	                         self);
 }
 
-void sn_proxy_context_menu(SnProxy *self, gint x_root, gint y_root)
+void sn_proxy_context_menu(SnProxy *self, int x_root, int y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
@@ -897,7 +897,7 @@ void sn_proxy_context_menu(SnProxy *self, gint x_root, gint y_root)
 	                  NULL);
 }
 
-void sn_proxy_activate(SnProxy *self, gint x_root, gint y_root)
+void sn_proxy_activate(SnProxy *self, int x_root, int y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
@@ -913,7 +913,7 @@ void sn_proxy_activate(SnProxy *self, gint x_root, gint y_root)
 	                  NULL);
 }
 
-void sn_proxy_secondary_activate(SnProxy *self, gint x_root, gint y_root)
+void sn_proxy_secondary_activate(SnProxy *self, int x_root, int y_root)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
@@ -929,23 +929,26 @@ void sn_proxy_secondary_activate(SnProxy *self, gint x_root, gint y_root)
 	                  NULL);
 }
 
-void sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time)
+bool sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);
 	g_return_if_fail(self->item_proxy != NULL);
+	g_autoptr(GError) err = NULL;
 
-	g_dbus_proxy_call(self->item_proxy,
-	                  "XAyatanaSecondaryActivate",
-	                  g_variant_new("(u)", event_time),
-	                  G_DBUS_CALL_FLAGS_NONE,
-	                  -1,
-	                  NULL,
-	                  NULL,
-	                  NULL);
+	g_dbus_proxy_call_sync(self->item_proxy,
+	                       "XAyatanaSecondaryActivate",
+	                       g_variant_new("(u)", event_time),
+	                       G_DBUS_CALL_FLAGS_NONE,
+	                       -1,
+	                       NULL,
+	                       &err);
+	if (err)
+		return false;
+	return true;
 }
 
-void sn_proxy_scroll(SnProxy *self, gint delta_x, gint delta_y)
+void sn_proxy_scroll(SnProxy *self, int delta_x, int delta_y)
 {
 	g_return_if_fail(SN_IS_PROXY(self));
 	g_return_if_fail(self->initialized);

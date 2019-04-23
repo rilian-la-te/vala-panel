@@ -161,16 +161,12 @@ namespace StatusNotifier
                 }
                 else if (e.button == 2)
                 {
-                    try
-                    {
-                        proxy.ayatana_secondary_activate(e.time);
-                    } catch (Error e){/* This only means than method not supported*/}
-                    try
+                    bool ayatana = proxy.ayatana_secondary_activate(e.time);
+                    if(!ayatana)
                     {
                         proxy.secondary_activate((int)Math.round(e.x_root),(int)Math.round(e.y_root));
                         return true;
                     }
-                    catch (Error e) {stderr.printf("%s\n",e.message);}
                 }
                 return false;
         }
