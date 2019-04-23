@@ -3,14 +3,12 @@ util_headers = files(
     'glistmodel-filter.h',
     'constants.h',
     'misc.h',
-    'launcher.h',
     'util.h'
 )
 util_sources = files(
     'boxed-wrapper.c',
     'glistmodel-filter.c',
     'misc.c',
-    'launcher.c',
 )
 
 util_inc = include_directories('.')

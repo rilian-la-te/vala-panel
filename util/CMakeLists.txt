@@ -3,14 +3,12 @@ set(UTIL_HEADERS
     glistmodel-filter.h
     constants.h
     misc.h
-    launcher.h
     util.h
     )
 set(UTIL_SOURCES
     boxed-wrapper.c
     glistmodel-filter.c
-    misc.c
-    launcher.c)
+    misc.c)
 
 #####
 # Core Library

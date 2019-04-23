@@ -22,7 +22,6 @@
 #include "boxed-wrapper.h"
 #include "constants.h"
 #include "glistmodel-filter.h"
-#include "launcher.h"
 #include "misc.h"
 
 #endif

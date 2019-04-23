@@ -49,9 +49,9 @@ namespace MenuMaker
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
     [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_launch")]
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
-    [CCode (cheader_filename="launcher.h",cname="vala_panel_launch_with_context")]
+    [CCode (cheader_filename="misc.h",cname="vala_panel_launch_with_context")]
     public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
-    [CCode (cheader_filename="launcher.h",cname="vala_panel_get_default_for_uri")]
+    [CCode (cheader_filename="misc.h",cname="vala_panel_get_default_for_uri")]
     public static AppInfo get_default_for_uri(string uri);
     [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);

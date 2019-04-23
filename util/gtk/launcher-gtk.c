@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 #include "launcher-gtk.h"
-#include "util/launcher.h"
+#include "util/misc.h"
 
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
 {

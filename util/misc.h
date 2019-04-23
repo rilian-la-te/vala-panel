@@ -19,10 +19,15 @@
 #ifndef MISC_H
 #define MISC_H
 
+#include <stdbool.h>
+#include <gio/gdesktopappinfo.h>
 #include <gio/gio.h>
 
 G_BEGIN_DECLS
 
+GAppInfo *vala_panel_get_default_for_uri(const char *uri);
+bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris);
+void child_spawn_func(void *data);
 void vala_panel_add_prop_as_action(GActionMap *map, const char *prop);
 void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop);
 void vala_panel_reset_schema(GSettings *settings);
