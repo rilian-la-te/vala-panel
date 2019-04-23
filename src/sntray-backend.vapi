@@ -90,7 +90,7 @@ namespace StatusNotifier
 		public void activate(int x, int y);
 		public void secondary_activate(int x, int y);
 		public void scroll(int dx, int dy);
-		public void ayatana_secondary_activate(uint32 timestamp);
+		public bool ayatana_secondary_activate(uint32 timestamp);
 	}
 }
 

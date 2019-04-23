@@ -12,6 +12,7 @@ set(VALA_FILES_CORE
 	snitembox.vala
 	snconfig.vala
         snchild.vala
+        sntray-backend.vapi
         ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
 vala_precompile(VALA_C_CORE sntray-core
@@ -19,7 +20,6 @@ vala_precompile(VALA_C_CORE sntray-core
 PACKAGES
     gtk+-3.0
     vala-dbusmenu
-    sntray-backend
 OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}
