@@ -24,7 +24,7 @@ foreach plugin : plugin_list
             plugin+'res', join_paths(plugin,'@0@.gresource.xml'.format(plugin)),
             source_dir: join_paths(meson.current_source_dir(),plugin),
             c_name: 'res'
-        )   
+        )
     endif
     plugin_module = shared_module(plugin,
                     sources, res, config,
@@ -35,10 +35,7 @@ foreach plugin : plugin_list
     i18n.merge_file(
         input: '@0@/org.valapanel.@1@.desktop.plugin.in'.format(plugin, plugin),
         output: 'org.valapanel.@0@.plugin'.format(plugin),
-        type: 'desktop',
-        po_dir: join_paths(meson.source_root(),'po'),
-        install: true,
-        install_dir: applets_datadir
+        kwargs: plugin_conf_kwargs
     )
 endforeach
 

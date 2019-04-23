@@ -1,6 +1,6 @@
 project('vala-panel', 'vala', 'c',
 	version : '0.5.0',
-	meson_version: '>=0.47.0',
+	meson_version: '>=0.49.0',
 	license: ['LGPL-3.0'],
     default_options: [
         'c_std=gnu11',
@@ -34,27 +34,8 @@ project_datadir = join_paths(prefix,datadir, meson.project_name())
 applets_datadir = join_paths(prefix,datadir, meson.project_name(),'applets')
 applets_libdir = join_paths(prefix,libdir, meson.project_name(),'applets')
 profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_name())
+base_source_dir = meson.current_source_dir()
 
-
-#am_cflags = [
-#    '-Wno-unused',
-#    '-Wno-unused-parameter',
-#    '-Wno-discarded-qualifiers',
-#    '-Wno-incompatible-pointer-types',
-#    '-Wno-missing-field-initializers',
-#    '-fstack-protector',
-#    '-Wstrict-prototypes',
-#    '-Wundef',
-#    '-Werror-implicit-function-declaration',
-#    '-Wformat',
-#    '-Wformat-security',
-#    '-Werror=format-security',
-#    '-Wconversion',
-#    '-Wunreachable-code',
-#    '-Wextra',
-#    '-Wall',
-#    '-W',
-#]
 am_cflags = [
     '-fstack-protector',
     '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),
@@ -77,6 +58,16 @@ m = cc.find_library('m', required : false)
 
 core_deps = [glib, gio, giounix, gmodule, gtk, m]
 core_inc = include_directories('.')
+################
+# Applet build #
+################
+
+plugin_conf_kwargs = {
+    'type': 'desktop',
+    'po_dir': join_paths(meson.current_source_dir(),'po'),
+    'install': true,
+    'install_dir': applets_datadir
+}
 
 #################
 # Configuration #
