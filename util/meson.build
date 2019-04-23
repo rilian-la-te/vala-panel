@@ -3,7 +3,6 @@ util_headers = files(
     'glistmodel-filter.h',
     'constants.h',
     'misc.h',
-    'info-data.h',
     'launcher.h',
     'util.h'
 )
@@ -11,7 +10,6 @@ util_sources = files(
     'boxed-wrapper.c',
     'glistmodel-filter.c',
     'misc.c',
-    'info-data.c',
     'launcher.c',
 )
 

@@ -1,6 +1,8 @@
 runner_sources = files(
     'runner.c',
     'runner.h',
+    'info-data.c',
+    'info-data.h',
     'runner-app.c',
     'runner-app.h'
 )

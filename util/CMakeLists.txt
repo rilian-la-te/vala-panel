@@ -3,7 +3,6 @@ set(UTIL_HEADERS
     glistmodel-filter.h
     constants.h
     misc.h
-    info-data.h
     launcher.h
     util.h
     )
@@ -11,7 +10,6 @@ set(UTIL_SOURCES
     boxed-wrapper.c
     glistmodel-filter.c
     misc.c
-    info-data.c
     launcher.c)
 
 #####

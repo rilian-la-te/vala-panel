@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "info-data.h"
 #include "util.h"
 #include <glib/gi18n.h>
 #include <string.h>

@@ -22,6 +22,7 @@
 
 #include "config.h"
 
+#include "info-data.h"
 #include "runner.h"
 #include "util-gtk.h"
 

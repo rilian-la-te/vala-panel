@@ -1,9 +1,11 @@
 INCLUDE(GLibProgramHandlers)
 set(RUNNER_SOURCES
-	runner.c
-	runner.h
-        runner-app.c
-        runner-app.h
+    info-data.c
+    info-data.h
+    runner.c
+    runner.h
+    runner-app.c
+    runner-app.h
 	)
 add_definitions(-DG_SETTINGS_ENABLE_BACKEND)
 glib_compile_resources(GLIB_RESOURCES_APP
