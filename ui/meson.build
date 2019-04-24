@@ -70,8 +70,7 @@ install_data(
     install_dir: vapi_dir,
 )
 
-pkg = import('pkgconfig')
-pkg.generate(ui_lib,
+pkgconfig.generate(ui_lib,
              name: meson.project_name(),
              description: 'A GTK3 desktop panel',
              requires: [glib, gio, giounix, gmodule, gtk],
