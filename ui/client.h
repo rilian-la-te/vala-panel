@@ -24,7 +24,6 @@
 G_BEGIN_DECLS
 
 #include "applet-info.h"
-#include "applet-plugin.h"
 #include "applet-widget-api.h"
 #include "definitions.h"
 #include "util-gtk.h"

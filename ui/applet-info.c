@@ -21,18 +21,18 @@
 
 #include <glib/gi18n.h>
 
-#define APPLET_INFO_GROUP "Plugin"
+#define INFO_GROUP "Plugin"
 
-#define APPLET_INFO_NAME "Name"
-#define APPLET_INFO_DESCRIPTION "Description"
-#define APPLET_INFO_COMMENT "Comment"
-#define APPLET_INFO_ICON "Icon"
-#define APPLET_INFO_AUTHORS "Authors"
-#define APPLET_INFO_WEBSITE "Website"
-#define APPLET_INFO_HELP_URI "HelpURI"
-#define APPLET_INFO_LICENSE "License"
-#define APPLET_INFO_VERSION "Version"
-#define APPLET_INFO_EXCLUSIVE "Exclusive"
+#define INFO_NAME "Name"
+#define INFO_DESCRIPTION "Description"
+#define INFO_COMMENT "Comment"
+#define INFO_ICON "Icon"
+#define INFO_AUTHORS "Authors"
+#define INFO_WEBSITE "Website"
+#define INFO_HELP_URI "HelpURI"
+#define INFO_LICENSE "License"
+#define INFO_VERSION "Version"
+#define INFO_EXCLUSIVE "Exclusive"
 
 struct _ValaPanelAppletInfo
 {
@@ -48,7 +48,9 @@ struct _ValaPanelAppletInfo
 	GtkLicense license;
 };
 
-static GtkLicense vala_panel_applet_info_get_license_from_name(const char *license_name)
+#define fb(str, fbs) (str) != NULL ? (str) : (fbs)
+
+static GtkLicense vp_applet_info_get_lic_from_name(const char *license_name)
 {
 	GEnumClass *enum_class = (GEnumClass *)g_type_class_ref(gtk_license_get_type());
 	GEnumValue *val        = g_enum_get_value_by_name(enum_class, license_name);
@@ -71,43 +73,29 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 		return NULL;
 	struct _ValaPanelAppletInfo *ret =
 	    (struct _ValaPanelAppletInfo *)g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
-	char *tmp =
-	    g_key_file_get_locale_string(file, APPLET_INFO_GROUP, APPLET_INFO_NAME, NULL, NULL);
+	char *tmp        = g_key_file_get_locale_string(file, INFO_GROUP, INFO_NAME, NULL, NULL);
 	ret->module_name = g_strdup(extension_name);
-	ret->name        = tmp != NULL ? tmp : g_strdup(_("Applet"));
-	tmp              = g_key_file_get_locale_string(file,
-                                           APPLET_INFO_GROUP,
-                                           APPLET_INFO_DESCRIPTION,
-                                           NULL,
-                                           NULL);
+	ret->name        = fb(tmp, g_strdup(_("Applet")));
+	tmp = g_key_file_get_locale_string(file, INFO_GROUP, INFO_DESCRIPTION, NULL, NULL);
 	g_autofree char *cmt =
-	    g_key_file_get_locale_string(file, APPLET_INFO_GROUP, APPLET_INFO_COMMENT, NULL, NULL);
-	ret->description =
-	    cmt != NULL ? cmt : (tmp != NULL ? tmp : g_strdup(_("Vala Panel Applet")));
-	tmp            = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_ICON, NULL);
-	ret->icon_name = tmp != NULL ? tmp : g_strdup("package-x-generic");
+	    g_key_file_get_locale_string(file, INFO_GROUP, INFO_COMMENT, NULL, NULL);
+	ret->description = fb(cmt, fb(tmp, g_strdup(_("Vala Panel Applet"))));
+	tmp              = g_key_file_get_string(file, INFO_GROUP, INFO_ICON, NULL);
+	ret->icon_name   = fb(tmp, g_strdup("package-x-generic"));
 	g_key_file_set_list_separator(file, ';');
-	GStrv tmp_list =
-	    g_key_file_get_string_list(file, APPLET_INFO_GROUP, APPLET_INFO_AUTHORS, NULL, NULL);
-	ret->authors = tmp_list != NULL
-	                   ? tmp_list
-	                   : g_strsplit("Konstantin <ria.freelander@gmail.com>;", ";", 0);
-	tmp = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_WEBSITE, NULL);
-	ret->website =
-	    tmp != NULL ? tmp : g_strdup("https://gitlab.com/vala-panel-project/vala-panel");
-	tmp =
-	    g_key_file_get_locale_string(file, APPLET_INFO_GROUP, APPLET_INFO_HELP_URI, NULL, NULL);
+	GStrv tmp_list = g_key_file_get_string_list(file, INFO_GROUP, INFO_AUTHORS, NULL, NULL);
+	ret->authors   = fb(tmp_list, g_strsplit("Konstantin <ria.freelander@gmail.com>;", ";", 0));
+	tmp            = g_key_file_get_string(file, INFO_GROUP, INFO_WEBSITE, NULL);
+	ret->website   = fb(tmp, g_strdup("https://gitlab.com/vala-panel-project/vala-panel"));
+	tmp            = g_key_file_get_locale_string(file, INFO_GROUP, INFO_HELP_URI, NULL, NULL);
 	ret->help_uri =
-	    tmp != NULL ? tmp
-	                : g_strdup("https://gitlab.com/vala-panel-project/vala-panel/wikis/home");
-	tmp = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_LICENSE, NULL);
-	ret->license =
-	    tmp != NULL ? vala_panel_applet_info_get_license_from_name(tmp) : GTK_LICENSE_LGPL_3_0;
+	    fb(tmp, g_strdup("https://gitlab.com/vala-panel-project/vala-panel/wikis/home"));
+	tmp          = g_key_file_get_string(file, INFO_GROUP, INFO_LICENSE, NULL);
+	ret->license = tmp != NULL ? vp_applet_info_get_lic_from_name(tmp) : GTK_LICENSE_LGPL_3_0;
 	g_clear_pointer(&tmp, g_free);
-	tmp          = g_key_file_get_string(file, APPLET_INFO_GROUP, APPLET_INFO_VERSION, NULL);
-	ret->version = tmp != NULL ? tmp : g_strdup(VERSION);
-	ret->exclusive =
-	    g_key_file_get_boolean(file, APPLET_INFO_GROUP, APPLET_INFO_EXCLUSIVE, NULL);
+	tmp            = g_key_file_get_string(file, INFO_GROUP, INFO_VERSION, NULL);
+	ret->version   = fb(tmp, g_strdup(VERSION));
+	ret->exclusive = g_key_file_get_boolean(file, INFO_GROUP, INFO_EXCLUSIVE, NULL);
 	return (ValaPanelAppletInfo *)ret;
 }
 

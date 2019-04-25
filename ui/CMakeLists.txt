@@ -13,7 +13,6 @@ set(LIBVALAPANEL_HEADERS
     panel-platform.h
     toplevel.h
     toplevel-config.h
-    applet-plugin.h
     applet-info.h
     panel-layout.h
     ${ENUMSH})
@@ -23,7 +22,6 @@ set(LIBVALAPANEL_C_SOURCES
     panel-platform.c
     applet-widget.c
     toplevel.c
-    applet-plugin.c
     applet-info.c
     applet-manager.c
     panel-layout.c

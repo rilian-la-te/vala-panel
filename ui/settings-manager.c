@@ -73,7 +73,7 @@ static ValaPanelUnitSettings *vp_unit_settings_copy(ValaPanelUnitSettings *sourc
 	return created_settings;
 }
 
-void vp_unit_settings_free(ValaPanelUnitSettings *settings)
+G_GNUC_INTERNAL void vp_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
 		return;
@@ -124,7 +124,7 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_copy(ValaPanelCoreSettin
 	return new_settings;
 }
 
-void vp_core_settings_free(ValaPanelCoreSettings *settings)
+G_GNUC_INTERNAL void vp_core_settings_free(ValaPanelCoreSettings *settings)
 {
 	g_free0(settings->root_path);
 	g_free0(settings->root_schema);

@@ -19,7 +19,7 @@
 #define APPLETMANAGER_H
 
 #include "applet-info.h"
-#include "applet-plugin.h"
+#include "applet-widget-api.h"
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 

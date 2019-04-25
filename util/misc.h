@@ -19,9 +19,9 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include <stdbool.h>
 #include <gio/gdesktopappinfo.h>
 #include <gio/gio.h>
+#include <stdbool.h>
 
 G_BEGIN_DECLS
 

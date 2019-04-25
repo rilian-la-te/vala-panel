@@ -9,20 +9,19 @@ ui_headers = ui_enum_headers + files (
     'applet-widget.h',
     'settings-manager.h',
     'toplevel.h',
-    'toplevel-config.h',
-    'applet-plugin.h',
     'applet-info.h',
     'panel-layout.h'
 )
 ui_sources = files (
     'toplevel-config.c',
+    'toplevel-config.h',
     'settings-manager.c',
     'panel-platform.c',
     'applet-widget.c',
     'toplevel.c',
-    'applet-plugin.c',
     'applet-info.c',
     'applet-manager.c',
+    'applet-manager.h',
     'panel-layout.c'
 )
 enum = 'vala-panel-enums'

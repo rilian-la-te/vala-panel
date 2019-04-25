@@ -17,7 +17,6 @@
  */
 #include "applet-manager.h"
 #include "applet-info.h"
-#include "applet-plugin.h"
 #include "config.h"
 #include "definitions.h"
 
@@ -42,7 +41,7 @@ GIOExtensionPoint *applet_point = NULL;
 struct _ValaPanelAppletManager
 {
 	GObject parent;
-	GHashTable *applet_info_table;
+	GHashTable *ainfo_table;
 	GIOModuleScope *scope;
 };
 
@@ -57,16 +56,14 @@ void vp_applet_manager_reload_applets(ValaPanelAppletManager *self)
 	for (GList *i = loaded_applets; i != NULL; i = g_list_next(i))
 	{
 		const char *module_name = g_io_extension_get_name((GIOExtension *)i->data);
-		if (!g_hash_table_contains(self->applet_info_table, module_name))
+		if (!g_hash_table_contains(self->ainfo_table, module_name))
 		{
 			ValaPanelAppletInfo *info = vala_panel_applet_info_load(module_name);
 			GType plugin_type    = g_io_extension_get_type((GIOExtension *)i->data);
 			AppletInfoData *data = applet_info_data_new(info, plugin_type);
 			if (info != NULL && plugin_type != G_TYPE_NONE)
 			{
-				g_hash_table_insert(self->applet_info_table,
-				                    g_strdup(module_name),
-				                    data);
+				g_hash_table_insert(self->ainfo_table, g_strdup(module_name), data);
 			}
 			else
 			{
@@ -80,10 +77,10 @@ void vp_applet_manager_reload_applets(ValaPanelAppletManager *self)
 
 static AppletInfoData *vp_applet_manager_applet_ref(ValaPanelAppletManager *self, const char *name)
 {
-	if (g_hash_table_contains(self->applet_info_table, name))
+	if (g_hash_table_contains(self->ainfo_table, name))
 	{
 		AppletInfoData *data =
-		    (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, name);
+		    (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, name);
 		if (data != NULL)
 		{
 			data->count += 1;
@@ -95,10 +92,10 @@ static AppletInfoData *vp_applet_manager_applet_ref(ValaPanelAppletManager *self
 
 void vp_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name)
 {
-	if (g_hash_table_contains(self->applet_info_table, name))
+	if (g_hash_table_contains(self->ainfo_table, name))
 	{
 		AppletInfoData *data =
-		    (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, name);
+		    (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, name);
 		if (data != NULL && data->count > 0)
 		{
 			data->count -= 1;
@@ -119,21 +116,10 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAp
 	if (!data)
 		return NULL;
 
-	if (g_type_is_a(data->applet_type, VALA_PANEL_TYPE_APPLET))
-	{
-		ValaPanelApplet *applet =
-		    vala_panel_applet_construct(data->applet_type, top, applet_settings, uuid);
-		if (VALA_PANEL_IS_APPLET(applet))
-			return applet;
-	}
-	else if (g_type_is_a(data->applet_type, VALA_PANEL_TYPE_APPLET_PLUGIN))
-	{
-		g_autoptr(ValaPanelAppletPlugin) pl =
-		    VALA_PANEL_APPLET_PLUGIN(g_object_new(data->applet_type, NULL));
-		if (VALA_PANEL_IS_APPLET_PLUGIN(pl))
-			return VALA_PANEL_APPLET_PLUGIN_GET_CLASS(pl)
-			    ->get_applet_widget(pl, top, applet_settings, uuid);
-	}
+	ValaPanelApplet *applet =
+	    vala_panel_applet_construct(data->applet_type, top, applet_settings, uuid);
+	if (VALA_PANEL_IS_APPLET(applet))
+		return applet;
 	return NULL;
 }
 
@@ -144,7 +130,7 @@ static AppletInfoData *vp_applet_manager_get_info_data(ValaPanelAppletManager *s
 	ValaPanelUnitSettings *settings =
 	    vp_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
 	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
-	return (AppletInfoData *)g_hash_table_lookup(self->applet_info_table, str);
+	return (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, str);
 }
 
 ValaPanelAppletInfo *vp_applet_manager_get_applet_info(ValaPanelAppletManager *self,
@@ -157,20 +143,20 @@ ValaPanelAppletInfo *vp_applet_manager_get_applet_info(ValaPanelAppletManager *s
 
 GList *vp_applet_manager_get_all_types(ValaPanelAppletManager *self)
 {
-	return g_hash_table_get_values(self->applet_info_table);
+	return g_hash_table_get_values(self->ainfo_table);
 }
 
 static void vp_applet_manager_finalize(GObject *data)
 {
 	ValaPanelAppletManager *self = VP_APPLET_MANAGER(data);
-	g_hash_table_unref(self->applet_info_table);
+	g_hash_table_unref(self->ainfo_table);
 	g_io_module_scope_free(self->scope);
 	G_OBJECT_CLASS(vp_applet_manager_parent_class)->finalize(data);
 }
 
 static void vp_applet_manager_init(ValaPanelAppletManager *self)
 {
-	self->applet_info_table =
+	self->ainfo_table =
 	    g_hash_table_new_full(g_str_hash, g_str_equal, g_free, applet_info_data_free);
 	self->scope = g_io_module_scope_new(G_IO_MODULE_SCOPE_BLOCK_DUPLICATES);
 	vp_applet_manager_reload_applets(self);
@@ -179,7 +165,7 @@ static void vp_applet_manager_init(ValaPanelAppletManager *self)
 static void vp_applet_manager_class_init(ValaPanelAppletManagerClass *klass)
 {
 	applet_point = g_io_extension_point_register(VALA_PANEL_APPLET_EXTENSION_POINT);
-	g_io_extension_point_set_required_type(applet_point, G_TYPE_OBJECT);
+	g_io_extension_point_set_required_type(applet_point, VALA_PANEL_TYPE_APPLET);
 	G_OBJECT_CLASS(klass)->finalize = vp_applet_manager_finalize;
 }
 

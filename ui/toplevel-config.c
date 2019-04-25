@@ -18,7 +18,6 @@
 
 #include "toplevel-config.h"
 #include "applet-manager.h"
-#include "applet-plugin.h"
 #include "definitions.h"
 #include "panel-layout.h"
 #include "toplevel.h"

@@ -26,8 +26,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(NetMonApplet, netmon_applet, VALA_PANEL, NETMON_APPLET, ValaPanelApplet)
 
-G_DECLARE_FINAL_TYPE(NetMonPlugin, netmon_plugin, VALA_PANEL, NETMON_PLUGIN, ValaPanelAppletPlugin)
-
 G_END_DECLS
 
 #endif // MONITORS_H

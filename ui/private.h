@@ -6,10 +6,6 @@
 G_BEGIN_DECLS
 
 #include "applet-manager.h"
-#include "applet-plugin.h"
-
-G_GNUC_INTERNAL ValaPanelApplet *vala_panel_applet_plugin_get_applet_widget(
-    ValaPanelAppletPlugin *self, ValaPanelToplevel *top, GSettings *settings, const char *uuid);
 
 /* From toplevel.h */
 G_GNUC_INTERNAL ValaPanelPlatform *vp_toplevel_get_current_platform(void);

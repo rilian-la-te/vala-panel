@@ -26,6 +26,9 @@ G_BEGIN_DECLS
 
 typedef struct _ValaPanelAppeltInfo ValaPanelAppletInfo;
 
+#define VALA_PANEL_APPLET_EXCLUSIVE "ValaPanel-Exclusive"
+#define VALA_PANEL_APPLET_EXTENSION_POINT "vala-panel-applet-module"
+
 ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name);
 ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info);
 void vala_panel_applet_info_free(void *info);
