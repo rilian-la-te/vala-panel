@@ -65,7 +65,6 @@ public class Sep: Applet
 public void g_io_separator_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Sep),"org.valapanel.separator",10);
 }
 

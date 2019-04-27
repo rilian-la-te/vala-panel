@@ -189,7 +189,6 @@ void g_io_tasklist_xfce_load(GTypeModule *module)
 
 	tasklist_applet_register_type(module);
 
-	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
 	                               tasklist_applet_get_type(),
 	                               "org.xfce.tasklist",

@@ -331,7 +331,6 @@ void g_io_monitors_load(GTypeModule *module)
 
 	monitors_applet_register_type(module);
 
-	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
 	                               monitors_applet_get_type(),
 	                               "org.valapanel.monitors",

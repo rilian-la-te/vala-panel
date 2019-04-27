@@ -276,7 +276,6 @@ namespace LaunchBar
 public void g_io_launchbar_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.Bar),"org.valapanel.launchbar",10);
 }
 

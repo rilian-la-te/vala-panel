@@ -271,7 +271,6 @@ public class Clock: Applet
 public void g_io_clock_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Clock),"org.valapanel.clock",10);
 }
 

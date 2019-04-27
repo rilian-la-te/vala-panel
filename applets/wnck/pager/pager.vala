@@ -97,7 +97,6 @@ public class Pager: Applet
 public void g_io_pager_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Pager),"org.valapanel.pager",10);
 }
 

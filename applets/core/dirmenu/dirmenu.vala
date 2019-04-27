@@ -202,7 +202,6 @@ public class Dirmenu: Applet
 public void g_io_dirmenu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Dirmenu),"org.valapanel.dirmenu",10);
 }
 

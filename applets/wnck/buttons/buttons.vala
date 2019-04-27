@@ -203,7 +203,6 @@ public class Buttons: Applet
 public void g_io_buttons_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Buttons),"org.valapanel.buttons",10);
 }
 

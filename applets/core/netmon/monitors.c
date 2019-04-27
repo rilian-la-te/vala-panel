@@ -264,7 +264,6 @@ void g_io_netmon_load(GTypeModule *module)
 
 	netmon_applet_register_type(module);
 
-	g_type_module_use(module);
 	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
 	                               netmon_applet_get_type(),
 	                               "org.valapanel.netmon",

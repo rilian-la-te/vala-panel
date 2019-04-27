@@ -107,7 +107,6 @@ public class Kbled: Applet
 public void g_io_kbled_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Kbled),"org.valapanel.kbled",10);
 }
 

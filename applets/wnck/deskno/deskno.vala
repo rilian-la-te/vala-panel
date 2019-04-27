@@ -102,7 +102,6 @@ public class Deskno: Applet
 public void g_io_deskno_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    module.use();
     GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Deskno),"org.valapanel.deskno",10);
 }
 
