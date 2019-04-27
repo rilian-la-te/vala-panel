@@ -63,7 +63,6 @@ if (ENABLE_VALAPANEL)
         --vapidir=${CMAKE_CURRENT_BINARY_DIR}
         --target-glib=2.44
         --gresources=${CMAKE_SOURCE_DIR}/${PLUGIN_NAME}.gresource.xml
-        ${NEW_DEFINE}
     )
     #####
     # Plugin Library

@@ -20,7 +20,6 @@ add_definitions(-Wall -Wextra
                 -Wno-ignored-qualifiers
                 -Wno-incompatible-pointer-types
                 -Wno-missing-field-initializers
-                -Wno-discarded-qualifiers
                 -Wno-sign-compare
                 ) #Vala often forgot cast to GtkWidget or gpointer
 

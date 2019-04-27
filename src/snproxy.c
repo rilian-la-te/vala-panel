@@ -931,9 +931,9 @@ void sn_proxy_secondary_activate(SnProxy *self, int x_root, int y_root)
 
 bool sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time)
 {
-	g_return_if_fail(SN_IS_PROXY(self));
-	g_return_if_fail(self->initialized);
-	g_return_if_fail(self->item_proxy != NULL);
+	g_return_val_if_fail(SN_IS_PROXY(self), false);
+	g_return_val_if_fail(self->initialized, false);
+	g_return_val_if_fail(self->item_proxy != NULL, false);
 	g_autoptr(GError) err = NULL;
 
 	g_dbus_proxy_call_sync(self->item_proxy,
