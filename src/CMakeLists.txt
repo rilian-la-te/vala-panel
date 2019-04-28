@@ -7,12 +7,12 @@ add_subdirectory(dbusmenu)
 #####
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(VALA_FILES_CORE
+        sntray-backend.vapi
 	snwatcher.vala
 	snhost.vala
 	snitembox.vala
 	snconfig.vala
         snchild.vala
-        sntray-backend.vapi
         ${CMAKE_CURRENT_BINARY_DIR}/config.vala
 	)
 vala_precompile(VALA_C_CORE sntray-core
