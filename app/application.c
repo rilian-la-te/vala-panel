@@ -638,7 +638,7 @@ static void activate_shutdown(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED
 static void activate_exit(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
                           gpointer data)
 {
-	ValaPanelApplication *app = (ValaPanelApplication *)data;
+	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	app->restart              = false;
 	g_application_quit(G_APPLICATION(app));
 }
@@ -646,7 +646,7 @@ static void activate_exit(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVa
 static void activate_restart(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
                              gpointer data)
 {
-	ValaPanelApplication *app = (ValaPanelApplication *)data;
+	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	app->restart              = true;
 	g_application_quit(G_APPLICATION(app));
 }

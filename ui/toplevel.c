@@ -156,8 +156,6 @@ static void stop_ui(ValaPanelToplevel *self)
 static void vala_panel_toplevel_destroy(GObject *base)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(base);
-	if (GTK_IS_WIDGET(self->pref_dialog))
-		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
 	stop_ui(self);
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->dispose(base);
 }
@@ -178,16 +176,15 @@ static void start_ui(ValaPanelToplevel *self)
 	                        "/org/vala-panel/lib/style.css",
 	                        "-panel-transparent");
 	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
-	gtk_application_add_window(gtk_window_get_application(GTK_WINDOW(self)), GTK_WINDOW(self));
+	gtk_window_set_application(GTK_WINDOW(self), gtk_window_get_application(GTK_WINDOW(self)));
 	gtk_widget_add_events(GTK_WIDGET(self),
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
 	                          GDK_LEAVE_NOTIFY_MASK);
 	gtk_widget_realize(GTK_WIDGET(self));
 	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
-	self->layout =
-	    VALA_PANEL_LAYOUT(vp_layout_new(VALA_PANEL_TOPLEVEL(self),
-	                                    vala_panel_orient_from_gravity(self->gravity),
-	                                    0));
+	self->layout = vp_layout_new(VALA_PANEL_TOPLEVEL(self),
+	                             vala_panel_orient_from_gravity(self->gravity),
+	                             0);
 	gtk_revealer_set_transition_type(self->ah_rev, GTK_REVEALER_TRANSITION_TYPE_CROSSFADE);
 	g_signal_connect_swapped(self->ah_rev,
 	                         "notify::child-revealed",

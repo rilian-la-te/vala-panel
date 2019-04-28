@@ -108,6 +108,9 @@ static void vp_toplevel_config_init(ValaPanelToplevelConfig *self)
 static void vp_toplevel_config_finalize(GObject *obj)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(obj);
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "conf", NULL);
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "win", NULL);
+	gtk_widget_insert_action_group(GTK_WIDGET(self), "app", NULL);
 	g_clear_object(&self->monitors_box);
 	g_clear_object(&self->spin_iconsize);
 	g_clear_object(&self->spin_height);

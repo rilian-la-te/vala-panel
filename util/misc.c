@@ -72,6 +72,7 @@ void vala_panel_add_prop_as_action(GActionMap *map, const char *prop)
 {
 	g_autoptr(GAction) action = G_ACTION(g_property_action_new(prop, map, prop));
 	g_action_map_add_action(map, action);
+	g_clear_object(&map);
 }
 
 void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop)
@@ -82,7 +83,8 @@ void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, co
 	                prop,
 	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |
 	                                     G_SETTINGS_BIND_DEFAULT));
-	vala_panel_add_prop_as_action(map, prop);
+	g_autoptr(GAction) action = G_ACTION(g_settings_create_action(settings, prop));
+	g_action_map_add_action(map, action);
 }
 
 void vala_panel_reset_schema(GSettings *settings)
