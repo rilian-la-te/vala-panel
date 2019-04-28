@@ -57,8 +57,8 @@ static GQuark applet_quark;
 	VALA_PANEL_APPLET(g_object_get_qdata((GObject *)row, applet_quark))
 #define config_row_set_applet(row, applet) g_object_set_qdata((GObject *)row, applet_quark, applet)
 
-#define config_row_get_info_data(row)                                                              \
-	((AppletInfoData *)(g_object_get_qdata((GObject *)row, applet_quark)))
+#define config_row_get_info(row)                                                                   \
+	((ValaPanelAppletInfo *)(g_object_get_qdata((GObject *)row, applet_quark)))
 #define config_row_set_info(row, applet) g_object_set_qdata((GObject *)row, applet_quark, applet)
 
 #define NEW_APPLET_NAME "new-applet"
@@ -557,11 +557,11 @@ static void on_about_plugin(G_GNUC_UNUSED GtkButton *btn, void *data)
 static int listbox_new_name_sort(GtkListBoxRow *before, GtkListBoxRow *after,
                                  G_GNUC_UNUSED void *user_data)
 {
-	AppletInfoData *before_info = before ? config_row_get_info_data(before) : NULL;
-	AppletInfoData *after_info  = after ? config_row_get_info_data(after) : NULL;
+	ValaPanelAppletInfo *before_info = before ? config_row_get_info(before) : NULL;
+	ValaPanelAppletInfo *after_info  = after ? config_row_get_info(after) : NULL;
 	if (before_info && after_info)
-		return g_strcmp0(vala_panel_applet_info_get_name(before_info->info),
-		                 vala_panel_applet_info_get_name(after_info->info));
+		return g_strcmp0(vala_panel_applet_info_get_name(before_info),
+		                 vala_panel_applet_info_get_name(after_info));
 	else if (before_info)
 		return -1;
 	else
@@ -572,8 +572,7 @@ static void listbox_new_applet_row_activated(G_GNUC_UNUSED GtkListBox *box, GtkL
                                              gpointer user_data)
 {
 	ValaPanelToplevelConfig *self = VP_TOPLEVEL_CONFIG(user_data);
-	const char *type =
-	    vala_panel_applet_info_get_module_name(config_row_get_info_data(row)->info);
+	const char *type    = vala_panel_applet_info_get_module_name(config_row_get_info(row));
 	GtkListBoxRow *prev = gtk_list_box_get_selected_row(self->plugin_list);
 	plugin_list_add_applet(type, self, prev);
 	gtk_list_box_invalidate_filter(self->listbox_new_applet);
@@ -581,11 +580,9 @@ static void listbox_new_applet_row_activated(G_GNUC_UNUSED GtkListBox *box, GtkL
 
 static int listbox_new_filter(GtkListBoxRow *row, G_GNUC_UNUSED void *data)
 {
-	AppletInfoData *d = config_row_get_info_data(row);
-	bool ret          = false;
-	if ((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info))
-		ret = true;
-	return ret;
+	ValaPanelAppletInfo *d = config_row_get_info(row);
+	return vp_applet_manager_is_applet_available(vp_layout_get_manager(),
+	                                             vala_panel_applet_info_get_module_name(d));
 }
 
 static void destroy(GtkWidget *applet, G_GNUC_UNUSED void *data)
@@ -604,7 +601,7 @@ static void available_plugins_reload(ValaPanelToplevelConfig *self)
 	{
 		AppletInfoData *d  = (AppletInfoData *)l->data;
 		GtkListBoxRow *row = create_info_representation(d->info);
-		config_row_set_info(row, d);
+		config_row_set_info(row, d->info);
 		gtk_container_add(GTK_CONTAINER(self->listbox_new_applet), GTK_WIDGET(row));
 	}
 	g_list_free(all_types);
@@ -653,8 +650,8 @@ static void on_remove_plugin(GtkButton *btn, void *user_data)
 	int index              = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 	GtkListBoxRow *sel_row = gtk_list_box_get_selected_row(self->plugin_list);
 	int sel_index          = sel_row ? gtk_list_box_row_get_index(sel_row) : -1;
-	gtk_widget_destroy0(row);
-	gtk_widget_destroy0(w);
+	g_clear_object(&row);
+	g_clear_object(&w);
 	if (index == sel_index)
 		gtk_list_box_select_row(self->plugin_list,
 		                        gtk_list_box_get_row_at_index(self->plugin_list, index));

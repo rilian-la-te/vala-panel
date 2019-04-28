@@ -493,9 +493,9 @@ static void vp_layout_get_property(GObject *object, guint property_id, GValue *v
 static void vp_layout_destroy(GObject *obj)
 {
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
-	gtk_widget_destroy0(self->start_box);
-	gtk_widget_destroy0(self->end_box);
-	gtk_widget_destroy0(self->center_box);
+	gtk_widget_destroy(self->start_box);
+	gtk_widget_destroy(self->end_box);
+	gtk_widget_destroy(self->center_box);
 	g_clear_pointer(&self->applets, g_hash_table_unref);
 	g_clear_pointer(&self->toplevel_id, g_free);
 	G_OBJECT_CLASS(vp_layout_parent_class)->dispose(obj);

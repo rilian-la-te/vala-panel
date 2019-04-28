@@ -400,7 +400,7 @@ static void vala_panel_app_finalize(GObject *object)
 	g_free0(app->shutdown_command);
 	g_clear_object(&app->provider);
 	g_free0(app->profile);
-	(*G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize)(object);
+	G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize(object);
 }
 
 static void vala_panel_app_set_property(GObject *object, uint id, const GValue *value,

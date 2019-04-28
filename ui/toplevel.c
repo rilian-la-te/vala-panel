@@ -349,6 +349,7 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 {
 	if (GTK_IS_WIDGET(self->pref_dialog))
 		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
+	self->pref_dialog = NULL;
 }
 
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)

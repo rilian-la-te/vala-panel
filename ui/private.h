@@ -17,6 +17,7 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self);
 G_GNUC_INTERNAL bool vp_toplevel_release_event_helper(GtkWidget *_sender, GdkEventButton *b,
                                                       gpointer obj);
 
+/* From platform.h */
 G_GNUC_INTERNAL ValaPanelAppletManager *vp_platform_get_manager(ValaPanelPlatform *self);
 
 G_END_DECLS

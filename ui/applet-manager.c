@@ -20,11 +20,10 @@
 #include "config.h"
 #include "definitions.h"
 
-static AppletInfoData *applet_info_data_new(ValaPanelAppletInfo *info, GType plugin_type)
+static AppletInfoData *applet_info_data_new(ValaPanelAppletInfo *info)
 {
 	AppletInfoData *ret = (AppletInfoData *)g_slice_alloc0(sizeof(AppletInfoData));
 	ret->info           = info;
-	ret->applet_type    = plugin_type;
 	ret->count          = 0;
 	return ret;
 }
@@ -58,19 +57,14 @@ void vp_applet_manager_reload_applets(ValaPanelAppletManager *self)
 		const char *module_name = g_io_extension_get_name((GIOExtension *)i->data);
 		if (!g_hash_table_contains(self->ainfo_table, module_name))
 		{
-			ValaPanelAppletInfo *info = vala_panel_applet_info_load(module_name);
-			GType plugin_type    = g_io_extension_get_type((GIOExtension *)i->data);
-			AppletInfoData *data = applet_info_data_new(info, plugin_type);
-			if (info != NULL && plugin_type != G_TYPE_NONE)
-			{
+			GType plugin_type = g_io_extension_get_type((GIOExtension *)i->data);
+			ValaPanelAppletInfo *info =
+			    vala_panel_applet_info_load(module_name, plugin_type);
+			AppletInfoData *data = applet_info_data_new(info);
+			if (info != NULL)
 				g_hash_table_insert(self->ainfo_table, g_strdup(module_name), data);
-			}
 			else
-			{
-				if (info)
-					vala_panel_applet_info_free(info);
 				applet_info_data_free(data);
-			}
 		}
 	}
 }
@@ -97,10 +91,7 @@ void vp_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *na
 		AppletInfoData *data =
 		    (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, name);
 		if (data != NULL && data->count > 0)
-		{
 			data->count -= 1;
-			return;
-		}
 	}
 	return;
 }
@@ -116,29 +107,32 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAp
 	if (!data)
 		return NULL;
 
+	GType applet_type = vala_panel_applet_info_get_stored_type(data->info);
 	ValaPanelApplet *applet =
-	    vala_panel_applet_construct(data->applet_type, top, applet_settings, uuid);
+	    vala_panel_applet_construct(applet_type, top, applet_settings, uuid);
 	if (VALA_PANEL_IS_APPLET(applet))
 		return applet;
 	return NULL;
-}
-
-static AppletInfoData *vp_applet_manager_get_info_data(ValaPanelAppletManager *self,
-                                                       ValaPanelApplet *pl,
-                                                       ValaPanelCoreSettings *core_settings)
-{
-	ValaPanelUnitSettings *settings =
-	    vp_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
-	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
-	return (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, str);
 }
 
 ValaPanelAppletInfo *vp_applet_manager_get_applet_info(ValaPanelAppletManager *self,
                                                        ValaPanelApplet *pl,
                                                        ValaPanelCoreSettings *core_settings)
 {
-	AppletInfoData *data = vp_applet_manager_get_info_data(self, pl, core_settings);
+	ValaPanelUnitSettings *settings =
+	    vp_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
+	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
+	AppletInfoData *data = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, str);
 	return data->info;
+}
+
+G_GNUC_INTERNAL bool vp_applet_manager_is_applet_available(ValaPanelAppletManager *self,
+                                                           const char *module_name)
+{
+	AppletInfoData *d = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, module_name);
+	if ((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info))
+		return true;
+	return false;
 }
 
 GList *vp_applet_manager_get_all_types(ValaPanelAppletManager *self)

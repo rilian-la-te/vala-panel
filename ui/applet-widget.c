@@ -338,22 +338,22 @@ static void vala_panel_applet_finalize(GObject *obj)
 }
 static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 {
-	((ValaPanelAppletClass *)klass)->update_context_menu =
+	VALA_PANEL_APPLET_CLASS(klass)->update_context_menu =
 	    vala_panel_applet_update_context_menu_private;
-	((ValaPanelAppletClass *)klass)->remote_command  = NULL;
-	((ValaPanelAppletClass *)klass)->get_settings_ui = vala_panel_applet_get_config_dialog;
-	((GtkWidgetClass *)klass)->parent_set            = vala_panel_applet_parent_set;
-	((GtkWidgetClass *)klass)->get_preferred_height_for_width =
+	VALA_PANEL_APPLET_CLASS(klass)->remote_command  = NULL;
+	VALA_PANEL_APPLET_CLASS(klass)->get_settings_ui = vala_panel_applet_get_config_dialog;
+	GTK_WIDGET_CLASS(klass)->parent_set             = vala_panel_applet_parent_set;
+	GTK_WIDGET_CLASS(klass)->get_preferred_height_for_width =
 	    vala_panel_applet_get_preferred_height_for_width;
-	((GtkWidgetClass *)klass)->get_preferred_width_for_height =
+	GTK_WIDGET_CLASS(klass)->get_preferred_width_for_height =
 	    vala_panel_applet_get_preferred_width_for_height;
-	((GtkWidgetClass *)klass)->get_request_mode     = vala_panel_applet_get_request_mode;
-	((GtkWidgetClass *)klass)->get_preferred_width  = vala_panel_applet_get_preferred_width;
-	((GtkWidgetClass *)klass)->get_preferred_height = vala_panel_applet_get_preferred_height;
-	G_OBJECT_CLASS(klass)->constructor              = vala_panel_applet_constructor;
-	G_OBJECT_CLASS(klass)->get_property             = vala_panel_applet_get_property;
-	G_OBJECT_CLASS(klass)->set_property             = vala_panel_applet_set_property;
-	G_OBJECT_CLASS(klass)->finalize                 = vala_panel_applet_finalize;
+	GTK_WIDGET_CLASS(klass)->get_request_mode     = vala_panel_applet_get_request_mode;
+	GTK_WIDGET_CLASS(klass)->get_preferred_width  = vala_panel_applet_get_preferred_width;
+	GTK_WIDGET_CLASS(klass)->get_preferred_height = vala_panel_applet_get_preferred_height;
+	G_OBJECT_CLASS(klass)->constructor            = vala_panel_applet_constructor;
+	G_OBJECT_CLASS(klass)->get_property           = vala_panel_applet_get_property;
+	G_OBJECT_CLASS(klass)->set_property           = vala_panel_applet_set_property;
+	G_OBJECT_CLASS(klass)->finalize               = vala_panel_applet_finalize;
 	applet_specs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
 	    g_param_spec_object(VP_KEY_BACKGROUND_WIDGET,
 	                        VP_KEY_BACKGROUND_WIDGET,

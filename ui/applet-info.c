@@ -36,6 +36,7 @@
 
 struct _ValaPanelAppletInfo
 {
+	GType type;
 	char *module_name;
 	char *name;
 	char *description;
@@ -60,7 +61,7 @@ static GtkLicense vp_applet_info_get_lic_from_name(const char *license_name)
 	return val ? (GtkLicense)val->value : GTK_LICENSE_LGPL_3_0;
 }
 
-ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
+ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name, GType plugin_type)
 {
 	g_autoptr(GKeyFile) file      = g_key_file_new();
 	g_autofree char *desktop_name = g_strdup_printf(PLUGINS_DATA "/%s.plugin", extension_name);
@@ -69,10 +70,11 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name)
 	    g_key_file_load_from_file(file, desktop_name, G_KEY_FILE_KEEP_TRANSLATIONS, &err);
 	if (err)
 		g_critical("%s: %s\n", desktop_name, err->message);
-	if (!loaded || err)
+	if (!loaded || err || !G_TYPE_IS_CLASSED(plugin_type))
 		return NULL;
 	struct _ValaPanelAppletInfo *ret =
 	    (struct _ValaPanelAppletInfo *)g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
+	ret->type        = plugin_type;
 	char *tmp        = g_key_file_get_locale_string(file, INFO_GROUP, INFO_NAME, NULL, NULL);
 	ret->module_name = g_strdup(extension_name);
 	ret->name        = fb(tmp, g_strdup(_("Applet")));
@@ -103,6 +105,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = (struct _ValaPanelAppletInfo *)info;
 	struct _ValaPanelAppletInfo *ret   = g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
+	ret->type                          = ainfo->type;
 	ret->module_name                   = g_strdup(ainfo->module_name);
 	ret->name                          = g_strdup(ainfo->name);
 	ret->description                   = g_strdup(ainfo->description);
@@ -140,6 +143,12 @@ void vala_panel_applet_info_free(void *info)
 
 G_DEFINE_BOXED_TYPE(ValaPanelAppletInfo, vala_panel_applet_info,
                     (GBoxedCopyFunc)vala_panel_applet_info_duplicate, vala_panel_applet_info_free)
+
+GType vala_panel_applet_info_get_stored_type(ValaPanelAppletInfo *info)
+{
+	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
+	return ainfo->type;
+}
 
 const char *vala_panel_applet_info_get_module_name(ValaPanelAppletInfo *info)
 {

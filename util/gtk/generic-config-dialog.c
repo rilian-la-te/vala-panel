@@ -153,6 +153,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				    g_markup_printf_escaped("<span style=\"italic\">%s</span>",
 				                            name);
 				gtk_label_set_markup(GTK_LABEL(entry), markup);
+				g_object_ref_sink(label);
 				g_clear_object(&label);
 				break;
 			}
