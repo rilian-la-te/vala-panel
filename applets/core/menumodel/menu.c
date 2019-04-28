@@ -212,7 +212,7 @@ static void menumodel_widget_destroy(MenuApplet *self)
 		g_source_remove(self->monitor_update_idle);
 	if (self->show_system_menu_idle)
 		g_source_remove(self->show_system_menu_idle);
-	if (self->button)
+	if (GTK_IS_WIDGET(self->button))
 	{
 		g_signal_handlers_disconnect_by_data(top, self->button);
 		g_signal_handlers_disconnect_by_data(self->button, self);
