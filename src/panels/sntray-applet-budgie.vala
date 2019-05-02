@@ -30,8 +30,8 @@ public class SNApplet : Budgie.Plugin, Peas.ExtensionBase
 public class SNTray: Budgie.Applet
 {
     unowned ItemBox widget;
-	GLib.Settings settings;
-	public string uuid { public set ; public get; }
+    GLib.Settings settings;
+    public string uuid { public set ; public get; }
     public override Gtk.Widget? get_settings_ui()
     {
         var dlg = new ConfigWidget(widget);
@@ -42,15 +42,15 @@ public class SNTray: Budgie.Applet
     public override bool supports_settings()
     {
         return true;
-	}
-	public SNTray (string uuid)
+    }
+    public SNTray (string uuid)
     {
-		Object(uuid: uuid);
+        Object(uuid: uuid);
         var layout = new ItemBox();
         widget = layout;
-		settings_schema = "org.valapanel.sntray";
-		settings_prefix = "/com/solus-project/budgie-panel/instance/sntray";
-		settings = get_applet_settings(uuid);
+        settings_schema = "org.valapanel.sntray";
+        settings_prefix = "/com/solus-project/budgie-panel/instance/sntray";
+        settings = get_applet_settings(uuid);
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_COMM,layout,SHOW_COMM,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_SYS,layout,SHOW_SYS,SettingsBindFlags.DEFAULT);
@@ -68,12 +68,19 @@ public class SNTray: Budgie.Applet
                                    (SettingsBindGetMappingShared)get_vardict,
                                    (SettingsBindSetMappingShared)set_vardict,
                                    (void*)"b",null);
-        layout.orientation = Orientation.VERTICAL; //Budgie does not support vertical panels now
-		panel_size_changed.connect((p,i,s)=> {
-			layout.indicator_size = (int)i;
-		});
+        layout.orientation = Orientation.VERTICAL; //Just setup
+        panel_size_changed.connect((p,i,s)=> {
+            layout.indicator_size = (int)s;
+        });
         this.add(layout);
         show_all();
+    }
+    protected override void panel_position_changed(Budgie.PanelPosition position)
+    {
+        if (position == Budgie.PanelPosition.LEFT || position == Budgie.PanelPosition.RIGHT)
+            widget.orientation = Gtk.Orientation.HORIZONTAL;
+        else
+            widget.orientation = Gtk.Orientation.VERTICAL;
     }
     private static bool get_vardict(Value val, Variant variant,void* data)
     {
