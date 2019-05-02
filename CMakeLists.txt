@@ -51,7 +51,7 @@ add_feature_info(MATE ENABLE_MATE "MATE Panel Integration")
 
 find_package(PEAS 1.14 COMPONENTS PEAS)
 pkg_check_modules(VALAPANEL vala-panel>=0.4.89 IMPORTED_TARGET)
-pkg_check_modules(BUDGIE budgie-1.0 IMPORTED_TARGET)
+pkg_check_modules(BUDGIE budgie-1.0>=2 IMPORTED_TARGET)
 
 cmake_dependent_option(ENABLE_VALAPANEL "Enable Vala Panel Integration" ON
     "VALAPANEL_FOUND" OFF)
