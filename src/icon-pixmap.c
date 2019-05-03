@@ -147,8 +147,8 @@ GIcon *icon_pixmap_select_icon(const char *icon_name, IconPixmap *pixmap, GtkIco
 	else if (pixmap != NULL)
 	{
 		GdkPixbuf *pixbuf = GDK_PIXBUF(icon_pixmap_to_gicon(pixmap));
-		if (gdk_pixbuf_get_width(pixbuf) > icon_size ||
-		    gdk_pixbuf_get_height(pixbuf) > icon_size)
+		if (pixbuf && (gdk_pixbuf_get_width(pixbuf) > icon_size ||
+		               gdk_pixbuf_get_height(pixbuf) > icon_size))
 		{
 			GdkPixbuf *tmp = gdk_pixbuf_scale_simple(pixbuf,
 			                                         icon_size,
