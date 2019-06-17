@@ -65,7 +65,7 @@ core_inc = include_directories('.')
 plugin_conf_kwargs = {
     'type': 'desktop',
     'po_dir': join_paths(meson.current_source_dir(),'po'),
-    'args' : ['--keyword=Description','--keyword=Help'],
+    'args' : ['--keyword=Name','--keyword=Description','--keyword=Help'],
     'install': true,
     'install_dir': applets_datadir
 }
