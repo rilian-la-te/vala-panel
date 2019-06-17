@@ -55,7 +55,7 @@ vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: app
 libvalapanel = declare_dependency(
 	link_with: ui_lib,
 	dependencies: [util_gtk,vala_panel_dep],
-	include_directories: ui_inc,
+	include_directories: [core_inc, ui_inc],
 )
 
 install_headers(ui_headers, subdir : meson.project_name())
