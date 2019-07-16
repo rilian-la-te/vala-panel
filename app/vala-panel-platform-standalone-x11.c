@@ -311,6 +311,12 @@ static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, Pane
 {
 	ValaPanelPlatformX11 *pl = VALA_PANEL_PLATFORM_X11(self);
 	int edge                 = vala_panel_edge_from_gravity(gravity);
+	bool strut               = true;
+	g_object_get(top, VP_KEY_STRUT, &strut, NULL);
+	if (!strut)
+	{
+		return strut;
+	}
 	for (g_autoptr(GList) w = gtk_application_get_windows(pl->app); w != NULL; w = w->next)
 		if (VALA_PANEL_IS_TOPLEVEL(w))
 		{
