@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.0 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
   <object class="GtkAdjustment" id="adjustment-corners">
@@ -58,6 +58,9 @@
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -536,6 +539,30 @@
                       <packing>
                         <property name="left_attach">0</property>
                         <property name="top_attach">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">Do not cover panel by other windows:</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">6</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="sw-strut">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="halign">center</property>
+                        <property name="action_name">win.strut</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">6</property>
                       </packing>
                     </child>
                   </object>
@@ -1038,9 +1065,6 @@
           </packing>
         </child>
       </object>
-    </child>
-    <child type="titlebar">
-      <placeholder/>
     </child>
   </template>
 </interface>
