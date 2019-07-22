@@ -2,14 +2,14 @@ stages:
   - build
   - release
 
-#before_script:
-#  - mkdir -p _ccache
-#  - export CCACHE_BASEDIR=${PWD}
-#  - export CCACHE_DIR=${PWD}/_ccache
+before_script:
+  - mkdir -p _ccache
+  - export CCACHE_BASEDIR=${PWD}
+  - export CCACHE_DIR=${PWD}/_ccache
 
-#cache:
-#  paths:
-#    - _ccache/
+cache:
+  paths:
+    - _ccache/
 
 build-arch-cmake:
   image: archlinux/base
