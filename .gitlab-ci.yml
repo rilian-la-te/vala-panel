@@ -8,6 +8,7 @@ before_script:
   - export CCACHE_DIR=${PWD}/_ccache
 
 cache:
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
     - _ccache/
 

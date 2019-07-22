@@ -34,9 +34,9 @@ ui_enums_gen = gnome.mkenums(
   install_dir: join_paths(includedir, meson.project_name()),
 )
 ui_res = gnome.compile_resources(
-    'ui', 'libvalapanel.gresource.xml',
+    'ui_res', 'libvalapanel.gresource.xml',
     source_dir: 'data',
-    c_name: 'ui'
+    c_name: 'ui_res'
 )
 ui_inc = include_directories('.')
 
