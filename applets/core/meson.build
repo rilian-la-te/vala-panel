@@ -27,7 +27,7 @@ foreach plugin : plugin_list
         )
     endif
     plugin_module = shared_module(plugin,
-                    sources, res, config,
+                    sources, res, config, version,
                     dependencies: [libvalapanel, posix_dep],
                     install: true,
                     install_dir: applets_libdir
