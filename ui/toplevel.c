@@ -703,8 +703,7 @@ static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *sel
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
 	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
-	if (self->strut)
-		vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
+	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
 }
