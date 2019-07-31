@@ -263,7 +263,7 @@ static int xfce_arrow_button_draw(GtkWidget *widget, cairo_t *cr)
 			gtk_render_arrow(context, cr, angle, x, y, width);
 	}
 
-	return true;
+	return false;
 }
 
 static void xfce_arrow_button_measure(GtkWidget *widget, GtkOrientation orientation,
