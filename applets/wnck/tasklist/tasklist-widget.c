@@ -3545,10 +3545,10 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
 	/* get the class group icon */
 	if (group_child->type == CHILD_TYPE_GROUP_MENU)
 		pixbuf = wnck_class_group_get_mini_icon(class_group);
-	
+
 	if (!pixbuf)
 		pixbuf = wnck_class_group_get_icon(class_group);
-	if(!pixbuf)
+	if (!pixbuf)
 		pixbuf = wnck_class_group_get_mini_icon(class_group);
 
 	/* check if all the windows in the group are minimized */
@@ -3577,10 +3577,13 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
 	if (G_LIKELY(pixbuf != NULL))
 	{
 		if (gdk_pixbuf_get_width(pixbuf) > icon_size)
-		new_pixbuf =
-		    gdk_pixbuf_scale_simple(pixbuf, icon_size, icon_size, GDK_INTERP_BILINEAR);
+			new_pixbuf = gdk_pixbuf_scale_simple(pixbuf,
+			                                     icon_size,
+			                                     icon_size,
+			                                     GDK_INTERP_BILINEAR);
 
-		gtk_image_set_from_pixbuf(GTK_IMAGE(group_child->icon), new_pixbuf ? new_pixbuf : pixbuf);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(group_child->icon),
+		                          new_pixbuf ? new_pixbuf : pixbuf);
 		gtk_image_set_pixel_size(GTK_IMAGE(group_child->icon), icon_size);
 	}
 	else
