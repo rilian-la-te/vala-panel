@@ -395,9 +395,9 @@ static int plugin_list_sort(GtkListBoxRow *before, GtkListBoxRow *after, void *u
 	ValaPanelLayout *layout      = VALA_PANEL_LAYOUT(user_data);
 	ValaPanelApplet *before_info = before ? config_row_get_applet(before) : NULL;
 	ValaPanelApplet *after_info  = after ? config_row_get_applet(after) : NULL;
-	uint bpos                    = vp_layout_get_applet_position(layout, before_info);
-	uint apos                    = vp_layout_get_applet_position(layout, after_info);
-	uint bi                      = vp_layout_get_applet_pack_type(before_info);
+	uint bpos = before_info ? vp_layout_get_applet_position(layout, before_info) : 0;
+	uint apos = after_info ? vp_layout_get_applet_position(layout, after_info) : UINT_MAX;
+	uint bi   = before_info ? vp_layout_get_applet_pack_type(before_info) : PACK_START;
 
 	if (before_info != NULL && after_info != NULL &&
 	    vp_layout_get_applet_pack_type(before_info) !=
@@ -653,7 +653,7 @@ static void on_remove_plugin(GtkButton *btn, void *user_data)
 	int index              = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
 	GtkListBoxRow *sel_row = gtk_list_box_get_selected_row(self->plugin_list);
 	int sel_index          = sel_row ? gtk_list_box_row_get_index(sel_row) : -1;
-	g_clear_object(&row);
+	gtk_container_remove(GTK_CONTAINER(self->plugin_list), row);
 	g_clear_object(&w);
 	if (index == sel_index)
 		gtk_list_box_select_row(self->plugin_list,
