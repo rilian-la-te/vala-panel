@@ -1,4 +1,3 @@
-image: archlinux/base
 stages:
   - build
   - release
@@ -6,17 +5,19 @@ before_script:
   - mkdir -p _ccache
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/_ccache
-  - pacman -Syy --noconfirm glibc libwnck3 gtk3 vala cmake git base-devel clang ninja xfce4-panel mate-panel budgie-desktop gobject-introspection
-  - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-  - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
-  - git clone https://gitlab.com/vala-panel-project/vala-panel.git
-  - cd vala-panel && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf vala-panel
 cache:
   paths:
     - _ccache/
+
 build:
+  image: archlinux/base
   stage: build
   script:
+   - pacman -Syy --noconfirm glibc libwnck3 gtk3 vala cmake git base-devel clang ninja xfce4-panel mate-panel budgie-desktop gobject-introspection
+   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
+   - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
+   - git clone https://gitlab.com/vala-panel-project/vala-panel.git
+   - cd vala-panel && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf vala-panel
    - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
    - ninja
    - ninja install
