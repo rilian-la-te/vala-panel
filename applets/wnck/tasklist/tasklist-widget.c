@@ -218,7 +218,7 @@ struct _XfceTasklistChild
 	uint unique_id;
 
 	/* last time this window was focused */
-	GTimeVal last_focused;
+	int64_t last_focused;
 
 	/* list of windows in case of a group button */
 	GSList *windows;
@@ -756,14 +756,10 @@ static int xfce_tasklist_size_sort_window(gconstpointer a, gconstpointer b)
 {
 	const XfceTasklistChild *child_a = a;
 	const XfceTasklistChild *child_b = b;
-	glong diff;
+	int64_t diff;
 
-	diff = child_a->last_focused.tv_sec - child_b->last_focused.tv_sec;
-	if (diff != 0)
-		return CLAMP(diff, -1, 1);
-
-	diff = child_a->last_focused.tv_usec - child_b->last_focused.tv_usec;
-	return CLAMP(diff, -1, 1);
+	diff = child_a->last_focused - child_b->last_focused;
+	return (int)CLAMP(diff, -1, 1);
 }
 
 static void xfce_tasklist_size_layout(XfceTasklist *tasklist, GtkAllocation *alloc, int *n_rows,
@@ -1452,7 +1448,7 @@ static void xfce_tasklist_active_window_changed(WnckScreen *screen, WnckWindow *
 		/* update timestamp for window */
 		if (child->window == active_window)
 		{
-			g_get_current_time(&child->last_focused);
+			child->last_focused = g_get_monotonic_time();
 			/* the active window is in a group, so find the group button */
 			if (child->type == CHILD_TYPE_GROUP_MENU)
 			{
@@ -3519,7 +3515,7 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
                                                     XfceTasklistChild *group_child)
 {
 	GtkStyleContext *context;
-	GdkPixbuf *pixbuf = NULL;
+	GdkPixbuf *pixbuf               = NULL;
 	g_autoptr(GdkPixbuf) new_pixbuf = NULL;
 	GSList *li;
 	XfceTasklistChild *child;
