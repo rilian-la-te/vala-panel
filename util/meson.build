@@ -24,6 +24,13 @@ util = declare_dependency(
 	dependencies : [giounix,glib,gio],
 	include_directories: [core_inc, util_inc],
 )
+
+util_with = declare_dependency(
+	link_with: util_lib,
+	dependencies : [giounix,glib,gio],
+	include_directories: [core_inc, util_inc],
+)
+
 install_headers(util_headers, subdir : meson.project_name())
 
 subdir('gtk')
