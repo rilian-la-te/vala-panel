@@ -42,8 +42,6 @@
 #define VALA_PANEL_PLUGIN_SCHEMA "org.valapanel.toplevel.plugin"
 #define VALA_PANEL_TOPLEVEL_ID "toplevel-id"
 #define VP_KEY_NAME "plugin-type"
-#define VP_KEY_EXPAND "is-expanded"
-#define VP_KEY_CAN_EXPAND "can-expand"
 #define VP_KEY_PACK "pack-type"
 #define VP_KEY_POSITION "position"
 
