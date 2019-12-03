@@ -42,7 +42,7 @@ ui_inc = include_directories('.')
 
 ui_lib = library(library_name,
              ui_headers, ui_sources, ui_res, ui_enums_gen, version,
-             dependencies: [util, util_gtk],
+             dependencies: util_gtk,
              include_directories: ui_inc,
              version: meson.project_version(),
              c_args: ['-DG_SETTINGS_ENABLE_BACKEND'],
@@ -54,7 +54,7 @@ vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: app
 
 libvalapanel = declare_dependency(
 	link_with: ui_lib,
-	dependencies: [util,util_gtk,vala_panel_dep],
+	dependencies: [util_gtk,vala_panel_dep],
 	include_directories: [core_inc, ui_inc],
 )
 
