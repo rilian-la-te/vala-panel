@@ -35,7 +35,7 @@ util_gtk_lib = static_library(
 
 util_gtk = declare_dependency(
 	link_whole: util_gtk_lib,
-	dependencies: [util, gmodule, gtk, m],
+	dependencies: [util_h, gmodule, gtk, m],
 	include_directories: util_gtk_inc,
 )
 
