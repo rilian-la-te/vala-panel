@@ -277,6 +277,8 @@ G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApp
 	g_autofree char *uuid        = g_strdup(vala_panel_applet_get_uuid(applet));
 	uint pos                     = vp_layout_get_applet_position(self, applet);
 	ValaPanelAppletPackType type = vp_layout_get_applet_pack_type(applet);
+	ValaPanelUnitSettings *unit  = vp_core_settings_get_by_uuid(core_settings, uuid);
+	g_signal_handlers_disconnect_by_data(unit->common, applet);
 	gtk_widget_destroy(GTK_WIDGET(applet));
 	vp_layout_applets_reposition_after(self, type, pos, GTK_PACK_START);
 	vp_core_settings_remove_unit_settings_full(core_settings, uuid, true);

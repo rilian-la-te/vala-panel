@@ -176,13 +176,18 @@ G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings(
 	return vp_core_settings_add_unit_settings_full(settings, name, uuid, is_toplevel);
 }
 
+G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
+                                                                    const char *uuid)
+{
+	return (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, uuid);
+}
+
 G_GNUC_INTERNAL void vp_core_settings_remove_unit_settings_full(ValaPanelCoreSettings *settings,
                                                                 const char *name, bool destroy)
 {
 	if (destroy)
 	{
-		ValaPanelUnitSettings *removing_unit =
-		    (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, name);
+		ValaPanelUnitSettings *removing_unit = vp_core_settings_get_by_uuid(settings, name);
 		vala_panel_reset_schema_with_children(removing_unit->common);
 		vala_panel_reset_schema_with_children(removing_unit->type);
 		if (removing_unit->custom != NULL)
@@ -194,12 +199,6 @@ G_GNUC_INTERNAL void vp_core_settings_remove_unit_settings_full(ValaPanelCoreSet
 		vp_core_settings_sync(settings);
 		g_settings_sync();
 	}
-}
-
-G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_get_by_uuid(ValaPanelCoreSettings *settings,
-                                                                    const char *uuid)
-{
-	return (ValaPanelUnitSettings *)g_hash_table_lookup(settings->all_units, uuid);
 }
 
 G_GNUC_INTERNAL bool vp_core_settings_init_unit_list(ValaPanelCoreSettings *settings)
