@@ -46,10 +46,11 @@ static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
 
-static const GActionEntry panel_entries[] =
-    { { "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
-      { "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
-      { "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } } };
+static const GActionEntry panel_entries[] = {
+	{ "new-panel", activate_new_panel, NULL, NULL, NULL, { 0 } },
+	{ "remove-panel", activate_remove_panel, NULL, NULL, NULL, { 0 } },
+	{ "panel-settings", activate_panel_settings, "s", NULL, NULL, { 0 } }
+};
 
 enum
 {
