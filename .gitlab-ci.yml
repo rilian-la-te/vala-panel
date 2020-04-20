@@ -17,6 +17,7 @@ build-arch-cmake:
   stage: build
   script:
    - pacman -Syy --noconfirm glibc libffi libwnck3 gtk3 vala cmake git base-devel clang ninja
+   - ln -sf /usr/lib/libffi.so.7 /usr/lib/libffi.so.6
    - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
    - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
    - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
