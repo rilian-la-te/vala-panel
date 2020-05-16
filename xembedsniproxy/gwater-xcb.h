@@ -27,8 +27,8 @@
 #define __G_WATER_XCB_H__
 
 #include <glib.h>
-#include <xcb/xcb.h>
 #include <stdbool.h>
+#include <xcb/xcb.h>
 
 G_BEGIN_DECLS
 
