@@ -12,21 +12,6 @@ cache:
   paths:
     - _ccache/
 
-build-arch-cmake:
-  image: archlinux/base
-  stage: build
-  script:
-   - pacman -Syy --noconfirm glibc libffi libwnck3 gtk3 vala cmake git base-devel clang ninja
-   - ln -sf /usr/lib/libffi.so.7 /usr/lib/libffi.so.6
-   - git clone https://gitlab.com/vala-panel-project/cmake-vala.git
-   - cd cmake-vala && cmake . -DCMAKE_INSTALL_PREFIX=/usr -GNinja && ninja install && cd .. && rm -rf cmake-vala
-   - mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -GNinja
-   - ninja && ninja install && ninja dist
-  artifacts:
-    paths:
-    - "build/vala-panel*.tar.xz"
-    expire_in: 1 week
-
 build-alpine-meson:
   image: alpine:edge
   stage: build
@@ -45,6 +30,6 @@ release-main:
   script:
     - apk add --no-cache python3 py3-pip
     - pip3 install gitlab_release
-    - python3 -m gitlab_release ${PRIVATE_TOKEN} build/vala-panel*.tar.xz
+    - python3 -m gitlab_release ${PRIVATE_TOKEN} bld/meson-dist/vala-panel*.tar.xz
   only:
     - tags
