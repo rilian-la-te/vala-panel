@@ -216,13 +216,13 @@ static void menumodel_widget_destroy(MenuApplet *self)
 	{
 		if (self->button)
 			g_signal_handlers_disconnect_by_data(self->int_menu, self->button);
-		gtk_widget_destroy(GTK_WIDGET(self->int_menu));
+		g_clear_object(&self->int_menu);
 	}
 	if (GTK_IS_WIDGET(self->button))
 	{
 		g_signal_handlers_disconnect_by_data(top, self->button);
 		g_signal_handlers_disconnect_by_data(self->button, self);
-		gtk_widget_destroy(GTK_WIDGET(self->button));
+		g_clear_object(&self->button);
 	}
 	if (G_IS_OBJECT(self->menu))
 		g_clear_object(&self->menu);

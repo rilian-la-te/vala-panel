@@ -21,7 +21,7 @@
 #include "settings-manager.h"
 
 static ValaPanelCoreSettings *core_settings;
-static ValaPanelAppletManager *manager;
+static VPManager *manager;
 
 enum
 {
@@ -144,7 +144,7 @@ static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
 	const char *uuid         = vala_panel_applet_get_uuid(self);
 	ValaPanelUnitSettings *s = vp_core_settings_get_by_uuid(core_settings, uuid);
 	g_autofree char *name    = g_settings_get_string(s->common, VP_KEY_NAME);
-	vp_applet_manager_applet_unref(manager, name);
+	vp_manager_applet_unref(manager, name);
 	if (gtk_widget_in_destruction(GTK_WIDGET(layout)))
 		vp_core_settings_remove_unit_settings(core_settings, uuid);
 	else
@@ -251,7 +251,7 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 	if (name == NULL)
 		return NULL;
 	ValaPanelToplevel *top  = vp_layout_get_toplevel(self);
-	ValaPanelApplet *applet = vp_applet_manager_get_applet_widget(manager, name, top, s);
+	ValaPanelApplet *applet = vp_manager_get_applet_widget(manager, name, top, s);
 	if (!applet)
 		return NULL;
 	bool nonfloat = g_object_is_floating(applet) ? false : true;
@@ -279,7 +279,7 @@ G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApp
 	ValaPanelAppletPackType type = vp_layout_get_applet_pack_type(applet);
 	ValaPanelUnitSettings *unit  = vp_core_settings_get_by_uuid(core_settings, uuid);
 	g_signal_handlers_disconnect_by_data(unit->common, applet);
-	gtk_widget_destroy(GTK_WIDGET(applet));
+	g_clear_object(&applet);
 	vp_layout_applets_reposition_after(self, type, pos, GTK_PACK_START);
 	vp_core_settings_remove_unit_settings_full(core_settings, uuid, true);
 	vp_layout_update_applet_positions(self);
@@ -321,7 +321,7 @@ G_GNUC_INTERNAL uint vp_layout_get_applet_position(G_GNUC_UNUSED ValaPanelLayout
 	return (uint)res;
 }
 
-G_GNUC_INTERNAL ValaPanelAppletManager *vp_layout_get_manager()
+G_GNUC_INTERNAL VPManager *vp_layout_get_manager()
 {
 	return manager;
 }
@@ -335,7 +335,7 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_layout_insert_applet(ValaPanelLayout *self, 
 	vp_layout_applets_reposition_after(self, pack, pos, GTK_PACK_END);
 	g_settings_set_enum(s->common, VP_KEY_PACK, (int)pack);
 	g_settings_set_uint(s->common, VP_KEY_POSITION, pos);
-	vp_applet_manager_reload_applets(manager);
+	vp_manager_reload_applets(manager);
 	ValaPanelApplet *applet = vp_layout_place_applet(self, type, s);
 	vp_layout_update_applet_positions(self);
 	return applet;
@@ -495,9 +495,9 @@ static void vp_layout_get_property(GObject *object, guint property_id, GValue *v
 static void vp_layout_destroy(GObject *obj)
 {
 	ValaPanelLayout *self = VALA_PANEL_LAYOUT(obj);
-	gtk_widget_destroy0(self->start_box);
-	gtk_widget_destroy0(self->end_box);
-	gtk_widget_destroy0(self->center_box);
+	g_clear_object(&self->start_box);
+	g_clear_object(&self->end_box);
+	g_clear_object(&self->center_box);
 	g_clear_pointer(&self->applets, g_hash_table_unref);
 	g_clear_pointer(&self->toplevel_id, g_free);
 	G_OBJECT_CLASS(vp_layout_parent_class)->dispose(obj);
@@ -534,10 +534,8 @@ static void vp_layout_init(ValaPanelLayout *self)
 	                       self->end_box,
 	                       "orientation",
 	                       G_BINDING_SYNC_CREATE);
-	self->applets = g_hash_table_new_full(g_str_hash,
-	                                      g_str_equal,
-	                                      g_free,
-	                                      (GDestroyNotify)gtk_widget_destroy);
+	self->applets =
+	    g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_object_unref);
 }
 
 static void vp_layout_class_init(ValaPanelLayoutClass *klass)

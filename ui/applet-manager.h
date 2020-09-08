@@ -24,7 +24,7 @@
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
-G_DECLARE_FINAL_TYPE(ValaPanelAppletManager, vp_applet_manager, VP, APPLET_MANAGER, GObject)
+G_DECLARE_FINAL_TYPE(VPManager, vp_manager, VP, MANAGER, GObject)
 
 typedef struct
 {
@@ -32,18 +32,16 @@ typedef struct
 	uint count;
 } AppletInfoData;
 
-G_GNUC_INTERNAL ValaPanelAppletManager *vp_applet_manager_new(void);
-G_GNUC_INTERNAL void vp_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *name);
-G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAppletManager *self,
-                                                                     const char *type,
-                                                                     ValaPanelToplevel *top,
-                                                                     ValaPanelUnitSettings *s);
-G_GNUC_INTERNAL ValaPanelAppletInfo *vp_applet_manager_get_applet_info(
-    ValaPanelAppletManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
-G_GNUC_INTERNAL void vp_applet_manager_reload_applets(ValaPanelAppletManager *self);
-G_GNUC_INTERNAL GList *vp_applet_manager_get_all_types(ValaPanelAppletManager *self);
-G_GNUC_INTERNAL bool vp_applet_manager_is_applet_available(ValaPanelAppletManager *self,
-                                                           const char *module_name);
+G_GNUC_INTERNAL VPManager *vp_manager_new(void);
+G_GNUC_INTERNAL void vp_manager_applet_unref(VPManager *self, const char *name);
+G_GNUC_INTERNAL ValaPanelApplet *vp_manager_get_applet_widget(VPManager *self, const char *type,
+                                                              ValaPanelToplevel *top,
+                                                              ValaPanelUnitSettings *s);
+G_GNUC_INTERNAL ValaPanelAppletInfo *vp_manager_get_applet_info(
+    VPManager *self, ValaPanelApplet *pl, ValaPanelCoreSettings *core_settings);
+G_GNUC_INTERNAL void vp_manager_reload_applets(VPManager *self);
+G_GNUC_INTERNAL GList *vp_manager_get_all_types(VPManager *self);
+G_GNUC_INTERNAL bool vp_manager_is_applet_available(VPManager *self, const char *module_name);
 
 G_END_DECLS
 

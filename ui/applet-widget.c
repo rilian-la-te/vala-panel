@@ -113,11 +113,10 @@ static void activate_remote(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVar
 static void activate_about(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
                            gpointer obj)
 {
-	ValaPanelApplet *self = VALA_PANEL_APPLET(obj);
-	ValaPanelAppletInfo *pl_info =
-	    vp_applet_manager_get_applet_info(vp_layout_get_manager(),
-	                                      self,
-	                                      vp_toplevel_get_core_settings());
+	ValaPanelApplet *self        = VALA_PANEL_APPLET(obj);
+	ValaPanelAppletInfo *pl_info = vp_manager_get_applet_info(vp_layout_get_manager(),
+	                                                          self,
+	                                                          vp_toplevel_get_core_settings());
 	vala_panel_applet_info_show_about_dialog(pl_info);
 }
 static void activate_remove(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,

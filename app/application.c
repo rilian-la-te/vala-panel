@@ -599,9 +599,9 @@ static void activate_about(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GV
 	gtk_about_dialog_set_version(d, VERSION);
 	gtk_window_set_position(GTK_WINDOW(d), GTK_WIN_POS_CENTER);
 	gtk_window_present(GTK_WINDOW(d));
-	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
-	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);
-	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "destroy", G_CALLBACK(g_object_unref), NULL);
+	g_signal_connect(d, "response", G_CALLBACK(g_object_unref), NULL);
+	g_signal_connect(d, "hide", G_CALLBACK(g_object_unref), NULL);
 }
 
 static void activate_run(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,

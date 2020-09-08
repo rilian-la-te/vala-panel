@@ -241,7 +241,7 @@ void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
 {
 	GtkDialog *d = vala_panel_applet_info_get_about_dialog(info);
 	gtk_window_present(GTK_WINDOW(d));
-	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
-	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);
-	g_signal_connect(d, "hide", G_CALLBACK(gtk_widget_destroy), NULL);
+	g_signal_connect(d, "destroy", G_CALLBACK(g_object_unref), NULL);
+	g_signal_connect(d, "response", G_CALLBACK(g_object_unref), NULL);
+	g_signal_connect(d, "hide", G_CALLBACK(g_object_unref), NULL);
 }

@@ -2887,7 +2887,7 @@ static void xfce_tasklist_button_activate(XfceTasklistChild *child, u_int32_t ti
 					/* switch to the other workspace before we activate the
 					 * window */
 					wnck_workspace_activate(workspace, timestamp);
-					gtk_main_iteration();
+					g_main_context_iteration(g_main_context_default(), false);
 				}
 			}
 			else if (workspace != NULL && wnck_workspace_is_virtual(workspace) &&

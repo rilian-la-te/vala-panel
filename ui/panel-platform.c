@@ -24,7 +24,7 @@
 typedef struct
 {
 	ValaPanelCoreSettings *core_settings;
-	ValaPanelAppletManager *manager;
+	VPManager *manager;
 	GHashTable *toplevels;
 } ValaPanelPlatformPrivate;
 
@@ -98,7 +98,7 @@ ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 	return priv->core_settings;
 }
 
-G_GNUC_INTERNAL ValaPanelAppletManager *vp_platform_get_manager(ValaPanelPlatform *self)
+G_GNUC_INTERNAL VPManager *vp_platform_get_manager(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
@@ -128,7 +128,7 @@ static void vala_panel_platform_init(ValaPanelPlatform *self)
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	priv->core_settings = NULL;
-	priv->manager       = vp_applet_manager_new();
+	priv->manager       = vp_manager_new();
 	priv->toplevels     = g_hash_table_new_full(g_direct_hash,
                                                 g_direct_equal,
                                                 (GDestroyNotify)gtk_widget_destroy,
