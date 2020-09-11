@@ -53,7 +53,7 @@ G_GNUC_INTERNAL ValaPanelUnitSettings *vp_layout_get_applet_settings(ValaPanelAp
 G_GNUC_INTERNAL ValaPanelAppletPackType vp_layout_get_applet_pack_type(ValaPanelApplet *pl);
 G_GNUC_INTERNAL unsigned int vp_layout_get_applet_position(ValaPanelLayout *self,
                                                            ValaPanelApplet *pl);
-G_GNUC_INTERNAL VPManager *vp_layout_get_manager(void);
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_layout_get_manager(void);
 
 G_END_DECLS
 

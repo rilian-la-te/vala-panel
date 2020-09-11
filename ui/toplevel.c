@@ -125,7 +125,7 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_toplevel_get_core_settings()
 {
 	return vala_panel_platform_get_settings(platform);
 }
-G_GNUC_INTERNAL VPManager *vp_toplevel_get_manager()
+G_GNUC_INTERNAL ValaPanelAppletManager *vp_toplevel_get_manager()
 {
 	return vp_platform_get_manager(platform);
 }
@@ -702,11 +702,11 @@ static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *sel
 		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
-		g_main_context_iteration(g_main_context_default(), false);
+		gtk_main_iteration_do(false);
 	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
 	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
 	while (gtk_events_pending())
-		g_main_context_iteration(g_main_context_default(), false);
+		gtk_main_iteration_do(false);
 }
 
 static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)

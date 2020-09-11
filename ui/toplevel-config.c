@@ -330,9 +330,9 @@ static void vp_toplevel_config_set_property(GObject *object, guint property_id, 
 
 static ValaPanelAppletInfo *get_info_from_applet(ValaPanelApplet *pl)
 {
-	return vp_manager_get_applet_info(vp_layout_get_manager(),
-	                                  pl,
-	                                  vp_toplevel_get_core_settings());
+	return vp_applet_manager_get_applet_info(vp_layout_get_manager(),
+	                                         pl,
+	                                         vp_toplevel_get_core_settings());
 }
 
 static GtkListBoxRow *create_info_representation(ValaPanelAppletInfo *pl_info)
@@ -366,12 +366,13 @@ static GtkListBoxRow *create_info_representation(ValaPanelAppletInfo *pl_info)
 static GtkListBoxRow *create_applet_representation(ValaPanelToplevelConfig *self,
                                                    ValaPanelApplet *pl)
 {
-	ValaPanelAppletInfo *pl_info = vp_manager_get_applet_info(vp_layout_get_manager(),
-	                                                          pl,
-	                                                          vp_toplevel_get_core_settings());
-	GtkListBoxRow *row           = create_info_representation(pl_info);
-	GtkBox *box                  = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
-	GtkWidget *button            = gtk_button_new();
+	ValaPanelAppletInfo *pl_info =
+	    vp_applet_manager_get_applet_info(vp_layout_get_manager(),
+	                                      pl,
+	                                      vp_toplevel_get_core_settings());
+	GtkListBoxRow *row = create_info_representation(pl_info);
+	GtkBox *box        = GTK_BOX(gtk_bin_get_child(GTK_BIN(row)));
+	GtkWidget *button  = gtk_button_new();
 	GtkWidget *image = gtk_image_new_from_icon_name("list-remove-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_widget_show(image);
 	gtk_container_add(GTK_CONTAINER(button), image);
@@ -583,8 +584,8 @@ static void listbox_new_applet_row_activated(G_GNUC_UNUSED GtkListBox *box, GtkL
 static int listbox_new_filter(GtkListBoxRow *row, G_GNUC_UNUSED void *data)
 {
 	ValaPanelAppletInfo *d = config_row_get_info(row);
-	return vp_manager_is_applet_available(vp_layout_get_manager(),
-	                                      vala_panel_applet_info_get_module_name(d));
+	return vp_applet_manager_is_applet_available(vp_layout_get_manager(),
+	                                             vala_panel_applet_info_get_module_name(d));
 }
 
 static void destroy(GtkWidget *applet, G_GNUC_UNUSED void *data)
@@ -596,9 +597,9 @@ static void available_plugins_reload(ValaPanelToplevelConfig *self)
 {
 	/* Populate list of available plugins.
 	 * Omit plugins that can only exist once per system if it is already configured. */
-	vp_manager_reload_applets(vp_layout_get_manager());
+	vp_applet_manager_reload_applets(vp_layout_get_manager());
 	gtk_container_foreach(GTK_CONTAINER(self->listbox_new_applet), (GtkCallback)destroy, NULL);
-	GList *all_types = vp_manager_get_all_types(vp_layout_get_manager());
+	GList *all_types = vp_applet_manager_get_all_types(vp_layout_get_manager());
 	for (GList *l = all_types; l != NULL; l = g_list_next(l))
 	{
 		AppletInfoData *d  = (AppletInfoData *)l->data;
