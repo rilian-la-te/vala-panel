@@ -75,9 +75,27 @@ static void activate_restart(GSimpleAction *simple, GVariant *param, gpointer da
 
 static const GOptionEntry entries[] = {
 	{ "version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version and exit"), NULL },
-	{ "profile", 'p', 0, G_OPTION_ARG_STRING, NULL, PROFILE_TR, N_("profile") },
-	{ "command", 'c', 0, G_OPTION_ARG_STRING, NULL, COMMAND_DES_TR, N_("cmd") },
-	{ "remote-command", 'r', 0, G_OPTION_ARG_STRING_ARRAY, NULL, REMOTE_DES_TR, N_("cmd") },
+	{ "profile",
+	  'p',
+	  0,
+	  G_OPTION_ARG_STRING,
+	  NULL,
+	  PROFILE_TR,
+	  N_("Profile is a config file name. Default is \"default\"") },
+	{ "command",
+	  'c',
+	  0,
+	  G_OPTION_ARG_STRING,
+	  NULL,
+	  COMMAND_DES_TR,
+	  N_("A command for main vala-panel executable.") },
+	{ "remote-command",
+	  'r',
+	  0,
+	  G_OPTION_ARG_STRING_ARRAY,
+	  NULL,
+	  REMOTE_DES_TR,
+	  N_("A command for a plugin.") },
 	{ NULL }
 };
 

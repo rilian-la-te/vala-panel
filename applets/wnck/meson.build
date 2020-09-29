@@ -20,7 +20,7 @@ foreach plugin : plugin_list
                     kwargs: wnck_kwargs,
                  )
     i18n.merge_file(
-        input: '@0@/org.valapanel.@1@.desktop.plugin.in'.format(plugin, plugin),
+        input: '@0@/org.valapanel.@1@.desktop.in'.format(plugin, plugin),
         output: 'org.valapanel.@0@.plugin'.format(plugin),
         kwargs: plugin_conf_kwargs
     )

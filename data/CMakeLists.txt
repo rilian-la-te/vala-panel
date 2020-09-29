@@ -1,6 +1,0 @@
-add_subdirectory(gschemas)
-add_subdirectory(profiles)
-add_subdirectory(images)
-add_subdirectory(man)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/desktop/org.valapanel.application.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/desktop/org.valapanel.application.appdata.xml DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo)

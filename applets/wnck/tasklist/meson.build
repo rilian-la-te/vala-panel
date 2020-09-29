@@ -12,7 +12,7 @@ tasklist = shared_module( 'tasklist-xfce',
                      )
 
 i18n.merge_file(
-  input: 'org.xfce.tasklist.desktop.plugin.in',
+  input: 'org.xfce.tasklist.desktop.in',
   output: 'org.xfce.tasklist.plugin',
   kwargs: plugin_conf_kwargs
 )
