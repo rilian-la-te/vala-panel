@@ -1,3 +1,4 @@
 [Plugin]
 Name=Pager
 Description=Shows desktops.
+Platforms=x11

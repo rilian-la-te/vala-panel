@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "applet-manager.h"
 #include "applet-info.h"
 #include "config.h"
 #include "definitions.h"
+#include "private.h"
 
 static AppletInfoData *applet_info_data_new(ValaPanelAppletInfo *info)
 {
@@ -130,7 +130,14 @@ G_GNUC_INTERNAL bool vp_applet_manager_is_applet_available(ValaPanelAppletManage
                                                            const char *module_name)
 {
 	AppletInfoData *d = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, module_name);
-	if ((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info))
+	bool platform_available      = false;
+	ValaPanelPlatform *platform  = vp_toplevel_get_current_platform();
+	const char *const *platforms = vala_panel_applet_info_get_platforms(d->info);
+	if (platforms && g_strv_contains(platforms, "all"))
+		platform_available = true;
+	if (platforms && g_strv_contains(platforms, vala_panel_platform_get_name(platform)))
+		platform_available = true;
+	if (((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info)) && platform_available)
 		return true;
 	return false;
 }

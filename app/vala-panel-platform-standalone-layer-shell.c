@@ -25,6 +25,8 @@
 #include "server.h"
 #include "vala-panel-platform-standalone-layer-shell.h"
 
+#define VALA_PANEL_CONFIG_HEADER "global"
+
 struct _ValaPanelPlatformLayer
 {
 	ValaPanelPlatform __parent__;
@@ -125,6 +127,11 @@ static void monitor_removed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 {
 	g_signal_handlers_disconnect_by_data(mon, data);
 	update_toplevel_geometry_for_all(scr, data);
+}
+
+static const char *vpp_layer_get_name(ValaPanelPlatform *obj)
+{
+	return "layer-shell";
 }
 
 static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplication *app,
@@ -260,6 +267,7 @@ static void vala_panel_platform_layer_init(G_GNUC_UNUSED ValaPanelPlatformLayer 
 
 static void vala_panel_platform_layer_class_init(ValaPanelPlatformLayerClass *klass)
 {
+	VALA_PANEL_PLATFORM_CLASS(klass)->get_name     = vpp_layer_get_name;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vpp_layer_move_to_side;
 	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vpp_layer_update_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vpp_layer_edge_can_strut;

@@ -67,6 +67,13 @@ bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char 
 	return vp_core_settings_init_unit_list(priv->core_settings);
 }
 
+const char *vala_panel_platform_get_name(ValaPanelPlatform *self)
+{
+	if (self)
+		return VALA_PANEL_PLATFORM_GET_CLASS(self)->get_name(self);
+	return "";
+}
+
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile)
 {

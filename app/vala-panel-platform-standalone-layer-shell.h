@@ -22,8 +22,6 @@
 #include "panel-platform.h"
 #include <glib-object.h>
 
-#define VALA_PANEL_CONFIG_HEADER "global"
-
 G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(ValaPanelPlatformLayer, vala_panel_platform_layer, VALA_PANEL, PLATFORM_LAYER,

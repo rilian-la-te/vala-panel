@@ -33,6 +33,7 @@
 #define INFO_LICENSE "License"
 #define INFO_VERSION "Version"
 #define INFO_EXCLUSIVE "Exclusive"
+#define INFO_PLATFORMS "Platforms"
 
 struct _ValaPanelAppletInfo
 {
@@ -45,6 +46,7 @@ struct _ValaPanelAppletInfo
 	char *website;
 	char *help_uri;
 	char *version;
+	char **platforms;
 	bool exclusive;
 	GtkLicense license;
 };
@@ -87,6 +89,8 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name, GTy
 	g_key_file_set_list_separator(file, ';');
 	GStrv tmp_list = g_key_file_get_string_list(file, INFO_GROUP, INFO_AUTHORS, NULL, NULL);
 	ret->authors   = fb(tmp_list, g_strsplit("Konstantin <ria.freelander@gmail.com>;", ";", 0));
+	tmp_list       = g_key_file_get_string_list(file, INFO_GROUP, INFO_PLATFORMS, NULL, NULL);
+	ret->platforms = fb(tmp_list, g_strsplit("all;", ";", 0));
 	tmp            = g_key_file_get_string(file, INFO_GROUP, INFO_WEBSITE, NULL);
 	ret->website   = fb(tmp, g_strdup("https://gitlab.com/vala-panel-project/vala-panel"));
 	tmp            = g_key_file_get_locale_string(file, INFO_GROUP, INFO_HELP_URI, NULL, NULL);
@@ -119,6 +123,15 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	}
 	else
 		ret->authors = NULL;
+	if (ainfo->platforms)
+	{
+		u_int32_t len  = g_strv_length(ainfo->platforms);
+		ret->platforms = g_new0(char *, len + 1);
+		for (uint i = 0; i < len; i++)
+			ret->platforms[i] = g_strdup(ainfo->platforms[i]);
+	}
+	else
+		ret->platforms = NULL;
 	ret->website   = g_strdup(ainfo->website);
 	ret->help_uri  = g_strdup(ainfo->help_uri);
 	ret->license   = ainfo->license;
@@ -135,6 +148,7 @@ void vala_panel_applet_info_free(void *info)
 	g_clear_pointer(&ainfo->description, g_free);
 	g_clear_pointer(&ainfo->icon_name, g_free);
 	g_clear_pointer(&ainfo->authors, g_strfreev);
+	g_clear_pointer(&ainfo->platforms, g_strfreev);
 	g_clear_pointer(&ainfo->website, g_free);
 	g_clear_pointer(&ainfo->help_uri, g_free);
 	g_clear_pointer(&ainfo->version, g_free);
@@ -178,6 +192,12 @@ const char *const *vala_panel_applet_info_get_authors(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return (const char *const *)ainfo->authors;
+}
+
+const char *const *vala_panel_applet_info_get_platforms(ValaPanelAppletInfo *info)
+{
+	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
+	return (const char *const *)ainfo->platforms;
 }
 
 const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info)
