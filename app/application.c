@@ -22,7 +22,16 @@
 #include "application.h"
 #include "panel-layout.h"
 #include "server.h"
+#include "vala-panel-platform-standalone-layer-shell.h"
 #include "vala-panel-platform-standalone-x11.h"
+
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
+
+#ifdef GDK_WINDOWING_WAYLAND
+#include <gdk/gdkwayland.h>
+#endif
 
 #include <glib/gi18n.h>
 #include <locale.h>
@@ -349,8 +358,16 @@ static bool load_settings(ValaPanelApplication *app)
 			return false;
 		}
 	}
-	app->platform =
-	    VALA_PANEL_PLATFORM(vala_panel_platform_x11_new(GTK_APPLICATION(app), app->profile));
+#ifdef PLATFORM_LAYER_SHELL
+	if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default()))
+		app->platform = VALA_PANEL_PLATFORM(
+		    vala_panel_platform_layer_new(GTK_APPLICATION(app), app->profile));
+#endif
+#ifdef PLATFORM_X11
+	if (GDK_IS_X11_DISPLAY(gdk_display_get_default()))
+		app->platform = VALA_PANEL_PLATFORM(
+		    vala_panel_platform_x11_new(GTK_APPLICATION(app), app->profile));
+#endif
 	ValaPanelCoreSettings *s         = vala_panel_platform_get_settings(app->platform);
 	GSettingsBackend *config_backend = s->backend;
 	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_BASE_SCHEMA,
