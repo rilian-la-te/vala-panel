@@ -53,14 +53,16 @@ giounix = dependency('gio-unix-2.0', version: glib_ver)
 gmodule = dependency('gmodule-2.0', version: glib_ver)
 gtk_ver = '>=3.22'
 gtk = dependency('gtk+-3.0', version: gtk_ver)
+platforms_opt = get_option('platforms')
+auto_platforms = (get_option('platforms') == ['auto'])
+gdk_x11 = dependency('gdk-x11-3.0', version: gtk_ver, required: platforms_opt.contains('x11'))
+gdk_wayland = dependency('gdk-wayland-3.0', version: gtk_ver, required: platforms_opt.contains('layer-shell'))
+gtk_layer_shell = dependency('gtk-layer-shell-0', required: platforms_opt.contains('layer-shell'))
 platforms = {
-    'x11': get_option('platforms').contains('x11'),
-    'layer-shell': get_option('platforms').contains('layer-shell')
+    'x11': platforms_opt.contains('x11') or (auto_platforms and gdk_x11.found()),
+    'layer-shell': platforms_opt.contains('layer-shell') or (auto_platforms and gdk_wayland.found() and gtk_layer_shell.found()),
     }
 assert(platforms['x11'] or platforms['layer-shell'], 'No platform available')
-gdk_x11 = dependency('gdk-x11-3.0', version: gtk_ver, required: platforms['x11'])
-gdk_wayland = dependency('gdk-wayland-3.0', version: gtk_ver, required: platforms['layer-shell'])
-gtk_layer_shell = dependency('gtk-layer-shell-0', required: platforms['layer-shell'])
 cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
