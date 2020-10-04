@@ -328,11 +328,9 @@ G_GNUC_INTERNAL bool vp_toplevel_release_event_helper(GtkWidget *_sender, GdkEve
 	if (e->button == 3)
 	{
 		GtkMenu *menu = vala_panel_toplevel_get_plugin_menu(self, pl);
-		gtk_menu_popup_at_widget(menu,
-		                         GTK_WIDGET(_sender),
-		                         GDK_GRAVITY_NORTH,
-		                         GDK_GRAVITY_NORTH,
-		                         (GdkEvent *)e);
+		GdkGravity menug, widget;
+		vala_panel_toplevel_get_menu_anchors(self, &menug, &widget);
+		gtk_menu_popup_at_widget(menu, GTK_WIDGET(_sender), widget, menug, (GdkEvent *)e);
 		return true;
 	}
 	return false;
@@ -351,6 +349,39 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 	if (GTK_IS_WIDGET(self->pref_dialog))
 		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
 	self->pref_dialog = NULL;
+}
+
+void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
+                                          GdkGravity *widget_anchor)
+{
+	PanelGravity gravity = self->gravity;
+	switch (gravity)
+	{
+	case NORTH_LEFT:
+	case NORTH_CENTER:
+	case NORTH_RIGHT:
+		*widget_anchor = GDK_GRAVITY_NORTH;
+		*menu_anchor   = GDK_GRAVITY_SOUTH;
+		break;
+	case SOUTH_LEFT:
+	case SOUTH_CENTER:
+	case SOUTH_RIGHT:
+		*menu_anchor   = GDK_GRAVITY_NORTH;
+		*widget_anchor = GDK_GRAVITY_SOUTH;
+		break;
+	case WEST_UP:
+	case WEST_CENTER:
+	case WEST_DOWN:
+		*widget_anchor = GDK_GRAVITY_NORTH_WEST;
+		*menu_anchor   = GDK_GRAVITY_NORTH_EAST;
+		break;
+	case EAST_UP:
+	case EAST_CENTER:
+	case EAST_DOWN:
+		*menu_anchor   = GDK_GRAVITY_NORTH_WEST;
+		*widget_anchor = GDK_GRAVITY_NORTH_EAST;
+		break;
+	}
 }
 
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
