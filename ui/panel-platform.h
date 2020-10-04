@@ -61,6 +61,8 @@ typedef enum
 struct _ValaPanelPlatformClass
 {
 	GObjectClass __parent__;
+	/*name*/
+	const char *(*get_name)(ValaPanelPlatform *self);
 	/*loading*/
 	bool (*start_panels_from_profile)(ValaPanelPlatform *self, GtkApplication *app,
 	                                  const char *profile);
@@ -82,6 +84,7 @@ bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend
 bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
+GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon);
 
 /* Toplevel registration and destruction */
 void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit);
@@ -89,6 +92,7 @@ void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *uni
 bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self);
 
 /* Virtual functions */
+const char *vala_panel_platform_get_name(ValaPanelPlatform *self);
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile);
 bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);

@@ -39,6 +39,7 @@ const char *vala_panel_applet_info_get_name(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_description(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_icon_name(ValaPanelAppletInfo *info);
 const char *const *vala_panel_applet_info_get_authors(ValaPanelAppletInfo *info);
+const char *const *vala_panel_applet_info_get_platforms(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_help_uri(ValaPanelAppletInfo *info);
 GtkLicense vala_panel_applet_info_get_license(ValaPanelAppletInfo *info);

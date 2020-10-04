@@ -286,6 +286,10 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	                                panel_entries,
 	                                G_N_ELEMENTS(panel_entries),
 	                                self);
+}
+
+void vala_panel_toplevel_init_ui(ValaPanelToplevel *self)
+{
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
 }
@@ -324,11 +328,9 @@ G_GNUC_INTERNAL bool vp_toplevel_release_event_helper(GtkWidget *_sender, GdkEve
 	if (e->button == 3)
 	{
 		GtkMenu *menu = vala_panel_toplevel_get_plugin_menu(self, pl);
-		gtk_menu_popup_at_widget(menu,
-		                         GTK_WIDGET(_sender),
-		                         GDK_GRAVITY_NORTH,
-		                         GDK_GRAVITY_NORTH,
-		                         (GdkEvent *)e);
+		GdkGravity menug, widget;
+		vala_panel_toplevel_get_menu_anchors(self, &menug, &widget);
+		gtk_menu_popup_at_widget(menu, GTK_WIDGET(_sender), widget, menug, (GdkEvent *)e);
 		return true;
 	}
 	return false;
@@ -347,6 +349,39 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 	if (GTK_IS_WIDGET(self->pref_dialog))
 		gtk_widget_destroy(GTK_WIDGET(self->pref_dialog));
 	self->pref_dialog = NULL;
+}
+
+void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
+                                          GdkGravity *widget_anchor)
+{
+	PanelGravity gravity = self->gravity;
+	switch (gravity)
+	{
+	case NORTH_LEFT:
+	case NORTH_CENTER:
+	case NORTH_RIGHT:
+		*widget_anchor = GDK_GRAVITY_NORTH;
+		*menu_anchor   = GDK_GRAVITY_SOUTH;
+		break;
+	case SOUTH_LEFT:
+	case SOUTH_CENTER:
+	case SOUTH_RIGHT:
+		*menu_anchor   = GDK_GRAVITY_NORTH;
+		*widget_anchor = GDK_GRAVITY_SOUTH;
+		break;
+	case WEST_UP:
+	case WEST_CENTER:
+	case WEST_DOWN:
+		*widget_anchor = GDK_GRAVITY_NORTH_WEST;
+		*menu_anchor   = GDK_GRAVITY_NORTH_EAST;
+		break;
+	case EAST_UP:
+	case EAST_CENTER:
+	case EAST_DOWN:
+		*menu_anchor   = GDK_GRAVITY_NORTH_WEST;
+		*widget_anchor = GDK_GRAVITY_NORTH_EAST;
+		break;
+	}
 }
 
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
@@ -605,6 +640,7 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 	ret->mon               = mon;
 	ret->gravity           = edge;
 	init_actions(ret, true);
+	vala_panel_toplevel_init_ui(ret);
 	return ret;
 }
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
@@ -636,12 +672,10 @@ static void measure(GtkWidget *w, GtkOrientation orient, G_GNUC_UNUSED int for_s
                     int *nat, int *base_min, int *base_nat)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(w);
-	GdkDisplay *screen      = gtk_widget_get_display(w);
 	GdkRectangle marea      = { 0, 0, 0, 0 };
-	if (self->mon < 0)
-		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
-	else if (self->mon < gdk_display_get_n_monitors(screen))
-		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	GdkMonitor *mon         = vala_panel_platform_get_suitable_monitor(w, self->mon);
+	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
+		gdk_monitor_get_geometry(mon, &marea);
 	int scrw = vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
 	               ? marea.width
 	               : marea.height;
@@ -694,12 +728,10 @@ static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 }
 static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *self)
 {
-	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self));
 	GdkRectangle marea = { 0 };
-	if (self->mon < 0)
-		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
-	else if (self->mon < gdk_display_get_n_monitors(screen))
-		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	GdkMonitor *mon    = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(self), self->mon);
+	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
+		gdk_monitor_get_geometry(mon, &marea);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
@@ -895,6 +927,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 	uint icon_size_value       = 24;
 	int mons                   = 1;
 	PangoFontDescription *desc = pango_font_description_from_string(self->font);
+	bool realized              = gtk_widget_get_realized(GTK_WIDGET(self));
 
 	switch (property_id)
 	{
@@ -1020,7 +1053,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
-	if (geometry_update_required)
+	if (geometry_update_required && realized)
 		vala_panel_toplevel_update_geometry(self);
 	if (appearance_update_required)
 		update_appearance(self);

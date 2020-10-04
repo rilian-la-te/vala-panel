@@ -1,3 +1,4 @@
 [Plugin]
 Name=Window Buttons
 Description=Shows window buttons (such as minimize, maximize and close).
+Platforms=x11
