@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 17:54+0300\n"
-"PO-Revision-Date: 2020-09-29 18:20+0300\n"
+"POT-Creation-Date: 2020-10-05 01:29+0300\n"
+"PO-Revision-Date: 2020-10-05 01:30+0300\n"
 "Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: app/app-about.ui:11
@@ -36,40 +36,40 @@ msgstr ""
 "Alexander Kazancev <kazancas@mandiriva.ru>\n"
 "Константин (Рилиан) <ria.freelander@gmail.com>"
 
-#: app/application.c:31
+#: app/application.c:40
 msgid "Use specified profile"
 msgstr "Использовать специфичный профиль"
 
-#: app/application.c:32
+#: app/application.c:41
 msgid "Run command on already opened panel"
 msgstr "Выполнить команду на открытом приложении"
 
-#: app/application.c:33
+#: app/application.c:42
 msgid "Run remote command on panel applet"
 msgstr "Выполнить удаленную команду апплета панели"
 
-#: app/application.c:77
+#: app/application.c:86
 msgid "Print version and exit"
 msgstr "Показать версию и выйти"
 
-#: app/application.c:84
+#: app/application.c:93
 msgid "Profile is a config file name. Default is \"default\""
 msgstr "Профиль - наименование файла конфигурации. По умолчанию \"default\""
 
-#: app/application.c:91
+#: app/application.c:100
 msgid "A command for main vala-panel executable."
 msgstr "Команда для главного исполняемого файла панели."
 
-#: app/application.c:98
+#: app/application.c:107
 msgid "A command for a plugin."
 msgstr "Команда для плагина."
 
-#: app/application.c:248
+#: app/application.c:257
 #, c-format
 msgid "%s - Version %s\n"
 msgstr "%s - Версия %s\n"
 
-#: app/application.c:280
+#: app/application.c:289
 #, c-format
 msgid ""
 "%s: invalid command - %s. Doing nothing.\n"
@@ -78,7 +78,7 @@ msgstr ""
 "%s: неверная команда - %s. Ничего не выполнено.\n"
 "Список команд: %s\n"
 
-#: app/application.c:293
+#: app/application.c:302
 #, c-format
 msgid ""
 "%s: invalid remote command - %s. Remote commands should have exactly 2 "
@@ -87,7 +87,7 @@ msgstr ""
 "%s: неверная удаленная команда - %s. Удаленная команда должна иметь ровно 2 "
 "аргумента\n"
 
-#: app/application.c:576
+#: app/application.c:593
 msgid "No panel with this name found.\n"
 msgstr "Не найдено панели с таким именем.\n"
 
@@ -158,6 +158,10 @@ msgstr ""
 "Некоторые из бывших плагинов LXPanel теперь являются отдельными исполняемыми "
 "файлами и находятся в отдельном пакете (например, апплет громкости)"
 
+#: data/desktop/org.valapanel.application.appdata.xml.in:30
+msgid "Konstantin"
+msgstr "Константин"
+
 #: data/desktop/org.valapanel.application.desktop.in:4
 msgid "Vala Panel"
 msgstr "Vala Panel"
@@ -169,10 +173,6 @@ msgstr "Панель рабочего стола"
 #: data/desktop/org.valapanel.application.desktop.in:7
 msgid "panel;launcher;menu;tasklist"
 msgstr "panel;launcher;menu;tasklist"
-
-#: data/desktop/org.valapanel.application.desktop.in:9
-msgid "vala-panel"
-msgstr "vala-panel"
 
 #: data/ui/panel-menus.ui:6
 msgid "Configure applet..."
@@ -218,123 +218,131 @@ msgstr "Основной"
 msgid "Panel preferences"
 msgstr "Настройки панели"
 
-#: data/ui/pref.ui:111
+#: data/ui/pref.ui:108
 msgid "Edge:"
 msgstr "Расположение:"
 
-#: data/ui/pref.ui:126
+#: data/ui/pref.ui:123
 msgid "Advanced properties"
 msgstr "Дополнительные настройки"
 
-#: data/ui/pref.ui:143
+#: data/ui/pref.ui:140
 msgid "Count as dock:"
 msgstr "Считать доком:"
 
-#: data/ui/pref.ui:167
+#: data/ui/pref.ui:164
 msgid "Placement properties"
 msgstr "Настройки размещения"
 
-#: data/ui/pref.ui:344
+#: data/ui/pref.ui:341
 msgid "Monitor:"
 msgstr "Монитор:"
 
-#: data/ui/pref.ui:404
+#: data/ui/pref.ui:401
 msgid "Position"
 msgstr "Позиция"
 
-#: data/ui/pref.ui:430
+#: data/ui/pref.ui:427
 msgid "Icon size in px:"
 msgstr "Размер значков в px:"
 
-#: data/ui/pref.ui:442
+#: data/ui/pref.ui:439
 msgid "Height in px:"
 msgstr "Толщина в px:"
 
-#: data/ui/pref.ui:467
+#: data/ui/pref.ui:464
 msgid "Width:"
 msgstr "Длина:"
 
-#: data/ui/pref.ui:491
+#: data/ui/pref.ui:488
 msgid "Size properties"
 msgstr "Настройки размера"
 
-#: data/ui/pref.ui:508
+#: data/ui/pref.ui:505
 msgid "Automatic hide panel"
 msgstr "Настройки автоскрытия"
 
-#: data/ui/pref.ui:537
+#: data/ui/pref.ui:534
 msgid "Autohide:"
 msgstr "Автоскрытие:"
 
-#: data/ui/pref.ui:549
+#: data/ui/pref.ui:546
 msgid "Do not cover panel by other windows:"
 msgstr "Поверх всех окон:"
 
-#: data/ui/pref.ui:571 applets/core/separator/separator.vala:59
+#: data/ui/pref.ui:568 applets/core/separator/separator.vala:59
 msgid "Size"
 msgstr "Размер"
 
-#: data/ui/pref.ui:587
+#: data/ui/pref.ui:584
 msgid "Foreground color:"
 msgstr "Цвет шрифта:"
 
-#: data/ui/pref.ui:599
+#: data/ui/pref.ui:596
 msgid "Background image:"
 msgstr "Фоновое изображение:"
 
-#: data/ui/pref.ui:611
+#: data/ui/pref.ui:608
 msgid "Background color:"
 msgstr "Цвет фона:"
 
-#: data/ui/pref.ui:623
+#: data/ui/pref.ui:620
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: data/ui/pref.ui:635
+#: data/ui/pref.ui:632
 msgid "Round corners size:"
 msgstr "Радиус угла:"
 
-#: data/ui/pref.ui:711
+#: data/ui/pref.ui:708
 msgid "Select background color"
 msgstr "Выберите цвет фона"
 
-#: data/ui/pref.ui:725
+#: data/ui/pref.ui:722
 msgid "Select foreground color"
 msgstr "Выберите цвет шрифта"
 
-#: data/ui/pref.ui:738
+#: data/ui/pref.ui:735
 msgid "Select an Image"
 msgstr "Выберите изображение"
 
-#: data/ui/pref.ui:757
+#: data/ui/pref.ui:754
 msgid "Select panel font"
 msgstr "Выберите шрифт панели"
 
-#: data/ui/pref.ui:769
+#: data/ui/pref.ui:766
 msgid "Size only"
 msgstr "Только размер"
 
-#: data/ui/pref.ui:793
+#: data/ui/pref.ui:790
 msgid "Use toolbar appearance:"
 msgstr "Использовать тему панели инструментов:"
 
-#: data/ui/pref.ui:821 applets/wnck/tasklist/config.ui:242
+#: data/ui/pref.ui:818 applets/wnck/tasklist/config.ui:242
 msgid "Appearance"
 msgstr "Внешний вид"
 
-#: data/ui/pref.ui:967
+#: data/ui/pref.ui:901
+msgid ""
+"Click here to add a new applet\n"
+"(opens a list of available applets)"
+msgstr ""
+"Нажмите для добавления апплета\n"
+"(появится список доступных апплетов)"
+
+#: data/ui/pref.ui:966
 msgid "No settings available"
 msgstr "Настройки недоступны"
 
-#: data/ui/pref.ui:977
+#: data/ui/pref.ui:976
 msgid "No Settings"
 msgstr "Нет настроек"
 
-#: data/ui/pref.ui:1003
+#: data/ui/pref.ui:1002
 msgid "New Applet"
 msgstr "Новый апплет"
 
-#: data/ui/pref.ui:1049
+#: data/ui/pref.ui:1048
 msgid "Applets"
 msgstr "Апплеты"
 
@@ -350,11 +358,11 @@ msgstr "Команда для запуска"
 msgid "Enter application name..."
 msgstr "Введите команду..."
 
-#: ui/applet-info.c:80
+#: ui/applet-info.c:82
 msgid "Applet"
 msgstr "Апплет"
 
-#: ui/applet-info.c:84
+#: ui/applet-info.c:86
 msgid "Vala Panel Applet"
 msgstr "Апплет Vala Panel"
 
@@ -370,16 +378,16 @@ msgstr "По центру"
 msgid "End"
 msgstr "К концу"
 
-#: ui/toplevel.c:428
+#: ui/toplevel.c:463
 msgid "There is no room for another panel. All the edges are taken."
 msgstr "Нет места для новой панели. Все стороны экрана заняты."
 
-#: ui/toplevel.c:430 util/gtk/misc-gtk.c:155
+#: ui/toplevel.c:465 util/gtk/misc-gtk.c:155
 #: applets/core/launchbar/launchbar-config.vala:212
 msgid "Error"
 msgstr "Ошибка"
 
-#: ui/toplevel.c:456
+#: ui/toplevel.c:491
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning:This can not be recovered.</b>"
@@ -387,7 +395,7 @@ msgstr ""
 "Вы точно хотите удалить панель?\n"
 "<b>Внимание: это необратимая операция.</b>"
 
-#: ui/toplevel.c:459 util/gtk/misc-gtk.c:169
+#: ui/toplevel.c:494 util/gtk/misc-gtk.c:169
 msgid "Confirm"
 msgstr "Подтвердить"
 
@@ -443,7 +451,7 @@ msgid "Label"
 msgstr "Метка"
 
 #: applets/core/dirmenu/dirmenu.vala:197 applets/core/launchbar/config.ui:134
-#: applets/core/menumodel/menu.c:455
+#: applets/core/menumodel/menu.c:454
 msgid "Icon"
 msgstr "Значок"
 
@@ -610,7 +618,7 @@ msgstr "Переход"
 msgid "Vala Panel - "
 msgstr "Vala Panel - "
 
-#: applets/core/menumodel/menu.c:442
+#: applets/core/menumodel/menu.c:441
 msgid ""
 "If internal menu is enabled, menu file will not be used,\n"
 " predefeined menu will be used instead."
@@ -618,23 +626,23 @@ msgstr ""
 "Если включено, то будет использовано \n"
 " встроенное меню, файл использован не будет."
 
-#: applets/core/menumodel/menu.c:446
+#: applets/core/menumodel/menu.c:445
 msgid "Is internal menu"
 msgstr "Использовать встроенное меню"
 
-#: applets/core/menumodel/menu.c:449
+#: applets/core/menumodel/menu.c:448
 msgid "Is system menu (can be keybound)"
 msgstr "Считать системным (привязывается к команде панели)"
 
-#: applets/core/menumodel/menu.c:452
+#: applets/core/menumodel/menu.c:451
 msgid "Is Menubar"
 msgstr "Является панелью меню"
 
-#: applets/core/menumodel/menu.c:458
+#: applets/core/menumodel/menu.c:457
 msgid "Caption (for button only)"
 msgstr "Название (только для кнопки)"
 
-#: applets/core/menumodel/menu.c:461
+#: applets/core/menumodel/menu.c:460
 msgid "Menu file name"
 msgstr "Имя файла меню"
 
@@ -958,6 +966,9 @@ msgstr "Показывать названия задач"
 msgid "Tasklist"
 msgstr "Панель задач"
 
+#~ msgid "vala-panel"
+#~ msgstr "vala-panel"
+
 #~ msgid "Run %s"
 #~ msgstr "Выполнить %s"
 
@@ -975,9 +986,6 @@ msgstr "Панель задач"
 
 #~ msgid "Plugin Description"
 #~ msgstr "Описание модуля"
-
-#~ msgid "Konstantin"
-#~ msgstr "Константин"
 
 #~ msgid "Digital clock with calendar"
 #~ msgstr "Цифровые часы с календарем"
