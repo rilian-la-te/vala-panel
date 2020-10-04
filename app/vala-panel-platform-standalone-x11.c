@@ -63,6 +63,7 @@ static void predicate_func(const char *key, ValaPanelUnitSettings *value, ValaPa
 	{
 		ValaPanelToplevel *unit = vala_panel_toplevel_new(user_data->app, self, key);
 		vala_panel_platform_register_unit(self, GTK_WINDOW(unit));
+		vala_panel_toplevel_init_ui(unit);
 		gtk_application_add_window(user_data->app, GTK_WINDOW(unit));
 	}
 }

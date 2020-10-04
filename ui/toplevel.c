@@ -286,6 +286,10 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	                                panel_entries,
 	                                G_N_ELEMENTS(panel_entries),
 	                                self);
+}
+
+void vala_panel_toplevel_init_ui(ValaPanelToplevel *self)
+{
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
 }
@@ -605,6 +609,7 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 	ret->mon               = mon;
 	ret->gravity           = edge;
 	init_actions(ret, true);
+	vala_panel_toplevel_init_ui(ret);
 	return ret;
 }
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
@@ -895,6 +900,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 	uint icon_size_value       = 24;
 	int mons                   = 1;
 	PangoFontDescription *desc = pango_font_description_from_string(self->font);
+	bool realized              = gtk_widget_get_realized(GTK_WIDGET(self));
 
 	switch (property_id)
 	{
@@ -1020,7 +1026,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
-	if (geometry_update_required)
+	if (geometry_update_required && realized)
 		vala_panel_toplevel_update_geometry(self);
 	if (appearance_update_required)
 		update_appearance(self);

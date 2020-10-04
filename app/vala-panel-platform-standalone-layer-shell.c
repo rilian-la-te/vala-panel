@@ -66,10 +66,11 @@ static void predicate_func(const char *key, ValaPanelUnitSettings *value, ValaPa
 		ValaPanelToplevel *unit = vala_panel_toplevel_new(user_data->app, self, key);
 		GtkWindow *win          = GTK_WINDOW(unit);
 		vala_panel_platform_register_unit(self, win);
-		gtk_application_add_window(user_data->app, win);
 		gtk_layer_init_for_window(win);
 		gtk_layer_set_layer(win, GTK_LAYER_SHELL_LAYER_TOP);
 		gtk_layer_set_namespace(win, "panel"); // FIXME: may have conflicts with mate-panel
+		vala_panel_toplevel_init_ui(unit);
+		gtk_application_add_window(user_data->app, win);
 	}
 }
 
