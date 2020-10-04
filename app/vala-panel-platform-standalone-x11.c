@@ -152,9 +152,7 @@ static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *
                                  PanelGravity gravity, int monitor)
 {
 	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
-	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon =
-	    monitor < 0 ? gdk_display_get_primary_monitor(d) : gdk_display_get_monitor(d, monitor);
+	GdkMonitor *mon       = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
 	GdkRectangle marea;
 	int x = 0, y = 0;
 	gdk_monitor_get_geometry(mon, &marea);
@@ -243,10 +241,8 @@ static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 	GdkRectangle primary_monitor_rect;
 	GtkPositionType edge = vala_panel_edge_from_gravity(gravity);
 	long struts[12]      = { 0 };
-	GdkDisplay *screen   = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon      = monitor < 0 ? gdk_display_get_primary_monitor(screen)
-	                              : gdk_display_get_monitor(screen, monitor);
-	int scale_factor = gdk_monitor_get_scale_factor(mon);
+	GdkMonitor *mon      = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
+	int scale_factor     = gdk_monitor_get_scale_factor(mon);
 	gdk_monitor_get_geometry(mon, &primary_monitor_rect);
 	/*
 	strut-left strut-right strut-top strut-bottom

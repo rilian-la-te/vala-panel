@@ -84,6 +84,7 @@ bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend
 bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
+GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon);
 
 /* Toplevel registration and destruction */
 void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit);

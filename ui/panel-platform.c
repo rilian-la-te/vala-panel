@@ -84,6 +84,18 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
 	return false;
 }
 
+GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon)
+{
+	GdkDisplay *screen   = gtk_widget_get_display(self);
+	GdkMonitor *fallback = gdk_display_get_monitor_at_point(screen, 0, 0);
+	GdkMonitor *monitor  = NULL;
+	if (mon < 0)
+		monitor = gdk_display_get_primary_monitor(screen);
+	else
+		monitor = gdk_display_get_monitor(screen, mon);
+	return GDK_IS_MONITOR(monitor) ? monitor : fallback;
+}
+
 void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit)
 {
 	ValaPanelPlatformPrivate *priv =

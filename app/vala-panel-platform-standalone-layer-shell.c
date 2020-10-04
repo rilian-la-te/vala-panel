@@ -157,13 +157,6 @@ static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkAppli
 static void vpp_layer_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top,
                                    PanelGravity gravity, int monitor)
 {
-	GdkDisplay *d = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon =
-	    monitor < 0 ? gdk_display_get_primary_monitor(d) : gdk_display_get_monitor(d, monitor);
-	GdkRectangle marea;
-	gdk_monitor_get_geometry(mon, &marea);
-	GtkRequisition size, min;
-	gtk_widget_get_preferred_size(GTK_WIDGET(top), &min, &size);
 	bool anchor[GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER] = { false };
 	switch (gravity)
 	{
@@ -198,7 +191,6 @@ static void vpp_layer_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow
 		break;
 	case EAST_CENTER:
 		anchor[GTK_LAYER_SHELL_EDGE_RIGHT] = true;
-
 		break;
 	}
 	for (int i = 0; i < GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER; i++)

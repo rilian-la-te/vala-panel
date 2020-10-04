@@ -641,12 +641,10 @@ static void measure(GtkWidget *w, GtkOrientation orient, G_GNUC_UNUSED int for_s
                     int *nat, int *base_min, int *base_nat)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(w);
-	GdkDisplay *screen      = gtk_widget_get_display(w);
 	GdkRectangle marea      = { 0, 0, 0, 0 };
-	if (self->mon < 0)
-		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
-	else if (self->mon < gdk_display_get_n_monitors(screen))
-		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	GdkMonitor *mon         = vala_panel_platform_get_suitable_monitor(w, self->mon);
+	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
+		gdk_monitor_get_geometry(mon, &marea);
 	int scrw = vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
 	               ? marea.width
 	               : marea.height;
@@ -699,12 +697,10 @@ static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 }
 static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *self)
 {
-	GdkDisplay *screen = gtk_widget_get_display(GTK_WIDGET(self));
 	GdkRectangle marea = { 0 };
-	if (self->mon < 0)
-		gdk_monitor_get_geometry(gdk_display_get_primary_monitor(screen), &marea);
-	else if (self->mon < gdk_display_get_n_monitors(screen))
-		gdk_monitor_get_geometry(gdk_display_get_monitor(screen, self->mon), &marea);
+	GdkMonitor *mon    = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(self), self->mon);
+	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
+		gdk_monitor_get_geometry(mon, &marea);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
