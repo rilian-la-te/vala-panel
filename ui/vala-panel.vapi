@@ -103,6 +103,7 @@ namespace ValaPanel {
 		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
 		public void configure (string page);
         public void configure_applet (string uuid);
+        public void get_menu_anchors(owned Gdk.Gravity menu, owned Gdk.Gravity window);
 		[NoAccessorMethod]
 		public bool autohide { get; internal set; }
 		[NoAccessorMethod]
