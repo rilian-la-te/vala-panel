@@ -898,7 +898,8 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="tooltip_text" translatable="yes">Click here to add a new applet (opens a list of available applets)</property>
+                            <property name="tooltip_text" translatable="yes">Click here to add a new applet
+(opens a list of available applets)</property>
                             <signal name="clicked" handler="on_add_plugin" object="ValaPanelToplevelConfig" swapped="no"/>
                             <child>
                               <object class="GtkImage" id="image1">
