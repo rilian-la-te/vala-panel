@@ -23,6 +23,8 @@
 #include "server.h"
 #include "vala-panel-platform-standalone-x11.h"
 
+#define VALA_PANEL_CONFIG_HEADER "global"
+
 struct _ValaPanelPlatformX11
 {
 	ValaPanelPlatform __parent__;
@@ -61,6 +63,7 @@ static void predicate_func(const char *key, ValaPanelUnitSettings *value, ValaPa
 	{
 		ValaPanelToplevel *unit = vala_panel_toplevel_new(user_data->app, self, key);
 		vala_panel_platform_register_unit(self, GTK_WINDOW(unit));
+		vala_panel_toplevel_init_ui(unit);
 		gtk_application_add_window(user_data->app, GTK_WINDOW(unit));
 	}
 }
@@ -121,6 +124,11 @@ static void monitor_removed_cb(GdkDisplay *scr, GdkMonitor *mon, void *data)
 	update_toplevel_geometry_for_all(scr, data);
 }
 
+static const char *vpp_x11_get_name(ValaPanelPlatform *obj)
+{
+	return "x11";
+}
+
 static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplication *app,
                                               G_GNUC_UNUSED const char *profile)
 {
@@ -144,9 +152,7 @@ static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *
                                  PanelGravity gravity, int monitor)
 {
 	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
-	GdkDisplay *d         = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon =
-	    monitor < 0 ? gdk_display_get_primary_monitor(d) : gdk_display_get_monitor(d, monitor);
+	GdkMonitor *mon       = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
 	GdkRectangle marea;
 	int x = 0, y = 0;
 	gdk_monitor_get_geometry(mon, &marea);
@@ -235,10 +241,8 @@ static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 	GdkRectangle primary_monitor_rect;
 	GtkPositionType edge = vala_panel_edge_from_gravity(gravity);
 	long struts[12]      = { 0 };
-	GdkDisplay *screen   = gtk_widget_get_display(GTK_WIDGET(top));
-	GdkMonitor *mon      = monitor < 0 ? gdk_display_get_primary_monitor(screen)
-	                              : gdk_display_get_monitor(screen, monitor);
-	int scale_factor = gdk_monitor_get_scale_factor(mon);
+	GdkMonitor *mon      = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
+	int scale_factor     = gdk_monitor_get_scale_factor(mon);
 	gdk_monitor_get_geometry(mon, &primary_monitor_rect);
 	/*
 	strut-left strut-right strut-top strut-bottom
@@ -352,6 +356,7 @@ static void vala_panel_platform_x11_init(G_GNUC_UNUSED ValaPanelPlatformX11 *sel
 
 static void vala_panel_platform_x11_class_init(ValaPanelPlatformX11Class *klass)
 {
+	VALA_PANEL_PLATFORM_CLASS(klass)->get_name     = vpp_x11_get_name;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vpp_x11_move_to_side;
 	VALA_PANEL_PLATFORM_CLASS(klass)->update_strut = vpp_x11_update_strut;
 	VALA_PANEL_PLATFORM_CLASS(klass)->can_strut    = vpp_x11_edge_can_strut;

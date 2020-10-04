@@ -8,4 +8,7 @@
 #define LOCALE_DIR "@LOCALE_DIR@"
 #define PROFILES "@PROFILES_DIR@"
 
+#mesondefine PLATFORM_X11
+#mesondefine PLATFORM_LAYER_SHELL
+
 #endif // CONFIG_H_IN

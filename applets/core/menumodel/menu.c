@@ -139,13 +139,12 @@ static GtkContainer *create_menubar(MenuApplet *self)
 
 static void on_menubutton_toggled(GtkToggleButton *b, void *data)
 {
-	MenuApplet *self = VALA_PANEL_MENU_APPLET(data);
+	MenuApplet *self       = VALA_PANEL_MENU_APPLET(data);
+	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	GdkGravity menug, widget;
+	vala_panel_toplevel_get_menu_anchors(top, &menug, &widget);
 	if (gtk_toggle_button_get_active(b) && !gtk_widget_get_visible(GTK_WIDGET(self->int_menu)))
-		gtk_menu_popup_at_widget(self->int_menu,
-		                         GTK_WIDGET(self),
-		                         GDK_GRAVITY_NORTH,
-		                         GDK_GRAVITY_NORTH,
-		                         NULL);
+		gtk_menu_popup_at_widget(self->int_menu, GTK_WIDGET(self), widget, menug, NULL);
 	else
 		gtk_menu_popdown(self->int_menu);
 }
@@ -466,15 +465,14 @@ static GtkWidget *menu_applet_get_settings_ui(ValaPanelApplet *self)
 
 static int show_menu_int(void *data)
 {
-	MenuApplet *self = VALA_PANEL_MENU_APPLET(data);
+	MenuApplet *self       = VALA_PANEL_MENU_APPLET(data);
+	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	GdkGravity menug, widget;
+	vala_panel_toplevel_get_menu_anchors(top, &menug, &widget);
 	if (g_source_is_destroyed(g_main_current_source()))
 		return false;
 	if (GTK_IS_MENU(self->int_menu))
-		gtk_menu_popup_at_widget(self->int_menu,
-		                         GTK_WIDGET(self),
-		                         GDK_GRAVITY_NORTH,
-		                         GDK_GRAVITY_NORTH,
-		                         NULL);
+		gtk_menu_popup_at_widget(self->int_menu, GTK_WIDGET(self), widget, menug, NULL);
 	else
 		gtk_menu_shell_select_first(GTK_MENU_SHELL(self->button), false);
 	self->show_system_menu_idle = 0;

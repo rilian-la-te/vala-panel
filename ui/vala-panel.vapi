@@ -85,7 +85,7 @@ namespace ValaPanel {
         [CCode (cheader_filename = "applet-info.h")]
 		public const string EXTENSION_POINT;
 		[CCode (cheader_filename = "applet-widget-api.h")]
-		public Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
+		protected Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
 		public void init_background ();
 		public bool is_configurable();
 		public virtual void update_context_menu (ref GLib.Menu parent_menu);
@@ -103,6 +103,7 @@ namespace ValaPanel {
 		public Toplevel (Gtk.Application app, ValaPanel.Platform platform, string name);
 		public void configure (string page);
         public void configure_applet (string uuid);
+        public void get_menu_anchors(owned Gdk.Gravity menu, owned Gdk.Gravity window);
 		[NoAccessorMethod]
 		public bool autohide { get; internal set; }
 		[NoAccessorMethod]

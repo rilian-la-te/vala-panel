@@ -1,4 +1,4 @@
 [Plugin]
 Name=Tasklist
 Description=Shows opened windows.
-Expandable=true
+Platforms=x11

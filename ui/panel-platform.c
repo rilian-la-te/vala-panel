@@ -67,6 +67,13 @@ bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char 
 	return vp_core_settings_init_unit_list(priv->core_settings);
 }
 
+const char *vala_panel_platform_get_name(ValaPanelPlatform *self)
+{
+	if (self)
+		return VALA_PANEL_PLATFORM_GET_CLASS(self)->get_name(self);
+	return "";
+}
+
 bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile)
 {
@@ -75,6 +82,18 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
 		                                                                      app,
 		                                                                      profile);
 	return false;
+}
+
+GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon)
+{
+	GdkDisplay *screen   = gtk_widget_get_display(self);
+	GdkMonitor *fallback = gdk_display_get_monitor_at_point(screen, 0, 0);
+	GdkMonitor *monitor  = NULL;
+	if (mon < 0)
+		monitor = gdk_display_get_primary_monitor(screen);
+	else
+		monitor = gdk_display_get_monitor(screen, mon);
+	return GDK_IS_MONITOR(monitor) ? monitor : fallback;
 }
 
 void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit)

@@ -40,9 +40,12 @@ ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatfor
 #define vala_panel_toplevel_get_layout(self)                                                       \
 	VALA_PANEL_LAYOUT(gtk_bin_get_child(GTK_BIN(gtk_bin_get_child(GTK_BIN(self)))))
 
+void vala_panel_toplevel_init_ui(ValaPanelToplevel *self);
 void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons);
 void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
 void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid);
+void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
+                                          GdkGravity *widget_anchor);
 
 G_END_DECLS
 
