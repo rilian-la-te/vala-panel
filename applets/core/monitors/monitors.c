@@ -289,7 +289,10 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 /* Plugin destructor. */
 static void monitors_applet_dispose(GObject *user_data)
 {
-	MonitorsApplet *c = VALA_PANEL_MONITORS_APPLET(user_data);
+	MonitorsApplet *c   = VALA_PANEL_MONITORS_APPLET(user_data);
+	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(c));
+	/* Disconnect the signals. */
+	g_signal_handlers_disconnect_by_data(settings, c);
 	/* Disconnect the timer. */
 	if (c->timer)
 	{

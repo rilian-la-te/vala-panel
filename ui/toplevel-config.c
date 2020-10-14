@@ -506,9 +506,19 @@ static void on_plugin_list_row_selected(G_GNUC_UNUSED GtkListBox *box, GtkListBo
 static void plugin_list_generate_applet_settings(ValaPanelApplet *pl, ValaPanelToplevelConfig *self)
 {
 	if (vala_panel_applet_is_configurable(pl))
-		gtk_stack_add_named(self->applet_info_stack,
-		                    vala_panel_applet_get_settings_ui(pl),
-		                    vala_panel_applet_get_uuid(pl));
+	{
+		GtkWidget *settings = vala_panel_applet_get_settings_ui(pl);
+		if (GTK_IS_WIDGET(settings))
+		{
+			bool floating = g_object_is_floating(G_OBJECT(settings));
+			gtk_stack_add_named(self->applet_info_stack,
+			                    settings,
+			                    vala_panel_applet_get_uuid(pl));
+			/* We do not need to hold a strong reference of object */
+			if (!floating)
+				g_object_unref(settings);
+		}
+	}
 }
 
 static void plugin_list_add_applet(const char *type, ValaPanelToplevelConfig *self,
@@ -654,7 +664,8 @@ static void on_remove_plugin(GtkButton *btn, void *user_data)
 	GtkListBoxRow *sel_row = gtk_list_box_get_selected_row(self->plugin_list);
 	int sel_index          = sel_row ? gtk_list_box_row_get_index(sel_row) : -1;
 	gtk_container_remove(GTK_CONTAINER(self->plugin_list), row);
-	g_clear_object(&w);
+	if (GTK_IS_WIDGET(w))
+		gtk_container_remove(GTK_CONTAINER(self->applet_info_stack), w);
 	if (index == sel_index)
 		gtk_list_box_select_row(self->plugin_list,
 		                        gtk_list_box_get_row_at_index(self->plugin_list, index));

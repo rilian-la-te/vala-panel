@@ -138,6 +138,7 @@ static void rebuild_mon(NetMonApplet *self)
 
 void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 {
+	g_return_if_fail(VALA_PANEL_IS_NETMON_APPLET(user_data));
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(user_data);
 	if (!g_strcmp0(key, NET_IFACE))
 	{
@@ -226,7 +227,10 @@ static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 /* Plugin destructor. */
 static void netmon_applet_dispose(GObject *user_data)
 {
-	NetMonApplet *c = VALA_PANEL_NETMON_APPLET(user_data);
+	NetMonApplet *c     = VALA_PANEL_NETMON_APPLET(user_data);
+	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(c));
+	/* Disconnect the signals. */
+	g_signal_handlers_disconnect_by_data(settings, c);
 	/* Disconnect the timer. */
 	if (c->timer)
 	{
