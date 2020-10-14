@@ -62,7 +62,6 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 			{
 			case CONF_STR:
 				entry = gtk_entry_new();
-				gtk_entry_set_width_chars(GTK_ENTRY(entry), 40);
 				g_settings_bind(settings,
 				                key,
 				                entry,
@@ -121,7 +120,6 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 				        ? GTK_FILE_CHOOSER_ACTION_OPEN
 				        : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 				GtkWidget *str_elem = gtk_entry_new();
-				gtk_entry_set_width_chars(GTK_ENTRY(str_elem), 40);
 				g_settings_bind(settings,
 				                key,
 				                str_elem,
