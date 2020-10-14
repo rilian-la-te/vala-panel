@@ -90,12 +90,12 @@ conf_data.set('PLUGINS_DIRECTORY', applets_libdir)
 conf_data.set('PLUGINS_DATA', applets_datadir)
 conf_data.set('DATADIR', project_datadir)
 conf_data.set('PROFILES_DIR', profiles_dir)
-conf_data.set('PLATFORM_X11','x11' in platforms)
-conf_data.set('PLATFORM_LAYER_SHELL','layer-shell' in platforms)
+conf_data.set('PLATFORM_X11',platforms['x11'])
+conf_data.set('PLATFORM_LAYER_SHELL',platforms['layer-shell'])
 
 config = configure_file(input : join_paths('util','config.h.in'),
                output : 'config.h',
-			   configuration : conf_data)
+	       configuration : conf_data)
 
 version = vcs_tag(
 	command : ['git','describe','--tags'],
