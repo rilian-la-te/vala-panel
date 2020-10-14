@@ -23,7 +23,14 @@ install_data(
 
 install_data(
     join_paths('images','panel.svg'),
+    rename: 'vala-panel.svg',
     install_dir: join_paths(datadir, 'icons','hicolor','scalable','apps')
+)
+
+install_data(
+    join_paths('images','panel.png'),
+    rename: 'vala-panel.png',
+    install_dir: join_paths(datadir, 'icons','hicolor','96x96','apps')
 )
 
 install_data(
