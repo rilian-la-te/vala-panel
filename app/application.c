@@ -101,7 +101,7 @@ static const GOptionEntry entries[] = {
 	{ "remote-command",
 	  'r',
 	  0,
-	  G_OPTION_ARG_STRING_ARRAY,
+	  G_OPTION_ARG_STRING,
 	  NULL,
 	  REMOTE_DES_TR,
 	  N_("A command for a plugin.") },
@@ -265,7 +265,7 @@ static int vala_panel_app_command_line(GApplication *application,
 {
 	g_autofree char *profile_name = NULL;
 	g_autofree char *ccommand     = NULL;
-	g_auto(GStrv) cremote         = NULL;
+	g_autofree char *cremote      = NULL;
 	GVariantDict *options         = g_application_command_line_get_options_dict(commandline);
 	if (g_variant_dict_lookup(options, "profile", "s", &profile_name))
 		g_object_set(G_OBJECT(application), "profile", profile_name, NULL);
@@ -292,22 +292,17 @@ static int vala_panel_app_command_line(GApplication *application,
 			    list);
 		}
 	}
-	if (g_variant_dict_lookup(options, "remote-command", "as", &cremote))
+	if (g_variant_dict_lookup(options, "remote-command", "s", &cremote))
 	{
-		if (g_strv_length(cremote) != 2)
-		{
-			g_autofree char *list = g_strjoinv(" ", cremote);
-			g_application_command_line_printerr(
-			    commandline,
-			    _("%s: invalid remote command - %s. Remote commands should have "
-			      "exactly 2 arguments\n"),
-			    g_get_application_name(),
-			    list);
-		}
-		char *uuid          = cremote[0];
-		char *command_name  = cremote[1];
-		GtkApplication *app = GTK_APPLICATION(application);
-		GList *windows      = gtk_application_get_windows(app);
+		g_autofree char *uuid            = NULL;
+		g_autoptr(GVariant) command_name = NULL;
+		g_autoptr(GError) err            = NULL;
+		g_action_parse_detailed_name(cremote, &uuid, &command_name, &err);
+		if (err)
+			g_warning("%s\n", err->message);
+		const char *command_str = g_variant_get_string(command_name, NULL);
+		GtkApplication *app     = GTK_APPLICATION(application);
+		GList *windows          = gtk_application_get_windows(app);
 		for (GList *l = windows; l != NULL; l = l->next)
 		{
 			if (VALA_PANEL_IS_TOPLEVEL(l->data))
@@ -322,7 +317,7 @@ static int vala_panel_app_command_line(GApplication *application,
 					if (!g_strcmp0(uuid, gotten_uuid))
 						vala_panel_applet_remote_command(VALA_PANEL_APPLET(
 						                                     il->data),
-						                                 command_name);
+						                                 command_str);
 				}
 				g_list_free(applets);
 			}
