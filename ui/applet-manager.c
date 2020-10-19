@@ -96,6 +96,24 @@ void vp_applet_manager_applet_unref(ValaPanelAppletManager *self, const char *na
 	return;
 }
 
+G_GNUC_INTERNAL bool vp_applet_manager_is_applet_available(ValaPanelAppletManager *self,
+                                                           const char *module_name)
+{
+	AppletInfoData *d = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, module_name);
+	if (!d)
+		return false;
+	bool platform_available      = false;
+	ValaPanelPlatform *platform  = vp_toplevel_get_current_platform();
+	const char *const *platforms = vala_panel_applet_info_get_platforms(d->info);
+	if (platforms && g_strv_contains(platforms, "all"))
+		platform_available = true;
+	if (platforms && g_strv_contains(platforms, vala_panel_platform_get_name(platform)))
+		platform_available = true;
+	if (((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info)) && platform_available)
+		return true;
+	return false;
+}
+
 G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAppletManager *self,
                                                                      const char *type,
                                                                      ValaPanelToplevel *top,
@@ -103,9 +121,10 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAp
 {
 	const char *uuid           = s->uuid;
 	GSettings *applet_settings = s->custom;
-	AppletInfoData *data       = vp_applet_manager_applet_ref(self, type);
-	if (!data)
+	if (!vp_applet_manager_is_applet_available(self, type))
 		return NULL;
+
+	AppletInfoData *data = vp_applet_manager_applet_ref(self, type);
 
 	GType applet_type = vala_panel_applet_info_get_stored_type(data->info);
 	ValaPanelApplet *applet =
@@ -124,22 +143,6 @@ ValaPanelAppletInfo *vp_applet_manager_get_applet_info(ValaPanelAppletManager *s
 	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
 	AppletInfoData *data = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, str);
 	return data->info;
-}
-
-G_GNUC_INTERNAL bool vp_applet_manager_is_applet_available(ValaPanelAppletManager *self,
-                                                           const char *module_name)
-{
-	AppletInfoData *d = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, module_name);
-	bool platform_available      = false;
-	ValaPanelPlatform *platform  = vp_toplevel_get_current_platform();
-	const char *const *platforms = vala_panel_applet_info_get_platforms(d->info);
-	if (platforms && g_strv_contains(platforms, "all"))
-		platform_available = true;
-	if (platforms && g_strv_contains(platforms, vala_panel_platform_get_name(platform)))
-		platform_available = true;
-	if (((d->count < 1) || !vala_panel_applet_info_is_exclusive(d->info)) && platform_available)
-		return true;
-	return false;
 }
 
 GList *vp_applet_manager_get_all_types(ValaPanelAppletManager *self)
