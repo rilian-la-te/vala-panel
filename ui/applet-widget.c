@@ -104,8 +104,7 @@ static void activate_configure(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 	vala_panel_toplevel_configure_applet(vala_panel_applet_get_toplevel(self),
 	                                     vala_panel_applet_get_uuid(self));
 }
-static void activate_remote(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
-                            gpointer obj)
+static void activate_remote(G_GNUC_UNUSED GSimpleAction *act, GVariant *param, gpointer obj)
 {
 	const char *command = g_variant_get_string(param, NULL);
 	vala_panel_applet_remote_command(VALA_PANEL_APPLET(obj), command);
