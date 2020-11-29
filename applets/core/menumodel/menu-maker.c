@@ -51,7 +51,7 @@ static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder
 		const char *cats_str = g_desktop_app_info_get_categories(info)
 		                           ? g_desktop_app_info_get_categories(info)
 		                           : " ";
-		g_auto(GStrv) cats = g_strsplit_set(cats_str, ";", 0);
+		g_auto(GStrv) cats   = g_strsplit_set(cats_str, ";", 0);
 		for (int i = 0; cats[i]; i++)
 		{
 			g_autofree char *catdown = g_ascii_strdown(cats[i], -1);

@@ -268,12 +268,12 @@ static void load_internal_menus(GMenu *menu, MenuInternalEnum enum_id)
 	if (enum_id == APPLICATIONS)
 	{
 		section = menu_maker_create_applications_menu(false);
-		g_menu_append_section(menu, NULL, section);
+		copy_model_items(menu, section);
 	}
 	if (enum_id == SETTINGS)
 	{
 		section = menu_maker_create_applications_menu(true);
-		g_menu_append_section(menu, NULL, section);
+		copy_model_items(menu, section);
 	}
 }
 
