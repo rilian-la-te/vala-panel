@@ -140,6 +140,11 @@ G_GNUC_INTERNAL ValaPanelPlatform *vp_toplevel_get_current_platform()
 	return platform;
 }
 
+const char *vala_panel_get_current_platform_name()
+{
+	return vala_panel_platform_get_name(platform);
+}
+
 static void stop_ui(ValaPanelToplevel *self)
 {
 	if (self->pref_dialog != NULL)

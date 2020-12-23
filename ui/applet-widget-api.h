@@ -8,5 +8,6 @@
 gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
                                      const char *uuid);
 ValaPanelToplevel *vala_panel_applet_get_toplevel(ValaPanelApplet *self);
+const char *vala_panel_get_current_platform_name();
 
 #endif // APPLETWIDGETAPI_H
