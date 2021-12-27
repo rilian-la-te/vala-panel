@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: lxpanel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-05 01:29+0300\n"
-"PO-Revision-Date: 2020-10-05 01:30+0300\n"
-"Last-Translator: Andriy Grytsenko <andrej@rep.kiev.ua>\n"
+"PO-Revision-Date: 2021-12-27 19:52+0400\n"
+"Last-Translator: Andrey Kultyapov <camellan@yandex.ru>\n"
 "Language-Team: Russian <hsh@runtu.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.3\n"
 "X-POOTLE-MTIME: 1407841216.000000\n"
 
 #: app/app-about.ui:11
@@ -204,11 +204,11 @@ msgstr "Удалить эту панель"
 
 #: data/ui/panel-menus.ui:45
 msgid "Application Settings"
-msgstr "Настройки приложения..."
+msgstr "Настройки приложения"
 
 #: data/ui/panel-menus.ui:49
 msgid "About"
-msgstr "О программе..."
+msgstr "О программе"
 
 #: data/ui/pref.ui:48
 msgid "Primary"
@@ -880,11 +880,11 @@ msgstr "Показывать _разделитель"
 
 #: applets/wnck/tasklist/config.ui:199
 msgid "Sorting _order:"
-msgstr "По_рядок сотировки"
+msgstr "По_рядок сотировки:"
 
 #: applets/wnck/tasklist/config.ui:282
 msgid "Window _grouping:"
-msgstr "_Группировка окон"
+msgstr "_Группировка окон:"
 
 #: applets/wnck/tasklist/config.ui:327
 msgid "Mi_ddle click action:"
