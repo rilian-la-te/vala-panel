@@ -277,7 +277,7 @@ static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 		            scale_factor;
 		break;
 	case GTK_POS_BOTTOM:
-		struts[3]  = (primary_monitor_rect.y + panel_size) * scale_factor;
+		struts[3]  = (primary_monitor_rect.y - panel_size) * scale_factor;
 		struts[10] = primary_monitor_rect.x * scale_factor;
 		struts[11] = (primary_monitor_rect.x + primary_monitor_rect.width / 100 * len) *
 		             scale_factor;
