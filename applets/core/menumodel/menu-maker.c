@@ -172,7 +172,9 @@ G_GNUC_INTERNAL GMenuModel *menu_maker_create_system_menu(void)
 	GMenu *menu = G_MENU(gtk_builder_get_object(builder, "settings-section"));
 	g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
 	g_autoptr(GDesktopAppInfo) app_info =
-	    g_desktop_app_info_new("gnome-control-center.desktop");
+	    g_desktop_app_info_new("org.gnome.Settings.desktop");
+	if (!app_info)
+		app_info = g_desktop_app_info_new("gnome-control-center.desktop");
 	if (!app_info)
 		app_info = g_desktop_app_info_new("matecc.desktop");
 	if (!app_info)
