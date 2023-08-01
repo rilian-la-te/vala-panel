@@ -1,4 +1,5 @@
 vala-panel
 build/
 .vscode
+.cache/
 CMakeLists.txt.user
