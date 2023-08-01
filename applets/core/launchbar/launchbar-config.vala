@@ -26,17 +26,17 @@ namespace LaunchBar
     {
         Bar launchbar;
         [GtkChild (name = "liststore-currentitems")]
-        Gtk.ListStore current_items;
+        unowned Gtk.ListStore current_items;
         [GtkChild (name = "selection-items")]
-        Gtk.TreeSelection selection_items;
+        unowned Gtk.TreeSelection selection_items;
         [GtkChild (name = "button-add")]
-        MenuButton button_add;
+        unowned MenuButton button_add;
         [GtkChild (name = "choose-desktop")]
-        AppChooserWidget choose_desktop;
+        unowned AppChooserWidget choose_desktop;
         [GtkChild (name = "choose-file")]
-        FileChooserWidget choose_file;
+        unowned FileChooserWidget choose_file;
         [GtkChild (name = "box-popover")]
-        Box box_popover;
+        unowned Box box_popover;
         public ConfigWidget(Bar launchbar)
         {
             TreeIter iter;
