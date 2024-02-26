@@ -1,5 +1,5 @@
 [core-version-1]
-units = ['appmenu','menumodel','appmenu-valapanel','separator','xembed','sntray','clock']
+units = ['appmenu','menumodel','appmenu-valapanel','separator','sntray','clock']
 
 [global]
 is-dark=false
@@ -27,12 +27,6 @@ toplevel-id='appmenu'
 plugin-type='org.valapanel.appmenu'
 position=1
 pack-type='start'
-
-[xembed]
-toplevel-id='appmenu'
-plugin-type='org.valapanel.xembed'
-position=0
-pack-type='end'
 
 [sntray]
 toplevel-id='appmenu'

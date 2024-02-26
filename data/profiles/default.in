@@ -1,5 +1,5 @@
 [core-version-1]
-units = ['toplevel1','sep1','menu','launcher','sep2','wcm','sep3','pgr','sep4','tlist','cpu','xembed','clock']
+units = ['toplevel1','sep1','menu','launcher','sep2','wcm','sep3','pgr','sep4','tlist','cpu','sntray','clock']
 
 [global]
 is-dark=false
@@ -91,9 +91,9 @@ plugin-type='org.valapanel.cpu'
 position=0
 pack-type='end'
 
-[xembed]
+[sntray]
 toplevel-id='toplevel1'
-plugin-type='org.valapanel.xembed'
+plugin-type='org.valapanel.sntray'
 position=1
 pack-type='end'
 

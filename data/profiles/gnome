@@ -1,5 +1,5 @@
 [core-version-1]
-units=['toplevel1', 'menu', 'appmenu', 'clock', 'xembed', 'sntray']
+units=['toplevel1', 'menu', 'appmenu', 'clock', 'sntray']
 
 [global]
 is-dark=false
@@ -58,10 +58,3 @@ plugin-type='org.valapanel.sntray'
 toplevel-id='toplevel1'
 pack-type='end'
 position=1
-
-[xembed]
-object-type='applet'
-plugin-type='org.valapanel.xembed'
-toplevel-id='toplevel1'
-pack-type='end'
-position=0

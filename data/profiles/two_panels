@@ -1,5 +1,5 @@
 [core-version-1]
-units = ['toplevel1','toplevel2','wcm','sep1','tlist','pgr','sep2','menubar','launch','sep3','xembed','clock']
+units = ['toplevel1','toplevel2','wcm','sep1','tlist','pgr','sep2','menubar','launch','sep3','sntray','clock']
 
 [global]
 is-custom=false
@@ -70,9 +70,9 @@ plugin-type='org.valapanel.launchbar'
 launch-buttons=['pcmanfm.desktop', 'gnome-terminal.desktop', 'firefox.desktop']
 position=2
 
-[xembed]
+[sntray]
 toplevel-id='toplevel1'
-plugin-type='org.valapanel.xembed'
+plugin-type='org.valapanel.sntray'
 pack-type='end'
 position=0
 
