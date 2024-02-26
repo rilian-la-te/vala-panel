@@ -51,7 +51,7 @@ i18n.merge_file(
   input: join_paths('desktop','org.valapanel.application.desktop.in'),
   output: 'org.valapanel.application.desktop',
   type: 'desktop',
-  po_dir: join_paths(meson.source_root(),'po'),
+  po_dir: join_paths(meson.project_source_root(),'po'),
   install: true,
   install_dir: join_paths(datadir, 'applications')
 )
@@ -60,7 +60,7 @@ i18n.merge_file(
   input: join_paths('desktop','org.valapanel.application.appdata.xml.in'),
   output: 'org.valapanel.application.appdata.xml',
   type: 'xml',
-  po_dir: join_paths(meson.source_root(),'po'),
+  po_dir: join_paths(meson.project_source_root(),'po'),
   install: true,
   install_dir: join_paths(datadir, 'appdata')
 )

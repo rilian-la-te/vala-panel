@@ -1,6 +1,6 @@
 project('vala-panel', 'vala', 'c',
 	version : '0.5.0',
-	meson_version: '>=0.51.0',
+	meson_version: '>=0.61.0',
 	license: ['LGPL-3.0'],
     default_options: [
         'c_std=gnu11',
