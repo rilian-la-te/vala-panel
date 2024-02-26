@@ -1,7 +1,6 @@
 subdir('dbusmenu')
 
 backend_sources = files(
-    'dbus-utils.c',
     'icon-pixmap.c',
     'icon-pixmap.h',
     'rtparser.c',
@@ -49,4 +48,10 @@ backend_vapi = declare_dependency(
     dependencies: [backend_dep, meson.get_compiler('vala').find_library('sntray-backend', dirs: meson.current_source_dir())]
 )
 
-subdir('panels')
+vp_applets_libdir = vp.get_variable(pkgconfig: 'applets_dir')
+vp_sources = files('vala-panel-sntray-applet.vala')
+vpp = shared_module('sntray', vp_sources,
+                dependencies: [backend_vapi, vp],
+                install: true,
+                install_dir: vp_applets_libdir
+                )

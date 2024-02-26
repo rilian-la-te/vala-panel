@@ -1,7 +1,7 @@
 ---
 Vala Panel SNTray
 ---
-Panel plugin to show StatusNotifierItems (also known as AppIndicators) for use with Vala Panel, xfce4-panel and mate-panel (Budgie 10.x is also planned). 
+Panel plugin to show StatusNotifierItems (also known as AppIndicators) for use with Vala Panel.
 
 **REQUIRED DEPENDENCES**
 
