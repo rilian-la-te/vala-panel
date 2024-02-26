@@ -2,7 +2,7 @@
 
 <gresources>
   <gresource prefix="/org/vala-panel/sntray">
-    <file compressed="true" alias="style.css">css/vala-panel.css</file>
+    <file compressed="true" alias="style.css">../../../../data/css/vala-panel.css</file>
     <file compressed="true" preprocess="xml-stripblanks">snconfig.ui</file>
   </gresource>
 </gresources>

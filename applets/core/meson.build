@@ -39,3 +39,4 @@ foreach plugin : plugin_list
     )
 endforeach
 
+subdir('sntray')

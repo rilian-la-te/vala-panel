@@ -38,7 +38,8 @@ msgstr "没有额外空间创建新面板，所有边缘已经被使用。"
 msgid ""
 "Really delete this panel?\n"
 "<b>Warning:This can not be recovered.</b>"
-msgstr "是否确认删除此面板？\n"
+msgstr ""
+"是否确认删除此面板？\n"
 "<b>警告：本操作不可撤销。</b>"
 
 #: ../lib/toplevel.c:462
@@ -234,8 +235,7 @@ msgstr ""
 msgid ""
 "If internal menu is enabled, menu file will not be used, predefeined menu "
 "will be used instead."
-msgstr ""
-"如果使用内部菜单，则菜单文件将会被预定义菜单替代使用。"
+msgstr "如果使用内部菜单，则菜单文件将会被预定义菜单替代使用。"
 
 #: ../applets/core/menumodel/menumodel.vala:112
 msgid "Is internal menu"
@@ -618,9 +618,9 @@ msgid ""
 "It was be a fork of LXPanel in version 0.1.0, but in 0.2.0 it is completely "
 "rewritten in Vala. It offers same functionality as LXPanel, but:"
 msgstr ""
-"Vala Panel 是一个 GTK+ 3 桌面面板，它基于 Vala 与 LXPanel 的设计思想。 "
-"它是 LXPanel 0.1.0 版本的分支版本，但从 0.2.0 开始完全使用 Vala 重写。 "
-"它提供等同于 LXPanel 的功能，但是："
+"Vala Panel 是一个 GTK+ 3 桌面面板，它基于 Vala 与 LXPanel 的设计思想。 它是 "
+"LXPanel 0.1.0 版本的分支版本，但从 0.2.0 开始完全使用 Vala 重写。 它提供等同"
+"于 LXPanel 的功能，但是："
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:11
 msgid "It has slightly more memory usage."
@@ -631,14 +631,16 @@ msgid ""
 "X11 dependency is stripped from panel core (but it is not tested on another "
 "display servers, such as Wayland or Mir, right now)."
 msgstr ""
-"X11 依赖已经从面板核心部分接触（但目前尚未在其他显示服务框架测试，例如：Wayland, Mir）"
+"X11 依赖已经从面板核心部分接触（但目前尚未在其他显示服务框架测试，例如："
+"Wayland, Mir）"
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:14
 msgid ""
 "Some of former LXPanel plugins is separate binaries now and lives in another "
 "packages (Example is volume applet)."
 msgstr ""
-"一些早期 LXPanel 组件已经被拆分为独立的二进制应用并包含与其他软件包中（例如声音组件）"
+"一些早期 LXPanel 组件已经被拆分为独立的二进制应用并包含与其他软件包中（例如声"
+"音组件）"
 
 #: ../data/desktop/org.valapanel.application.appdata.xml.in:30
 msgid "Konstantin"
@@ -781,3 +783,96 @@ msgstr ""
 #: ../applets/core/menumodel/system-menus.ui:116
 msgid "Lock screen..."
 msgstr "锁定屏幕..."
+
+#: ../src/snconfig.ui:38
+msgid "StatusNotifier Configuration"
+msgstr "通知指示器首选项"
+
+#: ../src/snconfig.ui:86
+msgid "Show Application Status"
+msgstr "显示状态"
+
+#: ../src/snconfig.ui:101
+msgid "Show Communications"
+msgstr "显示交互"
+
+#: ../src/snconfig.ui:116
+msgid "Show System Services"
+msgstr "显示服务"
+
+#: ../src/snconfig.ui:131
+msgid "Show Hardware"
+msgstr "显示硬件"
+
+#: ../src/snconfig.ui:146
+msgid "Show Other"
+msgstr "显示其他"
+
+#: ../src/snconfig.ui:161
+msgid "Show Passive"
+msgstr "显示静态"
+
+#: ../src/snconfig.ui:180
+msgid "Categories visibility"
+msgstr "类别可见性"
+
+#: ../src/snconfig.ui:206 ../src/snconfig.ui:221
+msgid "Use symbolic icons"
+msgstr "使用系统图标"
+
+#: ../src/snconfig.ui:228 ../src/snconfig.ui:243
+msgid "Indicator size:"
+msgstr "指示器大小："
+
+#: ../src/snconfig.ui:266 ../src/snconfig.ui:281
+msgid "Appearance properties"
+msgstr "外观选项"
+
+#: ../src/snconfig.ui:285 ../src/snconfig.ui:300
+msgid "Core"
+msgstr "核心选项"
+
+#: ../src/snconfig.ui:331 ../src/snconfig.ui:418 ../src/snconfig.ui:346
+#: ../src/snconfig.ui:433
+msgid "Override"
+msgstr "覆盖"
+
+#: ../src/snconfig.ui:344 ../src/snconfig.ui:359
+msgid "Index"
+msgstr "编号"
+
+#: ../src/snconfig.ui:369 ../src/snconfig.ui:384
+msgid "Order"
+msgstr "顺序"
+
+#: ../src/snconfig.ui:431 ../src/snconfig.ui:446
+msgid "Visible"
+msgstr "可见"
+
+#: ../src/snconfig.ui:454 ../src/snconfig.ui:469
+msgid "Visibility"
+msgstr "可见性"
+
+#: ../data/sntray.desktop.xfce.in:5
+msgid "StatusNotifier Plugin"
+msgstr "通知指示器插件"
+
+#: ../data/sntray.desktop.xfce.in:6
+msgid "Display AppIndicators in FlowBox"
+msgstr "在组件中显示应用指示器"
+
+#: ../data/sntray.desktop.xfce.in:7
+msgid "applications-system"
+msgstr ""
+
+#: ../src/snconfig.ui:206
+msgid "Show labels near icons (if applications provides some)"
+msgstr "显示图标标签（如果应用程序提供）"
+
+#: ../data/sntray.desktop.plugin.in:4
+msgid "StatusNotifier"
+msgstr "通知指示器"
+
+#: ../data/sntray.desktop.plugin.in:5
+msgid "System tray in KDE StatusNotifierItem format"
+msgstr "新的系统通知指示器"

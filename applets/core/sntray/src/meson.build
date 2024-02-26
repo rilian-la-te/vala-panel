@@ -16,7 +16,7 @@ backend_sources_vala = files(
     'snwatcher.vala',
     'sntray-backend.vapi'
 )
-backend_headers = files(meson.project_source_root() + '/include/sn-common.h')
+backend_headers = files('../include/sn-common.h')
 enum = 'sni-enums'
 backend_enums_gen = gnome.mkenums(
   enum,
@@ -48,10 +48,9 @@ backend_vapi = declare_dependency(
     dependencies: [backend_dep, meson.get_compiler('vala').find_library('sntray-backend', dirs: meson.current_source_dir())]
 )
 
-vp_applets_libdir = vp.get_variable(pkgconfig: 'applets_dir')
 vp_sources = files('vala-panel-sntray-applet.vala')
 vpp = shared_module('sntray', vp_sources,
-                dependencies: [backend_vapi, vp],
+                dependencies: [backend_vapi, libvalapanel],
                 install: true,
-                install_dir: vp_applets_libdir
+                install_dir: applets_libdir
                 )
