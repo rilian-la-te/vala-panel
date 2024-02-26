@@ -65,7 +65,7 @@ namespace ValaDBusMenu
             }
             layout_update_required = false;
             layout_update_in_progress = true;
-            string[2] props = {"type", "children-display"};
+            string[] props = {"type", "children-display"};
             uint rev;
             Variant layout;
             try{
