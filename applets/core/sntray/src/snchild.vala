@@ -37,7 +37,8 @@ namespace StatusNotifier
         Label label;
         Image image;
         EventBox ebox;
-        ValaDBusMenu.GtkClient? client;
+        DBusMenu.Importer? client;
+        private ulong connect_handler = 0;
         Gtk.Menu menu;
         StatusNotifier.Proxy proxy;
         public Item (string n, ObjectPath p)
@@ -203,27 +204,14 @@ namespace StatusNotifier
             menu.attach_to_widget(this,null);
             menu.vexpand = true;
             /*FIXME: MenuModel support */
-            /* if (client == null && remote_menu_model == null)
-            {
-                use_menumodel = !ValaDBusMenu.GtkClient.check(object_name,iface.menu);
-                if (use_menumodel)
-                {
-                    try
-                    {
-                        var connection = Bus.get_sync(BusType.SESSION);
-                        remote_action_group = DBusActionGroup.get(connection,object_name,iface.x_valapanel_action_group);
-                        remote_menu_model = DBusMenuModel.get(connection,object_name,iface.menu);
-                        this.insert_action_group("indicator",remote_action_group);
-                    } catch (Error e) {stderr.printf("Cannot create GMenuModel: %s",e.message);}
-                }
-                else */
-                {
-                    client = new ValaDBusMenu.GtkClient(object_name,proxy.menu);
-                    client.attach_to_menu(menu);
-                }
-            }
-
- //       }
+            client = new DBusMenu.Importer(object_name, proxy.menu);
+            connect_handler = Signal.connect(client,"notify::model",(GLib.Callback)on_model_changed_cb,this);
+        }
+        private static void on_model_changed_cb(DBusMenu.Importer importer, GLib.ParamSpec pspec, StatusNotifier.Item w)
+        {
+            w.insert_action_group("dbusmenu",importer.action_group);
+            w.menu.bind_model(importer.model, null, true);
+        }
         public bool context_menu()
         {
             int x,y;
@@ -251,6 +239,10 @@ namespace StatusNotifier
             }
             else
                 image.hide();
+        }
+        ~Item()
+        {
+            client.disconnect(connect_handler);
         }
     }
 }

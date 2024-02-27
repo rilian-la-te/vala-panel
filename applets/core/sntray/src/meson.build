@@ -1,5 +1,3 @@
-subdir('dbusmenu')
-
 backend_sources = files(
     'icon-pixmap.c',
     'icon-pixmap.h',
@@ -31,15 +29,17 @@ res = gnome.compile_resources(
     c_name: 'sntrayres'
 )
 
+importer = dependency('appmenu-glib-translator')
+
 backend_inc = include_directories('../include')
 this_inc = include_directories('.')
 backend_lib = static_library('sn-backend', backend_sources, backend_enums_gen, backend_sources_vala, res,
     include_directories : backend_inc,
-    dependencies: [vala_dbusmenu],
+    dependencies: [gtk, giounix, importer],
     pic : true
 )
 backend_dep = declare_dependency(
-        dependencies : [gtk, giounix],
+        dependencies : [gtk, giounix, importer],
         include_directories: backend_inc,
         link_whole: backend_lib
 )
