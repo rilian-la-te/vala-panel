@@ -16,7 +16,9 @@ build-alpine-meson:
   image: alpine:edge
   stage: build
   script:
-   - apk add --no-cache python3 gtk+3.0-dev vala meson ninja libwnck3-dev build-base git gtk-layer-shell-dev
+   - apk add --no-cache python3 gtk+3.0-dev vala meson ninja libwnck3-dev gobject-introspection-dev build-base git gtk-layer-shell-dev
+   - git clone https://gitlab.com/vala-panel-project/vala-panel-appmenu.git
+   - meson --prefix=/usr vp-build vala-panel-appmenu/subprojects/appmenu-glib-translator && meson install -C vp-build && rm -rf vala-panel-appmenu && rm -rf vp-build
    - meson bld --prefix=/usr && cd bld
    - ninja dist
   artifacts:
