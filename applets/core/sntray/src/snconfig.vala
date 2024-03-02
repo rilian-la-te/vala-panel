@@ -32,27 +32,27 @@ namespace StatusNotifier
         private const int COLUMN_ICON = 6;
 
         [GtkChild (name = "check-application")]
-        CheckButton check_application;
+        unowned CheckButton check_application;
         [GtkChild (name = "check-communications")]
-        CheckButton check_communications;
+        unowned CheckButton check_communications;
         [GtkChild (name = "check-system")]
-        CheckButton check_system;
+        unowned CheckButton check_system;
         [GtkChild (name = "check-hardware")]
-        CheckButton check_hardware;
+        unowned CheckButton check_hardware;
         [GtkChild (name = "check-other")]
-        CheckButton check_other;
+        unowned CheckButton check_other;
         [GtkChild (name = "check-passive")]
-        CheckButton check_passive;
+        unowned CheckButton check_passive;
         [GtkChild (name = "check-symbolic")]
-        CheckButton check_symbolic;
+        unowned CheckButton check_symbolic;
         [GtkChild (name = "check-labels")]
-        CheckButton check_labels;
+        unowned CheckButton check_labels;
         [GtkChild (name = "store")]
-        Gtk.ListStore store;
+        unowned Gtk.ListStore store;
         [GtkChild (name = "box-indicator")]
-        Box box_indicator;
+        unowned Box box_indicator;
         [GtkChild (name = "scale-indicator")]
-        Scale scale_indicator;
+        unowned Scale scale_indicator;
         unowned ItemBox layout;
         public bool configure_icon_size {get; set;}
         public static Gtk.Dialog get_config_dialog(ItemBox layout, bool configure_icon_size)

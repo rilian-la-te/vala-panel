@@ -56,7 +56,7 @@ namespace StatusNotifier
                 nested_watcher.register_status_notifier_host(object_path);
                 nested_watcher.status_notifier_item_registered.connect((id)=>{watcher_item_added(id);});
                 nested_watcher.status_notifier_item_unregistered.connect((id)=>{watcher_item_removed(id);});
-            } catch (IOError e) {
+            } catch (Error e) {
                 stderr.printf ("Could not register service. Waiting for external watcher\n");
             }
         }

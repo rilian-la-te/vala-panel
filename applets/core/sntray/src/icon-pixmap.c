@@ -63,6 +63,11 @@ G_GNUC_INTERNAL void icon_pixmap_free(IconPixmap *self)
 	g_clear_pointer(&self, g_free);
 }
 
+G_GNUC_INTERNAL void icon_pixmap_destroy_notify(uint8_t* pixels, gpointer user_data)
+{
+	g_free(pixels);
+}
+
 G_GNUC_INTERNAL GIcon *icon_pixmap_to_gicon(IconPixmap *self)
 {
 	if (!self->bytes)
@@ -88,7 +93,7 @@ G_GNUC_INTERNAL GIcon *icon_pixmap_to_gicon(IconPixmap *self)
 	                                    self->height,
 	                                    cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
 	                                                                  self->width),
-	                                    g_free,
+	                                    icon_pixmap_destroy_notify,
 	                                    NULL));
 	self->is_gicon = true;
 	self->bytes    = NULL;

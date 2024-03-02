@@ -266,7 +266,6 @@ static void visit_start(GMarkupParseContext *context, const char *name,
 	}
 	if (g_str_equal(name, "img"))
 	{
-		int i = 0;
 		for (size_t i = 0; attribute_names[i] != NULL; i++)
 		{
 			const char *attr = attribute_names[i];
