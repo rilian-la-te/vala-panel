@@ -13,8 +13,8 @@ G_BEGIN_DECLS
 #define VALA_PANEL_APPLET_ACTION_REMOVE "remove"
 #define VALA_PANEL_APPLET_ACTION_ABOUT "about"
 
-G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vala_panel_applet, VALA_PANEL, APPLET, GtkBin)
-#define VALA_PANEL_TYPE_APPLET vala_panel_applet_get_type()
+G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vp_applet, VALA_PANEL, APPLET, GtkBin)
+#define VALA_PANEL_TYPE_APPLET vp_applet_get_type()
 
 struct _ValaPanelAppletClass
 {
@@ -25,17 +25,17 @@ struct _ValaPanelAppletClass
 	gpointer padding[12];
 };
 
-bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command);
-bool vala_panel_applet_is_configurable(ValaPanelApplet *self);
-void vala_panel_applet_init_background(ValaPanelApplet *self);
-void vala_panel_applet_show_config_dialog(ValaPanelApplet *self);
-GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self);
-GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self);
-void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w);
-void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);
-GSettings *vala_panel_applet_get_settings(ValaPanelApplet *self);
-const char *vala_panel_applet_get_uuid(ValaPanelApplet *self);
-GActionMap *vala_panel_applet_get_action_group(ValaPanelApplet *self);
+bool vp_applet_remote_command(ValaPanelApplet *self, const char *command);
+bool vp_applet_is_configurable(ValaPanelApplet *self);
+void vp_applet_init_background(ValaPanelApplet *self);
+void vp_applet_show_config_dialog(ValaPanelApplet *self);
+GtkWidget *vp_applet_get_settings_ui(ValaPanelApplet *self);
+GtkWidget *vp_applet_get_background_widget(ValaPanelApplet *self);
+void vp_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w);
+void vp_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);
+GSettings *vp_applet_get_settings(ValaPanelApplet *self);
+const char *vp_applet_get_uuid(ValaPanelApplet *self);
+GActionMap *vp_applet_get_action_group(ValaPanelApplet *self);
 
 G_END_DECLS
 

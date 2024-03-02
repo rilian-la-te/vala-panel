@@ -40,12 +40,12 @@ struct _ValaPanelPlatformLayer
 	                          G_KEY_FILE_KEEP_COMMENTS,                                        \
 	                          NULL)
 
-G_DEFINE_TYPE(ValaPanelPlatformLayer, vala_panel_platform_layer, vala_panel_platform_get_type())
+G_DEFINE_TYPE(ValaPanelPlatformLayer, vp_platform_layer, vp_platform_get_type())
 
-ValaPanelPlatformLayer *vala_panel_platform_layer_new(GtkApplication *app, const char *profile)
+ValaPanelPlatformLayer *vp_platform_layer_new(GtkApplication *app, const char *profile)
 {
 	ValaPanelPlatformLayer *pl =
-	    VALA_PANEL_PLATFORM_LAYER(g_object_new(vala_panel_platform_layer_get_type(), NULL));
+	    VALA_PANEL_PLATFORM_LAYER(g_object_new(vp_platform_layer_get_type(), NULL));
 	pl->app                   = app;
 	pl->profile               = g_strdup(profile);
 	g_autofree char *filename = _user_config_file_name_new(pl->profile);
@@ -53,23 +53,23 @@ ValaPanelPlatformLayer *vala_panel_platform_layer_new(GtkApplication *app, const
 	    g_keyfile_settings_backend_new(filename,
 	                                   VALA_PANEL_OBJECT_PATH,
 	                                   VALA_PANEL_CONFIG_HEADER);
-	vala_panel_platform_init_settings(VALA_PANEL_PLATFORM(pl), backend);
+	vp_platform_init_settings(VALA_PANEL_PLATFORM(pl), backend);
 	return pl;
 }
 
 static void predicate_func(const char *key, ValaPanelUnitSettings *value, ValaPanelPlatform *self)
 {
-	bool is_toplevel                  = vala_panel_unit_settings_is_toplevel(value);
+	bool is_toplevel                  = vp_unit_settings_is_toplevel(value);
 	ValaPanelPlatformLayer *user_data = VALA_PANEL_PLATFORM_LAYER(self);
 	if (is_toplevel)
 	{
-		ValaPanelToplevel *unit = vala_panel_toplevel_new(user_data->app, self, key);
+		ValaPanelToplevel *unit = vp_toplevel_new(user_data->app, self, key);
 		GtkWindow *win          = GTK_WINDOW(unit);
-		vala_panel_platform_register_unit(self, win);
+		vp_platform_register_unit(self, win);
 		gtk_layer_init_for_window(win);
 		gtk_layer_set_layer(win, GTK_LAYER_SHELL_LAYER_TOP);
 		gtk_layer_set_namespace(win, "panel"); // FIXME: may have conflicts with mate-panel
-		vala_panel_toplevel_init_ui(unit);
+		vp_toplevel_init_ui(unit);
 		gtk_application_add_window(user_data->app, win);
 	}
 }
@@ -87,7 +87,7 @@ static void update_toplevel_geometry_for_all(GdkDisplay *scr, void *data)
 		if (VALA_PANEL_IS_TOPLEVEL(il->data))
 		{
 			ValaPanelToplevel *panel = (ValaPanelToplevel *)il->data;
-			vala_panel_update_visibility(panel, mons);
+			vp_update_visibility(panel, mons);
 		}
 	}
 }
@@ -139,7 +139,7 @@ static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkAppli
                                                 G_GNUC_UNUSED const char *profile)
 {
 	ValaPanelPlatformLayer *self = VALA_PANEL_PLATFORM_LAYER(obj);
-	ValaPanelCoreSettings *core  = vala_panel_platform_get_settings(obj);
+	ValaPanelCoreSettings *core  = vp_platform_get_settings(obj);
 	g_hash_table_foreach(core->all_units, (GHFunc)predicate_func, self);
 	monitors_update_init(app);
 	g_signal_connect(gdk_display_get_default(),
@@ -150,7 +150,7 @@ static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkAppli
 	                 "monitor-removed",
 	                 G_CALLBACK(monitor_removed_cb),
 	                 self->app);
-	return vala_panel_platform_has_units_loaded(obj);
+	return vp_platform_has_units_loaded(obj);
 }
 
 // TODO: Make more readable code without switch
@@ -208,7 +208,7 @@ static bool vpp_layer_edge_can_strut(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWind
 
 static void vpp_layer_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
-	if (vala_panel_platform_can_strut(f, top))
+	if (vp_platform_can_strut(f, top))
 		gtk_layer_auto_exclusive_zone_enable(top);
 	else
 		gtk_layer_set_exclusive_zone(top, 0);
@@ -218,7 +218,7 @@ static bool vpp_layer_edge_available(ValaPanelPlatform *self, GtkWindow *top, Va
                                      int monitor)
 {
 	ValaPanelPlatformLayer *pl = VALA_PANEL_PLATFORM_LAYER(self);
-	int edge                   = vala_panel_edge_from_gravity(gravity);
+	int edge                   = vp_edge_from_gravity(gravity);
 	bool strut                 = true;
 	g_object_get(top, VP_KEY_STRUT, &strut, NULL);
 	if (!strut)
@@ -239,7 +239,7 @@ static bool vpp_layer_edge_available(ValaPanelPlatform *self, GtkWindow *top, Va
 			             &sgravity,
 			             NULL);
 			if ((!have_toplevel || (pl != VALA_PANEL_TOPLEVEL(top))) &&
-			    (vala_panel_edge_from_gravity(sgravity) == edge) &&
+			    (vp_edge_from_gravity(sgravity) == edge) &&
 			    ((monitor == smonitor) || smonitor < 0))
 				return false;
 		}
@@ -251,14 +251,14 @@ static void vpp_layer_finalize(GObject *obj)
 	g_signal_handlers_disconnect_by_data(gdk_display_get_default(), self->app);
 	monitors_update_finalize(self->app);
 	g_clear_pointer(&self->profile, g_free);
-	G_OBJECT_CLASS(vala_panel_platform_layer_parent_class)->finalize(obj);
+	G_OBJECT_CLASS(vp_platform_layer_parent_class)->finalize(obj);
 }
 
-static void vala_panel_platform_layer_init(G_GNUC_UNUSED ValaPanelPlatformLayer *self)
+static void vp_platform_layer_init(G_GNUC_UNUSED ValaPanelPlatformLayer *self)
 {
 }
 
-static void vala_panel_platform_layer_class_init(ValaPanelPlatformLayerClass *klass)
+static void vp_platform_layer_class_init(ValaPanelPlatformLayerClass *klass)
 {
 	VALA_PANEL_PLATFORM_CLASS(klass)->get_name     = vpp_layer_get_name;
 	VALA_PANEL_PLATFORM_CLASS(klass)->move_to_side = vpp_layer_move_to_side;

@@ -25,16 +25,16 @@
 
 G_BEGIN_DECLS
 
-void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor);
-void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label);
-void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size);
-void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top);
-void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
-void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value);
-void vala_panel_apply_window_icon(GtkWindow *win);
-int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon);
-void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error);
-bool vala_panel_generate_confirmation_dialog(GtkWindow *parent, const char *error);
+void vp_setup_label(GtkLabel *label, const char *text, bool bold, double factor);
+void vp_setup_button(GtkButton *b, GtkImage *img, const char *label);
+void vp_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size);
+void vp_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top);
+void vp_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
+void vp_scale_button_set_value_labeled(GtkScaleButton *b, gint value);
+void vp_apply_window_icon(GtkWindow *win);
+int vp_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon);
+void vp_generate_error_dialog(GtkWindow *parent, const char *error);
+bool vp_generate_confirmation_dialog(GtkWindow *parent, const char *error);
 G_END_DECLS
 
 #endif // MISC_H

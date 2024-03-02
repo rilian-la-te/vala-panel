@@ -31,7 +31,7 @@ void child_spawn_func(G_GNUC_UNUSED void *data)
 	setpgid(0, getpgid(getppid()));
 }
 
-bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris)
+bool vp_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris)
 {
 	g_autoptr(GError) err = NULL;
 	if (app_info == NULL)
@@ -50,7 +50,7 @@ bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext
 	return ret;
 }
 
-GAppInfo *vala_panel_get_default_for_uri(const char *uri)
+GAppInfo *vp_get_default_for_uri(const char *uri)
 {
 	/* g_file_query_default_handler() calls
 	 * g_app_info_get_default_for_uri_scheme() too, but we have to do it
@@ -68,14 +68,14 @@ GAppInfo *vala_panel_get_default_for_uri(const char *uri)
 	return app_info;
 }
 
-void vala_panel_add_prop_as_action(GActionMap *map, const char *prop)
+void vp_add_prop_as_action(GActionMap *map, const char *prop)
 {
 	g_autoptr(GAction) action = G_ACTION(g_property_action_new(prop, map, prop));
 	g_action_map_add_action(map, action);
 	g_clear_object(&map);
 }
 
-void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop)
+void vp_add_gsettings_as_action(GActionMap *map, GSettings *settings, const char *prop)
 {
 	g_settings_bind(settings,
 	                prop,
@@ -87,7 +87,7 @@ void vala_panel_add_gsettings_as_action(GActionMap *map, GSettings *settings, co
 	g_action_map_add_action(map, action);
 }
 
-void vala_panel_reset_schema(GSettings *settings)
+void vp_reset_schema(GSettings *settings)
 {
 	g_autoptr(GSettingsSchema) schema = NULL;
 	g_object_get(settings, "settings-schema", &schema, NULL);
@@ -96,15 +96,15 @@ void vala_panel_reset_schema(GSettings *settings)
 		g_settings_reset(settings, keys[i]);
 }
 
-void vala_panel_reset_schema_with_children(GSettings *settings)
+void vp_reset_schema_with_children(GSettings *settings)
 {
 	g_settings_delay(settings);
-	vala_panel_reset_schema(settings);
+	vp_reset_schema(settings);
 	g_auto(GStrv) children = g_settings_list_children(settings);
 	for (int i = 0; children[i]; i++)
 	{
 		g_autoptr(GSettings) child = g_settings_get_child(settings, children[i]);
-		vala_panel_reset_schema(child);
+		vp_reset_schema(child);
 	}
 	g_settings_apply(settings);
 }

@@ -63,7 +63,7 @@ static GtkLicense vp_applet_info_get_lic_from_name(const char *license_name)
 	return val ? (GtkLicense)val->value : GTK_LICENSE_LGPL_3_0;
 }
 
-ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name, GType plugin_type)
+ValaPanelAppletInfo *vp_applet_info_load(const char *extension_name, GType plugin_type)
 {
 	g_autoptr(GKeyFile) file      = g_key_file_new();
 	g_autofree char *desktop_name = g_strdup_printf(PLUGINS_DATA "/%s.plugin", extension_name);
@@ -105,7 +105,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name, GTy
 	return (ValaPanelAppletInfo *)ret;
 }
 
-ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
+ValaPanelAppletInfo *vp_applet_info_duplicate(void *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = (struct _ValaPanelAppletInfo *)info;
 	struct _ValaPanelAppletInfo *ret   = g_slice_alloc0(sizeof(struct _ValaPanelAppletInfo));
@@ -140,7 +140,7 @@ ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info)
 	return (ValaPanelAppletInfo *)ret;
 }
 
-void vala_panel_applet_info_free(void *info)
+void vp_applet_info_free(void *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = (struct _ValaPanelAppletInfo *)info;
 	g_clear_pointer(&ainfo->module_name, g_free);
@@ -155,82 +155,82 @@ void vala_panel_applet_info_free(void *info)
 	g_slice_free(struct _ValaPanelAppletInfo, info);
 }
 
-G_DEFINE_BOXED_TYPE(ValaPanelAppletInfo, vala_panel_applet_info,
-                    (GBoxedCopyFunc)vala_panel_applet_info_duplicate, vala_panel_applet_info_free)
+G_DEFINE_BOXED_TYPE(ValaPanelAppletInfo, vp_applet_info,
+                    (GBoxedCopyFunc)vp_applet_info_duplicate, vp_applet_info_free)
 
-GType vala_panel_applet_info_get_stored_type(ValaPanelAppletInfo *info)
+GType vp_applet_info_get_stored_type(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->type;
 }
 
-const char *vala_panel_applet_info_get_module_name(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_module_name(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->module_name;
 }
 
-const char *vala_panel_applet_info_get_name(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_name(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->name;
 }
 
-const char *vala_panel_applet_info_get_description(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_description(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->description;
 }
 
-const char *vala_panel_applet_info_get_icon_name(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_icon_name(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->icon_name;
 }
 
-const char *const *vala_panel_applet_info_get_authors(ValaPanelAppletInfo *info)
+const char *const *vp_applet_info_get_authors(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return (const char *const *)ainfo->authors;
 }
 
-const char *const *vala_panel_applet_info_get_platforms(ValaPanelAppletInfo *info)
+const char *const *vp_applet_info_get_platforms(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return (const char *const *)ainfo->platforms;
 }
 
-const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_website(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->website;
 }
 
-const char *vala_panel_applet_info_get_help_uri(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_help_uri(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->help_uri;
 }
 
-GtkLicense vala_panel_applet_info_get_license(ValaPanelAppletInfo *info)
+GtkLicense vp_applet_info_get_license(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->license;
 }
 
-const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info)
+const char *vp_applet_info_get_version(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->version;
 }
 
-bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info)
+bool vp_applet_info_is_exclusive(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	return ainfo->exclusive;
 }
 
-static GtkDialog *vala_panel_applet_info_get_about_dialog(ValaPanelAppletInfo *info)
+static GtkDialog *vp_applet_info_get_about_dialog(ValaPanelAppletInfo *info)
 {
 	struct _ValaPanelAppletInfo *ainfo = ((struct _ValaPanelAppletInfo *)info);
 	g_autoptr(GtkBuilder) builder =
@@ -248,18 +248,18 @@ static GtkDialog *vala_panel_applet_info_get_about_dialog(ValaPanelAppletInfo *i
 	return GTK_DIALOG(d);
 }
 
-GtkWidget *vala_panel_applet_info_get_about_widget(ValaPanelAppletInfo *info)
+GtkWidget *vp_applet_info_get_about_widget(ValaPanelAppletInfo *info)
 {
-	GtkDialog *d         = vala_panel_applet_info_get_about_dialog(info);
+	GtkDialog *d         = vp_applet_info_get_about_dialog(info);
 	GtkWidget *content   = gtk_dialog_get_content_area(d);
 	GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(content));
 	gtk_container_remove(parent, content);
 	return content;
 }
 
-void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
+void vp_applet_info_show_about_dialog(ValaPanelAppletInfo *info)
 {
-	GtkDialog *d = vala_panel_applet_info_get_about_dialog(info);
+	GtkDialog *d = vp_applet_info_get_about_dialog(info);
 	gtk_window_present(GTK_WINDOW(d));
 	g_signal_connect(d, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 	g_signal_connect(d, "response", G_CALLBACK(gtk_widget_destroy), NULL);

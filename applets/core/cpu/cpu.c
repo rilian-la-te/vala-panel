@@ -54,7 +54,7 @@ struct _CpuApplet
 #define cpu_applet_from_da(da) VALA_PANEL_CPU_APPLET(gtk_widget_get_parent(GTK_WIDGET(da)))
 #define cpu_applet_get_da(p) GTK_DRAWING_AREA(gtk_bin_get_child(GTK_BIN(p)))
 
-G_DEFINE_DYNAMIC_TYPE(CpuApplet, cpu_applet, vala_panel_applet_get_type())
+G_DEFINE_DYNAMIC_TYPE(CpuApplet, cpu_applet, vp_applet_get_type())
 
 /* Redraw after timer callback or resize. */
 static void redraw_pixmap(CpuApplet *c)
@@ -263,14 +263,14 @@ CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, cons
 {
 	/* Allocate applet context*/
 	CpuApplet *c = VALA_PANEL_CPU_APPLET(
-	    vala_panel_applet_construct(cpu_applet_get_type(), toplevel, settings, uuid));
+	    vp_applet_construct(cpu_applet_get_type(), toplevel, settings, uuid));
 	return c;
 }
 static void cpu_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(cpu_applet_parent_class)->constructed(obj);
 	CpuApplet *c                = VALA_PANEL_CPU_APPLET(obj);
-	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(c));
+	ValaPanelToplevel *toplevel = vp_applet_get_toplevel(VALA_PANEL_APPLET(c));
 	/* Allocate drawing area as a child of top level widget. */
 	GtkDrawingArea *da = GTK_DRAWING_AREA(gtk_drawing_area_new());
 	gtk_widget_add_events(GTK_WIDGET(da),

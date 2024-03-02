@@ -24,10 +24,10 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelPlatformX11, vala_panel_platform_x11, VALA_PANEL, PLATFORM_X11,
+G_DECLARE_FINAL_TYPE(ValaPanelPlatformX11, vp_platform_x11, VALA_PANEL, PLATFORM_X11,
                      ValaPanelPlatform)
 
-ValaPanelPlatformX11 *vala_panel_platform_x11_new(GtkApplication *app, const char *profile);
+ValaPanelPlatformX11 *vp_platform_x11_new(GtkApplication *app, const char *profile);
 #define _user_config_file_name_new(cprofile)                                                       \
 	g_build_filename(g_get_user_config_dir(), GETTEXT_PACKAGE, cprofile, NULL)
 

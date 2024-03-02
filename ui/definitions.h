@@ -27,7 +27,7 @@
 #define gtk_widget_destroy0(x) g_clear_pointer(&x, gtk_widget_destroy)
 #define g_free0(x) g_clear_pointer(&x, g_free)
 
-#define vala_panel_bind_gsettings(obj, settings, prop)                                             \
+#define vp_bind_gsettings(obj, settings, prop)                                             \
 	g_settings_bind(settings,                                                                  \
 	                prop,                                                                      \
 	                G_OBJECT(obj),                                                             \
@@ -35,30 +35,30 @@
 	                (GSettingsBindFlags)(G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET |           \
 	                                     G_SETTINGS_BIND_DEFAULT));
 
-#define vala_panel_orient_from_edge(edge)                                                          \
+#define vp_orient_from_edge(edge)                                                          \
 	((edge == GTK_POS_TOP) || (edge == GTK_POS_BOTTOM)) ? GTK_ORIENTATION_HORIZONTAL           \
 	                                                    : GTK_ORIENTATION_VERTICAL
 
-#define vala_panel_orient_from_gravity(gravity)                                                    \
+#define vp_orient_from_gravity(gravity)                                                    \
 	(((gravity) < 6) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL)
 
-#define vala_panel_edge_from_gravity(gravity)                                                      \
+#define vp_edge_from_gravity(gravity)                                                      \
 	(gravity < 3)                                                                              \
 	    ? GTK_POS_TOP                                                                          \
 	    : (gravity < 6) ? GTK_POS_BOTTOM : (gravity < 9) ? GTK_POS_LEFT : GTK_POS_RIGHT
 
-#define vala_panel_invert_orient(orient)                                                           \
+#define vp_invert_orient(orient)                                                           \
 	orient == GTK_ORIENTATION_HORIZONTAL ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL
 
-#define vala_panel_effective_height(orient)                                                        \
+#define vp_effective_height(orient)                                                        \
 	orient == GTK_ORIENTATION_HORIZONTAL ? gtk_widget_get_allocated_height(GTK_WIDGET(top))    \
 	                                     : gtk_widget_get_allocated_width(GTK_WIDGET(top))
 
-#define vala_panel_effective_width(orient)                                                         \
+#define vp_effective_width(orient)                                                         \
 	orient == GTK_ORIENTATION_HORIZONTAL ? gtk_widget_get_allocated_width(GTK_WIDGET(top))     \
 	                                     : gtk_widget_get_allocated_height(GTK_WIDGET(top))
 
-#define vala_panel_transpose_area(marea)                                                           \
+#define vp_transpose_area(marea)                                                           \
 	{                                                                                          \
 		int i        = marea.height;                                                       \
 		marea.height = marea.width;                                                        \
@@ -68,9 +68,9 @@
 		marea.x      = i;                                                                  \
 	}
 
-#define vala_panel_str_is_empty(str) !str ? true : !g_strcmp0(str, "") ? true : false
+#define vp_str_is_empty(str) !str ? true : !g_strcmp0(str, "") ? true : false
 
-#define vala_panel_dup_array(DST, SRC, LEN)                                                        \
+#define vp_dup_array(DST, SRC, LEN)                                                        \
 	{                                                                                          \
 		size_t TMPSZ = sizeof(*(SRC)) * (LEN);                                             \
 		if (((DST) = malloc(TMPSZ)) != NULL)                                               \

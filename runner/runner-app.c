@@ -28,11 +28,11 @@ struct _ValaPanelRunApplication
 	GtkWindow *run_dialog;
 };
 
-G_DEFINE_TYPE(ValaPanelRunApplication, vala_panel_run_application, GTK_TYPE_APPLICATION)
+G_DEFINE_TYPE(ValaPanelRunApplication, vp_run_application, GTK_TYPE_APPLICATION)
 
-static ValaPanelRunApplication *vala_panel_run_application_new(void)
+static ValaPanelRunApplication *vp_run_application_new(void)
 {
-	return VALA_PANEL_RUN_APPLICATION(g_object_new(vala_panel_run_application_get_type(),
+	return VALA_PANEL_RUN_APPLICATION(g_object_new(vp_run_application_get_type(),
 	                                               "application-id",
 	                                               "org.valapanel.extras.Runner",
 	                                               "flags",
@@ -40,21 +40,21 @@ static ValaPanelRunApplication *vala_panel_run_application_new(void)
 	                                               NULL));
 }
 
-static void vala_panel_run_application_activate(GApplication *application)
+static void vp_run_application_activate(GApplication *application)
 {
 	ValaPanelRunApplication *app = VALA_PANEL_RUN_APPLICATION(application);
 	if (app->run_dialog == NULL)
-		app->run_dialog = GTK_WINDOW(vala_panel_runner_new(GTK_APPLICATION(app)));
+		app->run_dialog = GTK_WINDOW(vp_runner_new(GTK_APPLICATION(app)));
 	gtk_run(VALA_PANEL_RUNNER(app->run_dialog));
 }
 
-static void vala_panel_run_application_finalize(GObject *app)
+static void vp_run_application_finalize(GObject *app)
 {
 	GtkWidget *w = GTK_WIDGET(VALA_PANEL_RUN_APPLICATION(app)->run_dialog);
 	g_clear_pointer(&w, gtk_widget_destroy);
-	(*G_OBJECT_CLASS(vala_panel_run_application_parent_class)->finalize)(app);
+	(*G_OBJECT_CLASS(vp_run_application_parent_class)->finalize)(app);
 }
-static void vala_panel_run_application_init(G_GNUC_UNUSED ValaPanelRunApplication *self)
+static void vp_run_application_init(G_GNUC_UNUSED ValaPanelRunApplication *self)
 {
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
@@ -62,16 +62,16 @@ static void vala_panel_run_application_init(G_GNUC_UNUSED ValaPanelRunApplicatio
 	textdomain(GETTEXT_PACKAGE);
 }
 
-static void vala_panel_run_application_class_init(ValaPanelRunApplicationClass *klass)
+static void vp_run_application_class_init(ValaPanelRunApplicationClass *klass)
 {
 	GApplicationClass *parent = G_APPLICATION_CLASS(klass);
-	parent->activate          = vala_panel_run_application_activate;
+	parent->activate          = vp_run_application_activate;
 	GObjectClass *obj_class   = G_OBJECT_CLASS(klass);
-	obj_class->finalize       = vala_panel_run_application_finalize;
+	obj_class->finalize       = vp_run_application_finalize;
 }
 
 int main(int argc, char *argv[])
 {
-	ValaPanelRunApplication *rd = vala_panel_run_application_new();
+	ValaPanelRunApplication *rd = vp_run_application_new();
 	return g_application_run(G_APPLICATION(rd), argc, argv);
 }

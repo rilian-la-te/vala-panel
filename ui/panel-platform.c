@@ -28,53 +28,53 @@ typedef struct
 	GHashTable *toplevels;
 } ValaPanelPlatformPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelPlatform, vala_panel_platform, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE(ValaPanelPlatform, vp_platform, G_TYPE_OBJECT)
 
-bool vala_panel_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
+bool vp_platform_can_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_CLASS(self)->can_strut(self, top);
 	return false;
 }
 
-void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
+void vp_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
 {
 	if (self)
 		VALA_PANEL_PLATFORM_GET_CLASS(self)->update_strut(self, top);
 }
 
-void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top, ValaPanelGravity alloc,
+void vp_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top, ValaPanelGravity alloc,
                                       int monitor)
 {
 	if (self)
 		VALA_PANEL_PLATFORM_GET_CLASS(self)->move_to_side(self, top, alloc, monitor);
 }
 
-bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)
+bool vp_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend)
 {
-	return vala_panel_platform_init_settings_full(self,
+	return vp_platform_init_settings_full(self,
 	                                              VALA_PANEL_BASE_SCHEMA,
 	                                              VALA_PANEL_OBJECT_PATH,
 	                                              backend);
 }
 
-bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+bool vp_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	priv->core_settings = vp_core_settings_new(schema, path, backend);
 	return vp_core_settings_init_unit_list(priv->core_settings);
 }
 
-const char *vala_panel_platform_get_name(ValaPanelPlatform *self)
+const char *vp_platform_get_name(ValaPanelPlatform *self)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_CLASS(self)->get_name(self);
 	return "";
 }
 
-bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
+bool vp_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile)
 {
 	if (self)
@@ -84,7 +84,7 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
 	return false;
 }
 
-GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon)
+GdkMonitor *vp_platform_get_suitable_monitor(GtkWidget *self, int mon)
 {
 	GdkDisplay *screen   = gtk_widget_get_display(self);
 	GdkMonitor *fallback = gdk_display_get_monitor_at_point(screen, 0, 0);
@@ -96,42 +96,42 @@ GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon)
 	return GDK_IS_MONITOR(monitor) ? monitor : fallback;
 }
 
-void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit)
+void vp_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	g_hash_table_add(priv->toplevels, unit);
 }
 
-void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit)
+void vp_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	g_hash_table_remove(priv->toplevels, unit);
 }
 
-ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
+ValaPanelCoreSettings *vp_platform_get_settings(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	return priv->core_settings;
 }
 
 G_GNUC_INTERNAL ValaPanelAppletManager *vp_platform_get_manager(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	return priv->manager;
 }
 
-bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self)
+bool vp_platform_has_units_loaded(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	return g_hash_table_size(priv->toplevels);
 }
 
-bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
+bool vp_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
                                         ValaPanelGravity gravity, int monitor)
 {
 	if (self)
@@ -142,10 +142,10 @@ bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
 	return false;
 }
 
-static void vala_panel_platform_init(ValaPanelPlatform *self)
+static void vp_platform_init(ValaPanelPlatform *self)
 {
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	priv->core_settings = NULL;
 	priv->manager       = vp_applet_manager_new();
 	priv->toplevels     = g_hash_table_new_full(g_direct_hash,
@@ -154,19 +154,19 @@ static void vala_panel_platform_init(ValaPanelPlatform *self)
                                                 NULL);
 }
 
-static void vala_panel_platform_finalize(GObject *obj)
+static void vp_platform_finalize(GObject *obj)
 {
 	ValaPanelPlatform *self = VALA_PANEL_PLATFORM(obj);
 	ValaPanelPlatformPrivate *priv =
-	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
+	    (ValaPanelPlatformPrivate *)vp_platform_get_instance_private(self);
 	g_hash_table_unref(priv->toplevels);
 	if (priv->core_settings)
 		vp_core_settings_free(priv->core_settings);
 	g_clear_object(&priv->manager);
-	G_OBJECT_CLASS(vala_panel_platform_parent_class)->finalize(obj);
+	G_OBJECT_CLASS(vp_platform_parent_class)->finalize(obj);
 }
 
-static void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
+static void vp_platform_class_init(ValaPanelPlatformClass *klass)
 {
-	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
+	G_OBJECT_CLASS(klass)->finalize = vp_platform_finalize;
 }

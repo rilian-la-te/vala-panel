@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vala_panel_platform, VALA_PANEL, PLATFORM, GObject)
+G_DECLARE_DERIVABLE_TYPE(ValaPanelPlatform, vp_platform, VALA_PANEL, PLATFORM, GObject)
 
 typedef enum
 {
@@ -80,26 +80,26 @@ struct _ValaPanelPlatformClass
 /* Non-virtual functions */
 
 /* GSettings management */
-bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
-bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
+bool vp_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend *backend);
+bool vp_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
-ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
-GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon);
+ValaPanelCoreSettings *vp_platform_get_settings(ValaPanelPlatform *self);
+GdkMonitor *vp_platform_get_suitable_monitor(GtkWidget *self, int mon);
 
 /* Toplevel registration and destruction */
-void vala_panel_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit);
-void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit);
-bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self);
+void vp_platform_register_unit(ValaPanelPlatform *self, GtkWindow *unit);
+void vp_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *unit);
+bool vp_platform_has_units_loaded(ValaPanelPlatform *self);
 
 /* Virtual functions */
-const char *vala_panel_platform_get_name(ValaPanelPlatform *self);
-bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
+const char *vp_platform_get_name(ValaPanelPlatform *self);
+bool vp_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkApplication *app,
                                                    const char *profile);
-bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
-void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
-void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity alloc,
+bool vp_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
+void vp_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
+void vp_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity alloc,
                                       int monitor);
-bool vala_panel_platform_edge_available(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity gravity,
+bool vp_platform_edge_available(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity gravity,
                                         int monitor);
 
 G_END_DECLS

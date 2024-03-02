@@ -33,7 +33,7 @@ struct _TaskListApplet
 	XfceTasklist *widget;
 };
 
-G_DEFINE_DYNAMIC_TYPE(TaskListApplet, tasklist_applet, vala_panel_applet_get_type())
+G_DEFINE_DYNAMIC_TYPE(TaskListApplet, tasklist_applet, vp_applet_get_type())
 
 static void tasklist_settings_changed(GSettings *settings, char *key, void *data)
 {
@@ -74,7 +74,7 @@ static void tasklist_notify_orientation_connect(GObject *topo, GParamSpec *pspec
 	{
 		g_object_get(top, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);
 		xfce_tasklist_set_orientation(self, orient);
-		xfce_tasklist_update_edge(self, vala_panel_edge_from_gravity(gravity));
+		xfce_tasklist_update_edge(self, vp_edge_from_gravity(gravity));
 	}
 }
 
@@ -82,16 +82,16 @@ TaskListApplet *tasklist_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
                                     const char *uuid)
 {
 	TaskListApplet *self = TASKLIST_APPLET(
-	    vala_panel_applet_construct(tasklist_applet_get_type(), toplevel, settings, uuid));
+	    vp_applet_construct(tasklist_applet_get_type(), toplevel, settings, uuid));
 	return self;
 }
 static void tasklist_applet_constructed(GObject *obj)
 {
 	TaskListApplet *self        = TASKLIST_APPLET(obj);
 	ValaPanelApplet *base       = VALA_PANEL_APPLET(self);
-	ValaPanelToplevel *toplevel = vala_panel_applet_get_toplevel(base);
-	GSettings *settings         = vala_panel_applet_get_settings(base);
-	GActionMap *map             = G_ACTION_MAP(vala_panel_applet_get_action_group(base));
+	ValaPanelToplevel *toplevel = vp_applet_get_toplevel(base);
+	GSettings *settings         = vp_applet_get_settings(base);
+	GActionMap *map             = G_ACTION_MAP(vp_applet_get_action_group(base));
 	GtkOrientation orient;
 	ValaPanelGravity gravity;
 	g_object_get(toplevel, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);
@@ -126,7 +126,7 @@ static void tasklist_applet_constructed(GObject *obj)
 	xfce_tasklist_set_show_labels(self->widget,
 	                              g_settings_get_boolean(settings, TASKLIST_SHOW_LABELS));
 	xfce_tasklist_set_orientation(self->widget, orient);
-	xfce_tasklist_update_edge(self->widget, vala_panel_edge_from_gravity(gravity));
+	xfce_tasklist_update_edge(self->widget, vp_edge_from_gravity(gravity));
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(widget));
 	gtk_widget_show(GTK_WIDGET(widget));
 	gtk_widget_show(GTK_WIDGET(self));
@@ -134,7 +134,7 @@ static void tasklist_applet_constructed(GObject *obj)
 
 static GtkWidget *tasklist_applet_get_settings_ui(ValaPanelApplet *base)
 {
-	GtkWidget *config = generic_config_widget(vala_panel_applet_get_settings(base),
+	GtkWidget *config = generic_config_widget(vp_applet_get_settings(base),
 	                                          _("Show windows from all desktops"),
 	                                          TASKLIST_ALL_DESKTOPS,
 	                                          CONF_BOOL,

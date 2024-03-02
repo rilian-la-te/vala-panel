@@ -55,10 +55,10 @@ static void vp_layout_applets_reposition_after(ValaPanelLayout *self,
 static inline ValaPanelToplevel *vp_layout_get_toplevel(ValaPanelLayout *self)
 {
 	return VALA_PANEL_TOPLEVEL(
-	    gtk_widget_get_ancestor(GTK_WIDGET(self), vala_panel_toplevel_get_type()));
+	    gtk_widget_get_ancestor(GTK_WIDGET(self), vp_toplevel_get_type()));
 }
 
-static inline ValaPanelLayout *vala_panel_applet_get_layout(ValaPanelApplet *self)
+static inline ValaPanelLayout *vp_applet_get_layout(ValaPanelApplet *self)
 {
 	return VALA_PANEL_LAYOUT(gtk_widget_get_ancestor(GTK_WIDGET(self), vp_layout_get_type()));
 }
@@ -125,7 +125,7 @@ G_GNUC_INTERNAL void vp_layout_init_applets(ValaPanelLayout *self)
 	{
 		const char *unit          = core_units[i];
 		ValaPanelUnitSettings *pl = vp_core_settings_get_by_uuid(core_settings, unit);
-		if (!vala_panel_unit_settings_is_toplevel(pl))
+		if (!vp_unit_settings_is_toplevel(pl))
 		{
 			g_autofree char *id =
 			    g_settings_get_string(pl->common, VALA_PANEL_TOPLEVEL_ID);
@@ -138,10 +138,10 @@ G_GNUC_INTERNAL void vp_layout_init_applets(ValaPanelLayout *self)
 	return;
 }
 
-static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
+static void vp_applet_on_destroy(ValaPanelApplet *self, void *data)
 {
 	ValaPanelLayout *layout  = VALA_PANEL_LAYOUT(data);
-	const char *uuid         = vala_panel_applet_get_uuid(self);
+	const char *uuid         = vp_applet_get_uuid(self);
 	ValaPanelUnitSettings *s = vp_core_settings_get_by_uuid(core_settings, uuid);
 	g_autofree char *name    = g_settings_get_string(s->common, VP_KEY_NAME);
 	vp_applet_manager_applet_unref(manager, name);
@@ -216,10 +216,10 @@ G_GNUC_INTERNAL void vp_layout_applet_packing_updated(G_GNUC_UNUSED GSettings *s
                                                       const char *key, void *user_data)
 {
 	ValaPanelApplet *pl   = VALA_PANEL_APPLET(user_data);
-	ValaPanelLayout *self = vala_panel_applet_get_layout(pl);
+	ValaPanelLayout *self = vp_applet_get_layout(pl);
 
 	/* Prevent a massive amount of resorting */
-	if (!vp_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
+	if (!vp_toplevel_is_initialized(vp_applet_get_toplevel(pl)))
 		return;
 
 	if (!g_strcmp0(key, VP_KEY_PACK))
@@ -231,10 +231,10 @@ G_GNUC_INTERNAL void vp_layout_applet_position_updated(G_GNUC_UNUSED GSettings *
 {
 	ValaPanelApplet *pl = VALA_PANEL_APPLET(user_data);
 	ValaPanelLayout *layout =
-	    vala_panel_toplevel_get_layout(vala_panel_applet_get_toplevel(pl));
+	    vp_toplevel_get_layout(vp_applet_get_toplevel(pl));
 
 	/* Prevent a massive amount of resorting */
-	if (!vp_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
+	if (!vp_toplevel_is_initialized(vp_applet_get_toplevel(pl)))
 		return;
 
 	/* Prevent a massive amount of resorting when applets is moved*/
@@ -255,7 +255,7 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 	if (!applet)
 		return NULL;
 	bool nonfloat = g_object_is_floating(applet) ? false : true;
-	g_hash_table_insert(self->applets, g_strdup(vala_panel_applet_get_uuid(applet)), applet);
+	g_hash_table_insert(self->applets, g_strdup(vp_applet_get_uuid(applet)), applet);
 	vp_layout_applet_repack(NULL, applet, self);
 	vp_layout_applet_reposition(NULL, applet, NULL);
 	g_signal_connect(s->common,
@@ -266,7 +266,7 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 	                 "changed::" VP_KEY_POSITION,
 	                 G_CALLBACK(vp_layout_applet_position_updated),
 	                 applet);
-	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
+	g_signal_connect(applet, "destroy", G_CALLBACK(vp_applet_on_destroy), self);
 	if (nonfloat)
 		g_object_unref(applet);
 	return applet;
@@ -274,7 +274,7 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 
 G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApplet *applet)
 {
-	g_autofree char *uuid        = g_strdup(vala_panel_applet_get_uuid(applet));
+	g_autofree char *uuid        = g_strdup(vp_applet_get_uuid(applet));
 	uint pos                     = vp_layout_get_applet_position(self, applet);
 	ValaPanelAppletPackType type = vp_layout_get_applet_pack_type(applet);
 	ValaPanelUnitSettings *unit  = vp_core_settings_get_by_uuid(core_settings, uuid);
@@ -285,14 +285,14 @@ G_GNUC_INTERNAL void vp_layout_remove_applet(ValaPanelLayout *self, ValaPanelApp
 	vp_layout_update_applet_positions(self);
 }
 
-GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self)
+GList *vp_layout_get_applets_list(ValaPanelLayout *self)
 {
 	return g_hash_table_get_values(self->applets);
 }
 
 G_GNUC_INTERNAL ValaPanelUnitSettings *vp_layout_get_applet_settings(ValaPanelApplet *pl)
 {
-	const char *uuid = vala_panel_applet_get_uuid(pl);
+	const char *uuid = vp_applet_get_uuid(pl);
 	return vp_core_settings_get_by_uuid(core_settings, uuid);
 }
 

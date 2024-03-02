@@ -38,7 +38,7 @@ struct _NetMonApplet
 	uint timer;
 };
 
-G_DEFINE_DYNAMIC_TYPE(NetMonApplet, netmon_applet, vala_panel_applet_get_type())
+G_DEFINE_DYNAMIC_TYPE(NetMonApplet, netmon_applet, vp_applet_get_type())
 
 /*
  * Generic monitor functions and events
@@ -48,9 +48,9 @@ static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton
                                  NetMonApplet *applet)
 {
 	ValaPanelApplet *base = VALA_PANEL_APPLET(applet);
-	GtkWindow *top        = GTK_WINDOW(vala_panel_applet_get_toplevel(base));
+	GtkWindow *top        = GTK_WINDOW(vp_applet_get_toplevel(base));
 	g_autoptr(GVariant) var =
-	    g_settings_get_value(vala_panel_applet_get_settings(base), ACTION);
+	    g_settings_get_value(vp_applet_get_settings(base), ACTION);
 	if (evt->button == 1 &&
 	    g_variant_type_is_subtype_of(g_variant_get_type(var), G_VARIANT_TYPE_STRING))
 	{
@@ -63,7 +63,7 @@ static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton
 static void monitor_setup_size(NetMon *mon, NetMonApplet *pl, int width)
 {
 	int height;
-	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(pl)),
+	g_object_get(vp_applet_get_toplevel(VALA_PANEL_APPLET(pl)),
 	             VP_KEY_HEIGHT,
 	             &height,
 	             NULL);
@@ -102,7 +102,7 @@ static NetMon *monitor_create(GtkBox *monitor_box, NetMonApplet *pl, update_func
 
 static NetMon *create_monitor(NetMonApplet *self)
 {
-	GSettings *settings       = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	GSettings *settings       = vp_applet_get_settings(VALA_PANEL_APPLET(self));
 	g_autofree char *rx_color = g_settings_get_string(settings, NET_RX_CL);
 	g_autofree char *tx_color = g_settings_get_string(settings, NET_TX_CL);
 	char *interface_name      = g_settings_get_string(settings, NET_IFACE);
@@ -176,15 +176,15 @@ NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings
 {
 	/* Allocate applet context*/
 	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(
-	    vala_panel_applet_construct(netmon_applet_get_type(), toplevel, settings, uuid));
+	    vp_applet_construct(netmon_applet_get_type(), toplevel, settings, uuid));
 	return self;
 }
 static void netmon_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(netmon_applet_parent_class)->constructed(obj);
 	NetMonApplet *self  = VALA_PANEL_NETMON_APPLET(obj);
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
-	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
+	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(self));
+	GActionMap *map = G_ACTION_MAP(vp_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);
@@ -199,7 +199,7 @@ static void netmon_applet_constructed(GObject *obj)
 
 static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 {
-	return generic_config_widget(vala_panel_applet_get_settings(base),
+	return generic_config_widget(vp_applet_get_settings(base),
 	                             _("Network interface"),
 	                             NET_IFACE,
 	                             CONF_STR,
@@ -228,7 +228,7 @@ static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 static void netmon_applet_dispose(GObject *user_data)
 {
 	NetMonApplet *c     = VALA_PANEL_NETMON_APPLET(user_data);
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(c));
+	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(c));
 	/* Disconnect the signals. */
 	g_signal_handlers_disconnect_by_data(settings, c);
 	/* Disconnect the timer. */

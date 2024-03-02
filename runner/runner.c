@@ -45,7 +45,7 @@ struct _ValaPanelRunner
 	bool cached;
 };
 
-G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE(ValaPanelRunner, vp_runner, GTK_TYPE_DIALOG)
 #define BUTTON_QUARK g_quark_from_static_string("button-id")
 #define g_app_launcher_button_get_info_data(btn)                                                   \
 	(InfoData *)g_object_get_qdata(G_OBJECT(btn), BUTTON_QUARK)
@@ -92,7 +92,7 @@ GtkWidget *create_widget_func(const BoxedWrapper *wr, G_GNUC_UNUSED gpointer use
  * Main functions
  */
 
-static void vala_panel_runner_response(GtkDialog *dlg, gint response)
+static void vp_runner_response(GtkDialog *dlg, gint response)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(dlg);
 	if (G_LIKELY(response == GTK_RESPONSE_ACCEPT))
@@ -113,7 +113,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 				        ? G_APP_INFO_CREATE_NEEDS_TERMINAL
 				        : G_APP_INFO_CREATE_NONE,
 				    NULL);
-				launch = vala_panel_launch(G_DESKTOP_APP_INFO(app_info),
+				launch = vp_launch(G_DESKTOP_APP_INFO(app_info),
 				                           NULL,
 				                           GTK_WIDGET(dlg));
 			}
@@ -138,7 +138,7 @@ static void vala_panel_runner_response(GtkDialog *dlg, gint response)
 				return;
 			}
 			launch =
-			    vala_panel_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
+			    vp_launch(G_DESKTOP_APP_INFO(app_info), NULL, GTK_WIDGET(dlg));
 			if (!launch)
 			{
 				g_signal_stop_emission_by_name(dlg, "response");
@@ -168,7 +168,7 @@ static bool on_filter(const InfoData *info, ValaPanelRunner *self)
 void on_entry_changed(G_GNUC_UNUSED GtkSearchEntry *ent, ValaPanelRunner *self)
 {
 	if (self->filter)
-		vala_panel_list_model_filter_invalidate(self->filter);
+		vp_list_model_filter_invalidate(self->filter);
 	if (self->filter && g_list_model_get_n_items(G_LIST_MODEL(self->filter)) <= 0)
 	{
 		gtk_revealer_set_transition_type(self->bottom_revealer,
@@ -190,11 +190,11 @@ static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res,
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(source_object);
 	self->model           = (InfoDataModel *)g_task_propagate_pointer(G_TASK(res), NULL);
-	self->filter          = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
-	vala_panel_list_model_filter_set_filter_func(self->filter,
+	self->filter          = vp_list_model_filter_new(G_LIST_MODEL(self->model));
+	vp_list_model_filter_set_filter_func(self->filter,
 	                                             (ValaPanelListModelFilterFunc)on_filter,
 	                                             self);
-	vala_panel_list_model_filter_set_max_results(self->filter, MAX_SEARCH_RESULTS);
+	vp_list_model_filter_set_max_results(self->filter, MAX_SEARCH_RESULTS);
 	gtk_list_box_bind_model(self->app_box,
 	                        G_LIST_MODEL(self->filter),
 	                        (GtkListBoxCreateWidgetFunc)create_widget_func,
@@ -225,7 +225,7 @@ static int info_data_compare_func(gconstpointer a, gconstpointer b,
 	return 1;
 }
 
-static void vala_panel_runner_create_data_list(GTask *task, G_GNUC_UNUSED void *source,
+static void vp_runner_create_data_list(GTask *task, G_GNUC_UNUSED void *source,
                                                G_GNUC_UNUSED void *task_data,
                                                GCancellable *cancellable)
 {
@@ -301,7 +301,7 @@ static void build_app_box(ValaPanelRunner *self)
 		self->task = g_task_new(self, self->cancellable, setup_list_box_with_data, NULL);
 		g_task_set_return_on_cancel(self->task, true);
 		/* load in another working thread */
-		g_task_run_in_thread(self->task, vala_panel_runner_create_data_list);
+		g_task_run_in_thread(self->task, vp_runner_create_data_list);
 	}
 }
 
@@ -330,7 +330,7 @@ static void on_entry_cancelled(G_GNUC_UNUSED GtkSearchEntry *row, ValaPanelRunne
 	gtk_dialog_response(GTK_DIALOG(self), GTK_RESPONSE_CANCEL);
 }
 
-static void vala_panel_runner_destroy(GtkWidget *obj)
+static void vp_runner_destroy(GtkWidget *obj)
 {
 	ValaPanelRunner *self = VALA_PANEL_RUNNER(obj);
 
@@ -340,10 +340,10 @@ static void vala_panel_runner_destroy(GtkWidget *obj)
 	g_clear_object(&self->task);
 	g_clear_object(&self->model);
 	g_clear_object(&self->filter);
-	GTK_WIDGET_CLASS(vala_panel_runner_parent_class)->destroy(obj);
+	GTK_WIDGET_CLASS(vp_runner_parent_class)->destroy(obj);
 }
 
-static void vala_panel_runner_init(ValaPanelRunner *self)
+static void vp_runner_init(ValaPanelRunner *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
 	css_apply_from_resource(GTK_WIDGET(self),
@@ -352,10 +352,10 @@ static void vala_panel_runner_init(ValaPanelRunner *self)
 	build_app_box(self);
 }
 
-static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
+static void vp_runner_class_init(ValaPanelRunnerClass *klass)
 {
 	GtkWidgetClass *wclass = GTK_WIDGET_CLASS(klass);
-	wclass->destroy        = vala_panel_runner_destroy;
+	wclass->destroy        = vp_runner_destroy;
 	gtk_widget_class_set_template_from_resource(wclass, "/org/vala-panel/runner/app-runner.ui");
 	gtk_widget_class_bind_template_child_full(wclass,
 	                                          "main-entry",
@@ -385,17 +385,17 @@ static void vala_panel_runner_class_init(ValaPanelRunnerClass *klass)
 	                                             "on_search_cancelled",
 	                                             G_CALLBACK(on_entry_cancelled));
 	gtk_widget_class_bind_template_callback_full(wclass,
-	                                             "vala_panel_runner_response",
-	                                             G_CALLBACK(vala_panel_runner_response));
+	                                             "vp_runner_response",
+	                                             G_CALLBACK(vp_runner_response));
 	gtk_widget_class_bind_template_callback_full(wclass,
 	                                             "on_row_activated",
 	                                             G_CALLBACK(on_row_activated));
 }
 
-ValaPanelRunner *vala_panel_runner_new(GtkApplication *app)
+ValaPanelRunner *vp_runner_new(GtkApplication *app)
 {
 	return VALA_PANEL_RUNNER(
-	    g_object_new(vala_panel_runner_get_type(), "application", app, NULL));
+	    g_object_new(vp_runner_get_type(), "application", app, NULL));
 }
 
 void gtk_run(ValaPanelRunner *self)

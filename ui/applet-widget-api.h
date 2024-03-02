@@ -4,10 +4,10 @@
 #include "applet-widget.h"
 #include "toplevel.h"
 
-#define vala_panel_applet_new(t, s, n) vala_panel_applet_construct(VALA_PANEL_TYPE_APPLET, t, s, n)
-gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
+#define vp_applet_new(t, s, n) vp_applet_construct(VALA_PANEL_TYPE_APPLET, t, s, n)
+gpointer vp_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
                                      const char *uuid);
-ValaPanelToplevel *vala_panel_applet_get_toplevel(ValaPanelApplet *self);
-const char *vala_panel_get_current_platform_name();
+ValaPanelToplevel *vp_applet_get_toplevel(ValaPanelApplet *self);
+const char *vp_get_current_platform_name();
 
 #endif // APPLETWIDGETAPI_H

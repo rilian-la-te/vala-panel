@@ -74,14 +74,14 @@ struct _MenuApplet
 	char *filename;
 };
 
-G_DEFINE_DYNAMIC_TYPE(MenuApplet, menu_applet, vala_panel_applet_get_type())
+G_DEFINE_DYNAMIC_TYPE(MenuApplet, menu_applet, vp_applet_get_type())
 
 /* Applet widget constructor. */
 MenuApplet *menu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, const char *uuid)
 {
 	/* Allocate applet context*/
 	MenuApplet *self = VALA_PANEL_MENU_APPLET(
-	    vala_panel_applet_construct(menu_applet_get_type(), toplevel, settings, uuid));
+	    vp_applet_construct(menu_applet_get_type(), toplevel, settings, uuid));
 	return self;
 }
 
@@ -89,7 +89,7 @@ static void menu_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(menu_applet_parent_class)->constructed(obj);
 	MenuApplet *self = VALA_PANEL_MENU_APPLET(obj);
-	GActionMap *map  = vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self));
+	GActionMap *map  = vp_applet_get_action_group(VALA_PANEL_APPLET(self));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);
@@ -97,7 +97,7 @@ static void menu_applet_constructed(GObject *obj)
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_REMOTE)),
 	    true);
 	self->button        = NULL;
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(self));
 	g_settings_bind(settings, MODEL_FILE, self, MODEL_FILE, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, IS_SYSTEM, self, IS_SYSTEM, G_SETTINGS_BIND_GET);
 	g_settings_bind(settings, IS_BAR, self, IS_BAR, G_SETTINGS_BIND_GET);
@@ -122,12 +122,12 @@ static void panel_gravity_changed(ValaPanelToplevel *panel, G_GNUC_UNUSED GParam
 
 static GtkContainer *create_menubar(MenuApplet *self)
 {
-	ValaPanelToplevel *top   = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	ValaPanelToplevel *top   = vp_applet_get_toplevel(VALA_PANEL_APPLET(self));
 	GtkWidget *menubar       = gtk_menu_bar_new_from_model(G_MENU_MODEL(self->menu));
 	g_autoptr(GList) ch_list = gtk_container_get_children(GTK_CONTAINER(menubar));
 	apply_menu_properties(ch_list, G_MENU_MODEL(self->menu));
-	vala_panel_applet_set_background_widget(VALA_PANEL_APPLET(self), menubar);
-	vala_panel_applet_init_background(VALA_PANEL_APPLET(self));
+	vp_applet_set_background_widget(VALA_PANEL_APPLET(self), menubar);
+	vp_applet_init_background(VALA_PANEL_APPLET(self));
 	gtk_widget_show(menubar);
 	panel_gravity_changed(top, NULL, GTK_MENU_BAR(menubar));
 	g_signal_connect(top,
@@ -140,9 +140,9 @@ static GtkContainer *create_menubar(MenuApplet *self)
 static void on_menubutton_toggled(GtkToggleButton *b, void *data)
 {
 	MenuApplet *self       = VALA_PANEL_MENU_APPLET(data);
-	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	ValaPanelToplevel *top = vp_applet_get_toplevel(VALA_PANEL_APPLET(self));
 	GdkGravity menug, widget;
-	vala_panel_toplevel_get_menu_anchors(top, &menug, &widget);
+	vp_toplevel_get_menu_anchors(top, &menug, &widget);
 	if (gtk_toggle_button_get_active(b) && !gtk_widget_get_visible(GTK_WIDGET(self->int_menu)))
 		gtk_menu_popup_at_widget(self->int_menu, GTK_WIDGET(self), widget, menug, NULL);
 	else
@@ -157,7 +157,7 @@ static void on_menu_hide(G_GNUC_UNUSED GtkMenu *menu, void *data)
 
 static void menubutton_create_image(MenuApplet *self, GtkToggleButton *menubutton)
 {
-	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	ValaPanelToplevel *top = vp_applet_get_toplevel(VALA_PANEL_APPLET(self));
 	GtkWidget *img         = NULL;
 	if (self->icon)
 	{
@@ -165,10 +165,10 @@ static void menubutton_create_image(MenuApplet *self, GtkToggleButton *menubutto
 		g_autoptr(GError) err  = NULL;
 		g_autoptr(GIcon) gicon = g_icon_new_for_string(self->icon, &err);
 		if (!err)
-			vala_panel_setup_icon(GTK_IMAGE(img), gicon, G_OBJECT(top), -1);
+			vp_setup_icon(GTK_IMAGE(img), gicon, G_OBJECT(top), -1);
 		gtk_widget_show(img);
 	}
-	vala_panel_setup_button(GTK_BUTTON(menubutton), GTK_IMAGE(img), self->caption);
+	vp_setup_button(GTK_BUTTON(menubutton), GTK_IMAGE(img), self->caption);
 }
 
 static GtkContainer *create_menubutton(MenuApplet *self)
@@ -205,8 +205,8 @@ static GtkContainer *menumodel_widget_create(MenuApplet *self)
 
 static void menumodel_widget_destroy(MenuApplet *self)
 {
-	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
-	vala_panel_applet_set_background_widget(VALA_PANEL_APPLET(self), GTK_WIDGET(self));
+	ValaPanelToplevel *top = vp_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	vp_applet_set_background_widget(VALA_PANEL_APPLET(self), GTK_WIDGET(self));
 	if (self->monitor_update_idle)
 		g_source_remove(self->monitor_update_idle);
 	if (self->show_system_menu_idle)
@@ -436,7 +436,7 @@ static void menu_applet_set_property(GObject *object, uint prop_id, const GValue
 
 static GtkWidget *menu_applet_get_settings_ui(ValaPanelApplet *self)
 {
-	GSettings *settings = vala_panel_applet_get_settings(self);
+	GSettings *settings = vp_applet_get_settings(self);
 	return generic_config_widget(settings,
 	                             _("If internal menu is enabled, menu file will not be used,\n "
 	                               "predefeined menu will be used instead."),
@@ -466,9 +466,9 @@ static GtkWidget *menu_applet_get_settings_ui(ValaPanelApplet *self)
 static int show_menu_int(void *data)
 {
 	MenuApplet *self       = VALA_PANEL_MENU_APPLET(data);
-	ValaPanelToplevel *top = vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(self));
+	ValaPanelToplevel *top = vp_applet_get_toplevel(VALA_PANEL_APPLET(self));
 	GdkGravity menug, widget;
-	vala_panel_toplevel_get_menu_anchors(top, &menug, &widget);
+	vp_toplevel_get_menu_anchors(top, &menug, &widget);
 	if (g_source_is_destroyed(g_main_current_source()))
 		return false;
 	if (GTK_IS_MENU(self->int_menu))

@@ -29,22 +29,22 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelToplevel, vala_panel_toplevel, VALA_PANEL, TOPLEVEL,
+G_DECLARE_FINAL_TYPE(ValaPanelToplevel, vp_toplevel, VALA_PANEL, TOPLEVEL,
                      GtkApplicationWindow)
 
-#define VALA_PANEL_TYPE_TOPLEVEL vala_panel_toplevel_get_type()
+#define VALA_PANEL_TYPE_TOPLEVEL vp_toplevel_get_type()
 
-ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
+ValaPanelToplevel *vp_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
                                            const char *uid);
 
-#define vala_panel_toplevel_get_layout(self)                                                       \
+#define vp_toplevel_get_layout(self)                                                       \
 	VALA_PANEL_LAYOUT(gtk_bin_get_child(GTK_BIN(gtk_bin_get_child(GTK_BIN(self)))))
 
-void vala_panel_toplevel_init_ui(ValaPanelToplevel *self);
-void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons);
-void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page);
-void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid);
-void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
+void vp_toplevel_init_ui(ValaPanelToplevel *self);
+void vp_update_visibility(ValaPanelToplevel *panel, int mons);
+void vp_toplevel_configure(ValaPanelToplevel *self, const char *page);
+void vp_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid);
+void vp_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
                                           GdkGravity *widget_anchor);
 G_END_DECLS
 

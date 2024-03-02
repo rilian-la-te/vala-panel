@@ -87,7 +87,7 @@ G_GNUC_INTERNAL void vp_unit_settings_free(ValaPanelUnitSettings *settings)
 G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vp_unit_settings, vp_unit_settings_copy,
                     vp_unit_settings_free)
 
-bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings)
+bool vp_unit_settings_is_toplevel(ValaPanelUnitSettings *settings)
 {
 	g_autofree char *id;
 	g_object_get(settings->common, "schema-id", &id, NULL);
@@ -188,10 +188,10 @@ G_GNUC_INTERNAL void vp_core_settings_remove_unit_settings_full(ValaPanelCoreSet
 	if (destroy)
 	{
 		ValaPanelUnitSettings *removing_unit = vp_core_settings_get_by_uuid(settings, name);
-		vala_panel_reset_schema_with_children(removing_unit->common);
-		vala_panel_reset_schema_with_children(removing_unit->type);
+		vp_reset_schema_with_children(removing_unit->common);
+		vp_reset_schema_with_children(removing_unit->type);
 		if (removing_unit->custom != NULL)
-			vala_panel_reset_schema_with_children(removing_unit->custom);
+			vp_reset_schema_with_children(removing_unit->custom);
 	}
 	g_hash_table_remove(settings->all_units, name);
 	if (destroy)

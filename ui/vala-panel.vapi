@@ -47,11 +47,11 @@ namespace MenuMaker
     public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
     [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_command")]
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_launch")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="vp_launch")]
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);
-    [CCode (cheader_filename="misc.h",cname="vala_panel_launch_with_context")]
+    [CCode (cheader_filename="misc.h",cname="vp_launch_with_context")]
     public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
-    [CCode (cheader_filename="misc.h",cname="vala_panel_get_default_for_uri")]
+    [CCode (cheader_filename="misc.h",cname="vp_get_default_for_uri")]
     public static AppInfo get_default_for_uri(string uri);
     [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
@@ -161,9 +161,9 @@ namespace ValaPanel {
     public static void reset_schema(GLib.Settings settings);
     [CCode (cheader_filename="misc.h")]
     public static void reset_schema_with_children(GLib.Settings settings);
-    [CCode (cname = "vala_panel_add_gsettings_as_action",cheader_filename="misc.h")]
+    [CCode (cname = "vp_add_gsettings_as_action",cheader_filename="misc.h")]
     public static void settings_as_action(ActionMap map, GLib.Settings settings, string prop);
-    [CCode(cname = "vala_panel_bind_gsettings",cheader_filename="definitions.h")]
+    [CCode(cname = "vp_bind_gsettings",cheader_filename="definitions.h")]
     public static void settings_bind(Object map, GLib.Settings settings, string prop);
     [CCode (cheader_filename="misc-gtk.h")]
     public static void setup_button(Button b, Image? img = null, string? label = null);

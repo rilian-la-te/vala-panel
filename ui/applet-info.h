@@ -29,25 +29,25 @@ typedef struct _ValaPanelAppeltInfo ValaPanelAppletInfo;
 #define VALA_PANEL_APPLET_EXCLUSIVE "ValaPanel-Exclusive"
 #define VALA_PANEL_APPLET_EXTENSION_POINT "vala-panel-applet-module"
 
-ValaPanelAppletInfo *vala_panel_applet_info_load(const char *extension_name, GType plugin_type);
-ValaPanelAppletInfo *vala_panel_applet_info_duplicate(void *info);
-void vala_panel_applet_info_free(void *info);
+ValaPanelAppletInfo *vp_applet_info_load(const char *extension_name, GType plugin_type);
+ValaPanelAppletInfo *vp_applet_info_duplicate(void *info);
+void vp_applet_info_free(void *info);
 
-GType vala_panel_applet_info_get_stored_type(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_module_name(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_name(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_description(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_icon_name(ValaPanelAppletInfo *info);
-const char *const *vala_panel_applet_info_get_authors(ValaPanelAppletInfo *info);
-const char *const *vala_panel_applet_info_get_platforms(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_website(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_help_uri(ValaPanelAppletInfo *info);
-GtkLicense vala_panel_applet_info_get_license(ValaPanelAppletInfo *info);
-const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info);
-bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info);
+GType vp_applet_info_get_stored_type(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_module_name(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_name(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_description(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_icon_name(ValaPanelAppletInfo *info);
+const char *const *vp_applet_info_get_authors(ValaPanelAppletInfo *info);
+const char *const *vp_applet_info_get_platforms(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_website(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_help_uri(ValaPanelAppletInfo *info);
+GtkLicense vp_applet_info_get_license(ValaPanelAppletInfo *info);
+const char *vp_applet_info_get_version(ValaPanelAppletInfo *info);
+bool vp_applet_info_is_exclusive(ValaPanelAppletInfo *info);
 
-GtkWidget *vala_panel_applet_info_get_about_widget(ValaPanelAppletInfo *info);
-void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info);
+GtkWidget *vp_applet_info_get_about_widget(ValaPanelAppletInfo *info);
+void vp_applet_info_show_about_dialog(ValaPanelAppletInfo *info);
 
 G_END_DECLS
 

@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelRunApplication, vala_panel_run_application, VALA_PANEL,
+G_DECLARE_FINAL_TYPE(ValaPanelRunApplication, vp_run_application, VALA_PANEL,
                      RUN_APPLICATION, GtkApplication)
 
 G_END_DECLS

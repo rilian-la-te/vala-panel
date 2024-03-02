@@ -22,11 +22,11 @@
 #include "launcher-gtk.h"
 #include "util/misc.h"
 
-bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
+bool vp_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent)
 {
 	g_autoptr(GAppLaunchContext) cxt = G_APP_LAUNCH_CONTEXT(
 	    gdk_display_get_app_launch_context(gtk_widget_get_display(parent)));
-	return vala_panel_launch_with_context(app_info, cxt, uris);
+	return vp_launch_with_context(app_info, cxt, uris);
 }
 
 void activate_menu_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
@@ -36,7 +36,7 @@ void activate_menu_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *para
 	g_autoptr(GDesktopAppInfo) info = g_desktop_app_info_new(id);
 	GtkApplication *app             = GTK_APPLICATION(user_data);
 	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, NULL, GTK_WIDGET(window));
+	vp_launch(info, NULL, GTK_WIDGET(window));
 }
 
 void activate_menu_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
@@ -44,10 +44,10 @@ void activate_menu_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *par
 {
 	const char *uri                 = g_variant_get_string(param, NULL);
 	g_autoptr(GList) uris           = g_list_append(NULL, (gpointer)uri);
-	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(vala_panel_get_default_for_uri(uri));
+	g_autoptr(GDesktopAppInfo) info = G_DESKTOP_APP_INFO(vp_get_default_for_uri(uri));
 	GtkApplication *app             = GTK_APPLICATION(user_data);
 	GtkWidget *window               = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, uris, GTK_WIDGET(window));
+	vp_launch(info, uris, GTK_WIDGET(window));
 }
 
 void activate_menu_launch_command(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
@@ -61,5 +61,5 @@ void activate_menu_launch_command(G_GNUC_UNUSED GSimpleAction *action, GVariant 
 		g_warning("%s\n", err->message);
 	GtkApplication *app = GTK_APPLICATION(user_data);
 	GtkWidget *window   = GTK_WIDGET(gtk_application_get_windows(app)->data);
-	vala_panel_launch(info, NULL, GTK_WIDGET(window));
+	vp_launch(info, NULL, GTK_WIDGET(window));
 }

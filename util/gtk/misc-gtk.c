@@ -34,7 +34,7 @@ static void set_widget_align(GtkWidget *user_data, G_GNUC_UNUSED gpointer data)
 }
 
 /* Draw text into a label, with the user preference color and optionally bold. */
-void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor)
+void vp_setup_label(GtkLabel *label, const char *text, bool bold, double factor)
 {
 	gtk_label_set_text(label, text);
 	g_autofree char *css = css_generate_font_label(factor, bold);
@@ -64,7 +64,7 @@ static void setup_button_notify_connect(GObject *_sender, GParamSpec *b,
 	}
 }
 
-void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
+void vp_setup_button(GtkButton *b, GtkImage *img, const char *label)
 {
 	css_apply_from_resource(GTK_WIDGET(b), "/org/vala-panel/lib/style.css", "-panel-button");
 	g_signal_connect(G_OBJECT(b), "notify", G_CALLBACK(setup_button_notify_connect), NULL);
@@ -78,7 +78,7 @@ void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 	gtk_button_set_relief(b, GTK_RELIEF_NONE);
 }
 
-void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
+void vp_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 {
 	gtk_image_set_from_gicon(img, icon, GTK_ICON_SIZE_INVALID);
 	if (top != NULL)
@@ -91,7 +91,7 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 		gtk_image_set_pixel_size(img, size);
 }
 
-void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top)
+void vp_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top)
 {
 	css_apply_from_resource(GTK_WIDGET(btn),
 	                        "/org/vala-panel/lib/style.css",
@@ -101,22 +101,22 @@ void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label
 	if (icon != NULL)
 	{
 		img = GTK_IMAGE(gtk_image_new());
-		vala_panel_setup_icon(img, icon, top, -1);
+		vp_setup_icon(img, icon, top, -1);
 	}
-	vala_panel_setup_button(btn, img, label);
+	vp_setup_button(btn, img, label);
 	gtk_container_set_border_width(GTK_CONTAINER(btn), 0);
 	gtk_widget_set_can_focus(GTK_WIDGET(btn), false);
 	gtk_widget_set_has_window(GTK_WIDGET(btn), false);
 }
 
-void vala_panel_apply_window_icon(GtkWindow *win)
+void vp_apply_window_icon(GtkWindow *win)
 {
 	g_autoptr(GdkPixbuf) icon =
 	    gdk_pixbuf_new_from_resource("/org/vala-panel/lib/panel.png", NULL);
 	gtk_window_set_icon(win, icon);
 }
 
-void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper)
+void vp_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper)
 {
 	gtk_adjustment_set_lower(gtk_scale_button_get_adjustment(b), lower);
 	gtk_adjustment_set_upper(gtk_scale_button_get_adjustment(b), upper);
@@ -124,14 +124,14 @@ void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper
 	gtk_adjustment_set_page_increment(gtk_scale_button_get_adjustment(b), 1);
 }
 
-void vala_panel_scale_button_set_value_labeled(GtkScaleButton *b, gint value)
+void vp_scale_button_set_value_labeled(GtkScaleButton *b, gint value)
 {
 	gtk_scale_button_set_value(b, value);
 	g_autofree char *str = g_strdup_printf("%d", value);
 	gtk_button_set_label(GTK_BUTTON(b), str);
 }
 
-int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
+int vp_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 {
 	int mons = gdk_display_get_n_monitors(disp);
 	for (int i = 0; i < mons; i++)
@@ -142,7 +142,7 @@ int vala_panel_monitor_num_from_mon(GdkDisplay *disp, GdkMonitor *mon)
 	return -1;
 }
 
-void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error)
+void vp_generate_error_dialog(GtkWindow *parent, const char *error)
 {
 	g_warning("%s", error);
 	GtkWidget *dlg = gtk_message_dialog_new(parent,
@@ -151,13 +151,13 @@ void vala_panel_generate_error_dialog(GtkWindow *parent, const char *error)
 	                                        GTK_BUTTONS_CLOSE,
 	                                        "%s",
 	                                        error);
-	vala_panel_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
+	vp_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Error"));
 	gtk_dialog_run(GTK_DIALOG(dlg));
 	gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
-bool vala_panel_generate_confirmation_dialog(GtkWindow *parent, const char *error)
+bool vp_generate_confirmation_dialog(GtkWindow *parent, const char *error)
 {
 	GtkWidget *dlg = gtk_message_dialog_new(parent,
 	                                        GTK_DIALOG_MODAL,
@@ -165,7 +165,7 @@ bool vala_panel_generate_confirmation_dialog(GtkWindow *parent, const char *erro
 	                                        GTK_BUTTONS_OK_CANCEL,
 	                                        "%s",
 	                                        error);
-	vala_panel_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
+	vp_apply_window_icon(GTK_IS_WINDOW(dlg) ? GTK_WINDOW(dlg) : NULL);
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
 	bool ret = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
 	gtk_widget_destroy(GTK_WIDGET(dlg));

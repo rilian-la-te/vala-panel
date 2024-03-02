@@ -43,7 +43,7 @@ struct _MonitorsApplet
 	uint timer;
 };
 
-G_DEFINE_DYNAMIC_TYPE(MonitorsApplet, monitors_applet, vala_panel_applet_get_type())
+G_DEFINE_DYNAMIC_TYPE(MonitorsApplet, monitors_applet, vp_applet_get_type())
 
 /*
  * Generic monitor functions and events
@@ -53,14 +53,14 @@ static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton
                                  MonitorsApplet *applet)
 {
 	g_autoptr(GVariant) var =
-	    g_settings_get_value(vala_panel_applet_get_settings(VALA_PANEL_APPLET(applet)), ACTION);
+	    g_settings_get_value(vp_applet_get_settings(VALA_PANEL_APPLET(applet)), ACTION);
 	if (evt->button == 1 &&
 	    g_variant_type_is_subtype_of(g_variant_get_type(var), G_VARIANT_TYPE_STRING))
 	{
 		activate_menu_launch_command(NULL,
 		                             var,
 		                             gtk_window_get_application(
-		                                 GTK_WINDOW(vala_panel_applet_get_toplevel(
+		                                 GTK_WINDOW(vp_applet_get_toplevel(
 		                                     VALA_PANEL_APPLET(applet)))));
 		return true;
 	}
@@ -70,7 +70,7 @@ static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton
 static void monitor_setup_size(Monitor *mon, MonitorsApplet *pl, int width)
 {
 	int height;
-	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(pl)),
+	g_object_get(vp_applet_get_toplevel(VALA_PANEL_APPLET(pl)),
 	             VP_KEY_HEIGHT,
 	             &height,
 	             NULL);
@@ -103,7 +103,7 @@ static Monitor *monitor_create(GtkBox *monitor_box, MonitorsApplet *pl, update_f
 
 static Monitor *create_monitor_with_pos(MonitorsApplet *self, int pos)
 {
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
+	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(self));
 	if (pos == CPU_POS)
 	{
 		g_autofree char *color = g_settings_get_string(settings, CPU_CL);
@@ -224,7 +224,7 @@ MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *sett
 {
 	/* Allocate applet context*/
 	MonitorsApplet *self = VALA_PANEL_MONITORS_APPLET(
-	    vala_panel_applet_construct(monitors_applet_get_type(), toplevel, settings, uuid));
+	    vp_applet_construct(monitors_applet_get_type(), toplevel, settings, uuid));
 
 	return self;
 }
@@ -232,8 +232,8 @@ static void monitors_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(monitors_applet_parent_class)->constructed(obj);
 	MonitorsApplet *self = VALA_PANEL_MONITORS_APPLET(obj);
-	GSettings *settings  = vala_panel_applet_get_settings(VALA_PANEL_APPLET(self));
-	GActionMap *map = G_ACTION_MAP(vala_panel_applet_get_action_group(VALA_PANEL_APPLET(self)));
+	GSettings *settings  = vp_applet_get_settings(VALA_PANEL_APPLET(self));
+	GActionMap *map = G_ACTION_MAP(vp_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);
@@ -252,7 +252,7 @@ static void monitors_applet_constructed(GObject *obj)
 
 static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 {
-	return generic_config_widget(vala_panel_applet_get_settings(base),
+	return generic_config_widget(vp_applet_get_settings(base),
 	                             _("Display CPU usage"),
 	                             DISPLAY_CPU,
 	                             CONF_BOOL,
@@ -290,7 +290,7 @@ static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 static void monitors_applet_dispose(GObject *user_data)
 {
 	MonitorsApplet *c   = VALA_PANEL_MONITORS_APPLET(user_data);
-	GSettings *settings = vala_panel_applet_get_settings(VALA_PANEL_APPLET(c));
+	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(c));
 	/* Disconnect the signals. */
 	g_signal_handlers_disconnect_by_data(settings, c);
 	/* Disconnect the timer. */

@@ -69,7 +69,7 @@ struct _ValaPanelApplication
 	char *shutdown_command;
 };
 
-G_DEFINE_TYPE(ValaPanelApplication, vala_panel_application, GTK_TYPE_APPLICATION)
+G_DEFINE_TYPE(ValaPanelApplication, vp_application, GTK_TYPE_APPLICATION)
 
 static void activate_menu(GSimpleAction *simple, GVariant *param, gpointer data);
 static void activate_panel_preferences(GSimpleAction *simple, GVariant *param, gpointer data);
@@ -108,7 +108,7 @@ static const GOptionEntry entries[] = {
 	{ NULL }
 };
 
-static const GActionEntry vala_panel_application_app_entries[10] = {
+static const GActionEntry vp_application_app_entries[10] = {
 	{ "preferences", activate_preferences, NULL, NULL, NULL, { 0 } },
 	{ "panel-preferences", activate_panel_preferences, "s", NULL, NULL, { 0 } },
 	{ "about", activate_about, NULL, NULL, NULL, { 0 } },
@@ -120,7 +120,7 @@ static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "quit", activate_exit, NULL, NULL, NULL, { 0 } },
 	{ "restart", activate_restart, NULL, NULL, NULL, { 0 } },
 };
-static const GActionEntry vala_panel_application_menu_entries[3] = {
+static const GActionEntry vp_application_menu_entries[3] = {
 	{ "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
 	{ "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
 	{ "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } }
@@ -175,9 +175,9 @@ static void apply_styling(ValaPanelApplication *app)
 	}
 }
 
-ValaPanelApplication *vala_panel_application_new(void)
+ValaPanelApplication *vp_application_new(void)
 {
-	return (ValaPanelApplication *)g_object_new(vala_panel_application_get_type(),
+	return (ValaPanelApplication *)g_object_new(vp_application_get_type(),
 	                                            "application-id",
 	                                            "org.valapanel.application",
 	                                            "flags",
@@ -187,7 +187,7 @@ ValaPanelApplication *vala_panel_application_new(void)
 	                                            NULL);
 }
 
-static void vala_panel_application_init(ValaPanelApplication *self)
+static void vp_application_init(ValaPanelApplication *self)
 {
 	self->restart  = false;
 	self->profile  = g_strdup(DEFAULT_PROFILE);
@@ -195,10 +195,10 @@ static void vala_panel_application_init(ValaPanelApplication *self)
 	g_application_add_main_option_entries(G_APPLICATION(self), entries);
 }
 
-static void vala_panel_application_startup(GApplication *base)
+static void vp_application_startup(GApplication *base)
 {
 	ValaPanelApplication *self = (ValaPanelApplication *)base;
-	G_APPLICATION_CLASS(vala_panel_application_parent_class)->startup(base);
+	G_APPLICATION_CLASS(vp_application_parent_class)->startup(base);
 	g_application_mark_busy((GApplication *)self);
 	setlocale(LC_CTYPE, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
@@ -206,16 +206,16 @@ static void vala_panel_application_startup(GApplication *base)
 	textdomain(GETTEXT_PACKAGE);
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), DATADIR "/images");
 	g_action_map_add_action_entries((GActionMap *)self,
-	                                vala_panel_application_app_entries,
-	                                G_N_ELEMENTS(vala_panel_application_app_entries),
+	                                vp_application_app_entries,
+	                                G_N_ELEMENTS(vp_application_app_entries),
 	                                self);
 	g_action_map_add_action_entries((GActionMap *)self,
-	                                vala_panel_application_menu_entries,
-	                                G_N_ELEMENTS(vala_panel_application_menu_entries),
+	                                vp_application_menu_entries,
+	                                G_N_ELEMENTS(vp_application_menu_entries),
 	                                self);
 }
 
-static void vala_panel_application_shutdown(GApplication *base)
+static void vp_application_shutdown(GApplication *base)
 {
 	g_autoptr(GSList) list = NULL;
 	GList *lst             = gtk_application_get_windows(GTK_APPLICATION(base));
@@ -226,7 +226,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 		GtkWindow *w = GTK_WINDOW(il->data);
 		gtk_window_set_application(w, NULL);
 	}
-	G_APPLICATION_CLASS(vala_panel_application_parent_class)->shutdown(base);
+	G_APPLICATION_CLASS(vp_application_parent_class)->shutdown(base);
 	if (VALA_PANEL_APPLICATION(base)->restart)
 	{
 		g_autoptr(GError) err = NULL;
@@ -249,7 +249,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 	}
 }
 
-static gint vala_panel_app_handle_local_options(G_GNUC_UNUSED GApplication *application,
+static gint vp_app_handle_local_options(G_GNUC_UNUSED GApplication *application,
                                                 GVariantDict *options)
 {
 	if (g_variant_dict_contains(options, "version"))
@@ -260,7 +260,7 @@ static gint vala_panel_app_handle_local_options(G_GNUC_UNUSED GApplication *appl
 	return -1;
 }
 
-static int vala_panel_app_command_line(GApplication *application,
+static int vp_app_command_line(GApplication *application,
                                        GApplicationCommandLine *commandline)
 {
 	g_autofree char *profile_name = NULL;
@@ -308,14 +308,14 @@ static int vala_panel_app_command_line(GApplication *application,
 			if (VALA_PANEL_IS_TOPLEVEL(l->data))
 			{
 				ValaPanelLayout *layout =
-				    vala_panel_toplevel_get_layout(VALA_PANEL_TOPLEVEL(l->data));
-				GList *applets = vala_panel_layout_get_applets_list(layout);
+				    vp_toplevel_get_layout(VALA_PANEL_TOPLEVEL(l->data));
+				GList *applets = vp_layout_get_applets_list(layout);
 				for (GList *il = applets; il != NULL; il = il->next)
 				{
 					const char *gotten_uuid =
-					    vala_panel_applet_get_uuid(VALA_PANEL_APPLET(il->data));
+					    vp_applet_get_uuid(VALA_PANEL_APPLET(il->data));
 					if (!g_strcmp0(uuid, gotten_uuid))
-						vala_panel_applet_remote_command(VALA_PANEL_APPLET(
+						vp_applet_remote_command(VALA_PANEL_APPLET(
 						                                     il->data),
 						                                 command_str);
 				}
@@ -356,26 +356,26 @@ static bool load_settings(ValaPanelApplication *app)
 #ifdef PLATFORM_LAYER_SHELL
 	if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default()))
 		app->platform = VALA_PANEL_PLATFORM(
-		    vala_panel_platform_layer_new(GTK_APPLICATION(app), app->profile));
+		    vp_platform_layer_new(GTK_APPLICATION(app), app->profile));
 #endif
 #ifdef PLATFORM_X11
 	if (GDK_IS_X11_DISPLAY(gdk_display_get_default()))
 		app->platform = VALA_PANEL_PLATFORM(
-		    vala_panel_platform_x11_new(GTK_APPLICATION(app), app->profile));
+		    vp_platform_x11_new(GTK_APPLICATION(app), app->profile));
 #endif
-	ValaPanelCoreSettings *s         = vala_panel_platform_get_settings(app->platform);
+	ValaPanelCoreSettings *s         = vp_platform_get_settings(app->platform);
 	GSettingsBackend *config_backend = s->backend;
 	app->config = g_settings_new_with_backend_and_path(VALA_PANEL_BASE_SCHEMA,
 	                                                   config_backend,
 	                                                   VALA_PANEL_OBJECT_PATH);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_LOCK);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_RUN);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_LOGOUT);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_SHUTDOWN);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_TERMINAL);
-	vala_panel_bind_gsettings(app, app->config, VP_KEY_CSS);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_DARK);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_CUSTOM);
+	vp_bind_gsettings(app, app->config, VP_KEY_LOCK);
+	vp_bind_gsettings(app, app->config, VP_KEY_RUN);
+	vp_bind_gsettings(app, app->config, VP_KEY_LOGOUT);
+	vp_bind_gsettings(app, app->config, VP_KEY_SHUTDOWN);
+	vp_bind_gsettings(app, app->config, VP_KEY_TERMINAL);
+	vp_bind_gsettings(app, app->config, VP_KEY_CSS);
+	vp_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_DARK);
+	vp_add_gsettings_as_action(G_ACTION_MAP(app), app->config, VP_KEY_CUSTOM);
 	return true;
 }
 
@@ -386,7 +386,7 @@ static void _ensure_user_config_dirs(void)
 	g_mkdir_with_parents(dir, 0700);
 }
 
-void vala_panel_application_activate(GApplication *app)
+void vp_application_activate(GApplication *app)
 {
 	static bool is_started     = false;
 	ValaPanelApplication *self = VALA_PANEL_APPLICATION(app);
@@ -399,7 +399,7 @@ void vala_panel_application_activate(GApplication *app)
 		gdk_window_set_events(gdk_get_default_root_window(),
 		                      (GdkEventMask)(GDK_STRUCTURE_MASK | GDK_SUBSTRUCTURE_MASK |
 		                                     GDK_PROPERTY_CHANGE_MASK));
-		if (G_UNLIKELY(!vala_panel_platform_start_panels_from_profile(VALA_PANEL_PLATFORM(
+		if (G_UNLIKELY(!vp_platform_start_panels_from_profile(VALA_PANEL_PLATFORM(
 		                                                                  self->platform),
 		                                                              GTK_APPLICATION(app),
 		                                                              self->profile)))
@@ -417,7 +417,7 @@ void vala_panel_application_activate(GApplication *app)
 	}
 }
 
-static void vala_panel_app_finalize(GObject *object)
+static void vp_app_finalize(GObject *object)
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
 	g_clear_object(&app->config);
@@ -430,10 +430,10 @@ static void vala_panel_app_finalize(GObject *object)
 	g_free0(app->shutdown_command);
 	g_clear_object(&app->provider);
 	g_free0(app->profile);
-	G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize(object);
+	G_OBJECT_CLASS(vp_application_parent_class)->finalize(object);
 }
 
-static void vala_panel_app_set_property(GObject *object, uint id, const GValue *value,
+static void vp_app_set_property(GObject *object, uint id, const GValue *value,
                                         GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
@@ -495,7 +495,7 @@ static void vala_panel_app_set_property(GObject *object, uint id, const GValue *
 	}
 }
 
-static void vala_panel_app_get_property(GObject *object, uint id, GValue *value, GParamSpec *pspec)
+static void vp_app_get_property(GObject *object, uint id, GValue *value, GParamSpec *pspec)
 {
 	ValaPanelApplication *app;
 	g_return_if_fail(VALA_PANEL_IS_APPLICATION(object));
@@ -555,12 +555,12 @@ static void activate_menu(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVa
 		if (VALA_PANEL_IS_TOPLEVEL(l->data))
 		{
 			ValaPanelLayout *layout =
-			    vala_panel_toplevel_get_layout(VALA_PANEL_TOPLEVEL(l->data));
-			GList *applets = vala_panel_layout_get_applets_list(layout);
+			    vp_toplevel_get_layout(VALA_PANEL_TOPLEVEL(l->data));
+			GList *applets = vp_layout_get_applets_list(layout);
 			for (GList *il = applets; il != NULL; il = il->next)
 			{
 				ValaPanelApplet *applet = VALA_PANEL_APPLET(il->data);
-				bool success = vala_panel_applet_remote_command(applet, "menu");
+				bool success = vp_applet_remote_command(applet, "menu");
 				if (success)
 					break;
 			}
@@ -582,7 +582,7 @@ static void activate_panel_preferences(G_GNUC_UNUSED GSimpleAction *simple,
 			g_object_get(l->data, VP_KEY_UUID, &name, NULL);
 			if (!g_strcmp0(name, g_variant_get_string(param, NULL)))
 			{
-				vala_panel_toplevel_configure(l->data, "position");
+				vp_toplevel_configure(l->data, "position");
 				break;
 			}
 			g_warning(_("No panel with this name found.\n"));
@@ -681,16 +681,16 @@ static void activate_restart(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED 
 	g_application_quit(G_APPLICATION(app));
 }
 
-static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
+static void vp_application_class_init(ValaPanelApplicationClass *klass)
 {
-	G_APPLICATION_CLASS(klass)->startup              = vala_panel_application_startup;
-	G_APPLICATION_CLASS(klass)->shutdown             = vala_panel_application_shutdown;
-	G_APPLICATION_CLASS(klass)->activate             = vala_panel_application_activate;
-	G_APPLICATION_CLASS(klass)->handle_local_options = vala_panel_app_handle_local_options;
-	G_APPLICATION_CLASS(klass)->command_line         = vala_panel_app_command_line;
-	G_OBJECT_CLASS(klass)->get_property              = vala_panel_app_get_property;
-	G_OBJECT_CLASS(klass)->set_property              = vala_panel_app_set_property;
-	G_OBJECT_CLASS(klass)->finalize                  = vala_panel_app_finalize;
+	G_APPLICATION_CLASS(klass)->startup              = vp_application_startup;
+	G_APPLICATION_CLASS(klass)->shutdown             = vp_application_shutdown;
+	G_APPLICATION_CLASS(klass)->activate             = vp_application_activate;
+	G_APPLICATION_CLASS(klass)->handle_local_options = vp_app_handle_local_options;
+	G_APPLICATION_CLASS(klass)->command_line         = vp_app_command_line;
+	G_OBJECT_CLASS(klass)->get_property              = vp_app_get_property;
+	G_OBJECT_CLASS(klass)->set_property              = vp_app_set_property;
+	G_OBJECT_CLASS(klass)->finalize                  = vp_app_finalize;
 	app_specs[APP_PROFILE]                           = g_param_spec_string("profile",
                                                      "profile",
                                                      "profile",
@@ -746,7 +746,7 @@ static void vala_panel_application_class_init(ValaPanelApplicationClass *klass)
 
 int main(int argc, char *argv[])
 {
-	ValaPanelApplication *app = vala_panel_application_new();
+	ValaPanelApplication *app = vp_application_new();
 	int ret                   = g_application_run(G_APPLICATION(app), argc, argv);
 	g_clear_object(&app);
 	return ret;

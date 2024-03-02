@@ -17,7 +17,7 @@
     <property name="urgency_hint">True</property>
     <property name="decorated">False</property>
     <property name="deletable">False</property>
-    <signal name="response" handler="vala_panel_runner_response" swapped="no"/>
+    <signal name="response" handler="vp_runner_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="main-box">
         <property name="visible">True</property>

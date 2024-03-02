@@ -199,7 +199,7 @@ GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *s
                                                                 GTK_RESPONSE_CLOSE,
                                                                 NULL));
 	GtkBox *dlg_vbox = GTK_BOX(gtk_dialog_get_content_area(dlg));
-	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
+	vp_apply_window_icon(GTK_WINDOW(dlg));
 	GtkWidget *settings_widget = generic_config_widget_internal(settings, l);
 	gtk_container_add(GTK_CONTAINER(dlg_vbox), settings_widget);
 	gtk_box_set_spacing(dlg_vbox, 4);

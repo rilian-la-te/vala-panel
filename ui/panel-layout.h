@@ -48,7 +48,7 @@ G_GNUC_INTERNAL bool vp_layout_can_move_to_direction(ValaPanelLayout *self, Vala
                                                      ValaPanelApplet *next, GtkPackType direction);
 G_GNUC_INTERNAL void vp_layout_move_applet_one_step(ValaPanelLayout *self, ValaPanelApplet *prev,
                                                     ValaPanelApplet *next, GtkPackType direction);
-GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self);
+GList *vp_layout_get_applets_list(ValaPanelLayout *self);
 G_GNUC_INTERNAL ValaPanelUnitSettings *vp_layout_get_applet_settings(ValaPanelApplet *pl);
 G_GNUC_INTERNAL ValaPanelAppletPackType vp_layout_get_applet_pack_type(ValaPanelApplet *pl);
 G_GNUC_INTERNAL unsigned int vp_layout_get_applet_position(ValaPanelLayout *self,

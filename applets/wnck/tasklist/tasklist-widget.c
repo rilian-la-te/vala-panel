@@ -52,9 +52,9 @@
 
 /* locking helpers for tasklist->locked */
 #define xfce_tasklist_get_panel_plugin(tasklist)                                                   \
-	gtk_widget_get_ancestor(GTK_WIDGET(tasklist), vala_panel_applet_get_type())
+	gtk_widget_get_ancestor(GTK_WIDGET(tasklist), vp_applet_get_type())
 #define xfce_tasklist_get_toplevel(tasklist)                                                       \
-	gtk_widget_get_ancestor(GTK_WIDGET(tasklist), vala_panel_toplevel_get_type())
+	gtk_widget_get_ancestor(GTK_WIDGET(tasklist), vp_toplevel_get_type())
 #define xfce_tasklist_horizontal(tasklist) ((tasklist)->mode == GTK_ORIENTATION_HORIZONTAL)
 #define xfce_tasklist_vertical(tasklist) ((tasklist)->mode == GTK_ORIENTATION_VERTICAL)
 #define xfce_tasklist_deskbar(tasklist) 0
@@ -905,7 +905,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 	gtk_widget_set_allocation(widget, allocation);
 	/* swap integers with vertical orientation */
 	if (!xfce_tasklist_horizontal(tasklist))
-		vala_panel_transpose_area(area);
+		vp_transpose_area(area);
 	if (area.height > MAX_PANEL_HEIGHT)
 	{
 		area.height = MIN(area.height, area.width);
@@ -939,7 +939,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 
 		/* position the arrow in the correct position */
 		if (!xfce_tasklist_horizontal(tasklist))
-			vala_panel_transpose_area(child_alloc);
+			vp_transpose_area(child_alloc);
 	}
 	else
 	{
@@ -1013,7 +1013,7 @@ static void xfce_tasklist_size_allocate(GtkWidget *widget, GtkAllocation *alloca
 
 			/* allocate the child */
 			if (!xfce_tasklist_horizontal(tasklist))
-				vala_panel_transpose_area(child_alloc);
+				vp_transpose_area(child_alloc);
 
 			/* increase the position counter */
 			i++;
@@ -1911,7 +1911,7 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 	gtk_widget_add_events(GTK_WIDGET(child->button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
 	g_object_get(xfce_tasklist_get_toplevel(tasklist), VP_KEY_GRAVITY, &edge, NULL);
 	g_autofree char *flat_css =
-	    css_generate_flat_button(child->button, vala_panel_edge_from_gravity(edge));
+	    css_generate_flat_button(child->button, vp_edge_from_gravity(edge));
 	g_autofree char *css_string =
 	    g_strdup_printf("image { padding: 3px; } image.minimized { opacity: %d.%02d; }",
 	                    tasklist->minimized_icon_lucency / 100,
@@ -2202,9 +2202,9 @@ static int xfce_tasklist_button_compare(gconstpointer child_a, gconstpointer chi
 				name_b = wnck_class_group_get_name(class_group_b);
 
 			/* if there is no class group name, use the window name */
-			if (vala_panel_str_is_empty(name_a) && a->window != NULL)
+			if (vp_str_is_empty(name_a) && a->window != NULL)
 				name_a = wnck_window_get_name(a->window);
-			if (vala_panel_str_is_empty(name_b) && b->window != NULL)
+			if (vp_str_is_empty(name_b) && b->window != NULL)
 				name_b = wnck_window_get_name(b->window);
 
 			if (name_a == NULL)

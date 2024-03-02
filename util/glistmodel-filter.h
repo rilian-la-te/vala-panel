@@ -25,17 +25,17 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(ValaPanelListModelFilter, vala_panel_list_model_filter, VALA_PANEL,
+G_DECLARE_FINAL_TYPE(ValaPanelListModelFilter, vp_list_model_filter, VALA_PANEL,
                      LIST_MODEL_FILTER, GObject)
 
 typedef bool (*ValaPanelListModelFilterFunc)(gpointer, gpointer);
 
-ValaPanelListModelFilter *vala_panel_list_model_filter_new(GListModel *base_model);
-void vala_panel_list_model_filter_set_filter_func(ValaPanelListModelFilter *self,
+ValaPanelListModelFilter *vp_list_model_filter_new(GListModel *base_model);
+void vp_list_model_filter_set_filter_func(ValaPanelListModelFilter *self,
                                                   ValaPanelListModelFilterFunc func,
                                                   gpointer user_data);
-void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self);
-void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self,
+void vp_list_model_filter_invalidate(ValaPanelListModelFilter *self);
+void vp_list_model_filter_set_max_results(ValaPanelListModelFilter *self,
                                                   unsigned int max_results);
 G_END_DECLS
 

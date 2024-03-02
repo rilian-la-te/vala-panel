@@ -39,9 +39,9 @@ typedef enum
 
 static ValaPanelPlatform *platform = NULL;
 
-static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
+static ValaPanelToplevel *vp_toplevel_create(GtkApplication *app, const char *name, int mon,
                                                      ValaPanelGravity e);
-static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self);
+static void vp_toplevel_update_geometry(ValaPanelToplevel *self);
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_panel_settings(GSimpleAction *act, GVariant *param, void *data);
@@ -116,14 +116,14 @@ struct _ValaPanelToplevel
 	char *font;
 };
 
-G_DEFINE_TYPE(ValaPanelToplevel, vala_panel_toplevel, GTK_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE(ValaPanelToplevel, vp_toplevel, GTK_TYPE_APPLICATION_WINDOW)
 /*****************************************************************************************
  *                                   Common functions
  *****************************************************************************************/
 
 G_GNUC_INTERNAL ValaPanelCoreSettings *vp_toplevel_get_core_settings()
 {
-	return vala_panel_platform_get_settings(platform);
+	return vp_platform_get_settings(platform);
 }
 G_GNUC_INTERNAL ValaPanelAppletManager *vp_toplevel_get_manager()
 {
@@ -140,9 +140,9 @@ G_GNUC_INTERNAL ValaPanelPlatform *vp_toplevel_get_current_platform()
 	return platform;
 }
 
-const char *vala_panel_get_current_platform_name()
+const char *vp_get_current_platform_name()
 {
-	return vala_panel_platform_get_name(platform);
+	return vp_platform_get_name(platform);
 }
 
 static void stop_ui(ValaPanelToplevel *self)
@@ -158,21 +158,21 @@ static void stop_ui(ValaPanelToplevel *self)
 	g_clear_pointer(&ch, gtk_widget_destroy);
 }
 
-static void vala_panel_toplevel_destroy(GObject *base)
+static void vp_toplevel_destroy(GObject *base)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(base);
 	stop_ui(self);
-	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->dispose(base);
+	G_OBJECT_CLASS(vp_toplevel_parent_class)->dispose(base);
 }
 
-static void vala_panel_toplevel_finalize(GObject *obj)
+static void vp_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
 	g_clear_object(&self->provider);
 	g_free0(self->uuid);
 	g_free0(self->font);
 	g_free0(self->background_file);
-	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
+	G_OBJECT_CLASS(vp_toplevel_parent_class)->finalize(obj);
 }
 
 static void start_ui(ValaPanelToplevel *self)
@@ -188,7 +188,7 @@ static void start_ui(ValaPanelToplevel *self)
 	gtk_widget_realize(GTK_WIDGET(self));
 	self->ah_rev = GTK_REVEALER(gtk_revealer_new());
 	self->layout = vp_layout_new(VALA_PANEL_TOPLEVEL(self),
-	                             vala_panel_orient_from_gravity(self->gravity),
+	                             vp_orient_from_gravity(self->gravity),
 	                             0);
 	gtk_revealer_set_transition_type(self->ah_rev, GTK_REVEALER_TRANSITION_TYPE_CROSSFADE);
 	g_signal_connect_swapped(self->ah_rev,
@@ -216,7 +216,7 @@ static void start_ui(ValaPanelToplevel *self)
 	gtk_window_present(GTK_WINDOW(self));
 	bool autohide = g_settings_get_boolean(self->settings->common, VP_KEY_AUTOHIDE);
 	g_object_set(self, VP_KEY_AUTOHIDE, autohide, NULL);
-	vala_panel_toplevel_update_geometry(self);
+	vp_toplevel_update_geometry(self);
 	self->initialized = true;
 }
 
@@ -225,7 +225,7 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	if (self->settings == NULL)
 	{
 		self->settings =
-		    vp_core_settings_get_by_uuid(vala_panel_platform_get_settings(platform),
+		    vp_core_settings_get_by_uuid(vp_platform_get_settings(platform),
 		                                 self->uuid);
 	}
 	if (use_internal_values)
@@ -233,58 +233,58 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 		g_settings_set_int(self->settings->common, VP_KEY_MONITOR, self->mon);
 		g_settings_set_enum(self->settings->common, VP_KEY_GRAVITY, (int)self->gravity);
 	}
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_GRAVITY);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_HEIGHT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_WIDTH);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_DYNAMIC);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_AUTOHIDE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_STRUT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_DOCK);
-	vala_panel_bind_gsettings(self, self->settings->common, VP_KEY_MONITOR)
-	    vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_DOCK);
+	vp_bind_gsettings(self, self->settings->common, VP_KEY_MONITOR)
+	    vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                       self->settings->common,
 	                                       VP_KEY_ICON_SIZE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_BACKGROUND_COLOR);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_FOREGROUND_COLOR);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_BACKGROUND_FILE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_FONT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_FONT);
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_CORNER_RADIUS);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_FONT_SIZE_ONLY);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_USE_BACKGROUND_COLOR);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_USE_FOREGROUND_COLOR);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_USE_FONT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_USE_BACKGROUND_FILE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	vp_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VP_KEY_USE_TOOLBAR_APPEARANCE);
 	g_action_map_add_action_entries(G_ACTION_MAP(self),
@@ -293,7 +293,7 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	                                self);
 }
 
-void vala_panel_toplevel_init_ui(ValaPanelToplevel *self)
+void vp_toplevel_init_ui(ValaPanelToplevel *self)
 {
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		start_ui(self);
@@ -302,7 +302,7 @@ void vala_panel_toplevel_init_ui(ValaPanelToplevel *self)
 /**************************************************************************************
  *                                     Menus stuff
  **************************************************************************************/
-static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl)
+static GtkMenu *vp_toplevel_get_plugin_menu(ValaPanelToplevel *self, ValaPanelApplet *pl)
 {
 	g_autoptr(GtkBuilder) builder =
 	    gtk_builder_new_from_resource("/org/vala-panel/lib/menus.ui");
@@ -310,7 +310,7 @@ static GtkMenu *vala_panel_toplevel_get_plugin_menu(ValaPanelToplevel *self, Val
 	if (pl != NULL)
 	{
 		GMenu *gmenusection = G_MENU(gtk_builder_get_object(builder, "plugin-section"));
-		vala_panel_applet_update_context_menu(pl, gmenusection);
+		vp_applet_update_context_menu(pl, gmenusection);
 	}
 	if (GTK_IS_WIDGET(self->context_menu))
 		gtk_widget_destroy(GTK_WIDGET(self->context_menu));
@@ -332,9 +332,9 @@ G_GNUC_INTERNAL bool vp_toplevel_release_event_helper(GtkWidget *_sender, GdkEve
 		pl = VALA_PANEL_APPLET(_sender);
 	if (e->button == 3)
 	{
-		GtkMenu *menu = vala_panel_toplevel_get_plugin_menu(self, pl);
+		GtkMenu *menu = vp_toplevel_get_plugin_menu(self, pl);
 		GdkGravity menug, widget;
-		vala_panel_toplevel_get_menu_anchors(self, &menug, &widget);
+		vp_toplevel_get_menu_anchors(self, &menug, &widget);
 		gtk_menu_popup_at_widget(menu, GTK_WIDGET(_sender), widget, menug, (GdkEvent *)e);
 		return true;
 	}
@@ -356,7 +356,7 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 	self->pref_dialog = NULL;
 }
 
-void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
+void vp_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
                                           GdkGravity *widget_anchor)
 {
 	ValaPanelGravity gravity = self->gravity;
@@ -389,7 +389,7 @@ void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *m
 	}
 }
 
-void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
+void vp_toplevel_configure(ValaPanelToplevel *self, const char *page)
 {
 	if (self->pref_dialog == NULL)
 		self->pref_dialog =
@@ -402,7 +402,7 @@ void vala_panel_toplevel_configure(ValaPanelToplevel *self, const char *page)
 	                         self);
 }
 
-void vala_panel_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid)
+void vp_toplevel_configure_applet(ValaPanelToplevel *self, const char *uuid)
 {
 	if (self->pref_dialog == NULL)
 		self->pref_dialog =
@@ -430,7 +430,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 	int m = self->mon;
 	for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
 	{
-		if (vala_panel_platform_edge_available(platform, NULL, (ValaPanelGravity)e * 3, m))
+		if (vp_platform_edge_available(platform, NULL, (ValaPanelGravity)e * 3, m))
 		{
 			new_edge = (GtkPositionType)e;
 			new_mon  = m;
@@ -444,7 +444,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 			/* try each of the four edges */
 			for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
 			{
-				if ((vala_panel_platform_edge_available(platform,
+				if ((vp_platform_edge_available(platform,
 				                                        NULL,
 				                                        (ValaPanelGravity)e * 3,
 				                                        m)))
@@ -466,7 +466,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 		    GTK_MESSAGE_ERROR,
 		    GTK_BUTTONS_CLOSE,
 		    _("There is no room for another panel. All the edges are taken."));
-		vala_panel_apply_window_icon(GTK_WINDOW(msg));
+		vp_apply_window_icon(GTK_WINDOW(msg));
 		gtk_window_set_title(GTK_WINDOW(msg), _("Error"));
 		gtk_dialog_run(GTK_DIALOG(msg));
 		gtk_widget_destroy(GTK_WIDGET(msg));
@@ -475,11 +475,11 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 	g_autofree char *new_name = g_uuid_string_random();
 	// FIXME: Translate after adding constructors
 	ValaPanelToplevel *new_toplevel =
-	    vala_panel_toplevel_create(gtk_window_get_application(GTK_WINDOW(self)),
+	    vp_toplevel_create(gtk_window_get_application(GTK_WINDOW(self)),
 	                               new_name,
 	                               new_mon,
 	                               (ValaPanelGravity)3 * new_edge);
-	vala_panel_platform_register_unit(platform, GTK_WINDOW(new_toplevel));
+	vp_platform_register_unit(platform, GTK_WINDOW(new_toplevel));
 	//        new_toplevel.configure("position");
 	gtk_widget_show(GTK_WIDGET(new_toplevel));
 	gtk_widget_queue_resize(GTK_WIDGET(new_toplevel));
@@ -495,7 +495,7 @@ static void activate_remove_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSE
                                                GTK_BUTTONS_OK_CANCEL,
                                                _("Really delete this panel?\n<b>Warning:"
                                                  "This can not be recovered.</b>")));
-	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
+	vp_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
 	bool ok = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
 	gtk_widget_destroy(GTK_WIDGET(dlg));
@@ -505,17 +505,17 @@ static void activate_remove_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSE
 		stop_ui(self);
 		gtk_widget_hide(GTK_WIDGET(self));
 		/* delete the config unit of this panel */
-		ValaPanelCoreSettings *st = vala_panel_platform_get_settings(platform);
+		ValaPanelCoreSettings *st = vp_platform_get_settings(platform);
 		vp_core_settings_remove_unit_settings_full(st, uid, true);
 		/* Unregister unit in platform, causes panel destruction */
-		vala_panel_platform_unregister_unit(platform, GTK_WINDOW(self));
+		vp_platform_unregister_unit(platform, GTK_WINDOW(self));
 	}
 }
 static void activate_panel_settings(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED GVariant *param,
                                     void *data)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(data);
-	vala_panel_toplevel_configure(self, g_variant_get_string(param, NULL));
+	vp_toplevel_configure(self, g_variant_get_string(param, NULL));
 }
 /**************************************************************************
  * Appearance -------------------------------------------------------------
@@ -607,9 +607,9 @@ static void update_appearance(ValaPanelToplevel *self)
 	                 self->use_toolbar_appearance);
 }
 
-static ValaPanelToplevel *vala_panel_toplevel_create_window(GtkApplication *app, const char *uuid)
+static ValaPanelToplevel *vp_toplevel_create_window(GtkApplication *app, const char *uuid)
 {
-	return VALA_PANEL_TOPLEVEL(g_object_new(vala_panel_toplevel_get_type(),
+	return VALA_PANEL_TOPLEVEL(g_object_new(vp_toplevel_get_type(),
 	                                        "border-width",
 	                                        0,
 	                                        "decorated",
@@ -637,31 +637,31 @@ static ValaPanelToplevel *vala_panel_toplevel_create_window(GtkApplication *app,
 	                                        NULL));
 }
 
-static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *app,
+static ValaPanelToplevel *vp_toplevel_new_from_position(GtkApplication *app,
                                                                 const char *uid, int mon,
                                                                 ValaPanelGravity edge)
 {
-	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
+	ValaPanelToplevel *ret = vp_toplevel_create_window(app, uid);
 	ret->mon               = mon;
 	ret->gravity           = edge;
 	init_actions(ret, true);
-	vala_panel_toplevel_init_ui(ret);
+	vp_toplevel_init_ui(ret);
 	return ret;
 }
-static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
+static ValaPanelToplevel *vp_toplevel_create(GtkApplication *app, const char *name, int mon,
                                                      ValaPanelGravity e)
 {
 	vp_core_settings_add_unit_settings_full(vp_toplevel_get_core_settings(), name, name, true);
-	return vala_panel_toplevel_new_from_position(app, name, mon, e);
+	return vp_toplevel_new_from_position(app, name, mon, e);
 }
-ValaPanelToplevel *vala_panel_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
+ValaPanelToplevel *vp_toplevel_new(GtkApplication *app, ValaPanelPlatform *plt,
                                            const char *uid)
 {
 	if (platform == NULL)
 	{
 		platform = plt;
 	}
-	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
+	ValaPanelToplevel *ret = vp_toplevel_create_window(app, uid);
 	init_actions(ret, false);
 	return ret;
 }
@@ -678,13 +678,13 @@ static void measure(GtkWidget *w, GtkOrientation orient, G_GNUC_UNUSED int for_s
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(w);
 	GdkRectangle marea      = { 0, 0, 0, 0 };
-	GdkMonitor *mon         = vala_panel_platform_get_suitable_monitor(w, self->mon);
+	GdkMonitor *mon         = vp_platform_get_suitable_monitor(w, self->mon);
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		gdk_monitor_get_geometry(mon, &marea);
-	int scrw = vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
+	int scrw = vp_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL
 	               ? marea.width
 	               : marea.height;
-	if (vala_panel_orient_from_gravity(self->gravity) != orient)
+	if (vp_orient_from_gravity(self->gravity) != orient)
 		*min = *nat = (!self->autohide || (self->ah_rev != NULL &&
 		                                   gtk_revealer_get_reveal_child(self->ah_rev)))
 		                  ? self->height
@@ -696,7 +696,7 @@ static void get_preferred_width_for_height(GtkWidget *w, int height, int *min, i
 {
 	int x = 0, y = 0;
 	GtkOrientation eff_ori = GTK_ORIENTATION_HORIZONTAL;
-	GTK_WIDGET_CLASS(vala_panel_toplevel_parent_class)
+	GTK_WIDGET_CLASS(vp_toplevel_parent_class)
 	    ->get_preferred_width_for_height(w, height, &x, &y);
 	measure(w, eff_ori, height, min, nat, &x, &y);
 }
@@ -704,7 +704,7 @@ static void get_preferred_height_for_width(GtkWidget *w, int height, int *min, i
 {
 	int x = 0, y = 0;
 	GtkOrientation eff_ori = GTK_ORIENTATION_VERTICAL;
-	GTK_WIDGET_CLASS(vala_panel_toplevel_parent_class)
+	GTK_WIDGET_CLASS(vp_toplevel_parent_class)
 	    ->get_preferred_width_for_height(w, height, &x, &y);
 	measure(w, eff_ori, height, min, nat, &x, &y);
 }
@@ -727,32 +727,32 @@ static void get_preferred_height(GtkWidget *w, int *min, int *nat)
 static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(w);
-	return (vala_panel_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL)
+	return (vp_orient_from_gravity(self->gravity) == GTK_ORIENTATION_HORIZONTAL)
 	           ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
 	           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
-static void vala_panel_toplevel_update_geometry_no_orient(ValaPanelToplevel *self)
+static void vp_toplevel_update_geometry_no_orient(ValaPanelToplevel *self)
 {
 	GdkRectangle marea = { 0 };
-	GdkMonitor *mon    = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(self), self->mon);
+	GdkMonitor *mon    = vp_platform_get_suitable_monitor(GTK_WIDGET(self), self->mon);
 	if (self->mon < gdk_display_get_n_monitors(gtk_widget_get_display(GTK_WIDGET(self))))
 		gdk_monitor_get_geometry(mon, &marea);
 	gtk_widget_queue_resize(GTK_WIDGET(self));
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
-	vala_panel_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
-	vala_panel_platform_update_strut(platform, GTK_WINDOW(self));
+	vp_platform_move_to_side(platform, GTK_WINDOW(self), self->gravity, self->mon);
+	vp_platform_update_strut(platform, GTK_WINDOW(self));
 	while (gtk_events_pending())
 		gtk_main_iteration_do(false);
 }
 
-static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
+static void vp_toplevel_update_geometry(ValaPanelToplevel *self)
 {
-	vala_panel_toplevel_update_geometry_no_orient(self);
+	vp_toplevel_update_geometry_no_orient(self);
 	g_object_notify(G_OBJECT(self), "orientation");
 }
 
-void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
+void vp_update_visibility(ValaPanelToplevel *panel, int mons)
 {
 	int monitor;
 	g_object_get(panel, VP_KEY_MONITOR, &monitor, NULL);
@@ -762,7 +762,7 @@ void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
 		stop_ui(panel);
 	else
 	{
-		vala_panel_toplevel_update_geometry(panel);
+		vp_toplevel_update_geometry(panel);
 	}
 }
 /****************************************************
@@ -774,7 +774,7 @@ static uint timeout_func(ValaPanelToplevel *self)
 	{
 		css_toggle_class(GTK_WIDGET(self), "-panel-transparent", true);
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
-		vala_panel_toplevel_update_geometry_no_orient(self);
+		vp_toplevel_update_geometry_no_orient(self);
 		self->ah_state = AH_HIDDEN;
 		return G_SOURCE_REMOVE;
 	}
@@ -787,7 +787,7 @@ static void ah_show(ValaPanelToplevel *self)
 		return;
 	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
-	vala_panel_toplevel_update_geometry_no_orient(self);
+	vp_toplevel_update_geometry_no_orient(self);
 	self->ah_state = AH_VISIBLE;
 }
 
@@ -837,7 +837,7 @@ G_GNUC_INTERNAL const char *vp_toplevel_get_uuid(ValaPanelToplevel *self)
 	return self->uuid;
 }
 
-static void vala_panel_toplevel_get_property(GObject *object, guint property_id, GValue *value,
+static void vp_toplevel_get_property(GObject *object, guint property_id, GValue *value,
                                              GParamSpec *pspec)
 {
 	ValaPanelToplevel *self    = VALA_PANEL_TOPLEVEL(object);
@@ -900,7 +900,7 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 		g_value_set_enum(value, (int)self->gravity);
 		break;
 	case TOP_ORIENTATION:
-		g_value_set_enum(value, vala_panel_orient_from_gravity(self->gravity));
+		g_value_set_enum(value, vp_orient_from_gravity(self->gravity));
 		break;
 	case TOP_MONITOR:
 		g_value_set_int(value, self->mon);
@@ -924,7 +924,7 @@ static void vala_panel_toplevel_get_property(GObject *object, guint property_id,
 	g_clear_pointer(&desc, pango_font_description_free);
 }
 
-static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
+static void vp_toplevel_set_property(GObject *object, guint property_id,
                                              const GValue *value, GParamSpec *pspec)
 {
 	ValaPanelToplevel *self       = VALA_PANEL_TOPLEVEL(object);
@@ -1059,13 +1059,13 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		break;
 	}
 	if (geometry_update_required && realized)
-		vala_panel_toplevel_update_geometry(self);
+		vp_toplevel_update_geometry(self);
 	if (appearance_update_required)
 		update_appearance(self);
 	g_clear_pointer(&desc, pango_font_description_free);
 }
 
-void vala_panel_toplevel_init(ValaPanelToplevel *self)
+void vp_toplevel_init(ValaPanelToplevel *self)
 {
 	GtkWidget *w      = GTK_WIDGET(self);
 	GdkVisual *visual = gdk_screen_get_rgba_visual(gtk_widget_get_screen(w));
@@ -1077,7 +1077,7 @@ void vala_panel_toplevel_init(ValaPanelToplevel *self)
 	self->ah_state        = AH_VISIBLE; // We starts as Visible to init autohide chain properly
 }
 
-void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
+void vp_toplevel_class_init(ValaPanelToplevelClass *klass)
 {
 	GObjectClass *oclass                                    = G_OBJECT_CLASS(klass);
 	GTK_WIDGET_CLASS(klass)->enter_notify_event             = enter_notify_event;
@@ -1089,10 +1089,10 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	GTK_WIDGET_CLASS(klass)->get_preferred_width_for_height = get_preferred_width_for_height;
 	GTK_WIDGET_CLASS(klass)->get_request_mode               = get_request_mode;
 	GTK_WIDGET_CLASS(klass)->grab_notify                    = grab_notify;
-	oclass->set_property                                    = vala_panel_toplevel_set_property;
-	oclass->get_property                                    = vala_panel_toplevel_get_property;
-	oclass->dispose                                         = vala_panel_toplevel_destroy;
-	oclass->finalize                                        = vala_panel_toplevel_finalize;
+	oclass->set_property                                    = vp_toplevel_set_property;
+	oclass->get_property                                    = vp_toplevel_get_property;
+	oclass->dispose                                         = vp_toplevel_destroy;
+	oclass->finalize                                        = vp_toplevel_finalize;
 	top_specs[TOP_UUID] =
 	    g_param_spec_string(VP_KEY_UUID,
 	                        VP_KEY_UUID,

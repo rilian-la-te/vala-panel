@@ -50,11 +50,11 @@ ui_lib = library(library_name,
              install: true)
 
 applets_vapi_dir = meson.current_source_dir()
-vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
+vp_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
 
 libvalapanel = declare_dependency(
 	link_with: ui_lib,
-	dependencies: [util_gtk,vala_panel_dep],
+	dependencies: [util_gtk,vp_dep],
 	include_directories: [core_inc, ui_inc],
 )
 
@@ -87,7 +87,7 @@ ui_gir = gnome.generate_gir(ui_lib,
                     includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
                     namespace: 'ValaPanel',
                     identifier_prefix: 'ValaPanel',
-                    symbol_prefix: 'vala_panel',
+                    symbol_prefix: 'vp',
                     nsversion: meson.project_version(),
                     install: true
 )
