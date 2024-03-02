@@ -43,7 +43,7 @@ void vala_panel_platform_update_strut(ValaPanelPlatform *self, GtkWindow *top)
 		VALA_PANEL_PLATFORM_GET_CLASS(self)->update_strut(self, top);
 }
 
-void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top, PanelGravity alloc,
+void vala_panel_platform_move_to_side(ValaPanelPlatform *self, GtkWindow *top, ValaPanelGravity alloc,
                                       int monitor)
 {
 	if (self)
@@ -132,7 +132,7 @@ bool vala_panel_platform_has_units_loaded(ValaPanelPlatform *self)
 }
 
 bool vala_panel_platform_edge_available(ValaPanelPlatform *self, GtkWindow *top,
-                                        PanelGravity gravity, int monitor)
+                                        ValaPanelGravity gravity, int monitor)
 {
 	if (self)
 		return VALA_PANEL_PLATFORM_GET_CLASS(self)->edge_available(self,

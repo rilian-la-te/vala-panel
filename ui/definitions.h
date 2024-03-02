@@ -27,19 +27,6 @@
 #define gtk_widget_destroy0(x) g_clear_pointer(&x, gtk_widget_destroy)
 #define g_free0(x) g_clear_pointer(&x, g_free)
 
-#define g_value_replace_string(string, value)                                                      \
-                                                                                                   \
-	{                                                                                          \
-		g_free0(string);                                                                   \
-		string = g_value_dup_string(value);                                                \
-	}
-
-#define g_ascii_inplace_tolower(string)                                                            \
-	{                                                                                          \
-		for (int i = 0; string[i] != '\0'; i++)                                            \
-			g_ascii_tolower(string[i]);                                                \
-	}
-
 #define vala_panel_bind_gsettings(obj, settings, prop)                                             \
 	g_settings_bind(settings,                                                                  \
 	                prop,                                                                      \

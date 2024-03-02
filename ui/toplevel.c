@@ -40,7 +40,7 @@ typedef enum
 static ValaPanelPlatform *platform = NULL;
 
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
-                                                     PanelGravity e);
+                                                     ValaPanelGravity e);
 static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self);
 static void activate_new_panel(GSimpleAction *act, GVariant *param, void *data);
 static void activate_remove_panel(GSimpleAction *act, GVariant *param, void *data);
@@ -102,7 +102,7 @@ struct _ValaPanelToplevel
 	bool font_size_only;
 	bool use_toolbar_appearance;
 	uint corner_radius;
-	PanelIconSizeHints icon_size_hints;
+	ValaPanelIconSizeHints icon_size_hints;
 	GdkRGBA background_color;
 	GdkRGBA foreground_color;
 	char *background_file;
@@ -110,7 +110,7 @@ struct _ValaPanelToplevel
 	int mon;
 	int height;
 	int width;
-	PanelGravity gravity;
+	ValaPanelGravity gravity;
 	ValaPanelToplevelConfig *pref_dialog;
 	GtkMenu *context_menu;
 	char *font;
@@ -359,7 +359,7 @@ G_GNUC_INTERNAL void vp_toplevel_destroy_pref_dialog(ValaPanelToplevel *self)
 void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *menu_anchor,
                                           GdkGravity *widget_anchor)
 {
-	PanelGravity gravity = self->gravity;
+	ValaPanelGravity gravity = self->gravity;
 	switch (gravity)
 	{
 	case NORTH_LEFT:
@@ -430,7 +430,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 	int m = self->mon;
 	for (int e = GTK_POS_BOTTOM; e >= GTK_POS_LEFT; e--)
 	{
-		if (vala_panel_platform_edge_available(platform, NULL, (PanelGravity)e * 3, m))
+		if (vala_panel_platform_edge_available(platform, NULL, (ValaPanelGravity)e * 3, m))
 		{
 			new_edge = (GtkPositionType)e;
 			new_mon  = m;
@@ -446,7 +446,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 			{
 				if ((vala_panel_platform_edge_available(platform,
 				                                        NULL,
-				                                        (PanelGravity)e * 3,
+				                                        (ValaPanelGravity)e * 3,
 				                                        m)))
 				{
 					new_edge = (GtkPositionType)e;
@@ -478,7 +478,7 @@ static void activate_new_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSED G
 	    vala_panel_toplevel_create(gtk_window_get_application(GTK_WINDOW(self)),
 	                               new_name,
 	                               new_mon,
-	                               (PanelGravity)3 * new_edge);
+	                               (ValaPanelGravity)3 * new_edge);
 	vala_panel_platform_register_unit(platform, GTK_WINDOW(new_toplevel));
 	//        new_toplevel.configure("position");
 	gtk_widget_show(GTK_WIDGET(new_toplevel));
@@ -639,7 +639,7 @@ static ValaPanelToplevel *vala_panel_toplevel_create_window(GtkApplication *app,
 
 static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *app,
                                                                 const char *uid, int mon,
-                                                                PanelGravity edge)
+                                                                ValaPanelGravity edge)
 {
 	ValaPanelToplevel *ret = vala_panel_toplevel_create_window(app, uid);
 	ret->mon               = mon;
@@ -649,7 +649,7 @@ static ValaPanelToplevel *vala_panel_toplevel_new_from_position(GtkApplication *
 	return ret;
 }
 static ValaPanelToplevel *vala_panel_toplevel_create(GtkApplication *app, const char *name, int mon,
-                                                     PanelGravity e)
+                                                     ValaPanelGravity e)
 {
 	vp_core_settings_add_unit_settings_full(vp_toplevel_get_core_settings(), name, name, true);
 	return vala_panel_toplevel_new_from_position(app, name, mon, e);
@@ -1019,7 +1019,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		appearance_update_required = true;
 		break;
 	case TOP_GRAVITY:
-		self->gravity            = (PanelGravity)g_value_get_enum(value);
+		self->gravity            = (ValaPanelGravity)g_value_get_enum(value);
 		geometry_update_required = true;
 		break;
 	case TOP_MONITOR:
@@ -1205,7 +1205,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	    g_param_spec_enum(VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
 	                      VP_KEY_GRAVITY,
-	                      VALA_PANEL_TYPE_GRAVITY,
+	                      VALA_PANEL_TYPE_PANEL_GRAVITY,
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                    G_PARAM_CONSTRUCT));

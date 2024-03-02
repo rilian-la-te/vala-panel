@@ -149,7 +149,7 @@ static bool vpp_x11_start_panels_from_profile(ValaPanelPlatform *obj, GtkApplica
 
 // TODO: Make more readable code without switch
 static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top,
-                                 PanelGravity gravity, int monitor)
+                                 ValaPanelGravity gravity, int monitor)
 {
 	GtkOrientation orient = vala_panel_orient_from_gravity(gravity);
 	GdkMonitor *mon       = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
@@ -223,7 +223,7 @@ static bool vpp_x11_edge_can_strut(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow
 static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 {
 	bool autohide;
-	PanelGravity gravity;
+	ValaPanelGravity gravity;
 	int monitor;
 	int size, len;
 	g_object_get(top,
@@ -310,7 +310,7 @@ static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 	}
 }
 
-static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, PanelGravity gravity,
+static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, ValaPanelGravity gravity,
                                    int monitor)
 {
 	ValaPanelPlatformX11 *pl = VALA_PANEL_PLATFORM_X11(self);
@@ -327,7 +327,7 @@ static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, Pane
 			ValaPanelToplevel *pl = VALA_PANEL_TOPLEVEL(w->data);
 			bool have_toplevel    = VALA_PANEL_IS_TOPLEVEL(top);
 			int smonitor          = 0;
-			PanelGravity sgravity;
+			ValaPanelGravity sgravity;
 			g_object_get(pl,
 			             VP_KEY_MONITOR,
 			             &smonitor,

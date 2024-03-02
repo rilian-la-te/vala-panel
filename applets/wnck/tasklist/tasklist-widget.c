@@ -1897,7 +1897,7 @@ static void xfce_tasklist_child_drag_leave(XfceTasklistChild *child,
 static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 {
 	XfceTasklistChild *child;
-	PanelGravity edge;
+	ValaPanelGravity edge;
 
 	g_return_val_if_fail(XFCE_IS_TASKLIST(tasklist), NULL);
 

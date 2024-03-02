@@ -155,7 +155,7 @@ static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkAppli
 
 // TODO: Make more readable code without switch
 static void vpp_layer_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top,
-                                   PanelGravity gravity, int monitor)
+                                   ValaPanelGravity gravity, int monitor)
 {
 	bool anchor[GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER] = { false };
 	switch (gravity)
@@ -214,7 +214,7 @@ static void vpp_layer_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 		gtk_layer_set_exclusive_zone(top, 0);
 }
 
-static bool vpp_layer_edge_available(ValaPanelPlatform *self, GtkWindow *top, PanelGravity gravity,
+static bool vpp_layer_edge_available(ValaPanelPlatform *self, GtkWindow *top, ValaPanelGravity gravity,
                                      int monitor)
 {
 	ValaPanelPlatformLayer *pl = VALA_PANEL_PLATFORM_LAYER(self);
@@ -231,7 +231,7 @@ static bool vpp_layer_edge_available(ValaPanelPlatform *self, GtkWindow *top, Pa
 			ValaPanelToplevel *pl = VALA_PANEL_TOPLEVEL(w->data);
 			bool have_toplevel    = VALA_PANEL_IS_TOPLEVEL(top);
 			int smonitor          = 0;
-			PanelGravity sgravity;
+			ValaPanelGravity sgravity;
 			g_object_get(pl,
 			             VP_KEY_MONITOR,
 			             &smonitor,

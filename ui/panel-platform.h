@@ -44,7 +44,7 @@ typedef enum
 	EAST_UP      = 9,
 	EAST_CENTER  = 10,
 	EAST_DOWN    = 11
-} PanelGravity;
+} ValaPanelGravity;
 
 typedef enum
 {
@@ -56,7 +56,7 @@ typedef enum
 	XL   = 96,
 	XXL  = 128,
 	XXXL = 256
-} PanelIconSizeHints;
+} ValaPanelIconSizeHints;
 
 struct _ValaPanelPlatformClass
 {
@@ -70,8 +70,8 @@ struct _ValaPanelPlatformClass
 	bool (*can_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	void (*update_strut)(ValaPanelPlatform *f, GtkWindow *top);
 	/*positioning requests*/
-	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, PanelGravity alloc, int monitor);
-	bool (*edge_available)(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,
+	void (*move_to_side)(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity alloc, int monitor);
+	bool (*edge_available)(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity gravity,
 	                       int monitor);
 	/*GSettings management*/
 	gpointer padding[11];
@@ -97,9 +97,9 @@ bool vala_panel_platform_start_panels_from_profile(ValaPanelPlatform *self, GtkA
                                                    const char *profile);
 bool vala_panel_platform_can_strut(ValaPanelPlatform *f, GtkWindow *top);
 void vala_panel_platform_update_strut(ValaPanelPlatform *f, GtkWindow *top);
-void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, PanelGravity alloc,
+void vala_panel_platform_move_to_side(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity alloc,
                                       int monitor);
-bool vala_panel_platform_edge_available(ValaPanelPlatform *f, GtkWindow *top, PanelGravity gravity,
+bool vala_panel_platform_edge_available(ValaPanelPlatform *f, GtkWindow *top, ValaPanelGravity gravity,
                                         int monitor);
 
 G_END_DECLS
