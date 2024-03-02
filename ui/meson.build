@@ -81,3 +81,13 @@ pkgconfig.generate(ui_lib,
                 ],
              extra_cflags: ['-I${includedir}/vala-panel']
             )
+
+ui_gir = gnome.generate_gir(ui_lib,
+                    sources: ui_headers,
+                    includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
+                    namespace: 'ValaPanel',
+                    identifier_prefix: 'ValaPanel',
+                    symbol_prefix: 'vala_panel',
+                    nsversion: meson.project_version(),
+                    install: true
+)
