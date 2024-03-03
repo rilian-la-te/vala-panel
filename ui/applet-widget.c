@@ -25,10 +25,10 @@ static void activate_remove(GSimpleAction *act, GVariant *param, gpointer self);
 static void activate_about(GSimpleAction *act, GVariant *param, gpointer self);
 
 static const GActionEntry entries[] = {
-	{ VALA_PANEL_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL, { 0 } },
-	{ VALA_PANEL_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL, { 0 } },
-	{ VALA_PANEL_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL, { 0 } },
-	{ VALA_PANEL_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL, { 0 } }
+	{ VP_APPLET_ACTION_REMOTE, activate_remote, "s", NULL, NULL, { 0 } },
+	{ VP_APPLET_ACTION_CONFIGURE, activate_configure, NULL, NULL, NULL, { 0 } },
+	{ VP_APPLET_ACTION_ABOUT, activate_about, NULL, NULL, NULL, { 0 } },
+	{ VP_APPLET_ACTION_REMOVE, activate_remove, NULL, NULL, NULL, { 0 } }
 };
 
 enum
@@ -225,10 +225,10 @@ static void vp_applet_init(ValaPanelApplet *self)
 	p->settings               = NULL;
 	g_action_map_add_action_entries(G_ACTION_MAP(p->grp), entries, G_N_ELEMENTS(entries), self);
 	GSimpleAction *cnf = G_SIMPLE_ACTION(
-	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_CONFIGURE));
+	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VP_APPLET_ACTION_CONFIGURE));
 	g_simple_action_set_enabled(cnf, false);
 	cnf = G_SIMPLE_ACTION(
-	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VALA_PANEL_APPLET_ACTION_REMOTE));
+	    g_action_map_lookup_action(G_ACTION_MAP(p->grp), VP_APPLET_ACTION_REMOTE));
 	g_simple_action_set_enabled(cnf, false);
 	gtk_widget_set_has_window(GTK_WIDGET(self), false);
 	gtk_widget_insert_action_group(GTK_WIDGET(self), "applet", G_ACTION_GROUP(p->grp));

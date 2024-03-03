@@ -186,7 +186,7 @@ static void netmon_applet_constructed(GObject *obj)
 	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(self));
 	GActionMap *map = G_ACTION_MAP(vp_applet_get_action_group(VALA_PANEL_APPLET(self)));
 	g_simple_action_set_enabled(
-	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VP_APPLET_ACTION_CONFIGURE)),
 	    true);
 	GtkBox *box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	gtk_container_add(GTK_CONTAINER(self), GTK_WIDGET(box));
@@ -268,7 +268,7 @@ void g_io_netmon_load(GTypeModule *module)
 
 	netmon_applet_register_type(module);
 
-	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
+	g_io_extension_point_implement(VP_APPLET_EXTENSION_POINT,
 	                               netmon_applet_get_type(),
 	                               "org.valapanel.netmon",
 	                               10);

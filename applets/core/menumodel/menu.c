@@ -91,10 +91,10 @@ static void menu_applet_constructed(GObject *obj)
 	MenuApplet *self = VALA_PANEL_MENU_APPLET(obj);
 	GActionMap *map  = vp_applet_get_action_group(VALA_PANEL_APPLET(self));
 	g_simple_action_set_enabled(
-	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VP_APPLET_ACTION_CONFIGURE)),
 	    true);
 	g_simple_action_set_enabled(
-	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_REMOTE)),
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VP_APPLET_ACTION_REMOTE)),
 	    true);
 	self->button        = NULL;
 	GSettings *settings = vp_applet_get_settings(VALA_PANEL_APPLET(self));
@@ -554,7 +554,7 @@ void g_io_menumodel_load(GTypeModule *module)
 
 	menu_applet_register_type(module);
 
-	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
+	g_io_extension_point_implement(VP_APPLET_EXTENSION_POINT,
 	                               menu_applet_get_type(),
 	                               "org.valapanel.menumodel",
 	                               10);

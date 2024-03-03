@@ -63,7 +63,9 @@ namespace MenuMaker
 [CCode (cheader_filename = "applet-widget.h")]
 namespace ValaPanel.AppletAction
 {
+    [CCode (cname = "VP_APPLET_ACTION_REMOTE")]
 	public const string REMOTE;
+    [CCode (cname = "VP_APPLET_ACTION_CONFIGURE")]
 	public const string CONFIGURE;
 }
 namespace ValaPanel {
@@ -82,7 +84,7 @@ namespace ValaPanel {
     }
 	[CCode (cheader_filename = "applet-widget.h")]
 	public abstract class Applet : Gtk.Bin {
-        [CCode (cheader_filename = "applet-info.h")]
+        [CCode (cheader_filename = "applet-info.h", cname = "VP_APPLET_EXTENSION_POINT")]
 		public const string EXTENSION_POINT;
 		[CCode (cheader_filename = "applet-widget-api.h")]
 		protected Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);

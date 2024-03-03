@@ -336,7 +336,7 @@ void g_io_cpu_load(GTypeModule *module)
 
 	cpu_applet_register_type(module);
 
-	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
+	g_io_extension_point_implement(VP_APPLET_EXTENSION_POINT,
 	                               cpu_applet_get_type(),
 	                               "org.valapanel.cpu",
 	                               10);

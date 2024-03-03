@@ -96,7 +96,7 @@ static void tasklist_applet_constructed(GObject *obj)
 	ValaPanelGravity gravity;
 	g_object_get(toplevel, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);
 	g_simple_action_set_enabled(
-	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
+	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VP_APPLET_ACTION_CONFIGURE)),
 	    true);
 	XfceTasklist *widget = xfce_tasklist_new();
 	self->widget         = widget;
@@ -189,7 +189,7 @@ void g_io_tasklist_xfce_load(GTypeModule *module)
 
 	tasklist_applet_register_type(module);
 
-	g_io_extension_point_implement(VALA_PANEL_APPLET_EXTENSION_POINT,
+	g_io_extension_point_implement(VP_APPLET_EXTENSION_POINT,
 	                               tasklist_applet_get_type(),
 	                               "org.xfce.tasklist",
 	                               10);

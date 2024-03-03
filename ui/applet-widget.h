@@ -8,10 +8,10 @@
 
 G_BEGIN_DECLS
 
-#define VALA_PANEL_APPLET_ACTION_REMOTE "remote"
-#define VALA_PANEL_APPLET_ACTION_CONFIGURE "configure"
-#define VALA_PANEL_APPLET_ACTION_REMOVE "remove"
-#define VALA_PANEL_APPLET_ACTION_ABOUT "about"
+#define VP_APPLET_ACTION_REMOTE "remote"
+#define VP_APPLET_ACTION_CONFIGURE "configure"
+#define VP_APPLET_ACTION_REMOVE "remove"
+#define VP_APPLET_ACTION_ABOUT "about"
 
 G_DECLARE_DERIVABLE_TYPE(ValaPanelApplet, vp_applet, VALA_PANEL, APPLET, GtkBin)
 #define VALA_PANEL_TYPE_APPLET vp_applet_get_type()
