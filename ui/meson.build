@@ -83,7 +83,7 @@ pkgconfig.generate(ui_lib,
             )
 
 ui_gir = gnome.generate_gir(ui_lib,
-                    sources: ui_headers,
+                    sources: [ui_headers, 'applet-manager.h'],
                     includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
                     namespace: 'ValaPanel',
                     identifier_prefix: 'ValaPanel',
