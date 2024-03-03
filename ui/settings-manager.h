@@ -25,8 +25,6 @@
 #include <glib.h>
 #include <stdbool.h>
 
-#define ROOT_NAME "profile"
-
 G_BEGIN_DECLS
 
 typedef struct
