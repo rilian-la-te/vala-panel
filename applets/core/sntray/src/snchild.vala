@@ -38,7 +38,6 @@ namespace StatusNotifier
         Image image;
         EventBox ebox;
         DBusMenu.Importer? client;
-        private ulong connect_handler = 0;
         Gtk.Menu menu;
         StatusNotifier.Proxy proxy;
         public Item (string n, ObjectPath p)
@@ -205,12 +204,15 @@ namespace StatusNotifier
             menu.vexpand = true;
             /*FIXME: MenuModel support */
             client = new DBusMenu.Importer(object_name, proxy.menu);
-            connect_handler = Signal.connect(client,"notify::model",(GLib.Callback)on_model_changed_cb,this);
+            client.notify["model"].connect(on_model_changed_cb);
         }
-        private static void on_model_changed_cb(DBusMenu.Importer importer, GLib.ParamSpec pspec, StatusNotifier.Item w)
+        private void on_model_changed_cb(GLib.Object obj, GLib.ParamSpec pspec)
         {
-            w.insert_action_group("dbusmenu",importer.action_group);
-            w.menu.bind_model(importer.model, null, true);
+            if(obj is DBusMenu.Importer) {
+                DBusMenu.Importer importer = obj as DBusMenu.Importer;
+                this.insert_action_group("dbusmenu",importer.action_group);
+                this.menu.bind_model(importer.model, null, true);
+            }
         }
         public bool context_menu()
         {
@@ -239,10 +241,6 @@ namespace StatusNotifier
             }
             else
                 image.hide();
-        }
-        ~Item()
-        {
-            client.disconnect(connect_handler);
         }
     }
 }
