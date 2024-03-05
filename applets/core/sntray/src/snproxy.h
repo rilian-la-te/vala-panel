@@ -63,6 +63,7 @@ G_GNUC_INTERNAL void sn_proxy_activate(SnProxy *self, gint x_root, gint y_root);
 G_GNUC_INTERNAL void sn_proxy_secondary_activate(SnProxy *self, gint x_root, gint y_root);
 G_GNUC_INTERNAL bool sn_proxy_ayatana_secondary_activate(SnProxy *self, u_int32_t event_time);
 G_GNUC_INTERNAL void sn_proxy_scroll(SnProxy *self, gint delta_x, gint delta_y);
+G_GNUC_INTERNAL void sn_proxy_provide_xdg_activation_token(SnProxy *self, const char *token);
 
 G_END_DECLS
 

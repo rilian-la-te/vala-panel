@@ -978,3 +978,19 @@ void sn_proxy_scroll(SnProxy *self, int delta_x, int delta_y)
 		                  NULL);
 	}
 }
+
+void sn_proxy_provide_xdg_activation_token(SnProxy *self, const char *token)
+{
+	g_return_if_fail(SN_IS_PROXY(self));
+	g_return_if_fail(self->initialized);
+	g_return_if_fail(self->item_proxy != NULL);
+
+	g_dbus_proxy_call(self->item_proxy,
+	                  "ProvideXdgActivationToken",
+	                  g_variant_new_string(token),
+	                  G_DBUS_CALL_FLAGS_NONE,
+	                  -1,
+	                  NULL,
+	                  NULL,
+	                  NULL);
+}
