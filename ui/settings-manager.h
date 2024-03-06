@@ -50,16 +50,12 @@ typedef enum
 	APPLET   = 1,
 } ValaPanelType;
 
-G_GNUC_INTERNAL void vp_unit_settings_free(ValaPanelUnitSettings *settings);
+G_GNUC_INTERNAL void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
 bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings);
-G_GNUC_INTERNAL GType vp_unit_settings_get_type(void);
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelUnitSettings, vp_unit_settings_free)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelUnitSettings, vala_panel_unit_settings_free)
 
-G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_new(const char *schema, const char *path,
-                                                            GSettingsBackend *backend);
-G_GNUC_INTERNAL void vp_core_settings_free(ValaPanelCoreSettings *settings);
-G_GNUC_INTERNAL GType vp_core_settings_get_type(void);
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelCoreSettings, vp_core_settings_free)
+G_GNUC_INTERNAL void vala_panel_core_settings_free(ValaPanelCoreSettings *settings);
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(ValaPanelCoreSettings, vala_panel_core_settings_free)
 
 G_END_DECLS
 

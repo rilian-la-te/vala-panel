@@ -64,7 +64,7 @@ bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char 
 {
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
-	priv->core_settings = vp_core_settings_new(schema, path, backend);
+	priv->core_settings = vala_panel_core_settings_new(schema, path, backend);
 	return vp_core_settings_init_unit_list(priv->core_settings);
 }
 
@@ -164,7 +164,7 @@ static void vala_panel_platform_finalize(GObject *obj)
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	g_hash_table_unref(priv->toplevels);
 	if (priv->core_settings)
-		vp_core_settings_free(priv->core_settings);
+		vala_panel_core_settings_free(priv->core_settings);
 	g_clear_object(&priv->manager);
 	G_OBJECT_CLASS(vala_panel_platform_parent_class)->finalize(obj);
 }

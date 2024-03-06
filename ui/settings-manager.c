@@ -25,9 +25,9 @@
 #include "panel-platform.h"
 #include "settings-manager.h"
 
-static ValaPanelUnitSettings *vp_unit_settings_new(ValaPanelCoreSettings *settings,
-                                                   const char *name, const char *uuid,
-                                                   bool is_toplevel)
+static ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *settings,
+                                                           const char *name, const char *uuid,
+                                                           bool is_toplevel)
 {
 	ValaPanelUnitSettings *created_settings = g_slice_new(ValaPanelUnitSettings);
 	created_settings->uuid                  = g_strdup(uuid);
@@ -61,7 +61,7 @@ static ValaPanelUnitSettings *vp_unit_settings_new(ValaPanelCoreSettings *settin
 	return created_settings;
 }
 
-static ValaPanelUnitSettings *vp_unit_settings_copy(ValaPanelUnitSettings *source)
+static ValaPanelUnitSettings *vala_panel_unit_settings_copy(ValaPanelUnitSettings *source)
 {
 	ValaPanelUnitSettings *created_settings = g_slice_new0(ValaPanelUnitSettings);
 	created_settings->uuid                  = g_strdup(source->uuid);
@@ -73,7 +73,7 @@ static ValaPanelUnitSettings *vp_unit_settings_copy(ValaPanelUnitSettings *sourc
 	return created_settings;
 }
 
-G_GNUC_INTERNAL void vp_unit_settings_free(ValaPanelUnitSettings *settings)
+G_GNUC_INTERNAL void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings)
 {
 	if (!settings)
 		return;
@@ -84,8 +84,8 @@ G_GNUC_INTERNAL void vp_unit_settings_free(ValaPanelUnitSettings *settings)
 	g_slice_free(ValaPanelUnitSettings, settings);
 }
 
-G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vp_unit_settings, vp_unit_settings_copy,
-                    vp_unit_settings_free)
+G_DEFINE_BOXED_TYPE(ValaPanelUnitSettings, vala_panel_unit_settings, vala_panel_unit_settings_copy,
+                    vala_panel_unit_settings_free)
 
 bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings)
 {
@@ -94,17 +94,19 @@ bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings)
 	return !g_strcmp0(id, VALA_PANEL_TOPLEVEL_SCHEMA);
 }
 
-G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_new(const char *schema, const char *path,
-                                                            GSettingsBackend *backend)
+G_GNUC_INTERNAL ValaPanelCoreSettings *vala_panel_core_settings_new(const char *schema,
+                                                                    const char *path,
+                                                                    GSettingsBackend *backend)
 {
 	ValaPanelCoreSettings *new_settings = g_slice_new(ValaPanelCoreSettings);
-	new_settings->all_units             = g_hash_table_new_full(g_str_hash,
-                                                        g_str_equal,
-                                                        g_free,
-                                                        (GDestroyNotify)vp_unit_settings_free);
-	new_settings->root_path             = g_strdup(path);
-	new_settings->root_schema           = g_strdup(schema);
-	new_settings->backend               = g_object_ref_sink(backend);
+	new_settings->all_units =
+	    g_hash_table_new_full(g_str_hash,
+	                          g_str_equal,
+	                          g_free,
+	                          (GDestroyNotify)vala_panel_unit_settings_free);
+	new_settings->root_path   = g_strdup(path);
+	new_settings->root_schema = g_strdup(schema);
+	new_settings->backend     = g_object_ref_sink(backend);
 	g_autofree char *core_path =
 	    g_strdup_printf("%s%s/", new_settings->root_path, VALA_PANEL_CORE_PATH_ELEM);
 	new_settings->core_settings = g_settings_new_with_backend_and_path(VALA_PANEL_CORE_SCHEMA,
@@ -113,7 +115,8 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_new(const char *schema, 
 	return new_settings;
 }
 
-G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_copy(ValaPanelCoreSettings *settings)
+G_GNUC_INTERNAL ValaPanelCoreSettings *vala_panel_core_settings_copy(
+    ValaPanelCoreSettings *settings)
 {
 	ValaPanelCoreSettings *new_settings = g_slice_new0(ValaPanelCoreSettings);
 	new_settings->root_path             = g_strdup(settings->root_path);
@@ -124,7 +127,7 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_copy(ValaPanelCoreSettin
 	return new_settings;
 }
 
-G_GNUC_INTERNAL void vp_core_settings_free(ValaPanelCoreSettings *settings)
+G_GNUC_INTERNAL void vala_panel_core_settings_free(ValaPanelCoreSettings *settings)
 {
 	g_clear_pointer(&settings->root_path, g_free);
 	g_clear_pointer(&settings->root_schema, g_free);
@@ -134,8 +137,8 @@ G_GNUC_INTERNAL void vp_core_settings_free(ValaPanelCoreSettings *settings)
 	g_slice_free(ValaPanelCoreSettings, settings);
 }
 
-G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings, vp_core_settings, vp_core_settings_copy,
-                    vp_core_settings_free)
+G_DEFINE_BOXED_TYPE(ValaPanelCoreSettings, vala_panel_core_settings, vala_panel_core_settings_copy,
+                    vala_panel_core_settings_free)
 
 static void vp_core_settings_sync(ValaPanelCoreSettings *settings)
 {
@@ -155,7 +158,7 @@ static ValaPanelUnitSettings *vp_core_settings_load_unit_settings(ValaPanelCoreS
 	    g_settings_new_with_backend_and_path(VALA_PANEL_OBJECT_SCHEMA, settings->backend, path);
 	int en = g_settings_get_enum(s, VALA_PANEL_OBJECT_TYPE);
 	ValaPanelUnitSettings *usettings =
-	    vp_unit_settings_new(settings, NULL, uuid, en == TOPLEVEL);
+	    vala_panel_unit_settings_new(settings, NULL, uuid, en == TOPLEVEL);
 	g_hash_table_insert(settings->all_units, g_strdup(uuid), usettings);
 	return usettings;
 }
@@ -163,7 +166,8 @@ static ValaPanelUnitSettings *vp_core_settings_load_unit_settings(ValaPanelCoreS
 G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_add_unit_settings_full(
     ValaPanelCoreSettings *settings, const char *name, const char *uuid, bool is_toplevel)
 {
-	ValaPanelUnitSettings *usettings = vp_unit_settings_new(settings, name, uuid, is_toplevel);
+	ValaPanelUnitSettings *usettings =
+	    vala_panel_unit_settings_new(settings, name, uuid, is_toplevel);
 	g_hash_table_insert(settings->all_units, g_strdup(uuid), usettings);
 	vp_core_settings_sync(settings);
 	return usettings;
