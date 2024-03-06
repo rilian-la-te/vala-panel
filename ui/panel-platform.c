@@ -112,6 +112,7 @@ void vala_panel_platform_unregister_unit(ValaPanelPlatform *self, GtkWindow *uni
 
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 {
+	g_return_val_if_fail(VALA_PANEL_IS_PLATFORM(self), NULL);
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	return priv->core_settings;
@@ -119,6 +120,7 @@ ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self)
 
 G_GNUC_INTERNAL ValaPanelAppletManager *vp_platform_get_manager(ValaPanelPlatform *self)
 {
+	g_return_val_if_fail(VALA_PANEL_IS_PLATFORM(self), NULL);
 	ValaPanelPlatformPrivate *priv =
 	    (ValaPanelPlatformPrivate *)vala_panel_platform_get_instance_private(self);
 	return priv->manager;
