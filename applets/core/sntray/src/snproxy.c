@@ -459,6 +459,17 @@ static GIcon *sn_proxy_load_icon(SnProxy *self, const char *icon_name, IconPixma
 
 static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GVariant) properties =
+	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
+
+	if (error)
+	{
+		if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+			g_warning("%s", error->message);
+		return;
+	}
+
 	if (!SN_IS_PROXY(user_data))
 		return;
 
@@ -475,11 +486,7 @@ static void sn_proxy_reload_finish(GObject *source_object, GAsyncResult *res, gp
 	IconPixmap *icon_pixmap       = NULL;
 	IconPixmap *att_pixmap        = NULL;
 	IconPixmap *overlay_pixmap    = NULL;
-	g_autoptr(GError) error       = NULL;
-	g_autoptr(GVariant) properties =
-	    g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
-	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-		return;
+
 	if (!properties)
 	{
 		g_signal_emit(self, signals[FAIL], 0);
@@ -752,15 +759,21 @@ void sn_proxy_reload(SnProxy *self)
 static void sn_proxy_properties_callback(GObject *source_object, GAsyncResult *res,
                                          gpointer user_data)
 {
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GDBusProxy) props_proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+
+	if (error)
+	{
+		if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+			g_warning("%s", error->message);
+		return;
+	}
+
 	if (!SN_IS_PROXY(user_data))
 		return;
 
-	SnProxy *self           = SN_PROXY(user_data);
-	g_autoptr(GError) error = NULL;
-
-	self->properties_proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
-	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-		return;
+	SnProxy *self          = SN_PROXY(user_data);
+	self->properties_proxy = g_object_ref(props_proxy);
 	if (self->properties_proxy == NULL)
 	{
 		g_signal_emit(self, signals[FAIL], 0);
@@ -772,6 +785,9 @@ static void sn_proxy_properties_callback(GObject *source_object, GAsyncResult *r
 static void sn_proxy_signal_received(GDBusProxy *proxy, gchar *sender_name, gchar *signal_name,
                                      GVariant *parameters, gpointer user_data)
 {
+	if (!SN_IS_PROXY(user_data))
+		return;
+
 	SnProxy *self = SN_PROXY(user_data);
 	if (!self->initialized)
 		return;
@@ -795,15 +811,22 @@ static void sn_proxy_signal_received(GDBusProxy *proxy, gchar *sender_name, gcha
 
 static void sn_proxy_item_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GDBusProxy) item_proxy  = g_dbus_proxy_new_for_bus_finish(res, &error);
+
+	if (error)
+	{
+		if (!g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+			g_warning("%s", error->message);
+		return;
+	}
+
 	if (!SN_IS_PROXY(user_data))
 		return;
 
-	SnProxy *self           = SN_PROXY(user_data);
-	g_autoptr(GError) error = NULL;
+	SnProxy *self = SN_PROXY(user_data);
 
-	self->item_proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
-	if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-		return;
+	self->item_proxy = g_object_ref(item_proxy);
 	if (self->item_proxy == NULL)
 	{
 		g_signal_emit(G_OBJECT(self), signals[FAIL], 0);
