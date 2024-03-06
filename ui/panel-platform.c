@@ -20,6 +20,7 @@
 #include "applet-manager.h"
 #include "definitions.h"
 #include "toplevel.h"
+#include "private.h"
 
 typedef struct
 {
