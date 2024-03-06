@@ -43,7 +43,7 @@ struct _ValaPanelLayout
 	bool suppress_sorting;
 };
 
-G_DEFINE_TYPE(ValaPanelLayout, vp_layout, GTK_TYPE_BOX)
+G_DEFINE_TYPE(ValaPanelLayout, vala_panel_layout, GTK_TYPE_BOX)
 
 static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char *name,
                                                ValaPanelUnitSettings *s);
@@ -60,13 +60,13 @@ static inline ValaPanelToplevel *vp_layout_get_toplevel(ValaPanelLayout *self)
 
 static inline ValaPanelLayout *vala_panel_applet_get_layout(ValaPanelApplet *self)
 {
-	return VALA_PANEL_LAYOUT(gtk_widget_get_ancestor(GTK_WIDGET(self), vp_layout_get_type()));
+	return VALA_PANEL_LAYOUT(gtk_widget_get_ancestor(GTK_WIDGET(self), vala_panel_layout_get_type()));
 }
 
 G_GNUC_INTERNAL ValaPanelLayout *vp_layout_new(ValaPanelToplevel *top, GtkOrientation orient,
                                                int spacing)
 {
-	return VALA_PANEL_LAYOUT(g_object_new(vp_layout_get_type(),
+	return VALA_PANEL_LAYOUT(g_object_new(vala_panel_layout_get_type(),
 	                                      "orientation",
 	                                      orient,
 	                                      "spacing",
@@ -500,7 +500,7 @@ static void vp_layout_destroy(GObject *obj)
 	g_clear_pointer(&self->end_box, gtk_widget_destroy);
 	g_clear_pointer(&self->applets, g_hash_table_unref);
 	g_clear_pointer(&self->toplevel_id, g_free);
-	G_OBJECT_CLASS(vp_layout_parent_class)->dispose(obj);
+	G_OBJECT_CLASS(vala_panel_layout_parent_class)->dispose(obj);
 }
 
 static void vp_layout_constructed(GObject *obj)
@@ -513,7 +513,7 @@ static void vp_layout_constructed(GObject *obj)
 	gtk_box_set_center_widget(GTK_BOX(self), self->center_box);
 }
 
-static void vp_layout_init(ValaPanelLayout *self)
+static void vala_panel_layout_init(ValaPanelLayout *self)
 {
 	self->center_box     = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	self->start_box      = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -540,7 +540,7 @@ static void vp_layout_init(ValaPanelLayout *self)
 	                                      (GDestroyNotify)gtk_widget_destroy);
 }
 
-static void vp_layout_class_init(ValaPanelLayoutClass *klass)
+static void vala_panel_layout_class_init(ValaPanelLayoutClass *klass)
 {
 	manager                             = vp_toplevel_get_manager();
 	core_settings                       = vp_toplevel_get_core_settings();
