@@ -126,8 +126,8 @@ G_GNUC_INTERNAL ValaPanelCoreSettings *vp_core_settings_copy(ValaPanelCoreSettin
 
 G_GNUC_INTERNAL void vp_core_settings_free(ValaPanelCoreSettings *settings)
 {
-	g_free0(settings->root_path);
-	g_free0(settings->root_schema);
+	g_clear_pointer(&settings->root_path, g_free);
+	g_clear_pointer(&settings->root_schema, g_free);
 	g_clear_object(&settings->core_settings);
 	g_hash_table_unref(settings->all_units);
 	g_clear_object(&settings->backend);

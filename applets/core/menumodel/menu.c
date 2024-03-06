@@ -343,9 +343,9 @@ static void menu_applet_dispose(GObject *user_data)
 static void menu_applet_finalize(GObject *user_data)
 {
 	MenuApplet *self = VALA_PANEL_MENU_APPLET(user_data);
-	g_free0(self->icon);
-	g_free0(self->filename);
-	g_free0(self->caption);
+	g_clear_pointer(&self->icon, g_free);
+	g_clear_pointer(&self->filename, g_free);
+	g_clear_pointer(&self->caption, g_free);
 	G_OBJECT_CLASS(menu_applet_parent_class)->finalize(user_data);
 }
 
@@ -397,7 +397,7 @@ static void menu_applet_set_property(GObject *object, uint prop_id, const GValue
 		self->system = g_value_get_boolean(value);
 		break;
 	case PROP_ICON:
-		g_free0(self->icon);
+		g_clear_pointer(&self->icon, g_free);
 		self->icon = g_value_dup_string(value);
 		if (self->bar)
 			menumodel_widget_rebuild(self);
@@ -417,13 +417,13 @@ static void menu_applet_set_property(GObject *object, uint prop_id, const GValue
 		}
 		break;
 	case PROP_CAPTION:
-		g_free0(self->caption);
+		g_clear_pointer(&self->caption, g_free);
 		self->caption = g_value_dup_string(value);
 		if (!self->bar)
 			gtk_button_set_label(GTK_BUTTON(self->button), self->caption);
 		break;
 	case PROP_FILENAME:
-		g_free0(self->icon);
+		g_clear_pointer(&self->icon, g_free);
 		self->filename = g_value_dup_string(value);
 		if (!self->intern)
 			menumodel_widget_rebuild(self);

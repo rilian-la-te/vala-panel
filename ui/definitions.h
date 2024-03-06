@@ -24,9 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define gtk_widget_destroy0(x) g_clear_pointer(&x, gtk_widget_destroy)
-#define g_free0(x) g_clear_pointer(&x, g_free)
-
 #define vala_panel_bind_gsettings(obj, settings, prop)                                             \
 	g_settings_bind(settings,                                                                  \
 	                prop,                                                                      \

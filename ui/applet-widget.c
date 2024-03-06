@@ -316,7 +316,7 @@ static void vala_panel_applet_set_property(GObject *object, guint property_id, c
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case VALA_PANEL_APPLET_UUID:
-		g_free0(p->uuid);
+		g_clear_pointer(&p->uuid, g_free);
 		p->uuid = g_value_dup_string(value);
 		g_object_notify_by_pspec(object, pspec);
 		break;
@@ -333,7 +333,7 @@ static void vala_panel_applet_finalize(GObject *obj)
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	gtk_widget_insert_action_group(GTK_WIDGET(obj), "applet", NULL);
 	g_clear_object(&p->grp);
-	g_free0(p->uuid);
+	g_clear_pointer(&p->uuid, g_free);
 	G_OBJECT_CLASS(vala_panel_applet_parent_class)->finalize(obj);
 }
 static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)

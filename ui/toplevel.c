@@ -169,9 +169,9 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 {
 	ValaPanelToplevel *self = VALA_PANEL_TOPLEVEL(obj);
 	g_clear_object(&self->provider);
-	g_free0(self->uuid);
-	g_free0(self->font);
-	g_free0(self->background_file);
+	g_clear_pointer(&self->uuid, g_free);
+	g_clear_pointer(&self->font, g_free);
+	g_clear_pointer(&self->background_file, g_free);
 	G_OBJECT_CLASS(vala_panel_toplevel_parent_class)->finalize(obj);
 }
 
@@ -937,7 +937,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 	switch (property_id)
 	{
 	case TOP_UUID:
-		g_free0(self->uuid);
+		g_clear_pointer(&self->uuid, g_free);
 		self->uuid = g_value_dup_string(value);
 		break;
 	case TOP_HEIGHT:
@@ -981,7 +981,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		appearance_update_required = true;
 		break;
 	case TOP_FONT:
-		g_free0(self->font);
+		g_clear_pointer(&self->font, g_free);
 		self->font                 = g_value_dup_string(value);
 		appearance_update_required = true;
 		break;
@@ -1014,7 +1014,7 @@ static void vala_panel_toplevel_set_property(GObject *object, guint property_id,
 		appearance_update_required = true;
 		break;
 	case TOP_BG_FILE:
-		g_free0(self->background_file);
+		g_clear_pointer(&self->background_file, g_free);
 		self->background_file      = g_value_dup_string(value);
 		appearance_update_required = true;
 		break;

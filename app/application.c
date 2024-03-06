@@ -145,7 +145,7 @@ static GParamSpec *app_specs[APP_ALL];
 
 static inline void destroy0(GtkWidget *x, G_GNUC_UNUSED void *data)
 {
-	gtk_widget_destroy0(x);
+	g_clear_pointer(&x, gtk_widget_destroy);
 }
 
 static void apply_styling(ValaPanelApplication *app)
@@ -422,14 +422,14 @@ static void vala_panel_app_finalize(GObject *object)
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(object);
 	g_clear_object(&app->config);
 	g_clear_object(&app->platform);
-	g_free0(app->css);
-	g_free0(app->terminal_command);
-	g_free0(app->lock_command);
-	g_free0(app->run_command);
-	g_free0(app->logout_command);
-	g_free0(app->shutdown_command);
+	g_clear_pointer(&app->css, g_free);
+	g_clear_pointer(&app->terminal_command, g_free);
+	g_clear_pointer(&app->lock_command, g_free);
+	g_clear_pointer(&app->run_command, g_free);
+	g_clear_pointer(&app->logout_command, g_free);
+	g_clear_pointer(&app->shutdown_command, g_free);
 	g_clear_object(&app->provider);
-	g_free0(app->profile);
+	g_clear_pointer(&app->profile, g_free);
 	G_OBJECT_CLASS(vala_panel_application_parent_class)->finalize(object);
 }
 
@@ -454,37 +454,37 @@ static void vala_panel_app_set_property(GObject *object, uint id, const GValue *
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_TERMINAL_COMMAND:
-		g_free0(app->terminal_command);
+		g_clear_pointer(&app->terminal_command, g_free);
 		app->terminal_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_RUN_COMMAND:
-		g_free0(app->run_command);
+		g_clear_pointer(&app->run_command, g_free);
 		app->run_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_LOCK_COMMAND:
-		g_free0(app->lock_command);
+		g_clear_pointer(&app->lock_command, g_free);
 		app->lock_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_LOGOUT_COMMAND:
-		g_free0(app->logout_command);
+		g_clear_pointer(&app->logout_command, g_free);
 		app->logout_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_SHUTDOWN_COMMAND:
-		g_free0(app->shutdown_command);
+		g_clear_pointer(&app->shutdown_command, g_free);
 		app->shutdown_command = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_PROFILE:
-		g_free0(app->profile);
+		g_clear_pointer(&app->profile, g_free);
 		app->profile = g_strdup(g_value_get_string(value));
 		g_object_notify_by_pspec(object, pspec);
 		break;
 	case APP_CSS:
-		g_free0(app->css);
+		g_clear_pointer(&app->css, g_free);
 		app->css = g_strdup(g_value_get_string(value));
 		apply_styling(app);
 		g_object_notify_by_pspec(object, pspec);
