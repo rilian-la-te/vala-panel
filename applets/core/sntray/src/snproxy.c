@@ -269,6 +269,7 @@ static void sn_proxy_finalize(GObject *object)
 {
 	SnProxy *self = SN_PROXY(object);
 
+	g_cancellable_cancel(self->cancellable);
 	g_clear_object(&self->cancellable);
 
 	if (self->properties_timeout != 0)
