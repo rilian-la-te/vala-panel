@@ -91,3 +91,9 @@ ui_gir = gnome.generate_gir(ui_lib,
                     nsversion: meson.project_version(),
                     install: true
 )
+
+vala_panel_vapi = gnome.generate_vapi('vala-panel',
+    sources: ui_gir[0],
+    packages: ['gio-2.0', 'gtk+-3.0'],
+    install: true,
+)
