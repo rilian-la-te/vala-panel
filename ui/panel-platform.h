@@ -84,6 +84,15 @@ bool vala_panel_platform_init_settings(ValaPanelPlatform *self, GSettingsBackend
 bool vala_panel_platform_init_settings_full(ValaPanelPlatform *self, const char *schema,
                                             const char *path, GSettingsBackend *backend);
 ValaPanelCoreSettings *vala_panel_platform_get_settings(ValaPanelPlatform *self);
+
+/**
+ * vala_panel_platform_get_suitable_monitor:
+ * @self: toplevel for which we need to get monitor
+ * @mon: monitor number, where -1 is primary monitor.
+ *
+ * Get #GdkMonitor when toplevel can be placed.
+ * Returns: (transfer none): GdkMonitor* 
+ */
 GdkMonitor *vala_panel_platform_get_suitable_monitor(GtkWidget *self, int mon);
 
 /* Toplevel registration and destruction */

@@ -37,6 +37,13 @@ typedef enum
 
 G_DECLARE_FINAL_TYPE(ValaPanelLayout, vala_panel_layout, VALA_PANEL, LAYOUT, GtkBox)
 
+/**
+ * vala_panel_layout_get_applets_list:
+ * @self: a #ValaPanelLayout
+ * 
+ * Get a list of applets for these layout. 
+ * Returns: (transfer none) (element-type ValaPanelApplet): list of #ValaPanelApplet instances inside layout
+ */
 GList *vala_panel_layout_get_applets_list(ValaPanelLayout *self);
 
 G_END_DECLS

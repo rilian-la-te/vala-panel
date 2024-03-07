@@ -29,12 +29,42 @@ bool vala_panel_applet_remote_command(ValaPanelApplet *self, const char *command
 bool vala_panel_applet_is_configurable(ValaPanelApplet *self);
 void vala_panel_applet_init_background(ValaPanelApplet *self);
 void vala_panel_applet_show_config_dialog(ValaPanelApplet *self);
+/**
+ * vala_panel_applet_get_settings_ui: (virtual get_settings_ui)
+ * @self: a #ValaPanelApplet
+ * 
+ * Returns: (transfer full): Settings widget
+ */
 GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self);
+/**
+ * vala_panel_applet_get_background_widget: (get-property background-widget)
+ * @self: a #ValaPanelApplet
+ * 
+ * Returns: (transfer none): #GtkWidget widget (which serves as background now)
+ */
 GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self);
+/**
+ * vala_panel_applet_set_background_widget: (set-property background-widget)
+ * @self: a #ValaPanelApplet
+ * @w: (in) (not nullable): #GtkWidget which will be set as background one
+ * 
+ */
 void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w);
 void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);
+/**
+ * vala_panel_applet_get_settings: (get-property settings)
+ * @self: a #ValaPanelApplet
+ * 
+ * Returns: (transfer none): #GSettings instance of this applet
+ */
 GSettings *vala_panel_applet_get_settings(ValaPanelApplet *self);
 const char *vala_panel_applet_get_uuid(ValaPanelApplet *self);
+/**
+ * vala_panel_applet_get_action_group: (get-property action-group)
+ * @self: a #ValaPanelApplet
+ * 
+ * Returns: (transfer none): #GActionMap instance of this applet
+ */
 GActionMap *vala_panel_applet_get_action_group(ValaPanelApplet *self);
 
 G_END_DECLS

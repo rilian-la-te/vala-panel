@@ -47,6 +47,12 @@ GtkLicense vala_panel_applet_info_get_license(ValaPanelAppletInfo *info);
 const char *vala_panel_applet_info_get_version(ValaPanelAppletInfo *info);
 bool vala_panel_applet_info_is_exclusive(ValaPanelAppletInfo *info);
 
+/**
+ * vala_panel_applet_info_get_about_widget:
+ * @info: #ValaPanelAppletInfo of applet class for which about widget need to be created
+ * 
+ * Returns: (transfer full): #GtkWidget with about information for these applet info
+ */
 GtkWidget *vala_panel_applet_info_get_about_widget(ValaPanelAppletInfo *info);
 void vala_panel_applet_info_show_about_dialog(ValaPanelAppletInfo *info);
 
