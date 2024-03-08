@@ -84,7 +84,7 @@ pkgconfig.generate(ui_lib,
             )
 
 ui_gir = gnome.generate_gir(ui_lib,
-                    sources: ui_headers,
+                    sources: [ui_headers, util_headers, util_gtk_headers],
                     includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
                     header: 'vala-panel.h',
                     namespace: 'ValaPanel',
