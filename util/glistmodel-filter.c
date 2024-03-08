@@ -79,8 +79,8 @@ static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 	}
 	if (G_TYPE_IS_BOXED(g_list_model_get_item_type(self->base_model)))
 	{
-		BoxedWrapper *wr = boxed_wrapper_new(g_list_model_get_item_type(self->base_model));
-		boxed_wrapper_set_boxed(wr, item);
+		ValaPanelBoxedWrapper *wr = vala_panel_boxed_wrapper_new(g_list_model_get_item_type(self->base_model));
+		vala_panel_boxed_wrapper_set_boxed(wr, item);
 		return wr;
 	}
 	else

@@ -55,9 +55,9 @@ G_DEFINE_TYPE(ValaPanelRunner, vala_panel_runner, GTK_TYPE_DIALOG)
 	                        (gpointer)info,                                                    \
 	                        (GDestroyNotify)info_data_free)
 
-GtkWidget *create_widget_func(const BoxedWrapper *wr, G_GNUC_UNUSED gpointer user_data)
+GtkWidget *create_widget_func(const ValaPanelBoxedWrapper *wr, G_GNUC_UNUSED gpointer user_data)
 {
-	InfoData *data = (InfoData *)boxed_wrapper_dup_boxed(wr);
+	InfoData *data = (InfoData *)vala_panel_boxed_wrapper_dup_boxed(wr);
 	GtkBox *box    = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
 	g_app_launcher_button_set_info_data(box, data);
 	gtk_style_context_add_class(gtk_widget_get_style_context(GTK_WIDGET(box)),

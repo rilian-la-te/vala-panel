@@ -18,54 +18,54 @@
 
 #include "boxed-wrapper.h"
 
-struct _BoxedWrapper
+struct _ValaPanelBoxedWrapper
 {
 	GObject __parent__;
 	gpointer boxed;
 	GType boxed_type;
 };
 
-G_DEFINE_TYPE(BoxedWrapper, boxed_wrapper, G_TYPE_OBJECT)
+G_DEFINE_TYPE(ValaPanelBoxedWrapper, vala_panel_boxed_wrapper, G_TYPE_OBJECT)
 
-static void boxed_wrapper_finalize(GObject *obj)
+static void vala_panel_boxed_wrapper_finalize(GObject *obj)
 {
-	BoxedWrapper *self = VALA_PANEL_BOXED_WRAPPER(obj);
+	ValaPanelBoxedWrapper *self = VALA_PANEL_BOXED_WRAPPER(obj);
 	if (self->boxed_type && self->boxed)
 		g_boxed_free(self->boxed_type, self->boxed);
-	G_OBJECT_CLASS(boxed_wrapper_parent_class)->finalize(obj);
+	G_OBJECT_CLASS(vala_panel_boxed_wrapper_parent_class)->finalize(obj);
 }
 
-static void boxed_wrapper_init(BoxedWrapper *self)
+static void vala_panel_boxed_wrapper_init(ValaPanelBoxedWrapper *self)
 {
 	self->boxed      = NULL;
 	self->boxed_type = G_TYPE_NONE;
 }
 
-static void boxed_wrapper_class_init(BoxedWrapperClass *klass)
+static void vala_panel_boxed_wrapper_class_init(ValaPanelBoxedWrapperClass *klass)
 {
-	G_OBJECT_CLASS(klass)->finalize = boxed_wrapper_finalize;
+	G_OBJECT_CLASS(klass)->finalize = vala_panel_boxed_wrapper_finalize;
 }
 
-BoxedWrapper *boxed_wrapper_new(GType boxed_type)
+ValaPanelBoxedWrapper *vala_panel_boxed_wrapper_new(GType boxed_type)
 {
-	BoxedWrapper *wr = VALA_PANEL_BOXED_WRAPPER(g_object_new(boxed_wrapper_get_type(), NULL));
+	ValaPanelBoxedWrapper *wr = VALA_PANEL_BOXED_WRAPPER(g_object_new(vala_panel_boxed_wrapper_get_type(), NULL));
 	wr->boxed_type   = boxed_type;
 	return wr;
 }
 
-gconstpointer boxed_wrapper_get_boxed(const BoxedWrapper *self)
+gconstpointer vala_panel_boxed_wrapper_get_boxed(const ValaPanelBoxedWrapper *self)
 {
 	return self->boxed;
 }
 
-void boxed_wrapper_set_boxed(BoxedWrapper *self, gconstpointer boxed)
+void vala_panel_boxed_wrapper_set_boxed(ValaPanelBoxedWrapper *self, gconstpointer boxed)
 {
 	if (self->boxed)
 		g_boxed_free(self->boxed_type, self->boxed);
 	self->boxed = g_boxed_copy(self->boxed_type, boxed);
 }
 
-gpointer boxed_wrapper_dup_boxed(const BoxedWrapper *self)
+gpointer vala_panel_boxed_wrapper_dup_boxed(const ValaPanelBoxedWrapper *self)
 {
 	return g_boxed_copy(self->boxed_type, self->boxed);
 }
