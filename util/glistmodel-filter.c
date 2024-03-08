@@ -27,7 +27,6 @@ struct _ValaPanelListModelFilter
 	gpointer user_data;
 	uint max_results;
 	uint filter_matches;
-	bool wrap_to_gobject;
 };
 
 enum
@@ -35,7 +34,6 @@ enum
 	PROP_DUMMY,
 	PROP_BASE_MODEL,
 	PROP_MAX_RESULTS,
-	PROP_WRAP_TO_GOBJECT,
 	N_PROPERTIES
 };
 
@@ -75,7 +73,7 @@ static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 		if (self->filter_func(item, self->user_data))
 			counter++;
 	}
-	if (self->wrap_to_gobject)
+	if (G_TYPE_IS_BOXED(g_list_model_get_item_type(self->base_model)))
 	{
 		BoxedWrapper *wr = boxed_wrapper_new(g_list_model_get_item_type(self->base_model));
 		boxed_wrapper_set_boxed(wr, item);
@@ -129,9 +127,6 @@ static void vala_panel_list_model_filter_set_property(GObject *object, uint prop
 	case PROP_MAX_RESULTS:
 		self->max_results = g_value_get_uint(value);
 		break;
-	case PROP_WRAP_TO_GOBJECT:
-		self->wrap_to_gobject = g_value_get_boolean(value);
-		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 	}
@@ -170,13 +165,6 @@ static void vala_panel_list_model_filter_class_init(ValaPanelListModelFilterClas
 	                      G_MAXUINT,
 	                      50,
 	                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-	filter_spec[PROP_WRAP_TO_GOBJECT] =
-	    g_param_spec_boolean("wrap-to-gobject",
-	                         "",
-	                         "",
-	                         true,
-	                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE |
-	                             G_PARAM_STATIC_STRINGS);
 	g_object_class_install_properties(object_class, N_PROPERTIES, filter_spec);
 }
 
@@ -221,17 +209,5 @@ ValaPanelListModelFilter *vala_panel_list_model_filter_new(GListModel *base_mode
 	return VALA_PANEL_LIST_MODEL_FILTER(g_object_new(vala_panel_list_model_filter_get_type(),
 	                                                 "base-model",
 	                                                 base_model,
-	                                                 "wrap-to-gobject",
-	                                                 true,
-	                                                 NULL));
-}
-
-ValaPanelListModelFilter *vala_panel_list_model_filter_new_with_objects(GListModel *base_model)
-{
-	return VALA_PANEL_LIST_MODEL_FILTER(g_object_new(vala_panel_list_model_filter_get_type(),
-	                                                 "base-model",
-	                                                 base_model,
-	                                                 "wrap-to-gobject",
-	                                                 false,
 	                                                 NULL));
 }
