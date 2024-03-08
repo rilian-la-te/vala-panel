@@ -25,6 +25,7 @@ struct _ValaPanelListModelFilter
 	GListModel *base_model;
 	ValaPanelListModelFilterFunc filter_func;
 	gpointer user_data;
+	GDestroyNotify user_data_destroy;
 	uint max_results;
 	uint filter_matches;
 };
@@ -46,12 +47,14 @@ G_DEFINE_TYPE_WITH_CODE(ValaPanelListModelFilter, vala_panel_list_model_filter, 
 
 static GType vala_panel_list_model_filter_get_item_type(GListModel *lst)
 {
+	g_return_val_if_fail(!G_IS_LIST_MODEL(lst), G_TYPE_NONE);
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(lst);
 	return g_list_model_get_item_type(self->base_model);
 }
 
 static uint vala_panel_list_model_filter_get_n_items(GListModel *lst)
 {
+	g_return_val_if_fail(!G_IS_LIST_MODEL(lst), 0);
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(lst);
 	if (self->max_results > 0)
 		return self->filter_matches > self->max_results ? self->max_results
@@ -62,6 +65,7 @@ static uint vala_panel_list_model_filter_get_n_items(GListModel *lst)
 
 static gpointer vala_panel_list_model_filter_get_item(GListModel *lst, uint pos)
 {
+	g_return_val_if_fail(!G_IS_LIST_MODEL(lst), NULL);
 	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(lst);
 	gpointer item                  = NULL;
 	if (self->max_results > 0 && pos > self->max_results && pos != (uint)-1)
@@ -117,7 +121,7 @@ static void vala_panel_list_model_filter_set_property(GObject *object, uint prop
 	case PROP_BASE_MODEL:
 	{
 		GListModel *mdl  = G_LIST_MODEL(g_value_get_object(value));
-		self->base_model = mdl;
+		self->base_model = g_object_ref(mdl);
 		g_signal_connect(mdl,
 		                 "items-changed",
 		                 (GCallback)vala_panel_filter_base_changed,
@@ -143,12 +147,23 @@ static void vala_panel_list_model_filter_init(G_GNUC_UNUSED ValaPanelListModelFi
 {
 }
 
+static void vala_panel_list_model_filter_dispose(GObject *obj)
+{
+	g_return_if_fail(VALA_PANEL_IS_LIST_MODEL_FILTER(obj));
+	ValaPanelListModelFilter *self = VALA_PANEL_LIST_MODEL_FILTER(obj);
+	if (self->user_data && self->user_data_destroy)
+		self->user_data_destroy(self->user_data);
+
+	g_clear_object(&self->base_model);
+}
+
 static void vala_panel_list_model_filter_class_init(ValaPanelListModelFilterClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
 	object_class->set_property = vala_panel_list_model_filter_set_property;
 	object_class->get_property = vala_panel_list_model_filter_get_property;
+	object_class->dispose      = vala_panel_list_model_filter_dispose;
 
 	filter_spec[PROP_BASE_MODEL] =
 	    g_param_spec_object("base-model",
@@ -176,10 +191,15 @@ void vala_panel_list_model_filter_set_max_results(ValaPanelListModelFilter *self
 
 void vala_panel_list_model_filter_set_filter_func(ValaPanelListModelFilter *self,
                                                   ValaPanelListModelFilterFunc func,
-                                                  gpointer user_data)
+                                                  gpointer user_data,
+                                                  GDestroyNotify user_data_destroy)
 {
-	self->filter_func = func;
-	self->user_data   = user_data;
+	if (self->user_data && self->user_data_destroy)
+		self->user_data_destroy(self->user_data);
+
+	self->filter_func       = func;
+	self->user_data         = user_data;
+	self->user_data_destroy = user_data_destroy;
 }
 
 static bool continue_check(ValaPanelListModelFilter *self)
@@ -206,8 +226,6 @@ void vala_panel_list_model_filter_invalidate(ValaPanelListModelFilter *self)
 
 ValaPanelListModelFilter *vala_panel_list_model_filter_new(GListModel *base_model)
 {
-	return VALA_PANEL_LIST_MODEL_FILTER(g_object_new(vala_panel_list_model_filter_get_type(),
-	                                                 "base-model",
-	                                                 base_model,
-	                                                 NULL));
+	return VALA_PANEL_LIST_MODEL_FILTER(
+	    g_object_new(vala_panel_list_model_filter_get_type(), "base-model", base_model, NULL));
 }

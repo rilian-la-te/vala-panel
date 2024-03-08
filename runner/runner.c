@@ -193,7 +193,7 @@ static void setup_list_box_with_data(GObject *source_object, GAsyncResult *res,
 	self->filter          = vala_panel_list_model_filter_new(G_LIST_MODEL(self->model));
 	vala_panel_list_model_filter_set_filter_func(self->filter,
 	                                             (ValaPanelListModelFilterFunc)on_filter,
-	                                             self);
+	                                             self, NULL);
 	vala_panel_list_model_filter_set_max_results(self->filter, MAX_SEARCH_RESULTS);
 	gtk_list_box_bind_model(self->app_box,
 	                        G_LIST_MODEL(self->filter),
