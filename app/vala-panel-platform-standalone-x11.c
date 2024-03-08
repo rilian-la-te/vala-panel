@@ -214,7 +214,7 @@ static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *
 static bool vpp_x11_edge_can_strut(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top)
 {
 	int strut_set = false;
-	g_object_get(top, VP_KEY_STRUT, &strut_set, NULL);
+	g_object_get(top, VALA_PANEL_KEY_STRUT, &strut_set, NULL);
 	if (!gtk_widget_get_mapped(GTK_WIDGET(top)))
 		return false;
 	return strut_set;
@@ -227,15 +227,15 @@ static void vpp_x11_update_strut(ValaPanelPlatform *f, GtkWindow *top)
 	int monitor;
 	int size, len;
 	g_object_get(top,
-	             VP_KEY_AUTOHIDE,
+	             VALA_PANEL_KEY_AUTOHIDE,
 	             &autohide,
-	             VP_KEY_GRAVITY,
+	             VALA_PANEL_KEY_GRAVITY,
 	             &gravity,
-	             VP_KEY_MONITOR,
+	             VALA_PANEL_KEY_MONITOR,
 	             &monitor,
-	             VP_KEY_HEIGHT,
+	             VALA_PANEL_KEY_HEIGHT,
 	             &size,
-	             VP_KEY_WIDTH,
+	             VALA_PANEL_KEY_WIDTH,
 	             &len,
 	             NULL);
 	GdkRectangle primary_monitor_rect;
@@ -316,7 +316,7 @@ static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, Vala
 	ValaPanelPlatformX11 *pl = VALA_PANEL_PLATFORM_X11(self);
 	int edge                 = vala_panel_edge_from_gravity(gravity);
 	bool strut               = true;
-	g_object_get(top, VP_KEY_STRUT, &strut, NULL);
+	g_object_get(top, VALA_PANEL_KEY_STRUT, &strut, NULL);
 	if (!strut)
 	{
 		return strut;
@@ -329,9 +329,9 @@ static bool vpp_x11_edge_available(ValaPanelPlatform *self, GtkWindow *top, Vala
 			int smonitor          = 0;
 			ValaPanelGravity sgravity;
 			g_object_get(pl,
-			             VP_KEY_MONITOR,
+			             VALA_PANEL_KEY_MONITOR,
 			             &smonitor,
-			             VP_KEY_GRAVITY,
+			             VALA_PANEL_KEY_GRAVITY,
 			             &sgravity,
 			             NULL);
 			if ((!have_toplevel || (pl != VALA_PANEL_TOPLEVEL(top))) &&

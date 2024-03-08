@@ -71,7 +71,7 @@ static void monitor_setup_size(Monitor *mon, MonitorsApplet *pl, int width)
 {
 	int height;
 	g_object_get(vala_panel_applet_get_toplevel(VALA_PANEL_APPLET(pl)),
-	             VP_KEY_HEIGHT,
+	             VALA_PANEL_KEY_HEIGHT,
 	             &height,
 	             NULL);
 	gtk_widget_set_size_request(GTK_WIDGET(mon->da), width, height);

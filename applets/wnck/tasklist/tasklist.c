@@ -70,9 +70,9 @@ static void tasklist_notify_orientation_connect(GObject *topo, GParamSpec *pspec
 	XfceTasklist *self = XFCE_TASKLIST(data);
 	GtkOrientation orient;
 	ValaPanelGravity gravity;
-	if (!g_strcmp0(pspec->name, VP_KEY_ORIENTATION))
+	if (!g_strcmp0(pspec->name, VALA_PANEL_KEY_ORIENTATION))
 	{
-		g_object_get(top, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);
+		g_object_get(top, VALA_PANEL_KEY_ORIENTATION, &orient, VALA_PANEL_KEY_GRAVITY, &gravity, NULL);
 		xfce_tasklist_set_orientation(self, orient);
 		xfce_tasklist_update_edge(self, vala_panel_edge_from_gravity(gravity));
 	}
@@ -94,7 +94,7 @@ static void tasklist_applet_constructed(GObject *obj)
 	GActionMap *map             = G_ACTION_MAP(vala_panel_applet_get_action_group(base));
 	GtkOrientation orient;
 	ValaPanelGravity gravity;
-	g_object_get(toplevel, VP_KEY_ORIENTATION, &orient, VP_KEY_GRAVITY, &gravity, NULL);
+	g_object_get(toplevel, VALA_PANEL_KEY_ORIENTATION, &orient, VALA_PANEL_KEY_GRAVITY, &gravity, NULL);
 	g_simple_action_set_enabled(
 	    G_SIMPLE_ACTION(g_action_map_lookup_action(map, VALA_PANEL_APPLET_ACTION_CONFIGURE)),
 	    true);

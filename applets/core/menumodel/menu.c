@@ -114,7 +114,7 @@ static void panel_gravity_changed(ValaPanelToplevel *panel, G_GNUC_UNUSED GParam
 {
 	GtkOrientation orient;
 	GtkPackDirection pack;
-	g_object_get(panel, VP_KEY_ORIENTATION, &orient, NULL);
+	g_object_get(panel, VALA_PANEL_KEY_ORIENTATION, &orient, NULL);
 	pack =
 	    orient == GTK_ORIENTATION_HORIZONTAL ? GTK_PACK_DIRECTION_LTR : GTK_PACK_DIRECTION_TTB;
 	gtk_menu_bar_set_pack_direction(menu, pack);
@@ -131,7 +131,7 @@ static GtkContainer *create_menubar(MenuApplet *self)
 	gtk_widget_show(menubar);
 	panel_gravity_changed(top, NULL, GTK_MENU_BAR(menubar));
 	g_signal_connect(top,
-	                 "notify::" VP_KEY_GRAVITY,
+	                 "notify::" VALA_PANEL_KEY_GRAVITY,
 	                 G_CALLBACK(panel_gravity_changed),
 	                 menubar);
 	return GTK_CONTAINER(menubar);

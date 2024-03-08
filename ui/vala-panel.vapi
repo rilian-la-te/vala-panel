@@ -210,7 +210,7 @@ namespace ValaPanel {
 		public bool edge_available(Gtk.Window top, Gravity gravity, int monitor);
     }
 }
-[CCode (cheader_filename = "constants.h", cprefix = "VP_KEY_",lower_case_cprefix="VP_KEY_")]
+[CCode (cheader_filename = "constants.h", cprefix = "VALA_PANEL_KEY_",lower_case_cprefix="VALA_PANEL_KEY_")]
 namespace ValaPanel.Key
 {
     public const string GRAVITY;

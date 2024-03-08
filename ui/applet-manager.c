@@ -140,7 +140,7 @@ ValaPanelAppletInfo *vp_applet_manager_get_applet_info(ValaPanelAppletManager *s
 {
 	ValaPanelUnitSettings *settings =
 	    vp_core_settings_get_by_uuid(core_settings, vala_panel_applet_get_uuid(pl));
-	g_autofree char *str = g_settings_get_string(settings->common, VP_KEY_NAME);
+	g_autofree char *str = g_settings_get_string(settings->common, VALA_PANEL_KEY_NAME);
 	AppletInfoData *data = (AppletInfoData *)g_hash_table_lookup(self->ainfo_table, str);
 	return data->info;
 }

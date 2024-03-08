@@ -45,7 +45,7 @@ static ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings
 	                                         path);
 	g_autofree char *tname = is_toplevel ? g_strdup("toplevel") : g_strdup(name);
 	if (tname == NULL)
-		tname = g_settings_get_string(created_settings->common, VP_KEY_NAME);
+		tname = g_settings_get_string(created_settings->common, VALA_PANEL_KEY_NAME);
 
 	GSettingsSchemaSource *source = g_settings_schema_source_get_default();
 

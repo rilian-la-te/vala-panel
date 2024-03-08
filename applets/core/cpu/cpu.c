@@ -254,7 +254,7 @@ static void on_height_change(GObject *owner, G_GNUC_UNUSED GParamSpec *pspec, vo
 {
 	GtkWidget *da = GTK_WIDGET(data);
 	uint height;
-	g_object_get(owner, VP_KEY_HEIGHT, &height, NULL);
+	g_object_get(owner, VALA_PANEL_KEY_HEIGHT, &height, NULL);
 	gtk_widget_set_size_request(da, height > 40 ? height : 40, height);
 }
 
@@ -284,7 +284,7 @@ static void cpu_applet_constructed(GObject *obj)
 
 	/* Connect signals. */
 	g_signal_connect(G_OBJECT(toplevel),
-	                 "notify::" VP_KEY_HEIGHT,
+	                 "notify::" VALA_PANEL_KEY_HEIGHT,
 	                 G_CALLBACK(on_height_change),
 	                 (gpointer)da);
 	g_signal_connect(G_OBJECT(da), "configure-event", G_CALLBACK(configure_event), (gpointer)c);

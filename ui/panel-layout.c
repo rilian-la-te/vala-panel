@@ -93,11 +93,11 @@ static void update_widget_position_keys(GtkContainer *parent)
 		uint idx;
 		gtk_container_child_get(GTK_CONTAINER(parent),
 		                        GTK_WIDGET(applet),
-		                        VP_KEY_POSITION,
+		                        VALA_PANEL_KEY_POSITION,
 		                        &idx,
 		                        NULL);
 		ValaPanelUnitSettings *s = vp_layout_get_applet_settings(applet);
-		g_settings_set_uint(s->common, VP_KEY_POSITION, idx);
+		g_settings_set_uint(s->common, VALA_PANEL_KEY_POSITION, idx);
 	}
 }
 
@@ -129,7 +129,7 @@ G_GNUC_INTERNAL void vp_layout_init_applets(ValaPanelLayout *self)
 		{
 			g_autofree char *id =
 			    g_settings_get_string(pl->common, VALA_PANEL_TOPLEVEL_ID);
-			g_autofree char *name = g_settings_get_string(pl->common, VP_KEY_NAME);
+			g_autofree char *name = g_settings_get_string(pl->common, VALA_PANEL_KEY_NAME);
 			if (!g_strcmp0(id, self->toplevel_id))
 				vp_layout_place_applet(self, name, pl);
 		}
@@ -143,7 +143,7 @@ static void vala_panel_applet_on_destroy(ValaPanelApplet *self, void *data)
 	ValaPanelLayout *layout  = VALA_PANEL_LAYOUT(data);
 	const char *uuid         = vala_panel_applet_get_uuid(self);
 	ValaPanelUnitSettings *s = vp_core_settings_get_by_uuid(core_settings, uuid);
-	g_autofree char *name    = g_settings_get_string(s->common, VP_KEY_NAME);
+	g_autofree char *name    = g_settings_get_string(s->common, VALA_PANEL_KEY_NAME);
 	vp_applet_manager_applet_unref(manager, name);
 	if (gtk_widget_in_destruction(GTK_WIDGET(layout)))
 		vp_core_settings_remove_unit_settings(core_settings, uuid);
@@ -174,7 +174,7 @@ static void vp_layout_applet_repack(G_GNUC_UNUSED GHashTable *unused, ValaPanelA
 	/* Handle being reparented. */
 	ValaPanelUnitSettings *settings = vp_layout_get_applet_settings(info);
 	ValaPanelAppletPackType type =
-	    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VP_KEY_PACK);
+	    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VALA_PANEL_KEY_PACK);
 	GtkContainer *new_parent = NULL;
 	GtkContainer *old_parent = GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(info)));
 	switch (type)
@@ -206,7 +206,7 @@ static void vp_layout_applet_reposition(G_GNUC_UNUSED GHashTable *unused, ValaPa
                                         G_GNUC_UNUSED ValaPanelLayout *self)
 {
 	ValaPanelUnitSettings *settings = vp_layout_get_applet_settings(pl);
-	uint pos                        = g_settings_get_uint(settings->common, VP_KEY_POSITION);
+	uint pos                        = g_settings_get_uint(settings->common, VALA_PANEL_KEY_POSITION);
 	gtk_box_reorder_child(GTK_BOX(gtk_widget_get_parent(GTK_WIDGET(pl))),
 	                      GTK_WIDGET(pl),
 	                      (int)pos);
@@ -222,7 +222,7 @@ G_GNUC_INTERNAL void vp_layout_applet_packing_updated(G_GNUC_UNUSED GSettings *s
 	if (!vp_toplevel_is_initialized(vala_panel_applet_get_toplevel(pl)))
 		return;
 
-	if (!g_strcmp0(key, VP_KEY_PACK))
+	if (!g_strcmp0(key, VALA_PANEL_KEY_PACK))
 		vp_layout_applet_repack(NULL, pl, self);
 }
 
@@ -241,7 +241,7 @@ G_GNUC_INTERNAL void vp_layout_applet_position_updated(G_GNUC_UNUSED GSettings *
 	if (layout->suppress_sorting)
 		return;
 
-	if (!g_strcmp0(key, VP_KEY_POSITION))
+	if (!g_strcmp0(key, VALA_PANEL_KEY_POSITION))
 		vp_layout_applet_reposition(NULL, pl, NULL);
 }
 
@@ -259,11 +259,11 @@ static ValaPanelApplet *vp_layout_place_applet(ValaPanelLayout *self, const char
 	vp_layout_applet_repack(NULL, applet, self);
 	vp_layout_applet_reposition(NULL, applet, NULL);
 	g_signal_connect(s->common,
-	                 "changed::" VP_KEY_PACK,
+	                 "changed::" VALA_PANEL_KEY_PACK,
 	                 G_CALLBACK(vp_layout_applet_packing_updated),
 	                 applet);
 	g_signal_connect(s->common,
-	                 "changed::" VP_KEY_POSITION,
+	                 "changed::" VALA_PANEL_KEY_POSITION,
 	                 G_CALLBACK(vp_layout_applet_position_updated),
 	                 applet);
 	g_signal_connect(applet, "destroy", G_CALLBACK(vala_panel_applet_on_destroy), self);
@@ -305,7 +305,7 @@ G_GNUC_INTERNAL ValaPanelAppletPackType vp_layout_get_applet_pack_type(ValaPanel
 {
 	ValaPanelUnitSettings *settings = vp_layout_get_applet_settings(pl);
 	ValaPanelAppletPackType type =
-	    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VP_KEY_PACK);
+	    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VALA_PANEL_KEY_PACK);
 	return type;
 }
 
@@ -315,7 +315,7 @@ G_GNUC_INTERNAL uint vp_layout_get_applet_position(G_GNUC_UNUSED ValaPanelLayout
 	int res;
 	gtk_container_child_get(GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(pl))),
 	                        GTK_WIDGET(pl),
-	                        VP_KEY_POSITION,
+	                        VALA_PANEL_KEY_POSITION,
 	                        &res,
 	                        NULL);
 	return (uint)res;
@@ -330,11 +330,11 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_layout_insert_applet(ValaPanelLayout *self, 
                                                          ValaPanelAppletPackType pack, uint pos)
 {
 	ValaPanelUnitSettings *s = vp_core_settings_add_unit_settings(core_settings, type, false);
-	g_settings_set_string(s->common, VP_KEY_NAME, type);
+	g_settings_set_string(s->common, VALA_PANEL_KEY_NAME, type);
 	g_settings_set_string(s->common, VALA_PANEL_TOPLEVEL_ID, self->toplevel_id);
 	vp_layout_applets_reposition_after(self, pack, pos, GTK_PACK_END);
-	g_settings_set_enum(s->common, VP_KEY_PACK, (int)pack);
-	g_settings_set_uint(s->common, VP_KEY_POSITION, pos);
+	g_settings_set_enum(s->common, VALA_PANEL_KEY_PACK, (int)pack);
+	g_settings_set_uint(s->common, VALA_PANEL_KEY_POSITION, pos);
 	vp_applet_manager_reload_applets(manager);
 	ValaPanelApplet *applet = vp_layout_place_applet(self, type, s);
 	vp_layout_update_applet_positions(self);
@@ -408,24 +408,24 @@ G_GNUC_INTERNAL void vp_layout_move_applet_one_step(ValaPanelLayout *self, ValaP
 		if (direction == GTK_PACK_START)
 		{
 			g_settings_set_uint(prev_settings->common,
-			                    VP_KEY_POSITION,
+			                    VALA_PANEL_KEY_POSITION,
 			                    count_applets_in_pack(self, next_pack));
-			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, (int)next_pack);
+			g_settings_set_enum(prev_settings->common, VALA_PANEL_KEY_PACK, (int)next_pack);
 			vp_layout_applets_reposition_after(self, prev_pack, 0, direction);
 		}
 		else
 		{
 			vp_layout_applets_reposition_after(self, next_pack, 0, direction);
-			g_settings_set_enum(prev_settings->common, VP_KEY_PACK, (int)next_pack);
-			g_settings_set_uint(prev_settings->common, VP_KEY_POSITION, 0);
+			g_settings_set_enum(prev_settings->common, VALA_PANEL_KEY_PACK, (int)next_pack);
+			g_settings_set_uint(prev_settings->common, VALA_PANEL_KEY_POSITION, 0);
 		}
 	}
 	else
 	{
 		uint prev_pos = vp_layout_get_applet_position(self, prev);
 		uint next_pos = vp_layout_get_applet_position(self, next);
-		g_settings_set_uint(prev_settings->common, VP_KEY_POSITION, next_pos);
-		g_settings_set_uint(next_settings->common, VP_KEY_POSITION, prev_pos);
+		g_settings_set_uint(prev_settings->common, VALA_PANEL_KEY_POSITION, next_pos);
+		g_settings_set_uint(next_settings->common, VALA_PANEL_KEY_POSITION, prev_pos);
 	}
 	self->suppress_sorting = false;
 	vp_layout_update_applet_positions(self);
@@ -448,14 +448,14 @@ static void vp_layout_applets_reposition_after(ValaPanelLayout *self,
 	{
 		ValaPanelUnitSettings *settings = vp_core_settings_get_by_uuid(core_settings, key);
 		ValaPanelAppletPackType type =
-		    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VP_KEY_PACK);
+		    (ValaPanelAppletPackType)g_settings_get_enum(settings->common, VALA_PANEL_KEY_PACK);
 		if (type == alignment)
 		{
-			uint pos = g_settings_get_uint(settings->common, VP_KEY_POSITION);
+			uint pos = g_settings_get_uint(settings->common, VALA_PANEL_KEY_POSITION);
 			if (pos >= after)
 			{
 				pos = (direction == GTK_PACK_START) ? pos - 1 : pos + 1;
-				g_settings_set_uint(settings->common, VP_KEY_POSITION, pos);
+				g_settings_set_uint(settings->common, VALA_PANEL_KEY_POSITION, pos);
 			}
 		}
 	}

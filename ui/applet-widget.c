@@ -140,9 +140,9 @@ static void vala_panel_applet_measure(ValaPanelApplet *self, GtkOrientation orie
 {
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(self);
 	GtkOrientation panel_ori;
-	g_object_get(p->toplevel, VP_KEY_ORIENTATION, &panel_ori, NULL);
+	g_object_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &panel_ori, NULL);
 	int height, icon_size;
-	g_object_get(p->toplevel, VP_KEY_HEIGHT, &height, VP_KEY_ICON_SIZE, &icon_size, NULL);
+	g_object_get(p->toplevel, VALA_PANEL_KEY_HEIGHT, &height, VALA_PANEL_KEY_ICON_SIZE, &icon_size, NULL);
 	if (panel_ori != orient)
 	{
 		*min = icon_size;
@@ -179,7 +179,7 @@ static GtkSizeRequestMode vala_panel_applet_get_request_mode(GtkWidget *obj)
 	ValaPanelApplet *self     = VALA_PANEL_APPLET(obj);
 	ValaPanelAppletPrivate *p = vala_panel_applet_get_instance_private(VALA_PANEL_APPLET(self));
 	GtkOrientation pos;
-	g_object_get(p->toplevel, VP_KEY_ORIENTATION, &pos, NULL);
+	g_object_get(p->toplevel, VALA_PANEL_KEY_ORIENTATION, &pos, NULL);
 	return (pos == GTK_ORIENTATION_HORIZONTAL) ? GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
 	                                           : GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH;
 }
@@ -355,36 +355,36 @@ static void vala_panel_applet_class_init(ValaPanelAppletClass *klass)
 	G_OBJECT_CLASS(klass)->set_property           = vala_panel_applet_set_property;
 	G_OBJECT_CLASS(klass)->finalize               = vala_panel_applet_finalize;
 	applet_specs[VALA_PANEL_APPLET_BACKGROUND_WIDGET] =
-	    g_param_spec_object(VP_KEY_BACKGROUND_WIDGET,
-	                        VP_KEY_BACKGROUND_WIDGET,
-	                        VP_KEY_BACKGROUND_WIDGET,
+	    g_param_spec_object(VALA_PANEL_KEY_BACKGROUND_WIDGET,
+	                        VALA_PANEL_KEY_BACKGROUND_WIDGET,
+	                        VALA_PANEL_KEY_BACKGROUND_WIDGET,
 	                        gtk_widget_get_type(),
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	applet_specs[VALA_PANEL_APPLET_TOPLEVEL] =
-	    g_param_spec_object(VP_KEY_TOPLEVEL,
-	                        VP_KEY_TOPLEVEL,
-	                        VP_KEY_TOPLEVEL,
+	    g_param_spec_object(VALA_PANEL_KEY_TOPLEVEL,
+	                        VALA_PANEL_KEY_TOPLEVEL,
+	                        VALA_PANEL_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
 	applet_specs[VALA_PANEL_APPLET_UUID] =
-	    g_param_spec_string(VP_KEY_UUID,
-	                        VP_KEY_UUID,
-	                        VP_KEY_UUID,
+	    g_param_spec_string(VALA_PANEL_KEY_UUID,
+	                        VALA_PANEL_KEY_UUID,
+	                        VALA_PANEL_KEY_UUID,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
 	applet_specs[VALA_PANEL_APPLET_SETTINGS] =
-	    g_param_spec_object(VP_KEY_SETTINGS,
-	                        VP_KEY_SETTINGS,
-	                        VP_KEY_SETTINGS,
+	    g_param_spec_object(VALA_PANEL_KEY_SETTINGS,
+	                        VALA_PANEL_KEY_SETTINGS,
+	                        VALA_PANEL_KEY_SETTINGS,
 	                        G_TYPE_SETTINGS,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
 	applet_specs[VALA_PANEL_APPLET_GRP] =
-	    g_param_spec_object(VP_KEY_ACTION_GROUP,
-	                        VP_KEY_ACTION_GROUP,
-	                        VP_KEY_ACTION_GROUP,
+	    g_param_spec_object(VALA_PANEL_KEY_ACTION_GROUP,
+	                        VALA_PANEL_KEY_ACTION_GROUP,
+	                        VALA_PANEL_KEY_ACTION_GROUP,
 	                        G_TYPE_SIMPLE_ACTION_GROUP,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 	g_object_class_install_properties(G_OBJECT_CLASS(klass),

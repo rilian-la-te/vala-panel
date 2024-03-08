@@ -137,7 +137,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	ValaPanelToplevel *top        = self->_toplevel;
 	uint panel_gravity;
 	int request_mon;
-	g_object_get(top, VP_KEY_GRAVITY, &panel_gravity, NULL);
+	g_object_get(top, VALA_PANEL_KEY_GRAVITY, &panel_gravity, NULL);
 
 	/* change monitor */
 	GtkTreeIter iter;
@@ -148,7 +148,7 @@ static void on_monitors_changed(GtkComboBox *box, void *data)
 	                                       panel_gravity,
 	                                       request_mon))
 	{
-		g_object_set(top, VP_KEY_MONITOR, request_mon, NULL);
+		g_object_set(top, VALA_PANEL_KEY_MONITOR, request_mon, NULL);
 	}
 }
 static void background_color_connector(GtkColorButton *colorb, void *data)
@@ -156,7 +156,7 @@ static void background_color_connector(GtkColorButton *colorb, void *data)
 	GdkRGBA color;
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorb), &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
-	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_COLOR, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_BACKGROUND_COLOR, chr_str, NULL);
 }
 
 static void foreground_color_connector(GtkColorButton *colorb, void *data)
@@ -164,12 +164,12 @@ static void foreground_color_connector(GtkColorButton *colorb, void *data)
 	GdkRGBA color;
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(colorb), &color);
 	g_autofree char *chr_str = gdk_rgba_to_string(&color);
-	g_object_set(G_OBJECT(data), VP_KEY_FOREGROUND_COLOR, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_FOREGROUND_COLOR, chr_str, NULL);
 }
 static void background_file_connector(GtkFileChooser *colorb, void *data)
 {
 	g_autofree char *chr_str = gtk_file_chooser_get_filename(colorb);
-	g_object_set(G_OBJECT(data), VP_KEY_BACKGROUND_FILE, chr_str, NULL);
+	g_object_set(G_OBJECT(data), VALA_PANEL_KEY_BACKGROUND_FILE, chr_str, NULL);
 }
 static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_properties,
                                                GObjectConstructParam *construct_properties)
@@ -196,39 +196,39 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 		gtk_list_store_set(self->store_monitors, &iter, 0, i, 1, model, -1);
 	}
 	int true_monitor;
-	g_object_get(self->_toplevel, VP_KEY_MONITOR, &true_monitor, NULL);
+	g_object_get(self->_toplevel, VALA_PANEL_KEY_MONITOR, &true_monitor, NULL);
 
 	gtk_combo_box_set_active(self->monitors_box, true_monitor + 1);
 
 	/* size */
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_WIDTH,
+	                       VALA_PANEL_KEY_WIDTH,
 	                       self->spin_width,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_DYNAMIC,
+	                       VALA_PANEL_KEY_DYNAMIC,
 	                       self->spin_width,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_INVERT_BOOLEAN);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_HEIGHT,
+	                       VALA_PANEL_KEY_HEIGHT,
 	                       self->spin_height,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_ICON_SIZE,
+	                       VALA_PANEL_KEY_ICON_SIZE,
 	                       self->spin_iconsize,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_CORNER_RADIUS,
+	                       VALA_PANEL_KEY_CORNER_RADIUS,
 	                       self->spin_corners,
 	                       "value",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	/* background */
 	char scol[120];
-	g_object_get(self->_toplevel, VP_KEY_BACKGROUND_COLOR, &scol, NULL);
+	g_object_get(self->_toplevel, VALA_PANEL_KEY_BACKGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(self->color_background), &color);
 	gtk_button_set_relief(GTK_BUTTON(self->color_background), GTK_RELIEF_NONE);
@@ -237,23 +237,23 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	                 G_CALLBACK(background_color_connector),
 	                 self->_toplevel);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_USE_BACKGROUND_COLOR,
+	                       VALA_PANEL_KEY_USE_BACKGROUND_COLOR,
 	                       self->color_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
 	g_autofree char *file = NULL;
 	bool use_background_file;
 	g_object_get(self->_toplevel,
-	             VP_KEY_BACKGROUND_FILE,
+	             VALA_PANEL_KEY_BACKGROUND_FILE,
 	             &file,
-	             VP_KEY_USE_BACKGROUND_FILE,
+	             VALA_PANEL_KEY_USE_BACKGROUND_FILE,
 	             &use_background_file,
 	             NULL);
 	if (use_background_file && file != NULL)
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(self->file_background), file);
 	gtk_widget_set_sensitive(GTK_WIDGET(self->file_background), use_background_file);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_USE_BACKGROUND_FILE,
+	                       VALA_PANEL_KEY_USE_BACKGROUND_FILE,
 	                       self->file_background,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
@@ -262,7 +262,7 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	                 G_CALLBACK(background_file_connector),
 	                 self->_toplevel);
 	/* foregorund */
-	g_object_get(self->_toplevel, VP_KEY_FOREGROUND_COLOR, &scol, NULL);
+	g_object_get(self->_toplevel, VALA_PANEL_KEY_FOREGROUND_COLOR, &scol, NULL);
 	gdk_rgba_parse(&color, scol);
 	gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(self->color_foreground), &color);
 	gtk_button_set_relief(GTK_BUTTON(self->color_foreground), GTK_RELIEF_NONE);
@@ -271,19 +271,19 @@ static GObject *vp_toplevel_config_constructor(GType type, guint n_construct_pro
 	                 G_CALLBACK(foreground_color_connector),
 	                 self->_toplevel);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_USE_FOREGROUND_COLOR,
+	                       VALA_PANEL_KEY_USE_FOREGROUND_COLOR,
 	                       self->color_foreground,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
 	/* fonts */
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_FONT,
+	                       VALA_PANEL_KEY_FONT,
 	                       self->font_selector,
 	                       "font",
 	                       G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 	gtk_button_set_relief(GTK_BUTTON(self->font_selector), GTK_RELIEF_NONE);
 	g_object_bind_property(self->_toplevel,
-	                       VP_KEY_USE_FONT,
+	                       VALA_PANEL_KEY_USE_FONT,
 	                       self->font_box,
 	                       "sensitive",
 	                       G_BINDING_SYNC_CREATE);
@@ -716,9 +716,9 @@ static void vp_toplevel_config_class_init(ValaPanelToplevelConfigClass *klass)
 	G_OBJECT_CLASS(klass)->constructor  = vp_toplevel_config_constructor;
 	G_OBJECT_CLASS(klass)->finalize     = vp_toplevel_config_finalize;
 	vp_toplevel_config_properties[TOPLEVEL_PROPERTY] =
-	    g_param_spec_object(VP_KEY_TOPLEVEL,
-	                        VP_KEY_TOPLEVEL,
-	                        VP_KEY_TOPLEVEL,
+	    g_param_spec_object(VALA_PANEL_KEY_TOPLEVEL,
+	                        VALA_PANEL_KEY_TOPLEVEL,
+	                        VALA_PANEL_KEY_TOPLEVEL,
 	                        VALA_PANEL_TYPE_TOPLEVEL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));

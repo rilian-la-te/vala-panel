@@ -670,7 +670,7 @@ static void xfce_tasklist_measure(GtkWidget *widget, GtkOrientation orientation,
 	if (top)
 	{
 		int height;
-		g_object_get(top, VP_KEY_ICON_SIZE, &icon_size, VP_KEY_HEIGHT, &height, NULL);
+		g_object_get(top, VALA_PANEL_KEY_ICON_SIZE, &icon_size, VALA_PANEL_KEY_HEIGHT, &height, NULL);
 		tasklist->nrows = (int)floor(height / (float)icon_size);
 		tasklist->nrows = tasklist->nrows < 1 ? 1 : tasklist->nrows;
 		base_height     = height;
@@ -1909,7 +1909,7 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 	gtk_widget_set_parent(child->button, GTK_WIDGET(tasklist));
 	gtk_button_set_relief(GTK_BUTTON(child->button), tasklist->button_relief);
 	gtk_widget_add_events(GTK_WIDGET(child->button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
-	g_object_get(xfce_tasklist_get_toplevel(tasklist), VP_KEY_GRAVITY, &edge, NULL);
+	g_object_get(xfce_tasklist_get_toplevel(tasklist), VALA_PANEL_KEY_GRAVITY, &edge, NULL);
 	g_autofree char *flat_css =
 	    css_generate_flat_button(child->button, vala_panel_edge_from_gravity(edge));
 	g_autofree char *css_string =
@@ -2271,7 +2271,7 @@ static void xfce_tasklist_button_icon_changed(WnckWindow *window, XfceTasklistCh
 	if (tasklist->minimized_icon_lucency == 0)
 		return;
 	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(tasklist)),
-	             VP_KEY_ICON_SIZE,
+	             VALA_PANEL_KEY_ICON_SIZE,
 	             &icon_size,
 	             NULL);
 	context = gtk_widget_get_style_context(GTK_WIDGET(child->icon));
@@ -3378,7 +3378,7 @@ static bool xfce_tasklist_group_button_button_draw(GtkWidget *widget, cairo_t *c
 
 		pango_layout_get_pixel_extents(n_windows_layout, &ink_extent, &log_extent);
 		g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(group_child->tasklist)),
-		             VP_KEY_ICON_SIZE,
+		             VALA_PANEL_KEY_ICON_SIZE,
 		             &icon_size,
 		             NULL);
 		radius = log_extent.height / 2;
@@ -3533,7 +3533,7 @@ static void xfce_tasklist_group_button_icon_changed(WnckClassGroup *class_group,
 		return;
 
 	g_object_get(VALA_PANEL_TOPLEVEL(xfce_tasklist_get_toplevel(group_child->tasklist)),
-	             VP_KEY_ICON_SIZE,
+	             VALA_PANEL_KEY_ICON_SIZE,
 	             &icon_size,
 	             NULL);
 	context = gtk_widget_get_style_context(GTK_WIDGET(group_child->icon));

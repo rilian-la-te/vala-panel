@@ -214,8 +214,8 @@ static void start_ui(ValaPanelToplevel *self)
 	gtk_window_stick(GTK_WINDOW(self));
 	vp_layout_update_applet_positions(self->layout);
 	gtk_window_present(GTK_WINDOW(self));
-	bool autohide = g_settings_get_boolean(self->settings->common, VP_KEY_AUTOHIDE);
-	g_object_set(self, VP_KEY_AUTOHIDE, autohide, NULL);
+	bool autohide = g_settings_get_boolean(self->settings->common, VALA_PANEL_KEY_AUTOHIDE);
+	g_object_set(self, VALA_PANEL_KEY_AUTOHIDE, autohide, NULL);
 	vala_panel_toplevel_update_geometry(self);
 	self->initialized = true;
 }
@@ -230,63 +230,63 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	}
 	if (use_internal_values)
 	{
-		g_settings_set_int(self->settings->common, VP_KEY_MONITOR, self->mon);
-		g_settings_set_enum(self->settings->common, VP_KEY_GRAVITY, (int)self->gravity);
+		g_settings_set_int(self->settings->common, VALA_PANEL_KEY_MONITOR, self->mon);
+		g_settings_set_enum(self->settings->common, VALA_PANEL_KEY_GRAVITY, (int)self->gravity);
 	}
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_GRAVITY);
+	                                   VALA_PANEL_KEY_GRAVITY);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_HEIGHT);
+	                                   VALA_PANEL_KEY_HEIGHT);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_WIDTH);
+	                                   VALA_PANEL_KEY_WIDTH);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_DYNAMIC);
+	                                   VALA_PANEL_KEY_DYNAMIC);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_AUTOHIDE);
+	                                   VALA_PANEL_KEY_AUTOHIDE);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_STRUT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_DOCK);
-	vala_panel_bind_gsettings(self, self->settings->common, VP_KEY_MONITOR)
+	                                   VALA_PANEL_KEY_STRUT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VALA_PANEL_KEY_DOCK);
+	vala_panel_bind_gsettings(self, self->settings->common, VALA_PANEL_KEY_MONITOR)
 	    vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                       self->settings->common,
-	                                       VP_KEY_ICON_SIZE);
+	                                       VALA_PANEL_KEY_ICON_SIZE);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_BACKGROUND_COLOR);
+	                                   VALA_PANEL_KEY_BACKGROUND_COLOR);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_FOREGROUND_COLOR);
+	                                   VALA_PANEL_KEY_FOREGROUND_COLOR);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_BACKGROUND_FILE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VP_KEY_FONT);
+	                                   VALA_PANEL_KEY_BACKGROUND_FILE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VALA_PANEL_KEY_FONT);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_CORNER_RADIUS);
+	                                   VALA_PANEL_KEY_CORNER_RADIUS);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_FONT_SIZE_ONLY);
+	                                   VALA_PANEL_KEY_FONT_SIZE_ONLY);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_USE_BACKGROUND_COLOR);
+	                                   VALA_PANEL_KEY_USE_BACKGROUND_COLOR);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_USE_FOREGROUND_COLOR);
+	                                   VALA_PANEL_KEY_USE_FOREGROUND_COLOR);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_USE_FONT);
+	                                   VALA_PANEL_KEY_USE_FONT);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_USE_BACKGROUND_FILE);
+	                                   VALA_PANEL_KEY_USE_BACKGROUND_FILE);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
-	                                   VP_KEY_USE_TOOLBAR_APPEARANCE);
+	                                   VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE);
 	g_action_map_add_action_entries(G_ACTION_MAP(self),
 	                                panel_entries,
 	                                G_N_ELEMENTS(panel_entries),
@@ -755,7 +755,7 @@ static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
 {
 	int monitor;
-	g_object_get(panel, VP_KEY_MONITOR, &monitor, NULL);
+	g_object_get(panel, VALA_PANEL_KEY_MONITOR, &monitor, NULL);
 	if (monitor < mons && !vp_toplevel_is_initialized(panel) && mons > 0)
 		start_ui(panel);
 	else if ((monitor >= mons && vp_toplevel_is_initialized(panel)) || mons == 0)
@@ -1094,160 +1094,160 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	oclass->dispose                                         = vala_panel_toplevel_destroy;
 	oclass->finalize                                        = vala_panel_toplevel_finalize;
 	top_specs[TOP_UUID] =
-	    g_param_spec_string(VP_KEY_UUID,
-	                        VP_KEY_UUID,
-	                        VP_KEY_UUID,
+	    g_param_spec_string(VALA_PANEL_KEY_UUID,
+	                        VALA_PANEL_KEY_UUID,
+	                        VALA_PANEL_KEY_UUID,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                      G_PARAM_CONSTRUCT_ONLY));
 	top_specs[TOP_HEIGHT] =
-	    g_param_spec_int(VP_KEY_HEIGHT,
-	                     VP_KEY_HEIGHT,
-	                     VP_KEY_HEIGHT,
+	    g_param_spec_int(VALA_PANEL_KEY_HEIGHT,
+	                     VALA_PANEL_KEY_HEIGHT,
+	                     VALA_PANEL_KEY_HEIGHT,
 	                     G_MININT,
 	                     G_MAXINT,
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_WIDTH] =
-	    g_param_spec_int(VP_KEY_WIDTH,
-	                     VP_KEY_WIDTH,
-	                     VP_KEY_WIDTH,
+	    g_param_spec_int(VALA_PANEL_KEY_WIDTH,
+	                     VALA_PANEL_KEY_WIDTH,
+	                     VALA_PANEL_KEY_WIDTH,
 	                     G_MININT,
 	                     G_MAXINT,
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
 	top_specs[TOP_USE_FONT] =
-	    g_param_spec_boolean(VP_KEY_USE_FONT,
-	                         VP_KEY_USE_FONT,
-	                         VP_KEY_USE_FONT,
+	    g_param_spec_boolean(VALA_PANEL_KEY_USE_FONT,
+	                         VALA_PANEL_KEY_USE_FONT,
+	                         VALA_PANEL_KEY_USE_FONT,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_USE_BG_COLOR] =
-	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_COLOR,
-	                         VP_KEY_USE_BACKGROUND_COLOR,
-	                         VP_KEY_USE_BACKGROUND_COLOR,
+	    g_param_spec_boolean(VALA_PANEL_KEY_USE_BACKGROUND_COLOR,
+	                         VALA_PANEL_KEY_USE_BACKGROUND_COLOR,
+	                         VALA_PANEL_KEY_USE_BACKGROUND_COLOR,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_USE_FG_COLOR] =
-	    g_param_spec_boolean(VP_KEY_USE_FOREGROUND_COLOR,
-	                         VP_KEY_USE_FOREGROUND_COLOR,
-	                         VP_KEY_USE_FOREGROUND_COLOR,
+	    g_param_spec_boolean(VALA_PANEL_KEY_USE_FOREGROUND_COLOR,
+	                         VALA_PANEL_KEY_USE_FOREGROUND_COLOR,
+	                         VALA_PANEL_KEY_USE_FOREGROUND_COLOR,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_USE_BG_FILE] =
-	    g_param_spec_boolean(VP_KEY_USE_BACKGROUND_FILE,
-	                         VP_KEY_USE_BACKGROUND_FILE,
-	                         VP_KEY_USE_BACKGROUND_FILE,
+	    g_param_spec_boolean(VALA_PANEL_KEY_USE_BACKGROUND_FILE,
+	                         VALA_PANEL_KEY_USE_BACKGROUND_FILE,
+	                         VALA_PANEL_KEY_USE_BACKGROUND_FILE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_FONT_SIZE_ONLY] =
-	    g_param_spec_boolean(VP_KEY_FONT_SIZE_ONLY,
-	                         VP_KEY_FONT_SIZE_ONLY,
-	                         VP_KEY_FONT_SIZE_ONLY,
+	    g_param_spec_boolean(VALA_PANEL_KEY_FONT_SIZE_ONLY,
+	                         VALA_PANEL_KEY_FONT_SIZE_ONLY,
+	                         VALA_PANEL_KEY_FONT_SIZE_ONLY,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_TB_LOOK] =
-	    g_param_spec_boolean(VP_KEY_USE_TOOLBAR_APPEARANCE,
-	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
-	                         VP_KEY_USE_TOOLBAR_APPEARANCE,
+	    g_param_spec_boolean(VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
+	                         VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
+	                         VALA_PANEL_KEY_USE_TOOLBAR_APPEARANCE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_FONT_SIZE] =
-	    g_param_spec_uint(VP_KEY_FONT_SIZE,
-	                      VP_KEY_FONT_SIZE,
-	                      VP_KEY_FONT_SIZE,
+	    g_param_spec_uint(VALA_PANEL_KEY_FONT_SIZE,
+	                      VALA_PANEL_KEY_FONT_SIZE,
+	                      VALA_PANEL_KEY_FONT_SIZE,
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_CORNER_RAD] =
-	    g_param_spec_uint(VP_KEY_CORNER_RADIUS,
-	                      VP_KEY_CORNER_RADIUS,
-	                      VP_KEY_CORNER_RADIUS,
+	    g_param_spec_uint(VALA_PANEL_KEY_CORNER_RADIUS,
+	                      VALA_PANEL_KEY_CORNER_RADIUS,
+	                      VALA_PANEL_KEY_CORNER_RADIUS,
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_FONT] =
-	    g_param_spec_string(VP_KEY_FONT,
-	                        VP_KEY_FONT,
-	                        VP_KEY_FONT,
+	    g_param_spec_string(VALA_PANEL_KEY_FONT,
+	                        VALA_PANEL_KEY_FONT,
+	                        VALA_PANEL_KEY_FONT,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_BG_COLOR] =
-	    g_param_spec_string(VP_KEY_BACKGROUND_COLOR,
-	                        VP_KEY_BACKGROUND_COLOR,
-	                        VP_KEY_BACKGROUND_COLOR,
+	    g_param_spec_string(VALA_PANEL_KEY_BACKGROUND_COLOR,
+	                        VALA_PANEL_KEY_BACKGROUND_COLOR,
+	                        VALA_PANEL_KEY_BACKGROUND_COLOR,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_FG_COLOR] =
-	    g_param_spec_string(VP_KEY_FOREGROUND_COLOR,
-	                        VP_KEY_FOREGROUND_COLOR,
-	                        VP_KEY_FOREGROUND_COLOR,
+	    g_param_spec_string(VALA_PANEL_KEY_FOREGROUND_COLOR,
+	                        VALA_PANEL_KEY_FOREGROUND_COLOR,
+	                        VALA_PANEL_KEY_FOREGROUND_COLOR,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_ICON_SIZE] =
-	    g_param_spec_uint(VP_KEY_ICON_SIZE,
-	                      VP_KEY_ICON_SIZE,
-	                      VP_KEY_ICON_SIZE,
+	    g_param_spec_uint(VALA_PANEL_KEY_ICON_SIZE,
+	                      VALA_PANEL_KEY_ICON_SIZE,
+	                      VALA_PANEL_KEY_ICON_SIZE,
 	                      0,
 	                      G_MAXUINT,
 	                      0U,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_BG_FILE] =
-	    g_param_spec_string(VP_KEY_BACKGROUND_FILE,
-	                        VP_KEY_BACKGROUND_FILE,
-	                        VP_KEY_BACKGROUND_FILE,
+	    g_param_spec_string(VALA_PANEL_KEY_BACKGROUND_FILE,
+	                        VALA_PANEL_KEY_BACKGROUND_FILE,
+	                        VALA_PANEL_KEY_BACKGROUND_FILE,
 	                        NULL,
 	                        (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_GRAVITY] =
-	    g_param_spec_enum(VP_KEY_GRAVITY,
-	                      VP_KEY_GRAVITY,
-	                      VP_KEY_GRAVITY,
+	    g_param_spec_enum(VALA_PANEL_KEY_GRAVITY,
+	                      VALA_PANEL_KEY_GRAVITY,
+	                      VALA_PANEL_KEY_GRAVITY,
 	                      VALA_PANEL_TYPE_PANEL_GRAVITY,
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                    G_PARAM_CONSTRUCT));
 	top_specs[TOP_ORIENTATION] =
-	    g_param_spec_enum(VP_KEY_ORIENTATION,
-	                      VP_KEY_ORIENTATION,
-	                      VP_KEY_ORIENTATION,
+	    g_param_spec_enum(VALA_PANEL_KEY_ORIENTATION,
+	                      VALA_PANEL_KEY_ORIENTATION,
+	                      VALA_PANEL_KEY_ORIENTATION,
 	                      GTK_TYPE_ORIENTATION,
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 
 	top_specs[TOP_MONITOR] =
-	    g_param_spec_int(VP_KEY_MONITOR,
-	                     VP_KEY_MONITOR,
-	                     VP_KEY_MONITOR,
+	    g_param_spec_int(VALA_PANEL_KEY_MONITOR,
+	                     VALA_PANEL_KEY_MONITOR,
+	                     VALA_PANEL_KEY_MONITOR,
 	                     G_MININT,
 	                     G_MAXINT,
 	                     0,
 	                     (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                   G_PARAM_CONSTRUCT));
 	top_specs[TOP_DOCK] =
-	    g_param_spec_boolean(VP_KEY_DOCK,
-	                         VP_KEY_DOCK,
-	                         VP_KEY_DOCK,
+	    g_param_spec_boolean(VALA_PANEL_KEY_DOCK,
+	                         VALA_PANEL_KEY_DOCK,
+	                         VALA_PANEL_KEY_DOCK,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_STRUT] =
-	    g_param_spec_boolean(VP_KEY_STRUT,
-	                         VP_KEY_STRUT,
-	                         VP_KEY_STRUT,
+	    g_param_spec_boolean(VALA_PANEL_KEY_STRUT,
+	                         VALA_PANEL_KEY_STRUT,
+	                         VALA_PANEL_KEY_STRUT,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_IS_DYNAMIC] =
-	    g_param_spec_boolean(VP_KEY_DYNAMIC,
-	                         VP_KEY_DYNAMIC,
-	                         VP_KEY_DYNAMIC,
+	    g_param_spec_boolean(VALA_PANEL_KEY_DYNAMIC,
+	                         VALA_PANEL_KEY_DYNAMIC,
+	                         VALA_PANEL_KEY_DYNAMIC,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 	top_specs[TOP_AUTOHIDE] =
-	    g_param_spec_boolean(VP_KEY_AUTOHIDE,
-	                         VP_KEY_AUTOHIDE,
-	                         VP_KEY_AUTOHIDE,
+	    g_param_spec_boolean(VALA_PANEL_KEY_AUTOHIDE,
+	                         VALA_PANEL_KEY_AUTOHIDE,
+	                         VALA_PANEL_KEY_AUTOHIDE,
 	                         FALSE,
 	                         (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
