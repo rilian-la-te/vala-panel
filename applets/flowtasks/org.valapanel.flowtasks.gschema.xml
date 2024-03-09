@@ -1,0 +1,25 @@
+<schemalist>
+  <schema id="org.valapanel.flowtasks">
+    <key type="as" name="pinned-launchers">
+      <default>[]</default>
+    </key>
+    <key name="all-desktops" type="b">
+      <default>true</default>
+    </key>
+    <key name="grouped-tasks" type="b">
+      <default>false</default>
+    </key>
+    <key name="middle-click-close" type="b">
+      <default>false</default>
+    </key>
+    <key name="switch-workspace-on-unminimize" type="b">
+      <default>false</default>
+    </key>
+    <key name="show-labels" type="b">
+      <default>true</default>
+    </key>
+    <key name="unexpanded-limit" type="i">
+      <default>600</default>
+    </key>
+  </schema>
+</schemalist>

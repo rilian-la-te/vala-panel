@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<gresources>
+  <gresource prefix="/org/vala-panel/flowtasks">
+    <file compressed="true" alias="task-menus.ui" preprocess="xml-stripblanks">task-menus.ui</file>
+  </gresource>
+</gresources>

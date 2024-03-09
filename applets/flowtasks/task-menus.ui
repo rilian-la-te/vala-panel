@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="flowtasks-context-menu">
+    <section id="desktop-actions">
+        <item>
+          <attribute name="label" translatable="yes">New instance</attribute>
+          <attribute name="action">vt-task.new-instance</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+    </section>
+    <section id="window-management">
+        <item>
+          <attribute name="label" translatable="yes">Fullscreen</attribute>
+          <attribute name="action">vt-task.fullscreen</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Minimize</attribute>
+          <attribute name="action">vt-task.minimize</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Maximize</attribute>
+          <attribute name="action">vt-task.maximize</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Close</attribute>
+          <attribute name="action">vt-task.close</attribute>
+          <attribute name='hidden-when'>action-missing</attribute>
+        </item>
+    </section>
+  </menu>
+</interface>

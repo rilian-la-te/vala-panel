@@ -1,0 +1,7 @@
+[Plugin]
+Module=flowtasks
+Name=FlowBox Task List
+Description=Task List in FlowBox
+Icon=tab-new-symbolic
+Expandable=true
+Platforms=x11
