@@ -19,7 +19,7 @@
 #ifndef FLOWTASKSAPPLET_H
 #define FLOWTASKSAPPLET_H
 
-#include <vala-panel/client.h>
+#include "client.h"
 
 G_BEGIN_DECLS
 

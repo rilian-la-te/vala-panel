@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <vala-panel/client.h>
+#include "client.h"
 
 #include "flowtasks-backend-wnck.h"
 #include "flowtasks-widget.h"
