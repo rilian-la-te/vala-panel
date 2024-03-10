@@ -37,6 +37,103 @@ static void set_file_response(GtkFileChooserButton *widget, gpointer user_data)
 	g_settings_set_string(data->settings, data->key, fname);
 }
 
+static GtkWidget *generic_config_widget_generate_entry(GSettings *settings, const char *name,
+                                                       const char *key,
+                                                       ValaPanelConfiguratorType type)
+{
+	GtkLabel *label = GTK_LABEL(gtk_label_new(name));
+	gtk_widget_show(GTK_WIDGET(label));
+	GtkWidget *entry = NULL;
+	if (type != CONF_TRIM && key == NULL)
+	{
+		g_critical("NULL pointer for generic config dialog");
+		return NULL;
+	}
+	switch (type)
+	{
+	case CONF_STR:
+		entry = gtk_entry_new();
+		g_settings_bind(settings, key, entry, "text", G_SETTINGS_BIND_DEFAULT);
+		break;
+	case CONF_INT:
+	{
+		/* FIXME: the range shouldn't be hardcoded */
+		entry = gtk_spin_button_new_with_range(0, 1000, 1);
+		g_settings_bind(settings, key, entry, "value", G_SETTINGS_BIND_DEFAULT);
+		break;
+	}
+	case CONF_BOOL:
+		entry = gtk_check_button_new();
+		gtk_container_add(GTK_CONTAINER(entry), GTK_WIDGET(label));
+		g_settings_bind(settings, key, entry, "active", G_SETTINGS_BIND_DEFAULT);
+		break;
+	case CONF_FILE:
+	case CONF_DIRECTORY:
+	{
+		entry                = gtk_file_chooser_button_new(_("Select a file"),
+                                                    type == CONF_FILE
+		                                                       ? GTK_FILE_CHOOSER_ACTION_OPEN
+		                                                       : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+		g_autofree char *str = g_settings_get_string(settings, key);
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
+		SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
+		data->key        = g_strdup(key);
+		data->settings   = settings;
+		g_signal_connect(entry, "file-set", G_CALLBACK(set_file_response), data);
+		g_signal_connect_swapped(entry, "destroy", G_CALLBACK(g_free), data);
+		break;
+	}
+	case CONF_FILE_ENTRY:
+	case CONF_DIRECTORY_ENTRY:
+	{
+		entry = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+		GtkWidget *btn =
+		    gtk_file_chooser_button_new(_("Select a file"),
+		                                type == CONF_FILE_ENTRY
+		                                    ? GTK_FILE_CHOOSER_ACTION_OPEN
+		                                    : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+		GtkWidget *str_elem = gtk_entry_new();
+		g_settings_bind(settings, key, str_elem, "text", G_SETTINGS_BIND_DEFAULT);
+		g_autofree char *str = g_settings_get_string(settings, key);
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(btn), str);
+		SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
+		data->key        = key;
+		data->settings   = settings;
+		g_signal_connect(btn, "file-set", G_CALLBACK(set_file_response), data);
+		g_signal_connect_swapped(entry, "destroy", G_CALLBACK(g_free), data);
+		gtk_widget_show(btn);
+		gtk_widget_show(str_elem);
+		gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
+		gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
+		break;
+	}
+	case CONF_TRIM:
+	{
+		entry = gtk_label_new(NULL);
+		g_autofree char *markup =
+		    g_markup_printf_escaped("<span style=\"italic\">%s</span>", name);
+		gtk_label_set_markup(GTK_LABEL(entry), markup);
+		g_object_ref_sink(label);
+		g_clear_object(&label);
+		break;
+	}
+	}
+	if (entry)
+	{
+		gtk_widget_show(entry);
+		if ((type != CONF_BOOL) && (type != CONF_TRIM))
+		{
+			GtkBox *hbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
+			gtk_box_pack_start(hbox, GTK_WIDGET(label), false, false, 2);
+			gtk_box_pack_start(hbox, entry, true, true, 2);
+			gtk_widget_show(GTK_WIDGET(hbox));
+			return GTK_WIDGET(hbox);
+		}
+		return entry;
+	}
+	return NULL;
+}
+
 static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 {
 	GtkBox *dlg_vbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 4));
@@ -47,133 +144,14 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 			break;
 		GtkLabel *label = GTK_LABEL(gtk_label_new(name));
 		gtk_widget_show(GTK_WIDGET(label));
-		GtkWidget *entry       = NULL;
-		void *arg              = va_arg(l, void *);
-		const char *key        = NULL;
-		GenericConfigType type = (GenericConfigType)va_arg(l, int);
-		if (type == CONF_EXTERNAL)
-			entry = GTK_WIDGET(arg);
-		else
-			key = (const char *)arg;
-		if (type != CONF_TRIM && type != CONF_EXTERNAL && key == NULL)
-			g_critical("NULL pointer for generic config dialog");
-		else
-			switch (type)
-			{
-			case CONF_STR:
-				entry = gtk_entry_new();
-				g_settings_bind(settings,
-				                key,
-				                entry,
-				                "text",
-				                G_SETTINGS_BIND_DEFAULT);
-				break;
-			case CONF_INT:
-			{
-				/* FIXME: the range shouldn't be hardcoded */
-				entry = gtk_spin_button_new_with_range(0, 1000, 1);
-				g_settings_bind(settings,
-				                key,
-				                entry,
-				                "value",
-				                G_SETTINGS_BIND_DEFAULT);
-				break;
-			}
-			case CONF_BOOL:
-				entry = gtk_check_button_new();
-				gtk_container_add(GTK_CONTAINER(entry), GTK_WIDGET(label));
-				g_settings_bind(settings,
-				                key,
-				                entry,
-				                "active",
-				                G_SETTINGS_BIND_DEFAULT);
-				break;
-			case CONF_FILE:
-			case CONF_DIRECTORY:
-			{
-				entry = gtk_file_chooser_button_new(
-				    _("Select a file"),
-				    type == CONF_FILE ? GTK_FILE_CHOOSER_ACTION_OPEN
-				                      : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-				g_autofree char *str = g_settings_get_string(settings, key);
-				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(entry), str);
-				SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
-				data->key        = g_strdup(key);
-				data->settings   = settings;
-				g_signal_connect(entry,
-				                 "file-set",
-				                 G_CALLBACK(set_file_response),
-				                 data);
-				g_signal_connect_swapped(dlg_vbox,
-				                         "destroy",
-				                         G_CALLBACK(g_free),
-				                         data);
-				break;
-			}
-			case CONF_FILE_ENTRY:
-			case CONF_DIRECTORY_ENTRY:
-			{
-				entry          = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-				GtkWidget *btn = gtk_file_chooser_button_new(
-				    _("Select a file"),
-				    type == CONF_FILE_ENTRY
-				        ? GTK_FILE_CHOOSER_ACTION_OPEN
-				        : GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-				GtkWidget *str_elem = gtk_entry_new();
-				g_settings_bind(settings,
-				                key,
-				                str_elem,
-				                "text",
-				                G_SETTINGS_BIND_DEFAULT);
-				g_autofree char *str = g_settings_get_string(settings, key);
-				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(btn), str);
-				SignalData *data = (SignalData *)g_malloc0(sizeof(SignalData));
-				data->key        = key;
-				data->settings   = settings;
-				g_signal_connect(btn,
-				                 "file-set",
-				                 G_CALLBACK(set_file_response),
-				                 data);
-				g_signal_connect_swapped(dlg_vbox,
-				                         "destroy",
-				                         G_CALLBACK(g_free),
-				                         data);
-				gtk_widget_show(btn);
-				gtk_widget_show(str_elem);
-				gtk_box_pack_start(GTK_BOX(entry), str_elem, true, true, 0);
-				gtk_box_pack_start(GTK_BOX(entry), btn, false, true, 0);
-				break;
-			}
-			case CONF_TRIM:
-			{
-				entry = gtk_label_new(NULL);
-				g_autofree char *markup =
-				    g_markup_printf_escaped("<span style=\"italic\">%s</span>",
-				                            name);
-				gtk_label_set_markup(GTK_LABEL(entry), markup);
-				g_object_ref_sink(label);
-				g_clear_object(&label);
-				break;
-			}
-			case CONF_EXTERNAL:
-				if (!GTK_IS_WIDGET(entry))
-					g_critical("value for CONF_EXTERNAL is not a GtkWidget");
-				break;
-			}
+		GtkWidget *entry               = NULL;
+		void *arg                      = va_arg(l, void *);
+		const char *key                = NULL;
+		ValaPanelConfiguratorType type = (ValaPanelConfiguratorType)va_arg(l, int);
+		key                            = (const char *)arg;
+		entry = generic_config_widget_generate_entry(settings, name, key, type);
 		if (entry)
-		{
-			gtk_widget_show(entry);
-			if ((type == CONF_BOOL) || (type == CONF_TRIM))
-				gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
-			else
-			{
-				GtkBox *hbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2));
-				gtk_box_pack_start(hbox, GTK_WIDGET(label), false, false, 2);
-				gtk_box_pack_start(hbox, entry, true, true, 2);
-				gtk_box_pack_start(dlg_vbox, GTK_WIDGET(hbox), false, false, 2);
-				gtk_widget_show(GTK_WIDGET(hbox));
-			}
-		}
+			gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
 	}
 	gtk_widget_show(GTK_WIDGET(dlg_vbox));
 	return GTK_WIDGET(dlg_vbox);
@@ -186,4 +164,20 @@ GtkWidget *generic_config_widget(GSettings *settings, ...)
 	GtkWidget *w = generic_config_widget_internal(settings, l);
 	va_end(l);
 	return w;
+}
+
+GtkWidget *vala_panel_generic_config_widget(GSettings *settings, const char **names,
+                                            const char **keys, ValaPanelConfiguratorType *types,
+                                            uint n_entries)
+{
+	GtkBox *dlg_vbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 4));
+	for(int i = 0; i < n_entries; i++) {
+		GtkLabel *label = GTK_LABEL(gtk_label_new(names[i]));
+		gtk_widget_show(GTK_WIDGET(label));
+		GtkWidget * entry = generic_config_widget_generate_entry(settings, names[i], keys[i], types[i]);
+		if (entry)
+			gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
+	}
+	gtk_widget_show(GTK_WIDGET(dlg_vbox));
+	return GTK_WIDGET(dlg_vbox);
 }

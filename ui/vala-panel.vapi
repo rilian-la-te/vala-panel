@@ -65,7 +65,7 @@ namespace ValaPanel.AppletAction
 	public const string CONFIGURE;
 }
 namespace ValaPanel {
-    [CCode(cname="GenericConfigType", has_type_id = false, cprefix="CONF_", cheader_filename = "generic-config-dialog.h")]
+    [CCode(cname="ValaPanelConfiguratorType", has_type_id = false, cprefix="CONF_", cheader_filename = "generic-config-dialog.h")]
     public enum GenericConfigType
     {
         STR,
@@ -75,8 +75,7 @@ namespace ValaPanel {
         FILE_ENTRY,
         DIRECTORY,
         DIRECTORY_ENTRY,
-        TRIM,
-        EXTERNAL
+        TRIM
     }
 	[CCode (cheader_filename = "applet-widget.h")]
 	public abstract class Applet : Gtk.Bin {

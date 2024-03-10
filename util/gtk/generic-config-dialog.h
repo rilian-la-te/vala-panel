@@ -35,10 +35,34 @@ typedef enum
 	CONF_DIRECTORY,
 	CONF_DIRECTORY_ENTRY,
 	CONF_TRIM,
-	CONF_EXTERNAL
-} GenericConfigType;
+} ValaPanelConfiguratorType;
 
+/**
+ * generic_config_widget: (skip)
+ * Generate configuration for specific keys and values without need to create a custom widget
+ * @settings: a #GSettings
+ * @args: variable args with specific format
+ *
+ * Returns: (transfer full): a #GtkWidget for configuring an applet with provided GSettings
+ */
 GtkWidget *generic_config_widget(GSettings *settings, ...);
+
+/**
+ * vala_panel_generic_config_widget:
+ * Generate configuration for specific keys and values without need to create a custom widget
+ * @settings: a #GSettings
+ * @names: (array length=n_entries): names of config entries (shown in UI, should be translatable)
+ * @keys: (array length=n_entries): #GSettings keys of config entries (should be defined in provided
+ * schema)
+ * @types: (array length=n_entries): a #GenericConfigType of provided settings. External widgets is
+ * not supported in this version of function.
+ * @n_entries: number of config entries
+ *
+ * Returns: (transfer full): a #GtkWidget for configuring an applet with provided GSettings
+ */
+GtkWidget *vala_panel_generic_config_widget(GSettings *settings, const char **names,
+                                            const char **keys, ValaPanelConfiguratorType *types,
+                                            uint n_entries);
 
 G_END_DECLS
 
