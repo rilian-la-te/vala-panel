@@ -37,9 +37,9 @@ namespace PanelCSS
 [CCode (cprefix="")]
 namespace MenuMaker
 {
-    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_DND_SOURCE")]
+    [CCode (cheader_filename="menu-extras.h",cname="ATTRIBUTE_DND_SOURCE")]
     public const string ATTRIBUTE_DND_SOURCE;
-    [CCode (cheader_filename="menu-maker.h",cname="ATTRIBUTE_TOOLTIP")]
+    [CCode (cheader_filename="menu-extras.h",cname="ATTRIBUTE_TOOLTIP")]
     public const string ATTRIBUTE_TOOLTIP;
     [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_id")]
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
@@ -53,11 +53,11 @@ namespace MenuMaker
     public static bool launch_with_context(DesktopAppInfo info, AppLaunchContext cxt, GLib.List<string>? uris);
     [CCode (cheader_filename="misc.h",cname="vala_panel_get_default_for_uri")]
     public static AppInfo get_default_for_uri(string uri);
-    [CCode (cheader_filename="menu-maker.h",cname="append_all_sections")]
+    [CCode (cheader_filename="menu-extras.h",cname="append_all_sections")]
     public static void append_all_sections(GLib.Menu menu1, GLib.MenuModel menu2);
-    [CCode (cheader_filename="menu-maker.h",cname="copy_model_items")]
+    [CCode (cheader_filename="menu-extras.h",cname="copy_model_items")]
     public static void copy_model_items(GLib.Menu menu1, GLib.MenuModel menu2);
-    [CCode (cheader_filename="menu-maker.h",cname="apply_menu_properties")]
+    [CCode (cheader_filename="menu-extras.h",cname="apply_menu_properties")]
     public static void apply_menu_properties(List<unowned Widget> w, MenuModel menu);
 }
 [CCode (cheader_filename = "applet-widget.h")]

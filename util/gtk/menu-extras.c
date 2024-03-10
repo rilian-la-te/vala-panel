@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "menu-maker.h"
+#include "menu-extras.h"
 #include <gdk/gdk.h>
 #include <gio/gdesktopappinfo.h>
 #include <gtk/gtk.h>
