@@ -18,6 +18,7 @@
 
 #include "task-model.h"
 #include "matcher.h"
+#include "client.h"
 #include <string.h>
 
 #include <gtk/gtk.h>
@@ -39,30 +40,6 @@ struct _ValaPanelGroupTask
 };
 
 G_DEFINE_TYPE(ValaPanelGroupTask, vala_panel_group_task, vala_panel_task_get_type())
-
-static void child_spawn_func(G_GNUC_UNUSED void *data)
-{
-	setpgid(0, getpgid(getppid()));
-}
-
-static bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt,
-                                           GList *uris)
-{
-	g_return_val_if_fail(G_IS_APP_INFO(app_info), false);
-	g_autoptr(GError) err = NULL;
-	bool ret              = g_desktop_app_info_launch_uris_as_manager(app_info,
-                                                             uris,
-                                                             cxt,
-                                                             G_SPAWN_SEARCH_PATH,
-                                                             child_spawn_func,
-                                                             NULL,
-                                                             NULL,
-                                                             NULL,
-                                                             &err);
-	if (err)
-		g_warning("%s\n", err->message);
-	return ret;
-}
 
 bool vala_panel_group_task_new_instance(ValaPanelGroupTask *self, GAppLaunchContext *c);
 
