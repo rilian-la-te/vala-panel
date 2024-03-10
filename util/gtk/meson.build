@@ -5,12 +5,10 @@ util_gtk_headers = util_gtk_enum_headers + files (
     'css.h',
     'util-gtk.h',
 	'misc-gtk.h',
-    'menu-extras.h',
     'launcher-gtk.h'
 )
 util_gtk_sources = files (
     'generic-config-dialog.c',
-    'menu-extras.c',
 	'misc-gtk.c',
     'css.c',
     'launcher-gtk.c'

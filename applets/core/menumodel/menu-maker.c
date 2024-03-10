@@ -20,6 +20,7 @@
 #include <stdbool.h>
 
 #include "client.h"
+#include "menu-extras.h"
 #include "version.h"
 
 static void menu_maker_parse_app_info(GDesktopAppInfo *info, GtkBuilder *builder)

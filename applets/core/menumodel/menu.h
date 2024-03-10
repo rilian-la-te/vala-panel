@@ -19,6 +19,7 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "menu-extras.h"
 #include "client.h"
 
 G_BEGIN_DECLS
