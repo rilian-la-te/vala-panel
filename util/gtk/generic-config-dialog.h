@@ -38,7 +38,6 @@ typedef enum
 	CONF_EXTERNAL
 } GenericConfigType;
 
-GtkDialog *generic_config_dlg(const char *title, GtkWindow *parent, GSettings *settings, ...);
 GtkWidget *generic_config_widget(GSettings *settings, ...);
 
 G_END_DECLS

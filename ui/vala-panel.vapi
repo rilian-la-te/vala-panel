@@ -14,8 +14,6 @@ namespace PanelConfig {
 [CCode (cheader_filename = "generic-config-dialog.h", cprefix = "",lower_case_cprefix="")]
 namespace ValaPanel.Configurator
 {
-    public static Dialog generic_config_dlg(string title, Gtk.Window parent,
-                                    GLib.Settings settings, ...);
     public static Widget generic_config_widget(GLib.Settings settings, ...);
 }
 [CCode (cheader_filename = "css.h", cprefix = "",lower_case_cprefix="css_")]
