@@ -700,7 +700,7 @@ static void measure(GtkWidget *w, GtkOrientation orient, G_GNUC_UNUSED int for_s
 		*min = *nat = (!self->autohide || (self->ah_rev != NULL &&
 		                                   gtk_revealer_get_reveal_child(self->ah_rev)))
 		                  ? self->height
-		                  : GAP;
+		                  : VALA_PANEL_AUTOHIDE_GAP;
 	else
 		*min = *nat = *base_min = *base_nat = calc_width(scrw, self->width, 0);
 }
@@ -726,7 +726,7 @@ static void get_preferred_width(GtkWidget *w, int *min, int *nat)
 	*min = *nat = (!self->autohide ||
 	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
 	                  ? self->height
-	                  : GAP;
+	                  : VALA_PANEL_AUTOHIDE_GAP;
 }
 static void get_preferred_height(GtkWidget *w, int *min, int *nat)
 {
@@ -734,7 +734,7 @@ static void get_preferred_height(GtkWidget *w, int *min, int *nat)
 	*min = *nat = (!self->autohide ||
 	               (self->ah_rev != NULL && gtk_revealer_get_reveal_child(self->ah_rev)))
 	                  ? self->height
-	                  : GAP;
+	                  : VALA_PANEL_AUTOHIDE_GAP;
 }
 static GtkSizeRequestMode get_request_mode(GtkWidget *w)
 {

@@ -56,7 +56,7 @@
 /*
  * Autohide gap
  */
-#define GAP 2
+#define VALA_PANEL_AUTOHIDE_GAP 2
 
 /*
  * Toplevel keys
