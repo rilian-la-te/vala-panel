@@ -162,48 +162,48 @@ static void vpp_x11_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *
 	int width  = orient == GTK_ORIENTATION_HORIZONTAL ? size.width : size.height;
 	switch (gravity)
 	{
-	case NORTH_LEFT:
-	case WEST_UP:
+	case VALA_PANEL_GRAVITY_NORTH_LEFT:
+	case VALA_PANEL_GRAVITY_WEST_UP:
 		x = marea.x;
 		y = marea.y;
 		break;
-	case NORTH_CENTER:
+	case VALA_PANEL_GRAVITY_NORTH_CENTER:
 		x = marea.x + (marea.width - width) / 2;
 		y = marea.y;
 		break;
-	case NORTH_RIGHT:
+	case VALA_PANEL_GRAVITY_NORTH_RIGHT:
 		x = marea.x + marea.width - width;
 		y = marea.y;
 		break;
-	case SOUTH_LEFT:
+	case VALA_PANEL_GRAVITY_SOUTH_LEFT:
 		x = marea.x;
 		y = marea.y + marea.height - height;
 		break;
-	case SOUTH_CENTER:
+	case VALA_PANEL_GRAVITY_SOUTH_CENTER:
 		x = marea.x + (marea.width - width) / 2;
 		y = marea.y + marea.height - height;
 		break;
-	case SOUTH_RIGHT:
+	case VALA_PANEL_GRAVITY_SOUTH_RIGHT:
 		x = marea.x + marea.width - width;
 		y = marea.y + marea.height - height;
 		break;
-	case WEST_CENTER:
+	case VALA_PANEL_GRAVITY_WEST_CENTER:
 		x = marea.x;
 		y = marea.y + (marea.height - width) / 2;
 		break;
-	case WEST_DOWN:
+	case VALA_PANEL_GRAVITY_WEST_DOWN:
 		x = marea.x;
 		y = marea.y + (marea.height - width);
 		break;
-	case EAST_UP:
+	case VALA_PANEL_GRAVITY_EAST_UP:
 		x = marea.x + marea.width - height;
 		y = marea.y;
 		break;
-	case EAST_CENTER:
+	case VALA_PANEL_GRAVITY_EAST_CENTER:
 		x = marea.x + marea.width - height;
 		y = marea.y + (marea.height - width) / 2;
 		break;
-	case EAST_DOWN:
+	case VALA_PANEL_GRAVITY_EAST_DOWN:
 		x = marea.x + marea.width - height;
 		y = marea.y + (marea.height - width);
 		break;

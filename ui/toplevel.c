@@ -362,27 +362,27 @@ void vala_panel_toplevel_get_menu_anchors(ValaPanelToplevel *self, GdkGravity *m
 	ValaPanelGravity gravity = self->gravity;
 	switch (gravity)
 	{
-	case NORTH_LEFT:
-	case NORTH_CENTER:
-	case NORTH_RIGHT:
+	case VALA_PANEL_GRAVITY_NORTH_LEFT:
+	case VALA_PANEL_GRAVITY_NORTH_CENTER:
+	case VALA_PANEL_GRAVITY_NORTH_RIGHT:
 		*widget_anchor = GDK_GRAVITY_NORTH;
 		*menu_anchor   = GDK_GRAVITY_SOUTH;
 		break;
-	case SOUTH_LEFT:
-	case SOUTH_CENTER:
-	case SOUTH_RIGHT:
+	case VALA_PANEL_GRAVITY_SOUTH_LEFT:
+	case VALA_PANEL_GRAVITY_SOUTH_CENTER:
+	case VALA_PANEL_GRAVITY_SOUTH_RIGHT:
 		*menu_anchor   = GDK_GRAVITY_NORTH;
 		*widget_anchor = GDK_GRAVITY_SOUTH;
 		break;
-	case WEST_UP:
-	case WEST_CENTER:
-	case WEST_DOWN:
+	case VALA_PANEL_GRAVITY_WEST_UP:
+	case VALA_PANEL_GRAVITY_WEST_CENTER:
+	case VALA_PANEL_GRAVITY_WEST_DOWN:
 		*widget_anchor = GDK_GRAVITY_NORTH_WEST;
 		*menu_anchor   = GDK_GRAVITY_NORTH_EAST;
 		break;
-	case EAST_UP:
-	case EAST_CENTER:
-	case EAST_DOWN:
+	case VALA_PANEL_GRAVITY_EAST_UP:
+	case VALA_PANEL_GRAVITY_EAST_CENTER:
+	case VALA_PANEL_GRAVITY_EAST_DOWN:
 		*menu_anchor   = GDK_GRAVITY_NORTH_WEST;
 		*widget_anchor = GDK_GRAVITY_NORTH_EAST;
 		break;

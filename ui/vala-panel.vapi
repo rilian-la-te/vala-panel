@@ -166,7 +166,7 @@ namespace ValaPanel {
     public static Gtk.PositionType edge_from_gravity(Gravity gravity);
     [CCode (cheader_filename="definitions.h")]
     public static Gtk.Orientation invert_orient(Gtk.Orientation orient);
-    [CCode(cname="ValaPanelGravity", cprefix="", cheader_filename = "panel-platform.h")]
+    [CCode(cname="ValaPanelGravity", cprefix="VALA_PANEL_GRAVITY_", cheader_filename = "panel-platform.h")]
 	public enum Gravity
 	{
 		NORTH_LEFT,

@@ -162,36 +162,36 @@ static void vpp_layer_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow
 	bool anchor[GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER] = { false };
 	switch (gravity)
 	{
-	case NORTH_LEFT:
-	case WEST_UP:
+	case VALA_PANEL_GRAVITY_NORTH_LEFT:
+	case VALA_PANEL_GRAVITY_WEST_UP:
 		anchor[GTK_LAYER_SHELL_EDGE_LEFT] = true;
 		anchor[GTK_LAYER_SHELL_EDGE_TOP]  = true;
 		break;
-	case NORTH_CENTER:
+	case VALA_PANEL_GRAVITY_NORTH_CENTER:
 		anchor[GTK_LAYER_SHELL_EDGE_TOP] = true;
 		break;
-	case EAST_UP:
-	case NORTH_RIGHT:
+	case VALA_PANEL_GRAVITY_EAST_UP:
+	case VALA_PANEL_GRAVITY_NORTH_RIGHT:
 		anchor[GTK_LAYER_SHELL_EDGE_RIGHT] = true;
 		anchor[GTK_LAYER_SHELL_EDGE_TOP]   = true;
 		break;
-	case WEST_DOWN:
-	case SOUTH_LEFT:
+	case VALA_PANEL_GRAVITY_WEST_DOWN:
+	case VALA_PANEL_GRAVITY_SOUTH_LEFT:
 		anchor[GTK_LAYER_SHELL_EDGE_LEFT]   = true;
 		anchor[GTK_LAYER_SHELL_EDGE_BOTTOM] = true;
 		break;
-	case SOUTH_CENTER:
+	case VALA_PANEL_GRAVITY_SOUTH_CENTER:
 		anchor[GTK_LAYER_SHELL_EDGE_BOTTOM] = true;
 		break;
-	case EAST_DOWN:
-	case SOUTH_RIGHT:
+	case VALA_PANEL_GRAVITY_EAST_DOWN:
+	case VALA_PANEL_GRAVITY_SOUTH_RIGHT:
 		anchor[GTK_LAYER_SHELL_EDGE_RIGHT]  = true;
 		anchor[GTK_LAYER_SHELL_EDGE_BOTTOM] = true;
 		break;
-	case WEST_CENTER:
+	case VALA_PANEL_GRAVITY_WEST_CENTER:
 		anchor[GTK_LAYER_SHELL_EDGE_LEFT] = true;
 		break;
-	case EAST_CENTER:
+	case VALA_PANEL_GRAVITY_EAST_CENTER:
 		anchor[GTK_LAYER_SHELL_EDGE_RIGHT] = true;
 		break;
 	}
