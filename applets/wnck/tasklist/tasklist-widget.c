@@ -47,6 +47,7 @@
 #define ARROW_BUTTON_SIZE (20)
 #define WIREFRAME_SIZE (5) /* same as xfwm4 */
 #define DRAG_ACTIVATE_TIMEOUT (500)
+#define MAX_PANEL_HEIGHT (200)
 
 #define PANEL_HAS_FLAG(cont, fl) ((cont) & (fl))
 
