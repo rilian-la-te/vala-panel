@@ -121,9 +121,9 @@ static const GActionEntry vala_panel_application_app_entries[10] = {
 	{ "restart", activate_restart, NULL, NULL, NULL, { 0 } },
 };
 static const GActionEntry vala_panel_application_menu_entries[3] = {
-	{ "launch-id", activate_menu_launch_id, "s", NULL, NULL, { 0 } },
-	{ "launch-uri", activate_menu_launch_uri, "s", NULL, NULL, { 0 } },
-	{ "launch-command", activate_menu_launch_command, "s", NULL, NULL, { 0 } }
+	{ "launch-id", vala_panel_activate_launch_id, "s", NULL, NULL, { 0 } },
+	{ "launch-uri", vala_panel_activate_launch_uri, "s", NULL, NULL, { 0 } },
+	{ "launch-command", vala_panel_activate_launch_command, "s", NULL, NULL, { 0 } }
 };
 
 enum
@@ -639,7 +639,7 @@ static void activate_run(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVar
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->run_command);
-	activate_menu_launch_command(NULL, par, app);
+	vala_panel_activate_launch_command(NULL, par, app);
 }
 
 static void activate_lock(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
@@ -647,7 +647,7 @@ static void activate_lock(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVa
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->lock_command);
-	activate_menu_launch_command(NULL, par, app);
+	vala_panel_activate_launch_command(NULL, par, app);
 }
 
 static void activate_logout(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
@@ -655,7 +655,7 @@ static void activate_logout(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED G
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->logout_command);
-	activate_menu_launch_command(NULL, par, app);
+	vala_panel_activate_launch_command(NULL, par, app);
 }
 
 static void activate_shutdown(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
@@ -663,7 +663,7 @@ static void activate_shutdown(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED
 {
 	ValaPanelApplication *app = VALA_PANEL_APPLICATION(data);
 	g_autoptr(GVariant) par   = g_variant_new_string(app->shutdown_command);
-	activate_menu_launch_command(NULL, par, app);
+	vala_panel_activate_launch_command(NULL, par, app);
 }
 static void activate_exit(G_GNUC_UNUSED GSimpleAction *simple, G_GNUC_UNUSED GVariant *param,
                           gpointer data)

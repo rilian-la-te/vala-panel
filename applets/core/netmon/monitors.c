@@ -54,7 +54,7 @@ static bool button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton
 	if (evt->button == 1 &&
 	    g_variant_type_is_subtype_of(g_variant_get_type(var), G_VARIANT_TYPE_STRING))
 	{
-		activate_menu_launch_command(NULL, var, gtk_window_get_application(top));
+		vala_panel_activate_launch_command(NULL, var, gtk_window_get_application(top));
 		return true;
 	}
 	return false;

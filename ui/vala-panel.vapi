@@ -35,11 +35,11 @@ namespace PanelCSS
 [CCode (cprefix="")]
 namespace MenuMaker
 {
-    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_id")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_activate_launch_id")]
     public static void activate_menu_launch_id(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_uri")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_activate_launch_uri")]
     public static void activate_menu_launch_uri(SimpleAction? action, Variant? param, void* user_data);
-    [CCode (cheader_filename="launcher-gtk.h",cname="activate_menu_launch_command")]
+    [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_activate_launch_command")]
     public static void activate_menu_launch_command(SimpleAction? action, Variant? param, void* user_data);
     [CCode (cheader_filename="launcher-gtk.h",cname="vala_panel_launch")]
     public static bool launch(DesktopAppInfo info, GLib.List<string>? uris, Gtk.Widget parent);

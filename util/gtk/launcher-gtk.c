@@ -29,7 +29,7 @@ bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent
 	return vala_panel_launch_with_context(app_info, cxt, uris);
 }
 
-void activate_menu_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+void vala_panel_activate_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
                              gpointer user_data)
 {
 	const char *id                  = g_variant_get_string(param, NULL);
@@ -39,7 +39,7 @@ void activate_menu_launch_id(G_GNUC_UNUSED GSimpleAction *action, GVariant *para
 	vala_panel_launch(info, NULL, GTK_WIDGET(window));
 }
 
-void activate_menu_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+void vala_panel_activate_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
                               gpointer user_data)
 {
 	const char *uri                 = g_variant_get_string(param, NULL);
@@ -50,7 +50,7 @@ void activate_menu_launch_uri(G_GNUC_UNUSED GSimpleAction *action, GVariant *par
 	vala_panel_launch(info, uris, GTK_WIDGET(window));
 }
 
-void activate_menu_launch_command(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
+void vala_panel_activate_launch_command(G_GNUC_UNUSED GSimpleAction *action, GVariant *param,
                                   gpointer user_data)
 {
 	g_autoptr(GError) err           = NULL;
