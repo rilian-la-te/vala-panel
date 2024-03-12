@@ -157,6 +157,8 @@ static bool vpp_layer_start_panels_from_profile(ValaPanelPlatform *obj, GtkAppli
 static void vpp_layer_move_to_side(G_GNUC_UNUSED ValaPanelPlatform *f, GtkWindow *top,
                                    ValaPanelGravity gravity, int monitor)
 {
+	GdkMonitor* mon = vala_panel_platform_get_suitable_monitor(GTK_WIDGET(top), monitor);
+	gtk_layer_set_monitor(top, mon);
 	bool anchor[GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER] = { false };
 	switch (gravity)
 	{
