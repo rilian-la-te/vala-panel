@@ -29,6 +29,18 @@
 #include <stdbool.h>
 
 static const uint PERIOD = 200;
+
+typedef enum
+{
+	XXS  = 16,
+	XS   = 22,
+	S    = 24,
+	M    = 32,
+	L    = 48,
+	XL   = 96,
+	XXL  = 128,
+	XXXL = 256
+} ValaPanelIconSizeHints;
 typedef enum
 {
 	AH_HIDDEN  = 0,

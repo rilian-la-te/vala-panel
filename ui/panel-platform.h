@@ -46,18 +46,6 @@ typedef enum
 	VALA_PANEL_GRAVITY_EAST_DOWN    = 11
 } ValaPanelGravity;
 
-typedef enum
-{
-	XXS  = 16,
-	XS   = 22,
-	S    = 24,
-	M    = 32,
-	L    = 48,
-	XL   = 96,
-	XXL  = 128,
-	XXXL = 256
-} ValaPanelIconSizeHints;
-
 struct _ValaPanelPlatformClass
 {
 	GObjectClass __parent__;
