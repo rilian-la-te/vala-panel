@@ -23,7 +23,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "css.h"
+#include "css-private.h"
 
 void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass, bool remove)
 {
@@ -42,40 +42,6 @@ void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass,
 		                               GTK_STYLE_PROVIDER(provider),
 		                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
-}
-
-char *css_apply_from_file(GtkWidget *widget, const char *file)
-{
-	g_autoptr(GError) error  = NULL;
-	GtkStyleContext *context = gtk_widget_get_style_context(widget);
-	gtk_widget_reset_style(widget);
-	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
-	gtk_css_provider_load_from_path(provider, file, &error);
-	if (error)
-	{
-		char *returnie = g_strdup(error->message);
-		return returnie;
-	}
-	gtk_style_context_add_provider(context,
-	                               GTK_STYLE_PROVIDER(provider),
-	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	return NULL;
-}
-
-char *css_apply_from_file_to_app(const char *file)
-{
-	g_autoptr(GError) error            = NULL;
-	g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
-	gtk_css_provider_load_from_path(provider, file, &error);
-	if (error)
-	{
-		char *returnie = g_strdup(error->message);
-		return returnie;
-	}
-	gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-	                                          GTK_STYLE_PROVIDER(provider),
-	                                          GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	return NULL;
 }
 
 char *css_generate_background(const char *filename, GdkRGBA *color)
@@ -225,12 +191,6 @@ void css_add_css_to_widget(GtkWidget *widget, const char *css)
 	gtk_style_context_add_provider(context,
 	                               GTK_STYLE_PROVIDER(provider),
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-}
-
-GtkCssProvider *css_apply_from_file_to_app_with_provider(const char *file)
-{
-	return css_apply_from_file_to_app_with_provider_and_priority(
-	    file, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 GtkCssProvider *css_apply_from_file_to_app_with_provider_and_priority(const char *file,

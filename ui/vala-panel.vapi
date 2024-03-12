@@ -21,15 +21,8 @@ namespace PanelCSS
 {
     public void apply_with_class(Gtk.Widget w, string css, string klass, bool add);
     public void toggle_class(Widget w, string klass, bool apply);
-	[CCode (cname = "css_add_css_with_provider")]
-    public CssProvider? add_css_to_widget(Widget w, string css);
-    public Gtk.CssProvider? apply_from_file_to_app_with_provider(string file);
-    public string apply_from_file_to_app(string file);
+    public Gtk.CssProvider? apply_from_file_to_app_with_provider_and_priority(string file, uint priority);
     public void apply_from_resource(Gtk.Widget w, string file, string klass);
-    public string generate_background(string? name, Gdk.RGBA color);
-    public string generate_font_size(int size);
-    public string generate_font_color(Gdk.RGBA color);
-    public string generate_font_label(double size ,bool bold);
     public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e);
 }
 [CCode (cprefix="")]

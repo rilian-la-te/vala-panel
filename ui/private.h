@@ -5,6 +5,7 @@
 
 G_BEGIN_DECLS
 
+#include "css-private.h"
 #include "applet-manager.h"
 #include "panel-layout.h"
 

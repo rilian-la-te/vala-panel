@@ -20,7 +20,7 @@
 #include <inttypes.h>
 #include <string.h>
 
-#include "css.h"
+#include "css-private.h"
 #include "misc-gtk.h"
 #include "misc.h"
 

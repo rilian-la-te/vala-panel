@@ -11,7 +11,8 @@ util_gtk_sources = files (
     'generic-config-dialog.c',
 	'misc-gtk.c',
     'css.c',
-    'launcher-gtk.c'
+    'launcher-gtk.c',
+    'css-private.h'
 )
 enum = 'vala-panel-util-enums'
 util_gtk_enums_gen = gnome.mkenums(
