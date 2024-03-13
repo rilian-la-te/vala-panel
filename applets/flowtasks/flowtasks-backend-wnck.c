@@ -232,6 +232,7 @@ static void wnck_task_finalize(GObject *parent)
 {
 	g_return_if_fail(WNCK_IS_TASK(parent));
 	WnckTask *self = WNCK_TASK(parent);
+	g_signal_handlers_disconnect_by_data(self->window, self);
 	g_clear_pointer(&self->wnck_info.app_id, g_free);
 	g_clear_pointer(&self->wnck_info.title, g_free);
 

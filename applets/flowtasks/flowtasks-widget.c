@@ -42,9 +42,9 @@ GtkWidget *flow_tasks_widget_func(gpointer item, gpointer user_data)
 	GtkWidget *image    = gtk_image_new();
 	GtkWidget *label    = gtk_label_new("");
 	GtkWidget *box      = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-	g_object_bind_property(task, VT_KEY_TITLE, label, "label", G_BINDING_DEFAULT);
-	g_object_bind_property(task, VT_KEY_ICON, image, "gicon", G_BINDING_DEFAULT);
-	g_object_bind_property(task, VT_KEY_TOOLTIP, widget, "tooltip-markup", G_BINDING_DEFAULT);
+	g_object_bind_property(task, VT_KEY_TITLE, label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+	g_object_bind_property(task, VT_KEY_ICON, image, "gicon", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+	g_object_bind_property(task, VT_KEY_TOOLTIP, widget, "tooltip-markup", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 	gtk_box_pack_start(GTK_BOX(box), image, false, true, 0);
 	gtk_box_pack_start(GTK_BOX(box), label, false, true, 0);
 	gtk_container_add(GTK_CONTAINER(widget), box);
@@ -60,14 +60,14 @@ static void flow_tasks_widget_constructed(GObject *obj)
 	if (!g_strcmp0(plt, "x11"))
 	{
 		self->model = VALA_PANEL_TASK_MODEL(g_object_new(wnck_task_model_get_type(), NULL));
-		gtk_flow_box_bind_model(GTK_FLOW_BOX(self),
-		                        G_LIST_MODEL(self->model),
-		                        flow_tasks_widget_func,
-		                        self,
-		                        NULL);
 	}
 	else
 		g_warning("Platform is not supported. Desktop file is broken.");
+	gtk_flow_box_bind_model(GTK_FLOW_BOX(self),
+						G_LIST_MODEL(self->model),
+						flow_tasks_widget_func,
+						self,
+						NULL);
 	G_OBJECT_CLASS(flow_tasks_widget_parent_class)->constructed(obj);
 }
 
