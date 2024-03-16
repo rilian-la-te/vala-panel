@@ -24,9 +24,7 @@ pkgconfig = import('pkgconfig')
 
 prefix = get_option('prefix')
 
-bindir = get_option('bindir')
 datadir = get_option('datadir')
-desktopdir = join_paths(datadir, 'applications')
 includedir = get_option('includedir')
 libdir = get_option('libdir')
 localedir = get_option('localedir')
@@ -34,7 +32,6 @@ project_datadir = join_paths(prefix,datadir, meson.project_name())
 applets_datadir = join_paths(prefix,datadir, meson.project_name(),'applets')
 applets_libdir = join_paths(prefix,libdir, meson.project_name(),'applets')
 profiles_dir = join_paths(prefix,get_option('sysconfdir'),'xdg',meson.project_name())
-base_source_dir = meson.current_source_dir()
 
 am_cflags = [
     '-fstack-protector',
@@ -66,7 +63,6 @@ assert(platforms['x11'] or platforms['layer-shell'], 'No platform available')
 cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
-core_deps = [glib, gio, giounix, gmodule, gtk, m]
 core_inc = include_directories('.')
 ################
 # Applet build #
