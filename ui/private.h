@@ -58,6 +58,10 @@ G_GNUC_INTERNAL ValaPanelUnitSettings *vp_core_settings_get_by_uuid(ValaPanelCor
 G_GNUC_INTERNAL char *vp_core_settings_get_uuid(void);
 G_GNUC_INTERNAL bool vp_core_settings_init_unit_list(ValaPanelCoreSettings *settings);
 
+/* From applet-widget.h */
+G_GNUC_INTERNAL gpointer vala_panel_applet_new_with_type(GType ex, ValaPanelToplevel *top, GSettings *settings,
+                                     const char *uuid);
+
 G_END_DECLS
 
 #endif
