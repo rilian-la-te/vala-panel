@@ -61,6 +61,16 @@
 #define xfce_tasklist_deskbar(tasklist) 0
 #define xfce_tasklist_filter_monitors(tasklist)                                                    \
 	(!(tasklist)->all_monitors && (tasklist)->n_monitors > 1)
+#define vala_panel_str_is_empty(str) !str ? true : !g_strcmp0(str, "") ? true : false
+#define vala_panel_transpose_area(marea)                                                           \
+	{                                                                                          \
+		int i        = marea.height;                                                       \
+		marea.height = marea.width;                                                        \
+		marea.width  = i;                                                                  \
+		i            = marea.y;                                                            \
+		marea.y      = marea.x;                                                            \
+		marea.x      = i;                                                                  \
+	}
 
 enum
 {

@@ -50,6 +50,12 @@ GtkWidget *vala_panel_applet_get_background_widget(ValaPanelApplet *self);
  * 
  */
 void vala_panel_applet_set_background_widget(ValaPanelApplet *self, GtkWidget *w);
+/**
+ * vala_panel_applet_update_context_menu:
+ * @self: a #ValaPanelApplet
+ * @parent_menu: (inout) (not nullable): #GMenu which will be updated
+ * 
+ */
 void vala_panel_applet_update_context_menu(ValaPanelApplet *self, GMenu *parent_menu);
 /**
  * vala_panel_applet_get_settings: (get-property settings)

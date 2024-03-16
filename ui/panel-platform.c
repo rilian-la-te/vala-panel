@@ -173,3 +173,15 @@ static void vala_panel_platform_class_init(ValaPanelPlatformClass *klass)
 {
 	G_OBJECT_CLASS(klass)->finalize = vala_panel_platform_finalize;
 }
+
+int vala_panel_orient_from_gravity(int gravity)
+{
+	return (((gravity) < 6) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
+}
+int vala_panel_edge_from_gravity(int gravity)
+{
+	return (gravity < 3)   ? GTK_POS_TOP
+	       : (gravity < 6) ? GTK_POS_BOTTOM
+	       : (gravity < 9) ? GTK_POS_LEFT
+	                       : GTK_POS_RIGHT;
+}
