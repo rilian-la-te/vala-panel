@@ -199,7 +199,7 @@ static void netmon_applet_constructed(GObject *obj)
 
 static GtkWidget *netmon_get_settings_ui(ValaPanelApplet *base)
 {
-	return generic_config_widget(vala_panel_applet_get_settings(base),
+	return vala_panel_generic_cfg_widgetv(vala_panel_applet_get_settings(base),
 	                             _("Network interface"),
 	                             NET_IFACE,
 	                             CONF_STR,

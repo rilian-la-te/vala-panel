@@ -37,7 +37,7 @@ static void set_file_response(GtkFileChooserButton *widget, gpointer user_data)
 	g_settings_set_string(data->settings, data->key, fname);
 }
 
-static GtkWidget *generic_config_widget_generate_entry(GSettings *settings, const char *name,
+static GtkWidget *vala_panel_generic_cfg_widgetv_generate_entry(GSettings *settings, const char *name,
                                                        const char *key,
                                                        ValaPanelConfiguratorType type)
 {
@@ -134,7 +134,7 @@ static GtkWidget *generic_config_widget_generate_entry(GSettings *settings, cons
 	return NULL;
 }
 
-static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
+static GtkWidget *vala_panel_generic_cfg_widgetv_internal(GSettings *settings, va_list l)
 {
 	GtkBox *dlg_vbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 4));
 	while (true)
@@ -149,7 +149,7 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 		const char *key                = NULL;
 		ValaPanelConfiguratorType type = (ValaPanelConfiguratorType)va_arg(l, int);
 		key                            = (const char *)arg;
-		entry = generic_config_widget_generate_entry(settings, name, key, type);
+		entry = vala_panel_generic_cfg_widgetv_generate_entry(settings, name, key, type);
 		if (entry)
 			gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
 	}
@@ -157,11 +157,11 @@ static GtkWidget *generic_config_widget_internal(GSettings *settings, va_list l)
 	return GTK_WIDGET(dlg_vbox);
 }
 
-GtkWidget *generic_config_widget(GSettings *settings, ...)
+GtkWidget *vala_panel_generic_cfg_widgetv(GSettings *settings, ...)
 {
 	va_list l;
 	va_start(l, settings);
-	GtkWidget *w = generic_config_widget_internal(settings, l);
+	GtkWidget *w = vala_panel_generic_cfg_widgetv_internal(settings, l);
 	va_end(l);
 	return w;
 }
@@ -174,7 +174,7 @@ GtkWidget *vala_panel_generic_cfg_widget(GSettings *settings, const char **names
 	for(int i = 0; i < n_entries; i++) {
 		GtkLabel *label = GTK_LABEL(gtk_label_new(names[i]));
 		gtk_widget_show(GTK_WIDGET(label));
-		GtkWidget * entry = generic_config_widget_generate_entry(settings, names[i], keys[i], types[i]);
+		GtkWidget * entry = vala_panel_generic_cfg_widgetv_generate_entry(settings, names[i], keys[i], types[i]);
 		if (entry)
 			gtk_box_pack_start(dlg_vbox, entry, false, false, 2);
 	}

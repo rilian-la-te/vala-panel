@@ -252,7 +252,7 @@ static void monitors_applet_constructed(GObject *obj)
 
 static GtkWidget *monitors_get_settings_ui(ValaPanelApplet *base)
 {
-	return generic_config_widget(vala_panel_applet_get_settings(base),
+	return vala_panel_generic_cfg_widgetv(vala_panel_applet_get_settings(base),
 	                             _("Display CPU usage"),
 	                             DISPLAY_CPU,
 	                             CONF_BOOL,

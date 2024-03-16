@@ -38,14 +38,14 @@ typedef enum
 } ValaPanelConfiguratorType;
 
 /**
- * generic_config_widget: (skip)
+ * vala_panel_generic_cfg_widgetv: (skip)
  * Generate configuration for specific keys and values without need to create a custom widget
  * @settings: a #GSettings
- * @args: variable args with specific format
+ * @...: variable args with specific format
  *
  * Returns: (transfer full): a #GtkWidget for configuring an applet with provided GSettings
  */
-GtkWidget *generic_config_widget(GSettings *settings, ...);
+GtkWidget *vala_panel_generic_cfg_widgetv(GSettings *settings, ...);
 
 /**
  * vala_panel_generic_cfg_widget:

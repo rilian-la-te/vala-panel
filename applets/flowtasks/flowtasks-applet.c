@@ -133,7 +133,7 @@ static void flowtasks_applet_constructed(GObject *obj)
 
 static GtkWidget *flowtasks_applet_get_settings_ui(ValaPanelApplet *base)
 {
-	GtkWidget *config = generic_config_widget(vala_panel_applet_get_settings(base),
+	GtkWidget *config = vala_panel_generic_cfg_widgetv(vala_panel_applet_get_settings(base),
 	                                          _("Show windows from all desktops"),
 	                                          TASKLIST_ALL_DESKTOPS,
 	                                          CONF_BOOL,

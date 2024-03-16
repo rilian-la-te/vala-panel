@@ -437,7 +437,7 @@ static void menu_applet_set_property(GObject *object, uint prop_id, const GValue
 static GtkWidget *menu_applet_get_settings_ui(ValaPanelApplet *self)
 {
 	GSettings *settings = vala_panel_applet_get_settings(self);
-	return generic_config_widget(settings,
+	return vala_panel_generic_cfg_widgetv(settings,
 	                             _("If internal menu is enabled, menu file will not be used,\n "
 	                               "predefeined menu will be used instead."),
 	                             NULL,
