@@ -166,7 +166,7 @@ GtkWidget *generic_config_widget(GSettings *settings, ...)
 	return w;
 }
 
-GtkWidget *vala_panel_generic_config_widget(GSettings *settings, const char **names,
+GtkWidget *vala_panel_generic_cfg_widget(GSettings *settings, const char **names,
                                             const char **keys, ValaPanelConfiguratorType *types,
                                             uint n_entries)
 {

@@ -48,7 +48,7 @@ typedef enum
 GtkWidget *generic_config_widget(GSettings *settings, ...);
 
 /**
- * vala_panel_generic_config_widget:
+ * vala_panel_generic_cfg_widget:
  * Generate configuration for specific keys and values without need to create a custom widget
  * @settings: a #GSettings
  * @names: (array length=n_entries): names of config entries (shown in UI, should be translatable)
@@ -60,7 +60,7 @@ GtkWidget *generic_config_widget(GSettings *settings, ...);
  *
  * Returns: (transfer full): a #GtkWidget for configuring an applet with provided GSettings
  */
-GtkWidget *vala_panel_generic_config_widget(GSettings *settings, const char **names,
+GtkWidget *vala_panel_generic_cfg_widget(GSettings *settings, const char **names,
                                             const char **keys, ValaPanelConfiguratorType *types,
                                             uint n_entries);
 
