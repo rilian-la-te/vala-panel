@@ -17,14 +17,14 @@ namespace ValaPanel.Configurator
 	[CCode (cname="vala_panel_generic_cfg_widgetv")]
     public static Widget generic_config_widget(GLib.Settings settings, ...);
 }
-[CCode (cheader_filename = "css.h", cprefix = "",lower_case_cprefix="css_")]
+[CCode (cheader_filename = "css.h", cprefix = "",lower_case_cprefix="vala_panel_style_")]
 namespace PanelCSS
 {
-    public void apply_with_class(Gtk.Widget w, string css, string klass, bool add);
-    public void toggle_class(Widget w, string klass, bool apply);
-    public Gtk.CssProvider? apply_from_file_to_app_with_provider_and_priority(string file, uint priority);
-    public void apply_from_resource(Gtk.Widget w, string file, string klass);
-    public string generate_flat_button(Gtk.Widget w, Gtk.PositionType e);
+    public void set_class(Gtk.Widget w, string css, string klass, bool add);
+    public void class_toggle(Widget w, string klass, bool apply);
+    public Gtk.CssProvider? from_file(string file, uint priority);
+    public void from_res(Gtk.Widget w, string file, string klass);
+    public string flat_button(Gtk.Widget w, Gtk.PositionType e);
 }
 [CCode (cprefix="")]
 namespace MenuMaker

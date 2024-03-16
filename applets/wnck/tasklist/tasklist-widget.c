@@ -1912,14 +1912,14 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 	gtk_widget_add_events(GTK_WIDGET(child->button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
 	g_object_get(xfce_tasklist_get_toplevel(tasklist), VALA_PANEL_KEY_GRAVITY, &edge, NULL);
 	g_autofree char *flat_css =
-	    css_generate_flat_button(child->button, vala_panel_edge_from_gravity(edge));
+	    vala_panel_style_flat_button(child->button, vala_panel_edge_from_gravity(edge));
 	g_autofree char *css_string =
 	    g_strdup_printf("image { padding: 3px; } image.minimized { opacity: %d.%02d; }",
 	                    tasklist->minimized_icon_lucency / 100,
 	                    tasklist->minimized_icon_lucency % 100);
 	g_autofree char *css = g_strdup_printf("%s\n%s\n", flat_css, css_string);
-	css_add_css_to_widget(child->button, css);
-	css_toggle_class(child->button, "-panel-flat-button", true);
+	vala_panel_style_set_for_widget(child->button, css);
+	vala_panel_style_class_toggle(child->button, "-panel-flat-button", true);
 
 	child->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_container_add(GTK_CONTAINER(child->button), child->box);
@@ -4028,8 +4028,8 @@ void xfce_tasklist_update_edge(XfceTasklist *tasklist, GtkPositionType edge)
 	for (GList *li = tasklist->windows; li != NULL; li = li->next)
 	{
 		XfceTasklistChild *child = li->data;
-		g_autofree char *css     = css_generate_flat_button(child->button, edge);
-		css_add_css_to_widget(child->button, css);
+		g_autofree char *css     = vala_panel_style_flat_button(child->button, edge);
+		vala_panel_style_set_for_widget(child->button, css);
 	}
 }
 

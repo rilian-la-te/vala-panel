@@ -25,7 +25,7 @@
 
 #include "css-private.h"
 
-void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass, bool remove)
+void vala_panel_style_set_class(GtkWidget *widget, const char *css, const char *klass, bool remove)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
@@ -96,7 +96,7 @@ inline char *css_generate_font_label(double size, bool is_bold)
 	    is_bold ? "bold" : "normal");
 }
 
-char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
+char *vala_panel_style_flat_button(GtkWidget *widget, GtkPositionType direction)
 {
 	char *returnie;
 	GdkRGBA color, active_color;
@@ -147,7 +147,7 @@ char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction)
 	return returnie;
 }
 
-char *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass)
+char *vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
@@ -159,7 +159,7 @@ char *css_apply_from_resource(GtkWidget *widget, const char *file, const char *k
 	gtk_style_context_add_class(context, klass);
 	return NULL;
 }
-void css_toggle_class(GtkWidget *widget, const char *klass, bool apply)
+void vala_panel_style_class_toggle(GtkWidget *widget, const char *klass, bool apply)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	if (apply)
@@ -181,7 +181,7 @@ GtkCssProvider *css_add_css_with_provider(GtkWidget *widget, const char *css)
 	return err ? NULL : g_object_ref(provider);
 }
 
-void css_add_css_to_widget(GtkWidget *widget, const char *css)
+void vala_panel_style_set_for_widget(GtkWidget *widget, const char *css)
 {
 	g_autoptr(GError) err    = NULL;
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
@@ -193,7 +193,7 @@ void css_add_css_to_widget(GtkWidget *widget, const char *css)
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
-GtkCssProvider *css_apply_from_file_to_app_with_provider_and_priority(const char *file,
+GtkCssProvider *vala_panel_style_from_file(const char *file,
                                                                       uint priority)
 {
 	GtkCssProvider *provider = gtk_css_provider_new();

@@ -68,7 +68,7 @@ public class Clock: Applet
         });
         this.notify.connect((pspec)=>{
             if (pspec.name == BOLD)
-                PanelCSS.apply_with_class(clock,get_css(),"-vala-panel-font-weight",false);
+                PanelCSS.set_class(clock,get_css(),"-vala-panel-font-weight",false);
             else
             {
                 if (timer != 0) Source.remove(timer);

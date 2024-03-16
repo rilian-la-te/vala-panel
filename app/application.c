@@ -164,7 +164,7 @@ static void apply_styling(ValaPanelApplication *app)
 			                                                 app->provider));
 			g_clear_object(&app->provider);
 		}
-		app->provider = css_apply_from_file_to_app_with_provider_and_priority(
+		app->provider = vala_panel_style_from_file(
 		    app->css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	}
 	else if (app->provider)

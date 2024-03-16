@@ -66,7 +66,7 @@ namespace LaunchBar
             var commit = false;
             var ebox = new EventBox();
             get_style_context().remove_class("grid-child");
-            PanelCSS.apply_from_resource(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
+            PanelCSS.from_res(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
             if (uri != null)
                 id = uri;
             if (content_type != null && button_type != ButtonType.DESKTOP)

@@ -24,12 +24,11 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-void css_apply_with_class(GtkWidget *widget, const char *css, const char *klass, bool remove);
-char *css_apply_from_resource(GtkWidget *widget, const char *file, const char *klass);
-void css_toggle_class(GtkWidget *w, const char *klass, bool apply);
-GtkCssProvider *css_apply_from_file_to_app_with_provider_and_priority(const char *file,
-                                                                      unsigned int priority);
-void css_add_css_to_widget(GtkWidget *w, const char *css);
-char *css_generate_flat_button(GtkWidget *widget, GtkPositionType direction);
+void vala_panel_style_set_class(GtkWidget *widget, const char *css, const char *klass, bool remove);
+char *vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass);
+void vala_panel_style_class_toggle(GtkWidget *w, const char *klass, bool apply);
+GtkCssProvider *vala_panel_style_from_file(const char *file, unsigned int priority);
+void vala_panel_style_set_for_widget(GtkWidget *w, const char *css);
+char *vala_panel_style_flat_button(GtkWidget *widget, GtkPositionType direction);
 
 #endif

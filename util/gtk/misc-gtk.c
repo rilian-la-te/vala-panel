@@ -38,7 +38,7 @@ void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double
 {
 	gtk_label_set_text(label, text);
 	g_autofree char *css = css_generate_font_label(factor, bold);
-	css_apply_with_class(GTK_WIDGET(label), css, "-vala-panel-font-label", false);
+	vala_panel_style_set_class(GTK_WIDGET(label), css, "-vala-panel-font-label", false);
 }
 
 /* Children hierarhy: button => alignment => box => (label,image) */
@@ -66,7 +66,7 @@ static void setup_button_notify_connect(GObject *_sender, GParamSpec *b,
 
 void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label)
 {
-	css_apply_from_resource(GTK_WIDGET(b), "/org/vala-panel/lib/style.css", "-panel-button");
+	vala_panel_style_from_res(GTK_WIDGET(b), "/org/vala-panel/lib/style.css", "-panel-button");
 	g_signal_connect(G_OBJECT(b), "notify", G_CALLBACK(setup_button_notify_connect), NULL);
 	if (img != NULL)
 	{
@@ -93,10 +93,10 @@ void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size)
 
 void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top)
 {
-	css_apply_from_resource(GTK_WIDGET(btn),
+	vala_panel_style_from_res(GTK_WIDGET(btn),
 	                        "/org/vala-panel/lib/style.css",
 	                        "-panel-icon-button");
-	css_toggle_class(GTK_WIDGET(btn), GTK_STYLE_CLASS_BUTTON, true);
+	vala_panel_style_class_toggle(GTK_WIDGET(btn), GTK_STYLE_CLASS_BUTTON, true);
 	GtkImage *img = NULL;
 	if (icon != NULL)
 	{

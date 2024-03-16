@@ -76,7 +76,7 @@ void vala_panel_applet_init_background(ValaPanelApplet *self)
 	GdkRGBA color;
 	gdk_rgba_parse(&color, "rgba(0,0,0,0)");
 	g_autofree char *css = css_generate_background(NULL, &color);
-	css_apply_with_class(p->background, css, "-vala-panel-background", false);
+	vala_panel_style_set_class(p->background, css, "-vala-panel-background", false);
 }
 
 GtkWidget *vala_panel_applet_get_settings_ui(ValaPanelApplet *self)

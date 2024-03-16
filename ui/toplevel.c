@@ -189,10 +189,10 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 
 static void start_ui(ValaPanelToplevel *self)
 {
-	css_apply_from_resource(GTK_WIDGET(self),
+	vala_panel_style_from_res(GTK_WIDGET(self),
 	                        "/org/vala-panel/lib/style.css",
 	                        "-panel-transparent");
-	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
+	vala_panel_style_class_toggle(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_window_set_application(GTK_WINDOW(self), gtk_window_get_application(GTK_WINDOW(self)));
 	gtk_widget_add_events(GTK_WIDGET(self),
 	                      GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK |
@@ -602,19 +602,19 @@ static void update_appearance(ValaPanelToplevel *self)
 	char *css = str->str;
 	g_clear_object(&self->provider);
 	self->provider = css_add_css_with_provider(GTK_WIDGET(self), css);
-	css_toggle_class(GTK_WIDGET(self),
+	vala_panel_style_class_toggle(GTK_WIDGET(self),
 	                 "-vala-panel-background",
 	                 self->use_background_color || self->use_background_file);
-	css_toggle_class(GTK_WIDGET(self), "-vala-panel-shadow", false);
-	css_toggle_class(GTK_WIDGET(self), "-vala-panel-round-corners", self->corner_radius > 0);
-	css_toggle_class(GTK_WIDGET(self), "-vala-panel-font-size", self->use_font);
-	css_toggle_class(GTK_WIDGET(self),
+	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-shadow", false);
+	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-round-corners", self->corner_radius > 0);
+	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-font-size", self->use_font);
+	vala_panel_style_class_toggle(GTK_WIDGET(self),
 	                 "-vala-panel-font",
 	                 self->use_font && !self->font_size_only);
-	css_toggle_class(GTK_WIDGET(self),
+	vala_panel_style_class_toggle(GTK_WIDGET(self),
 	                 "-vala-panel-foreground-color",
 	                 self->use_foreground_color);
-	css_toggle_class(GTK_WIDGET(self),
+	vala_panel_style_class_toggle(GTK_WIDGET(self),
 	                 GTK_STYLE_CLASS_PRIMARY_TOOLBAR,
 	                 self->use_toolbar_appearance);
 }
@@ -784,7 +784,7 @@ static uint timeout_func(ValaPanelToplevel *self)
 {
 	if (self->autohide && self->ah_state == AH_WAITING)
 	{
-		css_toggle_class(GTK_WIDGET(self), "-panel-transparent", true);
+		vala_panel_style_class_toggle(GTK_WIDGET(self), "-panel-transparent", true);
 		gtk_revealer_set_reveal_child(self->ah_rev, false);
 		vala_panel_toplevel_update_geometry_no_orient(self);
 		self->ah_state = AH_HIDDEN;
@@ -797,7 +797,7 @@ static void ah_show(ValaPanelToplevel *self)
 {
 	if (self->ah_state >= AH_GRAB)
 		return;
-	css_toggle_class(GTK_WIDGET(self), "-panel-transparent", false);
+	vala_panel_style_class_toggle(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_revealer_set_reveal_child(self->ah_rev, true);
 	vala_panel_toplevel_update_geometry_no_orient(self);
 	self->ah_state = AH_VISIBLE;

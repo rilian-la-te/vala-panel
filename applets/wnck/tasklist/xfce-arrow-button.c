@@ -147,8 +147,8 @@ static void xfce_arrow_button_init(XfceArrowButton *button)
 	gtk_widget_set_focus_on_click(GTK_WIDGET(button), FALSE);
 	/* Make sure themes like Adwaita, which set excessive padding, don't cause the
 	   launcher buttons to overlap when panels have a fairly normal size */
-	css_add_css_to_widget(GTK_WIDGET(button), ".-panel-flat-button { padding: 0; }");
-	css_toggle_class(GTK_WIDGET(button), "-panel-flat-button", true);
+	vala_panel_style_set_for_widget(GTK_WIDGET(button), ".-panel-flat-button { padding: 0; }");
+	vala_panel_style_class_toggle(GTK_WIDGET(button), "-panel-flat-button", true);
 }
 
 static void xfce_arrow_button_set_property(GObject *object, guint prop_id, const GValue *value,
@@ -485,9 +485,9 @@ void xfce_arrow_button_set_blinking(XfceArrowButton *button, bool blinking)
 	g_return_if_fail(XFCE_IS_ARROW_BUTTON(button));
 
 	if (blinking)
-		css_apply_from_resource(GTK_WIDGET(button),
+		vala_panel_style_from_res(GTK_WIDGET(button),
 		                        "/org/vala-panel/lib/style.css",
 		                        "-panel-button-blink");
 	else
-		css_toggle_class(GTK_WIDGET(button), "-panel-button-blink", false);
+		vala_panel_style_class_toggle(GTK_WIDGET(button), "-panel-button-blink", false);
 }

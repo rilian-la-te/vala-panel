@@ -346,7 +346,7 @@ static void vala_panel_runner_destroy(GtkWidget *obj)
 static void vala_panel_runner_init(ValaPanelRunner *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
-	css_apply_from_resource(GTK_WIDGET(self),
+	vala_panel_style_from_res(GTK_WIDGET(self),
 	                        "/org/vala-panel/runner/style.css",
 	                        "-panel-run-dialog");
 	build_app_box(self);
