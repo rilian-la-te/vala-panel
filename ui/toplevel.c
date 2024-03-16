@@ -190,8 +190,8 @@ static void vala_panel_toplevel_finalize(GObject *obj)
 static void start_ui(ValaPanelToplevel *self)
 {
 	vala_panel_style_from_res(GTK_WIDGET(self),
-	                        "/org/vala-panel/lib/style.css",
-	                        "-panel-transparent");
+	                          "/org/vala-panel/lib/style.css",
+	                          "-panel-transparent");
 	vala_panel_style_class_toggle(GTK_WIDGET(self), "-panel-transparent", false);
 	gtk_window_set_application(GTK_WINDOW(self), gtk_window_get_application(GTK_WINDOW(self)));
 	gtk_widget_add_events(GTK_WIDGET(self),
@@ -243,7 +243,9 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	if (use_internal_values)
 	{
 		g_settings_set_int(self->settings->common, VALA_PANEL_KEY_MONITOR, self->mon);
-		g_settings_set_enum(self->settings->common, VALA_PANEL_KEY_GRAVITY, (int)self->gravity);
+		g_settings_set_enum(self->settings->common,
+		                    VALA_PANEL_KEY_GRAVITY,
+		                    (int)self->gravity);
 	}
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
@@ -263,11 +265,13 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VALA_PANEL_KEY_STRUT);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VALA_PANEL_KEY_DOCK);
-	vala_panel_bind_gsettings(self, self->settings->common, VALA_PANEL_KEY_MONITOR)
-	    vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
-	                                       self->settings->common,
-	                                       VALA_PANEL_KEY_ICON_SIZE);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->settings->common,
+	                                   VALA_PANEL_KEY_DOCK);
+	vala_panel_bind_gsettings(self, self->settings->common, VALA_PANEL_KEY_MONITOR);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->settings->common,
+	                                   VALA_PANEL_KEY_ICON_SIZE);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VALA_PANEL_KEY_BACKGROUND_COLOR);
@@ -277,7 +281,9 @@ static void init_actions(ValaPanelToplevel *self, bool use_internal_values)
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VALA_PANEL_KEY_BACKGROUND_FILE);
-	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self), self->settings->common, VALA_PANEL_KEY_FONT);
+	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
+	                                   self->settings->common,
+	                                   VALA_PANEL_KEY_FONT);
 	vala_panel_add_gsettings_as_action(G_ACTION_MAP(self),
 	                                   self->settings->common,
 	                                   VALA_PANEL_KEY_CORNER_RADIUS);
@@ -506,7 +512,7 @@ static void activate_remove_panel(G_GNUC_UNUSED GSimpleAction *act, G_GNUC_UNUSE
                                                GTK_MESSAGE_QUESTION,
                                                GTK_BUTTONS_OK_CANCEL,
                                                _("Really delete this panel?\n<b>Warning:"
-                                                 "This can not be recovered.</b>")));
+	                                           "This can not be recovered.</b>")));
 	vala_panel_apply_window_icon(GTK_WINDOW(dlg));
 	gtk_window_set_title(GTK_WINDOW(dlg), _("Confirm"));
 	bool ok = (gtk_dialog_run(GTK_DIALOG(dlg)) == GTK_RESPONSE_OK);
@@ -603,20 +609,22 @@ static void update_appearance(ValaPanelToplevel *self)
 	g_clear_object(&self->provider);
 	self->provider = css_add_css_with_provider(GTK_WIDGET(self), css);
 	vala_panel_style_class_toggle(GTK_WIDGET(self),
-	                 "-vala-panel-background",
-	                 self->use_background_color || self->use_background_file);
+	                              "-vala-panel-background",
+	                              self->use_background_color || self->use_background_file);
 	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-shadow", false);
-	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-round-corners", self->corner_radius > 0);
+	vala_panel_style_class_toggle(GTK_WIDGET(self),
+	                              "-vala-panel-round-corners",
+	                              self->corner_radius > 0);
 	vala_panel_style_class_toggle(GTK_WIDGET(self), "-vala-panel-font-size", self->use_font);
 	vala_panel_style_class_toggle(GTK_WIDGET(self),
-	                 "-vala-panel-font",
-	                 self->use_font && !self->font_size_only);
+	                              "-vala-panel-font",
+	                              self->use_font && !self->font_size_only);
 	vala_panel_style_class_toggle(GTK_WIDGET(self),
-	                 "-vala-panel-foreground-color",
-	                 self->use_foreground_color);
+	                              "-vala-panel-foreground-color",
+	                              self->use_foreground_color);
 	vala_panel_style_class_toggle(GTK_WIDGET(self),
-	                 GTK_STYLE_CLASS_PRIMARY_TOOLBAR,
-	                 self->use_toolbar_appearance);
+	                              GTK_STYLE_CLASS_PRIMARY_TOOLBAR,
+	                              self->use_toolbar_appearance);
 }
 
 static ValaPanelToplevel *vala_panel_toplevel_create_window(GtkApplication *app, const char *uuid)
