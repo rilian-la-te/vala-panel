@@ -147,7 +147,7 @@ char *vala_panel_style_flat_button(GtkWidget *widget, GtkPositionType direction)
 	return returnie;
 }
 
-char *vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass)
+void vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);
 	gtk_widget_reset_style(widget);
@@ -157,8 +157,8 @@ char *vala_panel_style_from_res(GtkWidget *widget, const char *file, const char 
 	                               GTK_STYLE_PROVIDER(provider),
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_style_context_add_class(context, klass);
-	return NULL;
 }
+
 void vala_panel_style_class_toggle(GtkWidget *widget, const char *klass, bool apply)
 {
 	GtkStyleContext *context = gtk_widget_get_style_context(widget);

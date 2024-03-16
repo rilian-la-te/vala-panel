@@ -25,7 +25,7 @@
 #include <stdbool.h>
 
 void vala_panel_style_set_class(GtkWidget *widget, const char *css, const char *klass, bool remove);
-char *vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass);
+void vala_panel_style_from_res(GtkWidget *widget, const char *file, const char *klass);
 void vala_panel_style_class_toggle(GtkWidget *w, const char *klass, bool apply);
 GtkCssProvider *vala_panel_style_from_file(const char *file, unsigned int priority);
 void vala_panel_style_set_for_widget(GtkWidget *w, const char *css);
