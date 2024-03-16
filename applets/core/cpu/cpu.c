@@ -27,7 +27,6 @@
 #include "cpu.h"
 
 #define BORDER_SIZE 2
-#define PANEL_HEIGHT_DEFAULT 26 /* from panel defaults */
 
 typedef struct
 {                                          /* Value from /proc/stat */
