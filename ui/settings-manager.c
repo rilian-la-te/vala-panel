@@ -25,6 +25,12 @@
 #include "panel-platform.h"
 #include "settings-manager.h"
 
+typedef enum
+{
+	TOPLEVEL = 0,
+	APPLET   = 1,
+} ValaPanelType;
+
 static ValaPanelUnitSettings *vala_panel_unit_settings_new(ValaPanelCoreSettings *settings,
                                                            const char *name, const char *uuid,
                                                            bool is_toplevel)

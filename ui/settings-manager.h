@@ -44,12 +44,6 @@ typedef struct
 	char *uuid;
 } ValaPanelUnitSettings;
 
-typedef enum
-{
-	TOPLEVEL = 0,
-	APPLET   = 1,
-} ValaPanelType;
-
 GType vala_panel_unit_settings_get_type();
 G_GNUC_INTERNAL void vala_panel_unit_settings_free(ValaPanelUnitSettings *settings);
 bool vala_panel_unit_settings_is_toplevel(ValaPanelUnitSettings *settings);
