@@ -26,7 +26,22 @@
 G_BEGIN_DECLS
 
 void vala_panel_setup_label(GtkLabel *label, const char *text, bool bold, double factor);
+/**
+ * vala_panel_setup_button:
+ * @b: (not nullable): a #GtkButton
+ * @img: (nullable) (optional): a #GtkImage to be added to button
+ * @label: (nullable) (optional): a text to be added to button
+ *
+ */
 void vala_panel_setup_button(GtkButton *b, GtkImage *img, const char *label);
+/**
+ * vala_panel_setup_icon:
+ * @img: (not nullable): a #GtkImage to setup
+ * @icon: (not nullable): a #Gicon for setup
+ * @top: (nullable) (optional): a #ValaPanelToplevel to bind icon size to
+ * @size: (nullable) (optional): an explicitly provided icon size
+ *
+ */
 void vala_panel_setup_icon(GtkImage *img, GIcon *icon, GObject *top, int size);
 void vala_panel_setup_icon_button(GtkButton *btn, GIcon *icon, const char *label, GObject *top);
 void vala_panel_scale_button_set_range(GtkScaleButton *b, gint lower, gint upper);
