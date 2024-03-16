@@ -24,6 +24,14 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+/**
+ * vala_panel_launch:
+ * @app_info: (not nullable): a #GDesktopAppInfo
+ * @uris: (element-type utf8) (nullable): list of URI identifiers to passing to programs for launching
+ * @parent: (not nullable): a #GtkWidget to take #GAppLaunchContext from.
+ *
+ * Returns: true on successful launch, false otherwise. 
+ */
 bool vala_panel_launch(GDesktopAppInfo *app_info, GList *uris, GtkWidget *parent);
 void vala_panel_activate_launch_id(GSimpleAction *action, GVariant *param, gpointer user_data);
 void vala_panel_activate_launch_uri(GSimpleAction *action, GVariant *param, gpointer user_data);

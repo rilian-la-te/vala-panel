@@ -193,8 +193,7 @@ void vala_panel_style_set_for_widget(GtkWidget *widget, const char *css)
 	                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
-GtkCssProvider *vala_panel_style_from_file(const char *file,
-                                                                      uint priority)
+GtkCssProvider *vala_panel_style_from_file(const char *file, uint priority)
 {
 	GtkCssProvider *provider = gtk_css_provider_new();
 	g_autoptr(GError) err    = NULL;

@@ -25,7 +25,25 @@
 
 G_BEGIN_DECLS
 
+/**
+ * vala_panel_get_default_for_uri: 
+ * @uri: a URI to get default transfer from
+ *
+ * Use it to get default #GAppInfo to handle a file or URI.
+ * Returns: (transfer full) (nullable): a #GAppInfo for handling a URI (desktop default)
+ */
+
 GAppInfo *vala_panel_get_default_for_uri(const char *uri);
+/**
+ * vala_panel_launch_with_context:
+ * @app_info: (not nullable): a #GDesktopAppInfo
+ * @cxt: (not nullable): a #GAppLaunchContext for launching application
+ * @uris: (element-type utf8) (nullable): list of URI identifiers to passing to programs for launching
+ *
+ * Allow you to launch an #GDesktopAppInfo with list of URIs and with provided #GAppLaunchContext. You
+ * most likely will not want this, and use #vala_panel_launch instead.
+ * Returns: true on successful launch, false otherwise. 
+ */
 bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext *cxt, GList *uris);
 void vala_panel_spawn_setup_func(void *data);
 void vala_panel_add_prop_as_action(GActionMap *map, const char *prop);
