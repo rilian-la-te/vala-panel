@@ -29,8 +29,6 @@ res = gnome.compile_resources(
     c_name: 'sntrayres'
 )
 
-importer = dependency('appmenu-glib-translator')
-
 backend_inc = include_directories('../include')
 this_inc = include_directories('.')
 backend_lib = static_library('sn-backend', backend_sources, backend_enums_gen, backend_sources_vala, res,

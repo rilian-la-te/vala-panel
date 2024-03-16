@@ -39,4 +39,5 @@ foreach plugin : plugin_list
     )
 endforeach
 
-subdir('sntray')
+importer = dependency('appmenu-glib-translator', required: false)
+subdir('sntray', if_found : importer)
