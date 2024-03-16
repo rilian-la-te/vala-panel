@@ -76,15 +76,6 @@ struct _MenuApplet
 
 G_DEFINE_DYNAMIC_TYPE(MenuApplet, menu_applet, vala_panel_applet_get_type())
 
-/* Applet widget constructor. */
-MenuApplet *menu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, const char *uuid)
-{
-	/* Allocate applet context*/
-	MenuApplet *self = VALA_PANEL_MENU_APPLET(
-	    vala_panel_applet_construct(menu_applet_get_type(), toplevel, settings, uuid));
-	return self;
-}
-
 static void menu_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(menu_applet_parent_class)->constructed(obj);

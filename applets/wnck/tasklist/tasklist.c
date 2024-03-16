@@ -78,13 +78,6 @@ static void tasklist_notify_orientation_connect(GObject *topo, GParamSpec *pspec
 	}
 }
 
-TaskListApplet *tasklist_applet_new(ValaPanelToplevel *toplevel, GSettings *settings,
-                                    const char *uuid)
-{
-	TaskListApplet *self = TASKLIST_APPLET(
-	    vala_panel_applet_construct(tasklist_applet_get_type(), toplevel, settings, uuid));
-	return self;
-}
 static void tasklist_applet_constructed(GObject *obj)
 {
 	TaskListApplet *self        = TASKLIST_APPLET(obj);

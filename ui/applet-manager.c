@@ -128,7 +128,7 @@ G_GNUC_INTERNAL ValaPanelApplet *vp_applet_manager_get_applet_widget(ValaPanelAp
 
 	GType applet_type = vala_panel_applet_info_get_stored_type(data->info);
 	ValaPanelApplet *applet =
-	    vala_panel_applet_construct(applet_type, top, applet_settings, uuid);
+	    vala_panel_applet_new_with_type(applet_type, top, applet_settings, uuid);
 	if (VALA_PANEL_IS_APPLET(applet))
 		return applet;
 	return NULL;

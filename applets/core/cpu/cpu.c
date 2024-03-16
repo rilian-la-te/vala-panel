@@ -257,14 +257,6 @@ static void on_height_change(GObject *owner, G_GNUC_UNUSED GParamSpec *pspec, vo
 	gtk_widget_set_size_request(da, height > 40 ? height : 40, height);
 }
 
-/* Applet widget constructor. */
-CpuApplet *cpu_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, const char *uuid)
-{
-	/* Allocate applet context*/
-	CpuApplet *c = VALA_PANEL_CPU_APPLET(
-	    vala_panel_applet_construct(cpu_applet_get_type(), toplevel, settings, uuid));
-	return c;
-}
 static void cpu_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(cpu_applet_parent_class)->constructed(obj);

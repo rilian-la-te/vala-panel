@@ -49,7 +49,7 @@ static bool release_event_helper(GtkWidget *_sender, GdkEventButton *b, gpointer
 	return vp_toplevel_release_event_helper(_sender, b, obj);
 }
 
-gpointer vala_panel_applet_construct(GType ex, ValaPanelToplevel *top, GSettings *settings,
+gpointer vala_panel_applet_new_with_type(GType ex, ValaPanelToplevel *top, GSettings *settings,
                                      const char *uuid)
 {
 	return g_object_new(ex, "toplevel", top, "settings", settings, "uuid", uuid, NULL);

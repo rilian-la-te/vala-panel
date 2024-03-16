@@ -171,14 +171,6 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	}
 }
 
-/* Applet widget constructor. */
-NetMonApplet *netmon_applet_new(ValaPanelToplevel *toplevel, GSettings *settings, const char *uuid)
-{
-	/* Allocate applet context*/
-	NetMonApplet *self = VALA_PANEL_NETMON_APPLET(
-	    vala_panel_applet_construct(netmon_applet_get_type(), toplevel, settings, uuid));
-	return self;
-}
 static void netmon_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(netmon_applet_parent_class)->constructed(obj);

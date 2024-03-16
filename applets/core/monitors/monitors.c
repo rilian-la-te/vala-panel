@@ -218,16 +218,6 @@ void on_settings_changed(GSettings *settings, char *key, gpointer user_data)
 	}
 }
 
-/* Applet widget constructor. */
-MonitorsApplet *monitors_applet_new(ValaPanelToplevel *toplevel, GSettings *settings,
-                                    const char *uuid)
-{
-	/* Allocate applet context*/
-	MonitorsApplet *self = VALA_PANEL_MONITORS_APPLET(
-	    vala_panel_applet_construct(monitors_applet_get_type(), toplevel, settings, uuid));
-
-	return self;
-}
 static void monitors_applet_constructed(GObject *obj)
 {
 	G_OBJECT_CLASS(monitors_applet_parent_class)->constructed(obj);

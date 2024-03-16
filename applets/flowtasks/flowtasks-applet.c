@@ -77,13 +77,6 @@ static void tasklist_notify_orientation_connect(GObject *topo, GParamSpec *pspec
         }
 }
 */
-FlowTasksApplet *flowtasks_applet_new(ValaPanelToplevel *toplevel, GSettings *settings,
-                                      const char *uuid)
-{
-	FlowTasksApplet *self = FLOWTASKS_APPLET(
-	    vala_panel_applet_construct(flowtasks_applet_get_type(), toplevel, settings, uuid));
-	return self;
-}
 static void flowtasks_applet_constructed(GObject *obj)
 {
 	FlowTasksApplet *self       = FLOWTASKS_APPLET(obj);
