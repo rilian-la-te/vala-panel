@@ -26,7 +26,7 @@ typedef struct
 	pid_t pid;
 } SpawnData;
 
-void child_spawn_func(G_GNUC_UNUSED void *data)
+void vala_panel_spawn_setup_func(G_GNUC_UNUSED void *data)
 {
 	setpgid(0, getpgid(getppid()));
 }
@@ -40,7 +40,7 @@ bool vala_panel_launch_with_context(GDesktopAppInfo *app_info, GAppLaunchContext
 	                                                     uris,
 	                                                     cxt,
 	                                                     G_SPAWN_SEARCH_PATH,
-	                                                     child_spawn_func,
+	                                                     vala_panel_spawn_setup_func,
 	                                                     NULL,
 	                                                     NULL,
 	                                                     NULL,

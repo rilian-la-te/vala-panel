@@ -240,7 +240,7 @@ static void vala_panel_application_shutdown(GApplication *base)
 		              (GStrv)argv,
 		              envp,
 		              G_SPAWN_SEARCH_PATH,
-		              child_spawn_func,
+		              vala_panel_spawn_setup_func,
 		              NULL,
 		              NULL,
 		              &err);
