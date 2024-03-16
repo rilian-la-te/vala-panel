@@ -30,19 +30,19 @@ public class Kbled: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         IconTheme.get_default().add_resource_path("/org/vala-panel/kbled/images/");
         widget = new FlowBox();
         widget.orientation = (toplevel.orientation == Orientation.HORIZONTAL) ? Orientation.VERTICAL:Orientation.HORIZONTAL;
         widget.selection_mode = SelectionMode.NONE;
         add(widget);
         caps = new Image();
-        toplevel.bind_property(Key.ICON_SIZE,caps,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+        toplevel.bind_property(KEY_ICON_SIZE,caps,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
         settings.bind(CAPS_ON,caps,"visible",SettingsBindFlags.GET);
         caps.show();
         widget.add(caps);
         num = new Image();
-        toplevel.bind_property(Key.ICON_SIZE,num,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
+        toplevel.bind_property(KEY_ICON_SIZE,num,"pixel-size",BindingFlags.DEFAULT|BindingFlags.SYNC_CREATE);
         num.show();
         settings.bind(NUM_ON,num,"visible",SettingsBindFlags.GET);
         widget.add(num);
@@ -58,9 +58,19 @@ public class Kbled: Applet
     }
     public override Widget get_settings_ui()
     {
-        Widget dlg = Configurator.generic_config_widget(this.settings,
-                            _("Show CapsLock"), CAPS_ON, GenericConfigType.BOOL,
-                            _("Show NumLock"), NUM_ON, GenericConfigType.BOOL);
+        string[] names = {
+            _("Show CapsLock"),
+            _("Show NumLock"),
+        };
+        string[] keys = {
+            CAPS_ON,
+            NUM_ON,
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.BOOL,
+            ConfiguratorType.BOOL,
+        };
+        Widget dlg = generic_cfg_widget(settings, names, keys, types);
         dlg.set_size_request(200, -1);  /* Improve geometry */
         return dlg;
     }
@@ -101,7 +111,7 @@ public class Kbled: Applet
 public void g_io_kbled_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Kbled),"org.valapanel.kbled",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Kbled),"org.valapanel.kbled",10);
 }
 
 public void g_io_kbled_unload(GLib.IOModule module)

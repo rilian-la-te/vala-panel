@@ -66,7 +66,7 @@ namespace LaunchBar
             var commit = false;
             var ebox = new EventBox();
             get_style_context().remove_class("grid-child");
-            PanelCSS.from_res(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
+            style_from_res(this,"/org/vala-panel/lib/style.css","-panel-launch-button");
             if (uri != null)
                 id = uri;
             if (content_type != null && button_type != ButtonType.DESKTOP)
@@ -140,10 +140,10 @@ namespace LaunchBar
             {
                 List<string> uri_l = new List<string>();
                 uri_l.append(uri);
-                MenuMaker.launch(desktop_info,uri_l,this);
+                ValaPanel.launch(desktop_info,uri_l,this);
             }
             else
-                MenuMaker.launch(desktop_info,null,this);
+                ValaPanel.launch(desktop_info,null,this);
         }
         private unowned Bar get_launchbar()
         {

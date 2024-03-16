@@ -18,6 +18,7 @@ endif
 
 posix_dep = meson.get_compiler('vala').find_library('posix')
 foreach plugin : plugin_list
+    add_dep = dependency('', required : false)
     subdir(plugin)
     if res_exists
         res = gnome.compile_resources(
@@ -28,7 +29,7 @@ foreach plugin : plugin_list
     endif
     plugin_module = shared_module(plugin,
                     sources, res, config, version,
-                    dependencies: [libvalapanel, posix_dep],
+                    dependencies: [libvalapanel, posix_dep, add_dep],
                     install: true,
                     install_dir: applets_libdir
                  )

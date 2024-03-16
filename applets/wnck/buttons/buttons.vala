@@ -40,7 +40,7 @@ public class Buttons: Applet
                 image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
             image.show();
         });
-        var gtksettings = this.get_settings();
+        var gtksettings = (this as Widget).get_settings();
         gtksettings.notify["gtk-decoration-layout"].connect(()=>{
             update_window_buttons(gtksettings.gtk_decoration_layout);
         });
@@ -184,7 +184,7 @@ public class Buttons: Applet
         if (icon != null)
         {
             img = new Image.from_gicon(icon,IconSize.INVALID);
-            setup_icon(img,icon,top);
+            setup_icon(img,icon,top, -1);
             img.show();
         }
         setup_button(btn, img, label);
@@ -198,7 +198,7 @@ public class Buttons: Applet
 public void g_io_buttons_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Buttons),"org.valapanel.buttons",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Buttons),"org.valapanel.buttons",10);
 }
 
 public void g_io_buttons_unload(GLib.IOModule module)

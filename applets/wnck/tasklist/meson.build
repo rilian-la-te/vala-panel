@@ -8,6 +8,7 @@ sources = files(
   )
 tasklist = shared_module( 'tasklist-xfce',
                         sources,
+                        dependencies: [libvalapanel, wnck, gdk_x11],
                         kwargs: wnck_kwargs
                      )
 

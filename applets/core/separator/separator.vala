@@ -29,7 +29,7 @@ public class Sep: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         widget = new Separator(toplevel.orientation == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL);
         this.add(widget);
         toplevel.notify["panel-gravity"].connect((pspec)=>{
@@ -50,9 +50,19 @@ public class Sep: Applet
     }
     public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_widget(this.settings,
-                            _("Size"), KEY_SIZE, GenericConfigType.INT,
-                            _("Visible separator"), KEY_SHOW_SEPARATOR, GenericConfigType.BOOL);
+        string[] names = {
+            _("Size"),
+            _("Visible separator")
+        };
+        string[] keys = {
+            KEY_SIZE,
+            KEY_SHOW_SEPARATOR
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.INT,
+            ConfiguratorType.BOOL
+        };
+        return generic_cfg_widget(settings, names, keys, types);
     }
 } // End class
 
@@ -60,7 +70,7 @@ public class Sep: Applet
 public void g_io_separator_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Sep),"org.valapanel.separator",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Sep),"org.valapanel.separator",10);
 }
 
 public void g_io_separator_unload(GLib.IOModule module)

@@ -37,13 +37,13 @@ public class Dirmenu: Applet
     {get; set;}
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         var button = new MenuButton();
         var img = new Image();
         settings.bind(DIR,this,DIR,SettingsBindFlags.GET);
         settings.bind(ICON,this,ICON,SettingsBindFlags.GET);
         settings.bind(LABEL,this,LABEL,SettingsBindFlags.GET);
-        setup_icon(img,set_icon(),toplevel);
+        setup_icon(img,set_icon(),toplevel, -1);
         setup_button(button as Button,img,caption);
         button.set_popup(create_menu(dir_path,false));
         this.notify.connect((pspec)=>{
@@ -185,10 +185,22 @@ public class Dirmenu: Applet
     }
     public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_widget(this.settings,
-                            _("Directory"), DIR, GenericConfigType.DIRECTORY,
-                            _("Label"), LABEL, GenericConfigType.STR,
-                            _("Icon"), ICON, GenericConfigType.FILE_ENTRY);
+        string[] names = {
+            _("Directory"),
+            _("Label"),
+            _("Icon")
+        };
+        string[] keys = {
+            DIR,
+            LABEL,
+            ICON,
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.DIRECTORY,
+            ConfiguratorType.STR,
+            ConfiguratorType.FILE_ENTRY,
+        };
+        return generic_cfg_widget(settings, names, keys, types);
     }
 } // End class
 
@@ -196,7 +208,7 @@ public class Dirmenu: Applet
 public void g_io_dirmenu_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Dirmenu),"org.valapanel.dirmenu",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Dirmenu),"org.valapanel.dirmenu",10);
 }
 
 public void g_io_dirmenu_unload(GLib.IOModule module)

@@ -45,7 +45,7 @@ public class Wincmd: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         button = new Button();
         image = new Image();
         settings.bind(KEY_LEFT,this,KEY_LEFT,SettingsBindFlags.GET);
@@ -59,8 +59,8 @@ public class Wincmd: Applet
             stderr.printf("Default icon will be used\n");
             gicon = new ThemedIcon.with_default_fallbacks("preferences-desktop-wallpaper-symbolic");
         }
-        setup_icon(image,gicon,toplevel);
-        setup_button(button,image);
+        setup_icon(image,gicon,toplevel, -1);
+        setup_button(button,image, null);
         button.set_image(image);
         button.clicked.connect(()=>{
             execute_command(left_button_command);
@@ -75,9 +75,17 @@ public class Wincmd: Applet
     }
     public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_widget(this.settings,
-        _("Alternately iconify/shade and raise"), KEY_TOGGLE, GenericConfigType.BOOL
-        /* FIXME: configure buttons 1 and 2 */);
+        /* FIXME: configure buttons 1 and 2 */
+        string[] names = {
+            _("Alternately iconify/shade and raise")
+        };
+        string[] keys = {
+            KEY_TOGGLE
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.BOOL
+        };
+        return generic_cfg_widget(settings, names, keys, types);
     }
     private void update_icon()
     {
@@ -156,7 +164,7 @@ public class Wincmd: Applet
 public void g_io_wincmd_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Wincmd),"org.valapanel.wincmd",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Wincmd),"org.valapanel.wincmd",10);
 }
 
 public void g_io_wincmd_unload(GLib.IOModule module)

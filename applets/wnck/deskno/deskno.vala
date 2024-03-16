@@ -32,7 +32,7 @@ public class Deskno: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         label = new Label(null);
         settings.bind(KEY_LABELS,this,KEY_LABELS,SettingsBindFlags.GET);
         settings.bind(KEY_BOLD,this,KEY_BOLD,SettingsBindFlags.GET);
@@ -52,10 +52,19 @@ public class Deskno: Applet
     }
     public override Widget get_settings_ui()
     {
-
-       return Configurator.generic_config_widget(this.settings,
-            _("Bold font"), KEY_BOLD, GenericConfigType.BOOL,
-            _("Display desktop names"), KEY_LABELS, GenericConfigType.BOOL);
+        string[] names = {
+            _("Bold font"),
+            _("Display desktop names")
+        };
+        string[] keys = {
+            KEY_BOLD,
+            KEY_LABELS
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.BOOL,
+            ConfiguratorType.BOOL
+        };
+        return generic_cfg_widget(settings, names, keys, types);
     }
     private void name_update()
     {
@@ -97,7 +106,7 @@ public class Deskno: Applet
 public void g_io_deskno_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Deskno),"org.valapanel.deskno",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Deskno),"org.valapanel.deskno",10);
 }
 
 public void g_io_deskno_unload(GLib.IOModule module)

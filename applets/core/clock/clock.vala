@@ -42,7 +42,7 @@ public class Clock: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         settings.bind(LABEL_FORMAT,this,LABEL_FORMAT,SettingsBindFlags.GET);
         settings.bind(TIP_FORMAT,this,TIP_FORMAT,SettingsBindFlags.GET);
         settings.bind(BOLD,this,BOLD,SettingsBindFlags.GET);
@@ -62,7 +62,7 @@ public class Clock: Applet
         });
         this.notify.connect((pspec)=>{
             if (pspec.name == BOLD)
-                PanelCSS.set_class(clock,get_css(),"-vala-panel-font-weight",false);
+                style_set_class(clock,get_css(),"-vala-panel-font-weight",false);
             else
             {
                 if (timer != 0) Source.remove(timer);
@@ -84,11 +84,25 @@ public class Clock: Applet
     }
     public override Widget get_settings_ui()
     {
-        return Configurator.generic_config_widget(this.settings,
-        _("Clock Format"), LABEL_FORMAT, GenericConfigType.STR,
-        _("Tooltip Format"), TIP_FORMAT, GenericConfigType.STR,
-        _("Format codes: man 3 strftime; %n for line break"), null, GenericConfigType.TRIM,
-        _("Bold font"), BOLD, GenericConfigType.BOOL);
+        string[] names = {
+            _("Clock Format"),
+            _("Tooltip Format"),
+            _("Format codes: man 3 strftime; %n for line break"),
+            _("Bold font")
+        };
+        string[] keys = {
+            LABEL_FORMAT,
+            TIP_FORMAT,
+            null,
+            BOLD
+        };
+        ConfiguratorType[] types = {
+            ConfiguratorType.STR,
+            ConfiguratorType.STR,
+            ConfiguratorType.TRIM,
+            ConfiguratorType.BOOL,
+        };
+        return generic_cfg_widget(settings, names, keys, types);
     }
     private void popup_position_helper(Gtk.Widget popup,
                                       out int x, out int y)
@@ -265,7 +279,7 @@ public class Clock: Applet
 public void g_io_clock_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(Clock),"org.valapanel.clock",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(Clock),"org.valapanel.clock",10);
 }
 
 public void g_io_clock_unload(GLib.IOModule module)

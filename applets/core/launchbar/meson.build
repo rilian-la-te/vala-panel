@@ -4,3 +4,4 @@ sources = files(
   'launchbar-config.vala',
   )
 res_exists = true
+add_dep = vala_panel_vapi

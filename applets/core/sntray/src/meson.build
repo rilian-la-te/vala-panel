@@ -48,7 +48,7 @@ backend_vapi = declare_dependency(
 
 vp_sources = files('vala-panel-sntray-applet.vala')
 vpp = shared_module('sntray', vp_sources,
-                dependencies: [backend_vapi, libvalapanel],
+                dependencies: [backend_vapi, libvalapanel, vala_panel_vapi],
                 install: true,
                 install_dir: applets_libdir
                 )

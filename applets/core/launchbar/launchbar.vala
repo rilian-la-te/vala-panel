@@ -37,7 +37,7 @@ namespace LaunchBar
 
         public override void constructed()
         {
-            (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+            (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
             layout = new FlowBox();
             Gtk.drag_dest_set (
                     layout,                     // widget that will accept a drop
@@ -167,7 +167,7 @@ namespace LaunchBar
                             btn = new LaunchBar.Button.with_content_type(info,id,type,content_type);
                         else
                             btn = new LaunchBar.Button(info,id,type);
-                        toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
+                        toplevel.bind_property(KEY_ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                         layout.add(btn);
                         btn.show();
                     }
@@ -177,7 +177,7 @@ namespace LaunchBar
             if (ids.length == 0)
             {
                 var btn = new LaunchBar.Button(null,null,ButtonType.BOOTSTRAP);
-                toplevel.bind_property(Key.ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
+                toplevel.bind_property(KEY_ICON_SIZE,btn,"icon-size",BindingFlags.SYNC_CREATE);
                 layout.add(btn);
                 btn.show();
             }
@@ -212,7 +212,7 @@ namespace LaunchBar
                     }
                     else
                     {
-                        info = MenuMaker.get_default_for_uri(str_pretend);
+                        info = get_default_for_uri(str_pretend);
                         if (info != null)
                             return ButtonType.URI;
                         return ButtonType.NONE;
@@ -271,7 +271,7 @@ namespace LaunchBar
 public void g_io_launchbar_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(LaunchBar.Bar),"org.valapanel.launchbar",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(LaunchBar.Bar),"org.valapanel.launchbar",10);
 }
 
 public void g_io_launchbar_unload(GLib.IOModule module)

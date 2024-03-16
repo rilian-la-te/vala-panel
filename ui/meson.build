@@ -50,33 +50,13 @@ ui_lib = library(library_name,
              soversion: 0,
              install: true)
 
-applets_vapi_dir = meson.current_source_dir()
-vala_panel_dep = meson.get_compiler('vala').find_library('vala-panel', dirs: applets_vapi_dir)
-
-libvalapanel = declare_dependency(
-	link_with: ui_lib,
-	dependencies: [util_gtk,vala_panel_dep],
-	include_directories: [core_inc, ui_inc],
-)
-
 install_headers(ui_headers, subdir : meson.project_name())
-vapi_dir = join_paths(prefix, datadir, 'vala', 'vapi')
-install_data(
-    meson.project_name()+'.deps',
-    install_dir: vapi_dir,
-)
-install_data(
-    meson.project_name()+'.vapi',
-    install_dir: vapi_dir,
-)
 
 pkgconfig.generate(ui_lib,
              name: meson.project_name(),
              description: 'A GTK3 desktop panel',
              requires: [glib, gio, giounix, gmodule, gtk],
              variables: [
-                 'datadir='+join_paths('${prefix}',datadir,meson.project_name()),
-                 'datarootdir='+join_paths('${prefix}',datadir),
                  'applets_dir='+join_paths('${libdir}',meson.project_name(),'applets'),
                  'applets_data='+join_paths('${datadir}','applets'),
                 ],
@@ -84,7 +64,7 @@ pkgconfig.generate(ui_lib,
             )
 
 ui_gir = gnome.generate_gir(ui_lib,
-                    sources: [ui_headers, util_headers, util_gtk_headers],
+                    sources: [ui_headers, util_headers, util_gtk_headers, ui_enums_gen],
                     includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
                     header: 'vala-panel.h',
                     namespace: 'ValaPanel',
@@ -98,4 +78,10 @@ vala_panel_vapi = gnome.generate_vapi('vala-panel',
     sources: ui_gir[0],
     packages: ['gio-2.0', 'gtk+-3.0', 'gio-unix-2.0'],
     install: true,
+)
+
+libvalapanel = declare_dependency(
+	link_with: ui_lib,
+	dependencies: [util_gtk],
+	include_directories: [core_inc, ui_inc],
 )

@@ -26,7 +26,7 @@ public class SNTray: Applet
 
     public override void constructed()
     {
-        (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
+        (this.action_group.lookup_action(APPLET_ACTION_CONFIGURE) as SimpleAction).set_enabled(true);
         var layout = new ItemBox();
         widget = layout;
         settings.bind(SHOW_APPS,layout,SHOW_APPS,SettingsBindFlags.DEFAULT);
@@ -35,7 +35,7 @@ public class SNTray: Applet
         settings.bind(SHOW_HARD,layout,SHOW_HARD,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_OTHER,layout,SHOW_OTHER,SettingsBindFlags.DEFAULT);
         settings.bind(SHOW_PASSIVE,layout,SHOW_PASSIVE,SettingsBindFlags.DEFAULT);
-        toplevel.bind_property(Key.ICON_SIZE,layout,INDICATOR_SIZE,BindingFlags.SYNC_CREATE);
+        toplevel.bind_property(KEY_ICON_SIZE,layout,INDICATOR_SIZE,BindingFlags.SYNC_CREATE);
         settings.bind(USE_SYMBOLIC,layout,USE_SYMBOLIC,SettingsBindFlags.DEFAULT);
         settings.bind(USE_LABELS,layout,USE_LABELS,SettingsBindFlags.DEFAULT);
         settings.bind_with_mapping(INDEX_OVERRIDE,layout,INDEX_OVERRIDE,SettingsBindFlags.DEFAULT,
@@ -86,7 +86,7 @@ public class SNTray: Applet
 public void g_io_sntray_load(GLib.TypeModule module)
 {
     // boilerplate - all modules need this
-    GLib.IOExtensionPoint.implement(ValaPanel.Applet.EXTENSION_POINT,typeof(SNTray),"org.valapanel.sntray",10);
+    GLib.IOExtensionPoint.implement(ValaPanel.APPLET_EXTENSION_POINT,typeof(SNTray),"org.valapanel.sntray",10);
 }
 public void g_io_sntray_unload(GLib.IOModule module)
 {

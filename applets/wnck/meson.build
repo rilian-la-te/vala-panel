@@ -7,16 +7,17 @@ plugin_list = [
 ]
 
 wnck_kwargs = {
-    'dependencies': [libvalapanel, wnck, gdk_x11],
     'install': true,
     'c_args': wnck_cflags,
     'install_dir': applets_libdir
 }
 
 foreach plugin : plugin_list
+    add_dep = dependency('', required : false)
     subdir(plugin)
     plugin_module = shared_module(plugin,
                     sources, config,
+                    dependencies: [libvalapanel, wnck, gdk_x11, add_dep],
                     kwargs: wnck_kwargs,
                  )
     i18n.merge_file(
