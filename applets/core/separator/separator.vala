@@ -26,12 +26,7 @@ public class Sep: Applet
     private const string KEY_SHOW_SEPARATOR = "show-separator";
     internal int size {get; set;}
     internal bool show_separator {get; set;}
-    public Sep(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        base(toplevel,settings,number);
-    }
+
     public override void constructed()
     {
         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);

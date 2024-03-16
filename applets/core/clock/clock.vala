@@ -40,12 +40,6 @@ public class Clock: Applet
     internal string tooltip_format {get; set;}
     internal bool bold_font {get; set;}
 
-    public Clock(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        base(toplevel,settings,number);
-    }
     public override void constructed()
     {
         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);

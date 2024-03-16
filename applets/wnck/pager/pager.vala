@@ -23,12 +23,7 @@ public class Pager: Applet
 {
     Wnck.Pager widget;
     int border;
-    public Pager(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        base(toplevel,settings,number);
-    }
+
     public override void constructed()
     {
         widget = new Wnck.Pager();

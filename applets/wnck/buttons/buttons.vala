@@ -27,12 +27,7 @@ public class Buttons: Applet
     Box box = new Box(Orientation.HORIZONTAL,0);
     ulong handler;
     ulong state;
-    public Buttons(ValaPanel.Toplevel toplevel,
-                                    GLib.Settings? settings,
-                                    string number)
-    {
-        base(toplevel,settings,number);
-    }
+
     public override void constructed()
     {
         Wnck.Screen.get_default().force_update();

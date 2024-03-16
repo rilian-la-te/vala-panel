@@ -65,8 +65,8 @@ namespace ValaPanel {
 	public abstract class Applet : Gtk.Bin {
         [CCode (cheader_filename = "applet-info.h")]
 		public const string EXTENSION_POINT;
-		[CCode (cheader_filename = "applet-widget-api.h")]
-		protected Applet (ValaPanel.Toplevel top, GLib.Settings? s, string uuid);
+		[CCode (cheader_filename = "applet-widget-api.h", has_construct_function = false)]
+		protected Applet ();
 		public void init_background ();
 		public bool is_configurable();
 		public virtual void update_context_menu (ref GLib.Menu parent_menu);

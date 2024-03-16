@@ -23,10 +23,7 @@ using StatusNotifier;
 public class SNTray: Applet
 {
     unowned ItemBox widget;
-    public SNTray (Toplevel top, GLib.Settings? settings, string number)
-    {
-        base(top,settings,number);
-    }
+
     public override void constructed()
     {
         (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);

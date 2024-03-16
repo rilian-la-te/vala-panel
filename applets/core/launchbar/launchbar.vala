@@ -34,12 +34,7 @@ namespace LaunchBar
         FlowBox layout;
         string[]? prev_ids;
         AppInfoMonitor? app_monitor;
-        public Bar(ValaPanel.Toplevel toplevel,
-                                        GLib.Settings? settings,
-                                        string number)
-        {
-            base(toplevel,settings,number);
-        }
+
         public override void constructed()
         {
             (this.action_group.lookup_action(AppletAction.CONFIGURE) as SimpleAction).set_enabled(true);
