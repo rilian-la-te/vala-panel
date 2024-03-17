@@ -14,19 +14,13 @@ TODO
  * [ ] Write Notification Center Applet (0.6)
  * [ ] Wayland support, make compositor and complete Wayland support(1.0)
  * [ ] Taskbar DBus library for compositor (1.0)
+ * [ ] Be prepared for GTK4
  * [x] ~~Redo ValaPanelIconGrid using GtkFlowBox and such wonders.~~ (not needed since I am already using FlowBox everywhere)
 
-*TODO for 0.5.0*
-
- * [x] Drop libpeas in favor to applets-new (use GIO Extensions to implement).
- * [x] Implement free applet actions (not only menu)
- * [x] Made pack-type useful
-
-*TODO for 0.6.0*
- * [ ] Be prepared for GTK4
- * [ ] Replace XEmbed to proxy and move it to extras
- * [ ] Remove all Solus code, rewrite IconTasks
- * [ ] Implement Layer Shell Wayland backend
+*TODO for next version*
+ * [x] Remove XEmbed - it is not useful for Wayland
+ * [ ] Write tasklist and some management applets for Wayland (wlroots)
+ * [x] Implement Layer Shell Wayland backend
 
 *Some notes about realization*
 
