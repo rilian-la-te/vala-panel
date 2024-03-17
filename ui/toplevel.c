@@ -772,7 +772,7 @@ static void vala_panel_toplevel_update_geometry(ValaPanelToplevel *self)
 	g_object_notify(G_OBJECT(self), "orientation");
 }
 
-void vala_panel_update_visibility(ValaPanelToplevel *panel, int mons)
+void vala_panel_toplevel_update_visibility(ValaPanelToplevel *panel, int mons)
 {
 	int monitor;
 	g_object_get(panel, VALA_PANEL_KEY_MONITOR, &monitor, NULL);
