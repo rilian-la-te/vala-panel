@@ -53,13 +53,13 @@ gtk = dependency('gtk+-3.0', version: gtk_ver)
 platforms_opt = get_option('platforms')
 auto_platforms = (get_option('platforms') == ['auto'])
 gdk_x11 = dependency('gdk-x11-3.0', version: gtk_ver, required: platforms_opt.contains('x11'))
-gdk_wayland = dependency('gdk-wayland-3.0', version: gtk_ver, required: platforms_opt.contains('layer-shell'))
-gtk_layer_shell = dependency('gtk-layer-shell-0', required: platforms_opt.contains('layer-shell'))
+gdk_wayland = dependency('gdk-wayland-3.0', version: gtk_ver, required: platforms_opt.contains('wayland'))
+gtk_layer_shell = dependency('gtk-layer-shell-0', required: platforms_opt.contains('wayland'))
 platforms = {
     'x11': platforms_opt.contains('x11') or (auto_platforms and gdk_x11.found()),
-    'layer-shell': platforms_opt.contains('layer-shell') or (auto_platforms and gdk_wayland.found() and gtk_layer_shell.found()),
+    'wayland': platforms_opt.contains('wayland') or (auto_platforms and gdk_wayland.found() and gtk_layer_shell.found()),
     }
-assert(platforms['x11'] or platforms['layer-shell'], 'No platform available')
+assert(platforms['x11'] or platforms['wayland'], 'No platform available')
 cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
@@ -87,7 +87,7 @@ conf_data.set('PLUGINS_DATA', applets_datadir)
 conf_data.set('DATADIR', project_datadir)
 conf_data.set('PROFILES_DIR', profiles_dir)
 conf_data.set('PLATFORM_X11',platforms['x11'])
-conf_data.set('PLATFORM_LAYER_SHELL',platforms['layer-shell'])
+conf_data.set('PLATFORM_WAYLAND',platforms['wayland'])
 
 config = configure_file(input : join_paths('util','config.h.in'),
                output : 'config.h',

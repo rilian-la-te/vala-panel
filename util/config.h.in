@@ -9,6 +9,6 @@
 #define PROFILES "@PROFILES_DIR@"
 
 #mesondefine PLATFORM_X11
-#mesondefine PLATFORM_LAYER_SHELL
+#mesondefine PLATFORM_WAYLAND
 
 #endif // CONFIG_H_IN

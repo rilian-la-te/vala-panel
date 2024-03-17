@@ -9,8 +9,8 @@ platform_x11_sources = files(
 )
 
 platform_gtk_layer_sources = files(
-    'vala-panel-platform-standalone-layer-shell.c',
-    'vala-panel-platform-standalone-layer-shell.h'
+    'vala-panel-platform-standalone-wayland.c',
+    'vala-panel-platform-standalone-wayland.h'
 )
 
 app_res = gnome.compile_resources(
@@ -25,7 +25,7 @@ if(platforms['x11'])
     app_all_sources += platform_x11_sources
 endif
 
-if(platforms['layer-shell'])
+if(platforms['wayland'])
     app_all_sources += platform_gtk_layer_sources
     app_dependencies += gtk_layer_shell
 endif

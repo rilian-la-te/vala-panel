@@ -22,7 +22,7 @@
 #include "application.h"
 #include "panel-layout.h"
 #include "server.h"
-#include "vala-panel-platform-standalone-layer-shell.h"
+#include "vala-panel-platform-standalone-wayland.h"
 #include "vala-panel-platform-standalone-x11.h"
 
 #ifdef GDK_WINDOWING_X11
@@ -353,10 +353,10 @@ static bool load_settings(ValaPanelApplication *app)
 			return false;
 		}
 	}
-#ifdef PLATFORM_LAYER_SHELL
+#ifdef PLATFORM_WAYLAND
 	if (GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default()))
 		app->platform = VALA_PANEL_PLATFORM(
-		    vala_panel_platform_layer_new(GTK_APPLICATION(app), app->profile));
+		    vala_panel_platform_wlr_new(GTK_APPLICATION(app), app->profile));
 #endif
 #ifdef PLATFORM_X11
 	if (GDK_IS_X11_DISPLAY(gdk_display_get_default()))
