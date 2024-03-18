@@ -37,7 +37,7 @@ flowtasks = shared_module( 'flowtasks',
                         sources, x11_sources, flowtasks_enums_gen, flowtasks_res,
                         dependencies: [libvalapanel, wnck],
                         install: true,
-                        c_args: [wnck_cflags],
+                        c_args: ['-DWNCK_I_KNOW_THIS_IS_UNSTABLE'],
                         install_dir: applets_libdir
                      )
 
