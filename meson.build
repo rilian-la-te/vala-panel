@@ -1,5 +1,5 @@
 project('vala-panel', 'vala', 'c',
-	version : '0.5.2',
+	version : '24.03',
 	meson_version: '>=0.62.0',
 	license: ['LGPL-3.0'],
     default_options: [
