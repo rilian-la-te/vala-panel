@@ -57,8 +57,8 @@ pkgconfig.generate(ui_lib,
              description: 'A GTK3 desktop panel',
              requires: [glib, gio, giounix, gmodule, gtk],
              variables: [
-                 'applets_dir='+join_paths('${libdir}',meson.project_name(),'applets'),
-                 'applets_data='+join_paths('${datadir}','applets'),
+                 'applets_dir=' + applets_libdir,
+                 'applets_data=' + applets_datadir,
                 ],
              extra_cflags: ['-I${includedir}/vala-panel']
             )
