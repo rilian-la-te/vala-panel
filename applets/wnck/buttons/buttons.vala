@@ -30,11 +30,10 @@ public class Buttons: Applet
 
     public override void constructed()
     {
-        Wnck.Screen.get_default().force_update();
-        handler = Wnck.Screen.get_default().active_window_changed.connect(update_buttons_sensitivity);
-        state = Wnck.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{
+        handler = libxfce4windowing.Screen.get_default().active_window_changed.connect(update_buttons_sensitivity);
+        state = libxfce4windowing.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{
             var image = maximize.get_image() as Gtk.Image;
-            if (Wnck.Screen.get_default().get_active_window().is_maximized())
+            if (libxfce4windowing.Screen.get_default().get_active_window().is_maximized())
                 image.set_from_icon_name("window-restore-symbolic",IconSize.MENU);
             else
                 image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
@@ -49,9 +48,9 @@ public class Buttons: Applet
         box.show();
         this.show();
     }
-    private void update_buttons_sensitivity(Wnck.Window? prev = null)
+    private void update_buttons_sensitivity(libxfce4windowing.Window? prev = null)
     {
-        var window = Wnck.Screen.get_default().get_active_window();
+        var window = libxfce4windowing.Screen.get_default().get_active_window();
         if (window == null)
         {
             if(minimize != null && minimize is Button)
@@ -62,15 +61,15 @@ public class Buttons: Applet
                 close.sensitive = false;
             return;
         }
-        var actions = window.get_actions();
-        minimize.sensitive = ((actions & Wnck.WindowActions.MINIMIZE) > 0);
-        maximize.sensitive = ((actions & Wnck.WindowActions.MAXIMIZE) > 0 ||
-                              (actions & Wnck.WindowActions.UNMAXIMIZE) > 0);
-        close.sensitive = ((actions & Wnck.WindowActions.CLOSE) > 0);
+        var actions = window.get_capabilities();
+        minimize.sensitive = ((actions & libxfce4windowing.WindowCapabilities.CAN_MINIMIZE) > 0);
+        maximize.sensitive = ((actions & libxfce4windowing.WindowCapabilities.CAN_MAXIMIZE) > 0 ||
+                              (actions & libxfce4windowing.WindowCapabilities.CAN_UNMAXIMIZE) > 0);
+        close.sensitive = true;
         if (state > 0 && prev != null)
             prev.disconnect(state);
         update_maximize_image();
-        state = Wnck.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{
+        state = libxfce4windowing.Screen.get_default().get_active_window().state_changed.connect((m,n)=>{
             update_maximize_image();
         });
     }
@@ -79,7 +78,7 @@ public class Buttons: Applet
         if (maximize == null)
             return;
         var image = maximize.get_image() as Gtk.Image;
-        if (Wnck.Screen.get_default().get_active_window().is_maximized())
+        if (libxfce4windowing.Screen.get_default().get_active_window().is_maximized())
             image.set_from_icon_name("window-restore-symbolic",IconSize.MENU);
         else
             image.set_from_icon_name("window-maximize-symbolic",IconSize.MENU);
@@ -102,7 +101,7 @@ public class Buttons: Applet
             close = null;
         }
         var tokens = decoration_layout.split(":",2);
-        var window = Wnck.Screen.get_default().get_active_window();
+        var window = libxfce4windowing.Screen.get_default().get_active_window();
         if (tokens == null)
             tokens = {"close,minimize,maximize","menu"};
         for (var i = 0; i < 2; i++)
@@ -123,7 +122,7 @@ public class Buttons: Applet
                     button.can_focus = false;
                     button.show();
                     button.clicked.connect(()=>{
-                        Wnck.Screen.get_default().get_active_window().minimize();
+                        libxfce4windowing.Screen.get_default().get_active_window().set_minimized(!libxfce4windowing.Screen.get_default().get_active_window().is_minimized());
                     });
                     var accessible = button.get_accessible();
                     if (accessible is Gtk.Accessible)
@@ -143,11 +142,7 @@ public class Buttons: Applet
                     button.can_focus = false;
                     button.show();
                     button.clicked.connect(()=>{
-                        var win = Wnck.Screen.get_default().get_active_window();
-                        if (win.is_maximized())
-                            win.unmaximize();
-                        else
-                            win.maximize();
+                        libxfce4windowing.Screen.get_default().get_active_window().set_maximized(!libxfce4windowing.Screen.get_default().get_active_window().is_maximized());
                     });
                     var accessible = button.get_accessible();
                     if (accessible is Gtk.Accessible)
@@ -165,7 +160,7 @@ public class Buttons: Applet
                     button.can_focus = false;
                     button.show();
                     button.clicked.connect(()=>{
-                        Wnck.Screen.get_default().get_active_window().close(get_current_event_time());
+                        libxfce4windowing.Screen.get_default().get_active_window().close(get_current_event_time());
                     });
                     var accessible = button.get_accessible();
                     if (accessible is Gtk.Accessible)
