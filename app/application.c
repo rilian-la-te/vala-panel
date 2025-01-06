@@ -25,11 +25,11 @@
 #include "vala-panel-platform-standalone-wayland.h"
 #include "vala-panel-platform-standalone-x11.h"
 
-#ifdef GDK_WINDOWING_X11
+#ifdef USE_X11
 #include <gdk/gdkx.h>
 #endif
 
-#ifdef GDK_WINDOWING_WAYLAND
+#ifdef USE_WAYLAND
 #include <gdk/gdkwayland.h>
 #endif
 

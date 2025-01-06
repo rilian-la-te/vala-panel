@@ -64,6 +64,15 @@ cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
 core_inc = include_directories('.')
+
+if(platforms['x11'])
+    add_project_arguments('-DUSE_X11',language: 'c')
+endif
+
+if(platforms['wayland'])
+    add_project_arguments('-DUSE_WAYLAND',language: 'c')
+endif
+
 ################
 # Applet build #
 ################

@@ -1,4 +1,3 @@
 option('drawing', type: 'boolean', value: true, description: 'Enables drawing plugins, like CPU Graph plot')
-option('wnck', type: 'feature', value: 'auto', description: 'Enables wnck-related plugins, like taskbar and pager')
 option('platforms', type: 'array', choices: ['x11','wayland','auto'], value: ['auto'], description: 'Platforms for vala-panel')
 
