@@ -25,7 +25,7 @@
 #include <gtk/gtk.h>
 #include <libwnck/libwnck.h>
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 #include <gdk/gdkx.h>
@@ -181,7 +181,7 @@ struct _XfceTasklist
 	/* sorting order of the buttons */
 	XfceTasklistSortOrder sort_order;
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* wireframe window */
 	Window wireframe_window;
 #endif
@@ -281,7 +281,7 @@ static int xfce_tasklist_update_icon_geometries(gpointer data);
 static void xfce_tasklist_update_icon_geometries_destroyed(gpointer data);
 
 /* wireframe */
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 static void xfce_tasklist_wireframe_hide(XfceTasklist *tasklist);
 static void xfce_tasklist_wireframe_destroy(XfceTasklist *tasklist);
 static void xfce_tasklist_wireframe_update(XfceTasklist *tasklist, XfceTasklistChild *child);
@@ -461,7 +461,7 @@ static void xfce_tasklist_init(XfceTasklist *tasklist)
 	tasklist->all_blinking      = true;
 	tasklist->middle_click      = XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT;
 	tasklist->label_decorations = true;
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	tasklist->wireframe_window = 0;
 #endif
 	tasklist->update_icon_geometries_id  = 0;
@@ -660,7 +660,7 @@ static void xfce_tasklist_finalize(GObject *object)
 	/* free the class group hash table */
 	g_hash_table_destroy(tasklist->class_groups);
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* destroy the wireframe window */
 	xfce_tasklist_wireframe_destroy(tasklist);
 #endif
@@ -1272,7 +1272,7 @@ static void xfce_tasklist_arrow_button_menu_destroy(GtkWidget *menu, XfceTasklis
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tasklist->arrow_button), false);
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* make sure the wireframe is hidden */
 	xfce_tasklist_wireframe_hide(tasklist);
 #endif
@@ -1661,7 +1661,7 @@ static void xfce_tasklist_window_removed(WnckScreen *screen, WnckWindow *window,
 			                                         NULL,
 			                                         child);
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 			/* hide the wireframe */
 			if (G_UNLIKELY(n > 5 && tasklist->show_wireframes))
 			{
@@ -1976,7 +1976,7 @@ static XfceTasklistChild *xfce_tasklist_child_new(XfceTasklist *tasklist)
 /**
  * Wire Frame
  **/
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 static void xfce_tasklist_wireframe_hide(XfceTasklist *tasklist)
 {
 	GdkDisplay *dpy;
@@ -2511,7 +2511,7 @@ static bool xfce_tasklist_button_size_allocate(G_GNUC_UNUSED GtkWidget *widget,
 	return true;
 }
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 static void xfce_tasklist_button_geometry_changed(WnckWindow *window, XfceTasklistChild *child)
 {
 	g_return_if_fail(child->window == window);
@@ -2551,7 +2551,7 @@ static bool xfce_tasklist_button_enter_notify_event(GtkWidget *button,
 	g_return_val_if_fail(GTK_IS_WIDGET(button), false);
 	g_return_val_if_fail(WNCK_IS_WINDOW(child->window), false);
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* leave when there is nothing to do */
 	if (!child->tasklist->show_wireframes)
 		return false;
@@ -3345,7 +3345,7 @@ static void xfce_tasklist_group_button_menu_destroy(GtkWidget *menu, XfceTasklis
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(group_child->button), false);
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* make sure the wireframe is hidden */
 	xfce_tasklist_wireframe_hide(group_child->tasklist);
 #endif
@@ -3945,7 +3945,7 @@ void xfce_tasklist_set_show_wireframes(XfceTasklist *tasklist, bool show_wirefra
 
 	tasklist->show_wireframes = !!show_wireframes;
 
-#ifdef GDK_WINDOWING_X11
+#ifdef PLATFORM_X11
 	/* destroy the window if needed */
 	xfce_tasklist_wireframe_destroy(tasklist);
 #endif

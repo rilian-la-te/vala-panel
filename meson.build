@@ -64,6 +64,7 @@ cc = meson.get_compiler('c')
 m = cc.find_library('m', required : false)
 
 core_inc = include_directories('.')
+
 ################
 # Applet build #
 ################
