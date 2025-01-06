@@ -50,6 +50,7 @@ giounix = dependency('gio-unix-2.0', version: glib_ver)
 gmodule = dependency('gmodule-2.0', version: glib_ver)
 gtk_ver = '>=3.22'
 gtk = dependency('gtk+-3.0', version: gtk_ver)
+girepository = dependency('girepository-2.0', version: glib_ver)
 platforms_opt = get_option('platforms')
 auto_platforms = (get_option('platforms') == ['auto'])
 gdk_x11 = dependency('gdk-x11-3.0', version: gtk_ver, required: platforms_opt.contains('x11'))

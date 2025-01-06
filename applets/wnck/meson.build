@@ -9,7 +9,8 @@ plugin_list = [
 wnck_kwargs = {
     'install': true,
     'c_args': wnck_cflags,
-    'install_dir': applets_libdir
+    'install_dir': applets_libdir,
+    'vala_args': '--vapidir='+ join_paths(meson.project_build_root(),'applets')
 }
 
 foreach plugin : plugin_list
@@ -17,7 +18,7 @@ foreach plugin : plugin_list
     subdir(plugin)
     plugin_module = shared_module(plugin,
                     sources, config,
-                    dependencies: [libvalapanel, wnck, gdk_x11, add_dep],
+                    dependencies: [libvalapanel, wnck, gdk_x11, add_dep, xfcewind_dep],
                     kwargs: wnck_kwargs,
                  )
     i18n.merge_file(
