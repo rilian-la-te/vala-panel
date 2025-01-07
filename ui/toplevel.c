@@ -1225,7 +1225,7 @@ void vala_panel_toplevel_class_init(ValaPanelToplevelClass *klass)
 	    g_param_spec_enum(VALA_PANEL_KEY_GRAVITY,
 	                      VALA_PANEL_KEY_GRAVITY,
 	                      VALA_PANEL_KEY_GRAVITY,
-	                      VALA_PANEL_TYPE_PANEL_GRAVITY,
+	                      vala_panel_gravity_get_type(),
 	                      0,
 	                      (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                    G_PARAM_CONSTRUCT));

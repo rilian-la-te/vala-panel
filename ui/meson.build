@@ -26,11 +26,9 @@ ui_sources = files (
     'panel-layout.c'
 )
 enum = 'vala-panel-enums'
-ui_enums_gen = gnome.mkenums(
+ui_enums_gen = gnome.mkenums_simple(
   enum,
   sources: ui_enum_headers,
-  c_template: enum + '.c.template',
-  h_template: enum + '.h.template',
   install_header: true,
   install_dir: join_paths(includedir, meson.project_name()),
 )
