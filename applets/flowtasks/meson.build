@@ -5,25 +5,26 @@ x11_sources = files(
     'libwnck-aux.h'
 )
 
-sources = files(
+headers = files(
     'task.h',
+    'task-model.h',
+    'matcher.h',
+    'flowtasks-widget.h',
+    'flowtasks-applet.h'
+)
+
+sources = files(
     'task.c',
     'task-model.c',
-    'task-model.h',
     'matcher.c',
-    'matcher.h',
     'flowtasks-widget.c',
-    'flowtasks-widget.h',
     'flowtasks-applet.c',
-    'flowtasks-applet.h'
   )
   
 enum = 'flowtasks-enums'
-flowtasks_enums_gen = gnome.mkenums(
+flowtasks_enums_gen = gnome.mkenums_simple(
   enum,
-  sources: sources,
-  c_template: enum + '.c.template',
-  h_template: enum + '.h.template',
+  sources: headers,
   install_header: false,
 )
 
@@ -34,7 +35,7 @@ flowtasks_res = gnome.compile_resources(
 )
 
 flowtasks = shared_module( 'flowtasks',
-                        sources, x11_sources, flowtasks_enums_gen, flowtasks_res,
+                        headers, sources, x11_sources, flowtasks_enums_gen, flowtasks_res,
                         dependencies: [libvalapanel, wnck],
                         install: true,
                         c_args: ['-DWNCK_I_KNOW_THIS_IS_UNSTABLE'],
