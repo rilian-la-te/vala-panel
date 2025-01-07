@@ -15,11 +15,9 @@ util_gtk_sources = files (
     'css-private.h'
 )
 enum = 'vala-panel-util-enums'
-util_gtk_enums_gen = gnome.mkenums(
+util_gtk_enums_gen = gnome.mkenums_simple(
   enum,
   sources: util_gtk_enum_headers,
-  c_template: enum + '.c.template',
-  h_template: enum + '.h.template',
   install_header: true,
   install_dir: join_paths(includedir, meson.project_name()),
 )
