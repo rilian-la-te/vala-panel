@@ -300,7 +300,7 @@ void vala_panel_task_class_init(ValaPanelTaskClass *klass)
 	    g_param_spec_flags(VT_KEY_STATE,
 	                       VT_KEY_STATE,
 	                       VT_KEY_STATE,
-	                       VALA_PANEL_TYPE_PANEL_TASK_STATE,
+	                       vala_panel_task_state_get_type(),
 	                       STATE_NORMAL,
 	                       (GParamFlags)(G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE |
 	                                     G_PARAM_CONSTRUCT));
