@@ -63,7 +63,7 @@ pkgconfig.generate(ui_lib,
 
 ui_gir = gnome.generate_gir(ui_lib,
                     sources: [ui_headers, util_headers, util_gtk_headers, ui_enums_gen],
-                    includes: ['GObject-2.0', 'Gio-2.0', 'Gtk-3.0', 'GModule-2.0'],
+                    includes: ['GObject-2.0', 'Gio-2.0', 'GioUnix-2.0', 'Gtk-3.0', 'GModule-2.0'],
                     header: 'vala-panel.h',
                     namespace: 'ValaPanel',
                     identifier_prefix: 'ValaPanel',
@@ -74,7 +74,8 @@ ui_gir = gnome.generate_gir(ui_lib,
 
 vala_panel_vapi = gnome.generate_vapi('vala-panel',
     sources: ui_gir[0],
-    packages: ['gio-2.0', 'gtk+-3.0', 'gio-unix-2.0'],
+    packages: ['gio-2.0', 'gtk+-3.0', 'gio-unix-2.0', 'gio-fix-2.0'],
+    vapi_dirs: [ meson.project_source_root()/'vapi' ],
     install: true,
 )
 
