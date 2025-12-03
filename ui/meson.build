@@ -73,9 +73,8 @@ ui_gir = gnome.generate_gir(ui_lib,
 )
 
 vala_panel_vapi = gnome.generate_vapi('vala-panel',
-    sources: ui_gir[0],
-    packages: ['gio-2.0', 'gtk+-3.0', 'gio-unix-2.0', 'gio-fix-2.0'],
-    vapi_dirs: [ meson.project_source_root()/'vapi' ],
+    sources: [ui_gir[0],meson.project_source_root()/'vapi/gio-fix-2.0.vapi'],
+    packages: ['gio-2.0', 'gtk+-3.0', 'gio-unix-2.0'],
     install: true,
 )
 
